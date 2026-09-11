@@ -493,6 +493,15 @@ export type BodyIndex = Record<string, Body>;
 
 **Quelle:** JPL Solar System Dynamics, *Approximate Positions of the Major Planets*,
 <https://ssd.jpl.nasa.gov/planets/approx_pos.html>, **Tabelle 1** (Gültigkeit 1800–2050).
+Die Seite ist vorab geprüft und maschinell lesbar — hole die Tabelle selbst ab, statt
+Werte aus dem Gedächtnis zu schreiben. Jeder Körper hat dort zwei Zeilen: die erste
+trägt die Elemente zur Epoche, die zweite die Raten pro Jahrhundert. Spaltenreihenfolge:
+`a` · `e` · `I` · `L` · `long.peri.` · `long.node.`
+
+Kontrollwert aus der Vorabprüfung — die Mars-Zeilen lauten genau:
+`1.52371034 | 0.09339410 | 1.84969142 | -4.55343205 | -23.94362959 | 49.55953891` und
+`0.00001847 | 0.00007882 | -0.00813131 | 19140.30268499 | 0.44441088 | -0.29257343`.
+Stimmt deine abgerufene Mars-Zeile damit überein, liest du die Tabelle richtig.
 
 Übertrage die Zeilen unverändert; erfinde keine Werte. Beachte, dass die Tabelle für
 die Erde den **Erde-Mond-Schwerpunkt** liefert — das ist für Phase 1 gewollt (die
@@ -878,7 +887,28 @@ Die Invariantentests aus Task 4 beweisen innere Stimmigkeit. Dieser Task beweist
 - [ ] **Step 1: Referenzwerte bei JPL Horizons abrufen**
 
 Die Werte werden **nicht** geschätzt, sondern einmalig von der Quelle geholt und
-eingecheckt. Verfahren auf <https://ssd.jpl.nasa.gov/horizons/app.html>:
+eingecheckt.
+
+**Bevorzugter Weg — die Horizons-API** (vorab geprüft, antwortet in genau dem
+gebrauchten Blockformat). Eine Anfrage je Körper und Stichtag:
+
+```
+https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND='<n>'&OBJ_DATA='NO'
+  &MAKE_EPHEM='YES'&EPHEM_TYPE='VECTORS'&CENTER='500@10'
+  &START_TIME='<JJJJ-MM-TT>'&STOP_TIME='<Folgetag>'&STEP_SIZE='1d'
+  &VEC_TABLE='2'&REF_PLANE='ECLIPTIC'&OUT_UNITS='KM-S'
+```
+
+`COMMAND`: 1 Merkur-, 2 Venus-, 3 Erde-Mond-, 4 Mars-, 5 Jupiter-, 6 Saturn-,
+7 Uranus-, 8 Neptun-Baryzentrum. Die Antwort enthält zwischen `$$SOE` und `$$EOE`
+je Epoche eine Zeile `JDTDB = …` und darunter `X = … Y = … Z = …` in km.
+
+Kontrollwert aus der Vorabprüfung — Mars zu JD 2451544,5:
+`X = 2.079950549836587E+08`, `Y = -3.143009713801308E+06`, `Z = -5.178781243501138E+06`.
+Weicht dein erster Abruf davon ab, stimmen die Parameter nicht.
+
+**Rückfallweg** — dasselbe über das Webformular auf
+<https://ssd.jpl.nasa.gov/horizons/app.html>:
 
 | Einstellung | Wert |
 |---|---|
