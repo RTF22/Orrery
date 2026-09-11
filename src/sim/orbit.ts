@@ -1,5 +1,5 @@
 import type { Body, BodyIndex, OrbitElements, Vec3 } from './types';
-import { centuriesSinceJ2000 } from './time';
+import { J2000, centuriesSinceJ2000 } from './time';
 import { solveKepler, normalizeAngle } from './kepler';
 
 export const AU_KM = 149_597_870.7;
@@ -66,6 +66,22 @@ export function positionAt(id: string, index: BodyIndex, jd: number): Vec3 {
   if (!body) throw new Error(`Unbekannter Körper: ${id}`);
   if (body.orbit === null) return { x: 0, y: 0, z: 0 };
 
+  // 'parentEquator' verlangt eine Drehung von der Äquatorebene des
+  // Mutterkörpers in die Ekliptik. Diese Drehung ist in Phase 1 bewusst
+  // nicht implementiert — kein Körper der Phase-1-Daten braucht sie (der
+  // Erdmond läuft in der Ekliptik, siehe data/bodies/moon.ts), und
+  // ungetestet mitgeschleppter Code in dieser Schicht wäre ein Risiko.
+  // Die Jupiter- und Saturnmonde in Phase 3 benötigen sie tatsächlich;
+  // bis dahin verhindert dieser Schutz, dass ein solcher Datensatz
+  // stillschweigend an der falschen Stelle landet.
+  if (body.orbit.frame === 'parentEquator') {
+    throw new Error(
+      `Bezugsebene 'parentEquator' wird noch nicht unterstützt (Körper: ${id}). ` +
+      `Die Drehung von der Äquatorebene des Mutterkörpers in die Ekliptik ` +
+      `folgt erst in Phase 3 mit den Jupiter- und Saturnmonden.`,
+    );
+  }
+
   const relativ = positionInParentFrame(body.orbit, jd);
   if (body.parent === null) return relativ;
 
@@ -75,4 +91,31 @@ export function positionAt(id: string, index: BodyIndex, jd: number): Vec3 {
     y: eltern.y + relativ.y,
     z: eltern.z + relativ.z,
   };
+}
+
+/**
+ * Geschwindigkeit in km/s durch zentrale Differenz.
+ *
+ * Numerisch statt analytisch: der Fehler liegt bei einem Schritt von 60 s
+ * weit unter einem Promille, und wir sparen uns eine zweite, unabhängig
+ * zu pflegende Ableitung der Bahnformeln. Eingesetzt wird sie für die
+ * Verfolgungskamera und die Infopanel-Anzeige.
+ */
+export function velocityAt(id: string, index: BodyIndex, jd: number): Vec3 {
+  const dtSekunden = 60;
+  const dtTage = dtSekunden / 86400;
+  const vor = positionAt(id, index, jd + dtTage);
+  const zurueck = positionAt(id, index, jd - dtTage);
+  return {
+    x: (vor.x - zurueck.x) / (2 * dtSekunden),
+    y: (vor.y - zurueck.y) / (2 * dtSekunden),
+    z: (vor.z - zurueck.z) / (2 * dtSekunden),
+  };
+}
+
+/** Rotationsphase in Radiant; negative Perioden drehen retrograd. */
+export function rotationAt(body: Body, jd: number): number {
+  const stunden = (jd - J2000) * 24;
+  const umdrehungen = stunden / body.physical.rotationPeriodH;
+  return (body.physical.rotationAtEpochDeg * GRAD) + umdrehungen * 2 * Math.PI;
 }
