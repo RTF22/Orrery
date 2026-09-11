@@ -100,31 +100,61 @@ die größte der fünf Abweichungen pro Körper (euklidischer Abstand zwischen
 Jede Toleranz in `horizons.json` ist auf rund das Doppelte dieser gemessenen
 Abweichung gesetzt, aufgerundet auf eine glatte Zahl.
 
-**Einordnung der Größenordnung:** Für die inneren Planeten (Merkur bis Mars)
-liegen die Abweichungen im Bereich weniger tausend bis niedrig zehntausend km.
-Bei den Riesenplaneten (Jupiter bis Neptun) sind die Abweichungen mit einigen
-hunderttausend bis wenigen Millionen km absolut größer, relativ zur Bahnhalbachse
-aber weiterhin klein (Jupiter ca. 0,15 %, Saturn ca. 0,3 %, Uranus ca. 0,04 %,
-Neptun ca. 0,03 % der Bahnhalbachse) — weit entfernt von der Größenordnung
-einer gespiegelten oder verdrehten Bahn, bei der die Abweichung in der
-Größenordnung der Bahnhalbachse selbst läge (also ~100 %). Die größeren
-absoluten Werte bei Jupiter und Saturn passen zu einer bekannten Einschränkung
-dieses Elementsatzes: Die "Approximate Positions"-Tabelle von JPL ist ein
-reines Zweikörper-Keplermodell mit linear fortgeschriebenen Elementen: Es
-enthält keine Korrektur für die gegenseitige Störung von Jupiter und Saturn
-(die sogenannte "große Ungleichheit"), deren Periode mit rund 900 Jahren weit
-über das hier genutzte 190-Jahre-Fenster hinausreicht und daher nicht als
-linearer Term erfasst ist.
+**Einordnung der Größenordnung — Gegenprobe gegen JPLs eigene Genauigkeitstabelle.**
+Dieselbe Quelle (`approx_pos.html`, Abschnitt „Accuracy") veröffentlicht für
+jeden Körper einen eigenen Nominalfehler in heliozentrischer Länge λ, Breite
+φ (beide in Bogensekunden) und Radiusvektor ρ (in 1000 km), getrennt nach den
+zwei Gültigkeitsfenstern der beiden Elementtabellen. Für unser Fenster
+(1800 AD–2050 AD, Tabelle 1) lauten die dort veröffentlichten Werte:
 
-Auffällig, aber ebenfalls durch das Zweikörpermodell erklärbar: Die größte
-Abweichung tritt nicht durchweg an den Rändern des Gültigkeitsfensters (1850
-bzw. 2040) auf, sondern bei Jupiter genau bei J2000 selbst. Das wäre
-verdächtig, wenn die Abweichung allein aus der linearen Fortschreibung der
-Elemente über die Zeit T seit J2000 stammte (dort wäre sie bei T=0 exakt
-null). Sie stammt hier jedoch überwiegend aus dem oben genannten fehlenden
-Störungsterm, dessen Beitrag eine periodische (nicht bei T=0 verschwindende)
-Funktion der Zeit ist und dessen mehrere Jahrhunderte lange Periode über die
-fünf Stichtage hinweg nicht monoton verläuft. Bei den erdnahen Planeten
-(Merkur bis Mars) zeigt sich aus demselben Grund kein einheitliches Muster
-"schlechtester Wert an den Rändern" — auch dort überwiegen kurzperiodische,
-nicht im Modell erfasste Störungen gegenüber dem linearen Fortschreibungsfehler.
+| Körper | λ [″] | φ [″] | ρ [1000 km] | daraus abgeleiteter Gesamtfehler [km]¹ | gemessen [km] | gemessen/abgeleitet |
+|---|---|---|---|---|---|---|
+| mercury | 15 | 1 | 1 | 4 337 | 5 693 | 1,31 |
+| venus | 20 | 1 | 4 | 11 241 | 10 431 | 0,93 |
+| earth (EM Bary) | 20 | 8 | 6 | 16 735 | 12 381 | 0,74 |
+| mars | 40 | 2 | 25 | 50 832 | 37 608 | 0,74 |
+| jupiter | 400 | 10 | 600 | 1 624 720 | 1 150 177 | 0,71 |
+| saturn | 600 | 25 | 1500 | 4 416 156 | 4 271 544 | 0,97 |
+| uranus | 50 | 2 | 1000 | 1 218 608 | 1 195 610 | 0,98 |
+| **neptune** | **10** | **1** | **200** | **296 712** | **1 229 219** | **4,14** |
+
+¹ eigene Kombination, nicht von JPL so veröffentlicht: Quer- und
+Normalanteil aus λ bzw. φ über `a · Winkel[rad]` in km umgerechnet, radialer
+Anteil = ρ · 1000 km, alle drei quadratisch addiert (RSS).
+
+Sieben der acht Körper liegen innerhalb des 0,7- bis 1,3-fachen dieses aus
+JPLs eigener Tabelle abgeleiteten Nominalfehlers — für Jupiter und Saturn
+ist der Nominalfehler selbst schon groß (400″ bzw. 600″ in λ), weil das
+zugrunde liegende Zweikörper-Keplermodell mit linear fortgeschriebenen
+Elementen keine Korrektur für die gegenseitige Störung von Jupiter und Saturn
+enthält (die sogenannte „große Ungleichheit", Periode rund 900 Jahre, weit
+über das 190-Jahre-Fenster hinaus) — **JPL benennt diese Einschränkung also
+bereits selbst in den eigenen Zahlen**, und unsere Messung bestätigt sie nur.
+
+**Neptun ist die Ausnahme und wurde deswegen gesondert untersucht** (siehe
+`task-5-report.md` im SDD-Ordner für die volle Herleitung): Die gemessene
+Abweichung übertrifft den aus JPLs eigenen λ/φ/ρ-Werten abgeleiteten
+Nominalfehler um das 4,1-fache — und das bereits bei JD 2451544.5 (praktisch
+T=0, wo eine reine lineare Fortschreibung der Elemente noch nichts beiträgt).
+Drei unabhängige Implementierungen (unser `orbit.ts`, eine komplett neu und
+ausschließlich aus dem JPL-Formeltext geschriebene Kontrollrechnung ohne
+jede gemeinsame Codebasis, sowie eine externe Prüfung) liefern für Neptun bei
+allen fünf Stichtagen dasselbe Ergebnis bis auf Rundungsrauschen
+(< 10⁻⁵ km) — ein Implementierungsfehler ist damit praktisch ausgeschlossen.
+Ein Scan über elf zusätzliche, über das gesamte Fenster 1800–2050 verteilte
+Zeitpunkte zeigt zudem ein **oszillierendes**, nicht monoton mit |T| von
+J2000 aus anwachsendes Restfehlerbild (Minima um 1849 und 1949, Maxima um
+1799, 1899 und 2000) — das Muster eines echten, im Modell nicht erfassten
+periodischen Störeinflusses (am ehesten durch Uranus), nicht das Muster eines
+Vorzeichen-, Rotations- oder Übertragungsfehlers. Die Bahnelemente selbst
+wurden erneut ziffernweise gegen die Live-Quelle geprüft und stimmen exakt.
+**Schlussfolgerung:** kein Fehler in `orbit.ts` oder `neptune.ts` — aber
+JPLs eigene veröffentlichte Nominalfehlerangabe für Neptun (10″/1″/200)
+erweist sich gegen eine moderne Referenzephemeride (Horizons/DE441) als zu
+optimistisch für dieses Element- und Zeitfenster. Die Toleranz in dieser
+Fixture beruht ohnehin auf der tatsächlich gemessenen Abweichung, nicht auf
+JPLs Nominalangabe, und bleibt davon unberührt.
+
+Für die inneren Planeten (Merkur bis Mars) liegen die absoluten Abweichungen
+im Bereich weniger tausend bis niedrig zehntausend km — durchweg im Rahmen
+dessen, was JPL selbst für dieses Elementmodell angibt.

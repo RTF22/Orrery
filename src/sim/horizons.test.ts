@@ -36,7 +36,7 @@ describe('Bahnberechnung gegen JPL Horizons', () => {
         'Körper': id,
         'max. Abweichung [km]': Math.round(km),
         'Toleranz [km]': toleranz[id],
-        'ausgeschoepft [%]': Math.round((km / toleranz[id]!) * 100),
+        'ausgeschöpft [%]': Math.round((km / toleranz[id]!) * 100),
       })),
     );
 
