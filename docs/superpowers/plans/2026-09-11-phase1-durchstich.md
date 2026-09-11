@@ -99,7 +99,12 @@ dist/
 .DS_Store
 *.local
 coverage/
+.superpowers/
 ```
+
+`.superpowers/` ist der Arbeitsbereich des Ausführungsprozesses (Protokoll, Briefings,
+Review-Pakete) und gehört nicht ins Repository. Die Zeile ist bereits vorhanden —
+beim Schreiben der Datei nicht verlieren.
 
 `tsconfig.json` — die beiden Schärfungen ergänzen:
 
@@ -1826,9 +1831,15 @@ damit der Durchstich sichtbar wird. Task 10 ersetzt das durch alle Körper:
 ```ts
 import * as THREE from 'three';
 import type { RenderContext } from './renderer';
+import type { AppState } from '../store/types';
 
+/**
+ * Zielsignatur — sie bleibt bis Task 15 unverändert. Die Szene holt sich
+ * Maßstab, Sichtbarkeiten und Kameramodus selbst aus dem übergebenen
+ * Zustand, statt mit jedem Task einen weiteren Parameter zu bekommen.
+ */
 export interface SceneHandle {
-  update: (jd: number, cameraTargetKm: { x: number; y: number; z: number }) => void;
+  update: (jd: number, dt: number, state: AppState) => void;
 }
 
 export function buildScene(ctx: RenderContext): SceneHandle {
@@ -2126,13 +2137,26 @@ describe('orbitPointsKm', () => {
     expect(orbitPointsKm('sun', bodyIndex, J2000, s)).toHaveLength(0);
   });
 
-  it('zeichnet die Mondbahn um die Erde, nicht um die Sonne', () => {
+  // Die Mondbahn ist der Härtefall: Über eine Mondumlaufzeit zieht die Erde
+  // selbst rund 0,46 AE weiter. Würde die Bahn im Inertialsystem abgetastet,
+  // ergäbe sich eine Zykloide quer durchs Sonnensystem statt einer Ellipse.
+  it('zeichnet die Mondbahn als geschlossene Schleife um die Erde', () => {
     const mond = orbitPointsKm('moon', bodyIndex, J2000, s);
     const erde = scaledPositionAt('earth', bodyIndex, J2000, s);
-    for (const q of mond) {
-      const abstandZurErde = betrag({ x: q.x - erde.x, y: q.y - erde.y, z: q.z - erde.z });
-      expect(abstandZurErde).toBeLessThan(betrag(erde) * 0.5);
-    }
+    const abstaende = mond.map((q) => betrag({
+      x: q.x - erde.x, y: q.y - erde.y, z: q.z - erde.z,
+    }));
+
+    // Mondabstände skalieren laut Maßstabsmodell mit sizeScale.
+    expect(Math.min(...abstaende)).toBeGreaterThan(300_000 * s.sizeScale);
+    expect(Math.max(...abstaende)).toBeLessThan(460_000 * s.sizeScale);
+
+    const zu = betrag({
+      x: mond[0]!.x - mond[ORBIT_SEGMENTS]!.x,
+      y: mond[0]!.y - mond[ORBIT_SEGMENTS]!.y,
+      z: mond[0]!.z - mond[ORBIT_SEGMENTS]!.z,
+    });
+    expect(zu).toBeLessThan(20_000 * s.sizeScale);
   });
 });
 ```
@@ -2151,7 +2175,6 @@ import * as THREE from 'three';
 import type { BodyIndex, Vec3 } from '../sim/types';
 import type { ScaleSettings } from '../sim/scale';
 import { scaledPositionAt } from '../sim/scale';
-import { elementsAt } from '../sim/orbit';
 import { bodies, bodyIndex } from '../data/index';
 import { worldToRender } from './units';
 
@@ -2173,10 +2196,25 @@ export function orbitPointsKm(
   // Umlaufzeit aus der Rate der mittleren Länge: LDot ist Grad pro Jahrhundert.
   const periodeTage = 36525 / (body.orbit.LDot / 360);
 
+  // Bei Monden wird der Mutterkörper auf jd festgehalten und nur der
+  // Relativvektor variiert. Ohne das verschmierte die Mondbahn über die
+  // Eigenbewegung der Erde — in 27,3 Tagen zieht die Erde rund 0,46 AE
+  // weiter — zu einer Zykloide quer durchs Sonnensystem, statt die
+  // Ellipse um die Erde zu zeigen.
+  const umMutter = body.parent !== null && body.parent !== 'sun';
+  const ankerJetzt = umMutter ? scaledPositionAt(body.parent!, index, jd, s) : null;
+
   const punkte: Vec3[] = [];
   for (let i = 0; i <= ORBIT_SEGMENTS; i++) {
     const t = jd + (i / ORBIT_SEGMENTS) * periodeTage;
-    punkte.push(scaledPositionAt(id, index, t, s));
+    const p = scaledPositionAt(id, index, t, s);
+    if (ankerJetzt === null) { punkte.push(p); continue; }
+    const ankerDann = scaledPositionAt(body.parent!, index, t, s);
+    punkte.push({
+      x: ankerJetzt.x + (p.x - ankerDann.x),
+      y: ankerJetzt.y + (p.y - ankerDann.y),
+      z: ankerJetzt.z + (p.z - ankerDann.z),
+    });
   }
   return punkte;
 }
@@ -2395,8 +2433,29 @@ export function createStarfield(scene: THREE.Scene): THREE.Points {
   geometrie.setAttribute('color', new THREE.BufferAttribute(farben, 3));
   geometrie.setAttribute('size', new THREE.BufferAttribute(groessen, 1));
 
-  const punkte = new THREE.Points(geometrie, new THREE.PointsMaterial({
-    vertexColors: true, sizeAttenuation: false, size: 2,
+  // Bewusst ShaderMaterial statt PointsMaterial: Letzteres ignoriert ein
+  // Attribut `size` pro Stern und zeichnete alle gleich groß — die
+  // Helligkeitsstaffelung, an der man Sternbilder erkennt, käme nie auf den
+  // Schirm. Das Attribut `color` deklariert three.js bei vertexColors selbst.
+  const punkte = new THREE.Points(geometrie, new THREE.ShaderMaterial({
+    vertexColors: true,
+    transparent: true,
+    depthWrite: false,
+    vertexShader: `
+      attribute float size;
+      varying vec3 vFarbe;
+      void main() {
+        vFarbe = color;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = size;
+      }`,
+    fragmentShader: `
+      varying vec3 vFarbe;
+      void main() {
+        float d = length(gl_PointCoord - vec2(0.5));
+        if (d > 0.5) discard;
+        gl_FragColor = vec4(vFarbe, smoothstep(0.5, 0.15, d));
+      }`,
   }));
   punkte.frustumCulled = false;
   scene.add(punkte);
@@ -2428,7 +2487,7 @@ git commit -m "Sternenhintergrund aus HYG-Katalog mit korrekten Sternbildern"
 
 **Files:**
 - Create: `src/render/postfx.ts`
-- Modify: `src/render/scene.ts`, `src/app/main.tsx`
+- Modify: `src/render/bodies.ts` (Sonne auf die Bloom-Ebene legen), `src/render/scene.ts`, `src/app/main.tsx`
 - Test: `src/render/postfx.test.ts`
 
 **Interfaces:**
