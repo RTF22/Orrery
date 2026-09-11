@@ -41,7 +41,7 @@ Einstellung, kein fest verdrahteter Kompromiss.
 | Kino-Modus | Kuratierte Szenen-Playlist + prozedurale Variation + Ambient-Sound (Phase 5) | Kuratiert garantiert gute Bilder; Variation verhindert das Wiederholungsgefühl. Bewusst **ohne** Info-Inserts. |
 | Plattform | Desktop-first, Mobile vollwertig bedienbar | Das Hauptszenario ist inhärent Desktop; Mobile bekommt echte Touch-Bedienung und automatisch abgesenkte Qualität. |
 | Stack | Three.js (imperativ) + TypeScript + Vite + React + Zustand + Tailwind | Die 3D-Schleife bleibt vom UI-Rendering unberührt; ein serialisierbarer Store deckt Presets, URL-Sharing und Wiederherstellung mit einem Mechanismus ab. Bewusst **nicht** react-three-fiber. |
-| Auslieferung | Git lokal + GitHub Pages via GitHub Actions | Rein statisch, kein Backend; macht das URL-Sharing tatsächlich nutzbar. |
+| Auslieferung | Git lokal, Repository **privat bis zur Fertigstellung**; GitHub Pages erst zum Abschluss | Rein statisch, kein Backend. Während der Entwicklung baut und testet die CI nur — veröffentlicht wird nichts. |
 | Reihenfolge | Durchstich → **Kino-Modus** → Katalog → Komfort → Sound/Politur | Auf Wunsch des Auftraggebers wurde der Kino-Modus vorgezogen. Der übliche Nachteil (frühe Szenen zeigen nur Planeten) wird dadurch entschärft, dass Szenen reine Daten sind — der spätere Katalog-Ausbau fügt Szenen hinzu, statt die Engine zu ändern. |
 
 ---
@@ -557,12 +557,31 @@ Solarsystem/
 
 ## 15. Build und Auslieferung
 
+**Das Repository ist privat und bleibt es bis zur Fertigstellung.** Während der
+gesamten Entwicklung wird nichts veröffentlicht.
+
+Das hat eine Konsequenz, die man kennen muss: Eine GitHub-Pages-Seite ist öffentlich
+erreichbar, **auch wenn das Repository privat ist** — Zugriffsschutz für Pages gibt es
+nur in Enterprise-Tarifen, und Pages aus einem privaten Repository heraus setzt
+ohnehin einen kostenpflichtigen Plan voraus. „Privates Repo" und „veröffentlichte
+Seite" sind also zwei verschiedene Dinge. Deshalb:
+
+- **Während der Entwicklung:** CI baut und testet ausschließlich. Kein Deployment.
+  Ansehen lokal über `npm run dev` beziehungsweise `npm run preview`.
+- **Der Pages-Workflow wird vorbereitet, aber nicht scharf geschaltet** — als
+  `workflow_dispatch` statt als Push-Trigger. Damit ist die Veröffentlichung ein
+  bewusster Knopfdruck und kann nicht versehentlich durch einen Push ausgelöst werden.
+- **Zur Fertigstellung** und nur nach ausdrücklicher Freigabe: Trigger umstellen und
+  veröffentlichen.
+
+Weiteres zum Build:
+
 - **Vite** mit TypeScript im `strict`-Modus, dazu ESLint und Prettier
-- **GitHub Actions:** bei Push auf `main` nacheinander `npm ci`, `npm test`,
-  `npm run build`, dann Veröffentlichung auf GitHub Pages. Der Build läuft nur durch,
-  wenn die Tests bestehen.
-- `base` in `vite.config.ts` auf den Repository-Namen setzen, da Pages in einem
-  Unterpfad liegt
+- **GitHub Actions** bei Push auf `main`: `npm ci`, `npm test`, `npm run build`. Der
+  Durchlauf ist nur grün, wenn die Tests bestehen.
+- `base` in `vite.config.ts` auf den Repository-Namen setzen, da Pages später in einem
+  Unterpfad liegt — gleich zu Beginn konfigurieren, damit die spätere
+  Veröffentlichung keine Pfadüberraschungen bringt
 - Kein Backend, keine Laufzeitabhängigkeit von einem Server
 
 ---
@@ -623,6 +642,8 @@ Jede Phase ist für sich lauffähig und vorzeigbar.
 - Qualitätsstufen inklusive automatischer Erkennung
 - Texturkompression (KTX2), Ladezeit gemessen und dokumentiert
 - `ASSETS.md` vollständig
+- Erst danach und nur auf ausdrückliche Freigabe: Pages-Veröffentlichung scharf
+  schalten (siehe Abschnitt 15)
 
 ---
 
