@@ -9,10 +9,14 @@ const betrag = (v: { x: number; y: number; z: number }) =>
 
 describe('Mondbahn', () => {
   it('hält den Mond im bekannten Abstandsbereich zur Erde', () => {
-    // Gemessen vom Erde-Mond-Schwerpunkt aus (unser "earth"-Datensatz ist
-    // der Schwerpunkt, siehe Kommentar in data/bodies/earth.ts): das liegt
-    // rund 4700 km unter den erdmittelpunktbezogenen Lehrbuchwerten
-    // (Perigäum ≈ 363 300 km, Apogäum ≈ 405 500 km).
+    // Der Test bildet positionAt('moon') - positionAt('earth'). Der Mond
+    // ist relativ zu genau dem Erde-Mond-Schwerpunkt modelliert, den der
+    // "earth"-Datensatz repräsentiert (siehe Kommentar in
+    // data/bodies/earth.ts) — dieser gemeinsame Term kürzt sich in der
+    // Differenz exakt heraus. Gemessen wird also unmittelbar die Mondbahn
+    // selbst, a(1∓e), und die Werte landen entsprechend auf den bekannten
+    // Perigäums-/Apogäumsdistanzen (≈363 300 km / ≈405 500 km), nicht
+    // darunter.
     let min = Infinity, max = -Infinity;
     for (let t = 0; t < 28; t += 0.25) {
       const mond = positionAt('moon', bodyIndex, J2000 + t);
