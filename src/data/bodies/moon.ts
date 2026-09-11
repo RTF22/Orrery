@@ -40,7 +40,14 @@ export const moon: Body = {
     L: 218.3164477,        LDot: 481266.511625,
     lp: 83.3532465,        lpDot: 4069.0137287,
     node: 125.0445479,     nodeDot: -1934.1362891,
-    frame: 'parentEquator',
+    // frame: 'ecliptic', nicht 'parentEquator' — die Inklination i = 5.145°
+    // dieses Datensatzes ist gegen die Ekliptik gemessen, nicht gegen den
+    // Erdäquator. Die Neigung zum Erdäquator ist ohnehin nicht konstant: sie
+    // pendelt im 18,6-Jahres-Knotenzyklus zwischen 18,3° und 28,6°
+    // (23,44° ± 5,145°). 'parentEquator' ist für die Jupiter- und
+    // Saturnmonde in Phase 3 reserviert, deren Elemente tatsächlich auf die
+    // Äquator-/Laplace-Ebene ihres Planeten bezogen sind.
+    frame: 'ecliptic',
   },
   physical: {
     // NASA/JPL NSSDC, Moon Fact Sheet, Stand 2023 (über Webarchiv abgerufen,
