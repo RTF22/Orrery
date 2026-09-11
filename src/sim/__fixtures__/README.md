@@ -47,11 +47,13 @@ Kontrollwert unten) — 40 Anfragen statt 8, aber gleiches Ergebnis.
 Die fünf Kalenderdaten stammen aus dem Implementierungsplan, verteilt über das
 Gültigkeitsfenster der Bahnelemente (1800–2050). Das zugehörige Julianische
 Datum wird **von Horizons selbst übernommen**, nicht selbst berechnet — damit
-ist jede Frage nach einem TDB/UTC-Versatz durch die Quelle beantwortet. Bei
-zwei der fünf Kalenderdaten weicht das von Horizons gemeldete JD spürbar vom
-naiv gerundeten Wert ab (± 0,5 bzw. rund 29 Tage) — Grund ist vermutlich eine
-Verwechslung von Kalenderdatum und JD-Näherung in einer früheren Notiz; die
-Werte unten sind die von Horizons tatsächlich gemeldeten:
+ist jede Frage nach einem TDB/UTC-Versatz durch die Quelle beantwortet. Ein
+zunächst versuchter JD-Schätzwert für 1850-07-04 traf tatsächlich den
+1850-Jan-01 (rund 184 Tage daneben), einer für 2040-03-20 den 2040-Feb-21
+(28 Tage daneben) — beide wurden verworfen und stattdessen mit je einer
+Einzelabfrage (`START_TIME`/`STOP_TIME`/`STEP_SIZE='1d'` für das exakte
+Kalenderdatum) durch das von Horizons gemeldete JD ersetzt. Die Werte unten
+sind die für alle acht Körper tatsächlich verwendeten:
 
 | Kalenderdatum (00:00 TDB) | JDTDB (von Horizons gemeldet) |
 |---|---|
