@@ -16,6 +16,14 @@ export interface AppState {
   camera: {
     mode: CameraMode; targetId: string;
     distance: number; azimuth: number; elevation: number;
+    /**
+     * Nur für den freien Modus: der Zeitpunkt, zu dem der Bezugspunkt
+     * eingefroren wurde. Gespeichert wird der Zeitpunkt und nicht die
+     * Koordinate, damit der Punkt bei einem Maßstabswechsel mitskaliert.
+     * `null` bedeutet „aktuelle Position" — beim Standardziel Sonne, die im
+     * Ursprung ruht, ist das ohnehin derselbe Punkt.
+     */
+    freezeJd: number | null;
   };
   /** Nur Abweichungen vom Standard „sichtbar" — siehe toggleVisible in index.ts. */
   visible: Record<string, boolean>;

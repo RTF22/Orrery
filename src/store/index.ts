@@ -10,7 +10,10 @@ export const DEFAULT_STATE: AppState = {
     orbits: true, labels: true, markers: true,
     bloom: true, brightness: 1, lightFalloff: 2,
   },
-  camera: { mode: 'free', targetId: 'sun', distance: 8e8, azimuth: 0.6, elevation: 0.5 },
+  camera: {
+    mode: 'free', targetId: 'sun', distance: 8e8,
+    azimuth: 0.6, elevation: 0.5, freezeJd: null,
+  },
   visible: {},
   quality: { tier: 'auto' },
   ui: { hidden: false, panels: { time: true, scale: true, camera: true, tree: true }, language: 'de' },

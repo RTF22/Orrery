@@ -41,7 +41,15 @@ export function CameraPanel(): React.JSX.Element {
               key={modus}
               type="button"
               aria-pressed={camera.mode === modus}
-              onClick={() => { setCamera({ mode: modus }); }}
+              onClick={() => {
+                // Beim Wechsel in den freien Modus wird der Bezugspunkt auf
+                // die aktuelle Position des Ziels festgelegt; die beiden
+                // mitführenden Modi brauchen keinen.
+                setCamera({
+                  mode: modus,
+                  freezeJd: modus === 'free' ? useStore.getState().time.jd : null,
+                });
+              }}
               className={`rounded border px-2 py-1 ${
                 camera.mode === modus
                   ? 'border-sky-300/60 bg-sky-400/20'

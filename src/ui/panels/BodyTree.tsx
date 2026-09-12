@@ -34,14 +34,16 @@ function Zeile({ knoten, tiefe }: { knoten: TreeNode; tiefe: number }): React.JS
   const name = t(knoten.body.info.nameKey);
 
   const fokussieren = (): void => {
-    const { camera, scale } = useStore.getState();
+    const { camera, scale, time } = useStore.getState();
     const radius = scaledRadius(bodyIndex[knoten.body.id] ?? knoten.body, scale);
     setCamera({
       targetId: knoten.body.id,
       distance: Math.max(radius * FOKUS_FAKTOR, FOKUS_MIN_KM),
-      // Im freien Modus hinge die Kamera weiter am Ursprung — ein Klick auf
-      // einen Körper meint aber „zeig ihn mir".
-      mode: camera.mode === 'free' ? 'attached' : camera.mode,
+      // Im freien Modus wird die Position des Körpers als Bezugspunkt
+      // eingefroren: Drehen und Zoomen wirken ab jetzt auf ihn, er zieht mit
+      // der Zeit aber daran vorbei. Geheftet und Verfolgung führen ihn
+      // ohnehin mit und brauchen keinen festen Punkt.
+      freezeJd: camera.mode === 'free' ? time.jd : null,
     });
   };
 

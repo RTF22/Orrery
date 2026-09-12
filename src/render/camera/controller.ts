@@ -17,7 +17,7 @@ const normiere = (v: Vec3): Vec3 => {
 
 /** Ziel-Transform je Modus — hier steckt der ganze Modusunterschied. */
 export function targetFor(state: AppState, jd: number, s: ScaleSettings): CameraTarget {
-  const { mode, targetId, distance, azimuth, elevation } = state.camera;
+  const { mode, targetId, distance, azimuth, elevation, freezeJd } = state.camera;
   const anker = scaledPositionAt(targetId, bodyIndex, jd, s);
 
   if (mode === 'follow') {
@@ -34,8 +34,14 @@ export function targetFor(state: AppState, jd: number, s: ScaleSettings): Camera
   }
 
   // 'free' und 'attached' teilen sich die Kugelkoordinaten; der Unterschied
-  // liegt allein im Anker (Ursprung beziehungsweise mitgeführter Körper).
-  const basis = mode === 'attached' ? anker : { x: 0, y: 0, z: 0 };
+  // liegt allein im Anker. Geheftet führt den Körper mit, frei friert seine
+  // Position zum Zeitpunkt der Auswahl ein: Gedreht und gezoomt wird um
+  // diesen Punkt, der Körper zieht mit der Zeit daran vorbei. Ohne
+  // eingefrorenen Zeitpunkt bleibt es beim Ursprung, solange die Sonne das
+  // Ziel ist — der Standardfall „Systemübersicht".
+  const basis = mode === 'attached'
+    ? anker
+    : scaledPositionAt(targetId, bodyIndex, freezeJd ?? jd, s);
   return {
     positionKm: {
       x: basis.x + distance * Math.cos(elevation) * Math.cos(azimuth),
@@ -80,7 +86,8 @@ export function createCameraController(camera: THREE.PerspectiveCamera): CameraC
         z: ziel.positionKm.z - anker.z,
       };
 
-      const schluessel = `${state.camera.mode}|${state.camera.targetId}`;
+      const schluessel =
+        `${state.camera.mode}|${state.camera.targetId}|${state.camera.freezeJd ?? 'jetzt'}`;
       if (letzterAnker !== null && schluessel !== letzterSchluessel) {
         versatz = {
           x: versatz.x + letzterAnker.x - anker.x,
