@@ -12,6 +12,11 @@ export function startCinema(): void {
   const { setCinema, setCamera } = useStore.getState();
   setCinema({ running: true, elapsedSec: 0 });
   setCamera({ mode: 'cinema' });
+  // Vollbild braucht eine Nutzergeste; der Aufruf steht deshalb hier im
+  // Tasten- beziehungsweise Klickpfad und nicht in einem Effekt.
+  if (typeof document !== 'undefined' && document.fullscreenElement === null) {
+    void document.documentElement.requestFullscreen?.().catch(() => { /* verweigert */ });
+  }
 }
 
 export function stopCinema(): void {

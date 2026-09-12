@@ -8,6 +8,7 @@ import { DisplayPanel } from './panels/DisplayPanel';
 import { BodyTree } from './panels/BodyTree';
 import { useShortcuts, SHORTCUTS_PANEL } from './shortcuts/useShortcuts';
 import { useIdleHide } from './idle';
+import { useWakeLock } from './wakeLock';
 
 /** Belegung für die Übersicht — Wirkung als Sprachschlüssel. */
 const KUERZEL: readonly (readonly [string, string])[] = [
@@ -48,6 +49,8 @@ export function App(): React.JSX.Element | null {
   const untaetig = useIdleHide();
   const versteckt = useStore((s) => s.ui.hidden);
   const laeuftKino = useStore((s) => s.cinema.running);
+  // Solange der Film läuft, darf der Bildschirm nicht abschalten.
+  useWakeLock(laeuftKino);
   const zeigeKuerzel = useStore((s) => s.ui.panels[SHORTCUTS_PANEL] === true);
 
   // Im Kino-Modus verschwindet die Oberfläche nach kurzer Ruhe von selbst;
