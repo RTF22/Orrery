@@ -113,6 +113,7 @@ export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandl
           renderPos: { x: mesh.position.x, y: mesh.position.y, z: mesh.position.z },
           radiusUnits: mesh.scale.x,
           sichtbar: mesh.visible,
+          istMond: body.kind === 'moon',
         }];
       });
       labels.update(eintraege, ctx.camera, state.display.labels, state.display.markers);
