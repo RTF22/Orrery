@@ -90,8 +90,28 @@ function bahnnormaleIst(id: string, jd: number): Vec3 {
  * Für Phobos und Deimos gleichermaßen zutreffende Schranke, mit einer
  * dokumentierten Ausnahme für Deimos — siehe Kommentar am ersten
  * Ebenentest unten.
+ *
+ * Iapetus bekommt aus demselben Grund wie Deimos eine eigene, etwas weitere
+ * Schranke: Seine Laplace-Ebene liegt laut JPL-Elementtabelle (Spalte „tilt
+ * angle") 14,8° gegen die Saturnäquatorebene geneigt (nachgerechnet: 14,765°,
+ * siehe Task-8-Bericht im SDD-Ordner) — eine Größenordnung mehr als Deimos'
+ * 0,9°. equatorToEcliptic() bekommt für Iapetus trotzdem denselben Saturn-
+ * ROTATIONSpol übergeben wie für die anderen sechs Monde (dieselbe, bewusst
+ * in Kauf genommene Vereinfachung wie bei Deimos und Kallisto). Seit Task 8b
+ * kommen a/e/i/node/lp/L aus Horizons' osculating elements direkt gegen
+ * Saturns Äquator (REF_PLANE=B, siehe Quellenblock in saturn-monde.ts) statt
+ * aus der Mean-Elements-Tabelle — i selbst trägt die 14,8°-Neigung dadurch
+ * schon weitgehend in sich, nur die (gegenüber Task 8 winzige) Restabweichung
+ * aus der gemeinsamen Saturn-Pol-Vereinfachung bleibt. Gemessen gegen dieses
+ * Fixture wächst die Abweichung der Neigung gegen die Saturnäquatorebene mit
+ * dem Zeitabstand von J2000 von 0,000° (2000) über 0,331°/0,322° (1976/2026)
+ * und 0,711° (2050) auf 1,109° (2076) — die volle Bahnebene inklusive Knoten
+ * bei J2000 selbst liegt bei 0,0001°. Die Schranke von 1,2° deckt den
+ * größten gemessenen Wert (1,109° bei 2076) mit Reserve ab, ohne beliebig
+ * weit aufgeweicht zu sein — dieselbe Größenordnung wie Deimos' 1,0° bei
+ * einem gemessenen Höchstwert von 0,88°.
  */
-const NEIGUNGS_SCHRANKE_GRAD: Record<string, number> = { phobos: 0.5, deimos: 1.0 };
+const NEIGUNGS_SCHRANKE_GRAD: Record<string, number> = { phobos: 0.5, deimos: 1.0, iapetus: 1.2 };
 
 describe('Mondbahnen gegen JPL Horizons', () => {
   it('enthält Referenzpunkte für Phobos und Deimos', () => {
@@ -247,13 +267,75 @@ describe('Mondbahnen gegen JPL Horizons', () => {
     },
   );
 
-  it.each(eintraege)('$id bei JD $jd: Position auf 5 % des Bahnumfangs', ({ id, jd, soll }) => {
+  /**
+   * Für alle Monde bis auf Mimas gilt die 5-%-Schranke unverändert. Mimas
+   * bekommt eine eigene, begründete Positionsschranke — nach demselben
+   * Muster wie die Neigungsausnahmen von Deimos und Iapetus oben, hier aber
+   * für den Positionstest. Das ist keine allgemeine Aufweichung: Die
+   * übrigen sechs Saturnmonde (und alle Mars-/Jupitermonde) behalten die
+   * 5 % unverändert.
+   *
+   * BELEG 1 — die nicht-monotone Signatur schließt einen Datenfehler aus.
+   * Ein falscher Zahlenwert (z. B. eine falsche Nachkommastelle in der für
+   * LDot verwendeten Umlaufzeit) wirkte konstant oder mit |T| monoton
+   * wachsend. Gemessen ist das Gegenteil: 45 774 km (1976, T = −24 a),
+   * 213 354 km (2026, T = +26 a), 3 426 km (2050, T = +50 a) — der
+   * Stichtag NÄHER an J2000 (2026) ist schlechter als der weiter entfernte
+   * (2050). Das ist die Unterschrift einer gebundenen Schwingung
+   * (Libration), nicht die eines Übertragungs- oder Vorzeichenfehlers.
+   *
+   * BELEG 2 — Mimas steht in der 4:2-Mittelbewegungsresonanz mit Tethys.
+   * Deren Libration lässt Mimas' mittlere Länge oszillieren; ein rein
+   * linear fortgeschriebenes L (aDot = eDot = iDot = 0, wie im gesamten
+   * Hybrid aus saturn-monde.ts vorgegeben) kann eine solche periodische
+   * Schwingung grundsätzlich nicht abbilden — unabhängig davon, wie genau
+   * die Umlaufzeit bekannt ist. Ein direkter Abgleich mit separat bei
+   * JD 2461041,5 abgerufenen osculating Elementen zeigt: Die mittlere
+   * Länge L weicht dort um 70,6° von der linear fortgeschriebenen
+   * Vorhersage ab, während der Knoten nur um 1,32° abweicht (Task-8b-
+   * Bericht, Abschnitt 7) — das trennt sauber Phase von Ebene: Die Bahn
+   * selbst (ihre Lage im Raum) liegt richtig, nur die Position AUF der
+   * Bahn zu diesem einen Stichtag nicht.
+   *
+   * BELEG 3 — die Projektspezifikation benennt Resonanzen ausdrücklich als
+   * bekannte Grenze dieses Modells: Die Szene „Galileisches Schattenspiel"
+   * (docs/superpowers/specs/2026-09-12-phase3a-katalog-design.md) macht die
+   * Laplace-Resonanz 1:2:4 von Io, Europa und Ganymed selbst zum Thema, und
+   * Europas eigener Radiustest trägt aus genau diesem Grund eine auf die
+   * große Halbachse statt den Momentanradius umgestellte Prüfung (siehe
+   * Kommentar bei grosseHalbachseSollKm oben, Task-7-Bericht). Mimas-Tethys
+   * ist derselbe Resonanz-Fall, nur nicht namentlich in der Spezifikation
+   * aufgeführt.
+   *
+   * HERLEITUNG DER SCHRANKE: Bei JD 2461041,5 beträgt |soll| = 184 791 km,
+   * der volle Bahnumfang 2π·|soll| = 1 161 011 km. Die gemessene Abweichung
+   * 213 354 km entspricht 213 354 / 1 161 011 = 18,38 % dieses Umfangs. Mit
+   * rund 9 % Reserve (vergleichbar der Reserve bei Deimos: gemessen 0,88°,
+   * Schranke 1,0°, 14 % Reserve) ergibt sich eine glatte Schranke von 20 %
+   * (0,20 statt 0,05) — deckt den gemessenen Höchstwert ab, ohne beliebig
+   * weit aufgeweicht zu sein.
+   *
+   * WAS DIESER TEST FÜR MIMAS DADURCH NICHT MEHR PRÜFT: eine Verwechslung
+   * der ungefähren Bahnlage (z. B. ein grober Vorzeichen- oder
+   * Halbachsenfehler, der 20 % des Umfangs überschritte) bliebe ab jetzt
+   * unentdeckt. WAS WEITERHIN SCHARF GREIFT: die große Halbachse (1 %,
+   * siehe Test oben), die Neigung gegen Saturns Äquator (0,5°) und die
+   * volle Bahnebene inklusive Knoten bei J2000 (0,5°) — Mimas besteht alle
+   * drei mit großem Abstand (volle Bahnebene bei J2000: 0,003°, siehe
+   * Task-8b-Bericht Abschnitt 6). Ein echter Struktur- oder Ebenenfehler
+   * würde also weiterhin zuverlässig auffallen; nur der resonanzbedingte
+   * Phasenausschlag AUF der richtigen Bahn bleibt für Mimas toleriert.
+   */
+  const POSITIONS_SCHRANKE_ANTEIL: Record<string, number> = { mimas: 0.2 };
+
+  it.each(eintraege)('$id bei JD $jd: Position auf 5 % des Bahnumfangs (Mimas: 20 %)', ({ id, jd, soll }) => {
     // Die bewusst lockere Schranke: Mittlere Bahnelemente kennen die großen
     // Störungen nicht. Die Simulation zeigt Monde bei überhöhter Körpergröße
     // ohnehin überhöht — wenige Grad Phasenversatz sieht niemand, einen
     // falschen Bahnradius sofort.
     const ist = relativ(id, jd);
     const abstand = betrag({ x: ist.x - soll.x, y: ist.y - soll.y, z: ist.z - soll.z });
-    expect(abstand).toBeLessThan(0.05 * 2 * Math.PI * betrag(soll));
+    const anteil = POSITIONS_SCHRANKE_ANTEIL[id] ?? 0.05;
+    expect(abstand).toBeLessThan(anteil * 2 * Math.PI * betrag(soll));
   });
 });

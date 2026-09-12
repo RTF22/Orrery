@@ -13,6 +13,7 @@ describe('Körperkatalog', () => {
     expect(bodies.map((b) => b.id)).toEqual(
       expect.arrayContaining([
         'moon', 'phobos', 'deimos', 'io', 'europa', 'ganymede', 'callisto',
+        'mimas', 'enceladus', 'tethys', 'dione', 'rhea', 'titan', 'iapetus',
       ]),
     );
   });
@@ -140,5 +141,62 @@ describe('Katalog-Invarianten', () => {
     const periode = (id: string): number => 36525 / ((bodyIndex[id]?.orbit?.LDot ?? 0) / 360);
     expect(periode('europa') / periode('io')).toBeCloseTo(2, 1);
     expect(periode('ganymede') / periode('io')).toBeCloseTo(4, 1);
+  });
+
+  it('führt Mimas, Enceladus, Tethys, Dione, Rhea, Titan und Iapetus in der Saturnäquatorebene', () => {
+    for (const id of ['mimas', 'enceladus', 'tethys', 'dione', 'rhea', 'titan', 'iapetus']) {
+      const mond = bodyIndex[id];
+      expect(mond?.parent).toBe('saturn');
+      expect(mond?.orbit?.frame).toBe('parentEquator');
+    }
+    // Iapetus' Inklination liegt bei rund 15,5° gegen Saturns Äquator (seine
+    // eigene Laplace-Ebene ist laut JPL-Elementtabelle um 14,8° dagegen
+    // geneigt, siehe Quellenblock in saturn-monde.ts) und liegt deshalb
+    // bewusst außerhalb dieser auf die übrigen, fast äquatornahen Monde
+    // zugeschnittenen Prüfung.
+    for (const id of ['mimas', 'enceladus', 'tethys', 'dione', 'rhea', 'titan']) {
+      expect(bodyIndex[id]?.orbit?.i ?? 99).toBeLessThan(2);
+    }
+  });
+
+  it('trifft die bekannten Bahnradien der Saturnmonde', () => {
+    // Kontrollrechnung der Quelle: große Halbachse zurück in Kilometer.
+    // Seit Task 8b stammt a aus Horizons' osculating elements (siehe
+    // Quellenblock in saturn-monde.ts) statt aus der JPL-Mean-Elements-
+    // Tabelle — die erwarteten Werte hier sind deshalb die Rückrechnungen
+    // aus dieser Quelle, nicht mehr die (auf sechs Stellen gerundeten)
+    // Tabellenwerte. Kleine Differenzen zur Mean-Elements-Tabelle (bis rund
+    // 870 km bei Iapetus) sind real und erwartet: Die osculating Elemente
+    // enthalten die kurzperiodische Momentaufnahme zur Epoche, die
+    // gemittelte Tabelle dagegen nicht (siehe Task-8b-Bericht).
+    expect((bodyIndex['mimas']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(186036.8234, -2);
+    expect((bodyIndex['enceladus']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(238419.8706, -2);
+    expect((bodyIndex['tethys']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(294980.2561, -2);
+    expect((bodyIndex['dione']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(377652.1841, -2);
+    expect((bodyIndex['rhea']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(527225.2657, -2);
+    expect((bodyIndex['titan']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(1221934.9070, -2);
+    expect((bodyIndex['iapetus']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(3562568.0967, -2);
+  });
+
+  // Der Sondertest aus dem Task-8-Brief: Mimas muss außerhalb des
+  // Ringsystems laufen. Der Brief prüft dafür ursprünglich gegen
+  // `bodyIndex['saturn'].appearance.rings.outerKm` — dieses Feld setzt erst
+  // Task 12, hier also noch `undefined`. Ersatzweise wird gegen den
+  // Literalwert der A-Ring-Außenkante aus derselben Quellenfamilie geprüft
+  // (NASA/JPL NSSDC Saturnian Rings Fact Sheet, Zeile „A outer edge",
+  // https://nssdc.gsfc.nasa.gov/planetary/factsheet/satringfact.html,
+  // abgerufen am 12.09.2026: 136 780 km — nicht die rund 140 200 km aus dem
+  // Task-8-Brief, die eher dem knapp weiter außen liegenden F-Ring
+  // entsprechen, 139 826 km laut derselben Tabelle; für den Zweck dieses
+  // Tests, Mimas' Bahn zweifelsfrei außerhalb jedes sichtbaren Rings zu
+  // halten, ist der Unterschied ohne Bedeutung).
+  //
+  // TODO(Task 12): Sobald `appearance.rings.outerKm` bei Saturn gesetzt ist,
+  // diesen Literalwert durch `bodyIndex['saturn']?.appearance.rings?.outerKm`
+  // ersetzen, damit der Ringaußenradius nicht dauerhaft doppelt im Projekt
+  // steht.
+  it('hält Mimas außerhalb des Ringsystems', () => {
+    const ringAussenKm = 136780;
+    expect((bodyIndex['mimas']?.orbit?.a ?? 0) * AU_KM).toBeGreaterThan(ringAussenKm);
   });
 });

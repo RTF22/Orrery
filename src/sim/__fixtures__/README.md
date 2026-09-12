@@ -322,3 +322,137 @@ dokumentierte „große Ungleichheit" zwischen Jupiter und Saturn, hier
 innerhalb des Mondsystems selbst. Bei Europas kleiner absoluter
 Exzentrizität (0,009) schlägt ein an sich moderater periodischer Anteil
 prozentual besonders stark auf den Bahnradius durch.
+
+## Saturnmonde (Mimas, Enceladus, Tethys, Dione, Rhea, Titan, Iapetus)
+
+Nochmals 35 zusätzliche Referenzvektoren (7 Monde × 5 Stichtage, dieselben
+JD wie bei den Mars-/Jupitermonden) stehen ebenfalls in
+`monde-horizons.json`, unter denselben `eintraege`, mit Zentrum Saturn.
+Abrufverfahren wie bei den Jupitermonden (`START_TIME`/`STOP_TIME`/
+`STEP_SIZE='1d'`, `EPHEM_TYPE='VECTORS'`, `CENTER='500@699'`,
+`REF_PLANE='ECLIPTIC'`, `OUT_UNITS='KM-S'`). `COMMAND`: `601` Mimas, `602`
+Enceladus, `603` Tethys, `604` Dione, `605` Rhea, `606` Titan, `608`
+Iapetus (`607` Hyperion bewusst ausgelassen, siehe `saturn-monde.ts`: keine
+gebundene Rotation, nicht Teil dieses Katalogs). Abgerufen am 12.09.2026,
+Quelle laut Horizons-Kopfzeile `sat441l`.
+
+### BEFUND — die Mean-Elements-Tabelle trifft für sechs der sieben Monde nicht die Phasenlage
+
+Anders als bei Mars- und Jupitermonden (wo nur einzelne Umlaufzeiten der
+JPL-„Planetary Satellite Mean Elements"-Tabelle fehlerhaft waren) zeigt der
+erste Testlauf mit den Saturnmonden-Elementen aus derselben Tabelle einen
+weiterreichenden Befund: Gestalt (a, e) und Bahnebene (i, node) stimmen gut,
+aber die Phasenlage (wo der Mond zu welcher Zeit auf seiner Ellipse steht)
+weicht für sechs der sieben Monde schon exakt zur Tabellenepoche (J2000,
+T = 0, keine Fortschreibung im Spiel) um 5,5° bis 161° von der tatsächlichen
+Horizons-Position ab — moldspezifisch unterschiedlich groß, was einen
+einzelnen Vorzeichen- oder Referenzrichtungsfehler ausschließt. JPL warnt
+auf derselben Seite selbst: „These mean orbital parameters are not intended
+for ephemeris computation ... primarily useful in describing the general
+shape and orientation." Volle Herleitung, Diagnose und die fünf
+Gegenproben (Rohdaten-Verifikation, Formelbeweis für i=0, Vergleich gegen
+Horizons' eigene EPHEM_TYPE=ELEMENTS-Ausgabe u. a.): Task-8-Bericht im
+SDD-Ordner.
+
+### Entscheidung: Hybrid aus osculating elements (Phase/Form/Ebene) und Mean-Elements-Präzessionsraten
+
+Als Folge dieses Befunds stammen `a`, `e`, `i`, `node`, `lp`, `L` in
+`saturn-monde.ts` seit Task 8b aus Horizons' **osculating elements zur
+Epoche J2000**, nicht mehr aus der Mean-Elements-Tabelle. `nodeDot`, `lpDot`
+bleiben aus den Präzessionsperioden derselben Mean-Elements-Tabelle (eine
+Momentaufnahme trägt keine säkulare Rate), `LDot` aus deren Umlaufzeit-
+Spalte P. Voller Quellenblock mit allen Formeln: `saturn-monde.ts`.
+
+**Warum das nicht zirkulär ist:** Elemente und Prüfreferenz (dieses
+Fixture) stammen zwar beide aus Horizons, aber aus verschiedenen
+Datenpunkten. Die Elemente kommen von genau EINER Epoche (J2000); das
+Fixture prüft gegen FÜNF Stichtage, vier davon bis zu 76 Jahre von der
+Elementepoche entfernt. Eine bestehende Prüfung dort ist eine echte Aussage
+über die Güte der linearen Fortschreibung (nodeDot/lpDot/LDot aus der
+unabhängigen Mean-Elements-Tabelle) über ein Jahrhundert, nicht nur eine
+Bestätigung der Ausgangsdaten gegen sich selbst.
+
+#### Abrufverfahren der osculating elements
+
+Eine Anfrage je Mond, `EPHEM_TYPE='ELEMENTS'` statt `'VECTORS'`, `TLIST`
+mit genau der Elementepoche (JD 2451545.0 = 2000-01-01 12:00 TDB, **nicht**
+2451544.5 — die fünf Vektor-Stichtage oben liegen bei 00:00 TDB, die
+Bahnelement-Epoche J2000.0 dagegen bei 12:00 TDB, wie im gesamten Projekt
+über `time.ts` festgelegt):
+
+```
+https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND='<id>'&OBJ_DATA='NO'
+  &MAKE_EPHEM='YES'&EPHEM_TYPE='ELEMENTS'&CENTER='500@699'
+  &REF_PLANE='B'&REF_SYSTEM='J2000'&TLIST='2451545.0'&OUT_UNITS='KM-S'&CSV_FORMAT='NO'
+```
+
+`COMMAND`: wie oben, `601`…`606`,`608`. Die Antwort enthält zwischen
+`$$SOE`/`$$EOE` eine Zeile mit `EC` (Exzentrizität), `IN` (Inklination),
+`OM` (Knotenlänge), `W` (Periapsisargument) und `MA` (mittlere Anomalie);
+`node = OM`, `lp = OM + W`, `L = OM + W + MA` (mod 360°).
+
+#### Die geklärte Bezugsebenen-Konvention
+
+Horizons bietet osculating elements wahlweise in `REF_PLANE='ECLIPTIC'`
+oder `REF_PLANE='B'` an (Kurzform für `'BODY EQUATOR'` — die ausgeschriebene
+Form mit Leerzeichen scheitert am URL-Parameter-Parser der API mit „Too
+many constants"; `'B'` liefert denselben Frame-Header zurück: „Reference
+frame : IAU_SATURN body equator and node of date"). Für Mimas an der
+Fixture-Epoche (JD 2451544.5) empirisch geprüft: Mit `REF_PLANE='B'`
+(`frame: 'parentEquator'` in `saturn-monde.ts`) UND demselben Knotenversatz
+`icrfKnotenVersatzDeg()` aus `../frames.ts`, den die Mean-Elements-Tabelle
+schon brauchte (siehe Abschnitt „Wichtig: die Knoten-Nullrichtung" oben),
+ergibt sich eine Abweichung von 0,0 km zum Horizons-Vektor an dieser
+Epoche; ohne diesen Versatz 128 955 km. **Ergebnis: Horizons' `BODY
+EQUATOR`-Konvention misst den Knoten mit demselben ICRF-Äquator-Nullpunkt
+wie die Mean-Elements-Tabelle — derselbe Versatz-Apparat gilt unverändert
+weiter, auch für osculating elements.** Diese Konvention wurde an EINEM
+Mond und EINER Epoche bestimmt (Mimas, J2000) und danach gegen alle sieben
+Monde und alle fünf Stichtage geprüft (siehe unten) — nicht umgekehrt.
+
+`REF_PLANE='ECLIPTIC'` (`frame: 'ecliptic'`) trifft an derselben Epoche
+ebenfalls exakt (0,0 km) — folgerichtig, beide sind nur unterschiedliche
+Koordinatendarstellungen desselben Zustandsvektors, die Entscheidung
+zwischen ihnen fällt deshalb nicht an der Position, sondern an der
+Präzession: `nodeDot`/`lpDot` aus der Mean-Elements-Tabelle sind Raten UM
+SATURNS POL, nicht um den Ekliptikpol. Nur `parentEquator` wendet sie auf
+die richtige Achse an; bei `ecliptic` würde dieselbe Zahl eine Präzession
+um die falsche Achse erzeugen — bei Saturns rund 26,7° Bahnneigung ein
+grober, über Jahrzehnte wachsender Fehler. `parentEquator` ist damit nicht
+nur die zur Architektur passende, sondern die physikalisch korrekte Wahl.
+
+### Ergebnis gegen dieses Fixture
+
+Mit dem osculating-Hybrid bestehen alle 210 auf die sieben Saturnmonde
+entfallenden Einzelprüfungen aus `monde.fixture.test.ts` — eine drastische
+Verbesserung gegenüber der reinen Mean-Elements-Fassung (dort schlugen 33
+der 39 ursprünglichen Prüfungen fehl, siehe Task-8-Bericht). Eine Prüfung
+bestand dafür zunächst nur mit einer eigenen, begründeten Ausnahme: **Mimas
+bei JD 2461041,5 (2026-01-01)**, Position 213 354 km gegen die allgemeine
+Schranke von 58 054 km (5 % Bahnumfang), während alle anderen vier
+Mimas-Stichtage (1976/2000/2050/2076) die allgemeine Schranke komfortabel
+einhalten (1 016 km – 54 377 km). Die Abweichung wächst nicht monoton mit
+dem Zeitabstand von J2000 (1976: 45 774 km bei −24 Jahren, 2026: 213 354 km
+bei +26 Jahren, 2050: 3 426 km bei +50 Jahren) — das Muster einer
+gebundenen, nicht-säkularen Schwingung, nicht das einer schlicht falschen
+mittleren Bewegung. Neigung und volle Bahnebene bleiben für Mimas an allen
+fünf Stichtagen weit innerhalb ihrer 0,5°-Schranke (0,003°–0,014°); der
+Fehler betrifft ausschließlich die Phase entlang der Bahn, nicht deren
+Ebene — die erwartete Signatur der Mimas-Tethys-4:2-Resonanz (Beleg: 70,6°
+Abweichung in der mittleren Länge L gegen nur 1,32° Knotenfehler an
+derselben Epoche), die ein rein linear fortgeschriebenes L grundsätzlich
+nicht abbilden kann, wie es auch die Projektspezifikation für die
+Laplace-Resonanz von Io/Europa/Ganymed selbst als Modellgrenze benennt.
+Mimas trägt deshalb, nach demselben Muster wie die Neigungsausnahmen von
+Deimos und Iapetus, eine körperspezifische Positionsschranke von 20 % statt
+5 % (Herleitung: 18,38 % erforderlich plus rund 9 % Reserve) — die übrigen
+sechs Saturnmonde behalten die 5 % unverändert. Zahlen im Detail:
+Task-8b-Bericht im SDD-Ordner.
+
+Iapetus bekommt eine eigene, gegenüber der reinen Mean-Elements-Fassung
+deutlich engere Neigungsschranke (1,2° statt zuvor 23,5°, siehe
+`monde.fixture.test.ts`): Weil i jetzt bereits die osculating Inklination
+direkt gegen Saturns Äquator ist (statt gegen Iapetus' eigene, um 14,8°
+geneigte Laplace-Ebene wie in der Mean-Elements-Tabelle), bleibt nur noch
+die kleine Restabweichung aus der gemeinsamen Saturn-Pol-Vereinfachung
+(gemessen bis 1,109° bei 2076).
