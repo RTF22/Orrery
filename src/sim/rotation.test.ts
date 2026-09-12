@@ -107,7 +107,7 @@ describe('Bezugsebene parentEquator', () => {
       orbit: null,
       physical: {
         radiusKm: 1000, massKg: 1e24,
-        rotationPeriodH: 24, axialTiltDeg: 10, rotationAtEpochDeg: 0,
+        rotationPeriodH: 24, pole: { raDeg: 0, decDeg: 90 }, rotationAtEpochDeg: 0,
       },
       appearance: { textures: { albedo: '' }, color: '#fff' },
       info: { nameKey: '', descriptionKey: '' },
@@ -127,7 +127,7 @@ describe('Bezugsebene parentEquator', () => {
       },
       physical: {
         radiusKm: 10, massKg: 1e18,
-        rotationPeriodH: 24, axialTiltDeg: 0, rotationAtEpochDeg: 0,
+        rotationPeriodH: 24, pole: { raDeg: 0, decDeg: 90 }, rotationAtEpochDeg: 0,
       },
       appearance: { textures: { albedo: '' }, color: '#fff' },
       info: { nameKey: '', descriptionKey: '' },

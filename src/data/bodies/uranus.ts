@@ -18,12 +18,24 @@ export const uranus: Body = {
   physical: {
     // NASA/JPL NSSDC, Uranus Fact Sheet, Stand 2023 (über Webarchiv abgerufen,
     // siehe Kommentar in sun.ts zur Herkunft der Archivkopie).
-    // Uranus liegt fast auf der Seite (Achsneigung > 90°) und rotiert nach
-    // IAU-Konvention retrograd, daher negative Rotationsperiode.
+    // Uranus liegt fast auf der Seite und rotiert nach IAU-Konvention
+    // retrograd, daher negative Rotationsperiode.
     radiusKm: 25362,
     massKg: 8.6811e25,
     rotationPeriodH: -17.24,
-    axialTiltDeg: 97.77,
+    // Pol aus dem IAU-Bericht über Rotationselemente (Archinal et al.).
+    // Kontrollrechnung: Der Winkel zwischen diesem Pol und der eigenen
+    // Bahnnormale beträgt 82,23° — nicht die vielzitierten 97,77°. Das ist
+    // kein Widerspruch: Die IAU legt den Nordpol unabhängig vom Rotations-
+    // sinn als den Pol fest, der geometrisch nördlich der Ekliptik liegt,
+    // und die 97,77° stecken zusätzlich die Information "rückläufig" in die
+    // Zahl (180° − 82,23°). Diese Information trägt hier bereits das
+    // negative Vorzeichen von rotationPeriodH — zusammen mit dem alten
+    // axialTiltDeg: 97.77 (> 90°, ebenfalls "rückläufig") wäre die
+    // Rückläufigkeit doppelt gezählt gewesen: Kugel auf dem Kopf UND
+    // rückwärts drehend, im Bild also wieder vorwärts. Mit Pol (< 90° zur
+    // Bahnnormale) plus negativer Periode ist es einfach und richtig.
+    pole: { raDeg: 257.311, decDeg: -15.175 },
     rotationAtEpochDeg: 0,
   },
   appearance: {

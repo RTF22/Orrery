@@ -2,6 +2,8 @@ import { describe, it, expect } from 'vitest';
 import {
   EKLIPTIK_SCHIEFE_GRAD, poleVector, axialTiltDeg, equatorToEcliptic,
 } from './frames';
+import { bodies, bodyIndex } from '../data/index';
+import type { Vec3 } from './types';
 
 describe('poleVector', () => {
   it('liefert für den Himmelsnordpol die um die Schiefe gekippte Ekliptiknormale', () => {
@@ -80,5 +82,57 @@ describe('equatorToEcliptic', () => {
     // dieses z ins Negative und fällt hier auf.
     const pole = poleVector(268.06, 64.5);
     expect(equatorToEcliptic({ x: 0, y: 1, z: 0 }, pole).z).toBeGreaterThan(0);
+  });
+});
+
+describe('Pollagen des Katalogs', () => {
+  // Kontrollrechnung: Pol (IAU-Bericht) und Bahnelemente (JPL) stammen aus
+  // zwei unabhängigen Quellen. Der Winkel zwischen Polrichtung und
+  // Bahnnormale muss die veröffentlichte Neigung gegen die eigene Bahnebene
+  // ergeben — den „Obliquity to orbit"-Wert der NASA-Fact-Sheets. Gegen die
+  // Ekliptik zu prüfen wäre falsch: Nur die Erdbahn *ist* die Ekliptik.
+  const NEIGUNG_ZUR_BAHN: Record<string, number> = {
+    mercury: 0.034, venus: 177.36, earth: 23.44, moon: 6.68, mars: 25.19,
+    jupiter: 3.13, saturn: 26.73, uranus: 97.77, neptune: 28.32,
+  };
+
+  /** Bahnnormale in Ekliptikkoordinaten aus Neigung und Knotenlänge. */
+  function bahnnormale(iGrad: number, nodeGrad: number): Vec3 {
+    const i = (iGrad * Math.PI) / 180;
+    const n = (nodeGrad * Math.PI) / 180;
+    return { x: Math.sin(i) * Math.sin(n), y: -Math.sin(i) * Math.cos(n), z: Math.cos(i) };
+  }
+
+  const winkelGrad = (a: Vec3, b: Vec3): number =>
+    (Math.acos(Math.min(Math.max(a.x * b.x + a.y * b.y + a.z * b.z, -1), 1)) * 180) / Math.PI;
+
+  it('trifft die veröffentlichte Neigung gegen die eigene Bahnebene', () => {
+    for (const body of bodies) {
+      const erwartet = NEIGUNG_ZUR_BAHN[body.id];
+      if (erwartet === undefined || body.orbit === null) continue;
+      const pol = poleVector(body.physical.pole.raDeg, body.physical.pole.decDeg);
+      const normale = bahnnormale(body.orbit.i, body.orbit.node);
+      // Bei rückläufiger Rotation ist der IAU-Nordpol das entgegengesetzte
+      // Ende der Achse, und die Fact-Sheets messen dort über 90°. Diese
+      // Fallunterscheidung prüft mit, dass Polkonvention und Vorzeichen von
+      // rotationPeriodH zueinander passen.
+      const soll = body.physical.rotationPeriodH < 0 ? 180 - erwartet : erwartet;
+      expect(Math.abs(winkelGrad(pol, normale) - soll), `Neigung von ${body.id}`)
+        .toBeLessThan(0.3);
+    }
+  });
+
+  it('stellt die Sonnenachse 7,25 Grad gegen die Ekliptik', () => {
+    // Die Sonne hat keine Bahn; für sie ist die Ekliptik der Bezug.
+    const sonne = bodyIndex['sun']!;
+    const pol = poleVector(sonne.physical.pole.raDeg, sonne.physical.pole.decDeg);
+    expect(Math.abs(axialTiltDeg(pol) - 7.25)).toBeLessThan(0.1);
+  });
+
+  it('kennt für jeden Körper einen Pol', () => {
+    for (const body of bodies) {
+      expect(Number.isFinite(body.physical.pole.raDeg), body.id).toBe(true);
+      expect(Number.isFinite(body.physical.pole.decDeg), body.id).toBe(true);
+    }
   });
 });

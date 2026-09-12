@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { bodies, bodyIndex, getBody } from './index';
+import { poleVector, axialTiltDeg } from '../sim/frames';
 
 describe('Körperkatalog', () => {
   it('enthält Sonne, acht Planeten und den Erdmond', () => {
@@ -54,7 +55,13 @@ describe('Körperkatalog', () => {
       expect(b.physical.radiusKm).toBeGreaterThan(0);
       expect(b.physical.massKg).toBeGreaterThan(0);
       expect(Math.abs(b.physical.rotationPeriodH)).toBeGreaterThan(0);
-      expect(Math.abs(b.physical.axialTiltDeg)).toBeLessThanOrEqual(180);
+      // Die aus dem Pol abgeleitete Achsneigung ist ein Winkel und liegt
+      // damit immer zwischen 0° und 180°; die eigentliche Prüfung der
+      // Pollagen — gegen die bekannte, veröffentlichte Neigung — leistet
+      // frames.test.ts.
+      const neigung = axialTiltDeg(poleVector(b.physical.pole.raDeg, b.physical.pole.decDeg));
+      expect(neigung).toBeGreaterThanOrEqual(0);
+      expect(neigung).toBeLessThanOrEqual(180);
     }
     // Die Sonne ist der größte Körper im Katalog.
     const maxRadius = Math.max(...bodies.map((b) => b.physical.radiusKm));

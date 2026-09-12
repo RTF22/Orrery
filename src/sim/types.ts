@@ -17,7 +17,13 @@ export interface PhysicalData {
   massKg: number;
   /** Siderische Rotationsperiode in Stunden; negativ bei retrograder Rotation. */
   rotationPeriodH: number;
-  axialTiltDeg: number;
+  /**
+   * Nordpolrichtung in äquatorialen Koordinaten J2000 (IAU-Bericht über
+   * Rotationselemente). Aus ihr folgen Achsneigung, Ringebene und die
+   * Bezugsebene der Monde — deshalb steht hier der Pol und nicht die
+   * Neigung: Die Neigung sagt, wie stark die Achse steht, nicht wohin.
+   */
+  pole: { raDeg: number; decDeg: number };
   /** Rotationsphase zur Epoche J2000 in Grad. */
   rotationAtEpochDeg: number;
 }

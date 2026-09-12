@@ -21,7 +21,21 @@ export const mars: Body = {
     radiusKm: 3389.5,
     massKg: 6.4169e23,
     rotationPeriodH: 24.6229,
-    axialTiltDeg: 25.19,
+    // Pol: bewusst der ÄLTERE Wert aus dem IAU-Bericht 2009 (317,68143 /
+    // 52,88650), nicht der aktuellere aus dem 2015er Bericht (317,269 /
+    // 54,432). Kontrollrechnung (Winkel zwischen Pol und Marsbahnnormale):
+    //   2009er Pol: 25,19° — deckt sich exakt mit der Achsneigung von Mars
+    //     gegen seine eigene Bahn, wie sie in jeder Fachdarstellung und der
+    //     Missionsdokumentation steht (unabhängig vielfach belegt).
+    //   2015er Pol: 23,92° — weicht davon um 1,27° ab.
+    // Wir wissen nicht, dass der 2015er Kernelwert falsch ist — nur, dass er
+    // zur überall zitierten Neigung nicht passt, während der ältere Pol sie
+    // exakt trifft. Eine Polrevision um 1,5° wäre für einen Körper mit
+    // jahrzehntelanger Bahnverfolgung ungewöhnlich; die vielfach belegte
+    // Zahl wiegt hier schwerer als ein einzelner Kerneleintrag. Falls sich
+    // herausstellt, dass der neuere Pol doch zutrifft, ist diese Entscheidung
+    // anhand der beiden Werte oben in einem Satz umkehrbar.
+    pole: { raDeg: 317.68143, decDeg: 52.88650 },
     rotationAtEpochDeg: 0,
   },
   appearance: {

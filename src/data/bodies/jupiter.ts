@@ -23,7 +23,10 @@ export const jupiter: Body = {
     radiusKm: 69911,
     massKg: 1.89813e27,
     rotationPeriodH: 9.9250,
-    axialTiltDeg: 3.13,
+    // Pol aus dem IAU-Bericht über Rotationselemente (Archinal et al.).
+    // Kontrollrechnung: Winkel zur eigenen Bahnnormale 3,12° — der bekannte
+    // Wert für Jupiter (3,13°).
+    pole: { raDeg: 268.057, decDeg: 64.495 },
     rotationAtEpochDeg: 0,
   },
   appearance: {

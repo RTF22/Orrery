@@ -23,7 +23,11 @@ export const saturn: Body = {
     radiusKm: 58232,
     massKg: 5.6832e26,
     rotationPeriodH: 10.656,
-    axialTiltDeg: 26.73,
+    // Pollage aus dem IAU-Bericht über Rotationselemente (Archinal et al.).
+    // Kontrollrechnung: Daraus folgt eine Achsneigung von 26,73° gegen die
+    // eigene Bahn — der bekannte Wert für Saturn, und zugleich die Neigung
+    // der Ringebene.
+    pole: { raDeg: 40.589, decDeg: 83.537 },
     rotationAtEpochDeg: 0,
   },
   appearance: {

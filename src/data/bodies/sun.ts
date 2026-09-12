@@ -15,7 +15,10 @@ export const sun: Body = {
     radiusKm: 695700,
     massKg: 1.9885e30,
     rotationPeriodH: 609.12,
-    axialTiltDeg: 7.25,
+    // Pol aus dem IAU-Bericht über Rotationselemente (Archinal et al.). Die
+    // Sonne hat keine eigene Bahn — Bezug ist deshalb direkt die Ekliptik.
+    // Kontrollrechnung: Winkel zur Ekliptiknormale 7,25° — der bekannte Wert.
+    pole: { raDeg: 286.13, decDeg: 63.87 },
     rotationAtEpochDeg: 0,
   },
   appearance: {
