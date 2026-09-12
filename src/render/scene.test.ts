@@ -35,6 +35,8 @@ function fakeContext(): import('./renderer').RenderContext {
     camera: new THREE.PerspectiveCamera(),
     renderer: {} as unknown as THREE.WebGLRenderer,
     resize: () => {},
+    setPixelRatioCap: () => {},
+    afterResize: null,
     dispose: () => {},
   };
 }

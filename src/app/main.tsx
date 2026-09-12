@@ -31,17 +31,21 @@ function App(): React.JSX.Element {
     if (canvas === null || overlay === null) return;
 
     const ctx = createRenderer(canvas);
+    // Nur zur Messung im Entwicklungslauf: Über window.renderer lassen sich
+    // Geometrie- und Texturzahlen im Dauerlauf ablesen. Im Build fällt der
+    // Zweig weg, weil import.meta.env.DEV dort konstant false ist.
+    if (import.meta.env.DEV) {
+      (window as unknown as { renderer: unknown }).renderer = ctx.renderer;
+    }
     const szene = buildScene(ctx, overlay);
     const postfx = createPostFx(ctx);
     // Ziehen dreht, Rad und Zwei-Finger-Geste zoomen — geschrieben wird
     // ausschließlich in den Store, gelesen im nächsten Bild vom Controller.
     const stopInput = attachCameraInput(canvas);
 
-    // Der Renderer hängt selbst am resize-Ereignis und wurde zuerst
-    // registriert; die Composer-Ziele folgen daher mit der bereits neuen
-    // Canvas-Größe.
-    const onResize = (): void => { postfx.resize(); };
-    window.addEventListener('resize', onResize);
+    // Der Renderer meldet jede Größen- und Pixeldichteänderung; die
+    // Composer-Ziele hängen sich hier an, damit sie nie hinterherhinken.
+    ctx.afterResize = () => { postfx.resize(); };
 
     let bloomAn: boolean | null = null;
     let stufe: QualityTier | null = null;
@@ -59,11 +63,11 @@ function App(): React.JSX.Element {
         postfx.setBloom(bloomAn, stufe);
 
         // Die Pixeldichte ist der wirksamste Hebel gegen eine zu niedrige
-        // Bildrate — sie kostet quadratisch Füllrate.
-        const grenze = QUALITY_SETTINGS[stufe === 'auto' ? 'medium' : stufe].pixelRatioCap;
-        ctx.renderer.setPixelRatio(Math.min(window.devicePixelRatio, grenze));
-        ctx.resize();
-        postfx.resize();
+        // Bildrate — sie kostet quadratisch Füllrate. Der Renderer hält den
+        // Deckel fortan auch über Monitorwechsel hinweg ein.
+        ctx.setPixelRatioCap(
+          QUALITY_SETTINGS[stufe === 'auto' ? 'medium' : stufe].pixelRatioCap,
+        );
       }
       postfx.render();
     });
@@ -72,7 +76,6 @@ function App(): React.JSX.Element {
       stopLoop();
       stopInput();
       szene.dispose();
-      window.removeEventListener('resize', onResize);
       postfx.dispose();
       ctx.dispose();
     };
