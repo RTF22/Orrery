@@ -1,7 +1,7 @@
 import type { Vec3 } from './types';
 
 /**
- * Schiefe der Ekliptik zur Epoche J2000 in Grad (IAU 2006, ε₀ = 23° 26′ 21,406″).
+ * Schiefe der Ekliptik zur Epoche J2000 in Grad (IAU-1976/2000, ε₀ = 23° 26′ 21,448″).
  * Die säkulare Änderung (rund 47″ pro Jahrhundert) bleibt außen vor: Sie liegt
  * über den Zeitraum, den diese Anwendung zeigt, weit unter der Genauigkeit der
  * verwendeten mittleren Bahnelemente.

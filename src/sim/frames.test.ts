@@ -71,4 +71,14 @@ describe('equatorToEcliptic', () => {
     const r = equatorToEcliptic({ x: 1, y: 0, z: 0 }, pole);
     expect(r.z).toBeCloseTo(0, 12);
   });
+
+  it('legt die x-Achse in den aufsteigenden, nicht in den absteigenden Knoten', () => {
+    // r.z ≈ 0 allein ist tautologisch — beide Knoten liegen in der
+    // Ekliptikebene. Unterscheidbar sind sie erst über die Richtung: Eine
+    // Vierteldrehung hinter dem aufsteigenden Knoten liegt nördlich der
+    // Ekliptik. Ein vertauschtes Vorzeichen in der Knotenrichtung kippt
+    // dieses z ins Negative und fällt hier auf.
+    const pole = poleVector(268.06, 64.5);
+    expect(equatorToEcliptic({ x: 0, y: 1, z: 0 }, pole).z).toBeGreaterThan(0);
+  });
 });
