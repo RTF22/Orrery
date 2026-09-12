@@ -14,6 +14,13 @@ export const DEFAULT_STATE: AppState = {
     mode: 'free', targetId: 'sun', distance: 8e8,
     azimuth: 0.6, elevation: 0.5, freezeJd: null,
   },
+  cinema: {
+    running: false, nummer: 0, elapsedSec: 0,
+    // Fester Standardkeim: Der erste Eindruck ist damit für alle gleich und
+    // Fehlerberichte sind nachstellbar. Wer Abwechslung will, würfelt ihn
+    // im Panel neu.
+    seed: 20260912, shuffle: true, pauseOnInput: true, idleResumeSec: 30,
+  },
   visible: {},
   quality: { tier: 'auto' },
   ui: { hidden: false, panels: { time: true, scale: true, camera: true, tree: true }, language: 'de' },
@@ -25,6 +32,7 @@ interface Actions {
   setDisplay(patch: Partial<AppState['display']>): void;
   setCamera(patch: Partial<AppState['camera']>): void;
   setUi(patch: Partial<AppState['ui']>): void;
+  setCinema(patch: Partial<AppState['cinema']>): void;
   toggleVisible(id: string): void;
   replaceAll(state: AppState): void;
 }
@@ -41,6 +49,7 @@ export const useStore = create<AppState & Actions>((set) => ({
   setDisplay: (p) => set((s) => ({ display: { ...s.display, ...p } })),
   setCamera: (p) => set((s) => ({ camera: { ...s.camera, ...p } })),
   setUi: (p) => set((s) => ({ ui: { ...s.ui, ...p } })),
+  setCinema: (p) => set((s) => ({ cinema: { ...s.cinema, ...p } })),
   // Blendet aus, indem der Schlüssel auf `false` gesetzt wird; blendet wieder
   // ein, indem der Schlüssel vollständig entfernt wird. `visible` enthält so
   // stets nur echte Abweichungen vom Standard „sichtbar" (DEFAULT_STATE.visible

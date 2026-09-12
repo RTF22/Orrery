@@ -6,6 +6,9 @@ import { scaledPositionAt } from '../../sim/scale';
 import { velocityAt } from '../../sim/orbit';
 import { bodyIndex } from '../../data/index';
 import { smoothDampVec3 } from './damping';
+import { plannedSceneAt } from '../../sim/director';
+import { SCENES } from '../../data/scenes';
+import { cinemaTargetFor } from './cinema';
 import { worldToRender } from '../units';
 
 export interface CameraTarget { positionKm: Vec3; lookAtKm: Vec3 }
@@ -19,6 +22,17 @@ const normiere = (v: Vec3): Vec3 => {
 export function targetFor(state: AppState, jd: number, s: ScaleSettings): CameraTarget {
   const { mode, targetId, distance, azimuth, elevation, freezeJd } = state.camera;
   const anker = scaledPositionAt(targetId, bodyIndex, jd, s);
+
+  if (mode === 'cinema') {
+    // Im Kino-Modus gibt der Director das Ziel vor. Szene und Laufzeit
+    // stehen im Zustand, die Kamerafahrt entsteht daraus als reine
+    // Funktion — und die Dämpfung unten macht aus dem Szenensprung von
+    // selbst einen weichen Überflug.
+    const geplant = plannedSceneAt(
+      state.cinema.nummer, SCENES, state.cinema.seed, state.cinema.shuffle,
+    );
+    return cinemaTargetFor(geplant, state.cinema.elapsedSec, jd, s);
+  }
 
   if (mode === 'follow') {
     // Hinter dem Körper, ausgerichtet an seinem Geschwindigkeitsvektor.

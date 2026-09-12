@@ -25,6 +25,22 @@ export interface AppState {
      */
     freezeJd: number | null;
   };
+  /**
+   * Der Kino-Modus. `nummer` und `elapsedSec` beschreiben die Stelle im
+   * endlosen Film; zusammen mit `seed` und `shuffle` ist der Film dadurch
+   * vollständig reproduzierbar, ohne dass eine Playlist gespeichert wird.
+   */
+  cinema: {
+    running: boolean;
+    nummer: number;
+    elapsedSec: number;
+    seed: number;
+    shuffle: boolean;
+    /** Hält der Kino-Modus bei einer Nutzereingabe an? */
+    pauseOnInput: boolean;
+    /** Nach so vielen Sekunden ohne Eingabe läuft er wieder an. */
+    idleResumeSec: number;
+  };
   /** Nur Abweichungen vom Standard „sichtbar" — siehe toggleVisible in index.ts. */
   visible: Record<string, boolean>;
   quality: { tier: QualityTier };
