@@ -48,6 +48,8 @@ export const de = {
   'display.bloom': 'Leuchten',
   'display.brightness': 'Helligkeit',
   'display.lightFalloff': 'Lichtabfall',
+  'display.nightFill': 'Nachtseite',
+  'display.lightCompensation': 'Distanzausgleich',
   'shortcuts.title': 'Tastenkürzel',
   'shortcuts.toggleUi': 'Bedienoberfläche ein- und ausblenden',
   'shortcuts.fullscreen': 'Vollbild',

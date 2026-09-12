@@ -12,6 +12,12 @@ export interface AppState {
   display: {
     orbits: boolean; labels: boolean; markers: boolean;
     bloom: boolean; brightness: number; lightFalloff: number;
+    /**
+     * Fülllicht der Nachtseite als Bruchteil des Tagniveaus desselben
+     * Körpers, und der Ausgleich des Abstandsabfalls (0 = physikalisch,
+     * 1 = alle Körper gleich hell) — siehe render/lighting.ts.
+     */
+    nightFill: number; lightCompensation: number;
   };
   camera: {
     mode: CameraMode; targetId: string;

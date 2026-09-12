@@ -9,6 +9,13 @@ export const DEFAULT_STATE: AppState = {
   display: {
     orbits: true, labels: true, markers: true,
     bloom: true, brightness: 1, lightFalloff: 2,
+    // Ohne diese beiden Standardwerte bliebe die abgewandte Hälfte jedes
+    // Körpers bei absolut null und die äußeren Planeten bei rund einem
+    // Prozent des Erdniveaus — im Dauerlauf sichtbar als schwarze Scheiben.
+    // Die Werte sind an Pixelmessungen kalibriert, nicht geschätzt: Bei
+    // 0,25 / 0,85 liegt die Nachtseite der Erde im Mittel bei 16 statt 4
+    // von 255 — Umrisse sind erkennbar, der Terminator bleibt deutlich.
+    nightFill: 0.25, lightCompensation: 0.85,
   },
   camera: {
     mode: 'free', targetId: 'sun', distance: 8e8,

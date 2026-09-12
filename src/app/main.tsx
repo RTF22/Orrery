@@ -35,7 +35,12 @@ function App(): React.JSX.Element {
     // Geometrie- und Texturzahlen im Dauerlauf ablesen. Im Build fällt der
     // Zweig weg, weil import.meta.env.DEV dort konstant false ist.
     if (import.meta.env.DEV) {
-      (window as unknown as { renderer: unknown }).renderer = ctx.renderer;
+      const w = window as unknown as { renderer: unknown; store: unknown };
+      w.renderer = ctx.renderer;
+      // Ebenfalls nur zur Messung: Über window.store lässt sich jeder
+      // Blickwinkel ohne Klickweg einstellen — etwa die Nachtseite eines
+      // Planeten für die Prüfung der Beleuchtung.
+      w.store = useStore;
     }
     const szene = buildScene(ctx, overlay);
     const postfx = createPostFx(ctx);

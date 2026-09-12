@@ -85,6 +85,47 @@ deshalb über `requestAnimationFrame`.
   an, die Bedienelemente des Kino-Panels und die Tasten `C`/`N` gelten nicht
   als Störung (verifiziert), nach 30 Sekunden Ruhe läuft er weiter.
 
+## Nachtrag: Beleuchtung (12.09.2026)
+
+Der 30-Minuten-Dauerlauf hat einen Befund geliefert, den die Messreihe nicht
+erfasst: Planeten erschienen wiederholt **vollständig schwarz**. Ursache waren
+drei Punkte, die sich überlagert haben.
+
+1. **Kein Fülllicht.** Die Szene hatte genau eine Lichtquelle, das Punktlicht
+   an der Sonne. Die abgewandte Hälfte jedes Körpers bekam damit exakt null —
+   kein dunkles Grau, sondern Schwarz. Die Kino-Szenen setzen den Azimut
+   unabhängig von der Sonnenrichtung, `ferne-sonne` blickt sogar bewusst von
+   Neptun in die Sonne: Ein erheblicher Teil der Einstellungen zeigte genau
+   diese unbeleuchtete Hälfte.
+2. **Abstandsabfall über vier Größenordnungen.** Bezogen auf die Erde erhielt
+   Saturn 6,6 %, Uranus 2,9 %, Neptun 1,7 % der Bestrahlungsstärke — beim
+   Preset „Realistisch" Neptun 0,11 %. Auch die Tagseite der äußeren Planeten
+   war damit praktisch schwarz.
+3. **Doppelte Einfärbung.** Die geladene Albedo-Textur wurde mit der
+   Ausweichfarbe des Körpers multipliziert. Bei der Erde (`#2a6fdb`, linear
+   0,02 | 0,16 | 0,71) fiel der Rotkanal der Textur auf zwei Prozent.
+
+**Behebung** (`src/render/lighting.ts`, neu): Die Beleuchtung wird pro Körper
+aus seinem dargestellten Sonnenabstand berechnet. Ein Distanzausgleich staucht
+den Abstandsabfall (`E^(1-c)`, Regler „Distanzausgleich", Standard 0,85), und
+ein Fülllicht hebt die Nachtseite auf einen festen Bruchteil der eigenen
+Tagseite (Regler „Nachtseite", Standard 0,25). Beides ist bewusst nicht
+physikalisch und über die Regler bis auf den physikalischen Fall (0 / 0)
+zurückdrehbar. Die Ausweichfarbe weicht Weiß, sobald die Textur steht.
+
+Gemessene Bildpixel (Helligkeitsmaximum der Kanäle, Median über die
+Planetenscheibe):
+
+| Einstellung | vorher | nachher |
+|---|---:|---:|
+| Erde, Nachtseite, Preset Schaubild | 4 | 16 |
+| Neptun, Nachtseite, Preset Realistisch | 2 | 17 |
+
+Merkur auf der Tagseite bleibt unverändert durchgezeichnet, der Terminator der
+Erde bleibt als helle Sichel deutlich erkennbar. Abgesichert ist das über
+`render/lighting.test.ts`: Tagseite jedes Planeten über 30 %, Nachtseite über
+5 % der eingestellten Helligkeit — bei jedem der drei Maßstabs-Presets.
+
 ## Offene Punkte
 
 - Wake Lock und Vollbild am Gerät im normalen Browser prüfen.
