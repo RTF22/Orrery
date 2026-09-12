@@ -1,6 +1,7 @@
 import type { Body, BodyIndex, OrbitElements, Vec3 } from './types';
 import { J2000, centuriesSinceJ2000 } from './time';
 import { solveKepler, normalizeAngle } from './kepler';
+import { equatorToEcliptic, poleVector } from './frames';
 
 export const AU_KM = 149_597_870.7;
 
@@ -66,30 +67,35 @@ export function positionAt(id: string, index: BodyIndex, jd: number): Vec3 {
   if (!body) throw new Error(`Unbekannter Körper: ${id}`);
   if (body.orbit === null) return { x: 0, y: 0, z: 0 };
 
-  // 'parentEquator' verlangt eine Drehung von der Äquatorebene des
-  // Mutterkörpers in die Ekliptik. Diese Drehung ist in Phase 1 bewusst
-  // nicht implementiert — kein Körper der Phase-1-Daten braucht sie (der
-  // Erdmond läuft in der Ekliptik, siehe data/bodies/moon.ts), und
-  // ungetestet mitgeschleppter Code in dieser Schicht wäre ein Risiko.
-  // Die Jupiter- und Saturnmonde in Phase 3 benötigen sie tatsächlich;
-  // bis dahin verhindert dieser Schutz, dass ein solcher Datensatz
-  // stillschweigend an der falschen Stelle landet.
-  if (body.orbit.frame === 'parentEquator') {
-    throw new Error(
-      `Bezugsebene 'parentEquator' wird noch nicht unterstützt (Körper: ${id}). ` +
-      `Die Drehung von der Äquatorebene des Mutterkörpers in die Ekliptik ` +
-      `folgt erst in Phase 3 mit den Jupiter- und Saturnmonden.`,
-    );
+  const relativ = positionInParentFrame(body.orbit, jd);
+  if (body.parent === null) {
+    if (body.orbit.frame === 'parentEquator') {
+      throw new Error(
+        `Bezugsebene 'parentEquator' ohne Mutterkörper (Körper: ${id}). ` +
+        `Die Ebene ist ohne den Pol eines Mutterkörpers nicht definiert.`,
+      );
+    }
+    return relativ;
   }
 
-  const relativ = positionInParentFrame(body.orbit, jd);
-  if (body.parent === null) return relativ;
+  const mutter = index[body.parent];
+  if (!mutter) throw new Error(`Unbekannter Mutterkörper: ${body.parent}`);
+
+  // 'parentEquator': Die Elemente sind auf die Äquator- bzw. Laplace-Ebene des
+  // Mutterkörpers bezogen — so gibt JPL die mittleren Elemente der Monde an.
+  // Erst die Drehung in die Ekliptik macht sie mit allem anderen vergleichbar.
+  const inEkliptik = body.orbit.frame === 'parentEquator'
+    ? equatorToEcliptic(
+      relativ,
+      poleVector(mutter.physical.pole.raDeg, mutter.physical.pole.decDeg),
+    )
+    : relativ;
 
   const eltern = positionAt(body.parent, index, jd);
   return {
-    x: eltern.x + relativ.x,
-    y: eltern.y + relativ.y,
-    z: eltern.z + relativ.z,
+    x: eltern.x + inEkliptik.x,
+    y: eltern.y + inEkliptik.y,
+    z: eltern.z + inEkliptik.z,
   };
 }
 

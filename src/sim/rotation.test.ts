@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { positionAt, velocityAt, rotationAt } from './orbit';
+import { positionAt, velocityAt, rotationAt, AU_KM } from './orbit';
 import { bodyIndex, getBody } from '../data/index';
 import { J2000 } from './time';
+import { EKLIPTIK_SCHIEFE_GRAD, poleVector } from './frames';
 import type { Body, BodyIndex } from './types';
 
 const betrag = (v: { x: number; y: number; z: number }) =>
@@ -92,48 +93,64 @@ describe('rotationAt', () => {
 });
 
 describe('Bezugsebene parentEquator', () => {
-  it('lehnt Bahnelemente mit frame "parentEquator" ab, statt sie falsch zu platzieren', () => {
-    // Phase 1 hat keinen Mond, dessen Elemente auf die Äquatorebene seines
-    // Planeten bezogen sind (der Erdmond läuft in der Ekliptik, siehe
-    // data/bodies/moon.ts). Die Drehung von Äquatorebene in Ekliptik kommt
-    // erst mit den Jupiter-/Saturnmonden in Phase 3. Bis dahin muss
-    // positionAt einen solchen Datensatz zurückweisen statt ihn stillschweigend
-    // wie 'ecliptic' zu behandeln — sonst landet der Körper an der falschen
-    // Stelle, ohne dass ein Test es merkt.
-    const zentralkoerper: Body = {
-      id: 'zentralkoerper',
-      parent: null,
-      kind: 'planet',
+  /** Baut einen Mutterkörper mit gegebener Pollage und einen Trabanten darum. */
+  function system(polRa: number, polDec: number, inklination: number): BodyIndex {
+    const mutter: Body = {
+      id: 'mutter', parent: null, kind: 'planet',
       orbit: null,
       physical: {
-        radiusKm: 1000, massKg: 1e24,
-        rotationPeriodH: 24, pole: { raDeg: 0, decDeg: 90 }, rotationAtEpochDeg: 0,
+        radiusKm: 1000, massKg: 1e24, rotationPeriodH: 24,
+        pole: { raDeg: polRa, decDeg: polDec }, rotationAtEpochDeg: 0,
       },
-      appearance: { textures: { albedo: '' }, color: '#fff' },
-      info: { nameKey: '', descriptionKey: '' },
+      appearance: { textures: { albedo: '' }, color: '#ffffff' },
+      info: { nameKey: 'x', descriptionKey: 'x' },
     };
     const trabant: Body = {
-      id: 'trabant',
-      parent: 'zentralkoerper',
-      kind: 'moon',
+      ...mutter,
+      id: 'trabant', parent: 'mutter', kind: 'moon',
       orbit: {
-        a: 0.001, aDot: 0,
-        e: 0, eDot: 0,
-        i: 0, iDot: 0,
-        L: 0, LDot: 100,
-        lp: 0, lpDot: 0,
-        node: 0, nodeDot: 0,
+        a: 0.001, aDot: 0, e: 0, eDot: 0,
+        i: inklination, iDot: 0,
+        L: 0, LDot: 1000, lp: 0, lpDot: 0, node: 0, nodeDot: 0,
         frame: 'parentEquator',
       },
-      physical: {
-        radiusKm: 10, massKg: 1e18,
-        rotationPeriodH: 24, pole: { raDeg: 0, decDeg: 90 }, rotationAtEpochDeg: 0,
-      },
-      appearance: { textures: { albedo: '' }, color: '#fff' },
-      info: { nameKey: '', descriptionKey: '' },
     };
-    const index: BodyIndex = { zentralkoerper, trabant };
+    return { mutter, trabant };
+  }
 
-    expect(() => positionAt('trabant', index, J2000)).toThrow(/parentEquator/);
+  it('ist deckungsgleich mit "ecliptic", wenn der Pol die Ekliptiknormale ist', () => {
+    // Pol = Ekliptiknormale heißt: Äquatorebene und Ekliptik fallen zusammen.
+    // Dann muss die Drehung wirkungslos sein — sonst stimmt die Basiswahl nicht.
+    const index = system(270, 90 - EKLIPTIK_SCHIEFE_GRAD, 0);
+    const p = positionAt('trabant', index, J2000 + 3);
+    expect(p.z).toBeCloseTo(0, 6);
+  });
+
+  it('legt eine ungeneigte Bahn in die Äquatorebene des Mutterkörpers', () => {
+    // Bahnneigung 0 gegen den Äquator heißt: Die Bahnebene steht senkrecht
+    // auf dem Pol. Geprüft wird genau das — das Skalarprodukt aus normiertem
+    // Ortsvektor und Polrichtung muss über die ganze Bahn verschwinden.
+    const index = system(268.057, 64.495, 0); // Jupiters Pollage
+    const pol = poleVector(268.057, 64.495);
+    for (const tage of [0, 1, 2, 5, 9]) {
+      const p = positionAt('trabant', index, J2000 + tage);
+      const betrag = Math.sqrt(p.x ** 2 + p.y ** 2 + p.z ** 2);
+      const skalar = (p.x * pol.x + p.y * pol.y + p.z * pol.z) / betrag;
+      expect(skalar).toBeCloseTo(0, 9);
+    }
+  });
+
+  it('hält den Bahnradius unverändert — die Drehung ist längentreu', () => {
+    const index = system(268.057, 64.495, 12);
+    const p = positionAt('trabant', index, J2000 + 4);
+    const r = Math.sqrt(p.x ** 2 + p.y ** 2 + p.z ** 2);
+    expect(r).toBeCloseTo(0.001 * AU_KM, 3);
+  });
+
+  it('lehnt einen Datensatz ohne Mutterkörper ab, statt still falsch zu rechnen', () => {
+    const index = system(268.057, 64.495, 0);
+    const waise = { ...index['trabant']!, id: 'waise', parent: null };
+    expect(() => positionAt('waise', { ...index, waise }, J2000))
+      .toThrow(/parentEquator/);
   });
 });
