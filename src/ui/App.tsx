@@ -7,6 +7,7 @@ import { CameraPanel } from './panels/CameraPanel';
 import { DisplayPanel } from './panels/DisplayPanel';
 import { BodyTree } from './panels/BodyTree';
 import { useShortcuts, SHORTCUTS_PANEL } from './shortcuts/useShortcuts';
+import { useIdleHide } from './idle';
 
 /** Belegung für die Übersicht — Wirkung als Sprachschlüssel. */
 const KUERZEL: readonly (readonly [string, string])[] = [
@@ -44,10 +45,14 @@ function Kuerzeluebersicht(): React.JSX.Element {
  */
 export function App(): React.JSX.Element | null {
   useShortcuts();
+  const untaetig = useIdleHide();
   const versteckt = useStore((s) => s.ui.hidden);
+  const laeuftKino = useStore((s) => s.cinema.running);
   const zeigeKuerzel = useStore((s) => s.ui.panels[SHORTCUTS_PANEL] === true);
 
-  if (versteckt) return null;
+  // Im Kino-Modus verschwindet die Oberfläche nach kurzer Ruhe von selbst;
+  // außerhalb bleibt sie stehen, bis H gedrückt wird.
+  if (versteckt || (laeuftKino && untaetig)) return null;
 
   return (
     <div className="pointer-events-none fixed inset-0 flex flex-col gap-2 p-3 text-slate-100">
