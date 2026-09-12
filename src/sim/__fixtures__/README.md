@@ -345,7 +345,7 @@ weiterreichenden Befund: Gestalt (a, e) und Bahnebene (i, node) stimmen gut,
 aber die Phasenlage (wo der Mond zu welcher Zeit auf seiner Ellipse steht)
 weicht für sechs der sieben Monde schon exakt zur Tabellenepoche (J2000,
 T = 0, keine Fortschreibung im Spiel) um 5,5° bis 161° von der tatsächlichen
-Horizons-Position ab — moldspezifisch unterschiedlich groß, was einen
+Horizons-Position ab — mondspezifisch unterschiedlich groß, was einen
 einzelnen Vorzeichen- oder Referenzrichtungsfehler ausschließt. JPL warnt
 auf derselben Seite selbst: „These mean orbital parameters are not intended
 for ephemeris computation ... primarily useful in describing the general

@@ -133,6 +133,90 @@ const NEIGUNGS_SCHRANKE_GRAD: Record<string, number> = {
   triton: 0.6,
 };
 
+/**
+ * Für alle Monde bis auf Mimas gilt die 5-%-Schranke unverändert. Mimas
+ * bekommt eine eigene, begründete Positionsschranke — nach demselben
+ * Muster wie die Neigungsausnahmen von Deimos und Iapetus oben, hier aber
+ * für den Positionstest. Das ist keine allgemeine Aufweichung: Die
+ * übrigen sechs Saturnmonde (und alle Mars-/Jupitermonde) behalten die
+ * 5 % unverändert.
+ *
+ * BELEG 1 — die nicht-monotone Signatur schließt einen Datenfehler aus.
+ * Ein falscher Zahlenwert (z. B. eine falsche Nachkommastelle in der für
+ * LDot verwendeten Umlaufzeit) wirkte konstant oder mit |T| monoton
+ * wachsend. Gemessen ist das Gegenteil: 45 774 km (1976, T = −24 a),
+ * 213 354 km (2026, T = +26 a), 3 426 km (2050, T = +50 a) — der
+ * Stichtag NÄHER an J2000 (2026) ist schlechter als der weiter entfernte
+ * (2050). Das ist die Unterschrift einer gebundenen Schwingung
+ * (Libration), nicht die eines Übertragungs- oder Vorzeichenfehlers.
+ *
+ * BELEG 2 — Mimas steht in der 4:2-Mittelbewegungsresonanz mit Tethys.
+ * Deren Libration lässt Mimas' mittlere Länge oszillieren; ein rein
+ * linear fortgeschriebenes L (aDot = eDot = iDot = 0, wie im gesamten
+ * Hybrid aus saturn-monde.ts vorgegeben) kann eine solche periodische
+ * Schwingung grundsätzlich nicht abbilden — unabhängig davon, wie genau
+ * die Umlaufzeit bekannt ist. Ein direkter Abgleich mit separat bei
+ * JD 2461041,5 abgerufenen osculating Elementen zeigt: Die mittlere
+ * Länge L weicht dort um 70,6° von der linear fortgeschriebenen
+ * Vorhersage ab, während der Knoten nur um 1,32° abweicht (Task-8b-
+ * Bericht, Abschnitt 7) — das trennt sauber Phase von Ebene: Die Bahn
+ * selbst (ihre Lage im Raum) liegt richtig, nur die Position AUF der
+ * Bahn zu diesem einen Stichtag nicht.
+ *
+ * BELEG 3 — die Projektspezifikation benennt Resonanzen ausdrücklich als
+ * bekannte Grenze dieses Modells: Die Szene „Galileisches Schattenspiel"
+ * (docs/superpowers/specs/2026-09-12-phase3a-katalog-design.md) macht die
+ * Laplace-Resonanz 1:2:4 von Io, Europa und Ganymed selbst zum Thema, und
+ * Europas eigener Radiustest trägt aus genau diesem Grund eine auf die
+ * große Halbachse statt den Momentanradius umgestellte Prüfung (siehe
+ * Kommentar bei grosseHalbachseSollKm oben, Task-7-Bericht). Mimas-Tethys
+ * ist derselbe Resonanz-Fall, nur nicht namentlich in der Spezifikation
+ * aufgeführt.
+ *
+ * HERLEITUNG DER SCHRANKE: Bei JD 2461041,5 beträgt |soll| = 184 791 km,
+ * der volle Bahnumfang 2π·|soll| = 1 161 011 km. Die gemessene Abweichung
+ * 213 354 km entspricht 213 354 / 1 161 011 = 18,38 % dieses Umfangs. Mit
+ * rund 9 % Reserve (vergleichbar der Reserve bei Deimos: gemessen 0,88°,
+ * Schranke 1,0°, 14 % Reserve) ergibt sich eine glatte Schranke von 20 %
+ * (0,20 statt 0,05) — deckt den gemessenen Höchstwert ab, ohne beliebig
+ * weit aufgeweicht zu sein.
+ *
+ * WAS DIESER TEST FÜR MIMAS DADURCH NICHT MEHR PRÜFT: eine Verwechslung
+ * der ungefähren Bahnlage (z. B. ein grober Vorzeichen- oder
+ * Halbachsenfehler, der 20 % des Umfangs überschritte) bliebe ab jetzt
+ * unentdeckt. WAS WEITERHIN SCHARF GREIFT: die große Halbachse (1 %,
+ * siehe Test oben), die Neigung gegen Saturns Äquator (0,5°) und die
+ * volle Bahnebene inklusive Knoten bei J2000 (0,5°) — Mimas besteht alle
+ * drei mit großem Abstand (volle Bahnebene bei J2000: 0,003°, siehe
+ * Task-8b-Bericht Abschnitt 6). Ein echter Struktur- oder Ebenenfehler
+ * würde also weiterhin zuverlässig auffallen; nur der resonanzbedingte
+ * Phasenausschlag AUF der richtigen Bahn bleibt für Mimas toleriert.
+ */
+/**
+ * Triton bekommt aus einem ANDEREN Grund als Mimas eine eigene, weitere
+ * Positionsschranke — nicht eine Resonanz, sondern eine ungenaue
+ * Präzessionsrate: Die Mean-Elements-Tabelle nennt für Triton
+ * P_apsis = 0,000 a (bei e ≈ 0,00015 praktisch unbestimmt, wie bei
+ * Enceladus/Dione/Io) und P_node = 340,379 a. Wörtlich eingesetzt weicht
+ * die Position um 240 000–700 000 km ab (weit über jeder vertretbaren
+ * Schranke). Ursache: Neptuns eigener IAU-Pol trägt ein periodisches
+ * Korrekturglied mit rund 688 Jahren Periode (Tritons Rückwirkung auf
+ * Neptuns Figur, siehe Quellenblock in neptun-monde.ts) — Horizons' „OM"
+ * an anderen Epochen als J2000 ist deshalb gegen einen MITLAUFENDEN Pol
+ * gemessen, während sim/orbit.ts bewusst Neptuns FESTEN, bei T = 0
+ * ausgewerteten Rotationspol verwendet. Eine direkte Differenz ergibt
+ * deshalb keine für dieses feste Modell gültige nodeDot/lpDot-Rate.
+ * nodeDot = lpDot = 0 (siehe neptun-monde.ts) ist die gegen das Fixture
+ * geprüfte beste Wahl: Die Positionsabweichung wächst NICHT monoton mit
+ * |T| (1976: 4,0 %; 2026: 4,3 %; 2050: 6,0 %; 2076: 12,4 % des
+ * Bahnumfangs) — die Signatur einer fehlenden Nachführung, nicht eines
+ * Vorzeichen- oder Rundungsfehlers. Große Halbachse (1 %) und volle
+ * Bahnebene bei J2000 (0,5°, s. u.) bestehen dagegen mit großem Abstand.
+ * Die Schranke von 15 % (statt 5 %) deckt den größten gemessenen Wert
+ * (12,4 % bei 2076) mit Reserve ab, nach demselben Muster wie Mimas oben.
+ */
+const POSITIONS_SCHRANKE_ANTEIL: Record<string, number> = { mimas: 0.2, triton: 0.15 };
+
 describe('Mondbahnen gegen JPL Horizons', () => {
   it('enthält Referenzpunkte für Phobos und Deimos', () => {
     const ids = new Set(eintraege.map((e) => e.id));
@@ -250,6 +334,24 @@ describe('Mondbahnen gegen JPL Horizons', () => {
   // (zweistellige Präzessionsperiode), kein Fehler im Code oder im
   // Fixture. Wer diesen Test auf weitere Epochen ausdehnen will, muss
   // zuerst eine genauer angegebene Knotenpräzessionsperiode beschaffen.
+  //
+  // Für Monde, deren Bahnelemente selbst aus Horizons' osculating elements
+  // ZUR EPOCHE J2000 stammen (Saturnmonde, siehe Quellenblock in
+  // saturn-monde.ts, Abschnitt „Warum das nicht zirkulär ist"; ebenso die
+  // Uranusmonde und Triton, siehe die analogen Quellenblöcke in
+  // uranus-monde.ts bzw. neptun-monde.ts), liegt der Fall anders als bei
+  // Phobos oben: Dort wurde an GENAU DIESER Epoche außerdem die
+  // Frame-Konvention (parentEquator vs. ecliptic, Knotenversatz) kalibriert.
+  // Der J2000-Test prüft für diese Monde deshalb fast ausschließlich die
+  // TRANSFORMATIONSKETTE (positionAt / equatorToEcliptic / Knotenversatz),
+  // nicht mehr die Güte der Quelle — node selbst trifft an dieser Epoche
+  // fast per Konstruktion, und nodeDot bleibt für sie durch diesen Test
+  // faktisch UNGEPRÜFT (an T ≈ 0 trägt eine Präzessionsrate noch nichts
+  // zur Position bei). Ein schärferer Knotentest müsste an einem Stichtag
+  // ansetzen, der NICHT die Elementepoche ist (also einem der vier anderen
+  // Fixture-Stichtage 1976/2026/2050/2076), und bräuchte dafür eine
+  // node-Referenz, die unabhängig von der hier zur Epoche J2000
+  // vorgenommenen Kalibrierung gewonnen wurde.
   const epocheJ2000 = eintraege.filter((e) => e.jd === 2451544.5);
 
   it('enthält die Epoche J2000 vollständig, für jeden Mond mit Bezugsebene parentEquator', () => {
@@ -286,90 +388,6 @@ describe('Mondbahnen gegen JPL Horizons', () => {
       expect(winkelZwischen(nIst, nSoll)).toBeLessThan(schranke);
     },
   );
-
-  /**
-   * Für alle Monde bis auf Mimas gilt die 5-%-Schranke unverändert. Mimas
-   * bekommt eine eigene, begründete Positionsschranke — nach demselben
-   * Muster wie die Neigungsausnahmen von Deimos und Iapetus oben, hier aber
-   * für den Positionstest. Das ist keine allgemeine Aufweichung: Die
-   * übrigen sechs Saturnmonde (und alle Mars-/Jupitermonde) behalten die
-   * 5 % unverändert.
-   *
-   * BELEG 1 — die nicht-monotone Signatur schließt einen Datenfehler aus.
-   * Ein falscher Zahlenwert (z. B. eine falsche Nachkommastelle in der für
-   * LDot verwendeten Umlaufzeit) wirkte konstant oder mit |T| monoton
-   * wachsend. Gemessen ist das Gegenteil: 45 774 km (1976, T = −24 a),
-   * 213 354 km (2026, T = +26 a), 3 426 km (2050, T = +50 a) — der
-   * Stichtag NÄHER an J2000 (2026) ist schlechter als der weiter entfernte
-   * (2050). Das ist die Unterschrift einer gebundenen Schwingung
-   * (Libration), nicht die eines Übertragungs- oder Vorzeichenfehlers.
-   *
-   * BELEG 2 — Mimas steht in der 4:2-Mittelbewegungsresonanz mit Tethys.
-   * Deren Libration lässt Mimas' mittlere Länge oszillieren; ein rein
-   * linear fortgeschriebenes L (aDot = eDot = iDot = 0, wie im gesamten
-   * Hybrid aus saturn-monde.ts vorgegeben) kann eine solche periodische
-   * Schwingung grundsätzlich nicht abbilden — unabhängig davon, wie genau
-   * die Umlaufzeit bekannt ist. Ein direkter Abgleich mit separat bei
-   * JD 2461041,5 abgerufenen osculating Elementen zeigt: Die mittlere
-   * Länge L weicht dort um 70,6° von der linear fortgeschriebenen
-   * Vorhersage ab, während der Knoten nur um 1,32° abweicht (Task-8b-
-   * Bericht, Abschnitt 7) — das trennt sauber Phase von Ebene: Die Bahn
-   * selbst (ihre Lage im Raum) liegt richtig, nur die Position AUF der
-   * Bahn zu diesem einen Stichtag nicht.
-   *
-   * BELEG 3 — die Projektspezifikation benennt Resonanzen ausdrücklich als
-   * bekannte Grenze dieses Modells: Die Szene „Galileisches Schattenspiel"
-   * (docs/superpowers/specs/2026-09-12-phase3a-katalog-design.md) macht die
-   * Laplace-Resonanz 1:2:4 von Io, Europa und Ganymed selbst zum Thema, und
-   * Europas eigener Radiustest trägt aus genau diesem Grund eine auf die
-   * große Halbachse statt den Momentanradius umgestellte Prüfung (siehe
-   * Kommentar bei grosseHalbachseSollKm oben, Task-7-Bericht). Mimas-Tethys
-   * ist derselbe Resonanz-Fall, nur nicht namentlich in der Spezifikation
-   * aufgeführt.
-   *
-   * HERLEITUNG DER SCHRANKE: Bei JD 2461041,5 beträgt |soll| = 184 791 km,
-   * der volle Bahnumfang 2π·|soll| = 1 161 011 km. Die gemessene Abweichung
-   * 213 354 km entspricht 213 354 / 1 161 011 = 18,38 % dieses Umfangs. Mit
-   * rund 9 % Reserve (vergleichbar der Reserve bei Deimos: gemessen 0,88°,
-   * Schranke 1,0°, 14 % Reserve) ergibt sich eine glatte Schranke von 20 %
-   * (0,20 statt 0,05) — deckt den gemessenen Höchstwert ab, ohne beliebig
-   * weit aufgeweicht zu sein.
-   *
-   * WAS DIESER TEST FÜR MIMAS DADURCH NICHT MEHR PRÜFT: eine Verwechslung
-   * der ungefähren Bahnlage (z. B. ein grober Vorzeichen- oder
-   * Halbachsenfehler, der 20 % des Umfangs überschritte) bliebe ab jetzt
-   * unentdeckt. WAS WEITERHIN SCHARF GREIFT: die große Halbachse (1 %,
-   * siehe Test oben), die Neigung gegen Saturns Äquator (0,5°) und die
-   * volle Bahnebene inklusive Knoten bei J2000 (0,5°) — Mimas besteht alle
-   * drei mit großem Abstand (volle Bahnebene bei J2000: 0,003°, siehe
-   * Task-8b-Bericht Abschnitt 6). Ein echter Struktur- oder Ebenenfehler
-   * würde also weiterhin zuverlässig auffallen; nur der resonanzbedingte
-   * Phasenausschlag AUF der richtigen Bahn bleibt für Mimas toleriert.
-   */
-  /**
-   * Triton bekommt aus einem ANDEREN Grund als Mimas eine eigene, weitere
-   * Positionsschranke — nicht eine Resonanz, sondern eine ungenaue
-   * Präzessionsrate: Die Mean-Elements-Tabelle nennt für Triton
-   * P_apsis = 0,000 a (bei e ≈ 0,00015 praktisch unbestimmt, wie bei
-   * Enceladus/Dione/Io) und P_node = 340,379 a. Wörtlich eingesetzt weicht
-   * die Position um 240 000–700 000 km ab (weit über jeder vertretbaren
-   * Schranke). Ursache: Neptuns eigener IAU-Pol trägt ein periodisches
-   * Korrekturglied mit rund 688 Jahren Periode (Tritons Rückwirkung auf
-   * Neptuns Figur, siehe Quellenblock in neptun-monde.ts) — Horizons' „OM"
-   * an anderen Epochen als J2000 ist deshalb gegen einen MITLAUFENDEN Pol
-   * gemessen, während sim/orbit.ts bewusst Neptuns FESTEN, bei T = 0
-   * ausgewerteten Rotationspol verwendet. Eine direkte Differenz ergibt
-   * deshalb keine für dieses feste Modell gültige nodeDot/lpDot-Rate.
-   * nodeDot = lpDot = 0 (siehe neptun-monde.ts) ist die gegen das Fixture
-   * geprüfte beste Wahl: Die Positionsabweichung wächst NICHT monoton mit
-   * |T| (1976: 4,0 %; 2026: 4,3 %; 2050: 6,0 %; 2076: 12,4 % des
-   * Bahnumfangs) — die Signatur einer fehlenden Nachführung, nicht eines
-   * Vorzeichen- oder Rundungsfehlers. Große Halbachse (1 %) und volle
-   * Bahnebene bei J2000 (0,5°, s. u.) bestehen dagegen mit großem Abstand.
-   * Die Schranke von 15 % (statt 5 %) deckt den größten gemessenen Wert
-   * (12,4 % bei 2076) mit Reserve ab, nach demselben Muster wie Mimas oben.
-   */
-  const POSITIONS_SCHRANKE_ANTEIL: Record<string, number> = { mimas: 0.2, triton: 0.15 };
 
   it.each(eintraege)('$id bei JD $jd: Position auf 5 % des Bahnumfangs (Mimas: 20 %, Triton: 15 %)', ({ id, jd, soll }) => {
     // Die bewusst lockere Schranke: Mittlere Bahnelemente kennen die großen

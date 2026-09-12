@@ -116,26 +116,29 @@ import type { Body } from '../../sim/types';
 // Ergebnis gegen das Fixture (fünf Stichtage, sieben Monde, siehe
 // monde.fixture.test.ts und Task-8b-Bericht für die volle Tabelle): Alle
 // Positions-, Neigungs- und volle-Bahnebene-Tests bestehen mit weiten
-// Rändern bis auf EINE Ausnahme — Mimas bei JD 2461041,5 (2026): 213 354 km
-// Abweichung gegen eine Schranke von 58 054 km (5 % Bahnumfang), während alle
-// anderen vier Mimas-Stichtage (1976/2000/2050/2076) komfortabel bestehen
-// (1 016 km bis 54 377 km). Das Muster ist NICHT monoton mit dem
-// Zeitabstand von J2000 (1976: 45 774 km bei −24 Jahren, 2026: 213 354 km bei
-// +26 Jahren, 2050: 3 426 km bei +50 Jahren) — eine wachsende Verletzung
-// träfe man bei einer schlicht falschen mittleren Bewegung, hier liegt
-// stattdessen eine gebundene, nicht monotone Schwankung vor. Neigung und
-// volle Bahnebene bleiben für Mimas an ALLEN fünf Stichtagen weit innerhalb
-// der 0,5°-Schranke (0,003°–0,014°) — der Fehler betrifft ausschließlich die
-// Phase entlang der Bahn (Mean Anomaly / L), nicht deren Ebene. Das ist die
-// erwartete Signatur der Mimas-Tethys-4:2-Resonanz (Librationsperiode in der
-// Größenordnung von Jahrzehnten, siehe z. B. Murray & Dermott, „Solar System
-// Dynamics"): Ein rein linear fortgeschriebenes L kann eine gebundene
-// Librationsschwingung grundsätzlich nicht abbilden, weder mit der
-// Tabellenperiode (6 Nachkommastellen, durch Fact Sheet und Rotation auf
-// Sekundenbruchteile bestätigt) noch mit einer genaueren. Dieser eine
-// Prüfpunkt bleibt deshalb ein dokumentierter, nicht behobener Befund (siehe
-// Task-8b-Bericht) — kein erfundener Ausnahmewert, keine Testschranke wurde
-// dafür aufgeweicht.
+// Rändern bis auf Mimas' Position bei JD 2461041,5 (2026), wo die für alle
+// übrigen Monde geltende 5-%-Schranke nicht ausreicht (213 354 km Abweichung,
+// während die anderen vier Mimas-Stichtage sie komfortabel einhalten). Der
+// Fehler ist eine reine Phasenabweichung entlang der Bahn (Mean Anomaly / L):
+// Neigung und volle Bahnebene bestehen für Mimas an allen fünf Stichtagen
+// weit innerhalb ihrer 0,5°-Schranke (0,003°–0,014°), nur die Position weicht
+// ab. Das Abweichungsmuster ist zudem NICHT monoton mit dem Zeitabstand von
+// J2000 (1976: 45 774 km, 2026: 213 354 km, 2050: 3 426 km) — die erwartete
+// Signatur einer gebundenen Librationsschwingung, nicht die eines schlicht
+// falschen Zahlenwerts. Ursache: die Mimas-Tethys-4:2-Mittelbewegungsresonanz
+// (Librationsperiode in der Größenordnung von Jahrzehnten, siehe z. B.
+// Murray & Dermott, „Solar System Dynamics") — ein rein linear
+// fortgeschriebenes L kann eine solche gebundene Schwingung grundsätzlich
+// nicht abbilden, unabhängig davon, wie genau die zugrunde liegende
+// Umlaufperiode bekannt ist.
+//
+// Deshalb trägt Mimas in monde.fixture.test.ts (Konstante
+// POSITIONS_SCHRANKE_ANTEIL) eine körperspezifische Positionsschranke von
+// 20 % des Bahnumfangs statt der dort für alle übrigen Monde geltenden 5 %.
+// Die vollständige Herleitung — drei Belege, die einen Datenfehler
+// ausschließen, sowie die rechnerische Ableitung der 20 % aus dem gemessenen
+// Höchstwert — steht ausführlich beim Positionstest in monde.fixture.test.ts
+// und wird hier bewusst nicht dupliziert.
 //
 // Physische Daten (Masse, Radius), Rotation/Pollagen, Farbgebung: unverändert
 // aus dem Task-8-Bericht übernommen — diese Werte hängen nicht von der
@@ -177,7 +180,7 @@ export const saturnMonde: readonly Body[] = [
       // Horizons osculating (REF_PLANE=B), JD 2451545.0, Saturn-Zentrum
       // (500@699): a = 186 036,8234 km. a_AE = 186 036,8234 / 149 597 870,7 =
       // 0,00124357935 AE. Rückrechnung: 0,00124357935 * 149 597 870,7 =
-      // 186 036,8234 km, trifft den Quellwert auf unter 0,0001 km.
+      // 186 036,8234 km, trifft den Quellwert auf unter 0,001 km.
       a: 0.00124357935,  aDot: 0,
       e: 0.02175635243,    eDot: 0,
       // i gegen Saturns Äquator (REF_PLANE=B) — praktisch identisch mit dem
@@ -210,7 +213,7 @@ export const saturnMonde: readonly Body[] = [
     orbit: {
       // Horizons osculating (REF_PLANE=B), JD 2451545.0: a = 238 419,8706 km.
       // a_AE = 238 419,8706 / 149 597 870,7 = 0,00159373840 AE. Rückrechnung:
-      // 0,00159373840 * 149 597 870,7 = 238 419,8706 km, unter 0,0001 km Fehler.
+      // 0,00159373840 * 149 597 870,7 = 238 419,8706 km, unter 0,001 km Fehler.
       a: 0.00159373840,  aDot: 0,
       e: 0.00635160473,    eDot: 0,
       // i = 0,0098° — winzig, aber nicht mehr exakt null wie in der
@@ -246,7 +249,7 @@ export const saturnMonde: readonly Body[] = [
     orbit: {
       // Horizons osculating (REF_PLANE=B), JD 2451545.0: a = 294 980,2561 km.
       // a_AE = 294 980,2561 / 149 597 870,7 = 0,00197182122 AE. Rückrechnung:
-      // 0,00197182122 * 149 597 870,7 = 294 980,2561 km, unter 0,0001 km Fehler.
+      // 0,00197182122 * 149 597 870,7 = 294 980,2561 km, unter 0,001 km Fehler.
       a: 0.00197182122,  aDot: 0,
       e: 0.00096988804,    eDot: 0,
       i: 1.09302920,         iDot: 0,
@@ -280,7 +283,7 @@ export const saturnMonde: readonly Body[] = [
     orbit: {
       // Horizons osculating (REF_PLANE=B), JD 2451545.0: a = 377 652,1841 km.
       // a_AE = 377 652,1841 / 149 597 870,7 = 0,00252444893 AE. Rückrechnung:
-      // 0,00252444893 * 149 597 870,7 = 377 652,1841 km, unter 0,0001 km Fehler.
+      // 0,00252444893 * 149 597 870,7 = 377 652,1841 km, unter 0,001 km Fehler.
       a: 0.00252444893,  aDot: 0,
       e: 0.00292837327,    eDot: 0,
       // i = 0,029° — wie bei Enceladus oben nicht mehr exakt null, aber
@@ -312,7 +315,7 @@ export const saturnMonde: readonly Body[] = [
     orbit: {
       // Horizons osculating (REF_PLANE=B), JD 2451545.0: a = 527 225,2657 km.
       // a_AE = 527 225,2657 / 149 597 870,7 = 0,00352428322 AE. Rückrechnung:
-      // 0,00352428322 * 149 597 870,7 = 527 225,2657 km, unter 0,0001 km Fehler.
+      // 0,00352428322 * 149 597 870,7 = 527 225,2657 km, unter 0,001 km Fehler.
       a: 0.00352428322,  aDot: 0,
       e: 0.00080019303,    eDot: 0,
       i: 0.31859106,         iDot: 0,
@@ -343,7 +346,7 @@ export const saturnMonde: readonly Body[] = [
       // Horizons osculating (REF_PLANE=B), JD 2451545.0: a = 1 221 934,9070 km.
       // a_AE = 1 221 934,9070 / 149 597 870,7 = 0,00816813034 AE.
       // Rückrechnung: 0,00816813034 * 149 597 870,7 = 1 221 934,9070 km,
-      // unter 0,0001 km Fehler.
+      // unter 0,001 km Fehler.
       a: 0.00816813034,  aDot: 0,
       e: 0.02860057677,    eDot: 0,
       i: 0.36004623,         iDot: 0,
@@ -375,7 +378,7 @@ export const saturnMonde: readonly Body[] = [
       // Horizons osculating (REF_PLANE=B), JD 2451545.0: a = 3 562 568,0967 km.
       // a_AE = 3 562 568,0967 / 149 597 870,7 = 0,02381429682 AE.
       // Rückrechnung: 0,02381429682 * 149 597 870,7 = 3 562 568,0967 km,
-      // unter 0,0001 km Fehler.
+      // unter 0,001 km Fehler.
       a: 0.02381429682,  aDot: 0,
       e: 0.02786209670,    eDot: 0,
       // i = 15,47° — anders als bei der Mean-Elements-Tabelle (dort i = 7,6°
