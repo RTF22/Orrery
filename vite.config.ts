@@ -10,5 +10,7 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['src/**/*.test.{ts,tsx}'],
+    // Räumt nach Komponententests den DOM auf; für die node-Tests folgenlos.
+    setupFiles: ['src/test/setup.ts'],
   },
 });

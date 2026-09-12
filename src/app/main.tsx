@@ -7,6 +7,7 @@ import { createPostFx } from '../render/postfx';
 import { attachCameraInput } from '../render/camera/input';
 import { startLoop } from './loop';
 import { useStore } from '../store';
+import { App as Bedienoberflaeche } from '../ui/App';
 import type { QualityTier } from '../store/types';
 
 /**
@@ -72,6 +73,7 @@ function App(): React.JSX.Element {
         style={{ position: 'fixed', inset: 0, width: '100%', height: '100%', display: 'block' }}
       />
       <div ref={overlayRef} style={{ position: 'fixed', inset: 0, pointerEvents: 'none' }} />
+      <Bedienoberflaeche />
     </>
   );
 }
