@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  EKLIPTIK_SCHIEFE_GRAD, poleVector, axialTiltDeg, equatorToEcliptic,
+  EKLIPTIK_SCHIEFE_GRAD, poleVector, axialTiltDeg, equatorToEcliptic, icrfKnotenVersatzDeg,
 } from './frames';
 import { bodies, bodyIndex } from '../data/index';
 import type { Vec3 } from './types';
@@ -120,6 +120,60 @@ describe('equatorToEcliptic', () => {
     expect(vierteldrehungWeiter.x).toBeCloseTo(0, 12);
     expect(vierteldrehungWeiter.y).toBeCloseTo(-Math.cos(eps), 12);
     expect(vierteldrehungWeiter.z).toBeCloseTo(Math.sin(eps), 12);
+  });
+});
+
+describe('icrfKnotenVersatzDeg', () => {
+  it('liefert 0, wenn der Pol die Ekliptiknormale ist', () => {
+    // Fällt die Äquatorebene mit der Ekliptik zusammen, gibt es keinen
+    // Knoten auf der Ekliptik (jede Richtung senkrecht zum Pol liegt schon
+    // in beiden Ebenen zugleich) — das Kreuzprodukt ist die Nullrichtung,
+    // ein Versatz zwischen "keinem" Knoten und dem ICRF-Knoten ist nicht
+    // bestimmbar. Verlangt ist hier ausdrücklich 0, nicht ein Fehlschlag,
+    // weil equatorToEcliptic() für exakt diesen Pol ebenfalls die Identität
+    // liefert (siehe deren eigener Test) — ohne Drehung braucht es auch
+    // keine Korrektur der Bahnelemente.
+    expect(icrfKnotenVersatzDeg({ x: 0, y: 0, z: 1 })).toBeCloseTo(0, 9);
+  });
+
+  it('trifft für einen Pol im Frühlingspunkt genau die negative Schiefe der Ekliptik', () => {
+    // Geschlossen herleitbarer Fall: pole = (1,0,0), die gemeinsame
+    // x-Achse von Ekliptik- und ICRF-Äquatorkoordinaten (der Frühlingspunkt
+    // selbst, der per Definition in beiden Ebenen liegt).
+    //
+    // Knoten auf der Ekliptik: (0,0,1) × (1,0,0) = (0,1,0).
+    // Knoten auf dem ICRF-Äquator: Der ICRF-Pol in Ekliptikkoordinaten ist
+    // laut poleVector-Test oben (0, sin ε, cos ε); damit
+    //   (0, sin ε, cos ε) × (1,0,0)
+    //     = (sin ε·0 − cos ε·0, cos ε·1 − 0·0, 0·0 − sin ε·1)
+    //     = (0, cos ε, −sin ε).
+    //
+    // Winkel von (0,1,0) zu (0, cos ε, −sin ε), um pole=(1,0,0) im
+    // Rechtssinn gemessen:
+    //   cos δ = (0,1,0)·(0,cos ε,−sin ε) = cos ε
+    //   sin δ = pole · [(0,1,0) × (0,cos ε,−sin ε)]
+    //         = (1,0,0) · (−sin ε, 0, 0) = −sin ε
+    // also δ = −ε — die Schiefe der Ekliptik, mit negativem Vorzeichen.
+    const eps = EKLIPTIK_SCHIEFE_GRAD;
+    expect(icrfKnotenVersatzDeg({ x: 1, y: 0, z: 0 })).toBeCloseTo(-eps, 9);
+  });
+
+  it('liefert 0, wenn der Pol der ICRF-Pol selbst ist', () => {
+    // Der spiegelbildliche entartete Fall zum ersten Test: Fällt die
+    // Äquatorebene mit dem ICRF-Äquator zusammen, gibt es keinen Knoten
+    // auf DIESER Ebene — auch hier ist der Versatz nicht bestimmbar, also 0.
+    const icrfPol = poleVector(0, 90);
+    expect(icrfKnotenVersatzDeg(icrfPol)).toBeCloseTo(0, 9);
+  });
+
+  it('trifft für den Marspol den in Task 6 gemessenen Versatz', () => {
+    // Kontrollwert gegen die unabhängige Diagnose im Task-6-Bericht: Der
+    // dort über die tatsächliche Positionsabweichung gegen JPL Horizons
+    // empirisch bestimmte Versatz (−40,858°, auf 0,02° genau mit der
+    // gemessenen Phobos/Deimos-Abweichung übereinstimmend) muss exakt aus
+    // dem hinterlegten Marspol folgen.
+    const marsPol = poleVector(317.68143, 52.88650);
+    expect(icrfKnotenVersatzDeg(marsPol)).toBeCloseTo(-40.858, 2);
   });
 });
 

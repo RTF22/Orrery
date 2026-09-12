@@ -13,6 +13,18 @@ import type { Body } from '../../sim/types';
 //   L    = node + w + M      (mittlere Länge)
 //   LDot = 36525 / P_tage * 360
 //
+// Knoten-Nullrichtung: Die Tabelle misst node — und darauf aufbauend lp und
+// L — laut eigenem Glossar „from the node of the reference plane on the
+// ICRF equator", nicht vom Knoten auf der Ekliptik. node, lp und L unten
+// stehen deshalb UNVERÄNDERT so, wie die Tabelle sie angibt (ICRF-Äquator-
+// Nullpunkt) — sie NICHT von Hand in eine ekliptikale Knotenlänge
+// umzurechnen. Die Umrechnung passiert zentral und einmalig in
+// sim/orbit.ts (icrfKnotenVersatzDeg aus sim/frames.ts, angewendet im
+// parentEquator-Zweig von positionAt), damit sie für jeden Mutterkörper mit
+// dessen eigenem Pol richtig ausfällt und nicht in jedem Mond-Datensatz neu
+// von Hand nachgerechnet werden muss. Siehe Task-6-Bericht im SDD-Ordner
+// für Herleitung und Kontrollwert (Marspol: −40,858°).
+//
 // Für P wird die sechsstellige siderische Umlaufzeit aus dem NASA/JPL NSSDC
 // Mars Fact Sheet genommen (0,31891 d und 1,26244 d), nicht die auf vier
 // Stellen gerundete Angabe der Elementtabelle (0,3187 d / 1,2625 d): Deren

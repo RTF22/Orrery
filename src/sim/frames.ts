@@ -78,3 +78,66 @@ export function equatorToEcliptic(v: Vec3, pole: Vec3): Vec3 {
     z: x.z * v.x + y.z * v.y + z.z * v.z,
   };
 }
+
+/**
+ * ICRF-Äquatorpol (Himmelsnordpol) in ekliptikalen Koordinaten J2000 — der
+ * Sonderfall poleVector(beliebige Rektaszension, 90°): Bei Deklination 90°
+ * ist die Rektaszension bedeutungslos. Ergebnis (0, sin ε, cos ε), siehe der
+ * erste poleVector-Test in frames.test.ts.
+ */
+const ICRF_AEQUATORPOL: Vec3 = poleVector(0, 90);
+
+/** Kreuzprodukt zweier Richtungen, normiert; null bei (annähernd) paralleler Eingabe. */
+function knotenrichtung(referenzNormale: Vec3, pole: Vec3): Vec3 | null {
+  const kx = referenzNormale.y * pole.z - referenzNormale.z * pole.y;
+  const ky = referenzNormale.z * pole.x - referenzNormale.x * pole.z;
+  const kz = referenzNormale.x * pole.y - referenzNormale.y * pole.x;
+  const kb = Math.sqrt(kx * kx + ky * ky + kz * kz);
+  if (kb < PARALLEL_SCHWELLE) return null;
+  return { x: kx / kb, y: ky / kb, z: kz / kb };
+}
+
+/**
+ * Winkel vom Knoten einer Äquatorebene auf der Ekliptik zu ihrem Knoten auf
+ * dem ICRF-Äquator, im Rechtssinn um pole gemessen (Grad).
+ *
+ * Hintergrund: JPLs „Planetary Satellite Mean Elements" (Quelle der
+ * Mondbahnelemente, siehe Quellenblock in data/bodies/mars-monde.ts)
+ * definieren ihre Spalte „node" wörtlich als „longitude of the ascending
+ * node measured from the node of the reference plane on the ICRF equator"
+ * (Glossar unter https://ssd.jpl.nasa.gov/sats/elem/). equatorToEcliptic()
+ * oben baut seine x-Achse dagegen als Schnittlinie von Äquator- und
+ * EKLIPTIKebene — ein anderer Nullpunkt für dieselbe Winkelangabe. Für Mars
+ * beträgt der Unterschied rechnerisch −40,858°; das deckt sich mit der in
+ * Task 6 gemessenen Positionsabweichung von Phobos/Deimos gegen JPL
+ * Horizons auf 0,02° genau (siehe Task-6-Bericht im SDD-Ordner).
+ *
+ * equatorToEcliptic() selbst bleibt bewusst unverändert: Seine Basiswahl
+ * ist in sich mathematisch korrekt (die Schnittlinie zweier Ebenen ist
+ * wohldefiniert) und durch den Vollvektor-Test in frames.test.ts von Hand
+ * hergeleitet abgesichert. Der Fehler liegt nicht in dieser Basis, sondern
+ * darin, dass die JPL-Bahnelemente eine ANDERE Basis referenzieren — die
+ * Korrektur gehört deshalb auf die Bahnelemente (node, lp, L in orbit.ts),
+ * nicht auf equatorToEcliptic.
+ *
+ * Fällt pole mit der Ekliptiknormale ODER mit dem ICRF-Pol zusammen, ist
+ * einer der beiden Knoten nicht definiert (Kreuzprodukt der Länge null) —
+ * dann liefert die Funktion 0, mangels eines bestimmbaren Versatzes.
+ */
+export function icrfKnotenVersatzDeg(pole: Vec3): number {
+  const eklKnoten = knotenrichtung({ x: 0, y: 0, z: 1 }, pole);
+  const icrfKnoten = knotenrichtung(ICRF_AEQUATORPOL, pole);
+  if (!eklKnoten || !icrfKnoten) return 0;
+
+  const cosDelta =
+    eklKnoten.x * icrfKnoten.x + eklKnoten.y * icrfKnoten.y + eklKnoten.z * icrfKnoten.z;
+  const kreuz = {
+    x: eklKnoten.y * icrfKnoten.z - eklKnoten.z * icrfKnoten.y,
+    y: eklKnoten.z * icrfKnoten.x - eklKnoten.x * icrfKnoten.z,
+    z: eklKnoten.x * icrfKnoten.y - eklKnoten.y * icrfKnoten.x,
+  };
+  const polBetrag = Math.sqrt(pole.x ** 2 + pole.y ** 2 + pole.z ** 2);
+  const sinDelta = (pole.x * kreuz.x + pole.y * kreuz.y + pole.z * kreuz.z) / polBetrag;
+
+  return (Math.atan2(sinDelta, cosDelta) * 180) / Math.PI;
+}

@@ -158,3 +158,98 @@ JPLs Nominalangabe, und bleibt davon unberührt.
 Für die inneren Planeten (Merkur bis Mars) liegen die absoluten Abweichungen
 im Bereich weniger tausend bis niedrig zehntausend km — durchweg im Rahmen
 dessen, was JPL selbst für dieses Elementmodell angibt.
+
+## Mondfixtures (`monde-horizons.json`)
+
+`monde-horizons.json` enthält 10 Referenzvektoren (Phobos und Deimos × 5
+Stichtage), abgerufen von der JPL-Horizons-API, gegen die `positionAt` aus
+`../orbit.ts` in `../monde.fixture.test.ts` geprüft wird. Im Unterschied zu
+`horizons.json` führt jeder Eintrag zusätzlich den Geschwindigkeitsvektor
+(`sollGeschwindigkeit`, km/s): Aus einem einzelnen Ortsvektor lässt sich die
+Lage der Bahnebene nicht bestimmen (unendlich viele Ebenen enthalten sowohl
+den Vektor als auch den Ursprung) — erst `r × v` liefert die Bahnnormale.
+Horizons liefert die Geschwindigkeit mit `VEC_TABLE='2'` ohnehin mit; das
+bestehende `horizons.json` verwirft sie nur, weil `horizons.test.ts` sie
+nicht braucht.
+
+### Abrufverfahren
+
+Je Mond und Stichtag eine Anfrage mit `START_TIME`/`STOP_TIME`/
+`STEP_SIZE='1d'` (der `TLIST`-Weg aus dem Planetenabruf entfällt hier, weil
+für diese fünf Kalenderdaten noch keine Julianischen Daten vorlagen — siehe
+„Alternativer Weg" oben):
+
+```
+https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND='<id>'&OBJ_DATA='NO'
+  &MAKE_EPHEM='YES'&EPHEM_TYPE='VECTORS'&CENTER='500@499'
+  &START_TIME='<Kalenderdatum>'&STOP_TIME='<Kalenderdatum + 1 Tag>'&STEP_SIZE='1d'
+  &VEC_TABLE='2'&REF_PLANE='ECLIPTIC'&OUT_UNITS='KM-S'
+```
+
+`COMMAND`: `401` Phobos, `402` Deimos. `CENTER='500@499'` ist der
+**Mars-Körpermittelpunkt** (nicht das Mars-Baryzentrum `500@4`, das für
+Mars und Phobos/Deimos wegen der geringen Mondmassen ohnehin praktisch
+zusammenfällt, aber begrifflich der falsche Bezug wäre): Die Bahnelemente
+in `mars-monde.ts` sind relativ zu Mars selbst angegeben, nicht relativ zum
+Baryzentrum des Mars-Systems. Aus der Antwort wird jeweils die erste Zeile
+zwischen `$$SOE` und `$$EOE` (00:00 TDB des angefragten Datums) entnommen;
+die zweite Zeile (Folgetag, wegen `STEP_SIZE='1d'` immer mitgeliefert) wird
+verworfen.
+
+Abgerufen am 2026-09-12.
+
+### Stichtage
+
+Die fünf Kalenderdaten stammen aus dem Implementierungsplan (Task-6-Brief):
+1976-01-01, 2000-01-01, 2026-01-01, 2050-01-01, 2076-01-01, jeweils 00:00
+TDB. Das Julianische Datum wird auch hier von Horizons selbst übernommen:
+
+| Kalenderdatum (00:00 TDB) | JDTDB (von Horizons gemeldet) |
+|---|---|
+| 1976-01-01 | 2442778.5 |
+| 2000-01-01 | 2451544.5 |
+| 2026-01-01 | 2461041.5 |
+| 2050-01-01 | 2469807.5 |
+| 2076-01-01 | 2479303.5 |
+
+Das ergibt 2 Monde × 5 Zeitpunkte = 10 Referenzpunkte, alle in
+`monde-horizons.json` unter `eintraege` enthalten.
+
+### Wichtig: die Knoten-Nullrichtung der Quelltabelle
+
+Die Bahnelemente in `../../data/bodies/mars-monde.ts` stammen aus JPLs
+„Planetary Satellite Mean Elements" (<https://ssd.jpl.nasa.gov/sats/elem/>).
+Deren Spalte `node` ist **nicht** vom Knoten der Äquatorebene auf der
+Ekliptik gemessen, sondern — wörtlich laut eigenem Glossar der Quelle —
+„measured from the node of the reference plane on the **ICRF equator**".
+`node`, `lp` und `L` bauen alle auf demselben Nullpunkt auf (`lp = node +
+w`, `L = node + w + M`) und dürfen deshalb **nicht unverändert** als
+ekliptikale Knotenlänge eingesetzt werden — die Umrechnung um den Versatz
+zwischen beiden Nullpunkten (`icrfKnotenVersatzDeg` in `../frames.ts`,
+angewendet in `../orbit.ts`) ist zwingend, sonst ergibt sich ein fester,
+knotengroßer Richtungsfehler in der Bahnposition (siehe nächster Abschnitt
+und Task-6-Bericht).
+
+### Befund und Korrektur
+
+Der erste Testlauf mit diesem Fixture schlug für Phobos und Deimos beim
+Ebenen- und beim Positionstest fehl (Radiustest bestand sofort). Die
+Abweichung lag **nicht** an diesem Fixture (die Anfrage wurde mehrfach
+gegen das offizielle Element-Glossar geprüft) und **nicht** an den Zahlen
+in `mars-monde.ts` (Rücktransformation `lp = node + w`, `L = node + w + M`
+trifft die dort tabellierten Werte exakt), sondern an genau der oben
+beschriebenen Knoten-Nullrichtung: `equatorToEcliptic()` in `../frames.ts`
+setzt die Knotenrichtung als Schnittlinie von Äquator- und **Ekliptik**ebene,
+nicht als Schnittlinie mit dem ICRF-Äquator. Für den Marspol ergibt das
+einen festen Winkel von 40,858° zwischen beiden Bezugsrichtungen — die
+zunächst gemessene Positionsabweichung lag bei allen zehn Fixture-Punkten
+im Bereich 40,9–46° (9,5–12,9 % des Bahnumfangs), fast zeitunabhängig, wie
+es ein fester Bezugsrichtungsfehler und keine Perioden-Ungenauigkeit
+erwarten lässt.
+
+Die Korrektur (`icrfKnotenVersatzDeg` in `../frames.ts`, angewandt auf
+`node`, `lp` und `L` im `parentEquator`-Zweig von `positionAt` in
+`../orbit.ts`) senkt die Positionsabweichung auf höchstens 1,96 % des
+Bahnumfangs (Schranke 5 %). Einzelheiten, die volle Abweichungstabelle vor
+und nach der Korrektur sowie die verbleibende, bewusst auf die Epoche
+J2000 beschränkte Ebenenprüfung stehen im Task-6-Bericht im SDD-Ordner.
