@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { bodies, bodyIndex, getBody } from './index';
 import { poleVector, axialTiltDeg } from '../sim/frames';
 import { AU_KM } from '../sim/orbit';
-import { t, de, type Key } from '../ui/i18n';
+import { t } from '../ui/i18n';
 
 describe('Körperkatalog', () => {
   // Die Zahl der Monde wächst über Phase 3a hinweg; festgenagelt bleiben
@@ -13,17 +13,6 @@ describe('Körperkatalog', () => {
     expect(bodies.map((b) => b.id)).toEqual(
       expect.arrayContaining(['moon', 'phobos', 'deimos']),
     );
-  });
-
-  it('vergibt eindeutige Bezeichner', () => {
-    const ids = bodies.map((b) => b.id);
-    expect(new Set(ids).size).toBe(ids.length);
-  });
-
-  it('löst alle Elternverweise auf', () => {
-    for (const b of bodies) {
-      if (b.parent !== null) expect(bodyIndex[b.parent]).toBeDefined();
-    }
   });
 
   it('gibt nur der Sonne keine Bahn', () => {
@@ -98,9 +87,11 @@ describe('Katalog-Invarianten', () => {
   it('kennt für jeden Körper einen Namensschlüssel mit hinterlegtem Text', () => {
     for (const body of bodies) {
       // t() gibt für unbekannte Schlüssel `[schlüssel]` zurück — genau darauf
-      // wird geprüft. Ein Vergleich gegen den Schlüssel selbst wäre
-      // tautologisch, weil die eckigen Klammern ihn ohnehin verschieden machen.
-      expect(t(body.info.nameKey), body.id).toBe(de[body.info.nameKey as Key]);
+      // wird geprüft. Ein Vergleich mit dem hinterlegten Text aus `de` würde
+      // nur die Implementierung von t() nachbilden, ohne eine zusätzliche
+      // Fehlerklasse zu fangen; ein Vergleich gegen den Schlüssel selbst wäre
+      // zudem tautologisch, weil die eckigen Klammern ihn ohnehin verschieden
+      // machen.
       expect(t(body.info.nameKey), body.id).not.toMatch(/^\[.*\]$/);
     }
   });

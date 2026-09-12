@@ -22,13 +22,22 @@ import type { Body } from '../../sim/types';
 //
 // Präzessionsraten aus denselben Tabellenspalten („periapsis precession
 // period", „node precession period"): Der Knoten läuft rückläufig um, die
-// Periapsis rechtläufig. Aus 1,1 a bzw. 2,3 a folgt
+// Periapsis rechtläufig. Für Phobos folgt aus 1,1 a bzw. 2,3 a
 //   nodeDot = -360 / 2,3 * 100 = -15 652 °/Jh.
 //   lpDot   = (+360 / 1,1 - 360 / 2,3) * 100 = +17 075 °/Jh.
 // Kontrollrechnung: Bei einem abgeplatteten Zentralkörper und kleiner
 // Inklination gilt theoretisch w-Punkt = -2 * Knoten-Punkt; 2,3 / 2 = 1,15
 // trifft die angegebenen 1,1 a — die beiden Spalten sind also konsistent und
 // im obigen Sinn gelesen.
+//
+// Für Deimos nennt dieselbe Spalte „node precession period" 56,2 a; daraus
+// folgt
+//   nodeDot = -360 / 56,2 * 100 = -640,5694 °/Jh.
+// Eine Periapsis-Präzessionsperiode führt die Tabelle für Deimos dagegen
+// nicht: Dort steht 0,0 a, weil e = 0,000 die Periapsis unbestimmt macht (bei
+// einer exakten Kreisbahn hat sie keine Lage, die präzedieren könnte). lpDot
+// bleibt deshalb 0, lp läuft mit dem Knoten mit — siehe auch den
+// Feldkommentar bei e weiter unten.
 //
 // Bezugsebene: Die Elemente gelten für die Laplace-Ebene, wir rechnen sie in
 // der Marsäquatorebene ('parentEquator', Pol aus mars.ts). Für Phobos ist das
@@ -72,7 +81,10 @@ export const marsMonde: readonly Body[] = [
     parent: 'mars',
     kind: 'moon',
     orbit: {
-      a: 0.00006267,      aDot: 0,
+      // a_AE = 9375 km / 149 597 870,7 km/AE = 0,00006266800 AE.
+      // Rückrechnung: 0,00006266800 * 149 597 870,7 = 9374,9994 km, trifft
+      // den Tabellenwert 9375 km auf 0,0006 km.
+      a: 0.00006266800,   aDot: 0,
       e: 0.015,           eDot: 0,
       i: 1.1,             iDot: 0,
       L: 215.2,           LDot: 41231068.326487,
@@ -105,7 +117,10 @@ export const marsMonde: readonly Body[] = [
     parent: 'mars',
     kind: 'moon',
     orbit: {
-      a: 0.00015680,      aDot: 0,
+      // a_AE = 23 457 km / 149 597 870,7 km/AE = 0,00015680036 AE.
+      // Rückrechnung: 0,00015680036 * 149 597 870,7 = 23 457,0000 km, trifft
+      // den Tabellenwert 23 457 km auf unter 0,0001 km.
+      a: 0.00015680036,   aDot: 0,
       // e = 0,000 steht so in der Tabelle; die Bahn ist auf drei Stellen
       // kreisförmig. Damit ist die Periapsis ohne Bedeutung, weshalb die
       // Tabelle auch w = 0,0 und eine Präzessionsperiode von 0,0 a führt.
