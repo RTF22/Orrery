@@ -153,4 +153,29 @@ describe('Bezugsebene parentEquator', () => {
     expect(() => positionAt('waise', { ...index, waise }, J2000))
       .toThrow(/parentEquator/);
   });
+
+  it('lehnt einen unbekannten Mutterkörper ab, statt still falsch zu rechnen', () => {
+    // "mutter" existiert im Datensatz, aber nicht im Index — der Lookup
+    // muss das explizit melden statt z.B. auf undefined-Feldern zu scheitern.
+    const index = system(268.057, 64.495, 0);
+    const findling = { ...index['trabant']!, id: 'findling', parent: 'spukgestalt' };
+    expect(() => positionAt('findling', { ...index, findling }, J2000))
+      .toThrow(/Unbekannter Mutterkörper: spukgestalt/);
+  });
+
+  it('meldet bei "ecliptic" einen unbekannten Elternkörper mit der allgemeinen Meldung, nicht der Mutterkörper-spezifischen', () => {
+    // Für "ecliptic" wird der Mutterkörper nicht gebraucht (keine Drehung
+    // nötig) — nur seine Position, die über den rekursiven positionAt-Aufruf
+    // angefragt wird. Der fehlende Elternkörper fällt also durch den
+    // allgemeinen Körper-Lookup auf, nicht durch den Mutterkörper-Lookup.
+    const index = system(268.057, 64.495, 0);
+    const findling = {
+      ...index['trabant']!,
+      id: 'findling',
+      parent: 'spukgestalt',
+      orbit: { ...index['trabant']!.orbit!, frame: 'ecliptic' as const },
+    };
+    expect(() => positionAt('findling', { ...index, findling }, J2000))
+      .toThrow(/Unbekannter Körper: spukgestalt/);
+  });
 });

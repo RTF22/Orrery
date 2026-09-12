@@ -78,18 +78,25 @@ export function positionAt(id: string, index: BodyIndex, jd: number): Vec3 {
     return relativ;
   }
 
-  const mutter = index[body.parent];
-  if (!mutter) throw new Error(`Unbekannter Mutterkörper: ${body.parent}`);
-
   // 'parentEquator': Die Elemente sind auf die Äquator- bzw. Laplace-Ebene des
   // Mutterkörpers bezogen — so gibt JPL die mittleren Elemente der Monde an.
   // Erst die Drehung in die Ekliptik macht sie mit allem anderen vergleichbar.
-  const inEkliptik = body.orbit.frame === 'parentEquator'
-    ? equatorToEcliptic(
+  // Der Mutterkörper-Lookup steht deshalb nur in diesem Zweig: Für 'ecliptic'
+  // wird der Pol des Mutterkörpers nicht gebraucht, nur seine Position (die
+  // gleich über den rekursiven positionAt-Aufruf angefragt wird). Ein fehlender
+  // Elternkörper fällt bei 'ecliptic' also durch dessen allgemeinen
+  // "Unbekannter Körper"-Check auf statt durch eine eigene, hier ungenutzte
+  // Mutterkörper-Prüfung — das hält beide Fehlermeldungen zueinander konsistent
+  // (jede Fehlermeldung kommt von der Stelle, die die fehlenden Daten wirklich braucht).
+  let inEkliptik = relativ;
+  if (body.orbit.frame === 'parentEquator') {
+    const mutter = index[body.parent];
+    if (!mutter) throw new Error(`Unbekannter Mutterkörper: ${body.parent}`);
+    inEkliptik = equatorToEcliptic(
       relativ,
       poleVector(mutter.physical.pole.raDeg, mutter.physical.pole.decDeg),
-    )
-    : relativ;
+    );
+  }
 
   const eltern = positionAt(body.parent, index, jd);
   return {

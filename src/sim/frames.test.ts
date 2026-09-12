@@ -83,6 +83,44 @@ describe('equatorToEcliptic', () => {
     const pole = poleVector(268.06, 64.5);
     expect(equatorToEcliptic({ x: 0, y: 1, z: 0 }, pole).z).toBeGreaterThan(0);
   });
+
+  it('legt die lokale Basis exakt in den aufsteigenden Knoten, mit dem richtigen Drehsinn — voller Vektor', () => {
+    // Die obigen Tests prüfen nur r.z, also je eine von drei Komponenten.
+    // Eine orthonormale, aber falsch orientierte Basis (x-Achse gespiegelt,
+    // oder x und y vertauscht) besteht sie trotzdem. Hier wird deshalb der
+    // volle Vektor gegen eine von Hand hergeleitete Erwartung geprüft.
+    //
+    // Für den Himmelsnordpol (ra=0, dec=90) liefert poleVector laut Test
+    // oben p = (0, sin ε, cos ε) mit ε = Schiefe der Ekliptik. Damit lässt
+    // sich die Basis aus dem Docstring von equatorToEcliptic von Hand
+    // ausrechnen:
+    //
+    //   x = normiert((0,0,1) × p) = normiert((-sin ε, 0, 0)) = (-1, 0, 0)
+    //       (sin ε > 0 für 0 < ε < 90°, also einfach das Vorzeichen kürzen)
+    //   y = p × x = (p.y·x.z − p.z·x.y, p.z·x.x − p.x·x.z, p.x·x.y − p.y·x.x)
+    //             = (sin ε·0 − cos ε·0, cos ε·(−1) − 0·0, 0·0 − sin ε·(−1))
+    //             = (0, −cos ε, sin ε)
+    //
+    // Probe (muss das Rechtssystem ergeben): x × y
+    //   = (0·sin ε − 0·(−cos ε), 0·0 − (−1)·sin ε, (−1)·(−cos ε) − 0·0)
+    //   = (0, sin ε, cos ε) = p ✓
+    //
+    // v = (1,0,0) liegt exakt am Knoten und muss auf x abgebildet werden;
+    // v = (0,1,0) liegt eine Vierteldrehung weiter und muss auf y abgebildet
+    // werden — das legt zugleich den Drehsinn um die Polachse fest.
+    const pole = poleVector(0, 90);
+    const eps = (EKLIPTIK_SCHIEFE_GRAD * Math.PI) / 180;
+
+    const amKnoten = equatorToEcliptic({ x: 1, y: 0, z: 0 }, pole);
+    expect(amKnoten.x).toBeCloseTo(-1, 12);
+    expect(amKnoten.y).toBeCloseTo(0, 12);
+    expect(amKnoten.z).toBeCloseTo(0, 12);
+
+    const vierteldrehungWeiter = equatorToEcliptic({ x: 0, y: 1, z: 0 }, pole);
+    expect(vierteldrehungWeiter.x).toBeCloseTo(0, 12);
+    expect(vierteldrehungWeiter.y).toBeCloseTo(-Math.cos(eps), 12);
+    expect(vierteldrehungWeiter.z).toBeCloseTo(Math.sin(eps), 12);
+  });
 });
 
 describe('Pollagen des Katalogs', () => {
