@@ -288,6 +288,15 @@ export const SCENES: readonly Scene[] = [
     // Bildmitte der Szene wirklich nah dran. Das Ringmaterial zeigt seine
     // Vorwärtsstreuung (Ringe leuchten im Gegenlicht auf) dabei, sobald
     // Sonne, Ring und Kamera näherungsweise fluchten.
+    // KORRIGIERT (Nachbesserung): variation.azimuthDeg stand hier weiterhin
+    // auf [0, 360] — der Director addiert die Variation additiv auf den
+    // Basiswert (plannedSceneAt in sim/director.ts), wodurch die sorgfältig
+    // berechneten 169,53° bei jedem Abspielen von einem gleichverteilten
+    // Zufallswert über den vollen Kreis überschrieben wurden. Der Ring
+    // kreuzte die Kamera dadurch nur noch zufällig, nicht mehr planmäßig.
+    // Wie bei saturn-ringkante jetzt [0, 0]: Die Vorbeiflug-Bewegung selbst
+    // (quer zur Blickachse, s. o.) liefert bereits genug Bildbewegung, eine
+    // zusätzliche Azimut-Streuung ist für diese Szene nicht nötig.
     id: 'ringdurchflug',
     titleKey: 'scene.ringdurchflug',
     targetId: 'saturn',
@@ -297,7 +306,7 @@ export const SCENES: readonly Scene[] = [
     durationSec: 30,
     timeRateDaysPerSec: 0.05,
     variation: {
-      azimuthDeg: [0, 360], elevationDeg: [-3, 15], distanceFactor: [0.8, 1.5],
+      azimuthDeg: [0, 0], elevationDeg: [-3, 15], distanceFactor: [0.8, 1.5],
     },
   },
   {
@@ -333,105 +342,206 @@ export const SCENES: readonly Scene[] = [
   {
     // Reiner Nahflug um den Mond selbst, kein lookAt nötig: Enceladus hat
     // mit Albedo rund 0,99 den höchsten Rückstrahlwert des Sonnensystems
-    // (Frost aus dem Südpol-Geysir, saturn-monde.ts) — flaches Streiflicht
-    // (Elevation 8°, enge Variation) und naher Abstand (5 Radien) sollen
-    // genau das zeigen.
+    // (Frost aus dem Südpol-Geysir, saturn-monde.ts) — dafür muss aber die
+    // beleuchtete Seite auch im Bild sein.
+    // KORRIGIERT (Nachbesserung): Die frühere Begründung, Beleuchtung sei
+    // über Szenenfelder nicht steuerbar, ist falsch — azimuthDeg IST der
+    // Hebel (aufKugel() in render/camera/cinema.ts platziert die Kamera rein
+    // ekliptikal um den Standortkörper; welche Seite dabei zur Kamera zeigt,
+    // hängt an genau diesem Winkel). Enceladus umkreist Saturn in nur
+    // 238 420 km (a, saturn-monde.ts), Saturn selbst steht rund 9,17 AE
+    // (1 372 159 849 km) von der Sonne entfernt (nachgerechnet aus Saturns
+    // Bahnelementen zur Epoche J2000 über sim/orbit.ts' positionInParentFrame:
+    // heliozentrisch x=959 638 100, y=979 217 915, z=−55 223 571 km) — die
+    // Parallaxe zwischen "Richtung Saturn→Sonne" und "Richtung Enceladus→
+    // Sonne" beträgt arctan(238 420 / 1 372 159 849) ≈ 0,01°, über die
+    // 30 Sekunden Szenendauer zudem praktisch konstant. Die Richtung
+    // Saturn→Sonne taugt also als Enceladus→Sonne-Näherung: Aus
+    // −saturnPos normiert folgen Azimut 225,58° und Elevation 2,31°
+    // (ekliptikal, atan2/asin). Azimut fest auf diesen Wert, Elevation nah
+    // an den 2,31° (Basis 10°, siehe Variation) — mit enger Streuung bleibt
+    // die Kamera auf der sonnenzugewandten Seite, statt wie zuvor mit
+    // variation.azimuthDeg: [0, 360] bei etwa der Hälfte der Ziehungen auf
+    // die dunkle Seite zu geraten.
+    // BEFUND (Sichtprüfung, außerhalb dieser Korrektur): Die geometrische
+    // Ausrichtung stimmt jetzt nachweislich — bei az=0/90/180/225,58/45,58°
+    // zeigt Enceladus dieselbe insgesamt gedämpfte Helligkeit, ohne die für
+    // eine falsche Hemisphäre typische scharfe Hell-Dunkel-Kante; dieselbe
+    // Dämpfung zeigt auch das unveränderte titan-dunst. Die Ursache liegt
+    // deshalb nicht am Azimut, sondern an der Beleuchtungsrechnung/den
+    // Texturen von Saturnmonden selbst — außerhalb der Reichweite einer
+    // Szenendaten-Korrektur und in render/lighting.ts, das dieser Auftrag
+    // ausdrücklich nicht anfassen soll. Gemeldet, nicht behoben.
     id: 'enceladus-hell',
     titleKey: 'scene.enceladusHell',
     targetId: 'enceladus',
     path: 'orbit',
     distanceBasis: 'bodyRadius',
-    params: { distanceInRadii: 5, elevationDeg: 8, azimuthDeg: 0, azimuthRateDegPerSec: 1.5 },
+    params: { distanceInRadii: 5, elevationDeg: 10, azimuthDeg: 225.58, azimuthRateDegPerSec: 1.5 },
     durationSec: 30,
     timeRateDaysPerSec: 0.05,
+    // Elevation additiv: Basiswert 10° plus Versatz [-8, 8] ergibt den
+    // beabsichtigten absoluten Bereich 2–18°, nah an der berechneten
+    // Sonnenelevation (2,31°) — die beleuchtete Seite bleibt so im Bild.
     variation: {
-      azimuthDeg: [0, 360], elevationDeg: [-2, 18], distanceFactor: [0.8, 1.5],
+      azimuthDeg: [-20, 20], elevationDeg: [-8, 8], distanceFactor: [0.8, 1.5],
     },
   },
   {
-    // BEFUND wie bei Titan (siehe dort und Bericht): Ein lookAt auf Neptun
-    // hält Triton NICHT zuverlässig im Bild — nachgerechnet lag Triton bei
-    // J2000 112,6° neben der Blickachse zu Neptun, deutlich außerhalb der
-    // 25°-Bildhälfte. Kamera blickt deshalb auf Triton selbst (kein
-    // lookAt), das zeigt den Mond zuverlässig. Azimut läuft mit 11°/s fast
-    // einmal ganz herum (35 s ≈ 385°), damit Neptun mit guter Chance
-    // wenigstens einmal durchs Bild zieht — nicht garantiert. Die
-    // Rückläufigkeit selbst (i = 156,83° gegen Neptuns Äquator, neptun-
-    // monde.ts) zeigt sich ohnehin erst über mehrere Umläufe (Periode
-    // 5,877 Tage); 35 s bei 0,4 Tagen/s decken knapp zweieinhalb Umläufe ab.
+    // NEU AUFGEBAUT (Nachbesserung, ersetzt die vorige mondzentrierte
+    // Fassung): Bei 8 Tritonradien Abstand steht der Mond praktisch still
+    // im Bild — Rückläufigkeit ist eine BAHN-Eigenschaft und wird nur
+    // planetenzentriert sichtbar, wie schon bei galileisches-schattenspiel.
+    // Die Szene zielt deshalb jetzt auf Neptun selbst (kein lookAt), Tritons
+    // Bahnlinie zeichnet render/orbits.ts automatisch um Neptun; der Mond
+    // trägt bei dieser Kameraentfernung kein Label mehr (8-px-Schwelle),
+    // was hier hinnehmbar ist — das Motiv ist die Bahn, nicht die Nahsicht.
+    //
+    // Abstand: Tritons a = 354 766 km / Neptunradius 24 622 km = 14,41
+    // Neptunradien. distanceInRadii 45 hält bei distanceFactor 0,8 (engste
+    // Ziehung) die Halbbildbreite (45 * 0,8 * 24 622 km * tan 25° ≈
+    // 413 000 km, Kamera-FOV 50°, halber Öffnungswinkel 25°, wie bei
+    // galileisches-schattenspiel) über Tritons Bahnradius (354 766 km,
+    // rund 16 % Marge) — die volle Bahn passt ins Bild.
+    //
+    // Zeitraffer: 35 s * 0,4 Tage/s = 14 simulierte Tage; Tritons Umlauf
+    // dauert 5,877 Tage (neptun-monde.ts) — rund 2,4 volle, sichtbar
+    // rückläufige Umläufe.
+    //
+    // Beleuchtung (derselbe Fehler wie bei enceladus-hell, hier milder, weil
+    // Neptun bei 35 Radien-Vielfachen ohnehin nur eine Scheibe im Bild ist,
+    // aber ebenso ungeprüft): Richtung Neptun→Sonne zur Epoche J2000, aus
+    // Neptuns Bahnelementen über positionInParentFrame nachgerechnet
+    // (heliozentrisch x=2 513 956 734, y=−3 738 856 178, z=19 059 249 km) —
+    // −neptunePos normiert ergibt Azimut 123,92°, Elevation −0,24°. Neptun-
+    // Triton-Abstand (354 766 km) gegen Neptun-Sonne-Abstand (30,12 AE =
+    // 4 505 484 129 km) ergibt eine Parallaxe von arctan(354 766 /
+    // 4 505 484 129) ≈ 0,0045° — die Neptun-Sonnen-Richtung gilt praktisch
+    // unverändert auch für Triton. Azimut fest auf 123,92° mit enger
+    // Streuung, statt wie zuvor mit variation.azimuthDeg: [0, 360] bei etwa
+    // der Hälfte der Ziehungen die unbeleuchtete Seite zu zeigen.
     id: 'triton-rueckwaerts',
     titleKey: 'scene.tritonRueckwaerts',
-    targetId: 'triton',
+    targetId: 'neptune',
     path: 'orbit',
     distanceBasis: 'bodyRadius',
-    params: { distanceInRadii: 8, elevationDeg: 12, azimuthDeg: 0, azimuthRateDegPerSec: 11 },
+    params: { distanceInRadii: 45, elevationDeg: 45, azimuthDeg: 123.92, azimuthRateDegPerSec: 1 },
     durationSec: 35,
     timeRateDaysPerSec: 0.4,
-    // Elevation additiv: Basiswert 12° plus Versatz [-10, 10] ergibt den
-    // beabsichtigten absoluten Bereich 2–22°.
+    // Elevation additiv: Basiswert 45° plus Versatz [-15, 15] ergibt den
+    // beabsichtigten absoluten Bereich 30–60° — schräg genug, um die stark
+    // geneigte (i = 156,83° gegen Neptuns Äquator) Bahnellipse als Ellipse
+    // statt als Linie zu zeigen.
     variation: {
-      azimuthDeg: [0, 360], elevationDeg: [-10, 10], distanceFactor: [0.8, 1.5],
+      azimuthDeg: [-20, 20], elevationDeg: [-15, 15], distanceFactor: [0.8, 1.5],
     },
   },
   {
-    // Iapetus' Bahn ist um 15,47° gegen Saturns Äquator und damit gegen
-    // die Ringebene geneigt (saturn-monde.ts) — bei a = 3 562 568 km ergibt
-    // das eine maximale Auslenkung von rund 950 000 km aus der Ringebene.
-    // BEFUND wie bei Titan/Triton (siehe dort und Bericht): ein lookAt auf
-    // Saturn hält Iapetus NICHT im Bild (bei J2000 129,4° neben der
-    // Blickachse). Anders als dort bleibt dies eine STATISCHE Szene (kein
-    // Azimutlauf, der Saturn zufällig einfinge) — also kein lookAt (Kamera
-    // blickt auf Iapetus selbst), und der feste Azimut/Elevations-Versatz
-    // ist stattdessen so gewählt, dass er der Richtung Iapetus→Saturn bei
-    // J2000 (der Standard-Startzeit der Anwendung) ENTGEGENgesetzt ist:
-    // az=215,29°, el=16,73° (aus scaledPositionAt(iapetus)/(saturn)
-    // nachgerechnet, siehe Bericht). Die Kamera steht damit bei J2000 auf
-    // der von Saturn abgewandten Seite von Iapetus, sodass Saturn beim
-    // Blick auf Iapetus ungefähr in dieselbe Richtung fällt. Das gilt nur
-    // näherungsweise und nur nahe J2000 — bei anderer Simulationszeit
-    // (Iapetus-Umlauf 79,33 Tage) dreht sich die tatsächliche Richtung
-    // weiter, während dieser feste Versatz stehen bleibt.
+    // NEU AUFGEBAUT (Nachbesserung, ersetzt die vorige mondzentrierte
+    // Fassung mit festem Azimut-/Elevations-Versatz gegen Saturn): Bei
+    // 8 Iapetusradien steht der Mond praktisch still im Bild — die geneigte
+    // Bahn ist eine BAHN-Eigenschaft und wird erst planetenzentriert
+    // sichtbar (wie galileisches-schattenspiel). Die Szene zielt deshalb
+    // jetzt auf Saturn selbst samt Ringsystem (kein lookAt); Iapetus' Bahn
+    // zeichnet render/orbits.ts automatisch um Saturn. Iapetus trägt bei
+    // dieser Kameraentfernung kein Label mehr (8-px-Schwelle) — hinnehmbar,
+    // das Motiv ist die gegen den Ring geneigte Bahn, nicht die Nahsicht auf
+    // den Mond.
+    //
+    // BEFUND (per Sichtprüfung, zwei Fehlschläge vor dieser Zahl): Iapetus'
+    // a = 3 562 568 km / Saturnradius 58 232 km = 61,19 Saturnradien — ein
+    // für einen Mond ungewöhnlich weiter Umlauf.
+    // Erster Versuch, distanceInRadii 185 (die einfache Kugelgeometrie
+    // distanceInRadii ≈ Bahnradius / tan(25°) für einen bildfüllenden
+    // Kreis): Die Sichtprüfung zeigte eine ganze Systemübersicht mit
+    // Jupiter statt Saturn. Ursache: sim/scale.ts skaliert Mond-Offsets MIT
+    // sizeScale (Kommentar dort: "Verhältnis Planetenradius zu Mondbahn
+    // bleibt bei jedem Preset exakt korrekt"), Saturns eigenen
+    // Sonnenabstand dagegen unabhängig davon mit der potenzkomprimierten
+    // distanceExponent (0,6 im Schaubild-Voreinstellungspreset) — bei 185
+    // lag die Kamera dadurch rund 808 Mio. km von Saturn entfernt, 143 %
+    // von Saturns eigenem komprimiertem Sonnenabstand (565 Mio. km,
+    // nachgerechnet über compressDistance()): weiter von Saturn weg als
+    // Saturn von der Sonne.
+    // Zweiter Versuch, distanceInRadii 20 (weit innerhalb von Saturns
+    // eigenem Sonnenabstand, rund 15 % bei distanceFactor 1,5): Saturn
+    // wieder klar dominant, aber Iapetus' Bahn lag komplett außerhalb des
+    // Bildausschnitts — die einfache Kugelgeometrie unterschätzt hier
+    // stark, weil sie voraussetzt, dass der Bahnradius klein gegen den
+    // Kameraabstand bleibt; bei Iapetus ist die Bahn selbst (rund
+    // 178 Mio. km skaliert) in derselben Größenordnung wie ein sinnvoller
+    // Kameraabstand zu Saturn, die Näherung passt also nicht mehr.
+    // distanceInRadii 40 (per Sichtprüfung gefunden, nicht vorausberechnet):
+    // zeigt Saturn samt Ringen deutlich dominant, UND Iapetus' vollständige,
+    // klar geneigte Bahnellipse komfortabel im Bild — der Kameraabstand
+    // bleibt dabei mit höchstens rund 175 Mio. km (bei distanceFactor 1,5)
+    // unter einem Drittel von Saturns komprimiertem Sonnenabstand, weit
+    // entfernt vom 143-%-Fehlschlag oben.
+    //
+    // Zeitraffer: Iapetus' Umlauf dauert 79,33 Tage (saturn-monde.ts,
+    // LDot-Rückrechnung). timeRateDaysPerSec 3 * 30 s = 90 simulierte Tage,
+    // gut 1,13 Umläufe — die geneigte Ellipse wird während der Szene einmal
+    // vollständig durchlaufen (per Sichtprüfung bestätigt).
+    //
+    // Beleuchtung: dieselbe Saturn→Sonne-Richtung wie bei enceladus-hell
+    // (az=225,58°, el=2,31°, siehe Herleitung dort) für eine ordentlich
+    // beleuchtete Ausgangslage; die Streuung bleibt trotzdem enger als im
+    // sonstigen Katalog, damit die Ringebene nicht zufällig von der
+    // Schattenseite gezeigt wird.
     id: 'iapetus-schief',
     titleKey: 'scene.iapetusSchief',
-    targetId: 'iapetus',
-    path: 'static',
+    targetId: 'saturn',
+    path: 'orbit',
     distanceBasis: 'bodyRadius',
-    params: { distanceInRadii: 8, elevationDeg: 16.73, azimuthDeg: 215.29, azimuthRateDegPerSec: 0 },
+    params: { distanceInRadii: 40, elevationDeg: 45, azimuthDeg: 225.58, azimuthRateDegPerSec: 1 },
     durationSec: 30,
-    timeRateDaysPerSec: 0.1,
-    // Abweichend vom sonstigen Katalog KEIN voller Azimut-Bereich: Azimut
-    // und Elevation sind auf die Saturn-Richtung bei J2000 abgestimmt (s.
-    // o.); ein voller [0, 360]-Bereich würde diese Abstimmung bei jedem
-    // Abspielen wieder zunichtemachen. [-15, 15] / [-8, 8] halten die
-    // Abweichung der Blickachse auf rund 16° und damit unter der 25°-
-    // Bildhälfte (nachgerechnet, siehe Bericht).
+    timeRateDaysPerSec: 3,
+    // Elevation additiv: Basiswert 45° plus Versatz [-15, 15] ergibt den
+    // beabsichtigten absoluten Bereich 30–60° — schräg genug, um die um
+    // 15,47° gegen Saturns Äquator geneigte Bahnellipse als Ellipse statt
+    // als Linie zu zeigen.
     variation: {
-      azimuthDeg: [-15, 15], elevationDeg: [-8, 8], distanceFactor: [0.8, 1.5],
+      azimuthDeg: [-20, 20], elevationDeg: [-15, 15], distanceFactor: [0.8, 1.5],
     },
   },
   {
     // Uranus liegt mit rund 98° Achsneigung praktisch auf der Seite
     // (uranus.ts) — seine Ringebene (Außenkante 51 000 km, 2,01
-    // Uranusradien) steht damit nahezu senkrecht zur Bahnebene. Ob sie im
-    // Bild als senkrechte Linie erscheint, hängt zusätzlich vom Azimut ab
-    // (aufKugel() misst rein ekliptikal, s. Befund bei saturn-ringkante) —
-    // per Sichtprüfung erschien der Ring bei einem Azimut während der
-    // Rotation eher als dünnes horizontales Band; in jedem Fall zeigt er
-    // sich fast kantengleich, passend zu „liegender Planet". 7 Uranusradien
-    // halten die Ringaußenkante auch am unteren Rand der Abstands-Variation
-    // (Faktor 0,8 → rund 20° Öffnungswinkel) innerhalb der Bildhälfte.
+    // Uranusradien) steht damit nahezu senkrecht zur Bahnebene.
+    // KORRIGIERT (Nachbesserung): Der vorige Stand ließ params.azimuthDeg
+    // bei 0 und variation.azimuthDeg bei [0, 360] — nie auf den tatsächlich
+    // maßgeblichen Winkel gesetzt, dasselbe Muster wie bei ringdurchflug.
+    // Selbst nachgerechnet (poleVector(257.311, −15.175) aus frames.ts,
+    // dieselbe Methode wie bei saturn-ringkante): Uranus' Pol liegt
+    // ekliptikal bei Länge 257,65°, Breite 7,72°. Die Ringebene schneidet
+    // die durch aufKugel() (rein ekliptikal, Elevation 0) aufgespannte Ebene
+    // an zwei Knoten bei Länge ± 90° — 167,65° und 347,65° —, denn dort
+    // steht der Azimutvektor senkrecht auf der Projektion des Pols (Herleitung:
+    // p·(cos az, sin az, 0) = |proj(p)|·cos(az − Pollänge) wird bei
+    // az = Pollänge ± 90° null). Azimut fest auf 167,65° (die kleinere der
+    // beiden Lösungen, wie bei saturn-ringkante). Streuung eng auf
+    // [-10, 10] statt vollem Kreis: Die scheinbare Ring-Abplattung folgt
+    // |Kamerarichtung · Pol| — bei dieser Elevation (Basis 10° ± 10°, s. u.)
+    // bleibt sie über den ganzen Streuungsbereich unter rund 0,2 (deutlich
+    // "kantig" statt offen). Der weiterhin laufende Azimut (1,2°/s, 35 s
+    // Dauer ≈ 42° Drift) lässt den Ring im Lauf der Szene sichtbar öffnen —
+    // gewolltes Kamera-Schwenken dieser orbit-Szene, keine Zufallsstreuung,
+    // und außerhalb des hier behobenen Fehlers.
+    // 7 Uranusradien halten die Ringaußenkante auch am unteren Rand der
+    // Abstands-Variation (Faktor 0,8 → rund 20° Öffnungswinkel) innerhalb
+    // der Bildhälfte.
     id: 'uranus-gekippt',
     titleKey: 'scene.uranusGekippt',
     targetId: 'uranus',
     path: 'orbit',
     distanceBasis: 'bodyRadius',
-    params: { distanceInRadii: 7, elevationDeg: 10, azimuthDeg: 0, azimuthRateDegPerSec: 1.2 },
+    params: { distanceInRadii: 7, elevationDeg: 10, azimuthDeg: 167.65, azimuthRateDegPerSec: 1.2 },
     durationSec: 35,
     timeRateDaysPerSec: 0.3,
     // Elevation additiv: Basiswert 10° plus Versatz [-10, 10] ergibt den
     // beabsichtigten absoluten Bereich 0–20°.
     variation: {
-      azimuthDeg: [0, 360], elevationDeg: [-10, 10], distanceFactor: [0.8, 1.5],
+      azimuthDeg: [-10, 10], elevationDeg: [-10, 10], distanceFactor: [0.8, 1.5],
     },
   },
   {
@@ -442,6 +552,14 @@ export const SCENES: readonly Scene[] = [
     // Regressionsschranke in render/lighting.test.ts) bestätigt: Ceres
     // bleibt hell genug — anders als das dort dokumentierte Befund-Ende
     // der Distanzkalibrierung bei Eris (rund 97 AE).
+    // KORRIGIERT (Nachbesserung): timeRateDaysPerSec 2 (48 Stunden
+    // Simulationszeit je Sekunde) gegen Ceres' Rotationsperiode von
+    // 9,074170 h (zwergplaneten.ts) ergibt 48 / 9,074170 ≈ 5,29 Eigen-
+    // umdrehungen je Sekunde auf einem bei 6 Radien Abstand bildfüllenden
+    // Körper (render/bodies.ts rendert die Rotation) — das strobt. Gesenkt
+    // auf 0,02: 0,02 Tage/s = 0,48 Stunden/s, eine Umdrehung dauert also
+    // 9,074170 / 0,48 ≈ 18,9 Sekunden Bildzeit — über die 30 s Szenendauer
+    // gut anderthalb ruhig sichtbare Umdrehungen statt gut 158 strobender.
     id: 'ceres-guertel',
     titleKey: 'scene.ceresGuertel',
     targetId: 'ceres',
@@ -449,7 +567,7 @@ export const SCENES: readonly Scene[] = [
     distanceBasis: 'bodyRadius',
     params: { distanceInRadii: 6, elevationDeg: 15, azimuthDeg: 0, azimuthRateDegPerSec: 1 },
     durationSec: 30,
-    timeRateDaysPerSec: 2,
+    timeRateDaysPerSec: 0.02,
     // Elevation additiv: Basiswert 15° plus Versatz [-10, 10] ergibt den
     // beabsichtigten absoluten Bereich 5–25°.
     variation: {
