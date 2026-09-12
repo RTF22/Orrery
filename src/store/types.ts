@@ -1,4 +1,4 @@
-export type CameraMode = 'free' | 'attached' | 'follow';
+export type CameraMode = 'free' | 'attached' | 'follow' | 'cinema';
 export type QualityTier = 'auto' | 'low' | 'medium' | 'high';
 
 /**
