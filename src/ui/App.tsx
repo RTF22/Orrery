@@ -3,6 +3,7 @@ import { t } from './i18n';
 import { Panel } from './panels/Panel';
 import { TimePanel } from './panels/TimePanel';
 import { ScalePanel } from './panels/ScalePanel';
+import { CinemaPanel } from './panels/CinemaPanel';
 import { CameraPanel } from './panels/CameraPanel';
 import { DisplayPanel } from './panels/DisplayPanel';
 import { BodyTree } from './panels/BodyTree';
@@ -18,6 +19,8 @@ const KUERZEL: readonly (readonly [string, string])[] = [
   ['◀ ▶', 'shortcuts.rate'],
   ['R', 'shortcuts.reverse'],
   ['Pos1', 'shortcuts.resetCamera'],
+  ['C', 'shortcuts.cinema'],
+  ['N', 'shortcuts.nextScene'],
   ['?', 'shortcuts.toggleHelp'],
 ];
 
@@ -62,6 +65,7 @@ export function App(): React.JSX.Element | null {
       <div className="flex w-72 max-w-full flex-col gap-2 overflow-y-auto">
         <TimePanel />
         <ScalePanel />
+        <CinemaPanel />
         <CameraPanel />
         <DisplayPanel />
         <BodyTree />

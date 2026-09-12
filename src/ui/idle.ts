@@ -64,12 +64,14 @@ export function useIdleHide(): boolean {
     });
 
     const beiEingabe = (e: Event): void => {
-      // `c` und `n` steuern den Kino-Modus selbst und gelten nicht als
-      // Störung — sonst hielte der Start ihn sofort wieder an.
+      // Die Bedienung des Kino-Modus zählt nicht als Störung — sonst hielte
+      // der Start ihn sofort wieder an und „Nächste Szene" bliebe stehen.
       const istSteuertaste = e instanceof KeyboardEvent
         && (e.key === 'c' || e.key === 'n');
+      const ausKinoBedienung = e.target instanceof Element
+        && e.target.closest('[data-cinema-control]') !== null;
       waechter.handleInput(Date.now());
-      if (!istSteuertaste) noteUserInput();
+      if (!istSteuertaste && !ausKinoBedienung) noteUserInput();
     };
 
     const takt = window.setInterval(() => { waechter.tick(Date.now()); }, TAKT_MS);
