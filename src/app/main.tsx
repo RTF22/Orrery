@@ -4,6 +4,7 @@ import '../index.css';
 import { createRenderer } from '../render/renderer';
 import { buildScene } from '../render/scene';
 import { createPostFx } from '../render/postfx';
+import { attachCameraInput } from '../render/camera/input';
 import { startLoop } from './loop';
 import { useStore } from '../store';
 import type { QualityTier } from '../store/types';
@@ -27,6 +28,9 @@ function App(): React.JSX.Element {
     const ctx = createRenderer(canvas);
     const szene = buildScene(ctx);
     const postfx = createPostFx(ctx);
+    // Ziehen dreht, Rad und Zwei-Finger-Geste zoomen — geschrieben wird
+    // ausschließlich in den Store, gelesen im nächsten Bild vom Controller.
+    const stopInput = attachCameraInput(canvas);
 
     // Der Renderer hängt selbst am resize-Ereignis und wurde zuerst
     // registriert; die Composer-Ziele folgen daher mit der bereits neuen
@@ -51,6 +55,7 @@ function App(): React.JSX.Element {
 
     return () => {
       stopLoop();
+      stopInput();
       window.removeEventListener('resize', onResize);
       postfx.dispose();
       ctx.dispose();

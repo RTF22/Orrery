@@ -4,7 +4,7 @@ import type { AppState } from '../store/types';
 import { createBodyViews } from './bodies';
 import { createOrbitLines } from './orbits';
 import { createStarfield } from './starfield';
-import { deriveCameraKm } from './camera';
+import { createCameraController } from './camera/controller';
 import { scaledPositionAt } from '../sim/scale';
 import { bodyIndex } from '../data/index';
 import { AU_KM } from '../sim/orbit';
@@ -25,8 +25,6 @@ const AU_EINHEITEN = kmToUnits(AU_KM);
 export interface SceneHandle {
   update: (jd: number, dt: number, state: AppState) => void;
 }
-
-const URSPRUNG_KM = new THREE.Vector3(0, 0, 0);
 
 /**
  * Baut die Szene auf: die Körper-Meshes (Task 10) sowie ein Punktlicht an
@@ -50,12 +48,16 @@ export function buildScene(ctx: RenderContext): SceneHandle {
   // jedem Frame mit, was den teuersten Teil dieser Aufgabe wäre.
   let letzterScale: AppState['scale'] | null = null;
 
+  // Kameramodi, Dämpfung und Blickrichtung liegen vollständig im Controller;
+  // die Szene braucht davon nur die Position (siehe camera/controller.ts).
+  const kamera = createCameraController(ctx.camera);
+
   return {
-    update(jd, _dt, state) {
+    update(jd, dt, state) {
       // Die Kamera selbst bleibt konstruktionsbedingt im Ursprung (siehe
       // renderer.ts) — bewegt wird die Welt relativ zu dieser gedachten
       // Kameraposition in Kilometern.
-      const { x, y, z } = deriveCameraKm(state.camera);
+      const { x, y, z } = kamera.update(state, jd, dt, state.scale);
       const cameraKm = new THREE.Vector3(x, y, z);
 
       if (state.scale !== letzterScale) {
@@ -82,10 +84,6 @@ export function buildScene(ctx: RenderContext): SceneHandle {
       // Helligkeit 1 vollständig unbeleuchtet.
       licht.intensity = state.display.brightness * AU_EINHEITEN ** state.display.lightFalloff;
       licht.decay = state.display.lightFalloff;
-
-      // Blick zurück zum Ursprung, um den die Kamera provisorisch kreist.
-      const blickzielRender = worldToRender(URSPRUNG_KM, cameraKm);
-      ctx.camera.lookAt(blickzielRender.x, blickzielRender.y, blickzielRender.z);
     },
   };
 }
