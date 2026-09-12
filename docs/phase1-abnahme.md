@@ -11,7 +11,7 @@ die Zahlen unten stammen aus der headless-Messung dieser Maschine.
 
 ```
 npm run lint   → ohne Befund
-npm test       → 152 Tests in 21 Dateien, alle grün
+npm test       → 152 Tests in 27 Dateien, alle grün
 npm run build  → erfolgreich
 ```
 
