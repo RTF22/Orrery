@@ -128,19 +128,41 @@ function bahnnormaleIst(id: string, jd: number): Vec3 {
  * einem gemessenen Höchstwert von 0,88°.
  */
 /**
- * Triton bekommt aus demselben Grund wie Deimos und Iapetus eine eigene,
- * etwas weitere Schranke: Die Mean-Elements-Tabelle führt Triton (anders
- * als die fünf großen Uranusmonde) mit Frame „Laplace" statt „equatorial"
- * und nennt einen „tilt angle" von 0,4° gegen Neptuns Äquator — Neptuns
- * eigener IAU-Pol trägt laut SPICE-Kernel ein periodisches Korrekturglied
- * (Periode 688,2 Jahre), das genau diese Kopplung zwischen Tritons Bahn und
- * Neptuns Polrichtung ausdrückt (siehe Quellenblock in neptun-monde.ts).
- * sim/orbit.ts verwendet trotzdem denselben festen Neptun-Rotationspol wie
- * für alle anderen Berechnungen (dieselbe, bewusst in Kauf genommene
- * Vereinfachung wie bei Deimos und Iapetus). Gemessen gegen dieses Fixture
- * weicht Tritons Neigung gegen Neptuns Äquator dadurch an JEDEM der fünf
- * Stichtage um 0,39°–0,51° ab (Maximum bei J2000 und 1976) — die Schranke
- * von 0,6° deckt das mit Reserve ab, ohne beliebig weit aufgeweicht zu sein.
+ * Triton bekommt eine eigene, etwas weitere Schranke — aus einem GEKLÄRTEN
+ * Grund, nicht (wie ursprünglich vermutet) wegen Tritons Laplace-Ebene.
+ *
+ * FRÜHERE VERMUTUNG (verworfen): Die Mean-Elements-Tabelle führt Triton
+ * (anders als die fünf großen Uranusmonde) mit Frame „Laplace" statt
+ * „equatorial" und nennt einen „tilt angle" von 0,4° gegen Neptuns Äquator.
+ * Das liegt aber 27 % neben dem gemessenen Wert (0,51°) — zu weit, um als
+ * Erklärung zu tragen.
+ *
+ * TATSÄCHLICHE URSACHE — eine Polkonventions-Differenz, nicht Tritons
+ * Bahnebene selbst: sim/orbit.ts dreht Tritons Bahn gegen Neptuns FESTEN,
+ * nutationskorrigierten Rotationspol (neptune.ts: 299,3337°/42,9504°, für
+ * Neptuns eigene Achse nachweislich richtig). Horizons' „OM" für
+ * REF_PLANE='B' misst Tritons Bahnelemente aber gegen Neptuns ROHEN,
+ * konstanten IAU-Pol (299,36°/43,46°) — der Winkel zwischen beiden Polen
+ * beträgt rechnerisch 0,5100°. Gegenprobe: Gegen den ROHEN Pol gemessen
+ * fällt Tritons Neigungsabweichung an den fünf Stichtagen (1976/2000/2026/
+ * 2050/2076) von 0,5097°/0,5097°/0,4907°/0,4524°/0,3869° auf nur noch
+ * 0,0122°/0,0003°/0,0046°/0,0040°/0,0025° — praktisch Rauschniveau. Das
+ * bestätigt die Diagnose zahlenmäßig (Einzelheiten: Task-9-Fix-Bericht im
+ * SDD-Ordner).
+ *
+ * Die 0,6°-Schranke deckt deshalb eine FRAME-INKONSISTENZ ab (Horizons'
+ * Referenzebene für Satellitenelemente vs. diesem Modells festen,
+ * korrekten Neptun-Pol), keinen physikalischen Effekt — anders als bei
+ * Deimos und Iapetus, deren weitere Schranken echte (wenn auch bewusst
+ * vereinfachte) Bahnebenen-Abweichungen abdecken. Sauberer Weg, sie später
+ * zu schließen: Tritons i/node/lp aus den Horizons-VEKTOREN (nicht den
+ * ELEMENTS) neu gegen den korrigierten Pol ableiten — für diesen Fix-Task
+ * geprüft und numerisch bestätigt (reproduziert Horizons' eigene Werte
+ * gegen den rohen Pol auf 0,0003–0,0007° genau), aber nicht übernommen:
+ * Bei Tritons winziger Exzentrizität (e≈0,00015) ist node/lp extrem
+ * rauschempfindlich, und das Ergebnis wäre — anders als jede andere Zahl
+ * in diesem Katalog — nicht über eine dokumentierte Horizons-URL
+ * nachvollziehbar (siehe Quellenblock in neptun-monde.ts).
  */
 const NEIGUNGS_SCHRANKE_GRAD: Record<string, number> = {
   phobos: 0.5,
@@ -210,7 +232,7 @@ const NEIGUNGS_SCHRANKE_GRAD: Record<string, number> = {
  */
 /**
  * Triton bekommt aus einem ANDEREN Grund als Mimas eine eigene, weitere
- * Positionsschranke — nicht eine Resonanz, sondern eine ungenaue
+ * Positionsschranke — nicht eine Resonanz, sondern eine fehlende
  * Präzessionsrate: Die Mean-Elements-Tabelle nennt für Triton
  * P_apsis = 0,000 a (bei e ≈ 0,00015 praktisch unbestimmt, wie bei
  * Enceladus/Dione/Io) und P_node = 340,379 a. Wörtlich eingesetzt weicht
@@ -222,14 +244,35 @@ const NEIGUNGS_SCHRANKE_GRAD: Record<string, number> = {
  * gemessen, während sim/orbit.ts bewusst Neptuns FESTEN, bei T = 0
  * ausgewerteten Rotationspol verwendet. Eine direkte Differenz ergibt
  * deshalb keine für dieses feste Modell gültige nodeDot/lpDot-Rate.
- * nodeDot = lpDot = 0 (siehe neptun-monde.ts) ist die gegen das Fixture
- * geprüfte beste Wahl: Die Positionsabweichung wächst NICHT monoton mit
- * |T| (1976: 4,0 %; 2026: 4,3 %; 2050: 6,0 %; 2076: 12,4 % des
- * Bahnumfangs) — die Signatur einer fehlenden Nachführung, nicht eines
- * Vorzeichen- oder Rundungsfehlers. Große Halbachse (1 %) und volle
- * Bahnebene bei J2000 (0,5°, s. u.) bestehen dagegen mit großem Abstand.
- * Die Schranke von 15 % (statt 5 %) deckt den größten gemessenen Wert
- * (12,4 % bei 2076) mit Reserve ab, nach demselben Muster wie Mimas oben.
+ * nodeDot = lpDot = 0 (siehe neptun-monde.ts) ist die hier GEWÄHLTE Wahl,
+ * nicht die hergeleitete oder nachweislich optimale: Die Positionsabweichung
+ * wächst STRENG MONOTON mit |T| (1976: 4,04 %; 2026: 4,32 %; 2050: 7,89 %;
+ * 2076: 12,42 % des Bahnumfangs) — genau die erwartete Signatur einer
+ * fehlenden Präzessionsrate, kein Vorzeichen- oder Rundungsfehler. Große
+ * Halbachse (1 %) und volle Bahnebene bei J2000 (0,5°, s. u.) bestehen
+ * dagegen mit großem Abstand.
+ *
+ * KEINE OPTIMALITÄTSAUSSAGE: Eine Parametersuche über nodeDot findet bei
+ * nodeDot ≈ −27 °/Jh einen kleineren Worst Case (6,03 % statt 12,42 %).
+ * Dieser Wert wird bewusst NICHT eingetragen — das wäre Training auf
+ * dieses Fixture, keine unabhängig (z. B. aus einer Laplace-Präzessions-
+ * theorie) hergeleitete Rate, und nodeDot = 0 bleibt die physikalisch
+ * motivierte Wahl (Knoten eingefroren, mangels Nachführung).
+ *
+ * Die Schranke von 15 % ist deshalb eine GEWÄHLTE Toleranz (12,42 %
+ * gemessen plus Aufschlag), keine hergeleitete Fehlergrenze — nach dem
+ * gleichen ANLASS wie Mimas oben (körperspezifisch statt allgemein), aber
+ * ohne dessen Bandbreiten-Herleitung.
+ *
+ * WAS DIESER TEST FÜR TRITON DADURCH NICHT MEHR PRÜFT: 15 % des
+ * Bahnumfangs entsprechen bei 354 766 km Bahnradius rund 0,15 · 2π ·
+ * 354 766 km ≈ 334 400 km bzw. 0,15 · 360° = 54° Bahnphase. Der Test prüft
+ * für Triton dadurch faktisch nur noch Halbachse und Ebene, nicht mehr den
+ * Ort auf der Bahn — ein um bis zu 54° falsch platzierter Triton bliebe
+ * unentdeckt. Sauberer Weg für später: eine hergeleitete Laplace-
+ * Präzessionsrate für Tritons Knoten/Perizentrum beschaffen (z. B. aus
+ * einer Laplace-Ebenen-Theorie für Triton), statt nodeDot = 0 nur empirisch
+ * zu rechtfertigen.
  */
 const POSITIONS_SCHRANKE_ANTEIL: Record<string, number> = { mimas: 0.2, triton: 0.15 };
 
@@ -274,7 +317,7 @@ describe('Mondbahnen gegen JPL Horizons', () => {
   );
 
   it.each(eintraege)(
-    '$id bei JD $jd: Neigung gegen die Äquatorebene des Mutterkörpers auf 0,5°/1,0°',
+    '$id bei JD $jd: Neigung gegen die Äquatorebene des Mutterkörpers auf 0,5° (Deimos 1,0°, Iapetus 1,2°, Triton 0,6°)',
     ({ id, jd, soll, sollGeschwindigkeit }) => {
       // Der Brief vor dieser Korrektur schlug vor, den Winkel zwischen dem
       // Ist-Ortsvektor und dem Soll-Ortsvektor über deren Kreuzprodukt-
@@ -391,7 +434,7 @@ describe('Mondbahnen gegen JPL Horizons', () => {
   });
 
   it.each(epocheJ2000)(
-    '$id bei JD $jd: volle Bahnebene inkl. Knoten auf 0,5°/1,0° — nur Epoche J2000',
+    '$id bei JD $jd: volle Bahnebene inkl. Knoten auf 0,5° (Deimos 1,0°, Iapetus 1,2°, Triton 0,6°) — nur Epoche J2000',
     ({ id, jd, soll, sollGeschwindigkeit }) => {
       // Dieselbe Deimos-Ausnahme wie beim knotenunabhängigen Test oben,
       // aus demselben Grund (Mars-Rotationspol statt Deimos' eigener

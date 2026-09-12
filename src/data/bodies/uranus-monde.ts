@@ -27,9 +27,15 @@ import type { Body } from '../../sim/types';
 // 128 955 km ohne) — der Versatz-Apparat in sim/orbit.ts gilt unverändert,
 // node/lp/L unten stehen deshalb UNVERÄNDERT wie von Horizons geliefert.
 //
-// URANUS LIEGT: Sein Pol (physical.pole unten identisch mit uranus.ts,
-// 257,311°/−15,175°) ist derselbe, den Horizons für REF_PLANE='B' nutzt.
-// Die Uranusmonde laufen fast exakt in seiner Äquatorebene UND prograd mit
+// URANUS LIEGT: physical.pole unten trägt je Mond dessen EIGENEN IAU-
+// Rotationspol (z. B. Miranda 257,43°/−15,08°) — nahe an, aber NICHT
+// identisch mit Uranus' eigenem Rotationspol (uranus.ts: 257,311°/−15,175°).
+// Für die Bahnebene der Monde (und damit für REF_PLANE='B') ist das ohne
+// Belang: sim/orbit.ts verwendet im parentEquator-Zweig ausschließlich den
+// Pol des MUTTERKÖRPERS (mutter.physical.pole, also Uranus' eigenen Pol aus
+// uranus.ts), nie den physical.pole-Eintrag des Mondes selbst — der dient
+// hier einzig der Rotationsdarstellung des Mondkörpers. Die Uranusmonde
+// laufen fast exakt in Uranus' Äquatorebene UND prograd mit
 // seiner (nach IAU-Konvention retrograden) Rotation — deshalb liefert
 // Horizons für alle fünf i ≈ 180° (179,81°…180,00°) statt i ≈ 0°: Die
 // Bahndrehimpulse zeigen der offiziellen Polrichtung entgegen, exakt wie
@@ -45,31 +51,57 @@ import type { Body } from '../../sim/types';
 // fünf Monde um 90 000–1 165 000 km ab (weit über der 5-%-Schranke,
 // Umbriel/Titania/Oberon sogar mit falschem Vorzeichen der Abweichung je
 // nach Zeitrichtung — kein Rundungsfehler, sondern eine falsche Rate).
-// Ursache: Bei i ≈ 180° ist der Knoten (Schnittlinie zur Äquatorebene)
-// numerisch entartet — dieselbe Situation wie Io/Enceladus/Dione bei i ≈ 0°
-// (siehe jupiter-monde.ts, saturn-monde.ts), hier nur am ANDEREN Pol der
-// Kugel. Horizons' „OM" ist für alle fünf Monde bei i so nah an 180°
-// (0,003°–0,19° Abstand) numerisch instabil — eine 40-Jahres-Zeitreihe der
-// osculating elements zeigt für Ariel/Umbriel/Titania/Oberon keinen
-// glatten, sondern einen chaotisch wirkenden OM-Verlauf ohne belastbaren
-// linearen Trend. Gegenprobe gegen das Fixture (fünf Horizons-
-// Vektor-Stichtage, s. u.): nodeDot = 0 (Knoten eingefroren, wie bei Io/
-// Enceladus/Dione) schlägt JEDE getestete Variante der Tabellenformel
-// (beide Vorzeichen, mehrere Präzessionsperioden) deutlich — größte
-// Abweichung damit nur noch 15 359 km (Miranda) statt >100 000 km. lpDot
-// bleibt aus der Tabelle (unverändert, Standardformel): Bei den hier
-// vorliegenden kleinen Exzentrizitäten (0,0006–0,0042) kürzt sich lp in der
-// Positionsformel weitgehend heraus (omega + M = L − node bei e → 0), sein
-// Beitrag zur Positionsabweichung liegt für alle fünf Monde unter 3 000 km,
-// unabhängig vom genauen lpDot-Wert. Miranda bekam wegen seiner deutlich
-// geneigten Bahn (s. u.) besondere Aufmerksamkeit — auch dort bestätigt
-// sich nodeDot = 0 als klar beste, unter allen getesteten Alternativen
-// robuste Wahl. Volle Zahlen: Task-9-Bericht im SDD-Ordner.
+// Ursache bei Ariel, Umbriel, Titania und Oberon: Bei i ≈ 180° ist der
+// Knoten (Schnittlinie zur Äquatorebene) numerisch entartet — dieselbe
+// Situation wie Io/Enceladus/Dione bei i ≈ 0° (siehe jupiter-monde.ts,
+// saturn-monde.ts), hier nur am ANDEREN Pol der Kugel. Horizons' „OM" liegt
+// für DIESE VIER Monde bei i so nah an 180° (0,003°–0,19° Abstand), dass es
+// numerisch instabil wird — eine 40-Jahres-Zeitreihe der osculating
+// elements zeigt für sie keinen glatten, sondern einen chaotisch wirkenden
+// OM-Verlauf ohne belastbaren linearen Trend.
 //
-// Präzessionsperioden (Mean-Elements-Tabelle, für lpDot; nodeDot s. o.):
-//   Miranda P_apsis=8,939a; Ariel P_apsis=28,901a; Umbriel P_apsis=64,126a;
-//   Titania P_apsis=579,928a; Oberon P_apsis=158,604a. lpDot = 360/P_apsis*100
-//   (der Knotenterm entfällt, da nodeDot = 0 gesetzt ist).
+// MIRANDA LIEGT ANDERS: Mit i = 175,572° ist Miranda 4,43° von der
+// Entartung entfernt (Fact Sheet: 4,34° Bahnneigung gegen Uranus' Äquator,
+// die mit Abstand am stärksten geneigte Bahn der fünf) — deutlich außerhalb
+// der 0,003°–0,19°-Spanne der anderen vier. Die Entartungsbegründung trägt
+// für Miranda deshalb NICHT; nodeDot = 0 ist hier eine rein EMPIRISCHE
+// Wahl. Sie bleibt aber gut begründet: Eine eigene Parametersuche über
+// −3000…+3000 °/Jh gegen das Fixture findet das Optimum exakt bei
+// nodeDot = 0 (robust — keine benachbarte Rate kommt näher; mit der
+// wörtlichen Tabellenformel läge der Fehler dagegen bei 256 177 km). Der
+// sichtbare Preis bleibt trotzdem: Mirandas Restfehler bei nodeDot = 0
+// beträgt 15 359 km (1,88 % des Bahnumfangs) — rund das Achtfache des
+// Mittels der anderen vier Monde (1 904 km) bzw. das 6,5-fache ihres
+// größten Einzelwerts (Ariel, 2 378 km, 0,20 %).
+//
+// Gegenprobe gegen das Fixture (fünf Horizons-Vektor-Stichtage, s. u.), für
+// alle fünf Monde gemeinsam: nodeDot = 0 (Knoten eingefroren, wie bei Io/
+// Enceladus/Dione) schlägt JEDE getestete Variante der Tabellenformel
+// (beide Vorzeichen, mehrere Präzessionsperioden) deutlich. Volle Zahlen:
+// Task-9-Bericht und Task-9-Fix-Bericht im SDD-Ordner.
+//
+// Präzessionsperioden (Mean-Elements-Tabelle https://ssd.jpl.nasa.gov/sats/elem/,
+// Epoche 2000-01-01.5 TDB, Ephemeride URA182 — Spalten „Papsis" und
+// „Pnode", beide in Jahren):
+//   Miranda P_apsis=8,939a  P_Knoten=17,787a
+//   Ariel   P_apsis=28,901a P_Knoten=0,000a  (von der Quelle selbst als
+//           undefiniert geführt — deshalb ohnehin nodeDot = 0, s. o.)
+//   Umbriel P_apsis=64,126a  P_Knoten=129,745a
+//   Titania P_apsis=579,928a P_Knoten=1644,649a
+//   Oberon  P_apsis=158,604a P_Knoten=192,798a
+// lpDot = (360/P_apsis − 360/P_Knoten) * 100 — die zweigliedrige
+// Projektformel aus der Quelle, NICHT die eingliedrige 360/P_apsis*100 (die
+// nur für Ariel dasselbe Ergebnis liefert, weil P_Knoten dort 0 ist). Der
+// Knotenterm bleibt also in lpDot stehen, OBWOHL nodeDot oben aus einem
+// GANZ ANDEREN, empirisch am Fixture geprüften Grund auf 0 gesetzt wird:
+// node und lp sind in der Mean-Elements-Systematik zwei unabhängig
+// tabellierte Größen mit je eigener Präzessionsperiode, die Wahl für die
+// eine sagt nichts über die andere aus. Das ist konsistent in dem Sinn, dass
+// es kaum etwas ausmacht: Bei den hier vorliegenden kleinen Exzentrizitäten
+// (0,0006–0,0042) kürzt sich lp in der Positionsformel weitgehend heraus
+// (omega + M = L − node bei e → 0), sein Beitrag zur Positionsabweichung
+// liegt für alle fünf Monde unter 3 000 km, unabhängig vom genauen
+// lpDot-Wert.
 //
 // Umlaufzeiten P gegen zwei unabhängige Wege geprüft, bevor sie für LDot
 // verwendet wurden: NASA/JPL NSSDC Uranian Satellite Fact Sheet

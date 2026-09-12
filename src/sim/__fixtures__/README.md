@@ -488,13 +488,17 @@ Herleitung).
 
 Wörtlich nach dem Saturn-Muster eingesetzt (`nodeDot = -360/P_Knoten*100`)
 weicht die Position für vier der fünf Uranusmonde um 90 000–1 165 000 km vom
-Fixture ab. Ursache: Bei i so nah an 180° ist der Knoten numerisch
-entartet — dieselbe Situation wie Io/Enceladus/Dione bei i ≈ 0°, hier am
-anderen Pol der Kugel. Gegenprobe: `nodeDot = 0` (Knoten eingefroren)
-schlägt jede getestete Variante der Tabellenformel deutlich; größte
-Restabweichung nur noch 15 359 km (Miranda). Volle Herleitung, Zahlen und
-die 40-Jahres-Zeitreihe, die die Entartung zeigt: `uranus-monde.ts` und
-Task-9-Bericht im SDD-Ordner.
+Fixture ab. Ursache bei Ariel, Umbriel, Titania und Oberon: Bei i so nah an
+180° ist der Knoten numerisch entartet — dieselbe Situation wie
+Io/Enceladus/Dione bei i ≈ 0°, hier am anderen Pol der Kugel. Miranda liegt
+mit i = 175,572° (4,43° von 180°) außerhalb dieser Entartung; für sie ist
+`nodeDot = 0` eine rein empirische, durch eine eigene Parametersuche
+gestützte Wahl, mit einem sichtbar höheren Restfehler (15 359 km, 1,88 %)
+als bei den anderen vier. Gegenprobe für alle fünf gemeinsam:
+`nodeDot = 0` (Knoten eingefroren) schlägt jede getestete Variante der
+Tabellenformel deutlich. Volle Herleitung, Zahlen und die 40-Jahres-
+Zeitreihe, die die Entartung zeigt: `uranus-monde.ts` und Task-9-/
+Task-9-Fix-Bericht im SDD-Ordner.
 
 ### Befund: Triton — gekoppelte Präzession von Neptuns Pol und Tritons Bahn
 
@@ -506,16 +510,30 @@ ist deshalb gegen einen MITLAUFENDEN Pol gemessen, während dieses Projekt
 bewusst Neptuns FESTEN, bei T = 0 ausgewerteten Rotationspol verwendet
 (wie beim Erdmond). `nodeDot = lpDot = 0` (dieselbe Begründung wie bei den
 Uranusmonden, zusätzlich gestützt durch Tritons winzige Exzentrizität, die
-`lp` ohnehin fast bedeutungslos macht) ist die gegen das Fixture geprüfte
-beste Wahl — die verbleibende Positionsabweichung wächst nicht monoton mit
-|T| (1976: 4,0 %; 2026: 4,3 %; 2050: 6,0 %; 2076: 12,4 % des Bahnumfangs),
-die erwartete Signatur einer fehlenden Nachführung statt eines
-Vorzeichenfehlers. Triton trägt deshalb, nach demselben Muster wie Mimas,
-eine eigene Positionsschranke (15 % statt 5 %) sowie, nach demselben Muster
-wie Deimos und Iapetus, eine eigene Neigungsschranke (0,6° statt 0,5° — die
-Mean-Elements-Tabelle bestätigt die Kopplung unabhängig mit einem „tilt
-angle" von 0,4° zwischen Tritons Laplace-Ebene und Neptuns Äquator). Volle
-Herleitung: `neptun-monde.ts`, `monde.fixture.test.ts` und Task-9-Bericht.
+`lp` ohnehin fast bedeutungslos macht) ist eine GEWÄHLTE, nicht die
+nachweislich optimale Wahl (eine Parametersuche findet bei
+nodeDot ≈ −27 °/Jh einen kleineren Worst Case, 6,03 % statt 12,42 % —
+bewusst nicht eingetragen, um nicht auf dieses Fixture zu trainieren). Die
+verbleibende Positionsabweichung wächst STRENG MONOTON mit |T| (1976:
+4,04 %; 2026: 4,32 %; 2050: 7,89 %; 2076: 12,42 % des Bahnumfangs) — genau
+die erwartete Signatur einer fehlenden Präzessionsrate. Triton trägt
+deshalb, nach demselben Anlass wie Mimas, eine eigene, GEWÄHLTE
+Positionsschranke (15 % statt 5 %, 12,42 % gemessen plus Aufschlag).
+
+Die eigene Neigungsschranke (0,6° statt 0,5°) hat eine geklärte Ursache,
+die eine frühere Vermutung ersetzt: Die Mean-Elements-Tabelle nennt zwar
+einen „tilt angle" von 0,4° zwischen Tritons Laplace-Ebene und Neptuns
+Äquator, aber das trifft den gemessenen Wert (0,51°) nur auf 27 % genau.
+Die tatsächliche Ursache ist eine Polkonventions-Differenz: Horizons' „OM"
+für `REF_PLANE='B'` misst gegen Neptuns ROHEN, konstanten IAU-Pol
+(299,36°/43,46°), während `sim/orbit.ts` gegen den in `neptune.ts`
+hinterlegten, nutationskorrigierten Pol dreht (299,3337°/42,9504°, für
+Neptuns eigene Achse weiterhin richtig) — der Winkel zwischen beiden Polen
+beträgt 0,5100°. Gegen den rohen Pol gemessen fällt Tritons
+Neigungsabweichung auf 0,0003°–0,0122° (Rauschniveau). Die 0,6°-Schranke
+deckt damit eine Frame-Inkonsistenz ab, keinen physikalischen Effekt. Volle
+Herleitung: `neptun-monde.ts`, `monde.fixture.test.ts` und
+Task-9-/Task-9-Fix-Bericht.
 
 ### Triton läuft retrograd
 
