@@ -12,12 +12,16 @@ import { moon } from './bodies/moon';
 import { marsMonde } from './bodies/mars-monde';
 import { jupiterMonde } from './bodies/jupiter-monde';
 import { saturnMonde } from './bodies/saturn-monde';
+import { uranusMonde } from './bodies/uranus-monde';
+import { neptunMonde } from './bodies/neptun-monde';
 
 export const bodies: Body[] = [
   sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, moon,
   ...marsMonde,
   ...jupiterMonde,
   ...saturnMonde,
+  ...uranusMonde,
+  ...neptunMonde,
 ];
 
 export const bodyIndex: BodyIndex = Object.fromEntries(

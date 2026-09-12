@@ -456,3 +456,72 @@ direkt gegen Saturns Äquator ist (statt gegen Iapetus' eigene, um 14,8°
 geneigte Laplace-Ebene wie in der Mean-Elements-Tabelle), bleibt nur noch
 die kleine Restabweichung aus der gemeinsamen Saturn-Pol-Vereinfachung
 (gemessen bis 1,109° bei 2076).
+
+## Uranusmonde (Miranda, Ariel, Umbriel, Titania, Oberon) und Triton
+
+Nochmals 30 zusätzliche Referenzvektoren (5 Uranusmonde + Triton × 5
+Stichtage, dieselben JD wie bei allen anderen Monden) stehen ebenfalls in
+`monde-horizons.json`, unter denselben `eintraege`, mit Zentrum Uranus
+(`500@799`) bzw. Neptun (`500@899`). Abrufverfahren wie bei den übrigen
+Monden (`EPHEM_TYPE='VECTORS'`, `REF_PLANE='ECLIPTIC'`, `OUT_UNITS='KM-S'`),
+hier mit `TLIST` statt Einzelabfragen je Stichtag (funktioniert, weil die
+JD der fünf Stichtage bereits aus den Mars-/Jupiter-/Saturnmond-Abfragen
+bekannt waren). `COMMAND`: `701` Ariel, `702` Umbriel, `703` Titania, `704`
+Oberon, `705` Miranda, `801` Triton. Abgerufen am 12.09.2026, Quelle laut
+Horizons-Kopfzeile `ura184_merged` (Uranusmonde) bzw. `nep098_merged`
+(Triton).
+
+### Uranus liegt
+
+Die Bahnelemente (osculating, `REF_PLANE='B'`, JD 2451545.0) liefern für
+alle fünf großen Uranusmonde eine Inklination nahe 180° (179,81°–180,00°),
+nicht nahe 0°: Uranus' Rotation ist nach IAU-Konvention retrograd, die Monde
+laufen prograd MIT dieser Rotation — ihr Bahndrehimpuls zeigt deshalb dem
+offiziellen Uranuspol entgegen, genau wie es Uranus' eigene negative
+Rotationsperiode (`uranus.ts`) bereits ausdrückt. Das ist der Fall, für den
+`poleVector()`/`icrfKnotenVersatzDeg()` in `../frames.ts` gebaut wurden —
+hier zum ersten Mal mit echten Daten geprüft (Sondertest 1 in
+`../../data/index.test.ts`, siehe `uranus-monde.ts` für die volle
+Herleitung).
+
+### Befund: nodeDot NICHT aus der Mean-Elements-Tabelle
+
+Wörtlich nach dem Saturn-Muster eingesetzt (`nodeDot = -360/P_Knoten*100`)
+weicht die Position für vier der fünf Uranusmonde um 90 000–1 165 000 km vom
+Fixture ab. Ursache: Bei i so nah an 180° ist der Knoten numerisch
+entartet — dieselbe Situation wie Io/Enceladus/Dione bei i ≈ 0°, hier am
+anderen Pol der Kugel. Gegenprobe: `nodeDot = 0` (Knoten eingefroren)
+schlägt jede getestete Variante der Tabellenformel deutlich; größte
+Restabweichung nur noch 15 359 km (Miranda). Volle Herleitung, Zahlen und
+die 40-Jahres-Zeitreihe, die die Entartung zeigt: `uranus-monde.ts` und
+Task-9-Bericht im SDD-Ordner.
+
+### Befund: Triton — gekoppelte Präzession von Neptuns Pol und Tritons Bahn
+
+Für Triton versagt dieselbe Tabellenformel aus einem anderen Grund:
+Neptuns eigener IAU-Pol trägt laut SPICE-Kernel `pck00011.tpc` ein
+periodisches Korrekturglied mit 688,2 Jahren Periode — Tritons
+Rückwirkung auf Neptuns Figur. Horizons' „OM" an anderen Epochen als J2000
+ist deshalb gegen einen MITLAUFENDEN Pol gemessen, während dieses Projekt
+bewusst Neptuns FESTEN, bei T = 0 ausgewerteten Rotationspol verwendet
+(wie beim Erdmond). `nodeDot = lpDot = 0` (dieselbe Begründung wie bei den
+Uranusmonden, zusätzlich gestützt durch Tritons winzige Exzentrizität, die
+`lp` ohnehin fast bedeutungslos macht) ist die gegen das Fixture geprüfte
+beste Wahl — die verbleibende Positionsabweichung wächst nicht monoton mit
+|T| (1976: 4,0 %; 2026: 4,3 %; 2050: 6,0 %; 2076: 12,4 % des Bahnumfangs),
+die erwartete Signatur einer fehlenden Nachführung statt eines
+Vorzeichenfehlers. Triton trägt deshalb, nach demselben Muster wie Mimas,
+eine eigene Positionsschranke (15 % statt 5 %) sowie, nach demselben Muster
+wie Deimos und Iapetus, eine eigene Neigungsschranke (0,6° statt 0,5° — die
+Mean-Elements-Tabelle bestätigt die Kopplung unabhängig mit einem „tilt
+angle" von 0,4° zwischen Tritons Laplace-Ebene und Neptuns Äquator). Volle
+Herleitung: `neptun-monde.ts`, `monde.fixture.test.ts` und Task-9-Bericht.
+
+### Triton läuft retrograd
+
+Die osculating Inklination (REF_PLANE='B') beträgt 156,83° — über 90°, also
+per Definition retrograd. Konsistent mit Horizons' eigener, stets positiver
+mittlerer Bewegung bleibt `LDot` positiv; die Rückläufigkeit steckt allein
+in i > 90°. Sondertest 2 in `../../data/index.test.ts` weist den Rücklauf
+zusätzlich über die tatsächliche Bahnbewegung (Kreuzprodukt zweier Örter
+gegen Neptuns Pol) nach.

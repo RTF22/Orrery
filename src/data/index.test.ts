@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { bodies, bodyIndex, getBody } from './index';
 import { poleVector, axialTiltDeg } from '../sim/frames';
-import { AU_KM } from '../sim/orbit';
+import { AU_KM, positionAt } from '../sim/orbit';
+import { J2000 } from '../sim/time';
 import { t } from '../ui/i18n';
 
 describe('Körperkatalog', () => {
@@ -14,6 +15,7 @@ describe('Körperkatalog', () => {
       expect.arrayContaining([
         'moon', 'phobos', 'deimos', 'io', 'europa', 'ganymede', 'callisto',
         'mimas', 'enceladus', 'tethys', 'dione', 'rhea', 'titan', 'iapetus',
+        'miranda', 'ariel', 'umbriel', 'titania', 'oberon', 'triton',
       ]),
     );
   });
@@ -198,5 +200,91 @@ describe('Katalog-Invarianten', () => {
   it('hält Mimas außerhalb des Ringsystems', () => {
     const ringAussenKm = 136780;
     expect((bodyIndex['mimas']?.orbit?.a ?? 0) * AU_KM).toBeGreaterThan(ringAussenKm);
+  });
+
+  it('führt Miranda, Ariel, Umbriel, Titania und Oberon in der Uranusäquatorebene', () => {
+    for (const id of ['miranda', 'ariel', 'umbriel', 'titania', 'oberon']) {
+      const mond = bodyIndex[id];
+      expect(mond?.parent).toBe('uranus');
+      expect(mond?.orbit?.frame).toBe('parentEquator');
+    }
+    // Uranus liegt fast in der Ekliptik (Pol nahe 0° Deklination gegen die
+    // Bahnnormale) — seine Monde laufen deshalb fast exakt in seiner
+    // Äquatorebene, aber Horizons misst deren Inklination gegen denselben
+    // Pol, den Uranus' eigene (nach IAU-Konvention retrograde) Rotation
+    // nutzt: i liegt für alle fünf nahe 180°, nicht nahe 0° (siehe
+    // Quellenblock in uranus-monde.ts). Geprüft wird deshalb der Abstand
+    // von 180°, nicht von 0°.
+    for (const id of ['ariel', 'umbriel', 'titania', 'oberon']) {
+      expect(180 - (bodyIndex[id]?.orbit?.i ?? 0)).toBeLessThan(0.5);
+    }
+    // Miranda hat mit Abstand die am stärksten geneigte Bahn der fünf
+    // großen Uranusmonde (rund 4,3° gegen Uranus' Äquator).
+    expect(180 - (bodyIndex['miranda']?.orbit?.i ?? 0)).toBeLessThan(5);
+  });
+
+  it('trifft die bekannten Bahnradien der Uranusmonde', () => {
+    // Kontrollrechnung der Quelle: große Halbachse zurück in Kilometer
+    // (Horizons osculating elements, siehe Quellenblock in uranus-monde.ts).
+    expect((bodyIndex['miranda']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(129871.7551, -2);
+    expect((bodyIndex['ariel']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(190941.3470, -2);
+    expect((bodyIndex['umbriel']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(266012.1887, -2);
+    expect((bodyIndex['titania']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(436292.6756, -2);
+    expect((bodyIndex['oberon']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(583549.9441, -2);
+  });
+
+  it('führt Triton um Neptun, retrograd', () => {
+    const mond = bodyIndex['triton'];
+    expect(mond?.parent).toBe('neptune');
+    expect(mond?.orbit?.frame).toBe('parentEquator');
+    // i > 90° ist per Definition ein retrograder Umlauf (siehe Quellenblock
+    // in neptun-monde.ts) — Sondertest 2 unten weist das zusätzlich über
+    // die tatsächliche Bahnbewegung nach.
+    expect(mond?.orbit?.i ?? 0).toBeGreaterThan(90);
+    expect((mond?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(354766.0619, -2);
+  });
+
+  // Sondertest 1 (Task-9-Brief): der liegende Uranus. Seine Monde laufen in
+  // seiner Äquatorebene, und die steht fast senkrecht auf der Ekliptik —
+  // der Fall, für den poleVector()/icrfKnotenVersatzDeg() gebaut wurden.
+  it('lässt die Uranusmonde in der Äquatorebene ihres Planeten laufen', () => {
+    const pol = poleVector(
+      bodyIndex['uranus']!.physical.pole.raDeg,
+      bodyIndex['uranus']!.physical.pole.decDeg,
+    );
+    for (const id of ['miranda', 'ariel', 'umbriel', 'titania', 'oberon']) {
+      const p = positionAt(id, bodyIndex, J2000 + 2);
+      const u = positionAt('uranus', bodyIndex, J2000 + 2);
+      const r = { x: p.x - u.x, y: p.y - u.y, z: p.z - u.z };
+      const betrag = Math.sqrt(r.x ** 2 + r.y ** 2 + r.z ** 2);
+      const skalar = (r.x * pol.x + r.y * pol.y + r.z * pol.z) / betrag;
+      // Bahnneigungen gegen die Laplace-Ebene liegen unter 5°, also |cos| < 0,09.
+      expect(Math.abs(skalar), id).toBeLessThan(0.09);
+    }
+  });
+
+  // Sondertest 2 (Task-9-Brief): Tritons Rücklauf. Über zwei Stützstellen
+  // muss der Relativvektor um den Neptunpol im mathematisch negativen Sinn
+  // wandern.
+  it('lässt Triton retrograd umlaufen', () => {
+    const pol = poleVector(
+      bodyIndex['neptune']!.physical.pole.raDeg,
+      bodyIndex['neptune']!.physical.pole.decDeg,
+    );
+    const rel = (jd: number) => {
+      const p = positionAt('triton', bodyIndex, jd);
+      const n = positionAt('neptune', bodyIndex, jd);
+      return { x: p.x - n.x, y: p.y - n.y, z: p.z - n.z };
+    };
+    const a = rel(J2000);
+    const b = rel(J2000 + 0.5);
+    // Das Kreuzprodukt a × b zeigt in Umlaufrichtung; bei retrogradem Lauf
+    // steht es dem Pol entgegen.
+    const kreuz = {
+      x: a.y * b.z - a.z * b.y,
+      y: a.z * b.x - a.x * b.z,
+      z: a.x * b.y - a.y * b.x,
+    };
+    expect(kreuz.x * pol.x + kreuz.y * pol.y + kreuz.z * pol.z).toBeLessThan(0);
   });
 });
