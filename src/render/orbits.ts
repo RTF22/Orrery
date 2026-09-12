@@ -48,7 +48,28 @@ export function orbitPointsKm(
 
 export interface OrbitLines {
   rebuild(jd: number, s: ScaleSettings): void;
-  update(cameraKm: THREE.Vector3, sichtbar: Record<string, boolean>, an: boolean): void;
+  update(
+    cameraKm: THREE.Vector3,
+    sichtbar: Record<string, boolean>,
+    an: boolean,
+    jd: number,
+    s: ScaleSettings,
+  ): void;
+  /** Die Linien je Körper-Id — für Tests und spätere Auswertung. */
+  lines: Map<string, THREE.Line>;
+}
+
+const URSPRUNG: Vec3 = { x: 0, y: 0, z: 0 };
+
+/**
+ * Bahnen von Satelliten hängen an ihrem Mutterkörper; alle anderen an der
+ * Sonne im Ursprung. Nur der Satellitenanker bewegt sich zwischen zwei
+ * rebuild-Aufrufen — deshalb wird er pro Bild neu bestimmt.
+ */
+function ankerKm(id: string, jd: number, s: ScaleSettings): Vec3 {
+  const body = bodyIndex[id];
+  if (!body || !isSatellite(body) || body.parent === null) return URSPRUNG;
+  return scaledPositionAt(body.parent, bodyIndex, jd, s);
 }
 
 export function createOrbitLines(scene: THREE.Scene): OrbitLines {
@@ -72,21 +93,36 @@ export function createOrbitLines(scene: THREE.Scene): OrbitLines {
   }
 
   return {
+    lines: linien,
     // Teuer (512 Kepler-Löser pro Körper) — nur bei Maßstabsänderung
     // aufrufen, niemals aus dem Pro-Frame-Pfad.
     rebuild(jd, s) {
-      for (const [id] of linien) punkteKm.set(id, orbitPointsKm(id, bodyIndex, jd, s));
+      for (const [id] of linien) {
+        const anker = ankerKm(id, jd, s);
+        // Satellitenbahnen werden relativ zum Mutterkörper abgelegt, damit
+        // update() sie an dessen aktuelle Position hängen kann. Absolut
+        // gespeichert bliebe die Mondbahn an der Erdposition des Aufbaus
+        // kleben, während die Erde weiterzieht.
+        punkteKm.set(id, orbitPointsKm(id, bodyIndex, jd, s).map((p) => ({
+          x: p.x - anker.x, y: p.y - anker.y, z: p.z - anker.z,
+        })));
+      }
     },
     // Billig — reprojiziert nur die bereits berechneten Stützpunkte relativ
     // zur aktuellen Kameraposition. Läuft jeden Frame.
-    update(cameraKm, sichtbar, an) {
+    update(cameraKm, sichtbar, an, jd, s) {
       for (const [id, linie] of linien) {
         linie.visible = an && sichtbar[id] !== false;
         if (!linie.visible) continue;
         const punkte = punkteKm.get(id) ?? [];
+        // Ein Kepler-Aufruf je Satellit und Bild — die 512 Stützpunkte
+        // selbst bleiben unangetastet.
+        const anker = ankerKm(id, jd, s);
         const attr = linie.geometry.getAttribute('position') as THREE.BufferAttribute;
         for (let i = 0; i < punkte.length; i++) {
-          const r = worldToRender(punkte[i]!, cameraKm);
+          const p = punkte[i]!;
+          const r = worldToRender(
+            { x: p.x + anker.x, y: p.y + anker.y, z: p.z + anker.z }, cameraKm);
           attr.setXYZ(i, r.x, r.y, r.z);
         }
         attr.needsUpdate = true;

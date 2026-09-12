@@ -72,7 +72,7 @@ export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandl
       }
       // Reprojektion der bereits berechneten Stützpunkte — billig, läuft
       // jeden Frame.
-      bahnen.update(cameraKm, state.visible, state.display.orbits);
+      bahnen.update(cameraKm, state.visible, state.display.orbits, jd, state.scale);
 
       koerper.update(jd, state.scale, cameraKm, state.visible);
 
