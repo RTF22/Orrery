@@ -110,10 +110,16 @@ describe('Katalog-Invarianten', () => {
     // Task-11-Vorgabe „keine neuen Abhängigkeiten"). Zur Laufzeit unter
     // Vitest/Node funktioniert der dynamische Import unverändert.
     const { existsSync } = await import('node:fs');
+    // Geprüft werden alle vier Texturarten, nicht nur albedo — ein toter
+    // Pfad bei normal/specular/emissive fiel bisher durch diesen Test durch
+    // (siehe Fixrunde Task 11, Sonne trug einen nie existierenden
+    // emissive-Pfad).
     for (const body of bodies) {
-      const pfad = body.appearance.textures.albedo;
-      if (pfad === '') continue;
-      expect(existsSync(`public/${pfad}`), `${body.id}: ${pfad}`).toBe(true);
+      const { albedo, normal, specular, emissive } = body.appearance.textures;
+      for (const pfad of [albedo, normal, specular, emissive]) {
+        if (pfad === undefined || pfad === '') continue;
+        expect(existsSync(`public/${pfad}`), `${body.id}: ${pfad}`).toBe(true);
+      }
     }
   });
 

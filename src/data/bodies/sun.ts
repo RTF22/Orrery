@@ -22,7 +22,10 @@ export const sun: Body = {
     rotationAtEpochDeg: 0,
   },
   appearance: {
-    textures: { albedo: 'textures/sun/albedo.jpg', emissive: 'textures/sun/emissive.jpg' },
+    // Kein eigener `emissive`-Pfad: ladeAlbedo() in render/bodies.ts setzt die
+    // Albedo-Textur ohnehin als emissiveMap ein, eine separate Emissiv-Datei
+    // wäre nie geladen worden (Fixrunde Task 11, toter Texturpfad).
+    textures: { albedo: 'textures/sun/albedo.jpg' },
     color: '#fdb813',
   },
   info: { nameKey: 'body.sun.name', descriptionKey: 'body.sun.description' },
