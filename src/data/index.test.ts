@@ -11,7 +11,9 @@ describe('Körperkatalog', () => {
     expect(bodies.filter((b) => b.kind === 'planet')).toHaveLength(8);
     expect(bodies.filter((b) => b.kind === 'star')).toHaveLength(1);
     expect(bodies.map((b) => b.id)).toEqual(
-      expect.arrayContaining(['moon', 'phobos', 'deimos']),
+      expect.arrayContaining([
+        'moon', 'phobos', 'deimos', 'io', 'europa', 'ganymede', 'callisto',
+      ]),
     );
   });
 
@@ -109,5 +111,34 @@ describe('Katalog-Invarianten', () => {
     // Kontrollrechnung der Quelle: große Halbachse zurück in Kilometer.
     expect((bodyIndex['phobos']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(9376, -2);
     expect((bodyIndex['deimos']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(23463, -2);
+  });
+
+  it('führt Io, Europa, Ganymed und Kallisto in der Jupiteräquatorebene', () => {
+    for (const id of ['io', 'europa', 'ganymede', 'callisto']) {
+      const mond = bodyIndex[id];
+      expect(mond?.parent).toBe('jupiter');
+      expect(mond?.orbit?.frame).toBe('parentEquator');
+      expect(mond?.orbit?.i ?? 99).toBeLessThan(1);
+    }
+  });
+
+  it('trifft die bekannten Bahnradien der Jupitermonde', () => {
+    // Kontrollrechnung der Quelle: große Halbachse zurück in Kilometer.
+    expect((bodyIndex['io']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(421800, -2);
+    expect((bodyIndex['europa']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(671100, -2);
+    expect((bodyIndex['ganymede']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(1070400, -2);
+    expect((bodyIndex['callisto']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(1882700, -2);
+  });
+
+  // Der eigentliche Nachweis, dass die vier Datensätze zueinander passen:
+  // Io, Europa und Ganymed stehen in der Laplace-Resonanz, ihre Umlaufzeiten
+  // also im Verhältnis 1:2:4 — die Szene „Galileisches Schattenspiel" (später)
+  // zeigt genau das.
+  it('hält die Laplace-Resonanz 1:2:4 von Io, Europa und Ganymed', () => {
+    // LDot ist die mittlere Länge in Grad je julianischem Jahrhundert;
+    // die Umlaufzeit in Tagen ist 36525 / (LDot / 360).
+    const periode = (id: string): number => 36525 / ((bodyIndex[id]?.orbit?.LDot ?? 0) / 360);
+    expect(periode('europa') / periode('io')).toBeCloseTo(2, 1);
+    expect(periode('ganymede') / periode('io')).toBeCloseTo(4, 1);
   });
 });

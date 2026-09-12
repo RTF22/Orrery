@@ -161,8 +161,9 @@ dessen, was JPL selbst für dieses Elementmodell angibt.
 
 ## Mondfixtures (`monde-horizons.json`)
 
-`monde-horizons.json` enthält 10 Referenzvektoren (Phobos und Deimos × 5
-Stichtage), abgerufen von der JPL-Horizons-API, gegen die `positionAt` aus
+`monde-horizons.json` enthält 30 Referenzvektoren (Phobos und Deimos × 5
+Stichtage aus Task 6, sowie Io, Europa, Ganymed und Kallisto × 5 Stichtage aus
+Task 7), abgerufen von der JPL-Horizons-API, gegen die `positionAt` aus
 `../orbit.ts` in `../monde.fixture.test.ts` geprüft wird. Im Unterschied zu
 `horizons.json` führt jeder Eintrag zusätzlich den Geschwindigkeitsvektor
 (`sollGeschwindigkeit`, km/s): Aus einem einzelnen Ortsvektor lässt sich die
@@ -253,3 +254,71 @@ Die Korrektur (`icrfKnotenVersatzDeg` in `../frames.ts`, angewandt auf
 Bahnumfangs (Schranke 5 %). Einzelheiten, die volle Abweichungstabelle vor
 und nach der Korrektur sowie die verbleibende, bewusst auf die Epoche
 J2000 beschränkte Ebenenprüfung stehen im Task-6-Bericht im SDD-Ordner.
+
+## Jupitermonde (Io, Europa, Ganymed, Kallisto)
+
+Dieselben 20 zusätzlichen Referenzvektoren (Io, Europa, Ganymed, Kallisto ×
+5 Stichtage) stehen ebenfalls in `monde-horizons.json`, unter denselben
+`eintraege`, nur mit Zentrum Jupiter statt Mars.
+
+### Abrufverfahren
+
+Wie bei den Marsmonden: je Mond und Stichtag eine Anfrage mit
+`START_TIME`/`STOP_TIME`/`STEP_SIZE='1d'`:
+
+```
+https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND='<id>'&OBJ_DATA='NO'
+  &MAKE_EPHEM='YES'&EPHEM_TYPE='VECTORS'&CENTER='500@599'
+  &START_TIME='<Kalenderdatum>'&STOP_TIME='<Kalenderdatum + 1 Tag>'&STEP_SIZE='1d'
+  &VEC_TABLE='2'&REF_PLANE='ECLIPTIC'&OUT_UNITS='KM-S'
+```
+
+`COMMAND`: `501` Io, `502` Europa, `503` Ganymed, `504` Kallisto.
+`CENTER='500@599'` ist der **Jupiter-Körpermittelpunkt**, aus demselben
+Grund wie `CENTER='500@499'` bei den Marsmonden: Die Bahnelemente in
+`../../data/bodies/jupiter-monde.ts` sind relativ zu Jupiter selbst
+angegeben, nicht relativ zum Baryzentrum des Jupitersystems. Abgerufen am
+12.09.2026, dieselben fünf Stichtage/JD wie bei den Marsmonden (die
+Kalender→JD-Umrechnung ist zielkörperunabhängig, siehe Tabelle oben).
+
+### Befund: Die Elementtabellen-Spalte P ist für Io und Europa falsch
+
+Vor dem Fixture-Abgleich fiel bei der Datenübernahme aus JPLs
+„Planetary Satellite Mean Elements" (Tabelle des Jupitersystems,
+Quelle der Bahnelemente in `jupiter-monde.ts`) ein Befund auf, der mit
+diesem Fixture unabhängig bestätigt wird: Die Tabellenspalte **P**
+(„sidereal period") nennt für Io 1,762732 d und für Europa 3,525463 d —
+beides weicht 9,3 bzw. 36,5 Minuten von der tatsächlichen Umlaufzeit ab
+(1,769138 d / 3,551181 d), bestätigt durch drei unabhängige Gegenproben
+(Kepler drittes Gesetz mit dem System-GM, direkte Positions-Regression über
+20/28 Tage Horizons-Ephemeride, sowie die gebundene Rotation aus dem
+SPICE-Kernel — Einzelheiten im Quellenblock von `jupiter-monde.ts`). Für
+Ganymed und Kallisto stimmt dieselbe Spalte dagegen auf unter zwei Minuten.
+`jupiter-monde.ts` verwendet deshalb für alle vier Monde einheitlich die
+Umlaufzeit aus dem NASA/JPL NSSDC Jovian Satellite Fact Sheet statt der
+Tabellenspalte P — nur zur Berechnung von `LDot`, alle anderen Spalten
+(a, e, w, M, i, node, Präzessionsperioden) bleiben unverändert aus der
+Elementtabelle.
+
+### Ergebnis gegen dieses Fixture
+
+Mit den oben beschriebenen Umlaufzeiten bestehen 63 der 64 auf die vier
+Jupitermonde entfallenden Einzelprüfungen aus `monde.fixture.test.ts`
+(4 Monde × [5 Radius + 5 Neigung + 5 Position + 1 volle Ebene bei J2000]).
+Eine einzelne Prüfung bleibt rot und wird bewusst NICHT durch eine
+aufgeweichte Schranke
+grün gerechnet (siehe Anleitung im Task-7-Brief): Europas Bahnradius zur
+Epoche 2050-01-01 (JD 2469807,5) weicht 1,42 % vom Horizons-Sollwert ab
+(Schranke 1 %; Soll 666 619,10 km, Ist 676 055,38 km). Die anderen vier
+Europa-Epochen sowie alle Positions- und Ebenentests (auch zu derselben
+Epoche) liegen dagegen deutlich innerhalb ihrer Schranken. Diagnose und
+Zahlen im Detail: Task-7-Bericht im SDD-Ordner. Kurzfassung: Europa steht
+in der Mitte der stärksten Drei-Körper-Bahnresonanz des Sonnensystems
+(Laplace-Resonanz mit Io und Ganymed); ihre Bahn trägt echte periodische
+(nicht-säkulare) Störungen, die ein rein linear fortgeschriebenes
+Mittelwert-Elemente-Modell (konstante a, e; linear präzedierende node, lp)
+nicht abbildet — dieselbe Fehlerklasse wie die in `horizons.json`
+dokumentierte „große Ungleichheit" zwischen Jupiter und Saturn, hier
+innerhalb des Mondsystems selbst. Bei Europas kleiner absoluter
+Exzentrizität (0,009) schlägt ein an sich moderater periodischer Anteil
+prozentual besonders stark auf den Bahnradius durch.
