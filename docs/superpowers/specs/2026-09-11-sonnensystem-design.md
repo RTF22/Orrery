@@ -319,7 +319,8 @@ Einstellung, die bei niedriger Qualitätsstufe entfällt.
   (qualitätsabhängig), verteilt aus einem gesetzten Zufallskeim nach realistischen
   Verteilungen von Halbachse, Exzentrizität und Inklination — inklusive
   **Kirkwood-Lücken** als Dichtemodulation. Ein Draw-Call, sichtbar korrekte Struktur.
-- **Sternenhintergrund:** echter Katalog (HYG, etwa 9000 Sterne bis Magnitude 6),
+- **Sternenhintergrund:** echter Katalog (HYG, rund 5000 Sterne bis Magnitude 6,0 — die oft zitierten
+  9000 gelten für Magnitude 6,5, also den Yale Bright Star Catalog),
   Punktgröße nach scheinbarer Helligkeit, Farbe aus dem B-V-Index — die Sternbilder
   stimmen also. Dahinter eine Milchstraßen-Skybox.
 
