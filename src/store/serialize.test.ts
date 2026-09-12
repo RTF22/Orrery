@@ -60,6 +60,51 @@ describe('Round-Trip', () => {
   });
 });
 
+/** Base64URL-Kodierung von rohem Text, unabhängig von encodeState — baut
+ * Fragmente, die encodeState so nie erzeugen würde (etwa mit einem
+ * __proto__-Schlüssel oder ungültigem JSON), um decodeState direkt gegen
+ * beliebige Fragmente zu prüfen. */
+function zuFragment(text: string): string {
+  const bytes = new TextEncoder().encode(text);
+  let binaer = '';
+  for (const b of bytes) binaer += String.fromCharCode(b);
+  return btoa(binaer).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+describe('decodeState — Robustheit gegen manipulierte Fragmente', () => {
+  it('lässt sich nicht per __proto__-Schlüssel im Fragment auf den Prototyp durchgreifen', () => {
+    // Objektliteral-Syntax würde __proto__ selbst als Prototyp interpretieren
+    // statt als Eigenschaft — deshalb hier ein wörtlicher JSON-Text, genauso
+    // wie ein Angreifer ihn im URL-Fragment platzieren würde.
+    const fragment = zuFragment('{"__proto__":{"polluted":true}}');
+    const ergebnis = decodeState(fragment);
+
+    expect(Object.getPrototypeOf(ergebnis)).toBe(Object.prototype);
+    expect(Object.prototype.hasOwnProperty.call(ergebnis, 'polluted')).toBe(false);
+    expect((ergebnis as unknown as Record<string, unknown>).polluted).toBeUndefined();
+  });
+
+  it('fällt bei gültigem Base64, das kein gültiges JSON ergibt, auf den Standardzustand zurück', () => {
+    // Unterscheidet sich vom Test oben mit ungültigen Base64-Zeichen: hier
+    // ist die Base64-Dekodierung selbst erfolgreich, erst JSON.parse scheitert.
+    const fragment = zuFragment('das ist kein JSON {');
+    expect(decodeState(fragment)).toEqual(DEFAULT_STATE);
+  });
+});
+
+describe('diff-Grenze: nur Hinzufügungen und Änderungen', () => {
+  // diff bildet ausschließlich vom Standard abweichende Schlüssel ab, niemals
+  // aus dem aktuellen Zustand gelöschte. Das ist nur deshalb unschädlich, weil
+  // visible im Standardzustand leer ist — es kann also nie unter seinen
+  // Standard "schrumpfen". Bekäme visible künftig nicht-leere Standardeinträge,
+  // müsste diff zuerst lernen, Löschungen darzustellen; dieser Test macht eine
+  // solche Änderung sichtbar, statt sie als stillen Datenverlust in einem
+  // geteilten Link enden zu lassen.
+  it('geht davon aus, dass DEFAULT_STATE.visible leer ist', () => {
+    expect(DEFAULT_STATE.visible).toEqual({});
+  });
+});
+
 describe('toggleVisible', () => {
   // Ruling 1: Erneutes Anzeigen muss den Schlüssel aus `visible` entfernen,
   // nicht auf `true` setzen — sonst wächst das geteilte Fragment mit jedem
