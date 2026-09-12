@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import fixture from './__fixtures__/monde-horizons.json';
-import { positionAt } from './orbit';
+import { positionAt, AU_KM } from './orbit';
 import { bodyIndex } from '../data/index';
 import { poleVector } from './frames';
 import type { Vec3 } from './types';
@@ -38,6 +38,38 @@ function winkelZwischen(a: Vec3, b: Vec3): number {
   return (Math.acos(geklemmt) * 180) / Math.PI;
 }
 
+/** Gravitationskonstante, CODATA 2018, in m³·kg⁻¹·s⁻². */
+const GRAVITATIONSKONSTANTE_M3_KG_S2 = 6.674_30e-11;
+
+/**
+ * GM des Mutterkörpers eines Mondes, in km³/s².
+ *
+ * G ist in Metern angegeben, der Katalog (und dieses Fixture) rechnen aber
+ * durchgehend in Kilometern. G · massKg ergibt zunächst m³/s²; ein Meter
+ * sind 10⁻³ km, also ein Kubikmeter 10⁻⁹ km³ — durch 10⁹ geteilt wird aus
+ * m³/s² also km³/s². Das ist genau die Stelle, an der eine vergessene
+ * Umrechnung den Radius um Faktor 10⁹ verfälschen würde, deshalb steht sie
+ * hier ausgeschrieben statt in einer Konstante versteckt.
+ */
+function gmMutterKm3S2(id: string): number {
+  const mutter = bodyIndex[bodyIndex[id]!.parent!]!;
+  return (GRAVITATIONSKONSTANTE_M3_KG_S2 * mutter.physical.massKg) / 1e9;
+}
+
+/**
+ * Große Halbachse aus der Vis-Viva-Gleichung: a = 1 / (2/r − v²/GM), mit
+ * r = |soll| in km, v = |sollGeschwindigkeit| in km/s und GM des
+ * Mutterkörpers in km³/s². Phasenunabhängig — anders als der momentane
+ * Abstand |r| hängt sie nicht davon ab, an welcher Stelle der (exzentrischen)
+ * Bahn sich der Mond gerade befindet.
+ */
+function grosseHalbachseSollKm(id: string, soll: Vec3, sollGeschwindigkeit: Vec3): number {
+  const r = betrag(soll);
+  const v = betrag(sollGeschwindigkeit);
+  const gm = gmMutterKm3S2(id);
+  return 1 / (2 / r - (v * v) / gm);
+}
+
 /**
  * Bahnnormale aus zwei Simulationspositionen im Achtelabstand eines
  * Umlaufs, n = r(jd) × r(jd + P/8). Die Umlaufzeit P folgt aus den
@@ -70,10 +102,36 @@ describe('Mondbahnen gegen JPL Horizons', () => {
     expect(eintraege.length).toBeGreaterThanOrEqual(10);
   });
 
-  it.each(eintraege)('$id bei JD $jd: Bahnradius auf 1 %', ({ id, jd, soll }) => {
-    const ist = betrag(relativ(id, jd));
-    expect(Math.abs(ist - betrag(soll)) / betrag(soll)).toBeLessThan(0.01);
-  });
+  it.each(eintraege)(
+    '$id bei JD $jd: große Halbachse auf 1 %',
+    ({ id, soll, sollGeschwindigkeit }) => {
+      // Geprüft wird die große Halbachse, nicht der momentane Abstand |r|
+      // zur selben Zeit: Bei einer exzentrischen Bahn schwankt |r| über den
+      // Umlauf um ±e·a, ein kleiner Phasenversatz zwischen Modell und
+      // Referenz zeigt sich also als scheinbarer "Radius"-Fehler, obwohl die
+      // Bahn selbst stimmt.
+      //
+      // Nachgerechnet am ursprünglich roten Fall Europa (a = 671 100 km,
+      // e = 0,0094): Das Band reicht von 664 792 km bis 677 408 km
+      // (2e = 1,88 % Spanne). Der Sollwert lag bei −0,67 % von a, der
+      // Istwert bei +0,74 % von a — beide innerhalb des Bandes, nur an
+      // verschiedenen Stellen derselben Bahn. Ein 1-%-Vergleich auf den
+      // momentanen Abstand war für Europa damit nie erfüllbar: Er maß den
+      // Phasenversatz, nicht den Bahnradius. Die große Halbachse ist
+      // phasenunabhängig und genau die Größe, die laut Projektspezifikation
+      // "sofort auffallen" soll, wenn sie falsch ist. Den Phasenversatz
+      // selbst deckt der separate Positionstest weiter unten ab (5 %
+      // Bahnumfang, bewusst locker wegen der Laplace-Resonanz bei
+      // Io/Europa/Ganymed).
+      //
+      // Was dieser Test NICHT mehr fängt: eine Bahn mit richtiger großer
+      // Halbachse, aber falscher Form (z. B. falsche Exzentrizität oder
+      // verdrehtes Perizentrum) — dagegen steht weiterhin der Positionstest.
+      const aSollKm = grosseHalbachseSollKm(id, soll, sollGeschwindigkeit);
+      const aIstKm = bodyIndex[id]!.orbit!.a * AU_KM;
+      expect(Math.abs(aIstKm - aSollKm) / aSollKm).toBeLessThan(0.01);
+    },
+  );
 
   it.each(eintraege)(
     '$id bei JD $jd: Neigung gegen die Äquatorebene des Mutterkörpers auf 0,5°/1,0°',
@@ -153,6 +211,26 @@ describe('Mondbahnen gegen JPL Horizons', () => {
   // Fixture. Wer diesen Test auf weitere Epochen ausdehnen will, muss
   // zuerst eine genauer angegebene Knotenpräzessionsperiode beschaffen.
   const epocheJ2000 = eintraege.filter((e) => e.jd === 2451544.5);
+
+  it('enthält die Epoche J2000 vollständig, für jeden Mond mit Bezugsebene parentEquator', () => {
+    // Schützt den folgenden it.each-Block davor, lautlos zu verschwinden:
+    // Verschiebt sich der Stichtag 2451544.5 künftig (oder fällt er aus dem
+    // Fixture heraus), liefert der obige .filter() eine leere Liste, und
+    // it.each([]) erzeugt dafür null Tests — kein roter Fehlschlag, einfach
+    // keine Prüfung mehr. Genau das würde die einzige Prüfung der vollen
+    // Bahnebene inklusive Knotenlage (siehe Kommentar oben) unbemerkt aus
+    // der Suite entfernen. Die erwartete Anzahl wird deshalb aus den Daten
+    // selbst hergeleitet — ein Eintrag je Mond mit frame 'parentEquator' —
+    // statt als Zahl hingeschrieben, die beim nächsten hinzugefügten Mond
+    // (aktuell sechs: Phobos, Deimos, Io, Europa, Ganymed, Kallisto) sofort
+    // wieder falsch wäre.
+    const mondeMitParentEquator = new Set(
+      eintraege.map((e) => e.id).filter((id) => bodyIndex[id]!.orbit!.frame === 'parentEquator'),
+    );
+    expect(epocheJ2000.length).toBeGreaterThan(0);
+    expect(new Set(epocheJ2000.map((e) => e.id))).toEqual(mondeMitParentEquator);
+    expect(epocheJ2000.length).toBe(mondeMitParentEquator.size);
+  });
 
   it.each(epocheJ2000)(
     '$id bei JD $jd: volle Bahnebene inkl. Knoten auf 0,5°/1,0° — nur Epoche J2000',
