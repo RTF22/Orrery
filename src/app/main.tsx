@@ -6,6 +6,7 @@ import { buildScene } from '../render/scene';
 import { createPostFx } from '../render/postfx';
 import { attachCameraInput } from '../render/camera/input';
 import { startLoop } from './loop';
+import { tickCinema } from './cinema';
 import { useStore } from '../store';
 import { App as Bedienoberflaeche } from '../ui/App';
 import type { QualityTier } from '../store/types';
@@ -46,6 +47,9 @@ function App(): React.JSX.Element {
     let stufe: QualityTier | null = null;
 
     const stopLoop = startLoop((jd, dt) => {
+      // Vor dem Lesen des Zustands: Szene und Kamera sollen im selben Bild
+      // denselben Stand sehen.
+      tickCinema(dt);
       const state = useStore.getState();
       szene.update(jd, dt, state);
 
