@@ -3,6 +3,7 @@ import type { RenderContext } from './renderer';
 import type { AppState } from '../store/types';
 import { createBodyViews } from './bodies';
 import { createOrbitLines } from './orbits';
+import { createStarfield } from './starfield';
 import { deriveCameraKm } from './camera';
 import { scaledPositionAt } from '../sim/scale';
 import { bodyIndex } from '../data/index';
@@ -34,6 +35,10 @@ const URSPRUNG_KM = new THREE.Vector3(0, 0, 0);
 export function buildScene(ctx: RenderContext): SceneHandle {
   const koerper = createBodyViews(ctx.scene);
   const bahnen = createOrbitLines(ctx.scene);
+  // Einmalig aufgebaut: Sterne stehen fest auf einer sehr großen Kugel um den
+  // Ursprung und werden — anders als Körper und Bahnen — nie pro Frame neu
+  // positioniert (siehe Kommentar in starfield.ts).
+  createStarfield(ctx.scene);
 
   const licht = new THREE.PointLight(0xffffff, 1, 0, 2);
   ctx.scene.add(licht);
