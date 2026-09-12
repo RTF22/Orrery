@@ -1276,9 +1276,12 @@ describe('BodyTree mit Monden', () => {
     expect(screen.queryByText('Europa')).not.toBeInTheDocument();
   });
 
-  it('klappt eine Gruppe auf Klick auf', async () => {
+  it('klappt eine Gruppe auf Klick auf', () => {
+    // fireEvent aus @testing-library/react, nicht user-event: Letzteres ist
+    // keine Abhängigkeit dieses Projekts, und alle bestehenden Paneltests
+    // arbeiten mit fireEvent.
     render(<BodyTree />);
-    await userEvent.click(screen.getByRole('button', { name: /Jupiter aufklappen/ }));
+    fireEvent.click(screen.getByRole('button', { name: /Jupiter aufklappen/ }));
     expect(screen.getByText('Europa')).toBeInTheDocument();
   });
 
