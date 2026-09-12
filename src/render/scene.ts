@@ -120,6 +120,7 @@ export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandl
     },
     dispose() {
       labels.dispose();
+      ringe.dispose();
     },
   };
 }

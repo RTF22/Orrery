@@ -5,7 +5,7 @@ import { scaledPositionAt } from '../sim/scale';
 import { poleVector } from '../sim/frames';
 import { bodies, bodyIndex } from '../data/index';
 import { kmToUnits, worldToRender } from './units';
-import { bodyLighting } from './lighting';
+import { bodyLighting, irradianceFactor } from './lighting';
 import type { LightingSettings } from './lighting';
 
 /**
@@ -105,15 +105,28 @@ const RING_SEGMENTE = 128;
 const RING_STREUUNG = 0.85;
 const RING_SCHAERFE = 6;
 
+// mat3(modelMatrix) statt normalMatrix (= Normalenmatrix von modelViewMatrix,
+// also Sichtraum): vWeltPos unten steht in Weltraum (modelMatrix), Sonnen-
+// und Blickvektor im Fragment-Shader werden daraus gebildet — vNormal muss
+// im selben Bezugssystem stehen, sonst vergleicht dot(N, L) zwei verschiedene
+// Räume und die Beleuchtung schwankt beim bloßen Drehen der Kamera. Reine
+// mat3(modelMatrix) genügt hier ohne inverse Transponierte: Die Ringe werden
+// pro Frame ausschließlich mit mesh.scale.setScalar (siehe update() unten)
+// gleichförmig skaliert, keine Achse einzeln — bei gleichförmiger Skalierung
+// dreht mat3(modelMatrix) die Normale korrekt, ein anschließendes normalize()
+// entfernt den (für alle Komponenten gleichen) Skalenfaktor vollständig.
 const RING_VERTEX_SHADER = `
+  #include <common>
+  #include <logdepthbuf_pars_vertex>
   varying vec2 vUv;
   varying vec3 vNormal;
   varying vec3 vWeltPos;
   void main() {
     vUv = uv;
-    vNormal = normalize(normalMatrix * normal);
+    vNormal = normalize(mat3(modelMatrix) * normal);
     vWeltPos = (modelMatrix * vec4(position, 1.0)).xyz;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    #include <logdepthbuf_vertex>
   }
 `;
 
@@ -122,7 +135,17 @@ const RING_VERTEX_SHADER = `
 // oben ab: -dot(V, L) entspricht -cosWinkel, uStreuung der staerke, uSchaerfe
 // der schaerfe. Ändert sich eine der beiden Stellen, muss die andere
 // mitgehen — siehe rings.test.ts für die geprüfte Kennlinie.
+//
+// RECIPROCAL_PI (aus <common>, dieselbe Konstante wie in Threes eigenen
+// Materialien) auf direkt und streu: Der Körper läuft durch Threes
+// Lambert-BRDF, die den direkten Anteil intern mit 1/π gewichtet (siehe der
+// RECIPROCAL_PI-Kommentar in lighting.ts); dieses ShaderMaterial hat keine
+// eingebaute BRDF und muss den Faktor deshalb selbst tragen, sonst ist der
+// Ring exakt um π heller als der Planet bei gleicher Albedo. uFuellung *
+// uTag bleibt ungeteilt: Sie steht für einen künstlerischen Füllwert der
+// Nachtseite, keine Reflexion, und hat kein Vorbild im BRDF-Pfad.
 const RING_FRAGMENT_SHADER = `
+  #include <common>
   uniform sampler2D tRing;
   uniform vec3 uSonne;
   uniform float uTag;
@@ -132,13 +155,15 @@ const RING_FRAGMENT_SHADER = `
   varying vec2 vUv;
   varying vec3 vNormal;
   varying vec3 vWeltPos;
+  #include <logdepthbuf_pars_fragment>
   void main() {
+    #include <logdepthbuf_fragment>
     vec4 ring = texture2D(tRing, vUv);
     vec3 L = normalize(uSonne - vWeltPos);
     vec3 V = normalize(-vWeltPos);            // Kamera sitzt im Ursprung
     vec3 N = normalize(vNormal);
-    float direkt = abs(dot(N, L)) * uTag;      // beidseitig: ein Ring hat keine Rückseite
-    float streu = uStreuung * pow(max(0.0, -dot(V, L)), uSchaerfe) * uTag;
+    float direkt = abs(dot(N, L)) * uTag * RECIPROCAL_PI; // beidseitig: ein Ring hat keine Rückseite
+    float streu = uStreuung * pow(max(0.0, -dot(V, L)), uSchaerfe) * uTag * RECIPROCAL_PI;
     gl_FragColor = vec4(ring.rgb * (direkt + uFuellung * uTag + streu), ring.a);
   }
 `;
@@ -194,6 +219,12 @@ export interface RingViews {
     licht: LightingSettings,
     sonneRender: THREE.Vector3,
   ): void;
+  /**
+   * Entfernt jede Ringscheibe aus der Szene und gibt Geometrie, ShaderMaterial
+   * und die aktuell gebundene Textur (Ersatztextur oder nachgeladenes Bild,
+   * siehe ladeRingTextur) frei — analog zu SceneHandle.dispose() in scene.ts.
+   */
+  dispose(): void;
 }
 
 interface RingEintrag {
@@ -275,17 +306,38 @@ export function createRingViews(scene: THREE.Scene): RingViews {
         const pol = poleVector(body.physical.pole.raDeg, body.physical.pole.decDeg);
         mesh.quaternion.copy(ringAusrichtung(pol));
 
-        // Beleuchtung: dieselbe Rechnung wie bei den Körpern (bodies.ts) —
-        // Sonnenabstand aus der dargestellten (skalierten) Position, damit
-        // Distanzausgleich und Nachtseitenfüllung bei jedem Preset densel-
-        // ben Wert liefern wie am Planeten selbst.
+        // Beleuchtung: Sonnenabstand aus der dargestellten (skalierten)
+        // Position, wie bei den Körpern (bodies.ts). uTag speist im
+        // Fragment-Shader direkt und streu (siehe RING_FRAGMENT_SHADER) und
+        // nimmt bewusst denselben geklemmten Weg wie das Material des
+        // Planeten — colorGain (in bodies.ts über material.color) mal
+        // irradianceFactor, mal brightness als Bezugsgröße der ganzen
+        // Kalibrierung (siehe lighting.ts) — statt des ungeklemmten
+        // dayLevel. Unklemmt sind beide Wege identisch (E^-c * E = E^(1-c) =
+        // dayLevel/brightness); nur wenn lightCompensation den Regler an den
+        // Rand treibt, greift die Klemme aus MAX_COLOR_GAIN/MIN_COLOR_GAIN
+        // und hält Ring und Planet gemeinsam im selben Rahmen, statt dass
+        // der Ring ungebremst über den Planeten hinauswächst. Der zweite,
+        // unabhängige Bruch — Three gewichtet den Planeten intern mit 1/π,
+        // dieses ShaderMaterial nicht — sitzt nicht hier, sondern in
+        // RECIPROCAL_PI im Fragment-Shader oben.
         const sonnenabstandKm = Math.sqrt(weltKm.x ** 2 + weltKm.y ** 2 + weltKm.z ** 2);
         const l = bodyLighting(sonnenabstandKm, licht);
+        const distanzfaktor = irradianceFactor(sonnenabstandKm, licht.lightFalloff);
 
         (material.uniforms['uSonne']!.value as THREE.Vector3).copy(sonneRender);
-        material.uniforms['uTag']!.value = l.dayLevel;
+        material.uniforms['uTag']!.value = licht.brightness * l.colorGain * distanzfaktor;
         material.uniforms['uFuellung']!.value = licht.nightFill;
       }
+    },
+    dispose() {
+      for (const { mesh, material } of eintraege) {
+        scene.remove(mesh);
+        mesh.geometry.dispose();
+        material.dispose();
+        (material.uniforms['tRing']!.value as THREE.Texture).dispose();
+      }
+      eintraege.length = 0;
     },
   };
 }

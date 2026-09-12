@@ -87,4 +87,13 @@ describe('vorwaertsstreuung', () => {
     // Bei halbem Gegenlicht muss ein schärferer Exponent weniger übrig lassen.
     expect(vorwaertsstreuung(-0.5, 1, 16)).toBeLessThan(vorwaertsstreuung(-0.5, 1, 4));
   });
+
+  it('trifft eine konkrete Stützstelle exakt', () => {
+    // Nagelt die Formel fest, nicht nur ihre Form (monoton, Nullstellen,
+    // Maximum) — die vorherigen Tests würden auch bei einer Formel mit
+    // falscher Basis oder falschem Exponenten grün bleiben.
+    // Herleitung: -cosWinkel = -(-0,5) = 0,5; pow(0,5; 8) = 1/2^8 = 1/256;
+    // staerke = 1 multipliziert nur, ändert also nichts an 1/256.
+    expect(vorwaertsstreuung(-0.5, 1, 8)).toBeCloseTo(1 / 256, 12);
+  });
 });
