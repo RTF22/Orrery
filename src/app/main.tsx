@@ -11,9 +11,9 @@ import { useStore } from '../store';
  *
  * Montiert eine vollflächige Canvas für Three.js sowie ein leeres
  * Overlay-Div, das erst eine spätere Aufgabe mit der Bedienoberfläche
- * füllt. Renderer, Szene und Schleife werden hier verdrahtet; die
- * eigentliche Darstellung aller Körper folgt in einer späteren Aufgabe —
- * bislang zeigt die Szene nur eine Platzhalterkugel im Ursprung.
+ * füllt. Renderer, Szene und Schleife werden hier verdrahtet. Die Kamera
+ * bleibt am Ursprung (siehe renderer.ts) — ihre Blickrichtung setzt die
+ * Szene pro Frame aus dem Store, siehe render/scene.ts und render/camera.ts.
  */
 function App(): React.JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -24,11 +24,6 @@ function App(): React.JSX.Element {
 
     const ctx = createRenderer(canvas);
     const szene = buildScene(ctx);
-
-    // Vorläufige, feste Kameraposition für den Durchstich. Eine spätere
-    // Aufgabe ersetzt dies durch die kamerarelative Steuerung aus dem Store.
-    ctx.camera.position.set(0, -6, 3);
-    ctx.camera.lookAt(0, 0, 0);
 
     const stopLoop = startLoop((jd, dt) => {
       szene.update(jd, dt, useStore.getState());
