@@ -152,6 +152,47 @@ Anders als bei den fünf großen Uranusmonden (siehe Lücken-Abschnitt unten)
 Fläche deutlich, weshalb diese drei Karten trotz der Lücke als brauchbar
 gewertet wurden.
 
+## Textur-Quelle: Solar System Scope (Ringtextur, Task 13)
+
+Die Saturn-Ringtextur stammt erneut von Solar System Scope
+(<https://www.solarsystemscope.com/textures/>). Urheber: Solar System Scope.
+Lizenz: Creative Commons Attribution 4.0 International (CC BY 4.0,
+<https://creativecommons.org/licenses/by/4.0/>).
+
+Format: PNG mit Alphakanal, 2048×125 Pixel — kein äquirektanguläres Bild wie
+die Albedo-Texturen, sondern ein radialer Streifen: Eine Bildspalte
+entspricht einem Radius des Rings, die geringe Höhe (125 px) ist die
+Streifendicke. Das trifft sich mit der UV-Belegung aus Task 12
+(`ringGeometrieDaten` in `src/render/rings.ts`): u läuft von der Innenkante
+(u=0) zur Außenkante (u=1) des Rings, v ist konstant und wird beim Sampling
+nicht ausgewertet. Der Alphakanal trägt die radiale Bänderung/Dichte der
+Ringe; das RGB trägt deren Farbe.
+
+Geprüft (12.09.2026): Die vollständige Download-Liste der Quelle führt unter
+„Rings" ausschließlich `2k_saturn_ring_alpha.png` und
+`8k_saturn_ring_alpha.png` — kein Uranus-Gegenstück. Verwendet wurde die
+2k-Variante, konsistent mit der 2k-Auflösung aller übrigen Phase-1-Texturen
+dieses Projekts.
+
+Bearbeitung: keine — unverändert in der gelieferten Auflösung übernommen,
+nur nach `public/textures/saturn/ring.png` abgelegt.
+
+| Datei | Quelle (URL) | Urheber | Lizenz | Maße | Größe | Bearbeitung |
+|---|---|---|---|---|---|---|
+| `public/textures/saturn/ring.png` | <https://www.solarsystemscope.com/textures/download/2k_saturn_ring_alpha.png> | Solar System Scope | CC BY 4.0 | 2048×125 | 12 119 Bytes | unverändert übernommen, nur umbenannt |
+
+**Lücke Uranus-Ring:** `appearance.rings.texture` bleibt bei Uranus leer
+(siehe `src/data/bodies/uranus.ts`). Solar System Scope bietet — anders als
+für Saturn — keine Uranus-Ringtextur an, und keine andere im Projekt bereits
+belegte Quelle (USGS Astrogeology, Wikimedia-Commons-NASA-Mosaike) führt
+eine. Der Ring wird trotzdem gerendert: Ohne Textur greift in
+`render/rings.ts` eine dunkelgraue, voll deckende 1×1-Ersatztextur (`tRing`,
+RGB 38 statt Weiß), sodass Uranus’ Ring als flächiger, ungebänderter Streifen
+sichtbar bleibt statt zu verschwinden — dieselbe Ersatzstrategie wie bei
+Körpern ohne Albedo-Textur in `render/bodies.ts`, hier bewusst dunkel statt
+weiß gewählt: Der reale Uranusring hat mit rund 0,05 eine sehr geringe
+Albedo, ein heller Platzhalter hätte das verfälscht.
+
 ## Lücken: Körper ohne Textur (Task 11)
 
 Für sechs der 25 in Task 8-10 hinzugekommenen Körper blieb

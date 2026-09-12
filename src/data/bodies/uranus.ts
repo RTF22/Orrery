@@ -52,8 +52,12 @@ export const uranus: Body = {
     // 51 149 km, Breite 58 km, Außenkante 51 149 + 58/2 ≈ 51 178 km. Auf
     // glatte Werte gerundet: 38 000 bis 51 000 km — deckt sich mit den
     // "rund 38 000 bis 51 000 km" aus dem Task-12-Brief.
-    // texture: noch keine Ringtextur im Repo (siehe ASSETS.md) — bleibt bis
-    // zum Material-Task leer, wie bei Körpern ohne Albedo-Textur üblich.
+    // texture: bleibt leer — Solar System Scope, die Quelle der übrigen
+    // Texturen dieses Projekts, bietet nur eine Saturn-Ringtextur an (Stand
+    // 12.09.2026, siehe ASSETS.md, Abschnitt "Ringtextur"); für Uranus
+    // findet sich dort kein Gegenstück. Der Ring wird trotzdem gerendert
+    // (siehe render/rings.ts, dunkelgraue Ersatztextur — passend zur realen,
+    // sehr geringen Albedo des Uranusrings), nur ohne Bänderung.
     rings: { innerKm: 38000, outerKm: 51000, texture: '' },
   },
   info: { nameKey: 'body.uranus.name', descriptionKey: 'body.uranus.description' },

@@ -43,9 +43,9 @@ export const saturn: Body = {
     // Der Task-12-Brief nennt gerundet 74 500 bis 140 200 km; die zweite
     // Zahl verwechselt A- mit F-Ring-Außenkante (siehe Kommentar zum
     // Mimas-Test) — hier gilt die nachgeprüfte Fact-Sheet-Zahl.
-    // texture: noch keine Ringtextur im Repo (siehe ASSETS.md) — bleibt bis
-    // zum Material-Task leer, wie bei Körpern ohne Albedo-Textur üblich.
-    rings: { innerKm: 74658, outerKm: 136780, texture: '' },
+    // texture: Solar-System-Scope-Ringtextur (radialer Streifen mit
+    // Alphakanal, siehe ASSETS.md, Abschnitt "Ringtextur"), Task 13.
+    rings: { innerKm: 74658, outerKm: 136780, texture: 'textures/saturn/ring.png' },
   },
   info: { nameKey: 'body.saturn.name', descriptionKey: 'body.saturn.description' },
 };

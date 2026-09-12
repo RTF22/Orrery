@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import * as THREE from 'three';
-import { ringGeometrieDaten, ringAusrichtung } from './rings';
+import { ringGeometrieDaten, ringAusrichtung, vorwaertsstreuung } from './rings';
 import { poleVector } from '../sim/frames';
 
 describe('ringGeometrieDaten', () => {
@@ -60,5 +60,31 @@ describe('ringAusrichtung', () => {
     expect(normale.x).toBeCloseTo(pol.x, 10);
     expect(normale.y).toBeCloseTo(pol.y, 10);
     expect(normale.z).toBeCloseTo(pol.z, 10);
+  });
+});
+
+describe('vorwaertsstreuung', () => {
+  it('ist maximal, wenn die Sonne genau hinter den Ringen steht', () => {
+    // cos = -1: Blickrichtung und Richtung zur Sonne sind entgegengesetzt,
+    // das Licht kommt also durch die Ringe auf die Kamera zu.
+    expect(vorwaertsstreuung(-1, 0.8, 8)).toBeCloseTo(0.8, 12);
+  });
+
+  it('verschwindet, sobald die Sonne vor den Ringen steht', () => {
+    expect(vorwaertsstreuung(0, 0.8, 8)).toBe(0);
+    expect(vorwaertsstreuung(0.5, 0.8, 8)).toBe(0);
+    expect(vorwaertsstreuung(1, 0.8, 8)).toBe(0);
+  });
+
+  it('wächst monoton zum Gegenlicht hin', () => {
+    const werte = [-0.2, -0.5, -0.8, -1].map((c) => vorwaertsstreuung(c, 1, 8));
+    for (let i = 1; i < werte.length; i++) {
+      expect(werte[i]!).toBeGreaterThan(werte[i - 1]!);
+    }
+  });
+
+  it('bündelt den Effekt mit steigender Schärfe enger', () => {
+    // Bei halbem Gegenlicht muss ein schärferer Exponent weniger übrig lassen.
+    expect(vorwaertsstreuung(-0.5, 1, 16)).toBeLessThan(vorwaertsstreuung(-0.5, 1, 4));
   });
 });

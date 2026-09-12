@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import type { RenderContext } from './renderer';
 import type { AppState } from '../store/types';
 import { createBodyViews } from './bodies';
+import { createRingViews } from './rings';
 import { createOrbitLines } from './orbits';
 import { createStarfield } from './starfield';
 import { createLabelOverlay } from './labels';
@@ -35,6 +36,7 @@ export interface SceneHandle {
  */
 export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandle {
   const koerper = createBodyViews(ctx.scene);
+  const ringe = createRingViews(ctx.scene);
   const bahnen = createOrbitLines(ctx.scene);
   // Einmalig aufgebaut: Sterne stehen fest auf einer sehr großen Kugel um den
   // Ursprung und werden — anders als Körper und Bahnen — nie pro Frame neu
@@ -80,6 +82,14 @@ export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandl
       const sonnenpositionKm = scaledPositionAt('sun', bodyIndex, jd, state.scale);
       const lichtRender = worldToRender(sonnenpositionKm, cameraKm);
       licht.position.set(lichtRender.x, lichtRender.y, lichtRender.z);
+
+      // Ringe bekommen dieselben Argumente wie die Körper, dazu die
+      // kamerarelative Sonnenposition für die Vorwärtsstreuung (siehe
+      // rings.ts) — dasselbe Punktlicht, das gerade eben positioniert wurde.
+      ringe.update(
+        jd, state.scale, cameraKm, state.visible, state.display,
+        new THREE.Vector3(lichtRender.x, lichtRender.y, lichtRender.z),
+      );
 
       // Kalibrierung: Bei 1 AE Abstand vom Licht soll die Bestrahlungsstärke
       // exakt state.display.brightness betragen — unabhängig vom gewählten
