@@ -5,6 +5,7 @@ import { scaledPositionAt, scaledRadius } from '../sim/scale';
 import { rotationAt } from '../sim/orbit';
 import { bodies, bodyIndex } from '../data/index';
 import { kmToUnits, worldToRender } from './units';
+import { BLOOM_LAYER } from './postfx';
 
 /** Untergrenze, damit Geometrie nie auf null kollabiert. */
 export const MIN_RADIUS_UNITS = 1e-4;
@@ -60,6 +61,9 @@ export function createBodyViews(scene: THREE.Scene): BodyViews {
 
     // Einheitskugel; die tatsächliche Größe kommt über scale.
     const mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 32), material);
+    // Selbstleuchtende Körper zusätzlich auf die Bloom-Ebene: Nur sie
+    // bekommen im Post-Processing einen Lichtkranz (siehe postfx.ts).
+    if (body.kind === 'star') mesh.layers.enable(BLOOM_LAYER);
     scene.add(mesh);
     meshes.set(body.id, mesh);
   }

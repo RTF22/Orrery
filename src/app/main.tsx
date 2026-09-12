@@ -3,8 +3,10 @@ import { createRoot } from 'react-dom/client';
 import '../index.css';
 import { createRenderer } from '../render/renderer';
 import { buildScene } from '../render/scene';
+import { createPostFx } from '../render/postfx';
 import { startLoop } from './loop';
 import { useStore } from '../store';
+import type { QualityTier } from '../store/types';
 
 /**
  * Einstiegspunkt der Anwendung.
@@ -24,14 +26,33 @@ function App(): React.JSX.Element {
 
     const ctx = createRenderer(canvas);
     const szene = buildScene(ctx);
+    const postfx = createPostFx(ctx);
+
+    // Der Renderer hängt selbst am resize-Ereignis und wurde zuerst
+    // registriert; die Composer-Ziele folgen daher mit der bereits neuen
+    // Canvas-Größe.
+    const onResize = (): void => { postfx.resize(); };
+    window.addEventListener('resize', onResize);
+
+    let bloomAn: boolean | null = null;
+    let stufe: QualityTier | null = null;
 
     const stopLoop = startLoop((jd, dt) => {
-      szene.update(jd, dt, useStore.getState());
-      ctx.renderer.render(ctx.scene, ctx.camera);
+      const state = useStore.getState();
+      szene.update(jd, dt, state);
+
+      if (state.display.bloom !== bloomAn || state.quality.tier !== stufe) {
+        bloomAn = state.display.bloom;
+        stufe = state.quality.tier;
+        postfx.setBloom(bloomAn, stufe);
+      }
+      postfx.render();
     });
 
     return () => {
       stopLoop();
+      window.removeEventListener('resize', onResize);
+      postfx.dispose();
       ctx.dispose();
     };
   }, []);
