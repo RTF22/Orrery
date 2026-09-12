@@ -42,6 +42,8 @@ export const de = {
   'panel.display': 'Darstellung',
   'tree.show': 'anzeigen',
   'tree.focus': 'Kamera auf diesen Körper richten',
+  'tree.expand': 'aufklappen',
+  'tree.collapse': 'einklappen',
   'display.orbits': 'Bahnlinien',
   'display.labels': 'Beschriftungen',
   'display.markers': 'Marker',

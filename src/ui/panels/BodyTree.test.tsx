@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { BodyTree, buildTree } from './BodyTree';
+import { BodyTree, buildTree, kaskadierendeSichtbarkeit } from './BodyTree';
 import { bodies } from '../../data/index';
 import { useStore, DEFAULT_STATE } from '../../store';
 
@@ -69,5 +69,33 @@ describe('BodyTree', () => {
     render(<BodyTree />);
     fireEvent.click(screen.getByLabelText(/Neptun anzeigen/));
     expect(useStore.getState().visible.neptune).toBe(false);
+  });
+});
+
+describe('BodyTree mit Monden', () => {
+  it('zeigt Mondgruppen zunächst eingeklappt', () => {
+    // toBeTruthy()/toBeNull() statt toBeInTheDocument(): jest-dom liegt zwar
+    // als Abhängigkeit vor, ist aber in src/test/setup.ts nicht eingebunden,
+    // und alle bestehenden Paneltests prüfen Präsenz auf diese Weise.
+    render(<BodyTree />);
+    expect(screen.getByText('Jupiter')).toBeTruthy();
+    expect(screen.queryByText('Europa')).toBeNull();
+  });
+
+  it('klappt eine Gruppe auf Klick auf', () => {
+    // fireEvent aus @testing-library/react, nicht user-event: Letzteres ist
+    // keine Abhängigkeit dieses Projekts, und alle bestehenden Paneltests
+    // arbeiten mit fireEvent.
+    render(<BodyTree />);
+    fireEvent.click(screen.getByRole('button', { name: /Jupiter aufklappen/ }));
+    expect(screen.getByText('Europa')).toBeTruthy();
+  });
+
+  it('blendet mit dem Planeten auch seine Monde aus', () => {
+    useStore.setState({ visible: {} });
+    kaskadierendeSichtbarkeit('jupiter').forEach((id) => {
+      expect(['jupiter', 'io', 'europa', 'ganymede', 'callisto']).toContain(id);
+    });
+    expect(kaskadierendeSichtbarkeit('jupiter')).toHaveLength(5);
   });
 });
