@@ -77,7 +77,16 @@ export interface LabelEintrag {
   renderPos: Vec3;
   radiusUnits: number;
   sichtbar: boolean;
-  /** Für die Mond-Schwelle in zeigeLabel — siehe LABEL_MIN_PIXEL_MOND. */
+  /**
+   * Für die Mond-Schwelle in zeigeLabel (LABEL_MIN_PIXEL_MOND) UND als
+   * Rangkriterium in der Kollisionsauflösung von update() — Sonne, Planeten
+   * und Zwergplaneten (istMond === false) vor Monden. Kein eigenes
+   * Rang-Feld: body.kind kennt zwar vier Klassen (star/planet/moon/dwarf),
+   * aber die Beschriftung braucht durchgehend nur die binäre Unterscheidung
+   * Mond/Nicht-Mond. Ein zusätzliches Feld würde exakt dieselbe Tatsache ein
+   * zweites Mal tragen — zwei Quellen, die auseinanderlaufen könnten, für
+   * eine Information, die dieses eine Flag bereits vollständig abbildet.
+   */
   istMond: boolean;
 }
 
@@ -139,8 +148,17 @@ export function createLabelOverlay(container: HTMLElement): LabelOverlay {
       const breite = wurzel.clientWidth;
       const hoehe = wurzel.clientHeight;
 
-      // Erst alles projizieren, dann nach Tiefe sortiert platzieren: Bei
-      // Überlappung gewinnt der vordere Körper, der hintere tritt zurück.
+      // Erst alles projizieren, dann zweistufig sortiert platzieren: zuerst
+      // nach Rang (Sonne, Planeten und Zwergplaneten vor Monden), erst
+      // INNERHALB desselben Rangs weiter nach Tiefe. Reine Tiefensortierung
+      // würde Planet und Mond gleichrangig behandeln — zieht ein Mond vor
+      // seinem Planeten vorbei, ist er der vordere und verdrängt dessen
+      // Beschriftung, zieht er dahinter, kommt sie zurück. Bei kurzen
+      // Umlaufzeiten (Io, Phobos) mehrmals pro Sekunde im Zeitraffer — genau
+      // das gemeldete Flackern. Mit dem Rang zuerst gewinnt die
+      // Planetenbeschriftung unabhängig davon, wer gerade näher steht; „bei
+      // Überlappung gewinnt der vordere Körper" gilt damit nur noch
+      // INNERHALB derselben Rangstufe (Planet gegen Planet, Mond gegen Mond).
       const kandidaten = eintraege.flatMap((eintrag) => {
         if (!eintrag.sichtbar) return [];
         const p = projectToScreen(eintrag.renderPos, camera, breite, hoehe);
@@ -149,9 +167,25 @@ export function createLabelOverlay(container: HTMLElement): LabelOverlay {
         const radiusPixel = apparentRadiusPixels(eintrag.radiusUnits, abstand, camera.fov, hoehe);
         return [{ eintrag, p, radiusPixel }];
       });
-      kandidaten.sort((a, b) => a.p.tiefe - b.p.tiefe);
+      const rang = (istMond: boolean): 0 | 1 => (istMond ? 1 : 0);
+      kandidaten.sort((a, b) => {
+        const rangUnterschied = rang(a.eintrag.istMond) - rang(b.eintrag.istMond);
+        if (rangUnterschied !== 0) return rangUnterschied;
+        return a.p.tiefe - b.p.tiefe;
+      });
 
-      const platziert: { x: number; y: number }[] = [];
+      // Jeder belegte Platz merkt sich zusätzlich, ob er eine Beschriftung
+      // trägt oder nur eine Ersatzglyphe (Marker-Punkt für einen zu kleinen
+      // Körper). Eine bloße Glyphe ist visuell ein kleiner Punkt — sie soll
+      // keiner Beschriftung ihren Platz streitig machen können, sonst könnte
+      // ein winziger Mondmarker weiterhin ein Planetenlabel verdecken, auch
+      // wenn der Rang das jetzt eigentlich verhindert (z. B. zwei Monde
+      // desselben Rangs). Zwei Glyphen weichen sich weiterhin gegenseitig
+      // aus, und eine Beschriftung blockiert weiterhin auch eine bloße
+      // Glyphe (ein Punkt mitten im Namen eines anderen Körpers wäre
+      // ebenfalls unschön) — nur die eine Richtung „Glyphe verdrängt Text"
+      // wird hier ausgeschlossen.
+      const platziert: { x: number; y: number; hatText: boolean }[] = [];
       const gezeigt = new Set<string>();
 
       for (const { eintrag, p, radiusPixel } of kandidaten) {
@@ -162,14 +196,16 @@ export function createLabelOverlay(container: HTMLElement): LabelOverlay {
         // Platz ab.
         const zeigtText = zeigeLabels && zeigeLabel(radiusPixel, eintrag.istMond);
         if (!zeigtText && !brauchtGlyphe) continue;
-        if (platziert.some((q) => ueberlappt(q, p))) continue;
+
+        const belegt = zeigtText ? platziert.filter((q) => q.hatText) : platziert;
+        if (belegt.some((q) => ueberlappt(q, p))) continue;
 
         const el = hole(eintrag);
         el.wrapper.style.transform = `translate(${p.x}px, ${p.y}px)`;
         el.wrapper.hidden = false;
         el.glyphe.hidden = !brauchtGlyphe;
         el.text.hidden = !zeigtText;
-        platziert.push(p);
+        platziert.push({ x: p.x, y: p.y, hatText: zeigtText });
         gezeigt.add(eintrag.id);
       }
 
