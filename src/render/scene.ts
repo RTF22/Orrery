@@ -4,9 +4,11 @@ import type { AppState } from '../store/types';
 import { createBodyViews } from './bodies';
 import { createOrbitLines } from './orbits';
 import { createStarfield } from './starfield';
+import { createLabelOverlay } from './labels';
+import type { LabelEintrag } from './labels';
 import { createCameraController } from './camera/controller';
 import { scaledPositionAt } from '../sim/scale';
-import { bodyIndex } from '../data/index';
+import { bodies, bodyIndex } from '../data/index';
 import { AU_KM } from '../sim/orbit';
 import { kmToUnits, worldToRender } from './units';
 
@@ -24,19 +26,23 @@ const AU_EINHEITEN = kmToUnits(AU_KM);
  */
 export interface SceneHandle {
   update: (jd: number, dt: number, state: AppState) => void;
+  dispose: () => void;
 }
 
 /**
  * Baut die Szene auf: die Körper-Meshes (Task 10) sowie ein Punktlicht an
  * der Sonnenposition, das die Planeten beleuchtet.
  */
-export function buildScene(ctx: RenderContext): SceneHandle {
+export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandle {
   const koerper = createBodyViews(ctx.scene);
   const bahnen = createOrbitLines(ctx.scene);
   // Einmalig aufgebaut: Sterne stehen fest auf einer sehr großen Kugel um den
   // Ursprung und werden — anders als Körper und Bahnen — nie pro Frame neu
   // positioniert (siehe Kommentar in starfield.ts).
   createStarfield(ctx.scene);
+
+  // Beschriftungen und Ersatzglyphen liegen als HTML über der Canvas.
+  const labels = createLabelOverlay(overlay);
 
   const licht = new THREE.PointLight(0xffffff, 1, 0, 2);
   ctx.scene.add(licht);
@@ -84,6 +90,25 @@ export function buildScene(ctx: RenderContext): SceneHandle {
       // Helligkeit 1 vollständig unbeleuchtet.
       licht.intensity = state.display.brightness * AU_EINHEITEN ** state.display.lightFalloff;
       licht.decay = state.display.lightFalloff;
+
+      // Die Meshes tragen die fertige kamerarelative Position und den
+      // skalierten Radius bereits — das Overlay rechnet nichts doppelt.
+      const eintraege: LabelEintrag[] = bodies.flatMap((body) => {
+        const mesh = koerper.meshes.get(body.id);
+        if (mesh === undefined) return [];
+        return [{
+          id: body.id,
+          nameKey: body.info.nameKey,
+          farbe: body.appearance.color,
+          renderPos: { x: mesh.position.x, y: mesh.position.y, z: mesh.position.z },
+          radiusUnits: mesh.scale.x,
+          sichtbar: mesh.visible,
+        }];
+      });
+      labels.update(eintraege, ctx.camera, state.display.labels, state.display.markers);
+    },
+    dispose() {
+      labels.dispose();
     },
   };
 }

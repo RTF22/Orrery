@@ -20,13 +20,15 @@ import type { QualityTier } from '../store/types';
  */
 function App(): React.JSX.Element {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const overlayRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (canvas === null) return;
+    const overlay = overlayRef.current;
+    if (canvas === null || overlay === null) return;
 
     const ctx = createRenderer(canvas);
-    const szene = buildScene(ctx);
+    const szene = buildScene(ctx, overlay);
     const postfx = createPostFx(ctx);
     // Ziehen dreht, Rad und Zwei-Finger-Geste zoomen — geschrieben wird
     // ausschließlich in den Store, gelesen im nächsten Bild vom Controller.
@@ -56,6 +58,7 @@ function App(): React.JSX.Element {
     return () => {
       stopLoop();
       stopInput();
+      szene.dispose();
       window.removeEventListener('resize', onResize);
       postfx.dispose();
       ctx.dispose();
@@ -68,7 +71,7 @@ function App(): React.JSX.Element {
         ref={canvasRef}
         style={{ position: 'fixed', inset: 0, width: '100%', height: '100%', display: 'block' }}
       />
-      <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none' }} />
+      <div ref={overlayRef} style={{ position: 'fixed', inset: 0, pointerEvents: 'none' }} />
     </>
   );
 }

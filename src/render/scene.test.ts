@@ -8,6 +8,12 @@ vi.mock('./bodies', () => ({
   createBodyViews: () => ({ meshes: new Map(), update: vi.fn() }),
 }));
 
+// Das Label-Overlay legt DOM-Knoten an; in der Node-Testumgebung gibt es
+// kein document. Hier interessiert nur die Bahnlinien-Verdrahtung.
+vi.mock('./labels', () => ({
+  createLabelOverlay: () => ({ update: vi.fn(), dispose: vi.fn() }),
+}));
+
 const rebuildSpion = vi.fn();
 const updateSpion = vi.fn();
 vi.mock('./orbits', () => ({
@@ -16,6 +22,9 @@ vi.mock('./orbits', () => ({
 
 const { buildScene } = await import('./scene');
 const { DEFAULT_STATE } = await import('../store');
+
+/** buildScene reicht das Overlay nur an das (ersetzte) Label-Modul weiter. */
+const fakeOverlay = {} as HTMLElement;
 
 // Der WebGLRenderer selbst braucht einen echten Canvas/GL-Kontext, den es in
 // der Node-Testumgebung nicht gibt. buildScene liest ctx.renderer nirgends,
@@ -33,14 +42,14 @@ function fakeContext(): import('./renderer').RenderContext {
 describe('buildScene — Bahnlinien-Rebuild-Disziplin', () => {
   it('baut die Bahnform beim ersten Frame auf', () => {
     rebuildSpion.mockClear();
-    const szene = buildScene(fakeContext());
+    const szene = buildScene(fakeContext(), fakeOverlay);
     szene.update(2451545.0, 0.016, DEFAULT_STATE);
     expect(rebuildSpion).toHaveBeenCalledTimes(1);
   });
 
   it('ruft rebuild NICHT erneut auf, solange sich die Maßstabsreferenz nicht ändert', () => {
     rebuildSpion.mockClear();
-    const szene = buildScene(fakeContext());
+    const szene = buildScene(fakeContext(), fakeOverlay);
     for (let i = 0; i < 50; i++) {
       szene.update(2451545.0 + i, 0.016, DEFAULT_STATE);
     }
@@ -53,7 +62,7 @@ describe('buildScene — Bahnlinien-Rebuild-Disziplin', () => {
 
   it('ruft rebuild erneut auf, sobald sich die Maßstabseinstellungen ändern', () => {
     rebuildSpion.mockClear();
-    const szene = buildScene(fakeContext());
+    const szene = buildScene(fakeContext(), fakeOverlay);
     szene.update(2451545.0, 0.016, DEFAULT_STATE);
     const geaendert = { ...DEFAULT_STATE, scale: { ...DEFAULT_STATE.scale, sizeScale: 99 } };
     szene.update(2451546.0, 0.016, geaendert);

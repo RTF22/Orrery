@@ -1,3 +1,36 @@
 @import "tailwindcss";
 
 html, body, #root { height: 100%; margin: 0; background: #05070d; }
+
+/* Beschriftungen und Marker liegen als HTML über der Canvas — deshalb
+   bleibt die Schrift in jedem Zoomgrad scharf. Ereignisse gehen an die
+   Canvas darunter, damit das Ziehen der Kamera nicht an einem Label hängt. */
+.label-overlay {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.koerper-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  /* Der Ankerpunkt sitzt am Körper; Glyphe und Text stehen daneben. */
+  margin: -0.5rem 0 0 0.6rem;
+  color: #e8edf7;
+  font: 500 0.75rem/1.2 system-ui, sans-serif;
+  text-shadow: 0 0 3px #05070d, 0 0 6px #05070d;
+  white-space: nowrap;
+}
+
+.koerper-glyphe {
+  width: 6px;
+  height: 6px;
+  margin-left: -0.95rem;
+  border-radius: 50%;
+  box-shadow: 0 0 4px currentColor;
+}
