@@ -46,6 +46,19 @@ describe('handleShortcut', () => {
     expect(useStore.getState().ui.panels[SHORTCUTS_PANEL]).toBe(false);
   });
 
+  it('startet und beendet den Kino-Modus mit C', () => {
+    handleShortcut('c');
+    expect(useStore.getState().cinema.running).toBe(true);
+    handleShortcut('c');
+    expect(useStore.getState().cinema.running).toBe(false);
+  });
+
+  it('springt mit N zur nächsten Szene', () => {
+    handleShortcut('c');
+    handleShortcut('n');
+    expect(useStore.getState().cinema.nummer).toBe(1);
+  });
+
   it('lässt unbelegte Tasten unangetastet', () => {
     expect(handleShortcut('x')).toBe(false);
   });
