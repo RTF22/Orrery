@@ -17,7 +17,7 @@ describe('pickRadiusUnits', () => {
   });
 
   it('fällt nie unter die Mindestgröße', () => {
-    // Sonst verschwände ein Körper bei winzigem sizeScale voellig aus der Geometrie.
+    // Sonst verschwände ein Körper bei winzigem sizeScale völlig aus der Geometrie.
     const winzig = { sizeScale: 1e-6, distanceExponent: 1, sunDamping: 1 };
     expect(pickRadiusUnits(getBody('moon'), winzig)).toBeGreaterThanOrEqual(MIN_RADIUS_UNITS);
   });

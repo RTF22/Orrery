@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import type { RenderContext } from './renderer';
 import type { AppState } from '../store/types';
 import { createBodyViews } from './bodies';
+import { createOrbitLines } from './orbits';
 import { deriveCameraKm } from './camera';
 import { scaledPositionAt } from '../sim/scale';
 import { bodyIndex } from '../data/index';
@@ -32,9 +33,17 @@ const URSPRUNG_KM = new THREE.Vector3(0, 0, 0);
  */
 export function buildScene(ctx: RenderContext): SceneHandle {
   const koerper = createBodyViews(ctx.scene);
+  const bahnen = createOrbitLines(ctx.scene);
 
   const licht = new THREE.PointLight(0xffffff, 1, 0, 2);
   ctx.scene.add(licht);
+
+  // Die Bahnform (512 Kepler-Lösungen pro Körper) wird nur neu berechnet,
+  // wenn sich die Maßstabseinstellungen tatsächlich ändern. setScale im
+  // Store liefert bei jeder Änderung ein frisches Objekt (Spread), daher
+  // genügt ein Referenzvergleich — ohne diese Schranke liefe rebuild bei
+  // jedem Frame mit, was den teuersten Teil dieser Aufgabe wäre.
+  let letzterScale: AppState['scale'] | null = null;
 
   return {
     update(jd, _dt, state) {
@@ -43,6 +52,14 @@ export function buildScene(ctx: RenderContext): SceneHandle {
       // Kameraposition in Kilometern.
       const { x, y, z } = deriveCameraKm(state.camera);
       const cameraKm = new THREE.Vector3(x, y, z);
+
+      if (state.scale !== letzterScale) {
+        bahnen.rebuild(jd, state.scale);
+        letzterScale = state.scale;
+      }
+      // Reprojektion der bereits berechneten Stützpunkte — billig, läuft
+      // jeden Frame.
+      bahnen.update(cameraKm, state.visible, state.display.orbits);
 
       koerper.update(jd, state.scale, cameraKm, state.visible);
 
