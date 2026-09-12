@@ -197,24 +197,14 @@ describe('Katalog-Invarianten', () => {
   });
 
   // Der Sondertest aus dem Task-8-Brief: Mimas muss außerhalb des
-  // Ringsystems laufen. Der Brief prüft dafür ursprünglich gegen
-  // `bodyIndex['saturn'].appearance.rings.outerKm` — dieses Feld setzt erst
-  // Task 12, hier also noch `undefined`. Ersatzweise wird gegen den
-  // Literalwert der A-Ring-Außenkante aus derselben Quellenfamilie geprüft
-  // (NASA/JPL NSSDC Saturnian Rings Fact Sheet, Zeile „A outer edge",
-  // https://nssdc.gsfc.nasa.gov/planetary/factsheet/satringfact.html,
-  // abgerufen am 12.09.2026: 136 780 km — nicht die rund 140 200 km aus dem
-  // Task-8-Brief, die eher dem knapp weiter außen liegenden F-Ring
-  // entsprechen, 139 826 km laut derselben Tabelle; für den Zweck dieses
-  // Tests, Mimas' Bahn zweifelsfrei außerhalb jedes sichtbaren Rings zu
-  // halten, ist der Unterschied ohne Bedeutung).
-  //
-  // TODO(Task 12): Sobald `appearance.rings.outerKm` bei Saturn gesetzt ist,
-  // diesen Literalwert durch `bodyIndex['saturn']?.appearance.rings?.outerKm`
-  // ersetzen, damit der Ringaußenradius nicht dauerhaft doppelt im Projekt
-  // steht.
+  // Ringsystems laufen. Seit Task 12 ist `appearance.rings.outerKm` bei
+  // Saturn gesetzt (A-Ring-Außenkante, NASA/JPL NSSDC Saturnian Rings Fact
+  // Sheet, siehe Herleitung und Quelle in data/bodies/saturn.ts) — geprüft
+  // wird jetzt gegen dieses Feld und nicht mehr gegen einen zweiten,
+  // gleichlautenden Literalwert hier in der Testdatei.
   it('hält Mimas außerhalb des Ringsystems', () => {
-    const ringAussenKm = 136780;
+    const ringAussenKm = bodyIndex['saturn']?.appearance.rings?.outerKm ?? 0;
+    expect(ringAussenKm).toBeGreaterThan(0);
     expect((bodyIndex['mimas']?.orbit?.a ?? 0) * AU_KM).toBeGreaterThan(ringAussenKm);
   });
 

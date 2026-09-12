@@ -33,6 +33,19 @@ export const saturn: Body = {
   appearance: {
     textures: { albedo: 'textures/saturn/albedo.jpg' },
     color: '#e3c16f',
+    // NASA/JPL NSSDC Saturnian Rings Fact Sheet,
+    // https://nssdc.gsfc.nasa.gov/planetary/factsheet/satringfact.html,
+    // abgerufen am 12.09.2026 (dieselbe Quelle, die schon der Mimas-Test in
+    // data/index.test.ts zitiert). innerKm ist die Innenkante des C-Rings
+    // (74 658 km — der D-Ring davor ist zu schwach, um ihn eigens
+    // darzustellen), outerKm die Außenkante des A-Rings (136 780 km, nicht
+    // der weiter außen liegende, deutlich schwächere F-Ring bei 139 826 km).
+    // Der Task-12-Brief nennt gerundet 74 500 bis 140 200 km; die zweite
+    // Zahl verwechselt A- mit F-Ring-Außenkante (siehe Kommentar zum
+    // Mimas-Test) — hier gilt die nachgeprüfte Fact-Sheet-Zahl.
+    // texture: noch keine Ringtextur im Repo (siehe ASSETS.md) — bleibt bis
+    // zum Material-Task leer, wie bei Körpern ohne Albedo-Textur üblich.
+    rings: { innerKm: 74658, outerKm: 136780, texture: '' },
   },
   info: { nameKey: 'body.saturn.name', descriptionKey: 'body.saturn.description' },
 };
