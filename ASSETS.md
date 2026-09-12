@@ -181,22 +181,51 @@ nur nach `public/textures/saturn/ring.png` abgelegt.
 |---|---|---|---|---|---|---|
 | `public/textures/saturn/ring.png` | <https://www.solarsystemscope.com/textures/download/2k_saturn_ring_alpha.png> | Solar System Scope | CC BY 4.0 | 2048×125 | 12 119 Bytes | unverändert übernommen, nur umbenannt |
 
-**Lücke Uranus-Ring:** `appearance.rings.texture` bleibt bei Uranus leer
-(siehe `src/data/bodies/uranus.ts`). Solar System Scope bietet — anders als
-für Saturn — keine Uranus-Ringtextur an, und keine andere im Projekt bereits
-belegte Quelle (USGS Astrogeology, Wikimedia-Commons-NASA-Mosaike) führt
-eine. Der Ring wird trotzdem gerendert: Ohne Textur greift in
-`render/rings.ts` eine mittelgraue, voll deckende 1×1-Ersatztextur (`tRing`,
-Grauwert `ERSATZ_RING_GRAU` = 128), sodass Uranus’ Ring als flächiger,
-ungebänderter Streifen sichtbar bleibt statt zu verschwinden — dieselbe
-Ersatzstrategie wie bei Körpern ohne Albedo-Textur in `render/bodies.ts`.
-Der Grauwert ist bewusst kein Albedowert: Ein aus der realen Albedo des
-Uranusrings (rund 0,05) hergeleiteter Wert (RGB 38) war in der Kinoszene
-`uranus-gekippt` messbar schwarz (0 von 255 an jeder Ringposition), weil die
-Szene nirgends physikalisch belichtet ist und das ACES-Tonemapping alles
-unter rund 1 % linear auf Schwarz drückt. Mit 128 misst der Ring dort 31 von
-255 — dunkel, aber vorhanden. Herleitung und Messwerte stehen bei der
-Konstante in `render/rings.ts`.
+## Uranus-Ring: gerechnet aus Messdaten statt Bilddatei
+
+`appearance.rings.texture` bleibt bei Uranus leer. Geprüft am 12.09.2026,
+ob eine Ringtextur unter einer zum Projekt passenden Lizenz (CC BY,
+gemeinfrei) existiert:
+
+| Quelle | Befund |
+|---|---|
+| Solar System Scope, Download-Liste „Rings" | nur `2k_/8k_saturn_ring_alpha.png`, kein Uranus |
+| NASA-3D-Resources (GitHub, „Images and Textures") | Uranusmonde Ariel bis Umbriel, keine Ringtextur |
+| NASA Science, „Uranus 3D Model" (glTF/USDZ, VTAD, 09/2023) | eine Kugel mit einem Bild (`Uranus_1_51118.glb`: 1 Netz, 1 Material, 1 Textur), keine Ringe |
+| Stellarium `textures/` und `stellarium-addons` (1K-Paket) | `uranus_rings.png` nur im Addon-Paket; `ssystem_major.ini` vermerkt „texture from Celestia", das Paket nennt sich „from Celestia and Space Engine projects" mit leerem Lizenzfeld — unbrauchbar |
+| DeviantArt-Texturen („Uranus Rings Texture") | Fan-Arbeiten, teils abgeleitet von Planet Pixel Emporium (nicht frei weitergebbar) |
+
+Frei verfügbar sind dagegen die **Messdaten**: Der PDS Ring-Moon Systems
+Node (SETI Institute, NASA Planetary Data System) tabelliert unter „Vital
+Statistics for Uranus's Rings" (<https://pds-rings.seti.org/uranus/uranus_rings_table.html>)
+für jeden Ring Mittelradius, Breite und normale optische Tiefe. Diese Werte
+stehen als `URANUS_RINGPROFIL` in `src/data/bodies/uranus.ts`;
+`src/render/ringProfil.ts` rechnet daraus zur Laufzeit einen radialen
+2048×1-Streifen mit Alphakanal im Format der Saturn-Ringtextur. Es liegt
+also keine Bilddatei im Repository, und es gibt nichts zu attribuieren
+außer der Datenquelle.
+
+Bewusst nicht maßstäblich (künstlerische Freiheit, im Modulkommentar von
+`ringProfil.ts` begründet): Die schmalen Ringe (1,5 bis 60 km) sind auf
+Sockel 260 km plus sechsfache echte Breite verbreitert, weil ein Kilometer
+in der Kinoszene ein Achtzigstel Pixel ist; die diffusen Komponenten
+(ζ-Ring, Staubschicht, τ ≈ 0,005) sind zwölffach verstärkt und auf
+Deckkraft 0,12 gedeckelt. Physikalisch bleibt die Deckkraft der schmalen
+Ringe (1 − e^(−τ)) und damit die Rangfolge: ε deckt zu 78 %, δ und 5 zu
+39 %, 6, 4, β, γ zu 26 %, λ zu 10 %. Farbe einheitlich helles, warmes Grau
+(sRGB 214/202/190) — „slightly red" im Sichtbaren nach Baines et al. 1998.
+Pixelmessung nach dem Umbau (12.09.2026, Kinoszene `uranus-gekippt` bei
+Sekunde 4, Preset Schaubild, Standardbeleuchtung, Chromium 1249×1269):
+ε-Ring 66 von 255, innere Ringe 10 bis 32, ζ-Schleier 8 — gegen 0 an jeder
+Ringposition vor der Korrektur.
+
+Fällt `profil` einmal weg, greift weiterhin die mittelgraue 1×1-Ersatztextur
+(`ERSATZ_RING_GRAU` = 128 in `render/rings.ts`). Der Grauwert ist ein
+Sichtbarkeitswert, kein Albedowert: Ein aus der realen Albedo (rund 0,05)
+hergeleiteter Wert (RGB 38) war in der Kinoszene `uranus-gekippt` messbar
+schwarz (0 von 255), weil die Szene nirgends physikalisch belichtet ist und
+das ACES-Tonemapping alles unter rund 1 % linear auf Schwarz drückt; mit 128
+maß der flächige Ring dort 31 von 255.
 
 ## Lücken: Körper ohne Textur (Task 11)
 

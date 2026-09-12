@@ -33,7 +33,28 @@ export interface Appearance {
   /** Fallback-Farbe sowie Farbe von Marker und Bahnlinie. */
   color: string;
   atmosphere?: { colorInner: string; colorOuter: string; heightKm: number };
-  rings?: { innerKm: number; outerKm: number; texture: string };
+  /**
+   * Ringsystem. `texture` ist ein radialer Streifen (u = 0 Innenkante,
+   * u = 1 Außenkante) oder leer. `profil` beschreibt die Ringe als Daten,
+   * aus denen render/ringProfil.ts den Streifen selbst rechnet — für
+   * Systeme ohne freie Bildquelle (Uranus). Ist beides gesetzt, gewinnt die
+   * Bilddatei.
+   */
+  rings?: { innerKm: number; outerKm: number; texture: string; profil?: RingBand[] };
+}
+
+/**
+ * Ein Ring als Messgröße: Mittelradius, Breite und normale optische Tiefe,
+ * wie sie der PDS Ring-Moon Systems Node tabelliert. `art` trennt die
+ * schmalen, dichten Ringe (Breite wenige Kilometer, τ um 0,3 bis 2) von den
+ * breiten, diffusen Staubkomponenten (Breite Tausende Kilometer, τ um 0,005).
+ */
+export interface RingBand {
+  name: string;
+  radiusKm: number;
+  widthKm: number;
+  opticalDepth: number;
+  art: 'schmal' | 'breit';
 }
 
 export interface Body {

@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import type { Vec3 } from '../sim/types';
+import type { Appearance, Vec3 } from '../sim/types';
 import type { ScaleSettings } from '../sim/scale';
 import { scaledPositionAt } from '../sim/scale';
 import { poleVector } from '../sim/frames';
@@ -7,6 +7,7 @@ import { bodies, bodyIndex } from '../data/index';
 import { kmToUnits, worldToRender } from './units';
 import { bodyLighting, irradianceFactor } from './lighting';
 import type { LightingSettings } from './lighting';
+import { ringProfilTexel } from './ringProfil';
 
 /**
  * Stützpunkte einer Ringscheibe in der lokalen xy-Ebene.
@@ -219,10 +220,10 @@ const RING_FRAGMENT_SHADER = `
 `;
 
 /**
- * Mittelgraue, voll deckende 1×1-Ersatztextur für Ringe ohne dokumentierte
- * Bildquelle (siehe ASSETS.md). Ohne sie bliebe `tRing` unbelegt und der
- * Ring unsichtbar statt — wie bei Körpern ohne Albedo-Textur in bodies.ts —
- * in einer Ersatzdarstellung: ein flächig deckender, ungebänderter Ring.
+ * Mittelgraue, voll deckende 1×1-Ersatztextur für Ringe, die weder Bild
+ * noch Profil mitbringen. Ohne sie bliebe `tRing` unbelegt und der Ring
+ * unsichtbar statt — wie bei Körpern ohne Albedo-Textur in bodies.ts — in
+ * einer Ersatzdarstellung: ein flächig deckender, ungebänderter Ring.
  *
  * Grauwert und seine Begründung: siehe ERSATZ_RING_GRAU. Kurzfassung: Der
  * Ring soll "dunkel, aber vorhanden" erscheinen; der frühere, aus der
@@ -232,6 +233,39 @@ function ersatzRingTextur(): THREE.DataTexture {
   const g = ERSATZ_RING_GRAU;
   const textur = new THREE.DataTexture(new Uint8Array([g, g, g, 255]), 1, 1, THREE.RGBAFormat);
   textur.colorSpace = THREE.SRGBColorSpace;
+  textur.needsUpdate = true;
+  return textur;
+}
+
+/** Texelzahl des gerechneten Streifens — wie die Breite der Saturn-Ringtextur (2048 px). */
+const PROFIL_TEXEL = 2048;
+
+/**
+ * Farbe des gerechneten Streifens (sRGB): neutrales, leicht warmes Grau.
+ * Die Uranusringe sind im Sichtbaren "slightly red" und im Nahinfrarot grau
+ * (Baines et al. 1998); mehr als ein Hauch Wärme ist damit nicht belegt.
+ * Die Helligkeit liegt deutlich über ERSATZ_RING_GRAU: Die Struktur steckt
+ * im Alphakanal, der dichteste Ring (ε) deckt nur zu 78 %, die feinen
+ * inneren zu einem Viertel — mit dem Ersatzgrau blieben sie im Bild unter
+ * 10 von 255 (Pixelmessung mit 172/162/152: ε 44, innere Ringe 7 bis 19).
+ * Die Messung nach dem Umbau steht in ASSETS.md.
+ */
+const PROFIL_FARBE: readonly [number, number, number] = [214, 202, 190];
+
+/**
+ * Radialer Streifen aus Messdaten (siehe ringProfil.ts), als 2048×1-Textur
+ * mit Alphakanal — dasselbe Format wie die Saturn-Ringtextur, sodass der
+ * Shader keinen Unterschied kennt. Mipmaps und lineare Filter, weil die
+ * schmalen Ringe im Bild ein bis drei Pixel breit sind und ohne Filterung
+ * beim Drehen flimmerten (DataTexture filtert standardmäßig mit Nearest).
+ */
+function profilRingTextur(ring: NonNullable<Appearance['rings']>): THREE.DataTexture {
+  const texel = ringProfilTexel(ring.profil!, ring.innerKm, ring.outerKm, PROFIL_TEXEL, PROFIL_FARBE);
+  const textur = new THREE.DataTexture(texel, PROFIL_TEXEL, 1, THREE.RGBAFormat);
+  textur.colorSpace = THREE.SRGBColorSpace;
+  textur.magFilter = THREE.LinearFilter;
+  textur.minFilter = THREE.LinearMipmapLinearFilter;
+  textur.generateMipmaps = true;
   textur.needsUpdate = true;
   return textur;
 }
@@ -315,7 +349,9 @@ export function createRingViews(scene: THREE.Scene): RingViews {
       depthWrite: false,
       side: THREE.DoubleSide,
       uniforms: {
-        tRing: { value: ersatzRingTextur() },
+        // Startbelegung: gerechnetes Profil, sonst Ersatzgrau; eine
+        // Bilddatei (ring.texture) ersetzt beides, sobald sie geladen ist.
+        tRing: { value: ring.profil !== undefined ? profilRingTextur(ring) : ersatzRingTextur() },
         uSonne: { value: new THREE.Vector3() },
         uTag: { value: 0 },
         uFuellung: { value: 0 },
