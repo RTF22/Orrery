@@ -9,6 +9,7 @@ import { startLoop } from './loop';
 import { useStore } from '../store';
 import { App as Bedienoberflaeche } from '../ui/App';
 import type { QualityTier } from '../store/types';
+import { QUALITY_SETTINGS } from './quality';
 
 /**
  * Einstiegspunkt der Anwendung.
@@ -52,6 +53,13 @@ function App(): React.JSX.Element {
         bloomAn = state.display.bloom;
         stufe = state.quality.tier;
         postfx.setBloom(bloomAn, stufe);
+
+        // Die Pixeldichte ist der wirksamste Hebel gegen eine zu niedrige
+        // Bildrate — sie kostet quadratisch Füllrate.
+        const grenze = QUALITY_SETTINGS[stufe === 'auto' ? 'medium' : stufe].pixelRatioCap;
+        ctx.renderer.setPixelRatio(Math.min(window.devicePixelRatio, grenze));
+        ctx.resize();
+        postfx.resize();
       }
       postfx.render();
     });
