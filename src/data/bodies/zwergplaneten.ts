@@ -81,10 +81,11 @@ export const zwergplaneten: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      // Texturen kommen gesammelt in Task 11; bis dahin ein dunkles Grau als
-      // Ausweichfarbe (Albedo 0,09 laut SBDB — einer der dunkelsten großen
-      // Körper des inneren Sonnensystems, kohlenstoffreiche Oberfläche).
-      textures: { albedo: '' },
+      // Ausweichfarbe für die Ladezeit der Textur (unten) und für den
+      // seltenen Fehlschlagsfall: dunkles Grau (Albedo 0,09 laut SBDB —
+      // einer der dunkelsten großen Körper des inneren Sonnensystems,
+      // kohlenstoffreiche Oberfläche).
+      textures: { albedo: 'textures/ceres/albedo.jpg' },
       color: '#6e6a63',
     },
     info: { nameKey: 'body.ceres.name', descriptionKey: 'body.ceres.description' },
@@ -131,11 +132,12 @@ export const zwergplaneten: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      // Texturen kommen gesammelt in Task 11; bis dahin ein sehr helles,
-      // nahezu weißes Grau (Albedo 0,96 laut Sicardy et al. 2011 — die
-      // höchste im gesamten Katalog, gefrorener Stickstoff auf der
-      // Oberfläche, ähnlich Plutos Tombaugh Regio).
-      textures: { albedo: '' },
+      // Ausweichfarbe für die Ladezeit der Textur (unten) und für den
+      // seltenen Fehlschlagsfall: sehr helles, nahezu weißes Grau (Albedo
+      // 0,96 laut Sicardy et al. 2011 — die höchste im gesamten Katalog,
+      // gefrorener Stickstoff auf der Oberfläche, ähnlich Plutos Tombaugh
+      // Regio).
+      textures: { albedo: 'textures/eris/albedo.jpg' },
       color: '#f1efe9',
     },
     info: { nameKey: 'body.eris.name', descriptionKey: 'body.eris.description' },
@@ -186,9 +188,10 @@ export const zwergplaneten: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      // Texturen kommen gesammelt in Task 11; bis dahin ein sehr helles
-      // Grauweiß (kristallines Wassereis an der Oberfläche, hohe Albedo).
-      textures: { albedo: '' },
+      // Ausweichfarbe für die Ladezeit der Textur (unten) und für den
+      // seltenen Fehlschlagsfall: sehr helles Grauweiß (kristallines
+      // Wassereis an der Oberfläche, hohe Albedo).
+      textures: { albedo: 'textures/haumea/albedo.jpg' },
       color: '#e6e2da',
     },
     info: { nameKey: 'body.haumea.name', descriptionKey: 'body.haumea.description' },
@@ -234,10 +237,11 @@ export const zwergplaneten: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      // Texturen kommen gesammelt in Task 11; bis dahin ein helles,
-      // rötlich-oranges Tan (Albedo 0,82 laut Hromakina et al. 2019 — hell
-      // wie Eris, aber mit Methaneis und Tholinen ähnlich Pluto gefärbt).
-      textures: { albedo: '' },
+      // Ausweichfarbe für die Ladezeit der Textur (unten) und für den
+      // seltenen Fehlschlagsfall: helles, rötlich-oranges Tan (Albedo 0,82
+      // laut Hromakina et al. 2019 — hell wie Eris, aber mit Methaneis und
+      // Tholinen ähnlich Pluto gefärbt).
+      textures: { albedo: 'textures/makemake/albedo.jpg' },
       color: '#d9a679',
     },
     info: { nameKey: 'body.makemake.name', descriptionKey: 'body.makemake.description' },

@@ -132,12 +132,12 @@ export const plutoSystem: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      // Texturen kommen gesammelt in Task 11; bis dahin ein blasses,
-      // bräunliches Tan als Ausweichfarbe, angenähert an die von New
-      // Horizons gezeigte, tholingefärbte Oberfläche (u. a. das helle
-      // Stickstoffeisfeld Tombaugh Regio, umgeben von dunkleren,
+      // Ausweichfarbe für die Ladezeit der Textur (unten) und für den
+      // seltenen Fehlschlagsfall: blasses, bräunliches Tan, angenähert an
+      // die von New Horizons gezeigte, tholingefärbte Oberfläche (u. a. das
+      // helle Stickstoffeisfeld Tombaugh Regio, umgeben von dunkleren,
       // rötlich-braunen Regionen wie Cthulhu Macula).
-      textures: { albedo: '' },
+      textures: { albedo: 'textures/pluto/albedo.jpg' },
       color: '#d3b58f',
     },
     info: { nameKey: 'body.pluto.name', descriptionKey: 'body.pluto.description' },
@@ -196,7 +196,7 @@ export const plutoSystem: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      textures: { albedo: '' },
+      textures: { albedo: 'textures/charon/albedo.jpg' },
       // Grau mit rötlicher Polkappe (Mordor Macula, Tholin-Ablagerung aus
       // entwichenem Methan von Pluto); hier ein neutrales Grau als
       // Ausweichfarbe, da eine einzelne Polkappe erst eine Textur zeigen kann.

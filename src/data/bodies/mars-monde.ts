@@ -117,9 +117,10 @@ export const marsMonde: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      // Texturen kommen gesammelt in Task 11; bis dahin trägt die
-      // Ausweichfarbe den Körper (dunkles, rötlich-graues Regolith).
-      textures: { albedo: '' },
+      // Textur seit Task 11 gesetzt (Viking-Mosaik, siehe ASSETS.md); die
+      // Ausweichfarbe bleibt als Rückfallebene bestehen (dunkles,
+      // rötlich-graues Regolith).
+      textures: { albedo: 'textures/phobos/albedo.jpg' },
       color: '#6b6259',
     },
     info: { nameKey: 'body.phobos.name', descriptionKey: 'body.phobos.description' },
@@ -153,6 +154,10 @@ export const marsMonde: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
+      // Task 11 fand keine amtliche USGS-/NASA-Globalkarte für Deimos (nur
+      // eine nicht-amtliche Fan-Rekonstruktion, siehe ASSETS.md) — die
+      // Ausweichfarbe trägt den Körper deshalb dauerhaft (dunkles,
+      // rötlich-graues Regolith, wie Phobos).
       textures: { albedo: '' },
       color: '#7a7067',
     },

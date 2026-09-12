@@ -69,6 +69,12 @@ interface KoerperEintrag {
  * zeigt damit die Oberfläche selbst und nicht eine flache Einheitsfarbe.
  */
 function ladeAlbedo(lader: THREE.TextureLoader, pfad: string, eintrag: KoerperEintrag): void {
+  // Körper ohne belegte Textur (siehe ASSETS.md für die dokumentierten
+  // Lücken) tragen absichtlich einen leeren Pfad. Ohne diese Abfrage würde
+  // TextureLoader den leeren String gegen die Dokument-URL auflösen und pro
+  // Körper einen sinnlosen Netzwerk-Request auslösen, der ohnehin nur im
+  // stillen Fehlerzweig unten landet — die Fallback-Farbe bleibt so oder so.
+  if (pfad === '') return;
   lader.load(
     pfad,
     (textur) => {

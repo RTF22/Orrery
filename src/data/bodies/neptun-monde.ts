@@ -122,10 +122,12 @@ import type { Body } from '../../sim/types';
 // „Bulk parameters": Masse 214·10²⁰ kg, Radius 1353,4 km (rund genug für
 // einen einzelnen Wert).
 //
-// Darstellung: Texturen kommen gesammelt in Task 11; bis dahin ein blass
-// rosa-weißlicher Ton als Ausweichfarbe, angenähert an Tritons ungewöhnlich
-// hohe Albedo (0,72 laut Fact Sheet — Stickstoff-/Methaneisfrost) und die
-// von Voyager 2 beobachtete, leicht rötliche „Cantaloupe"-Färbung.
+// Darstellung: Textur seit Task 11 gesetzt (Voyager-2-Mosaik, siehe
+// ASSETS.md — die unbeleuchtete Nordhalbkugel bleibt darin schwarz, siehe
+// dort); die Ausweichfarbe bleibt als Rückfallebene bestehen: ein blass
+// rosa-weißlicher Ton, angenähert an Tritons ungewöhnlich hohe Albedo (0,72
+// laut Fact Sheet — Stickstoff-/Methaneisfrost) und die von Voyager 2
+// beobachtete, leicht rötliche „Cantaloupe"-Färbung.
 
 export const neptunMonde: readonly Body[] = [
   {
@@ -157,7 +159,7 @@ export const neptunMonde: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      textures: { albedo: '' },
+      textures: { albedo: 'textures/triton/albedo.jpg' },
       // Blasses Rosa-Weiß: Albedo 0,72 (Stickstoffeisfrost) mit der von
       // Voyager 2 beobachteten „Cantaloupe"-Färbung.
       color: '#e8d4c8',

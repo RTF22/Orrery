@@ -162,14 +162,17 @@ import type { Body } from '../../sim/types';
 // (P-Gegenprobe, „S"-Markierung im Fact Sheet, Nähe von physical.pole zum
 // Laplace-Pol der Mean-Elements-Tabelle), siehe Task-8-Bericht Abschnitt 3.
 //
-// Darstellung: Texturen kommen gesammelt in Task 11; bis dahin tragen
-// Ausweichfarben die Körper, angenähert an die bekannte Farbgebung (Mimas,
-// Tethys, Dione und Rhea helles, leicht bräunliches Eisgrau je nach
-// Fact-Sheet-Albedo; Enceladus nahezu weiß, Albedo 1,0; Titan orange-bräunlich
-// wegen seines dichten Dunstschleiers, sichtbar keine feste Oberfläche;
-// Iapetus in einem mittleren Grauton als Kompromiss zwischen seiner extrem
-// dunklen Vorderseite (Albedo 0,05, Cassini Regio) und seiner hellen
-// Rückseite (Albedo 0,5) — die Dichotomie selbst bildet erst eine Textur ab).
+// Darstellung: Texturen seit Task 11 gesetzt (Cassini-Mosaike bzw. bei
+// Titan die haze-durchdringende Nahinfrarot-Karte, siehe ASSETS.md); die
+// Ausweichfarben bleiben als Rückfallebene für die Ladezeit und einen
+// möglichen Fehlschlag bestehen, angenähert an die bekannte Farbgebung
+// (Mimas, Tethys, Dione und Rhea helles, leicht bräunliches Eisgrau je nach
+// Fact-Sheet-Albedo; Enceladus nahezu weiß, Albedo 1,0; Titan
+// orange-bräunlich wegen seines dichten Dunstschleiers, sichtbar keine
+// feste Oberfläche; Iapetus in einem mittleren Grauton als Kompromiss
+// zwischen seiner extrem dunklen Vorderseite (Albedo 0,05, Cassini Regio)
+// und seiner hellen Rückseite (Albedo 0,5) — die Dichotomie selbst zeigt
+// erst die Textur).
 
 export const saturnMonde: readonly Body[] = [
   {
@@ -200,7 +203,7 @@ export const saturnMonde: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      textures: { albedo: '' },
+      textures: { albedo: 'textures/mimas/albedo.jpg' },
       // Helles, leicht bräunliches Eisgrau; Albedo 0,6 laut Fact Sheet.
       color: '#b8b3aa',
     },
@@ -235,7 +238,7 @@ export const saturnMonde: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      textures: { albedo: '' },
+      textures: { albedo: 'textures/enceladus/albedo.jpg' },
       // Albedo 1,0 laut Fact Sheet — der hellste Körper des Sonnensystems,
       // deshalb nahezu reines Weiß statt eines Grautons.
       color: '#f5f6f4',
@@ -270,7 +273,7 @@ export const saturnMonde: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      textures: { albedo: '' },
+      textures: { albedo: 'textures/tethys/albedo.jpg' },
       // Helles Eis, Albedo 0,8 laut Fact Sheet.
       color: '#d9d5c9',
     },
@@ -302,7 +305,7 @@ export const saturnMonde: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      textures: { albedo: '' },
+      textures: { albedo: 'textures/dione/albedo.jpg' },
       // Eisgrau, Albedo 0,7 laut Fact Sheet.
       color: '#c4c0b6',
     },
@@ -332,7 +335,7 @@ export const saturnMonde: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      textures: { albedo: '' },
+      textures: { albedo: 'textures/rhea/albedo.jpg' },
       // Eisgrau, Albedo 0,7 laut Fact Sheet.
       color: '#c9c5bb',
     },
@@ -363,7 +366,7 @@ export const saturnMonde: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      textures: { albedo: '' },
+      textures: { albedo: 'textures/titan/albedo.jpg' },
       // Orange-bräunlich wegen des dichten, undurchsichtigen Dunstschleiers;
       // Albedo 0,22 laut Fact Sheet, keine feste Oberfläche sichtbar.
       color: '#e3a857',
@@ -401,11 +404,11 @@ export const saturnMonde: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      textures: { albedo: '' },
-      // Mittleres Grau als Kompromiss: Iapetus' Vorderseite (Cassini Regio)
-      // ist mit Albedo 0,05 einer der dunkelsten Körper des Sonnensystems,
-      // seine Rückseite mit Albedo 0,5 vergleichsweise hell — diese
-      // Dichotomie bildet erst eine Textur ab (Task 11).
+      textures: { albedo: 'textures/iapetus/albedo.jpg' },
+      // Mittleres Grau als Rückfallebene: Iapetus' Vorderseite (Cassini
+      // Regio) ist mit Albedo 0,05 einer der dunkelsten Körper des
+      // Sonnensystems, seine Rückseite mit Albedo 0,5 vergleichsweise hell
+      // — diese Dichotomie zeigt seit Task 11 die Textur (siehe ASSETS.md).
       color: '#7c7468',
     },
     info: { nameKey: 'body.iapetus.name', descriptionKey: 'body.iapetus.description' },

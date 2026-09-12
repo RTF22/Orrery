@@ -127,10 +127,11 @@ import type { Body } from '../../sim/types';
 // Das Fact Sheet nennt dieselben a-Werte (421,8 / 671,1 / 1070,4 / 1882,7,
 // jeweils ×1000 km) unabhängig noch einmal, exakt übereinstimmend.
 //
-// Darstellung: Texturen kommen gesammelt in Task 11; bis dahin tragen
-// Ausweichfarben die Körper, angenähert an die bekannte Farbgebung
-// (schwefelgelb bei Io, eisig-blass bei Europa, gräulich-braun bei Ganymed
-// und Kallisto, Kallisto am dunkelsten).
+// Darstellung: Texturen seit Task 11 gesetzt (USGS/NASA-Mosaike, siehe
+// ASSETS.md); die Ausweichfarben bleiben als Rückfallebene für die Ladezeit
+// und einen möglichen Fehlschlag bestehen, angenähert an die bekannte
+// Farbgebung (schwefelgelb bei Io, eisig-blass bei Europa, gräulich-braun
+// bei Ganymed und Kallisto, Kallisto am dunkelsten).
 
 export const jupiterMonde: readonly Body[] = [
   {
@@ -162,7 +163,7 @@ export const jupiterMonde: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      textures: { albedo: '' },
+      textures: { albedo: 'textures/io/albedo.jpg' },
       color: '#d8c257',
     },
     info: { nameKey: 'body.io.name', descriptionKey: 'body.io.description' },
@@ -191,7 +192,7 @@ export const jupiterMonde: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      textures: { albedo: '' },
+      textures: { albedo: 'textures/europa/albedo.jpg' },
       color: '#d9cdb0',
     },
     info: { nameKey: 'body.europa.name', descriptionKey: 'body.europa.description' },
@@ -222,7 +223,7 @@ export const jupiterMonde: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      textures: { albedo: '' },
+      textures: { albedo: 'textures/ganymede/albedo.jpg' },
       color: '#8a8175',
     },
     info: { nameKey: 'body.ganymede.name', descriptionKey: 'body.ganymede.description' },
@@ -251,7 +252,7 @@ export const jupiterMonde: readonly Body[] = [
       rotationAtEpochDeg: 0,
     },
     appearance: {
-      textures: { albedo: '' },
+      textures: { albedo: 'textures/callisto/albedo.jpg' },
       color: '#5f564c',
     },
     info: { nameKey: 'body.callisto.name', descriptionKey: 'body.callisto.description' },

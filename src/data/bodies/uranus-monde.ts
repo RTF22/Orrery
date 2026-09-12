@@ -139,12 +139,19 @@ import type { Body } from '../../sim/types';
 // genug für einen einzelnen Wert. Massen direkt aus derselben Tabelle
 // (Spalte „Mass", in 10²⁰ kg).
 //
-// Darstellung: Texturen kommen gesammelt in Task 11; bis dahin tragen
-// Ausweichfarben die Körper, angenähert an die bekannte Farbgebung nach
-// Fact-Sheet-Albedo (Miranda 0,32 mittelhelles Eisgrau mit auffälliger,
-// stark zerklüfteter Oberfläche; Ariel 0,39 hellstes Eisgrau der fünf;
-// Umbriel 0,21 dunkelstes; Titania 0,27 und Oberon 0,23 mittleres, bei
-// Oberon leicht rötlich getöntes Grau nach seiner rötlicheren Oberfläche).
+// Darstellung: Für alle fünf hat Task 11 keine brauchbare freie Karte
+// gefunden — Voyager 2 sah bei seinem einzigen Vorbeiflug 1986 jeweils nur
+// die sonnenzugewandte Südhalbkugel (rund 35-45 % der Oberfläche je Mond,
+// siehe ASSETS.md); die als USGS/NASA-Mosaike verfügbaren Karten bestehen
+// deshalb zu über der Hälfte aus unbelichteter, schwarzer Fläche und wären
+// als Textur irreführender als die reine Ausweichfarbe. Bis zu einer
+// besseren Quelle (z. B. einer künftigen Uranus-Mission) tragen die Körper
+// deshalb dauerhaft Ausweichfarben, angenähert an die bekannte Farbgebung
+// nach Fact-Sheet-Albedo (Miranda 0,32 mittelhelles Eisgrau mit
+// auffälliger, stark zerklüfteter Oberfläche; Ariel 0,39 hellstes Eisgrau
+// der fünf; Umbriel 0,21 dunkelstes; Titania 0,27 und Oberon 0,23
+// mittleres, bei Oberon leicht rötlich getöntes Grau nach seiner
+// rötlicheren Oberfläche).
 
 export const uranusMonde: readonly Body[] = [
   {
