@@ -1,4 +1,4 @@
-export type CameraMode = 'free' | 'attached' | 'follow';
+export type CameraMode = 'free' | 'attached' | 'follow' | 'cinema';
 export type QualityTier = 'auto' | 'low' | 'medium' | 'high';
 
 /**
@@ -12,6 +12,12 @@ export interface AppState {
   display: {
     orbits: boolean; labels: boolean; markers: boolean;
     bloom: boolean; brightness: number; lightFalloff: number;
+    /**
+     * Fülllicht der Nachtseite als Bruchteil des Tagniveaus desselben
+     * Körpers, und der Ausgleich des Abstandsabfalls (0 = physikalisch,
+     * 1 = alle Körper gleich hell) — siehe render/lighting.ts.
+     */
+    nightFill: number; lightCompensation: number;
   };
   camera: {
     mode: CameraMode; targetId: string;
@@ -24,6 +30,22 @@ export interface AppState {
      * Ursprung ruht, ist das ohnehin derselbe Punkt.
      */
     freezeJd: number | null;
+  };
+  /**
+   * Der Kino-Modus. `nummer` und `elapsedSec` beschreiben die Stelle im
+   * endlosen Film; zusammen mit `seed` und `shuffle` ist der Film dadurch
+   * vollständig reproduzierbar, ohne dass eine Playlist gespeichert wird.
+   */
+  cinema: {
+    running: boolean;
+    nummer: number;
+    elapsedSec: number;
+    seed: number;
+    shuffle: boolean;
+    /** Hält der Kino-Modus bei einer Nutzereingabe an? */
+    pauseOnInput: boolean;
+    /** Nach so vielen Sekunden ohne Eingabe läuft er wieder an. */
+    idleResumeSec: number;
   };
   /** Nur Abweichungen vom Standard „sichtbar" — siehe toggleVisible in index.ts. */
   visible: Record<string, boolean>;

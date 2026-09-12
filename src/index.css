@@ -34,3 +34,7 @@ html, body, #root { height: 100%; margin: 0; background: #05070d; }
   border-radius: 50%;
   box-shadow: 0 0 4px currentColor;
 }
+
+/* Im Dauerlauf stört schon der Mauszeiger. Er kommt bei der nächsten
+   Bewegung von selbst zurück (siehe ui/idle.ts). */
+.zeiger-aus, .zeiger-aus * { cursor: none !important; }

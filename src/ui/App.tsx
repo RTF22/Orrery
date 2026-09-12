@@ -3,10 +3,13 @@ import { t } from './i18n';
 import { Panel } from './panels/Panel';
 import { TimePanel } from './panels/TimePanel';
 import { ScalePanel } from './panels/ScalePanel';
+import { CinemaPanel } from './panels/CinemaPanel';
 import { CameraPanel } from './panels/CameraPanel';
 import { DisplayPanel } from './panels/DisplayPanel';
 import { BodyTree } from './panels/BodyTree';
 import { useShortcuts, SHORTCUTS_PANEL } from './shortcuts/useShortcuts';
+import { useIdleHide } from './idle';
+import { useWakeLock } from './wakeLock';
 
 /** Belegung für die Übersicht — Wirkung als Sprachschlüssel. */
 const KUERZEL: readonly (readonly [string, string])[] = [
@@ -16,6 +19,8 @@ const KUERZEL: readonly (readonly [string, string])[] = [
   ['◀ ▶', 'shortcuts.rate'],
   ['R', 'shortcuts.reverse'],
   ['Pos1', 'shortcuts.resetCamera'],
+  ['C', 'shortcuts.cinema'],
+  ['N', 'shortcuts.nextScene'],
   ['?', 'shortcuts.toggleHelp'],
 ];
 
@@ -44,16 +49,23 @@ function Kuerzeluebersicht(): React.JSX.Element {
  */
 export function App(): React.JSX.Element | null {
   useShortcuts();
+  const untaetig = useIdleHide();
   const versteckt = useStore((s) => s.ui.hidden);
+  const laeuftKino = useStore((s) => s.cinema.running);
+  // Solange der Film läuft, darf der Bildschirm nicht abschalten.
+  useWakeLock(laeuftKino);
   const zeigeKuerzel = useStore((s) => s.ui.panels[SHORTCUTS_PANEL] === true);
 
-  if (versteckt) return null;
+  // Im Kino-Modus verschwindet die Oberfläche nach kurzer Ruhe von selbst;
+  // außerhalb bleibt sie stehen, bis H gedrückt wird.
+  if (versteckt || (laeuftKino && untaetig)) return null;
 
   return (
     <div className="pointer-events-none fixed inset-0 flex flex-col gap-2 p-3 text-slate-100">
       <div className="flex w-72 max-w-full flex-col gap-2 overflow-y-auto">
         <TimePanel />
         <ScalePanel />
+        <CinemaPanel />
         <CameraPanel />
         <DisplayPanel />
         <BodyTree />

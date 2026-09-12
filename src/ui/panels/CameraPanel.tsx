@@ -4,7 +4,9 @@ import type { CameraMode } from '../../store/types';
 import { t } from '../i18n';
 import { Panel } from './Panel';
 
-const MODI: readonly CameraMode[] = ['free', 'attached', 'follow'];
+// Der vierte Modus ist auswählbar, startet den Director aber nicht — das
+// tun das Kino-Panel und die Taste C.
+const MODI: readonly CameraMode[] = ['free', 'attached', 'follow', 'cinema'];
 
 const ABSTAND_MIN_KM = 1e3;
 const ABSTAND_MAX_KM = 1e10;

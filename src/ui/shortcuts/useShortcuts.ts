@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useStore, DEFAULT_STATE } from '../../store';
+import { toggleCinema, nextScene } from '../cinemaControl';
 
 /** Panel-Schlüssel der Kürzel-Übersicht. */
 export const SHORTCUTS_PANEL = 'shortcuts';
@@ -44,6 +45,12 @@ export function handleShortcut(taste: string): boolean {
       return true;
     case 'r':
       s.setTime({ rateDaysPerSec: -s.time.rateDaysPerSec });
+      return true;
+    case 'c':
+      toggleCinema();
+      return true;
+    case 'n':
+      nextScene();
       return true;
     case 'Home':
       s.setCamera({ ...DEFAULT_STATE.camera });

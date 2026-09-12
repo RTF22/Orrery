@@ -6,6 +6,7 @@ import { buildScene } from '../render/scene';
 import { createPostFx } from '../render/postfx';
 import { attachCameraInput } from '../render/camera/input';
 import { startLoop } from './loop';
+import { tickCinema } from './cinema';
 import { useStore } from '../store';
 import { App as Bedienoberflaeche } from '../ui/App';
 import type { QualityTier } from '../store/types';
@@ -30,22 +31,34 @@ function App(): React.JSX.Element {
     if (canvas === null || overlay === null) return;
 
     const ctx = createRenderer(canvas);
+    // Nur zur Messung im Entwicklungslauf: Über window.renderer lassen sich
+    // Geometrie- und Texturzahlen im Dauerlauf ablesen. Im Build fällt der
+    // Zweig weg, weil import.meta.env.DEV dort konstant false ist.
+    if (import.meta.env.DEV) {
+      const w = window as unknown as { renderer: unknown; store: unknown };
+      w.renderer = ctx.renderer;
+      // Ebenfalls nur zur Messung: Über window.store lässt sich jeder
+      // Blickwinkel ohne Klickweg einstellen — etwa die Nachtseite eines
+      // Planeten für die Prüfung der Beleuchtung.
+      w.store = useStore;
+    }
     const szene = buildScene(ctx, overlay);
     const postfx = createPostFx(ctx);
     // Ziehen dreht, Rad und Zwei-Finger-Geste zoomen — geschrieben wird
     // ausschließlich in den Store, gelesen im nächsten Bild vom Controller.
     const stopInput = attachCameraInput(canvas);
 
-    // Der Renderer hängt selbst am resize-Ereignis und wurde zuerst
-    // registriert; die Composer-Ziele folgen daher mit der bereits neuen
-    // Canvas-Größe.
-    const onResize = (): void => { postfx.resize(); };
-    window.addEventListener('resize', onResize);
+    // Der Renderer meldet jede Größen- und Pixeldichteänderung; die
+    // Composer-Ziele hängen sich hier an, damit sie nie hinterherhinken.
+    ctx.afterResize = () => { postfx.resize(); };
 
     let bloomAn: boolean | null = null;
     let stufe: QualityTier | null = null;
 
     const stopLoop = startLoop((jd, dt) => {
+      // Vor dem Lesen des Zustands: Szene und Kamera sollen im selben Bild
+      // denselben Stand sehen.
+      tickCinema(dt);
       const state = useStore.getState();
       szene.update(jd, dt, state);
 
@@ -55,11 +68,11 @@ function App(): React.JSX.Element {
         postfx.setBloom(bloomAn, stufe);
 
         // Die Pixeldichte ist der wirksamste Hebel gegen eine zu niedrige
-        // Bildrate — sie kostet quadratisch Füllrate.
-        const grenze = QUALITY_SETTINGS[stufe === 'auto' ? 'medium' : stufe].pixelRatioCap;
-        ctx.renderer.setPixelRatio(Math.min(window.devicePixelRatio, grenze));
-        ctx.resize();
-        postfx.resize();
+        // Bildrate — sie kostet quadratisch Füllrate. Der Renderer hält den
+        // Deckel fortan auch über Monitorwechsel hinweg ein.
+        ctx.setPixelRatioCap(
+          QUALITY_SETTINGS[stufe === 'auto' ? 'medium' : stufe].pixelRatioCap,
+        );
       }
       postfx.render();
     });
@@ -68,7 +81,6 @@ function App(): React.JSX.Element {
       stopLoop();
       stopInput();
       szene.dispose();
-      window.removeEventListener('resize', onResize);
       postfx.dispose();
       ctx.dispose();
     };
