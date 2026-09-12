@@ -155,7 +155,7 @@ export const plutoSystem: readonly Body[] = [
       // 12.09.2026, Quelle laut Horizons-Kopfzeile "plu060_merged".
       // A = 19 595,76204124312 km. a_AE = 19 595,76204124312/149 597 870,7
       // = 0,00013098958 AE. Rückrechnung: 0,00013098958 * 149 597 870,7 =
-      // 19 595,76195 km, trifft den Quellwert auf unter 0,001 km.
+      // 19 595,76225 km, trifft den Quellwert auf unter 0,001 km.
       a: 0.00013098958,   aDot: 0,
       e: 0.00016106728,   eDot: 0,
       // i gegen Plutos Äquator (REF_PLANE=B) nahe 0° — Charon läuft praktisch

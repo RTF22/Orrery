@@ -66,7 +66,7 @@ const GRAVITATIONSKONSTANTE_M3_KG_S2 = 6.674_30e-11;
  * Quellenblock in pluto-system.ts). Das ist eine Korrektur an der Physik
  * dieser Testhilfsfunktion, keine Aufweichung der 1-%-Schranke selbst.
  */
-function gmMutterKm3S2(id: string): number {
+function gmZweikoerperKm3S2(id: string): number {
   const mutter = bodyIndex[bodyIndex[id]!.parent!]!;
   const mond = bodyIndex[id]!;
   return (GRAVITATIONSKONSTANTE_M3_KG_S2 * (mutter.physical.massKg + mond.physical.massKg)) / 1e9;
@@ -75,14 +75,15 @@ function gmMutterKm3S2(id: string): number {
 /**
  * Große Halbachse aus der Vis-Viva-Gleichung: a = 1 / (2/r − v²/GM), mit
  * r = |soll| in km, v = |sollGeschwindigkeit| in km/s und GM des
- * Mutterkörpers in km³/s². Phasenunabhängig — anders als der momentane
- * Abstand |r| hängt sie nicht davon ab, an welcher Stelle der (exzentrischen)
- * Bahn sich der Mond gerade befindet.
+ * Zweikörperproblems (Mutterkörper + Mond, s. gmZweikoerperKm3S2 oben) in
+ * km³/s². Phasenunabhängig — anders als der momentane Abstand |r| hängt sie
+ * nicht davon ab, an welcher Stelle der (exzentrischen) Bahn sich der Mond
+ * gerade befindet.
  */
 function grosseHalbachseSollKm(id: string, soll: Vec3, sollGeschwindigkeit: Vec3): number {
   const r = betrag(soll);
   const v = betrag(sollGeschwindigkeit);
-  const gm = gmMutterKm3S2(id);
+  const gm = gmZweikoerperKm3S2(id);
   return 1 / (2 / r - (v * v) / gm);
 }
 

@@ -19,19 +19,25 @@ import type { Body } from '../../sim/types';
 // vertreten). Für Eris und Makemake ist noch nicht einmal aus der
 // Satellitenbahn (Dysnomia bzw. MK 2) eine vollständige Pol-RA/Dec bekannt
 // — die Literatur nennt für beide nur einen Kippwinkel OHNE Achsrichtung
-// (z. B. Eris' Wikipedia-Infobox: "≈78,3° zur Bahn (angenommen)", ohne
-// Rektaszension; für Makemake ebenso nur eine Spanne "46°–78° zur Bahn").
-// Ohne Achsrichtung lässt sich kein vollständiger pole-Vektor bilden. Hier
-// tritt deshalb ausdrücklich die vom Task-Brief vorgeschlagene Näherung in
-// Kraft: die Bahnnormale der eigenen heliozentrischen Bahn steht anstelle
-// des unbekannten Rotationspols. Das ist physikalisch keine beliebige
-// Wahl — bei den meisten größeren, in Rotation abgeplatteten
-// Kleinkörpern liegt der Spinpol tatsächlich nahe der Bahnnormale (starke
-// Kollisionsdämpfung über die Systemlebensdauer) —, aber ausdrücklich EINE
-// ANNAHME und keine Messung: Die tatsächliche Achslage von Eris und
-// Makemake ist unbekannt. Berechnung: Bahnnormale (Ekliptik) aus i, node
-// über n=(sin i·sin node, −sin i·cos node, cos i), anschließend in
-// äquatoriale RA/Dec gedreht (Umkehrung von frames.ts' poleVector()).
+// (Eris ≈78,3° zur Bahn, Szakáts et al. 2022 — dieselbe Quelle wie unten
+// bei Eris' rotationPeriodH; für Makemake ebenso nur eine Spanne
+// "46°–78° zur Bahn"). Ohne Achsrichtung lässt sich kein vollständiger
+// pole-Vektor bilden. Hier tritt deshalb ausdrücklich die vom Task-Brief
+// vorgeschlagene Näherung in Kraft: die Bahnnormale der eigenen
+// heliozentrischen Bahn steht anstelle des unbekannten Rotationspols.
+//
+// Das ist eine BEHELFSANNAHME, keine physikalisch plausible Wahl: Sie wird
+// gebraucht, weil überhaupt irgendeine Achsrichtung ins Modell muss — nicht
+// weil sie die wahrscheinlichste wäre. Die einzige tatsächlich bekannte
+// Größe, der publizierte Kippwinkel, widerspricht ihr sogar direkt: Die
+// Bahnnormale selbst ENTSPRICHT einem Kippwinkel von 0° zur Bahn, während
+// die Messung bei Eris rund 78,3° und bei Makemake 46°–78° ergibt. Die hier
+// dargestellte Achse kann deshalb um bis zu rund 78° falsch stehen. Bekannt
+// ist also gerade NICHT, dass die Bahnnormale ungefähr stimmt — bekannt ist
+// vor allem, dass sie es sehr wahrscheinlich NICHT tut. Berechnung:
+// Bahnnormale (Ekliptik) aus i, node über
+// n=(sin i·sin node, −sin i·cos node, cos i), anschließend in äquatoriale
+// RA/Dec gedreht (Umkehrung von frames.ts' poleVector()).
 
 export const zwergplaneten: readonly Body[] = [
   {

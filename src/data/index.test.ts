@@ -310,7 +310,14 @@ describe('Pluto-System und Zwergplaneten (Task 10)', () => {
   it('trifft den bekannten Bahnradius von Charon', () => {
     // Kontrollrechnung der Quelle: große Halbachse zurück in Kilometer
     // (Horizons osculating elements, siehe Quellenblock in pluto-system.ts).
-    expect((bodyIndex['charon']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(19595.76204124312, -2);
+    // Toleranz ±0,005 km (numDigits 2): Der Ist-Wert weicht rechnerisch nur
+    // um rund 0,00021 km vom Quellwert ab (die durch die 11-Dezimalstellen-
+    // Rundung von orbit.a selbst gesetzte Grenze liegt bei rund 0,00075 km,
+    // ein LSB-Fehler in a bei rund 0,0015 km) — ±0,005 km umschließt beides
+    // mit deutlicher Reserve (rund 24-fach über dem Ist-Fehler), ohne auf
+    // ihn zu trimmen, und bleibt eng genug, um eine falsch abgeschriebene
+    // Nachkommastelle in a weiterhin zu fassen. Vorher: ±50 km (numDigits -2).
+    expect((bodyIndex['charon']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(19595.76204124312, 2);
   });
 
   // Grobe Kontrollpunkte aus dem Task-10-Brief. Die tatsächlichen JPL-SBDB-
@@ -328,8 +335,14 @@ describe('Pluto-System und Zwergplaneten (Task 10)', () => {
       const ist = bodyIndex[id]!.orbit!.a;
       expect(Math.abs(ist - a) / a, id).toBeLessThan(0.02);
     }
-    expect(bodyIndex['pluto']!.orbit!.e).toBeCloseTo(0.2488, 1);
-    expect(bodyIndex['pluto']!.orbit!.i).toBeCloseTo(17.16, 0);
+    // ±0,005 (numDigits 2): Ist-Abweichung von der Fact-Sheet-Kontrollgröße
+    // rund 0,00304 (≈1,22 %, die oben erläuterte Libration) — ±0,005 (≈2 %)
+    // umschließt das mit rund 1,6-facher Reserve. Vorher: ±0,05 (numDigits 1).
+    expect(bodyIndex['pluto']!.orbit!.e).toBeCloseTo(0.2488, 2);
+    // ±0,05° (numDigits 1): Ist-Abweichung rund 0,0123°, also rund 4-fache
+    // Reserve; numDigits 2 (±0,005°) wäre bereits enger als diese reale
+    // Libration und ließe den Test fehlschlagen. Vorher: ±0,5° (numDigits 0).
+    expect(bodyIndex['pluto']!.orbit!.i).toBeCloseTo(17.16, 1);
     expect(bodyIndex['eris']!.orbit!.e).toBeCloseTo(0.44, 1);
     const erisAphel = bodyIndex['eris']!.orbit!.a * (1 + bodyIndex['eris']!.orbit!.e);
     expect(Math.abs(erisAphel - 97) / 97).toBeLessThan(0.02);

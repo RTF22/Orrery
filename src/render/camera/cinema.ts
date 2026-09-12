@@ -8,11 +8,18 @@ import { bodyIndex } from '../../data/index';
 
 const GRAD = Math.PI / 180;
 
-/** Der äußerste Planet des Katalogs bestimmt, wie groß das System aussieht. */
-const AEUSSERSTER_KOERPER = 'neptune';
+/**
+ * Der äußerste Planet des Katalogs bestimmt, wie groß das System aussieht.
+ * Bewusst der äußerste PLANET, nicht der äußerste Körper: Zwergplaneten
+ * (kind: 'dwarf', z. B. Eris im Aphel bei rund 98 AE, weiter draußen als
+ * Neptun) zählen hier ausdrücklich nicht mit — ihre teils stark exzentrischen
+ * Bahnen würden den Systemradius und damit jede Kameraszene, die sich an ihm
+ * orientiert, unverhältnismäßig aufblähen.
+ */
+const AEUSSERSTER_PLANET = 'neptune';
 
 export function systemRadiusKm(jd: number, s: ScaleSettings): number {
-  const p = scaledPositionAt(AEUSSERSTER_KOERPER, bodyIndex, jd, s);
+  const p = scaledPositionAt(AEUSSERSTER_PLANET, bodyIndex, jd, s);
   return Math.hypot(p.x, p.y, p.z);
 }
 
