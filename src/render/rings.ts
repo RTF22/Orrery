@@ -105,6 +105,55 @@ const RING_SEGMENTE = 128;
 const RING_STREUUNG = 0.85;
 const RING_SCHAERFE = 6;
 
+/**
+ * Gesamthelligkeit eines Ringfragments (linear, vor Tonemapping) — das
+ * Gegenstück zur letzten Zeile von RING_FRAGMENT_SHADER als reine Funktion:
+ * albedo · (|N·L| · uTag/π + Füllung · uTag + Streuung · uTag/π).
+ *
+ * `cosNL` ist N·L (Ringnormale gegen Sonnenrichtung, beidseitig über den
+ * Betrag), `cosVL` das Skalarprodukt aus Blick- und Lichtrichtung wie bei
+ * vorwaertsstreuung(). Wie diese existiert die Funktion, damit der nicht
+ * testbare Shader eine testbare Kennlinie hat — konkret dafür, dass die
+ * Ersatztextur (ERSATZ_RING_GRAU) unter realen Szenenwerten über der
+ * Sichtbarkeitsschwelle bleibt, siehe rings.test.ts. Beide Stellen müssen
+ * dieselbe Formel abbilden.
+ */
+export function ringHelligkeit(
+  albedoLinear: number, cosNL: number, cosVL: number, uTag: number, fuellung: number,
+): number {
+  const direkt = (Math.abs(cosNL) * uTag) / Math.PI;
+  const streu = (vorwaertsstreuung(cosVL, RING_STREUUNG, RING_SCHAERFE) * uTag) / Math.PI;
+  return albedoLinear * (direkt + fuellung * uTag + streu);
+}
+
+/**
+ * Grauwert (sRGB, 8 Bit) der Ersatztextur für Ringe ohne Bildquelle.
+ *
+ * 128 ist ein Sichtbarkeitswert, kein Albedowert — und das mit Absicht. Der
+ * Vorgänger (RGB 38, linear rund 2 %) war aus der realen Albedo des
+ * Uranusrings (etwa 0,05) hergeleitet und im Bild schlicht nicht vorhanden:
+ * In der Kinoszene `uranus-gekippt` liegt uTag bei 0,33 (Preset Schaubild,
+ * Standardbeleuchtung; die Klemme MAX_COLOR_GAIN greift dort bereits), die
+ * Summe aus Direktlicht und Nachtseitenfüllung bei 0,14 — das Fragment
+ * landete bei 0,003 linear, und das ACES-Tonemapping (renderer.ts) drückt
+ * alles unter rund 0,01 auf 0 von 255. Pixelmessung am 12.09.2026: 0 an
+ * jeder Ringposition außerhalb der Planetenscheibe.
+ *
+ * Eine albedotreue Darstellung ist an dieser Stelle grundsätzlich nicht zu
+ * haben: Die Szene ist nirgends physikalisch belichtet (Fülllicht,
+ * Distanzausgleich, Farbverstärkung bis Faktor 12, siehe lighting.ts), und
+ * auch die Saturn-Ringtextur ist mit im Mittel rund 0,15 linear weit von
+ * Saturns Ringalbedo (0,5 bis 0,6) entfernt. Der Uranusring bekommt deshalb
+ * dieselbe Behandlung wie alles andere: einen Wert, der ihn im Bild dunkel,
+ * aber zweifelsfrei vorhanden macht. Mit 128 (linear 0,216) misst der Ring
+ * in derselben Szene 31 von 255 — gegen 0 vorher — und liegt damit am
+ * dunklen Ende dessen, was der Saturnring in offener Ansicht zeigt
+ * (`saturn-streiflicht`, Ringpixel rund 25 bis 80; sein uTag ist mit 0,67
+ * doppelt so hoch, seine Textur im Mittel dunkler). Rechnung mit den
+ * gemessenen Szenenwerten: rings.test.ts.
+ */
+export const ERSATZ_RING_GRAU = 128;
+
 // mat3(modelMatrix) statt normalMatrix (= Normalenmatrix von modelViewMatrix,
 // also Sichtraum): vWeltPos unten steht in Weltraum (modelMatrix), Sonnen-
 // und Blickvektor im Fragment-Shader werden daraus gebildet — vNormal muss
@@ -133,8 +182,9 @@ const RING_VERTEX_SHADER = `
 // Die Fragment-Zeile für die Streuung (`uStreuung * pow(max(0.0, -dot(V,
 // L)), uSchaerfe)`) bildet exakt dieselbe Formel wie vorwaertsstreuung()
 // oben ab: -dot(V, L) entspricht -cosWinkel, uStreuung der staerke, uSchaerfe
-// der schaerfe. Ändert sich eine der beiden Stellen, muss die andere
-// mitgehen — siehe rings.test.ts für die geprüfte Kennlinie.
+// der schaerfe. Die Summenzeile in gl_FragColor spiegelt ringHelligkeit().
+// Ändert sich eine dieser Stellen, muss ihr Gegenstück mitgehen — siehe
+// rings.test.ts für die geprüften Kennlinien.
 //
 // RECIPROCAL_PI (aus <common>, dieselbe Konstante wie in Threes eigenen
 // Materialien) auf direkt und streu: Der Körper läuft durch Threes
@@ -169,21 +219,18 @@ const RING_FRAGMENT_SHADER = `
 `;
 
 /**
- * Dunkelgraue, voll deckende 1×1-Ersatztextur für Ringe ohne dokumentierte
+ * Mittelgraue, voll deckende 1×1-Ersatztextur für Ringe ohne dokumentierte
  * Bildquelle (siehe ASSETS.md). Ohne sie bliebe `tRing` unbelegt und der
  * Ring unsichtbar statt — wie bei Körpern ohne Albedo-Textur in bodies.ts —
  * in einer Ersatzdarstellung: ein flächig deckender, ungebänderter Ring.
  *
- * Bewusst dunkelgrau (RGB 38, entspricht linear rund 2 %) statt Weiß: Ein
- * heller Ersatz hätte bei der Sichtprüfung (Task-13-Brief, Schritt 6) genau
- * den falschen Eindruck erzeugt — der Uranusring soll "sehr dunkel, aber
- * vorhanden" erscheinen, was für sein reales, sehr geringes Rückstrahl-
- * vermögen (Albedo rund 0,05, deutlich dunkler als Kohle) auch physikalisch
- * zutrifft. Ein weißer Platzhalter hätte diese reale Eigenschaft verdeckt
- * und einen hellen, papierartigen Ring vorgetäuscht, den es so nicht gibt.
+ * Grauwert und seine Begründung: siehe ERSATZ_RING_GRAU. Kurzfassung: Der
+ * Ring soll "dunkel, aber vorhanden" erscheinen; der frühere, aus der
+ * realen Albedo hergeleitete Wert 38 war im Bild schwarz.
  */
 function ersatzRingTextur(): THREE.DataTexture {
-  const textur = new THREE.DataTexture(new Uint8Array([38, 38, 38, 255]), 1, 1, THREE.RGBAFormat);
+  const g = ERSATZ_RING_GRAU;
+  const textur = new THREE.DataTexture(new Uint8Array([g, g, g, 255]), 1, 1, THREE.RGBAFormat);
   textur.colorSpace = THREE.SRGBColorSpace;
   textur.needsUpdate = true;
   return textur;

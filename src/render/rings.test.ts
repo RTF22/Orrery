@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import * as THREE from 'three';
-import { ringGeometrieDaten, ringAusrichtung, vorwaertsstreuung } from './rings';
+import {
+  ringGeometrieDaten, ringAusrichtung, vorwaertsstreuung,
+  ringHelligkeit, ERSATZ_RING_GRAU,
+} from './rings';
 import { poleVector } from '../sim/frames';
 
 describe('ringGeometrieDaten', () => {
@@ -95,5 +98,45 @@ describe('vorwaertsstreuung', () => {
     // Herleitung: -cosWinkel = -(-0,5) = 0,5; pow(0,5; 8) = 1/2^8 = 1/256;
     // staerke = 1 multipliziert nur, ändert also nichts an 1/256.
     expect(vorwaertsstreuung(-0.5, 1, 8)).toBeCloseTo(1 / 256, 12);
+  });
+});
+
+describe('ringHelligkeit — die Ersatztextur muss sichtbar bleiben', () => {
+  // Messwerte aus der Kinoszene `uranus-gekippt` (12.09.2026, Preset
+  // Schaubild, Standardbeleuchtung): uTag 0,331, |N·L| 0,508, kein
+  // Gegenlicht (V·L > 0), Nachtseitenfüllung 0,25. Mit der alten
+  // Ersatztextur RGB 38 (linear 0,0206) ergab das 0,0028 linear — nach
+  // ACES-Tonemapping und sRGB weniger als 1 von 255: Der Ring war im Bild
+  // nicht vorhanden (Pixelmessung: 0 an jeder Ringposition außerhalb der
+  // Planetenscheibe). Unter rund 0,01 linear drückt die ACES-Kurve alles
+  // auf Schwarz; die Schwelle 0,02 lässt dazu einen Faktor 2 Luft.
+  const uranus = { cosNL: 0.508, cosVL: 0.3, uTag: 0.331, fuellung: 0.25 };
+  // 8-Bit-sRGB-Grauwert nach linear — derselbe Weg, den die DataTexture mit
+  // colorSpace = SRGBColorSpace beim Sampling nimmt.
+  const linear = (grau8: number): number =>
+    new THREE.Color().setRGB(grau8 / 255, grau8 / 255, grau8 / 255, THREE.SRGBColorSpace).r;
+
+  it('hebt das Ersatzgrau in der Uranusszene über die Sichtbarkeitsschwelle', () => {
+    const albedo = linear(ERSATZ_RING_GRAU);
+    const wert = ringHelligkeit(albedo, uranus.cosNL, uranus.cosVL, uranus.uTag, uranus.fuellung);
+    expect(wert).toBeGreaterThanOrEqual(0.02);
+  });
+
+  it('belegt, dass der alte Wert 38 unter der Schwelle lag', () => {
+    const albedoAlt = linear(38);
+    const wert = ringHelligkeit(albedoAlt, uranus.cosNL, uranus.cosVL, uranus.uTag, uranus.fuellung);
+    expect(wert).toBeLessThan(0.01);
+  });
+
+  it('rechnet beidseitig: ein Ring hat keine Rückseite', () => {
+    expect(ringHelligkeit(0.5, -0.4, 0.3, 1, 0)).toBeCloseTo(ringHelligkeit(0.5, 0.4, 0.3, 1, 0), 12);
+  });
+
+  it('setzt sich aus Direktlicht, Füllung und Streuung zusammen', () => {
+    // Stützstelle von Hand: albedo 0,5, |cos| 0,4, uTag 1, Füllung 0,25,
+    // Gegenlicht cosVL = -1 (Streuung maximal = RING_STREUUNG 0,85):
+    // 0,5 · (0,4/π + 0,25 + 0,85/π)
+    const erwartet = 0.5 * (0.4 / Math.PI + 0.25 + 0.85 / Math.PI);
+    expect(ringHelligkeit(0.5, 0.4, -1, 1, 0.25)).toBeCloseTo(erwartet, 12);
   });
 });

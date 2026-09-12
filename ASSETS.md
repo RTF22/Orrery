@@ -186,12 +186,17 @@ nur nach `public/textures/saturn/ring.png` abgelegt.
 für Saturn — keine Uranus-Ringtextur an, und keine andere im Projekt bereits
 belegte Quelle (USGS Astrogeology, Wikimedia-Commons-NASA-Mosaike) führt
 eine. Der Ring wird trotzdem gerendert: Ohne Textur greift in
-`render/rings.ts` eine dunkelgraue, voll deckende 1×1-Ersatztextur (`tRing`,
-RGB 38 statt Weiß), sodass Uranus’ Ring als flächiger, ungebänderter Streifen
-sichtbar bleibt statt zu verschwinden — dieselbe Ersatzstrategie wie bei
-Körpern ohne Albedo-Textur in `render/bodies.ts`, hier bewusst dunkel statt
-weiß gewählt: Der reale Uranusring hat mit rund 0,05 eine sehr geringe
-Albedo, ein heller Platzhalter hätte das verfälscht.
+`render/rings.ts` eine mittelgraue, voll deckende 1×1-Ersatztextur (`tRing`,
+Grauwert `ERSATZ_RING_GRAU` = 128), sodass Uranus’ Ring als flächiger,
+ungebänderter Streifen sichtbar bleibt statt zu verschwinden — dieselbe
+Ersatzstrategie wie bei Körpern ohne Albedo-Textur in `render/bodies.ts`.
+Der Grauwert ist bewusst kein Albedowert: Ein aus der realen Albedo des
+Uranusrings (rund 0,05) hergeleiteter Wert (RGB 38) war in der Kinoszene
+`uranus-gekippt` messbar schwarz (0 von 255 an jeder Ringposition), weil die
+Szene nirgends physikalisch belichtet ist und das ACES-Tonemapping alles
+unter rund 1 % linear auf Schwarz drückt. Mit 128 misst der Ring dort 31 von
+255 — dunkel, aber vorhanden. Herleitung und Messwerte stehen bei der
+Konstante in `render/rings.ts`.
 
 ## Lücken: Körper ohne Textur (Task 11)
 

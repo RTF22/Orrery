@@ -35,8 +35,11 @@ function App(): React.JSX.Element {
     // Geometrie- und Texturzahlen im Dauerlauf ablesen. Im Build fällt der
     // Zweig weg, weil import.meta.env.DEV dort konstant false ist.
     if (import.meta.env.DEV) {
-      const w = window as unknown as { renderer: unknown; store: unknown };
+      const w = window as unknown as { renderer: unknown; store: unknown; scene: unknown };
       w.renderer = ctx.renderer;
+      // Und die Szene selbst: Damit lassen sich Material-Uniforms (etwa
+      // uTag eines Rings) im laufenden Bild ablesen, statt sie nachzurechnen.
+      w.scene = ctx.scene;
       // Ebenfalls nur zur Messung: Über window.store lässt sich jeder
       // Blickwinkel ohne Klickweg einstellen — etwa die Nachtseite eines
       // Planeten für die Prüfung der Beleuchtung.

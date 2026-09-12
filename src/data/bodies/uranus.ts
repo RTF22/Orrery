@@ -56,8 +56,11 @@ export const uranus: Body = {
     // Texturen dieses Projekts, bietet nur eine Saturn-Ringtextur an (Stand
     // 12.09.2026, siehe ASSETS.md, Abschnitt "Ringtextur"); für Uranus
     // findet sich dort kein Gegenstück. Der Ring wird trotzdem gerendert
-    // (siehe render/rings.ts, dunkelgraue Ersatztextur — passend zur realen,
-    // sehr geringen Albedo des Uranusrings), nur ohne Bänderung.
+    // (siehe render/rings.ts, mittelgraue Ersatztextur ERSATZ_RING_GRAU),
+    // nur ohne Bänderung. Der Grauwert ist ein Sichtbarkeitswert, kein
+    // Albedowert: Ein aus der realen Albedo (rund 0,05) hergeleiteter
+    // Wert war in der Kinoszene `uranus-gekippt` messbar schwarz — die
+    // Begründung steht bei der Konstante.
     rings: { innerKm: 38000, outerKm: 51000, texture: '' },
   },
   info: { nameKey: 'body.uranus.name', descriptionKey: 'body.uranus.description' },
