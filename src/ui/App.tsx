@@ -3,6 +3,9 @@ import { t } from './i18n';
 import { Panel } from './panels/Panel';
 import { TimePanel } from './panels/TimePanel';
 import { ScalePanel } from './panels/ScalePanel';
+import { CameraPanel } from './panels/CameraPanel';
+import { DisplayPanel } from './panels/DisplayPanel';
+import { BodyTree } from './panels/BodyTree';
 import { useShortcuts, SHORTCUTS_PANEL } from './shortcuts/useShortcuts';
 
 /** Belegung für die Übersicht — Wirkung als Sprachschlüssel. */
@@ -51,6 +54,9 @@ export function App(): React.JSX.Element | null {
       <div className="flex w-72 max-w-full flex-col gap-2 overflow-y-auto">
         <TimePanel />
         <ScalePanel />
+        <CameraPanel />
+        <DisplayPanel />
+        <BodyTree />
         {zeigeKuerzel ? <Kuerzeluebersicht /> : null}
       </div>
     </div>
