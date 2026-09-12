@@ -98,4 +98,34 @@ describe('BodyTree mit Monden', () => {
     });
     expect(kaskadierendeSichtbarkeit('jupiter')).toHaveLength(5);
   });
+
+  // Der Test oben prüft nur die reine Funktion. Der tatsächlich verdrahtete
+  // Weg — Klick auf das Kästchen, toggleVisible je Nachkomme, resultierender
+  // Store-Zustand — braucht einen echten Verhaltenstest, sonst bliebe ein
+  // Fehler wie "die Kaskade toggelt im UI gar nicht" unbemerkt.
+  const galileischeMonde = ['io', 'europa', 'ganymede', 'callisto'];
+
+  it('schaltet beim Ausblenden Jupiters über das Kästchen alle vier Galileischen Monde mit aus', () => {
+    render(<BodyTree />);
+    fireEvent.click(screen.getByRole('button', { name: /Jupiter aufklappen/ }));
+    fireEvent.click(screen.getByLabelText(/Jupiter anzeigen/));
+
+    const { visible } = useStore.getState();
+    expect(visible.jupiter).toBe(false);
+    galileischeMonde.forEach((id) => { expect(visible[id]).toBe(false); });
+  });
+
+  it('macht beim Wiedereinblenden Jupiters alle vier Monde erneut sichtbar', () => {
+    render(<BodyTree />);
+    fireEvent.click(screen.getByRole('button', { name: /Jupiter aufklappen/ }));
+    const kaestchen = screen.getByLabelText(/Jupiter anzeigen/);
+    fireEvent.click(kaestchen); // ausblenden
+    fireEvent.click(kaestchen); // wieder einblenden
+
+    const { visible } = useStore.getState();
+    // toggleVisible entfernt den Schlüssel beim Wiedereinblenden vollständig
+    // (siehe store/index.ts) statt ihn auf true zu setzen.
+    expect(visible.jupiter).toBeUndefined();
+    galileischeMonde.forEach((id) => { expect(visible[id]).toBeUndefined(); });
+  });
 });

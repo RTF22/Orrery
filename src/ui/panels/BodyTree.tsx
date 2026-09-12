@@ -83,6 +83,16 @@ function Zeile({ knoten, tiefe }: { knoten: TreeNode; tiefe: number }): React.JS
   // Nachkomme wird nur dann umgeschaltet, wenn er davon abweicht. So kippt
   // nicht die Hälfte der Monde in die falsche Richtung, falls einzelne zuvor
   // schon individuell aus- oder eingeblendet worden waren.
+  //
+  // Bewusste Einschränkung, nicht dokumentiert gewesen: Das gilt nur für die
+  // Ausblend-Richtung. Beim Wiedereinblenden werden ausnahmslos alle
+  // Nachkommen sichtbar — auch einer, der vorher einzeln ausgeblendet war,
+  // verliert dabei seine Einzelauswahl. Beispiel: Europa wird für sich
+  // ausgeblendet, danach Jupiter aus- und wieder eingeblendet — Europa ist
+  // danach wieder da, die vorherige Einzelentscheidung ist weg. Akzeptiert,
+  // weil eine Kaskade, die pro Nachkomme den vorherigen Einzelzustand
+  // merkt, einen zusätzlichen Zustand bräuchte, den `visible` (siehe
+  // store/index.ts) gerade bewusst nicht führt.
   const sichtbarkeitKaskadieren = (): void => {
     const zielVersteckt = !versteckt;
     const aktuelleSichtbarkeit = useStore.getState().visible;
