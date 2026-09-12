@@ -2,6 +2,7 @@ import { useStore } from '../store';
 import { t } from './i18n';
 import { Panel } from './panels/Panel';
 import { TimePanel } from './panels/TimePanel';
+import { ScalePanel } from './panels/ScalePanel';
 import { useShortcuts, SHORTCUTS_PANEL } from './shortcuts/useShortcuts';
 
 /** Belegung für die Übersicht — Wirkung als Sprachschlüssel. */
@@ -49,6 +50,7 @@ export function App(): React.JSX.Element | null {
     <div className="pointer-events-none fixed inset-0 flex flex-col gap-2 p-3 text-slate-100">
       <div className="flex w-72 max-w-full flex-col gap-2 overflow-y-auto">
         <TimePanel />
+        <ScalePanel />
         {zeigeKuerzel ? <Kuerzeluebersicht /> : null}
       </div>
     </div>
