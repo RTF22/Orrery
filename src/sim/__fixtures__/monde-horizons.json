@@ -1,5 +1,5 @@
 {
-  "quelle": "JPL Horizons, Vector Table, Ebene Ekliptik J2000, Einheiten km und km/s. Zentrum je Mutterkörper: Mars (500@499) für Phobos/Deimos, Jupiter (500@599) für Io/Europa/Ganymed/Kallisto, Saturn (500@699) für Mimas/Enceladus/Tethys/Dione/Rhea/Titan/Iapetus; Uranus (500@799) für Miranda/Ariel/Umbriel/Titania/Oberon, Neptun (500@899) für Triton.",
+  "quelle": "JPL Horizons, Vector Table, Ebene Ekliptik J2000, Einheiten km und km/s. Zentrum je Mutterkörper: Mars (500@499) für Phobos/Deimos, Jupiter (500@599) für Io/Europa/Ganymed/Kallisto, Saturn (500@699) für Mimas/Enceladus/Tethys/Dione/Rhea/Titan/Iapetus; Uranus (500@799) für Miranda/Ariel/Umbriel/Titania/Oberon, Neptun (500@899) für Triton, Pluto (500@999) für Charon.",
   "abgerufenAm": "2026-09-12",
   "eintraege": [
     {
@@ -1330,6 +1330,76 @@
         "x": 0.1655405079940946,
         "y": -3.531733130044663,
         "z": -2.602222831583624
+      }
+    },
+    {
+      "id": "charon",
+      "jd": 2442778.5,
+      "soll": {
+        "x": 6358.480930634862,
+        "y": 14280.13909271863,
+        "z": 11812.63694699390
+      },
+      "sollGeschwindigkeit": {
+        "x": 0.1471556582930722,
+        "y": 0.06303355827706933,
+        "z": -0.1554437688870950
+      }
+    },
+    {
+      "id": "charon",
+      "jd": 2451544.5,
+      "soll": {
+        "x": -40.84948172132215,
+        "y": -10402.84741543365,
+        "z": -16608.30411548325
+      },
+      "sollGeschwindigkeit": {
+        "x": -0.1639769771317849,
+        "y": -0.1280279049215525,
+        "z": 0.08055889577326453
+      }
+    },
+    {
+      "id": "charon",
+      "jd": 2461041.5,
+      "soll": {
+        "x": 10162.77278327551,
+        "y": 608.3625155146601,
+        "z": -16742.49446062912
+      },
+      "sollGeschwindigkeit": {
+        "x": -0.1161824352291725,
+        "y": -0.1742700875315236,
+        "z": -0.07689614484784509
+      }
+    },
+    {
+      "id": "charon",
+      "jd": 2469807.5,
+      "soll": {
+        "x": -13616.80548705164,
+        "y": -7278.187358907537,
+        "z": 12069.99551324965
+      },
+      "sollGeschwindigkeit": {
+        "x": 0.05348205107596549,
+        "y": 0.1534608322433835,
+        "z": 0.1528283654555632
+      }
+    },
+    {
+      "id": "charon",
+      "jd": 2479303.5,
+      "soll": {
+        "x": -1916.382186520904,
+        "y": -11778.99386831396,
+        "z": -15545.18603646691
+      },
+      "sollGeschwindigkeit": {
+        "x": -0.1625082461479732,
+        "y": -0.1115246993937412,
+        "z": 0.1045031194628105
       }
     }
   ]

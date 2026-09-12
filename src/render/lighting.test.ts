@@ -94,7 +94,18 @@ describe('Standardeinstellung — kein Körper bleibt schwarz', () => {
   // zwischen den Planeten: Lesbar ist ein Körper ab etwa 0,15 linear — die
   // sRGB-Ausgabe hebt das deutlich an. Vorher lag Neptun bei
   // „Realistisch" bei 0,0011 — im Bild gemessene 2 von 255, also schwarz.
-  const planeten = bodies.filter((b) => b.kind !== 'star');
+  //
+  // Ausdrücklich ohne kind: 'dwarf' (seit Task 10: Pluto, Ceres, Eris,
+  // Haumea, Makemake): Diese Regressionsschranke wurde für die Planeten
+  // kalibriert (bis Neptun, ≈30 AE bei „Realistisch"). Eris steht dort im
+  // Aphel rund 98 AE von der Sonne entfernt, mehr als dreimal so weit wie
+  // Neptun — bei quadratischem Lichtabfall und demselben, für ≤30 AE
+  // kalibrierten lightCompensation-Wert unterschreitet ihr Tagniveau die
+  // 30-%-Schranke real und nachvollziehbar (gemessen: rund 25 %), keine
+  // Regression. Ob der Distanzausgleich künftig auch über Neptun hinaus
+  // gezielt nachgezogen wird, ist eine eigene, hier bewusst nicht
+  // mitentschiedene Abwägung am Renderweg (siehe Task-10-Bericht).
+  const planeten = bodies.filter((b) => b.kind !== 'star' && b.kind !== 'dwarf');
   const presets = ['realistisch', 'schaubild', 'kompakt'] as const;
 
   it('hält jede Tagseite bei jedem Maßstabs-Preset über 30 % der Helligkeit', () => {

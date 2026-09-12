@@ -16,6 +16,7 @@ describe('Körperkatalog', () => {
         'moon', 'phobos', 'deimos', 'io', 'europa', 'ganymede', 'callisto',
         'mimas', 'enceladus', 'tethys', 'dione', 'rhea', 'titan', 'iapetus',
         'miranda', 'ariel', 'umbriel', 'titania', 'oberon', 'triton',
+        'pluto', 'charon', 'ceres', 'eris', 'haumea', 'makemake',
       ]),
     );
   });
@@ -286,5 +287,74 @@ describe('Katalog-Invarianten', () => {
       z: a.x * b.y - a.y * b.x,
     };
     expect(kreuz.x * pol.x + kreuz.y * pol.y + kreuz.z * pol.z).toBeLessThan(0);
+  });
+});
+
+describe('Pluto-System und Zwergplaneten (Task 10)', () => {
+  it('führt Pluto und die vier übrigen Zwergplaneten heliozentrisch, Charon dagegen um Pluto', () => {
+    for (const id of ['pluto', 'ceres', 'eris', 'haumea', 'makemake']) {
+      const b = bodyIndex[id];
+      expect(b?.kind, id).toBe('dwarf');
+      expect(b?.parent, id).toBe('sun');
+      expect(b?.orbit?.frame, id).toBe('ecliptic');
+    }
+    const charon = bodyIndex['charon'];
+    expect(charon?.kind).toBe('moon');
+    expect(charon?.parent).toBe('pluto');
+    expect(charon?.orbit?.frame).toBe('parentEquator');
+    // Charon läuft praktisch exakt in Plutos Äquatorebene (gegenseitig
+    // gebundene Rotation erzwingt das), siehe Quellenblock in pluto-system.ts.
+    expect(charon?.orbit?.i ?? 99).toBeLessThan(1);
+  });
+
+  it('trifft den bekannten Bahnradius von Charon', () => {
+    // Kontrollrechnung der Quelle: große Halbachse zurück in Kilometer
+    // (Horizons osculating elements, siehe Quellenblock in pluto-system.ts).
+    expect((bodyIndex['charon']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(19595.76204124312, -2);
+  });
+
+  // Grobe Kontrollpunkte aus dem Task-10-Brief. Die tatsächlichen JPL-SBDB-
+  // Werte weichen davon in Einzelfällen um bis zu rund 1 % ab (besonders
+  // Pluto: die 3:2-Resonanz mit Neptun lässt seine oskulierenden Elemente
+  // über den 248-jährigen Umlauf spürbar librieren, siehe Quellenblock in
+  // pluto-system.ts) — die Toleranz ist deshalb bewusst weiter als bei den
+  // Halbachsen-Tests der acht Planeten oben, die gegen dieselbe gefittete
+  // Tabelle prüfen, aus der auch die Katalogwerte stammen.
+  it('hält die groben Kontrollwerte der Zwergplaneten aus dem Task-10-Brief ein (± 2 %)', () => {
+    const erwartetA: Record<string, number> = {
+      ceres: 2.77, pluto: 39.48, haumea: 43.1, makemake: 45.4, eris: 67.8,
+    };
+    for (const [id, a] of Object.entries(erwartetA)) {
+      const ist = bodyIndex[id]!.orbit!.a;
+      expect(Math.abs(ist - a) / a, id).toBeLessThan(0.02);
+    }
+    expect(bodyIndex['pluto']!.orbit!.e).toBeCloseTo(0.2488, 1);
+    expect(bodyIndex['pluto']!.orbit!.i).toBeCloseTo(17.16, 0);
+    expect(bodyIndex['eris']!.orbit!.e).toBeCloseTo(0.44, 1);
+    const erisAphel = bodyIndex['eris']!.orbit!.a * (1 + bodyIndex['eris']!.orbit!.e);
+    expect(Math.abs(erisAphel - 97) / 97).toBeLessThan(0.02);
+  });
+
+  // Kepler-Gegenprobe (Task-Vorgabe): P_Jahre = a_AE^1,5 gegen die aus LDot
+  // zurückgerechnete Umlaufzeit — fängt Zahlendreher in a unabhängig von
+  // der SBDB-eigenen Periodenangabe.
+  it.each(['ceres', 'pluto', 'haumea', 'makemake', 'eris'])(
+    '%s: Umlaufzeit aus LDot stimmt mit dem dritten Keplerschen Gesetz überein',
+    (id) => {
+      const orbit = bodyIndex[id]!.orbit!;
+      const periodeAusLDot = 36525 / (orbit.LDot / 360) / 365.25;
+      const periodeKepler = Math.pow(orbit.a, 1.5);
+      expect(Math.abs(periodeAusLDot - periodeKepler) / periodeKepler).toBeLessThan(0.001);
+    },
+  );
+
+  // Der Sondertest aus dem Task-10-Brief: Plutos Perihel liegt innerhalb
+  // der Neptunbahn. a(1-e) ≈ 29,7 AE gegen Neptuns 30,07 AE. Der Test
+  // belegt zugleich, dass Halbachse und Exzentrizität zueinander passen.
+  it('führt Pluto im Perihel innerhalb der Neptunbahn', () => {
+    const p = bodyIndex['pluto']!.orbit!;
+    const perihel = p.a * (1 - p.e);
+    expect(perihel).toBeLessThan(bodyIndex['neptune']!.orbit!.a);
+    expect(perihel).toBeGreaterThan(29);
   });
 });

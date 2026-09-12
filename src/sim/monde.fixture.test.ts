@@ -42,18 +42,34 @@ function winkelZwischen(a: Vec3, b: Vec3): number {
 const GRAVITATIONSKONSTANTE_M3_KG_S2 = 6.674_30e-11;
 
 /**
- * GM des Mutterkörpers eines Mondes, in km³/s².
+ * GM des Zweikörperproblems Mond–Mutterkörper, in km³/s².
  *
  * G ist in Metern angegeben, der Katalog (und dieses Fixture) rechnen aber
- * durchgehend in Kilometern. G · massKg ergibt zunächst m³/s²; ein Meter
+ * durchgehend in Kilometern. G · Masse ergibt zunächst m³/s²; ein Meter
  * sind 10⁻³ km, also ein Kubikmeter 10⁻⁹ km³ — durch 10⁹ geteilt wird aus
  * m³/s² also km³/s². Das ist genau die Stelle, an der eine vergessene
  * Umrechnung den Radius um Faktor 10⁹ verfälschen würde, deshalb steht sie
  * hier ausgeschrieben statt in einer Konstante versteckt.
+ *
+ * Die für die Relativbahn maßgebliche Größe ist GM(Mutterkörper) +
+ * GM(Mond) — nicht nur GM(Mutterkörper) allein. Für 21 der 22 Monde dieses
+ * Katalogs ist der Mondanteil so klein (schlechtestenfalls Titan/Saturn mit
+ * 0,024 %), dass er innerhalb der 1-%-Schranke unten nie auffällt — deshalb
+ * blieb er hier lange unausgesprochen. Charon durchbricht das: Sein
+ * Massenanteil am Pluto-Charon-System beträgt 1,586/(13,03+1,586) = 10,85 %.
+ * Ohne den Mondanteil ergab die Vis-Viva-Gleichung für Charon eine um
+ * durchgängig 12,16 % zu hohe Soll-Halbachse (an allen fünf Fixture-
+ * Stichtagen praktisch identisch, 12,159-12,165 % — die Signatur eines
+ * fehlenden, körperunabhängigen Terms in der Formel, nicht eines
+ * Datenfehlers bei Charon selbst: Horizons' eigene "Keplerian GM" für
+ * Charons Bahn, 975,427 km³/s², ist exakt GM(Pluto)+GM(Charon), siehe
+ * Quellenblock in pluto-system.ts). Das ist eine Korrektur an der Physik
+ * dieser Testhilfsfunktion, keine Aufweichung der 1-%-Schranke selbst.
  */
 function gmMutterKm3S2(id: string): number {
   const mutter = bodyIndex[bodyIndex[id]!.parent!]!;
-  return (GRAVITATIONSKONSTANTE_M3_KG_S2 * mutter.physical.massKg) / 1e9;
+  const mond = bodyIndex[id]!;
+  return (GRAVITATIONSKONSTANTE_M3_KG_S2 * (mutter.physical.massKg + mond.physical.massKg)) / 1e9;
 }
 
 /**

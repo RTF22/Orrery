@@ -525,3 +525,49 @@ mittlerer Bewegung bleibt `LDot` positiv; die Rückläufigkeit steckt allein
 in i > 90°. Sondertest 2 in `../../data/index.test.ts` weist den Rücklauf
 zusätzlich über die tatsächliche Bahnbewegung (Kreuzprodukt zweier Örter
 gegen Neptuns Pol) nach.
+
+## Erweiterung Task 10: Pluto-System und Zwergplaneten
+
+**`horizons.json`** um Pluto, Ceres, Eris, Haumea und Makemake ergänzt —
+dieselben fünf Stichtage, dasselbe Zentrum `@sun` (`500@10`), dieselbe
+Ebene (Ekliptik J2000) und dieselben Einheiten (km) wie bei den acht
+Planeten. Abfrage je Körper mit allen fünf `TLIST`-Stichtagen in einer
+Anfrage:
+
+```
+https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND='<id>'&OBJ_DATA='NO'
+  &MAKE_EPHEM='YES'&EPHEM_TYPE='VECTORS'&CENTER='500@10'
+  &TLIST='2396942.5,2451544.5,2455362.5,2461294.5,2466233.5'
+  &VEC_TABLE='2'&REF_PLANE='ECLIPTIC'&OUT_UNITS='KM-S'
+```
+
+`COMMAND`: `999` für Pluto (Horizons führt ihn weiterhin als nummerierten
+Körper). Für die vier übrigen — echte Kleinkörper in Horizons' Sinne, nicht
+in der Haupttabelle der großen Planeten — muss ein Semikolon an die
+SPK-ID angehängt werden, um Horizons zur Small-Body-Database-Suche statt
+zur (mehrdeutigen) Haupttabelle zu zwingen, und dieses Semikolon muss als
+`%3B` kodiert werden (ein unkodiertes `;` liefert HTTP 400 "one or more
+query parameter was not recognized"): `1%3B` (Ceres), `136199%3B` (Eris),
+`136108%3B` (Haumea), `136472%3B` (Makemake). Abgerufen am 12.09.2026.
+
+Toleranzen zunächst großzügig (50 000 000 km) gesetzt und nach Lauf von
+`npx vitest run src/sim/horizons.test.ts` anhand der ausgegebenen
+`console.table`-Abweichungen auf rund das Doppelte der gemessenen
+Abweichung verkleinert, nach demselben Verfahren wie bei den acht Planeten
+oben.
+
+**`monde-horizons.json`** um Charon ergänzt (Zentrum Pluto, `500@999`,
+Horizons-ID `901`), dieselben fünf Stichtage, dieselbe Ebene und
+Einheiten wie bei den übrigen Monden:
+
+```
+https://ssd.jpl.nasa.gov/api/horizons.api?format=text&COMMAND='901'&OBJ_DATA='NO'
+  &MAKE_EPHEM='YES'&EPHEM_TYPE='VECTORS'&CENTER='500@999'
+  &TLIST='2442778.5,2451544.5,2461041.5,2469807.5,2479303.5'
+  &VEC_TABLE='2'&REF_PLANE='ECLIPTIC'&OUT_UNITS='KM-S'
+```
+
+Volle Herleitung der Bahnelemente, der Rückverschiebung heliozentrischer
+SBDB-Elemente auf J2000 und der Pluto/Charon-Dreifachkontrolle:
+`../../data/bodies/pluto-system.ts` und `../../data/bodies/zwergplaneten.ts`,
+Task-10-Bericht im SDD-Ordner.

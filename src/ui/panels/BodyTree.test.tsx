@@ -14,8 +14,16 @@ describe('buildTree', () => {
     expect(baum[0]!.body.id).toBe('sun');
   });
 
-  it('hängt die acht Planeten unter die Sonne', () => {
-    expect(buildTree(bodies)[0]!.children).toHaveLength(8);
+  it('hängt die acht Planeten und die fünf Zwergplaneten unter die Sonne', () => {
+    // Seit Task 10 hängen unter der Sonne nicht mehr nur die acht Planeten,
+    // sondern zusätzlich Pluto, Ceres, Eris, Haumea und Makemake (parent:
+    // 'sun', kind: 'dwarf') — macht 13 statt 8 direkte Kinder.
+    const kinder = buildTree(bodies)[0]!.children;
+    expect(kinder).toHaveLength(13);
+    expect(kinder.filter((k) => k.body.kind === 'planet')).toHaveLength(8);
+    expect(kinder.filter((k) => k.body.kind === 'dwarf').map((k) => k.body.id).sort()).toEqual(
+      ['ceres', 'eris', 'haumea', 'makemake', 'pluto'],
+    );
   });
 
   it('hängt den Mond unter die Erde', () => {
