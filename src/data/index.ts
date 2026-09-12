@@ -9,9 +9,11 @@ import { saturn } from './bodies/saturn';
 import { uranus } from './bodies/uranus';
 import { neptune } from './bodies/neptune';
 import { moon } from './bodies/moon';
+import { marsMonde } from './bodies/mars-monde';
 
 export const bodies: Body[] = [
   sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, moon,
+  ...marsMonde,
 ];
 
 export const bodyIndex: BodyIndex = Object.fromEntries(

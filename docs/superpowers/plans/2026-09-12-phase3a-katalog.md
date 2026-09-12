@@ -145,13 +145,22 @@ describe('equatorToEcliptic', () => {
     expect(a.x * b.x + a.y * b.y + a.z * b.z).toBeCloseTo(0, 12);
   });
 
-  it('legt die x-Achse in den aufsteigenden Knoten', () => {
+  it('legt die x-Achse in den Knoten — die Schnittgerade beider Ebenen', () => {
     // Der Knoten ist die Schnittgerade von Äquator- und Ekliptikebene. Ein
     // Vektor entlang der lokalen x-Achse muss deshalb in der Ekliptikebene
     // liegen, also z = 0 haben.
     const pole = poleVector(268.06, 64.5);
     const r = equatorToEcliptic({ x: 1, y: 0, z: 0 }, pole);
     expect(r.z).toBeCloseTo(0, 12);
+  });
+
+  it('legt die x-Achse in den aufsteigenden, nicht in den absteigenden Knoten', () => {
+    // Der Test darüber allein ist tautologisch: Beide Knoten liegen in der
+    // Ekliptikebene, ein vertauschtes Vorzeichen bestünde ihn ebenso.
+    // Unterscheidbar sind sie über die Richtung — eine Vierteldrehung hinter
+    // dem aufsteigenden Knoten liegt nördlich der Ekliptik.
+    const pole = poleVector(268.06, 64.5);
+    expect(equatorToEcliptic({ x: 0, y: 1, z: 0 }, pole).z).toBeGreaterThan(0);
   });
 });
 ```
@@ -167,7 +176,10 @@ Erwartet: FAIL mit `Cannot find module './frames'`
 import type { Vec3 } from './types';
 
 /**
- * Schiefe der Ekliptik zur Epoche J2000 in Grad (IAU 2006, ε₀ = 23° 26′ 21,406″).
+ * Schiefe der Ekliptik zur Epoche J2000 in Grad: 23° 26′ 21,448″, der Wert
+ * der IAU-1976/2000-Reihe (Lieske). IAU 2006 gibt 23° 26′ 21,406″ an — der
+ * Unterschied von 1,2 × 10⁻⁵ Grad ist hier bedeutungslos, die Quellenangabe
+ * muss trotzdem zum verwendeten Wert passen.
  * Die säkulare Änderung (rund 47″ pro Jahrhundert) bleibt außen vor: Sie liegt
  * über den Zeitraum, den diese Anwendung zeigt, weit unter der Genauigkeit der
  * verwendeten mittleren Bahnelemente.
@@ -274,22 +286,32 @@ git commit -m "Pol-Mathematik für Äquatorebenen als reine Funktionen"
 - Consumes: `poleVector`, `axialTiltDeg` aus Task 1
 - Produces: `PhysicalData.pole: { raDeg: number; decDeg: number }`; `axialTiltDeg` ist **kein** Datenfeld mehr
 
-**Kontrollrechnung — das Herzstück dieses Tasks.** Die Pollagen kommen aus dem IAU-Bericht (Archinal et al., *Report of the IAU Working Group on Cartographic Coordinates and Rotational Elements*). Ob ein abgerufener Wert richtig übernommen wurde, prüft die abgeleitete Achsneigung: Sie muss die bekannte Neigung des Körpers ergeben. Diese Tabelle ist der Test, nicht die Quelle:
+**Kontrollrechnung — das Herzstück dieses Tasks.** Die Pollagen kommen aus dem IAU-Bericht (Archinal et al., *Report of the IAU Working Group on Cartographic Coordinates and Rotational Elements*). Ob ein abgerufener Wert richtig übernommen wurde, prüft der Winkel zwischen Polrichtung und **Bahnnormale des Körpers selbst**: Er muss die veröffentlichte Neigung gegen die eigene Bahnebene ergeben („Obliquity to orbit" der NASA-Fact-Sheets). Pol und Bahnelemente stammen aus zwei unabhängigen Quellen und werden gegen eine dritte Zahl geprüft — tautologisch ist das nicht.
 
-| Körper | Pol RA / Dec (Ausgangswert) | Erwartete Achsneigung |
+**Nicht gegen die Ekliptik prüfen.** Nur die Erdbahn *ist* die Ekliptik; bei allen anderen Körpern unterscheiden sich beide Bezugsebenen um die Bahnneigung, bei Merkur um volle 7°. Bei rückläufiger Rotation (Venus, Uranus — beide mit negativem `rotationPeriodH`) ist der IAU-Nordpol das entgegengesetzte Ende der Achse; erwartet wird dort `180° − Tabellenwert`. Diese Fallunterscheidung prüft mit, dass Polkonvention und Vorzeichen der Rotationsperiode zusammenpassen: Mit dem alten `axialTiltDeg` war beides doppelt gezählt — der Körper stand auf dem Kopf **und** drehte rückwärts.
+
+Diese Tabelle ist der Test, nicht die Quelle:
+
+| Körper | Pol RA / Dec (Ausgangswert) | Erwartete Neigung gegen die eigene Bahn |
 |---|---|---|
-| Sonne | 286,13 / 63,87 | 7,25° |
+| Sonne | 286,13 / 63,87 | 7,25° (gegen die Ekliptik — die Sonne hat keine Bahn) |
 | Merkur | 281,0103 / 61,4155 | 0,03° |
 | Venus | 272,76 / 67,16 | 177,36° |
 | Erde | 0,00 / 90,00 | 23,44° |
-| Mond | 269,9949 / 66,5392 | 1,54° |
-| Mars | 317,269 / 54,432 | 25,19° |
+| Mond | 266,8577 / 65,6411 | 6,68° |
+| Mars | 317,68143 / 52,88650 | 25,19° (siehe Anmerkung unten) |
 | Jupiter | 268,057 / 64,495 | 3,13° |
 | Saturn | 40,589 / 83,537 | 26,73° |
 | Uranus | 257,311 / −15,175 | 97,77° |
-| Neptun | 299,36 / 43,46 | 28,32° |
+| Neptun | 299,3337 / 42,9504 | 28,32° |
 
-Weicht eine abgeleitete Neigung um mehr als 0,05° ab, ist der Polwert falsch abgeschrieben — dann gilt die Quelle, und die erwartete Neigung wird aus einer zweiten unabhängigen Quelle geprüft, bevor irgendetwas angepasst wird.
+Toleranz 0,3°: Die veröffentlichten Neigungen sind gerundet, die Bahnelemente sind mittlere Elemente. Weicht ein Körper um mehr als 1° ab, ist der Polwert falsch übernommen — dann gilt die Quelle, nicht der Plan, und die Schranke wird **nicht** aufgeweitet.
+
+**Mars — bewusste Abweichung vom aktuellen NAIF-Kernel.** Dessen gegenwärtige Werte (317,269202 / 54,432516) ergeben in der Kontrollrechnung 23,92° statt der überall zitierten 25,19°; der ältere Satz trifft sie fast exakt. Zwischen „Kernelwert ist aktueller" und „physikalische Größe ist vielfach belegt" wiegt hier die zweite schwerer: Eine Polrevision um 1,5° wäre für einen Körper, dessen Achse aus jahrzehntelanger Bahnverfolgung bekannt ist, außergewöhnlich. Beide Werte samt beider Ergebnisse gehören in den Datensatzkommentar, damit die Entscheidung in einem Satz umkehrbar bleibt. Sie gehört außerdem unter die offenen Punkte des Abnahmeprotokolls.
+
+**Neptun** braucht wie der Mond den periodischen Korrekturterm des Kernels, ausgewertet zur Epoche J2000 — die Führungsterme allein verfehlen die Kontrollrechnung um 0,47°, mit Korrekturterm bleiben 0,002°.
+
+Der Mondpol ist ein Sonderfall: Die Führungsterme der IAU-Formel liegen praktisch auf dem Ekliptikpol, weil die periodischen Terme dort Amplituden bis 3,8° tragen. Der eingetragene Wert stammt aus der vollständigen Formel zur Epoche J2000, gegengeprüft über Cassinis drittes Gesetz (1,54° gegen die Ekliptik, 5,145° Bahnneigung, 6,68° gegen die eigene Bahn — die drei Winkel liegen in einer Ebene). Er steht fest, während der echte Mondpol im 18,6-Jahres-Knotenzyklus um den Ekliptikpol wandert; das ist dieselbe Vereinfachung, die `moon.ts` für die Bahnelemente bereits dokumentiert.
 
 - [ ] **Step 1: Den fehlschlagenden Test schreiben**
 
@@ -626,7 +648,7 @@ Zwei Körper, bewusst als eigener Task: Hier zeigt sich, ob Bezugsebene, Maßsta
 
 Beide Bahnen liegen nahezu in der Marsäquatorebene (i < 2°) — genau der Fall, für den `parentEquator` gebaut ist. Phobos' Bahnradius ist kleiner als der 2,8-fache Marsradius; bei `sizeScale` 200 (Preset „Kompakt") liegt er damit **innerhalb** der dargestellten Marskugel. Das ist kein Fehler, sondern die bekannte Folge der Größenüberhöhung — es gehört als Kommentar in den Datensatz, damit es später niemand „korrigiert".
 
-- [ ] **Step 1: Den fehlschlagenden Test schreiben**
+- [x] **Step 1: Den fehlschlagenden Test schreiben**
 
 In `src/data/index.test.ts` anfügen:
 
@@ -675,29 +697,29 @@ describe('Katalog-Invarianten', () => {
 });
 ```
 
-- [ ] **Step 2: Test laufen lassen und Fehlschlag bestätigen**
+- [x] **Step 2: Test laufen lassen und Fehlschlag bestätigen**
 
 Run: `npx vitest run src/data/index.test.ts`
 Erwartet: FAIL — `phobos` ist unbekannt.
 
-- [ ] **Step 3: Werte abrufen**
+- [x] **Step 3: Werte abrufen**
 
 Die Tabelle des Marssystems von <https://ssd.jpl.nasa.gov/sats/elem/> abrufen. Notiert werden alle Elemente, die Umlaufzeit, die Pollage der Laplace-Ebene sowie Abrufdatum und Epoche der Tabelle. Radius und Masse aus dem zugehörigen NASA-Fact-Sheet, Pollagen von Phobos und Deimos aus dem IAU-Bericht (beide rotieren gebunden).
 
-- [ ] **Step 4: Datensatz schreiben**
+- [x] **Step 4: Datensatz schreiben**
 
 `src/data/bodies/mars-monde.ts` nach dem Muster von `moon.ts`: Quellenblock als Kommentar oben (URL, Abrufdatum, Epoche), darunter je Mond ein vollständiger `Body`. Danach `src/data/index.ts` um den Import erweitern und `ui/i18n/de.ts` um `body.phobos.name`, `body.phobos.description`, `body.deimos.name`, `body.deimos.description`.
 
-- [ ] **Step 5: Tests prüfen**
+- [x] **Step 5: Tests prüfen**
 
 Run: `npm test && npm run lint && npx tsc --noEmit`
 Erwartet: alles grün.
 
-- [ ] **Step 6: Sichtprüfung**
+- [x] **Step 6: Sichtprüfung**
 
 `npm run dev`, Preset „Schaubild", Kamera auf Mars heften, Zeitraffer rund 1 Tag/s: Phobos muss sichtbar schneller umlaufen als Deimos, beide nahezu in derselben Ebene — und diese Ebene muss zur Marsachse passen, nicht zur Ekliptik.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add src/data/bodies/mars-monde.ts src/data/index.ts src/data/index.test.ts src/ui/i18n/de.ts

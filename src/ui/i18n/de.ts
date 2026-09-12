@@ -69,6 +69,8 @@ export const de = {
   'body.uranus.name': 'Uranus',
   'body.neptune.name': 'Neptun',
   'body.moon.name': 'Mond',
+  'body.phobos.name': 'Phobos',
+  'body.deimos.name': 'Deimos',
   'panel.cinema': 'Kino-Modus',
   'cinema.start': 'Kino starten',
   'cinema.stop': 'Kino beenden',

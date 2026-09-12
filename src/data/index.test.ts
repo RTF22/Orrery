@@ -1,13 +1,18 @@
 import { describe, it, expect } from 'vitest';
 import { bodies, bodyIndex, getBody } from './index';
 import { poleVector, axialTiltDeg } from '../sim/frames';
+import { AU_KM } from '../sim/orbit';
+import { t, de, type Key } from '../ui/i18n';
 
 describe('Körperkatalog', () => {
-  it('enthält Sonne, acht Planeten und den Erdmond', () => {
-    expect(bodies).toHaveLength(10);
+  // Die Zahl der Monde wächst über Phase 3a hinweg; festgenagelt bleiben
+  // deshalb nur Stern und Planeten, dazu die namentlich erwarteten Monde.
+  it('enthält Sonne, acht Planeten und die bisherigen Monde', () => {
     expect(bodies.filter((b) => b.kind === 'planet')).toHaveLength(8);
     expect(bodies.filter((b) => b.kind === 'star')).toHaveLength(1);
-    expect(bodies.filter((b) => b.kind === 'moon')).toHaveLength(1);
+    expect(bodies.map((b) => b.id)).toEqual(
+      expect.arrayContaining(['moon', 'phobos', 'deimos']),
+    );
   });
 
   it('vergibt eindeutige Bezeichner', () => {
@@ -66,5 +71,52 @@ describe('Körperkatalog', () => {
     // Die Sonne ist der größte Körper im Katalog.
     const maxRadius = Math.max(...bodies.map((b) => b.physical.radiusKm));
     expect(getBody('sun').physical.radiusKm).toBe(maxRadius);
+  });
+});
+
+describe('Katalog-Invarianten', () => {
+  it('hat eindeutige IDs', () => {
+    const ids = bodies.map((b) => b.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('verweist nur auf existierende Mutterkörper', () => {
+    for (const body of bodies) {
+      if (body.parent === null) continue;
+      expect(bodyIndex[body.parent], `Mutterkörper von ${body.id}`).toBeDefined();
+    }
+  });
+
+  it('nutzt parentEquator nur, wo der Mutterkörper einen Pol hat', () => {
+    for (const body of bodies) {
+      if (body.orbit?.frame !== 'parentEquator') continue;
+      const mutter = body.parent === null ? undefined : bodyIndex[body.parent];
+      expect(mutter?.physical.pole, `Pol des Mutterkörpers von ${body.id}`).toBeDefined();
+    }
+  });
+
+  it('kennt für jeden Körper einen Namensschlüssel mit hinterlegtem Text', () => {
+    for (const body of bodies) {
+      // t() gibt für unbekannte Schlüssel `[schlüssel]` zurück — genau darauf
+      // wird geprüft. Ein Vergleich gegen den Schlüssel selbst wäre
+      // tautologisch, weil die eckigen Klammern ihn ohnehin verschieden machen.
+      expect(t(body.info.nameKey), body.id).toBe(de[body.info.nameKey as Key]);
+      expect(t(body.info.nameKey), body.id).not.toMatch(/^\[.*\]$/);
+    }
+  });
+
+  it('führt Phobos und Deimos in der Marsäquatorebene', () => {
+    for (const id of ['phobos', 'deimos']) {
+      const mond = bodyIndex[id];
+      expect(mond?.parent).toBe('mars');
+      expect(mond?.orbit?.frame).toBe('parentEquator');
+      expect(mond?.orbit?.i ?? 99).toBeLessThan(2);
+    }
+  });
+
+  it('trifft die bekannten Bahnradien der Marsmonde', () => {
+    // Kontrollrechnung der Quelle: große Halbachse zurück in Kilometer.
+    expect((bodyIndex['phobos']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(9376, -2);
+    expect((bodyIndex['deimos']?.orbit?.a ?? 0) * AU_KM).toBeCloseTo(23463, -2);
   });
 });
