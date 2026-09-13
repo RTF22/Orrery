@@ -269,6 +269,10 @@ describe('GLSL-Bausteine — vorhanden und mit den erwarteten Kernzeilen', () =>
   });
 
   it('SCHATTEN_GLSL_KOERPER_ANWENDUNG multipliziert Diffus/Spekular und färbt das Emissiv', () => {
+    // Skalar, nicht vec3: Alle Faktoren sind Skalare, ein Vektor würde nur
+    // eine Farbabhängigkeit vortäuschen, die es nicht gibt.
+    expect(SCHATTEN_GLSL_KOERPER_ANWENDUNG).toContain('float schattenFaktor = 1.0;');
+    expect(SCHATTEN_GLSL_KOERPER_ANWENDUNG).not.toContain('vec3 schattenFaktor');
     expect(SCHATTEN_GLSL_KOERPER_ANWENDUNG).toContain('reflectedLight.directDiffuse *= schattenFaktor;');
     expect(SCHATTEN_GLSL_KOERPER_ANWENDUNG).toContain('reflectedLight.directSpecular *= schattenFaktor;');
     expect(SCHATTEN_GLSL_KOERPER_ANWENDUNG).toContain('totalEmissiveRadiance *= fuellFarbe;');

@@ -291,7 +291,7 @@ varying vec3 vSchattenPos;
 ${SCHATTEN_GLSL_FUNKTIONEN}`;
 
 export const SCHATTEN_GLSL_KOERPER_ANWENDUNG = `
-vec3 schattenFaktor = vec3(1.0);
+float schattenFaktor = 1.0;
 vec3 fuellFarbe = vec3(1.0);
 for (int i = 0; i < 4; i++) {
   if (i >= uOkkluderAnzahl) break;
