@@ -54,5 +54,10 @@ export interface AppState {
   /** Nur Abweichungen vom Standard „sichtbar" — siehe toggleVisible in index.ts. */
   visible: Record<string, boolean>;
   quality: { tier: QualityTier };
-  ui: { hidden: boolean; panels: Record<string, boolean>; language: 'de' };
+  ui: {
+    hidden: boolean;
+    panels: Record<string, boolean>;
+    /** Muss mit `Sprache` in ui/i18n/index.ts übereinstimmen; i18n.test.ts prüft die Tabellen. */
+    language: 'de' | 'en';
+  };
 }

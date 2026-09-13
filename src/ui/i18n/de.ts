@@ -135,4 +135,12 @@ export const de = {
   'model.limits.text':
     'Keplerbahnen ohne gegenseitige Störungen. Volle Genauigkeit 1800 bis 2050.',
   'model.outOfRange': 'Außerhalb des Gültigkeitsfensters — Positionen ungenau.',
+  'language.de': 'Deutsch',
+  'language.en': 'English',
+  'language.switch': 'Sprache',
+  'shortcuts.language': 'Sprache umschalten',
+  'key.home': 'Pos1',
+  'key.space': 'Leertaste',
+  'key.arrows': '◀ ▶',
+  'unit.millionKm': 'Mio. km',
 } as const;
