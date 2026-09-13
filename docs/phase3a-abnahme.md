@@ -269,12 +269,75 @@ selbst mittelgrau sind (Enceladus-Karte: Median 115 von 255). Das betrifft
 alle Körper gleichermaßen und ist eine Frage des Standardwerts von
 `brightness`, nicht der Abstandsrechnung — siehe „Offene Punkte".
 
+## Nachtrag: Zielbelichtung und Albedo (13.09.2026)
+
+Seit dem vorigen Nachtrag sind drei Tasks abgeschlossen. Die Kamera belichtet
+jetzt auf ihr eigenes Ziel statt auf einen festen Bezug (`targetExposure` in
+`render/lighting.ts`, Belichtungsmesser mit Dämpfung im logarithmischen Raum
+in `render/exposure.ts`). Jeder Körper trägt eine geometrische Albedo als
+Katalogdatum (`PhysicalData.albedo`, 34 Körper, belegt aus NSSDC, JPL und
+Nature). Beim Laden normiert `render/bodies.ts` jede Textur auf diese Albedo
+(`render/albedo.ts`); Sonne, Sterne und die Beleuchtungsrechnung selbst
+bleiben unverändert.
+
+**Pixelwerte, Median (99. Perzentil in Klammern):**
+
+| Körper / Größe | vorher | nach Zielbelichtung (Task 3) | nach Albedo (Task 6, korrigiert) |
+|---|---:|---:|---:|
+| Erde, Median (p99) | 51 | 114,5 (163,0) | 187,0 (242,0) |
+| Pluto, Median (p99) | 43 | 92,0 (183,0) | 161,0 (231,0) |
+| Charon, Median | 23 | — | — (nicht neu gemessen) |
+| Enceladus, Median (p99) | 34 | — | 224,0 (237,0) |
+| Uranus, Median Mittellinie (p99) | 77–81 | — | 185–190 (213,0) |
+| Ringdurchflug, Anteil > 12 (p99 Bild) | 54,4 % (—) | — | 62,5 % (224,0) |
+| Uranusring `uTag` | 0,58 | — | — |
+
+Alle drei Schritte heben die Werte deutlich an, ohne die 250er-Schwelle zu
+reißen (höchster Wert: Erde mit 242,0). Charon wurde in diesem Plan nicht neu
+gemessen, weil Task 6 zur Kontrolle der Albedo-Normierung nur Erde, Pluto und
+Enceladus fotografiert hat.
+
+### Messung des Distanzausgleichs
+
+Offene Frage aus Abschnitt 5 des Entwurfs: Verträgt die Systemschau eine
+Senkung des Distanzausgleichs (`display.lightCompensation`, Standardwert
+0,85) auf den Kandidatenwert 0,7? Gemessen an der Szene „Systemblick" (Nr. 4)
+mit eingefrorener Simulationszeit (`cinema.elapsedSec` 20,12 s,
+`time.paused: true`, `cinema.running: false`, damit beide Aufnahmen exakt
+denselben Bildinhalt zeigen), Bahnlinien, Beschriftung und Marker aus:
+
+| Körper | Position im Bild | Maximum @0,85 | Median @0,85 | Maximum @0,7 | Median @0,7 |
+|---|---|---:|---:|---:|---:|
+| Neptun | (625, 42), 1 Bildpunkt | 181 | 181 | 136 | 136 |
+| Uranus | (417, 159), 2 Bildpunkte | 148 | 106,0 | 108 | 74,5 |
+
+Beide Körper füllen bei dieser Systemschau nur 1–2 Bildpunkte ohne trennbare
+Nachtseite, deshalb genügen Maximum und Median. Die Bildposition wurde über
+die Kameraprojektion der tatsächlichen Körperposition bestätigt, nicht nur
+optisch geschätzt (die Sonne desselben Bildes projiziert exakt auf die
+Bildmitte 640/400).
+
+Das Kriterium aus dem Entwurf (Neptun Maximum über 40, Median über 12) ist
+beim Kandidatenwert 0,7 mit großem Abstand erfüllt (136 gegenüber 40 bzw.
+12). **Empfehlung:** Der Distanzausgleich lässt sich auf 0,7 senken. Task 6
+maß mehrere 99. Perzentile nahe der 250er-Schwelle (Pluto 231, Enceladus 237,
+Erde 242); eine Senkung schafft dort Abstand, ohne die am weitesten
+entfernten Körper der Systemschau unsichtbar zu machen. Die Änderung des
+Standardwerts selbst und die Neuherleitung der Schranken in
+`lighting.test.ts` bleiben ein eigener, kleiner Folgetask (siehe „Offene
+Punkte").
+
+Dieser Task ändert keinen Code; der automatische Testlauf bleibt bei 720
+Tests.
+
 ## Offene Punkte
 
-- **Gesamtbelichtung.** Die volle Tagseite der Erde erreicht nur einen Median
-  von 51 von 255 (Nachtrag oben). Ob der Standardwert `brightness` 1 angehoben
-  wird, ist eine Gestaltungsentscheidung mit Blick auf Sonne, Bloom und den
-  Regler „Nachtseite", und wurde hier bewusst nicht mitentschieden.
+- **Distanzausgleich senken.** Der Nachtrag oben empfiehlt, den Standardwert
+  von `display.lightCompensation` (aktuell 0,85) auf 0,7 zu senken, weil
+  Task 6 mehrere 99. Perzentile nahe der 250er-Schwelle maß und die
+  Systemschau bei 0,7 die entferntesten Körper weiterhin deutlich zeigt. Die
+  Änderung des Werts selbst und die Neuherleitung der Schranken in
+  `lighting.test.ts` bleiben ein eigener, kleiner Folgetask.
 - **Sechs Körper ohne Textur** (fünf Uranusmonde, Deimos), begründet in
   `ASSETS.md`; die Ausweichfarbe trägt sie. Bleibt offen, bis eine amtliche
   Karte mit weniger als etwa 40 % Datenlücke auftaucht.
