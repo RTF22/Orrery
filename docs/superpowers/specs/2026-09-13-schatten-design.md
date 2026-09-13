@@ -57,9 +57,12 @@ Schatten sind in jeder Stufe an, gesteuert nur über den Schalter.
   β = asin(R / |c − p|), Winkelabstand γ zwischen Sonnenrichtung und
   (c − p) / |c − p|. Der unverdeckte Anteil f ∈ [0, 1] ist die Fläche der
   Sonnenscheibe (Radius α) außerhalb der Okkluderscheibe (Radius β) im
-  Abstand γ, geteilt durch die Sonnenfläche — die Kreisschnitt-Formel in
-  Kleinwinkelnäherung (α, β < 0,01 rad in jedem Fall, den der Katalog
-  kennt). Sonderfälle: γ ≥ α + β → 1; γ ≤ |α − β| und β ≥ α → 0; γ ≤ β − α
+  Abstand γ, geteilt durch die Sonnenfläche — die ebene Kreisschnitt-Formel in der
+  Tangentialebene der Sonnenrichtung. Sie setzt nur die Sonne als klein
+  voraus (α < 0,012 rad selbst bei Merkur); β darf groß sein (Phobos sieht
+  Mars unter 0,37 rad), denn nahe der Sonnenrichtung ist der Rand der
+  Okkluderkappe lokal ein Kreis vom Radius β, der Fehler ist von der
+  Ordnung α². Sonderfälle: γ ≥ α + β → 1; γ ≤ |α − β| und β ≥ α → 0; γ ≤ β − α
   ist nur mit β ≥ α möglich; β < α und γ ≤ α − β → 1 − (β/α)². Okkluder
   hinter dem Fragment (Skalarprodukt mit der Sonnenrichtung negativ) und
   das Fragment selbst (der eigene Körper ist nie Okkluder) zählen nicht.
@@ -83,7 +86,7 @@ Schatten sind in jeder Stufe an, gesteuert nur über den Schalter.
   mit (1 − f) zur Kernschattenfarbe des Okkluders hin gemischt,
   `emissive · mix(1, farbe, 1 − f)`. Bei Nachtseite 0 bleibt der
   verfinsterte Mond schwarz, wie physikalisch. Die Erde bekommt als einziger
-  Körper eine Farbe: lineares RGB (1,00 / 0,30 / 0,10), ein Gestaltungswert
+  Körper eine Farbe: lineares RGB (1,00 / 0,32 / 0,11), ein Gestaltungswert
   nahe einer Farbtemperatur von 2500 K, wie sie das durch die Erdatmosphäre
   gebrochene Sonnenuntergangslicht hat (Danjon-Skala L2–L3, „dunkelrot bis
   ziegelrot"). Körper ohne Eintrag färben neutral (1 / 1 / 1). Bei mehreren
@@ -156,7 +159,9 @@ deshalb den Zeitpunkt auf ±4 h und die Art (total) exakt.
 - Neuer Bahntyp `sichtlinie` in `ScenePath` (data/scenes.ts, Kamera in
   render/camera/cinema.ts): Die Kamera steht auf der Linie vom Blickziel
   (`lookAtId`) zum Standortkörper (`targetId`), `distanceInRadii`
-  Standortradien vor dem Standortkörper, und blickt auf ihn. `azimuthDeg`
+  Standortradien vor dem Standortkörper, und blickt auf den
+  Standortkörper — anders als bei den übrigen Bahntypen bestimmt `lookAtId`
+  hier nur die Linie, nicht das Blickziel. `azimuthDeg`
   und `elevationDeg` sind Versätze auf die Kugelkoordinaten dieser Linie, so
   wie bei den anderen Bahntypen additiv; `azimuthRateDegPerSec` läuft
   weiter. Damit sitzt die Kamera zwischen Erde und Mond dicht vor dem Mond
