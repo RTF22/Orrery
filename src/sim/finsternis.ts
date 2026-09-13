@@ -128,7 +128,7 @@ export function kernschattenLage(index: BodyIndex, jd: number): KernschattenLage
   };
 }
 
-/** abstand < kern + mond — der Mond berührt zumindest den Halbschatten-Kern, sprich: den Kernschatten. */
+/** abstand < kern + mond — der Mond berührt zumindest den Kernschatten. */
 export function istPartiell(l: KernschattenLage): boolean {
   return l.abstandKm < l.kernschattenKm + l.mondRadiusKm;
 }

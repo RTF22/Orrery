@@ -12,7 +12,17 @@ import { poleVector } from '../sim/frames';
  * sitzt in bodies.ts/rings.ts.
  */
 
-/** Höchstens vier Kugel-Okkluder je Körper (Entwurf §2, "Auswahl der Okkluder"). */
+/**
+ * Höchstens vier Kugel-Okkluder je Körper (Entwurf §2, "Auswahl der Okkluder").
+ *
+ * Das GLSL weiter unten in dieser Datei trägt dieselbe Zahl fest verdrahtet
+ * an drei Stellen (`uniform vec4 uOkkluder[4]`, `uniform vec3
+ * uOkkluderFarbe[4]` und die Schleife `for (int i = 0; i < 4; i++)` in
+ * `SCHATTEN_GLSL_KOERPER_PARS`/`SCHATTEN_GLSL_KOERPER_ANWENDUNG`) — eine
+ * Änderung hier muss dort von Hand nachgezogen werden (oder `${MAX_OKKLUDER}`
+ * in diese GLSL-Strings interpolieren; dann den GLSL-Text für den Wert 4
+ * byteidentisch halten und die Tests aus shadows/bodies/rings laufen lassen).
+ */
 export const MAX_OKKLUDER = 4;
 
 /** Ein Kugel-Okkluder mit dargestellter Mitte/Radius und Kernschattenfarbe. */
@@ -80,6 +90,10 @@ export function sonnenAnteil(alpha: number, beta: number, gamma: number): number
 /**
  * u in [0, 1] des Treffers eines Strahls (Start p, Richtung d) in der
  * Ringebene, sonst null. Alle Längen in derselben Einheit.
+ *
+ * Testbarer TS-Zwilling des Ring-Blocks in SCHATTEN_GLSL_KOERPER_ANWENDUNG
+ * weiter unten; hat wie ringHelligkeit in rings.ts bewusst keinen Aufrufer
+ * in Produktionscode.
  */
 export function ringTreffer(p: Vec3, d: Vec3, ring: RingOkkluder): number | null {
   const n = ring.normale;

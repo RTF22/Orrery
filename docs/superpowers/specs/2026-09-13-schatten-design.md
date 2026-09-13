@@ -106,8 +106,10 @@ Schatten sind in jeder Stufe an, gesteuert nur über den Schalter.
   Emissiv-Fülllicht aus 3a. Der Baustein wird nach
   `#include <lights_fragment_end>` eingefügt und multipliziert
   `reflectedLight.directDiffuse` und `directSpecular` mit dem Produkt der
-  Okkluderfaktoren; das Emissiv wird nach `#include <emissivemap_fragment>`
-  gefärbt. Weil die Szene genau ein Licht hat (das Punktlicht in scene.ts),
+  Okkluderfaktoren; im selben Baustein, ebenfalls nach
+  `#include <lights_fragment_end>`, wird auch das Emissiv gefärbt, wo
+  `totalEmissiveRadiance` noch die unveränderte Nachtseitenfüllung trägt.
+  Weil die Szene genau ein Licht hat (das Punktlicht in scene.ts),
   ist der Direktanteil insgesamt der Sonnenanteil. Uniforms:
   `uSonnenRichtung` (vec3, Einheitsvektor in Render-Koordinaten),
   `uSonnenWinkel` (float, rad), `uOkkluder[4]` (vec4: Mitte in
@@ -237,9 +239,14 @@ widerspräche dem Vorgehen des Katalogs.
   an gegen aus, Verfahren wie in `docs/phase3b-guertel-abnahme.md`):
   - Szene `mondfinsternis` zum Maximum: Die Mondscheibe verliert gegenüber
     „Schatten aus" im Median mehr als 80 % ihrer Helligkeit, und im Rest
-    dominiert Rot (R > 2 · B im Mittel der Scheibe). Halbwegs im Durchgang
-    ist der Halbschattenrand als stetiger Übergang messbar (kein Sprung
-    über mehr als 40 von 255 zwischen Nachbarpixeln längs des Randes).
+    dominiert Rot (R > 2 · B im Mittel der Scheibe). Helligkeit ist dabei
+    die Luma nach Rec. 709 (0,2126 R + 0,7152 G + 0,0722 B) im sRGB-Bild;
+    das Maximum der Farbkanäle taugt nicht als Maß, weil der Blutmond
+    (Abschnitt 2) den Rotkanal des Fülllichts per Entwurf ungedämpft lässt
+    (Entscheidung nach der Sichtprüfung Task 6, 13.09.2026). Halbwegs im
+    Durchgang ist der Halbschattenrand als stetiger Übergang messbar (kein
+    Sprung über mehr als 40 von 255 zwischen Nachbarpixeln längs des
+    Randes).
   - Szene `saturn-streiflicht`: ein zusammenhängendes dunkles Band auf dem
     Planeten in Ringebene (Ringschatten) und ein dunkler Sektor des Rings
     hinter dem Planeten (Planetenschatten), beide als Differenz > 30 von 255

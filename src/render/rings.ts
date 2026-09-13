@@ -265,14 +265,13 @@ const RING_FRAGMENT_SHADER = `
       : 1.0;
     float direkt = abs(dot(N, L)) * uTag * RECIPROCAL_PI; // beidseitig: ein Ring hat keine Rückseite
     float streu = uStreuung * pow(max(0.0, -dot(V, L)), uSchaerfe) * uTag * RECIPROCAL_PI;
-    // Der Schatten nimmt das Direktlicht ganz weg, von der Nachtseitenfuellung
+    // Der Schatten nimmt das Direktlicht ganz weg, von der Nachtseitenfüllung
     // bleibt uRestlicht stehen: Der Ring im Schatten steht dicht neben Saturns
     // beleuchteter Tagseite und wird von ihr angestrahlt (Planetenschein, wie
     // das aschgraue Mondlicht). Ohne diesen Rest sah der Sektor im Bild aus wie
     // ein Loch im Ring, durch dessen halbdurchsichtige Stellen die Sterne
     // schienen. Die Streuung bleibt ganz unbeschattet, damit der Ringdurchflug
-    // gleich bleibt. Begruendung und Messwerte: RING_SCHATTEN_RESTLICHT.
-    // (ASCII im Shader-Quelltext, Umlaute nur im TS-Kommentar oben.)
+    // gleich bleibt. Begründung und Messwerte: RING_SCHATTEN_RESTLICHT.
     gl_FragColor = vec4(ring.rgb * (direkt * f + uFuellung * uTag * mix(uRestlicht, 1.0, f) + streu), ring.a);
   }
 `;

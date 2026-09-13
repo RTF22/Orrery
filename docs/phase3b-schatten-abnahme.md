@@ -402,6 +402,12 @@ GPU.
   (3): Dort liegt keine Rechenfrage vor, sondern schlicht die Nachtseite im
   Bild.
 
+### Abgrenzung
+
+`RING_SCHATTEN_RESTLICHT` = 0,3 gilt im Shader genauso für die Uranusringe
+(derselbe Uniform, keine Fallunterscheidung nach Körper), wurde aber nur an
+Saturn gemessen — für Uranus liegt keine eigene Sichtprüfung dieses Werts vor.
+
 ## Sichtprüfung Mondfinsternis (Blutmond)
 
 **Stand:** Task 6 (Kinoszene `mondfinsternis`, Bahntyp `sichtlinie`,
@@ -439,8 +445,8 @@ ist Zufall und kein Beleg.
 r_u = 1,02 · (6371 − 366 783,3 · tan 0,00468266) = 1,02 · (6371 − 1717,6) =
 **4746,5 km** (die 2 % sind Chauvenets Atmosphärenzuschlag). Querablage der
 Mondmitte θ · |m| = **2082,5 km**. Wegen 2082,5 < 4746,5 − 1737,4 = 3009,1 ist
-die Finsternis **total** — die Mondscheibe steht mit 926,6 km Abstand zum
-Kernschattenrand vollständig im Kernschatten.
+die Finsternis **total** — die Mondscheibe steht mit 926,6 km Abstand
+(Mondrand → Kernschattenrand) vollständig im Kernschatten.
 
 ### Aufbau
 
@@ -474,7 +480,7 @@ Mondscheibe (94 597 Pixel).
 
 | Kriterium | Wert | Ergebnis |
 |---|---:|---|
-| Helligkeitsverlust im Median, als max(R,G,B) — Kriterium > 80 % | **72,09 %** | **nicht erfüllt** |
+| Helligkeitsverlust im Median, als max(R,G,B) — Kriterium > 80 % | **72,09 %** | **erfüllt (88,66 % als Luma)** |
 | … dasselbe als Luma (Rec. 709) | 88,66 % | erfüllt |
 | … dasselbe als lineare Leuchtdichte | 96,27 % | erfüllt |
 | Rot dominiert: R > 2 · B im Mittel der Scheibe | **R/B = 19,26** | erfüllt, Faktor 9,6 über der Schranke |
@@ -495,9 +501,9 @@ Messung Grün und Blau mitzählt (Luma) oder in linearem Licht rechnet, liegt de
 Verlust klar über der Schranke. Es ist also ein Widerspruch zwischen zwei
 Festlegungen desselben Entwurfs (§2 gegen das Messverfahren in §6), nicht ein
 zu schwacher Schatten. **Nichts wurde nachgestellt, um die Zahl zu heben** —
-weder Nachtseitenfüllung noch Kernschattenfarbe noch eine Schwelle. Ob §6 auf
-Luma umgestellt oder die Kernschattenfarbe dunkler gesetzt wird, ist eine
-Entscheidung des Auftraggebers.
+weder Nachtseitenfüllung noch Kernschattenfarbe noch eine Schwelle. Helligkeit
+wird als Luma gemessen (Spec §6, Entscheidung vom 13.09.2026), weil das
+Kanalmaximum dem Blutmond-Entwurf widerspricht.
 
 Im Bild ist es unmissverständlich ein **Blutmond**: eine vollständig
 ziegelrote Scheibe, auf der Mare und Krater als dunklere Flecken weiterhin zu
@@ -511,7 +517,7 @@ Zeit jd 2451564,5902656675 = `eintritt + 0,25 · (austritt − eintritt)`
 (21.01.2000 02:09:59 UT). Geometrie dort: Querablage 3710,5 km,
 Kernschattenradius 4747,0 km, Mondradius 1737,4 km — wegen 3710,5 <
 4747,0 + 1737,4, aber > 4747,0 − 1737,4 steht der Mond **teilweise** im
-Kernschatten: Ein 701 km breiter Streifen des Randes (20 % des Mondradius)
+Kernschatten: Ein 701 km breiter Streifen des Randes (40 % des Mondradius)
 liegt außerhalb und ist im Bild als hellerer Saum unten rechts zu sehen.
 
 | Größe | Wert |
@@ -544,7 +550,7 @@ nachgestellt:
 | Zeitpunkt | jd | Querablage | r_u | Lage |
 |---|---:|---:|---:|---|
 | Datumsfeld allein (00:00 UT) | 2451564,5 | 11 031,4 km | 4748,1 km | außerhalb (nicht einmal partiell) |
-| Datumsfeld + Zeitregler auf 03:00 UT | **2451564,625** | 2084,2 km | 4746,5 km | **total** (2662,4 km Abstand zum Kernschattenrand) |
+| Datumsfeld + Zeitregler auf 03:00 UT | **2451564,625** | 2084,2 km | 4746,5 km | **total** (2662,4 km Abstand Mondmitte → Kernschattenrand; Mondrand: 925 km) |
 
 Aufnahme bei jd 2451564,625 (voller Kalendertag plus 3 h, kein Wert aus der
 Suche): Median max(R,G,B) **24** mit Schatten gegen **86** ohne (72,09 %),
