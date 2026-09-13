@@ -27,6 +27,8 @@ export const mercury: Body = {
     // auf der eigenen (gegen die Ekliptik um 7° geneigten) Bahnebene.
     pole: { raDeg: 281.0103, decDeg: 61.4155 },
     rotationAtEpochDeg: 0,
+    // NSSDC Mercury Fact Sheet, Zeile „Geometric albedo", abgerufen 13.09.2026.
+    albedo: 0.142,
   },
   appearance: {
     textures: { albedo: 'textures/mercury/albedo.jpg' },

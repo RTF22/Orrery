@@ -8,6 +8,8 @@ import { createStarfield } from './starfield';
 import { createLabelOverlay } from './labels';
 import type { LabelEintrag } from './labels';
 import { createCameraController } from './camera/controller';
+import { createExposureMeter } from './exposure';
+import type { LightingSettings } from './lighting';
 import { scaledPositionAt } from '../sim/scale';
 import { bodies, bodyIndex } from '../data/index';
 import { AU_KM } from '../sim/orbit';
@@ -60,6 +62,12 @@ export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandl
   // die Szene braucht davon nur die Position (siehe camera/controller.ts).
   const kamera = createCameraController(ctx.camera);
 
+  // Die Kamera belichtet auf das Ziel (exposure.ts): Der Faktor geht auf die
+  // Bestrahlungsstärke — Punktlicht, Körper, Ringe — und bewusst nicht auf
+  // das Tonemapping. Sonne, Sterne, Bahnlinien und Bloom hängen nicht an
+  // brightness und bleiben deshalb unverändert.
+  const belichtung = createExposureMeter();
+
   return {
     update(jd, dt, state) {
       // Die Kamera selbst bleibt konstruktionsbedingt im Ursprung (siehe
@@ -67,6 +75,11 @@ export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandl
       // Kameraposition in Kilometern.
       const { x, y, z } = kamera.update(state, jd, dt, state.scale);
       const cameraKm = new THREE.Vector3(x, y, z);
+
+      const exposure = belichtung.update(state, jd, dt);
+      const belichtet: LightingSettings = {
+        ...state.display, brightness: state.display.brightness * exposure,
+      };
 
       if (state.scale !== letzterScale) {
         bahnen.rebuild(jd, state.scale);
@@ -76,7 +89,7 @@ export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandl
       // jeden Frame.
       bahnen.update(cameraKm, state.visible, state.display.orbits, jd, state.scale);
 
-      koerper.update(jd, state.scale, cameraKm, state.visible, state.display);
+      koerper.update(jd, state.scale, cameraKm, state.visible, belichtet);
 
       // Das Licht sitzt an der (kamerarelativen) Sonnenposition.
       const sonnenpositionKm = scaledPositionAt('sun', bodyIndex, jd, state.scale);
@@ -87,19 +100,20 @@ export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandl
       // kamerarelative Sonnenposition für die Vorwärtsstreuung (siehe
       // rings.ts) — dasselbe Punktlicht, das gerade eben positioniert wurde.
       ringe.update(
-        jd, state.scale, cameraKm, state.visible, state.display,
+        jd, state.scale, cameraKm, state.visible, belichtet,
         new THREE.Vector3(lichtRender.x, lichtRender.y, lichtRender.z),
       );
 
       // Kalibrierung: Bei 1 AE Abstand vom Licht soll die Bestrahlungsstärke
-      // exakt state.display.brightness betragen — unabhängig vom gewählten
+      // exakt die belichtete Helligkeit betragen — `brightness` mal
+      // Zielbelichtung, siehe exposure.ts — unabhängig vom gewählten
       // Abfallexponenten. Ohne diesen Faktor wäre „Helligkeit 1" von der
       // Render-Einheit (1 Einheit = 1000 km) abhängig: bei physikalisch
       // korrektem quadratischem Abfall und Planetenabständen in der
       // Größenordnung 10^5 Render-Einheiten bliebe jeder Körper mit
       // Helligkeit 1 vollständig unbeleuchtet.
-      licht.intensity = state.display.brightness * AU_EINHEITEN ** state.display.lightFalloff;
-      licht.decay = state.display.lightFalloff;
+      licht.intensity = belichtet.brightness * AU_EINHEITEN ** belichtet.lightFalloff;
+      licht.decay = belichtet.lightFalloff;
 
       // Die Meshes tragen die fertige kamerarelative Position und den
       // skalierten Radius bereits — das Overlay rechnet nichts doppelt.

@@ -1,11 +1,15 @@
 import { describe, it, expect, vi } from 'vitest';
 import * as THREE from 'three';
+import type { LightingSettings } from './lighting';
+import { exposureFor } from './exposure';
+import { SCALE_PRESETS } from '../sim/scale';
 
 // createBodyViews lädt beim Aufbau Texturen über THREE.TextureLoader, was in
 // der Node-Testumgebung (kein document) fehlschlagen würde — hier interessiert
 // nur die Bahnlinien-Verdrahtung, daher ein leerer Ersatz.
+const koerperUpdateSpion = vi.fn();
 vi.mock('./bodies', () => ({
-  createBodyViews: () => ({ meshes: new Map(), update: vi.fn() }),
+  createBodyViews: () => ({ meshes: new Map(), update: koerperUpdateSpion }),
 }));
 
 // Dieselbe Begründung wie bei createBodyViews: createRingViews lädt beim
@@ -28,6 +32,8 @@ vi.mock('./orbits', () => ({
 
 const { buildScene } = await import('./scene');
 const { DEFAULT_STATE } = await import('../store');
+const { AU_KM } = await import('../sim/orbit');
+const { kmToUnits } = await import('./units');
 
 /** buildScene reicht das Overlay nur an das (ersetzte) Label-Modul weiter. */
 const fakeOverlay = {} as HTMLElement;
@@ -75,5 +81,54 @@ describe('buildScene — Bahnlinien-Rebuild-Disziplin', () => {
     const geaendert = { ...DEFAULT_STATE, scale: { ...DEFAULT_STATE.scale, sizeScale: 99 } };
     szene.update(2451546.0, 0.016, geaendert);
     expect(rebuildSpion).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe('buildScene — die Kamera belichtet auf das Ziel', () => {
+  /** Die Lichteinstellungen, die der letzte Körper-Update-Aufruf bekommen hat. */
+  function letztesLicht(): LightingSettings {
+    const aufrufe = koerperUpdateSpion.mock.calls;
+    return aufrufe[aufrufe.length - 1]![4] as LightingSettings;
+  }
+
+  it('reicht bei Ziel Sonne die Helligkeit mal π an die Körper', () => {
+    koerperUpdateSpion.mockClear();
+    const szene = buildScene(fakeContext(), fakeOverlay);
+    szene.update(2451545.0, 0.016, DEFAULT_STATE);
+    // Standardziel ist die Sonne im Ursprung: Referenz 1 AE, Faktor π.
+    expect(letztesLicht().brightness).toBeCloseTo(DEFAULT_STATE.display.brightness * Math.PI, 10);
+    // Alles andere aus display kommt unverändert durch.
+    expect(letztesLicht().nightFill).toBe(DEFAULT_STATE.display.nightFill);
+    expect(letztesLicht().lightCompensation).toBe(DEFAULT_STATE.display.lightCompensation);
+  });
+
+  it('kalibriert das Punktlicht auf die belichtete Helligkeit', () => {
+    const ctx = fakeContext();
+    const szene = buildScene(ctx, fakeOverlay);
+    szene.update(2451545.0, 0.016, DEFAULT_STATE);
+    const licht = ctx.scene.children.find((o) => o instanceof THREE.PointLight) as THREE.PointLight;
+    const auEinheiten = kmToUnits(AU_KM);
+    const erwartet = DEFAULT_STATE.display.brightness * Math.PI
+      * auEinheiten ** DEFAULT_STATE.display.lightFalloff;
+    expect(licht.intensity).toBeCloseTo(erwartet, 6);
+  });
+
+  it('belichtet im ersten Frame direkt auf ein fernes Ziel und zieht danach gedämpft nach', () => {
+    koerperUpdateSpion.mockClear();
+    const szene = buildScene(fakeContext(), fakeOverlay);
+    const neptun = {
+      ...DEFAULT_STATE,
+      scale: { ...SCALE_PRESETS.realistisch, preset: 'realistisch' },
+      camera: { ...DEFAULT_STATE.camera, mode: 'attached' as const, targetId: 'neptune' },
+    };
+    szene.update(2451545.0, 0.016, neptun);
+    const soll = exposureFor(neptun, 2451545.0);
+    expect(letztesLicht().brightness).toBeCloseTo(neptun.display.brightness * soll, 10);
+
+    // Zurück zur Sonne: ein Frame später liegt der Wert zwischen beiden.
+    szene.update(2451545.0, 0.016, { ...neptun, camera: { ...neptun.camera, targetId: 'sun' } });
+    const dazwischen = letztesLicht().brightness;
+    expect(dazwischen).toBeLessThan(neptun.display.brightness * soll);
+    expect(dazwischen).toBeGreaterThan(neptun.display.brightness * Math.PI);
   });
 });

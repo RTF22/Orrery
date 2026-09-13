@@ -79,6 +79,10 @@ export const zwergplaneten: readonly Body[] = [
       // deckungsgleich mit SBDBs eigenem phys_par-Eintrag (291,421°/66,758°).
       pole: { raDeg: 291.418, decDeg: 66.764 },
       rotationAtEpochDeg: 0,
+      // JPL SBDB, sstr=1, phys-par=1, Parameter „albedo" = 0,090 ± 0,003,
+      // Referenz dort: Li et al. (2006), Icarus 182, 143-160, V-Band,
+      // abgerufen 13.09.2026.
+      albedo: 0.090,
     },
     appearance: {
       // Ausweichfarbe für die Ladezeit der Textur (unten) und für den
@@ -130,6 +134,10 @@ export const zwergplaneten: readonly Body[] = [
       // Bahnpol) ist publiziert. Hier ersatzweise die eigene Bahnnormale.
       pole: { raDeg: 296.9706, decDeg: 25.9491 },
       rotationAtEpochDeg: 0,
+      // Sicardy et al. (2011), Nature 478, 493, doi 10.1038/nature10550:
+      // p_V = 0,96 (+0,09/−0,04) aus der Sternbedeckung vom 06.11.2010 —
+      // die höchste Albedo im gesamten Katalog. Abgerufen/bestätigt 13.09.2026.
+      albedo: 0.96,
     },
     appearance: {
       // Ausweichfarbe für die Ladezeit der Textur (unten) und für den
@@ -186,6 +194,11 @@ export const zwergplaneten: readonly Body[] = [
       // beide liegen nur 1,2° auseinander.
       pole: { raDeg: 282.6, decDeg: -13.0 },
       rotationAtEpochDeg: 0,
+      // Ortiz et al. (2017), Nature 550, 219, arXiv:2006.03113: p_V = 0,51 ±
+      // 0,02 aus der Sternbedeckung vom 21.01.2017 — bestätigt 13.09.2026.
+      // Frühere, thermale Bestimmungen streuen deutlich höher (0,7-0,8, s.
+      // Spec, Abschnitt 7); der Okkultationswert gilt als der genauere.
+      albedo: 0.51,
     },
     appearance: {
       // Ausweichfarbe für die Ladezeit der Textur (unten) und für den
@@ -235,6 +248,10 @@ export const zwergplaneten: readonly Body[] = [
       // Bahnnormale.
       pole: { raDeg: 317.9202, decDeg: 50.0297 },
       rotationAtEpochDeg: 0,
+      // Ortiz et al. (2012), Nature 491, 566, doi 10.1038/nature11597:
+      // p_V = 0,77 ± 0,03 aus der Sternbedeckung vom 23.04.2011. Bestätigt
+      // 13.09.2026.
+      albedo: 0.77,
     },
     appearance: {
       // Ausweichfarbe für die Ladezeit der Textur (unten) und für den

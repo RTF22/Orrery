@@ -26,6 +26,18 @@ export interface PhysicalData {
   pole: { raDeg: number; decDeg: number };
   /** Rotationsphase zur Epoche J2000 in Grad. */
   rotationAtEpochDeg: number;
+  /**
+   * Geometrische Albedo im V-Band, dimensionslos. Quelle je Datensatz im
+   * Kommentar. Sie wird in render/bodies.ts als Normalalbedo der
+   * Lambert-Fläche verwendet: Die Albedo-Textur wird beim Laden so
+   * skaliert, dass ihre mittlere lineare Reflexion diesem Wert entspricht —
+   * die Karten sind kontrastnormierte Mosaike, keine Reflexionskarten. Die
+   * geometrische Albedo enthält den Oppositionseffekt und kann über 1
+   * liegen; sie wird nicht abgeschnitten (dokumentierte Vereinfachung, siehe
+   * docs/superpowers/specs/2026-09-13-zielbelichtung-albedo-design.md,
+   * Abschnitt 4.1). Die Sonne trägt das Feld nicht — sie leuchtet selbst.
+   */
+  albedo?: number;
 }
 
 export interface Appearance {

@@ -161,6 +161,9 @@ export const jupiterMonde: readonly Body[] = [
       // Wie bei allen Körpern dieses Katalogs bleibt die Rotationsphase zur
       // Epoche bei 0 (siehe mars-monde.ts für die Begründung).
       rotationAtEpochDeg: 0,
+      // NSSDC Jovian Satellite Fact Sheet, Zeile „Visual geometric albedo",
+      // abgerufen 13.09.2026.
+      albedo: 0.62,
     },
     appearance: {
       textures: { albedo: 'textures/io/albedo.jpg' },
@@ -190,6 +193,9 @@ export const jupiterMonde: readonly Body[] = [
       rotationPeriodH: 85.22835,
       pole: { raDeg: 268.08, decDeg: 64.51 },
       rotationAtEpochDeg: 0,
+      // NSSDC Jovian Satellite Fact Sheet, Zeile „Visual geometric albedo",
+      // abgerufen 13.09.2026.
+      albedo: 0.68,
     },
     appearance: {
       textures: { albedo: 'textures/europa/albedo.jpg' },
@@ -221,6 +227,9 @@ export const jupiterMonde: readonly Body[] = [
       rotationPeriodH: 171.70927,
       pole: { raDeg: 268.20, decDeg: 64.57 },
       rotationAtEpochDeg: 0,
+      // NSSDC Jovian Satellite Fact Sheet, Zeile „Visual geometric albedo",
+      // abgerufen 13.09.2026.
+      albedo: 0.44,
     },
     appearance: {
       textures: { albedo: 'textures/ganymede/albedo.jpg' },
@@ -250,6 +259,9 @@ export const jupiterMonde: readonly Body[] = [
       rotationPeriodH: 400.53643,
       pole: { raDeg: 268.72, decDeg: 64.83 },
       rotationAtEpochDeg: 0,
+      // NSSDC Jovian Satellite Fact Sheet, Zeile „Visual geometric albedo",
+      // abgerufen 13.09.2026.
+      albedo: 0.19,
     },
     appearance: {
       textures: { albedo: 'textures/callisto/albedo.jpg' },

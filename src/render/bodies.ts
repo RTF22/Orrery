@@ -9,6 +9,7 @@ import { kmToUnits, worldToRender } from './units';
 import { BLOOM_LAYER } from './postfx';
 import { bodyLighting } from './lighting';
 import type { LightingSettings } from './lighting';
+import { albedoFaktor, farbMittelLinear, mittlereReflexion } from './albedo';
 
 /** Untergrenze, damit Geometrie nie auf null kollabiert. */
 export const MIN_RADIUS_UNITS = 1e-4;
@@ -52,10 +53,37 @@ type KoerperMaterial = THREE.MeshBasicMaterial | THREE.MeshStandardMaterial;
  * mit der Ausweichfarbe multiplizieren — bei der Erde `#2a6fdb`, linear
  * also (0,02 | 0,16 | 0,71): Der Rotkanal der Textur fiele auf zwei
  * Prozent, und der Planet wäre selbst auf der Tagseite fast schwarz.
+ *
+ * `albedoFaktor` normiert die Reflexion auf die Katalog-Albedo
+ * (physical.albedo): vor dem Laden aus der Ausweichfarbe, danach aus dem
+ * gemessenen Mittel der Textur — siehe albedo.ts. Er geht auf die
+ * Materialfarbe und auf das Nachtseiten-Emissiv, damit die Nachtseite
+ * derselbe Bruchteil der Tagseite bleibt.
  */
 interface KoerperEintrag {
   material: KoerperMaterial;
   basisFarbe: THREE.Color;
+  albedoFaktor: number;
+}
+
+/** Messformat der Texturauswertung — dasselbe wie in scripts/textur-mittel.py. */
+const MESS_BREITE = 256;
+const MESS_HOEHE = 128;
+
+/**
+ * Mittlere lineare Reflexion der geladenen Textur, über ein verkleinertes
+ * Canvas. `null`, wenn kein 2D-Kontext zu haben ist — dann bleibt der
+ * Faktor aus der Ausweichfarbe stehen.
+ */
+function texturMittelLinear(bild: CanvasImageSource): number | null {
+  const canvas = document.createElement('canvas');
+  canvas.width = MESS_BREITE;
+  canvas.height = MESS_HOEHE;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  if (ctx === null) return null;
+  ctx.drawImage(bild, 0, 0, MESS_BREITE, MESS_HOEHE);
+  const { data } = ctx.getImageData(0, 0, MESS_BREITE, MESS_HOEHE);
+  return mittlereReflexion(data, MESS_BREITE, MESS_HOEHE);
 }
 
 /**
@@ -68,7 +96,9 @@ interface KoerperEintrag {
  * Dieselbe Textur dient als `emissiveMap`: Das Fülllicht der Nachtseite
  * zeigt damit die Oberfläche selbst und nicht eine flache Einheitsfarbe.
  */
-function ladeAlbedo(lader: THREE.TextureLoader, pfad: string, eintrag: KoerperEintrag): void {
+function ladeAlbedo(
+  lader: THREE.TextureLoader, pfad: string, eintrag: KoerperEintrag, albedo: number | undefined,
+): void {
   // Körper ohne belegte Textur (siehe ASSETS.md für die dokumentierten
   // Lücken) tragen absichtlich einen leeren Pfad. Ohne diese Abfrage würde
   // TextureLoader den leeren String gegen die Dokument-URL auflösen und pro
@@ -86,6 +116,11 @@ function ladeAlbedo(lader: THREE.TextureLoader, pfad: string, eintrag: KoerperEi
         material.emissive.setRGB(1, 1, 1);
       }
       eintrag.basisFarbe.setRGB(1, 1, 1);
+      // Die Karte ist ein kontrastnormiertes Mosaik — erst der Faktor macht
+      // aus ihrem Mittel die Albedo des Körpers (siehe albedo.ts).
+      eintrag.albedoFaktor = albedoFaktor(
+        albedo, texturMittelLinear(textur.image as CanvasImageSource),
+      );
       material.needsUpdate = true;
     },
     undefined,
@@ -109,9 +144,15 @@ export function createBodyViews(scene: THREE.Scene): BodyViews {
         // Das Fülllicht der Nachtseite; die Stärke setzt update pro Frame.
         emissive: fallbackFarbe.clone(), emissiveIntensity: 0,
       });
-    const eintrag: KoerperEintrag = { material, basisFarbe: fallbackFarbe.clone() };
+    const eintrag: KoerperEintrag = {
+      material,
+      basisFarbe: fallbackFarbe.clone(),
+      // Bis die Textur steht (und dauerhaft bei Körpern ohne Textur): die
+      // Ausweichfarbe so skalieren, dass ihr Mittel der Albedo entspricht.
+      albedoFaktor: albedoFaktor(body.physical.albedo, farbMittelLinear(body.appearance.color)),
+    };
     eintraege.set(body.id, eintrag);
-    ladeAlbedo(lader, body.appearance.textures.albedo, eintrag);
+    ladeAlbedo(lader, body.appearance.textures.albedo, eintrag, body.physical.albedo);
 
     // Einheitskugel; die tatsächliche Größe kommt über scale.
     const mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 32), material);
@@ -147,10 +188,12 @@ export function createBodyViews(scene: THREE.Scene): BodyViews {
         if (eintrag !== undefined && body.kind !== 'star') {
           const sonnenabstandKm = Math.sqrt(weltKm.x ** 2 + weltKm.y ** 2 + weltKm.z ** 2);
           const l = bodyLighting(sonnenabstandKm, licht);
-          eintrag.material.color.copy(eintrag.basisFarbe).multiplyScalar(l.colorGain);
+          eintrag.material.color.copy(eintrag.basisFarbe)
+            .multiplyScalar(l.colorGain * eintrag.albedoFaktor);
           if (eintrag.material instanceof THREE.MeshStandardMaterial) {
-            eintrag.material.emissiveIntensity = l.emissiveIntensity;
+            eintrag.material.emissiveIntensity = l.emissiveIntensity * eintrag.albedoFaktor;
           }
+          mesh.userData['albedoFaktor'] = eintrag.albedoFaktor;
         }
 
         // Ausrichtung: Pol zuerst, dann die Eigenrotation um genau diese Achse.

@@ -201,6 +201,9 @@ export const saturnMonde: readonly Body[] = [
       rotationPeriodH: 22.61813,
       pole: { raDeg: 40.66, decDeg: 83.52 },
       rotationAtEpochDeg: 0,
+      // NSSDC Saturnian Satellite Fact Sheet, Zeile „Visual geometric
+      // albedo", abgerufen 13.09.2026.
+      albedo: 0.6,
     },
     appearance: {
       textures: { albedo: 'textures/mimas/albedo.jpg' },
@@ -236,6 +239,9 @@ export const saturnMonde: readonly Body[] = [
       rotationPeriodH: 32.88523,
       pole: { raDeg: 40.66, decDeg: 83.52 },
       rotationAtEpochDeg: 0,
+      // NSSDC Saturnian Satellite Fact Sheet, Zeile „Visual geometric
+      // albedo", abgerufen 13.09.2026 — der hellste Körper des Katalogs.
+      albedo: 1.0,
     },
     appearance: {
       textures: { albedo: 'textures/enceladus/albedo.jpg' },
@@ -271,6 +277,9 @@ export const saturnMonde: readonly Body[] = [
       rotationPeriodH: 45.30725,
       pole: { raDeg: 40.66, decDeg: 83.52 },
       rotationAtEpochDeg: 0,
+      // NSSDC Saturnian Satellite Fact Sheet, Zeile „Visual geometric
+      // albedo", abgerufen 13.09.2026.
+      albedo: 0.8,
     },
     appearance: {
       textures: { albedo: 'textures/tethys/albedo.jpg' },
@@ -303,6 +312,9 @@ export const saturnMonde: readonly Body[] = [
       rotationPeriodH: 65.68598,
       pole: { raDeg: 40.66, decDeg: 83.52 },
       rotationAtEpochDeg: 0,
+      // NSSDC Saturnian Satellite Fact Sheet, Zeile „Visual geometric
+      // albedo", abgerufen 13.09.2026.
+      albedo: 0.7,
     },
     appearance: {
       textures: { albedo: 'textures/dione/albedo.jpg' },
@@ -333,6 +345,9 @@ export const saturnMonde: readonly Body[] = [
       rotationPeriodH: 108.42007,
       pole: { raDeg: 40.38, decDeg: 83.55 },
       rotationAtEpochDeg: 0,
+      // NSSDC Saturnian Satellite Fact Sheet, Zeile „Visual geometric
+      // albedo", abgerufen 13.09.2026.
+      albedo: 0.7,
     },
     appearance: {
       textures: { albedo: 'textures/rhea/albedo.jpg' },
@@ -364,6 +379,9 @@ export const saturnMonde: readonly Body[] = [
       rotationPeriodH: 382.69075,
       pole: { raDeg: 39.4827, decDeg: 83.4279 },
       rotationAtEpochDeg: 0,
+      // NSSDC Saturnian Satellite Fact Sheet, Zeile „Visual geometric
+      // albedo", abgerufen 13.09.2026.
+      albedo: 0.22,
     },
     appearance: {
       textures: { albedo: 'textures/titan/albedo.jpg' },
@@ -402,6 +420,13 @@ export const saturnMonde: readonly Body[] = [
       rotationPeriodH: 1903.94405,
       pole: { raDeg: 318.16, decDeg: 75.03 },
       rotationAtEpochDeg: 0,
+      // NSSDC Saturnian Satellite Fact Sheet, Zeile „Visual geometric
+      // albedo", abgerufen 13.09.2026: „0.05 / 0.5" für Vorder-/Rückseite
+      // (die extreme Dichotomie aus Cassini Regio gegen die helle
+      // Rückseite, s. o.). Der Katalog trägt hier das arithmetische Mittel
+      // (0,275) als einzelnen Skalar für die Belichtung; die tatsächliche
+      // Zweiteilung zeigt weiterhin nur die Textur, nicht dieser Wert.
+      albedo: 0.275,
     },
     appearance: {
       textures: { albedo: 'textures/iapetus/albedo.jpg' },

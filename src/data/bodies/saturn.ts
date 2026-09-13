@@ -29,6 +29,8 @@ export const saturn: Body = {
     // der Ringebene.
     pole: { raDeg: 40.589, decDeg: 83.537 },
     rotationAtEpochDeg: 0,
+    // NSSDC Saturn Fact Sheet, Zeile „Geometric albedo", abgerufen 13.09.2026.
+    albedo: 0.499,
   },
   appearance: {
     textures: { albedo: 'textures/saturn/albedo.jpg' },

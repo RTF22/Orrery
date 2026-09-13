@@ -269,12 +269,114 @@ selbst mittelgrau sind (Enceladus-Karte: Median 115 von 255). Das betrifft
 alle Körper gleichermaßen und ist eine Frage des Standardwerts von
 `brightness`, nicht der Abstandsrechnung — siehe „Offene Punkte".
 
+## Nachtrag: Zielbelichtung und Albedo (13.09.2026)
+
+Seit dem vorigen Nachtrag sind drei Tasks abgeschlossen. Die Kamera belichtet
+jetzt auf ihr eigenes Ziel statt auf einen festen Bezug (`targetExposure` in
+`render/lighting.ts`, Belichtungsmesser mit Dämpfung im logarithmischen Raum
+in `render/exposure.ts`). Jeder Körper trägt eine geometrische Albedo als
+Katalogdatum (`PhysicalData.albedo`, 34 Körper, belegt aus NSSDC, JPL und
+Nature). Beim Laden normiert `render/bodies.ts` jede Textur auf diese Albedo
+(`render/albedo.ts`); Sonne, Sterne und die Beleuchtungsrechnung selbst
+bleiben unverändert.
+
+**Pixelwerte, Median (99. Perzentil in Klammern):**
+
+| Körper / Größe | vorher | nach Zielbelichtung (Task 3) | nach Albedo (Task 6, korrigiert) |
+|---|---:|---:|---:|
+| Erde, Median (p99) | 51 | 114,5 (163,0) | 187,0 (242,0) |
+| Pluto, Median (p99) | 43 | 92,0 (183,0) | 161,0 (231,0) |
+| Charon, Median | 23 | — | — (nicht neu gemessen) |
+| Enceladus, Median (p99) | 34 | — | 224,0 (237,0) |
+| Uranus, Median Mittellinie (p99) | 77–81 | — | 185–190 (213,0) |
+| Ringdurchflug, Anteil > 12 (p99 Bild) | 54,4 % (—) | — | 62,5 % (224,0) |
+| Uranusring `uTag` | 0,58 | — | — |
+
+Alle drei Schritte heben die Werte deutlich an, ohne die 250er-Schwelle zu
+reißen (höchster Wert: Erde mit 242,0). Charon wurde in diesem Plan nicht neu
+gemessen, weil Task 6 zur Kontrolle der Albedo-Normierung nur Erde, Pluto und
+Enceladus fotografiert hat.
+
+### Messung des Distanzausgleichs
+
+Offene Frage aus Abschnitt 5 des Entwurfs: Verträgt die Systemschau eine
+Senkung des Distanzausgleichs (`display.lightCompensation`, Standardwert
+0,85) auf den Kandidatenwert 0,7? Gemessen an der Szene „Systemblick" (Nr. 4)
+mit eingefrorener Simulationszeit (`cinema.elapsedSec` 20,12 s,
+`time.paused: true`, `cinema.running: false`, damit beide Aufnahmen exakt
+denselben Bildinhalt zeigen), Bahnlinien, Beschriftung und Marker aus:
+
+| Körper | Position im Bild | Maximum @0,85 | Median @0,85 | Maximum @0,7 | Median @0,7 |
+|---|---|---:|---:|---:|---:|
+| Neptun | (625, 42), 1 Bildpunkt | 181 | 181 | 136 | 136 |
+| Uranus | (417, 159), 2 Bildpunkte | 148 | 106,0 | 108 | 74,5 |
+
+Beide Körper füllen bei dieser Systemschau nur 1–2 Bildpunkte ohne trennbare
+Nachtseite, deshalb genügen Maximum und Median. Die Bildposition wurde über
+die Kameraprojektion der tatsächlichen Körperposition bestätigt, nicht nur
+optisch geschätzt (die Sonne desselben Bildes projiziert exakt auf die
+Bildmitte 640/400).
+
+Das Kriterium aus dem Entwurf (Neptun Maximum über 40, Median über 12) ist
+beim Kandidatenwert 0,7 mit großem Abstand erfüllt (Neptun 136/136, Uranus
+108/74,5 gegenüber 40 bzw. 12).
+
+Der Distanzausgleich wirkt dabei nur auf das Verhältnis der Körper
+zueinander, nicht auf die Helligkeit des Körpers, auf den die Kamera gerade
+belichtet: `targetExposure` in `render/lighting.ts` setzt die Belichtung so,
+dass am Ziel stets `EXPOSURE_REFERENCE · π` ankommt — der Faktor `E^(1-c)`
+aus dem Distanzausgleich kürzt sich gegen seinen eigenen Kehrwert in der
+Belichtung heraus. Deshalb ändert `lightCompensation` weder den Median noch
+das 99. Perzentil von Erde, Pluto oder Enceladus in ihren eigenen Nahszenen
+aus Task 6 (dort ist jeweils der gezeigte Körper selbst das Belichtungsziel);
+diese Werte taugen nicht als Argument für eine Senkung. **Empfehlung:** Der
+Distanzausgleich lässt sich auf 0,7 senken, allein gestützt auf das
+Systemschau-Kriterium oben — Neptun und Uranus bleiben bei diesem Wert
+deutlich sichtbar, während der Helligkeitsunterschied zwischen nahen und
+fernen Körpern in solchen Weitwinkelblicken etwas physikalischer ausfällt.
+Die Wahl bleibt eine Gestaltungsentscheidung über diese Staffelung, keine
+durch Ausbrennen erzwungene Korrektur. Die Änderung des Standardwerts selbst
+und die Neuherleitung der Schranken in `lighting.test.ts` bleiben ein
+eigener, kleiner Folgetask (siehe „Offene Punkte").
+
+Dieser Task ändert keinen Code; der automatische Testlauf bleibt bei 720
+Tests.
+
+### Folgetask: Standardwert gesenkt (13.09.2026)
+
+Die Empfehlung ist umgesetzt: `display.lightCompensation` steht jetzt
+standardmäßig auf 0,7 (`store/index.ts`). Der Regler bleibt, die
+Serialisierung ändert sich nicht. Die Bildwerte der Systemschau bei 0,7
+stehen in der Tabelle oben (Neptun 136, Uranus 108 bzw. 74,5); eine neue
+Aufnahme war nicht nötig, weil sich am Renderweg nichts geändert hat und die
+Messung denselben Wert über den Regler gesetzt hatte.
+
+Die Regressionsschranken in `render/lighting.test.ts` („Standardeinstellung —
+kein Körper bleibt schwarz") waren auf 0,85 kalibriert (Tagseite über 30 %,
+Nachtseite über 5 % der Helligkeit, Eris ausgenommen) und sind neu
+hergeleitet. Seit der Zielbelichtung ist `dayLevel` bei Helligkeit 1 genau
+die Strahldichte einer weißen Fläche in der Systemschau, der einzigen
+Ansicht, in der der Ausgleich über Sichtbarkeit entscheidet. Das Kriterium
+des Entwurfs (40 bzw. 12 von 255) entspricht dort nach ACES und sRGB linear
+rund 0,039 bzw. 0,013. Werte bei 0,7, Preset „Realistisch", J2000:
+
+| Körper | Abstand [AE] | Tagseite | Nachtseite |
+|---|---:|---:|---:|
+| Ceres | 2,55 | 0,5708 | 0,1427 |
+| Neptun | 30,12 | 0,1296 | 0,0324 |
+| Pluto | 30,20 | 0,1294 | 0,0324 |
+| Haumea / Makemake | 51,4 | 0,0941 | 0,0235 |
+| Eris | 97,23 | 0,0642 | 0,0160 |
+
+Neue Schranken: Tagseite über 0,06, Nachtseite über 0,015 der Helligkeit,
+bei allen drei Maßstabs-Presets. Sie liegen über dem Kriterium des Entwurfs
+und 7 % unter Eris; damit prüft der Block jetzt **alle** Körper, die
+Ausnahme für Eris entfällt. Ein versehentlich gesenkter Ausgleich fiele auf
+(0,65 drückt Eris auf 0,041). Ein weiterer Test hält den Standardwert selbst
+mit Verweis auf diese Messung fest. Testlauf: 721 Tests.
+
 ## Offene Punkte
 
-- **Gesamtbelichtung.** Die volle Tagseite der Erde erreicht nur einen Median
-  von 51 von 255 (Nachtrag oben). Ob der Standardwert `brightness` 1 angehoben
-  wird, ist eine Gestaltungsentscheidung mit Blick auf Sonne, Bloom und den
-  Regler „Nachtseite", und wurde hier bewusst nicht mitentschieden.
 - **Sechs Körper ohne Textur** (fünf Uranusmonde, Deimos), begründet in
   `ASSETS.md`; die Ausweichfarbe trägt sie. Bleibt offen, bis eine amtliche
   Karte mit weniger als etwa 40 % Datenlücke auftaucht.

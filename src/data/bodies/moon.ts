@@ -77,6 +77,8 @@ export const moon: Body = {
     // Seiten): 5,145° + 1,5424° ≈ 6,68°.
     pole: { raDeg: 266.8577, decDeg: 65.6411 },
     rotationAtEpochDeg: 0,
+    // NSSDC Moon Fact Sheet, Zeile „Geometric albedo", abgerufen 13.09.2026.
+    albedo: 0.12,
   },
   appearance: {
     textures: { albedo: 'textures/moon/albedo.jpg' },
