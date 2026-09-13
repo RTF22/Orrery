@@ -574,3 +574,38 @@ Datumsfeld und Zeitregler nachstellen, ohne die Kinoszene zu benutzen.
   (`renderer.toneMappingExposure` steht in beiden Zuständen auf 1,0). Der
   gemessene Unterschied ist also der Schatten selbst, nicht eine nachgeführte
   Blende.
+
+## Nachtrag: Folgearbeit (13.09.2026, abends)
+
+Die in der Abnahme bewusst offen gelassenen Punkte, erledigt auf dem Branch
+`phase3-folgearbeit` (Plan `docs/superpowers/plans/2026-09-13-phase3-folgearbeit.md`):
+
+- **`schattenFaktor` als Skalar** (`render/shadows.ts`, Commit 2cf9246): Der
+  Faktor im Körper-Shader ist jetzt `float` statt `vec3`; alle Multiplikanden
+  waren ohnehin Skalare. Kontrollbild in der Finsternis-Szene: 72 abweichende
+  Pixel zwischen den Aufnahmen vor und nach der Änderung — bei einem
+  Grundrauschen von 679 Pixeln zwischen zwei Seitenladungen mit identischem
+  Code und 0 Pixeln innerhalb derselben Ladung. Die Änderung ist bildwirkungsfrei.
+  Messhinweis: `quality.tier` wird in den ersten Sekunden nach dem Laden
+  automatisch eingestuft (`app/quality.ts`) und ändert die Pixeldichte; für
+  Vergleiche über Seitenladungen hinweg vorher auf `'high'` festsetzen.
+- **Zeitsprung beim Start auf der Finsternis-Szene** (`app/cinema.ts`, Commit
+  a48ed55): Der Sprung feuert jetzt bei jedem Szenenbeginn (`szenenBeginn`:
+  Nummernwechsel oder `elapsedSec` 0 vor dem Tick), also auch an
+  Playlist-Position 0 und nach einem Neustart auf der Szene; der Wiederanlauf
+  nach Ruhe springt weiterhin nicht. Fünf neue Tests.
+- **Vergleichstest `sonnenAnteil`** (`render/shadows.glsl-zwilling.test.ts`,
+  Commit 120ea90): Der GLSL-Rumpf wird mechanisch nach JavaScript übersetzt und
+  auf einem Raster aus 24 Radienpaaren × 61 Abständen sowie an den Fallgrenzen
+  gegen die TS-Fassung gerechnet (Toleranz 1e-9 bzw. 1e-12). Eine
+  Gegenprobe mit verstelltem Shader lässt den Test fallen.
+- **Szenenabstände geprüft, unverändert belassen.** `saturn-streiflicht`: Bei
+  5 Radien (Ist) 75 617 Pixel Schattendifferenz mit deutlichem
+  Ringschattenband; bei 3,5 Radien ist die Kugel an drei Seiten angeschnitten,
+  bei 2,5 Radien füllt sie das Bild ohne Ringe. `galileisches-schattenspiel`:
+  bei 55, 30 und 15 Radien je 0 Schattenpixel in der Szene, weil zum
+  Aufnahmezeitpunkt kein Mond vor der Sonne stand; ein berechneter
+  Doppeltransit (Europa und Ganymed, jd 2451552,12 in Schaubild-Geometrie)
+  wurde nicht mehr vermessen. Entscheidung: Die Schattensichtbarkeit dieser
+  Szene wird nicht weiterverfolgt, beide Szenen bleiben, wie sie sind.
+- Hildas und Trojaner (3b-1, Task 4) entfallen endgültig.
