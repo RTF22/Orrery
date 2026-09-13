@@ -203,11 +203,14 @@ const RING_VERTEX_SHADER = `
 // Planetenschatten auf dem Ring (Phase 3b-2, Entwurf §2 „Ring-Shader"):
 // `uPlanetOkkluder` trägt Mitte (xyz) und dargestellten Radius (w) des
 // Ringträgers in Render-Einheiten, kamerarelativ — dasselbe Bezugssystem, in
-// dem vWeltPos steht. Der Faktor f sitzt allein auf `direkt`: `uFuellung` ist
-// die künstlerische Nachtseitenfüllung und `streu` die Vorwärtsstreuung, die
-// im Kernschatten physikalisch zwar auch fort wäre, aber bereits selbst ein
-// Gestaltungswert ist — sie unangetastet zu lassen hält den Ringdurchflug
-// (Szene `ringdurchflug`) unverändert.
+// dem vWeltPos steht. Der Faktor f sitzt auf `direkt` und auf der
+// Nachtseitenfüllung `uFuellung * uTag` (Entscheidung nach der Sichtprüfung
+// Task 4, 13.09.2026: ohne beschattete Füllung blieb der Planetenschatten auf
+// dem Ring bei höchstens 27 von 255 und damit unter dem Abnahmekriterium; ein
+// Ring hat anders als ein Mond keine Atmosphäre, die den Kernschatten
+// aufhellen könnte). Nur `streu` bleibt unbeschattet: Die Vorwärtsstreuung ist
+// ein reiner Gestaltungswert am Gegenlicht, und sie unangetastet zu lassen
+// hält den Ringdurchflug (Szene `ringdurchflug`) unverändert.
 //
 // Radius 0 ist zugleich der Aus-Schalter: kugelSchatten liefert mit w = 0 für
 // jedes Fragment exakt 1 (beta = 0, damit greift der Zweig „kleiner Okkluder
@@ -238,9 +241,14 @@ const RING_FRAGMENT_SHADER = `
     float f = uPlanetOkkluder.w > 0.0
       ? kugelSchatten(vWeltPos, uPlanetOkkluder, uSonnenRichtung, uSonnenWinkel)
       : 1.0;
-    float direkt = abs(dot(N, L)) * uTag * RECIPROCAL_PI * f; // beidseitig: ein Ring hat keine Rückseite
+    float direkt = abs(dot(N, L)) * uTag * RECIPROCAL_PI; // beidseitig: ein Ring hat keine Rückseite
     float streu = uStreuung * pow(max(0.0, -dot(V, L)), uSchaerfe) * uTag * RECIPROCAL_PI;
-    gl_FragColor = vec4(ring.rgb * (direkt + uFuellung * uTag + streu), ring.a);
+    // f auf Direktlicht und Füllung, nicht auf die Streuung: Ein Ring hat
+    // keine Atmosphäre, die den Kernschatten aufhellen könnte — der Grund,
+    // aus dem die Füllung bei den Körpern stehen bleibt (Blutmond), gilt hier
+    // nicht. Die Streuung bleibt unbeschattet, damit der Ringdurchflug
+    // unverändert bleibt.
+    gl_FragColor = vec4(ring.rgb * ((direkt + uFuellung * uTag) * f + streu), ring.a);
   }
 `;
 

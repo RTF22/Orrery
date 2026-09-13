@@ -215,11 +215,13 @@ describe('createRingViews — Planetenschatten auf dem Ring', () => {
     expect(fragmentShader).toContain(
       'kugelSchatten(vWeltPos, uPlanetOkkluder, uSonnenRichtung, uSonnenWinkel)',
     );
-    // Der Schattenfaktor gehört allein auf den Direktanteil: uFuellung ist die
-    // künstlerische Nachtseitenfüllung, streu die Vorwärtsstreuung — beide
-    // bleiben unangetastet (Entwurf §2, Absatz „Ring-Shader").
-    expect(fragmentShader).toContain('* uTag * RECIPROCAL_PI * f;');
-    expect(fragmentShader).toContain('(direkt + uFuellung * uTag + streu)');
+    // Der Schattenfaktor gehört auf den Direktanteil *und* auf die
+    // Nachtseitenfüllung: Ein Ring hat keine Atmosphäre, die den Kernschatten
+    // aufhellen könnte (Entwurf §2, Absatz „Ring-Shader", Entscheidung nach
+    // der Sichtprüfung Task 4). Allein `streu` bleibt unbeschattet, damit der
+    // Ringdurchflug unverändert bleibt.
+    expect(fragmentShader).toContain('float direkt = abs(dot(N, L)) * uTag * RECIPROCAL_PI;');
+    expect(fragmentShader).toContain('((direkt + uFuellung * uTag) * f + streu)');
     ringe.dispose();
   });
 

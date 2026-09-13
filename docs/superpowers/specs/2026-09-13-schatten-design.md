@@ -116,11 +116,17 @@ Schatten sind in jeder Stufe an, gesteuert nur über den Schalter.
   zwei vec4), `uRingAktiv` (float), `tRingSchatten` (sampler2D).
 
 - **Ring-Shader** (`rings.ts`): zwei Uniforms mehr, `uPlanetOkkluder`
-  (vec4) und `uSonnenWinkel`; der Term `direkt` wird mit f multipliziert,
-  `uFuellung` und `streu` nicht. Die Vorwärtsstreuung im Planetenschatten
-  ist physikalisch tatsächlich fort, aber sie ist bereits ein
-  Gestaltungswert am Gegenlicht; sie unangetastet zu lassen hält den
-  Ringdurchflug (Szene `ringdurchflug`) unverändert.
+  (vec4) und `uSonnenWinkel`; die Terme `direkt` **und** `uFuellung · uTag`
+  werden mit f multipliziert, `streu` nicht: `ring.rgb * ((direkt +
+  uFuellung * uTag) * f + streu)`. Ein Ring hat anders als ein Mond keine
+  Atmosphäre, die den Kernschatten aufhellen könnte — der Grund, aus dem die
+  Nachtseitenfüllung bei den Körpern stehen bleibt (siehe „Blutmond"), gilt
+  hier nicht; mit unbeschatteter Füllung bleibt der Planetenschatten auf dem
+  Ring unter dem Abnahmekriterium aus §6 (gemessen höchstens 27 von 255).
+  Die Vorwärtsstreuung im Planetenschatten ist physikalisch tatsächlich
+  fort, aber sie ist bereits ein Gestaltungswert am Gegenlicht; sie
+  unangetastet zu lassen hält den Ringdurchflug (Szene `ringdurchflug`)
+  unverändert. (Entscheidung nach der Sichtprüfung Task 4, 13.09.2026)
 
 - **Schalter** `display.shadows` (Standard an) im Anzeigepanel, Text
   `display.shadows: 'Schatten'` in `ui/i18n/de.ts`. Aus setzt
