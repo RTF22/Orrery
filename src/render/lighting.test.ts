@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   irradianceFactor, bodyLighting, MAX_COLOR_GAIN, MIN_COLOR_GAIN,
+  targetExposure, EXPOSURE_REFERENCE,
 } from './lighting';
 import type { LightingSettings } from './lighting';
 import { DEFAULT_STATE } from '../store';
@@ -176,5 +177,44 @@ describe('Standardeinstellung — kein Körper bleibt schwarz', () => {
     const neptun = bodyLighting(abstandKm('neptune'), STANDARD).dayLevel;
     expect(merkur).toBeGreaterThan(jupiter);
     expect(jupiter).toBeGreaterThan(neptun);
+  });
+});
+
+describe('targetExposure — die Kamera belichtet auf das Ziel', () => {
+  it('bringt eine weiße Lambert-Fläche am Zielabstand auf die Referenz', () => {
+    // Der Renderweg: Das Material bekommt brightness · E · colorGain (= dayLevel),
+    // Three gewichtet den direkten Anteil mit 1/π. Die gerenderte Strahldichte
+    // der weißen Fläche ist also dayLevel / π — und die muss am Ziel genau
+    // EXPOSURE_REFERENCE sein, bei jedem Abstand und jedem Ausgleich.
+    for (const au of [0.4, 1, 5.2, 30, 97]) {
+      for (const c of [0, 0.85, 1]) {
+        const s = { ...STANDARD, brightness: 1, lightCompensation: c };
+        const exposure = targetExposure(au * AU_KM, s);
+        const l = bodyLighting(au * AU_KM, { ...s, brightness: s.brightness * exposure });
+        expect(l.dayLevel / Math.PI, `${au} AE, c=${c}`).toBeCloseTo(EXPOSURE_REFERENCE, 10);
+      }
+    }
+  });
+
+  it('liefert für die Sonne im Ursprung die Referenz 1 AE: Faktor π', () => {
+    // irradianceFactor gibt im Ursprung den Bezugswert 1 — die Systemschau
+    // (Ziel Sonne) ist damit die Kamera bei 1 AE, ohne Sonderregel.
+    expect(targetExposure(0, STANDARD)).toBeCloseTo(Math.PI, 12);
+    expect(targetExposure(AU_KM, STANDARD)).toBeCloseTo(Math.PI, 12);
+  });
+
+  it('hängt nicht von der Helligkeit ab — die kommt getrennt dazu', () => {
+    const eins = targetExposure(9 * AU_KM, { ...STANDARD, brightness: 1 });
+    const drei = targetExposure(9 * AU_KM, { ...STANDARD, brightness: 3 });
+    expect(drei).toBeCloseTo(eins, 12);
+  });
+
+  it('ist bei vollem Distanzausgleich für jeden Abstand gleich', () => {
+    const s = { ...STANDARD, lightCompensation: 1 };
+    expect(targetExposure(30 * AU_KM, s)).toBeCloseTo(targetExposure(0.4 * AU_KM, s), 12);
+  });
+
+  it('steigt mit dem Zielabstand, solange der Ausgleich unvollständig ist', () => {
+    expect(targetExposure(30 * AU_KM, STANDARD)).toBeGreaterThan(targetExposure(AU_KM, STANDARD));
   });
 });

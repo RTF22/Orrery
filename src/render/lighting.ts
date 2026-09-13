@@ -35,6 +35,15 @@ export interface LightingSettings {
 export const MAX_COLOR_GAIN = 1e5;
 export const MIN_COLOR_GAIN = 0.02;
 
+/**
+ * Belichtungsreferenz: der lineare Wert, den eine weiße Lambert-Fläche am
+ * Sonnenabstand des Zielkörpers unter senkrechtem Licht erreicht. 1,0 landet
+ * nach dem ACES-Tonemapping (renderer.ts) bei 232 von 255 — die Reserve bis
+ * 255 bleibt für Eis und Wolken, die heller als eine graue Lambert-Fläche
+ * zurückstrahlen (Albedo über 1, siehe PhysicalData.albedo).
+ */
+export const EXPOSURE_REFERENCE = 1;
+
 /** Für die Sonne selbst und alles im Ursprung gilt der Bezugswert. */
 const BEZUG_IM_URSPRUNG = 1;
 
@@ -102,4 +111,32 @@ export function bodyLighting(distanceKm: number, s: LightingSettings): BodyLight
     dayLevel,
     emissiveIntensity: (s.nightFill * dayLevel) / Math.PI,
   };
+}
+
+/**
+ * Die Kamera belichtet auf das Ziel.
+ *
+ * Wie eine Raumsondenkamera oder das Auge passt sich die Belichtung dem
+ * Körper an, der gerade betrachtet wird — eine Aussage über das Messgerät,
+ * nicht über die Szene: Der Lichtabfall bleibt so, wie `lightFalloff` und
+ * `lightCompensation` ihn setzen, nur der Maßstab der ganzen Beleuchtung
+ * verschiebt sich, damit das Ziel richtig belichtet ist.
+ *
+ * Ergebnis ist der Faktor auf `brightness`. Die Rechnung: Das Material
+ * bekommt `brightness · E · colorGain` (= `dayLevel`, aus der geklemmten
+ * Verstärkung), Three gewichtet den Lambert-Anteil mit 1/π. Für eine weiße
+ * Fläche am Ziel soll `brightness · exposure · dayLevelRel / π` gleich
+ * `EXPOSURE_REFERENCE · brightness` sein — also
+ * `exposure = EXPOSURE_REFERENCE · π / dayLevelRel`, mit `dayLevelRel` dem
+ * Tagniveau des Ziels bei Helligkeit 1. Im Ursprung (Sonne als Ziel) ist
+ * `dayLevelRel` = 1, die Belichtung also die einer Kamera bei 1 AE.
+ *
+ * Eingebaut wird der Faktor auf die Bestrahlungsstärke (scene.ts), nicht auf
+ * das Tonemapping: Sonne, Sterne, Bahnlinien und Bloom hängen nicht an
+ * `brightness` und bleiben unverändert — eine auf Pluto belichtete Kamera
+ * würde die Sonne ohnehin nur ausbrennen.
+ */
+export function targetExposure(zielSonnenabstandKm: number, s: LightingSettings): number {
+  const dayLevelRel = bodyLighting(zielSonnenabstandKm, { ...s, brightness: 1 }).dayLevel;
+  return (EXPOSURE_REFERENCE * Math.PI) / dayLevelRel;
 }
