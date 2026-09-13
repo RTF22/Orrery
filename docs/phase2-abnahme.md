@@ -131,8 +131,8 @@ Erde bleibt als helle Sichel deutlich erkennbar. Abgesichert ist das über
 - ~~Wake Lock und Vollbild am Gerät im normalen Browser prüfen.~~ Erledigt
   am 13.09.2026, siehe `phase3a-abnahme.md`, Nachtrag „Geräteprüfung".
 - ~~Bildrate auf dem Referenz-Laptop messen.~~ Gemessen am 13.09.2026 auf
-  einem Desktop (RTX 4060), siehe ebenda; ein Laptop mit integrierter Grafik
-  bleibt dort als offener Punkt.
+  einem Desktop (RTX 4060), siehe ebenda; Zielgeräte sind Browser mit
+  GPU-Unterstützung, damit erledigt.
 - Die drei Entwurfsszenen mit Galileischen Monden, Marsmonden und Pluto
   brauchen den Katalog aus Phase 3; der Katalog dieses Plans nutzt
   gleichwertige Ersatzszenen (siehe Plan, Abschnitt „Abweichungen vom Entwurf").

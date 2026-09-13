@@ -422,7 +422,9 @@ Kino-Modus, Ansicht und Canvas 2560×1440 (DPR 1):
 | Frames über 25 ms | 0 | 0 |
 
 Durchgehend an der Bildsynchronisation (59 Hz), unabhängig von der
-Auflösung, deckungsgleich mit der Messung aus Phase 2.
+Auflösung, deckungsgleich mit der Messung aus Phase 2. Zielgeräte sind laut
+Auftraggeber (13.09.2026) Browser mit GPU-Unterstützung; eine gesonderte
+Messung auf integrierter Grafik entfällt damit.
 
 ## Offene Punkte
 
@@ -434,6 +436,3 @@ Auflösung, deckungsgleich mit der Messung aus Phase 2.
   Horizons-Abfrage von Task 6 und wurden für die weiteren Mondsysteme
   beibehalten, damit alle Monde dieselben Epochen teilen.
 - **Build-Chunk über 500 kB** — Aufteilung erst mit der Veröffentlichung.
-- **Bildrate auf einem Laptop mit integrierter Grafik**, falls ein solcher
-  Zielgerät ist: Die Geräteprüfung oben lief auf einem Desktop mit RTX 4060.
-  Wake Lock und Vollbild sind gerätunabhängig belegt.
