@@ -375,6 +375,55 @@ Ausnahme für Eris entfällt. Ein versehentlich gesenkter Ausgleich fiele auf
 (0,65 drückt Eris auf 0,041). Ein weiterer Test hält den Standardwert selbst
 mit Verweis auf diese Messung fest. Testlauf: 721 Tests.
 
+## Nachtrag: Geräteprüfung — Wake Lock, Vollbild, Bildrate (13.09.2026)
+
+Prüfgerät: ASUS-Desktop (kein Laptop), NVIDIA GeForce RTX 4060, Monitor
+2560×1440 bei 59 Hz, Windows 11 Home, Chrome 152, Produktionsbuild über
+`vite preview`. Damit sind die seit Phase 2 offenen Gerätefragen beantwortet,
+mit der Einschränkung, dass es ein Desktop mit dedizierter Grafik ist.
+
+**Echtes Vollbild.** Im gewöhnlichen Chrome (eigenes leeres Profil, keine
+Automatisierungsflags) startet die Taste `C` den Kino-Modus. Danach misst das
+Chrome-Fenster per `GetWindowRect` 0,0 bis 2560,1440, und der Bildschirmabzug
+des ganzen Monitors zeigt nur die Szene mit Chromes Esc-Hinweis. Das Vollbild
+bleibt auch bestehen, während der Film wegen einer Eingabe pausiert.
+Hinweis für künftige Prüfungen: Im Playwright-Chrome meldet
+`document.fullscreenElement` zwar das `HTML`-Element, das Fenster bleibt aber
+bei der erzwungenen Ansichtsgröße (1280×800) — Vollbild ist nur im
+gewöhnlichen Browser belegbar.
+
+**Wake Lock.** `powercfg /requests` (braucht erhöhte Rechte; ein per UAC
+bestätigter Helfer hat es alle 3 s protokolliert) listet unter `DISPLAY`
+den Eintrag `chrome.exe — Blink Wake Lock`, sobald der Film läuft:
+
+| Zeit | Ereignis | Eintrag in `powercfg /requests` |
+|---|---|---|
+| 11:09:45 | Taste `C`, Kino startet | — |
+| 11:09:47 – 11:09:53 | Film läuft | vorhanden |
+| 11:09:56 – 11:10:23 | Film durch Eingabe pausiert (Mausbewegung zählt, `idle.ts`); Bildschirmabzug zeigt die eingeblendete Oberfläche | fehlt |
+| 11:10:26 – 11:10:35 | Wiederaufnahme nach 30 s Ruhe | vorhanden |
+
+Das ist genau das vorgesehene Verhalten: `useWakeLock(cinema.running)` hält
+die Sperre nur, solange der Film läuft, und fordert sie nach der
+Wiederaufnahme neu an. Der Eintrag ist die Display-Anforderung, die den
+Bildschirm-Timeout des Systems (hier 120 min am Netz) aussetzt — das System
+hält die Sperre also tatsächlich. Firefox wurde nicht geprüft.
+
+**Bildrate.** 20 s Aufzeichnung über `requestAnimationFrame` im laufenden
+Kino-Modus, Ansicht und Canvas 2560×1440 (DPR 1):
+
+| Größe | 2560×1440 | 1280×800 |
+|---|---:|---:|
+| Frames | 1 200 | 1 200 |
+| Median-Framezeit | 16,70 ms | 16,70 ms |
+| 95. Perzentil | 16,80 ms | 16,80 ms |
+| 99. Perzentil | 16,80 ms | 16,80 ms |
+| Maximum | 17,10 ms | 16,90 ms |
+| Frames über 25 ms | 0 | 0 |
+
+Durchgehend an der Bildsynchronisation (59 Hz), unabhängig von der
+Auflösung, deckungsgleich mit der Messung aus Phase 2.
+
 ## Offene Punkte
 
 - **Sechs Körper ohne Textur** (fünf Uranusmonde, Deimos), begründet in
@@ -385,5 +434,6 @@ mit Verweis auf diese Messung fest. Testlauf: 721 Tests.
   Horizons-Abfrage von Task 6 und wurden für die weiteren Mondsysteme
   beibehalten, damit alle Monde dieselben Epochen teilen.
 - **Build-Chunk über 500 kB** — Aufteilung erst mit der Veröffentlichung.
-- Wie nach Phase 2: Wake Lock, Vollbild und Bildrate am Referenz-Laptop im
-  normalen Browser prüfen.
+- **Bildrate auf einem Laptop mit integrierter Grafik**, falls ein solcher
+  Zielgerät ist: Die Geräteprüfung oben lief auf einem Desktop mit RTX 4060.
+  Wake Lock und Vollbild sind gerätunabhängig belegt.
