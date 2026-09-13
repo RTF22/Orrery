@@ -1,20 +1,27 @@
 import { describe, it, expect } from 'vitest';
-// @ts-expect-error -- 'node:fs' hat ohne @types/node keine Typdeklaration;
-// das Paket wird bewusst nicht als neue Abhängigkeit ergänzt (siehe
-// data/index.test.ts, dortselbst derselbe Kunstgriff). Zur Laufzeit unter
-// Vitest/Node funktioniert der Import unverändert.
-import { readdirSync, readFileSync } from 'node:fs';
 
-/** render/ darf ui/ nicht kennen (Entwurf 4a, §4.3; CLAUDE-Schichtregel). */
+/**
+ * render/ darf ui/ nicht kennen (Entwurf 4a, §4.3; Schichtregel ui → store →
+ * render → sim). Vites import.meta.glob liest alle Quelldateien unter
+ * src/render/ rekursiv als Text — ohne Node-Dateisystem, ohne Abhängigkeit
+ * vom Arbeitsverzeichnis; neue Unterordner sind automatisch erfasst.
+ */
+const quellen = import.meta.glob('./**/*.{ts,tsx}', {
+  query: '?raw', import: 'default', eager: true,
+}) as Record<string, string>;
+
 describe('Schichtung', () => {
   it('render/ importiert nichts aus ui/', () => {
-    const ordner = 'src/render';
-    const verstoesse: string[] = [];
-    for (const datei of readdirSync(ordner)) {
-      if (!datei.endsWith('.ts') || datei.endsWith('.test.ts')) continue;
-      const text = readFileSync(`${ordner}/${datei}`, 'utf8');
-      if (/from\s+['"]\.\.\/ui\//.test(text)) verstoesse.push(datei);
-    }
+    const verstoesse = Object.entries(quellen)
+      .filter(([pfad]) => !/\.test\.tsx?$/.test(pfad))
+      .filter(([, text]) => /from\s+['"](\.\.\/)+ui\//.test(text))
+      .map(([pfad]) => pfad);
     expect(verstoesse).toEqual([]);
+  });
+
+  it('erfasst auch Unterordner', () => {
+    // Gegenprobe gegen einen leeren oder flachen Scan: camera/ existiert.
+    expect(Object.keys(quellen).some((p) => p.startsWith('./camera/'))).toBe(true);
+    expect(Object.keys(quellen).length).toBeGreaterThan(10);
   });
 });
