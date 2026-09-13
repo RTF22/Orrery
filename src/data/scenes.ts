@@ -6,8 +6,13 @@
  * - `flyby`  — geradliniger Vorbeiflug seitlich am Körper
  * - `chase`  — hinter dem Körper, ausgerichtet an seinem Geschwindigkeitsvektor
  * - `system` — Draufsicht auf das ganze System, Azimut läuft langsam mit
+ * - `sichtlinie` — auf der Linie vom Blickziel (`lookAtId`) zum
+ *   Standortkörper, davor stehend und auf den STANDORTKÖRPER blickend;
+ *   `lookAtId` bestimmt hier also nur die Linie, nicht das Blickziel
+ *   (Entwurf `2026-09-13-schatten-design.md` §4). `azimuthDeg` und
+ *   `elevationDeg` sind Versätze auf die Kugelkoordinaten dieser Linie.
  */
-export type ScenePath = 'static' | 'orbit' | 'flyby' | 'chase' | 'system';
+export type ScenePath = 'static' | 'orbit' | 'flyby' | 'chase' | 'system' | 'sichtlinie';
 
 /**
  * Bezugsgröße für `distanceInRadii`. `bodyRadius` ist der dargestellte
@@ -37,6 +42,15 @@ export interface Scene {
   durationSec: number;
   timeRateDaysPerSec: number;
   /**
+   * Verlangt beim Wechsel AUF diese Szene einen Zeitsprung: `tickCinema`
+   * (app/cinema.ts) sucht dann mit `naechsteMondfinsternis` (sim/finsternis.ts)
+   * die nächste Mondfinsternis ab der aktuellen Zeit und stellt `time.jd`
+   * kurz vor deren Eintritt. Der Sprung bleibt nach der Szene bestehen — die
+   * Zeit ist im Kino die des Kinos (Entwurf §4). Findet die Suche nichts,
+   * läuft die Szene ohne Sprung.
+   */
+  zeitpunkt?: 'naechste-mondfinsternis';
+  /**
    * Streuung je Abspielen: Azimut und Elevation additiv in Grad, Abstand
    * multiplikativ als Faktor. Ein Bereich `[0, 0]` schaltet die Variation
    * für dieses Feld ab.
@@ -55,6 +69,10 @@ export interface Scene {
  * (Sonne, acht Planeten, 20 Monde, fünf Zwergplaneten — 35 Körper, siehe
  * data/index.ts). Alles bleibt reine Daten — Director und Szenen-Engine
  * (render/camera/cinema.ts) sind unverändert.
+ *
+ * Phase 3b-2 (Task 6) legt die 19. Szene dazu: `mondfinsternis`, die einzige
+ * Szene mit Bahntyp `sichtlinie` und mit `zeitpunkt` — sie springt auf die
+ * nächste echte Mondfinsternis.
  */
 export const SCENES: readonly Scene[] = [
   {
@@ -589,6 +607,36 @@ export const SCENES: readonly Scene[] = [
     // beabsichtigten absoluten Bereich 5–25°.
     variation: {
       azimuthDeg: [0, 360], elevationDeg: [-10, 10], distanceFactor: [0.8, 1.5],
+    },
+  },
+  {
+    // Die nächste echte Mondfinsternis (Entwurf 2026-09-13-schatten-design.md
+    // §4). Bahntyp `sichtlinie`: Die Kamera steht auf der Linie Erde → Mond,
+    // vier Mondradien vor dem Mond, und blickt auf den MOND — `lookAtId`
+    // legt hier nur die Linie fest. Damit sieht sie die erdzugewandte Seite,
+    // bei Vollmond also die beleuchtete, über die der Erdschatten zieht.
+    // `zeitpunkt` lässt tickCinema beim Wechsel auf diese Szene die nächste
+    // Finsternis suchen und die Zeit kurz vor den Eintritt setzen.
+    // Zeitraffer: 45 s * 0,0035 Tage/s = 0,1575 simulierte Tage = 3,78 h —
+    // ein typischer Kernschattendurchgang (rund 3,5 h) passt damit ganz in
+    // die Szene, samt des Vorlaufs von 10 % der Durchgangsdauer, den der
+    // Zeitsprung vor den Eintritt legt.
+    id: 'mondfinsternis',
+    titleKey: 'scene.mondfinsternis',
+    targetId: 'moon',
+    lookAtId: 'earth',
+    path: 'sichtlinie',
+    distanceBasis: 'bodyRadius',
+    params: { distanceInRadii: 4, elevationDeg: 8, azimuthDeg: 0, azimuthRateDegPerSec: 0.4 },
+    durationSec: 45,
+    timeRateDaysPerSec: 0.0035,
+    zeitpunkt: 'naechste-mondfinsternis',
+    // Enge Streuung, anders als bei den freien Rundflügen des Katalogs: Die
+    // Kameralinie ist hier keine Geschmacksfrage, sondern der Grund der
+    // Szene — ein großer Versatz drehte die Kamera von der beschienenen,
+    // erdzugewandten Mondseite weg.
+    variation: {
+      azimuthDeg: [-20, 20], elevationDeg: [-6, 6], distanceFactor: [0.8, 1.3],
     },
   },
 ];

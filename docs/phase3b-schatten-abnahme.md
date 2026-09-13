@@ -3,8 +3,10 @@
 **Datum:** 13.09.2026
 **Stand:** Zweig `schatten`, Task 3 (Körper-Shader, Okkluderauswahl je Bild,
 erstes sichtbares Ergebnis) und Task 4 (Planetenschatten auf den Ringen,
-Ringschatten auf Saturn, Bildrate). Die Rechnung selbst (`render/shadows.ts`)
-und der Schalter `display.shadows` stammen aus Task 1 und 2.
+Ringschatten auf Saturn, Bildrate) und Task 6 (Kinoszene `mondfinsternis`,
+Blutmond). Die Rechnung selbst (`render/shadows.ts`) und der Schalter
+`display.shadows` stammen aus Task 1 und 2, die Finsternis-Suche
+(`sim/finsternis.ts`) aus Task 5.
 **Prüfumgebung:** Windows 11, Desktop mit RTX 4060, Chromium (Playwright),
 Vite-Entwicklungsserver auf `localhost`, Fenster 1280 × 800 CSS-Pixel,
 `devicePixelRatio` 1, Qualitätsstufe `high`, Maßstabs-Preset „Schaubild"
@@ -344,6 +346,15 @@ durch eine andere Kameraführung.
 
 ### Bildrate
 
+**Messzeitpunkt:** Diese Tabelle ist **vor** den beiden Ring-Shader-Änderungen
+entstanden (beschattetes Ring-Fülllicht, Restlicht 0,3 — Abschnitt (2)). Sie
+wurde danach **bewusst nicht wiederholt**: Beide Änderungen fügen dem
+Fragment-Shader zusammen ein einziges `mix` hinzu (`uFuellung * uTag *
+mix(uRestlicht, 1.0, f)` statt `uFuellung * uTag`); der Schattenfaktor `f`
+wurde ohnehin schon je Fragment gerechnet. Eine messbare Verschiebung wäre bei
+einem Bildaufbau, der ohnehin in die Vertikalsynchronisation läuft (siehe
+Einschränkung unten), nicht zu erwarten und auch nicht auflösbar.
+
 Szene `saturn-streiflicht`, Aufbau wie oben, Framezeiten aus
 `requestAnimationFrame` über je 5 s (300 Bilder), drei Runden im Wechsel,
 jeweils 3 s Vorlauf nach dem Umlegen des Schalters:
@@ -390,3 +401,170 @@ GPU.
   101. Für den Ringschatten auf dem Planeten bleibt es bei der Nahaufnahme
   (3): Dort liegt keine Rechenfrage vor, sondern schlicht die Nachtseite im
   Bild.
+
+## Sichtprüfung Mondfinsternis (Blutmond)
+
+**Stand:** Task 6 (Kinoszene `mondfinsternis`, Bahntyp `sichtlinie`,
+Zeitsprung). Prüfumgebung wie oben: Windows 11, Desktop mit RTX 4060, Chromium
+(Playwright), Vite-Entwicklungsserver, Fenster 1280 × 800 CSS-Pixel,
+`devicePixelRatio` 1, Qualitätsstufe `high`, Preset „Schaubild", Zeit
+angehalten, Bedienoberfläche ausgeblendet, Bahnlinien/Beschriftungen/Marker
+aus. Zwischen Zustandswechsel und erster Aufnahme 12 s (4 s Kameradämpfung,
+8 s Belichtungsmesser), nach jedem Umlegen des Schalters erneut 8 s.
+Differenzbild wie immer `display.shadows` an gegen aus.
+
+### Die Finsternis, auf die die Szene springt
+
+Gefunden von `naechsteMondfinsternis(bodyIndex, 2451545)` (J2000), Werte aus
+einem `vitest`-Lauf gegen dieselbe Funktion, die auch das Kino ruft:
+
+| Größe | jd | UT |
+|---|---:|---|
+| Eintritt in den Kernschatten | 2451564,554560101 | 21.01.2000 01:18:34 |
+| **Maximum** | **2451564,6260017515** | **21.01.2000 03:01:27** |
+| Austritt | 2451564,6973823668 | 21.01.2000 04:44:14 |
+| Zielwert des Zeitsprungs (`eintritt − 0,1 · Dauer`) | 2451564,5402778746 | 21.01.2000 00:58:00 |
+| Art | `total` | Dauer des Durchgangs 0,142822 d = 3,4277 h |
+
+Das ist die Finsternis vom 21.01.2000 des NASA-Kanons (Maximum dort 04:44 UT);
+das Modell liegt rund 1,7 h früher — innerhalb der ±4 h, die `sim/finsternis.ts`
+für die fehlenden periodischen Störungen der Mondbahn ansetzt. Dass der vom
+Modell gerechnete Austritt auf die Minute mit dem Kanon-Maximum zusammenfällt,
+ist Zufall und kein Beleg.
+
+**Rechenweg Kernschattenradius** (zum Maximum, unabhängig vom Renderer aus
+`positionAt` nachgerechnet): Erde–Mond |m| = 366 783,3 km, Erde–Sonne |s| =
+147 209 486,8 km. Schattenkegel: asin((R☉ − R⊕) / |s|) = asin((695 700 −
+6371) / 147 209 487) = 0,00468266 rad. Kernschattenradius in Mondentfernung
+r_u = 1,02 · (6371 − 366 783,3 · tan 0,00468266) = 1,02 · (6371 − 1717,6) =
+**4746,5 km** (die 2 % sind Chauvenets Atmosphärenzuschlag). Querablage der
+Mondmitte θ · |m| = **2082,5 km**. Wegen 2082,5 < 4746,5 − 1737,4 = 3009,1 ist
+die Finsternis **total** — die Mondscheibe steht mit 926,6 km Abstand zum
+Kernschattenrand vollständig im Kernschatten.
+
+### Aufbau
+
+| Größe | Wert |
+|---|---|
+| Kameramodus | `cinema`, Szenennummer **18** (`mondfinsternis`, null-basiert), `shuffle` aus, `seed` 1 |
+| Weg in die Szene | `nummer` 17 mit `elapsedSec` 31 s (über der 30-s-Dauer von `ceres-guertel`), `running` an, **ein Bild** laufen lassen — `tickCinema` schaltet weiter und springt |
+| `time.jd` nach diesem Bild | **2451564,540444255** (Zielwert 2451564,5402778746 plus 1,03 s Szenenzeit im Zeitraffer) |
+| danach | `running` aus, `time.paused` an, `time.jd` auf den Messzeitpunkt gesetzt |
+| `cinema.elapsedSec` | 1,033 s (von 45 s) |
+| Mondscheibe im Bild (Mitte / Radius) | **(640,0 / 400,0) / 173,52 px** |
+| Kameraabstand | 429,45 Render-Einheiten = **4,94 dargestellte Mondradien** (4 × Streufaktor 1,235) |
+| Erde im Bild | (18,2 / 387,3), 13,3 px Radius — die Kamera steht auf der Linie zum Mond, um Azimut- und Elevationsversatz der Szene gekippt, die Erde liegt dadurch am linken Bildrand |
+
+Der Zeitsprung ist damit **im laufenden Programm** belegt, nicht nur im Test:
+`time.jd` steht nach genau einem Bild 19,54 Tage weiter als der Startwert
+2451545. Die Mondscheibe im Bild ist aus `mesh.modelViewMatrix` und `mesh.scale`
+projiziert (senkrechter Bildwinkel 50°), wie in den Abschnitten oben.
+
+### (1) Zum Maximum — Blutmond
+
+Zeit jd 2451564,6260017515 (21.01.2000 03:01:27 UT), gemessen auf der
+Mondscheibe (94 597 Pixel).
+
+| Größe | Schatten an | Schatten aus |
+|---|---:|---:|
+| Median max(R,G,B) | **24** | **86** |
+| Median Luma (Rec. 709) | 9,47 | 83,49 |
+| Median Leuchtdichte (linear, sRGB dekodiert) | 0,003266 | 0,08759 |
+| Mittel R / G / B auf der Scheibe | **22,07 / 5,59 / 1,15** | 82,85 / 80,49 / 79,79 |
+
+| Kriterium | Wert | Ergebnis |
+|---|---:|---|
+| Helligkeitsverlust im Median, als max(R,G,B) — Kriterium > 80 % | **72,09 %** | **nicht erfüllt** |
+| … dasselbe als Luma (Rec. 709) | 88,66 % | erfüllt |
+| … dasselbe als lineare Leuchtdichte | 96,27 % | erfüllt |
+| Rot dominiert: R > 2 · B im Mittel der Scheibe | **R/B = 19,26** | erfüllt, Faktor 9,6 über der Schranke |
+| Pixel mit Differenz > 30 auf der Scheibe | 94 542 von 94 597 (99,94 %) | — |
+| größte Differenz | 146 von 255 | — |
+| Kontrolle: zwei Aufnahmen desselben Zustands | **0 abweichende Pixel** | erfüllt |
+
+**Befund zum 80-%-Kriterium.** Der Verlust liegt je nach Helligkeitsbegriff bei
+72 %, 89 % oder 96 % — der Unterschied ist kein Messfehler, sondern folgt
+direkt aus dem Entwurf. §2 „Blutmond" legt fest: Der Kernschatten **ändert
+keine Helligkeit, nur die Farbe** des Nachtseiten-Fülllichts (`emissive ·
+mix(1, farbe, 1 − f)`). Die Kernschattenfarbe der Erde ist linear (1,00 /
+0,32 / 0,11): Der **Rotkanal wird also gar nicht gedämpft**, er behält die
+volle Nachtseitenfüllung. `max(R,G,B)` ist auf der verfinsterten Scheibe
+durchweg genau dieser ungedämpfte Rotkanal und kann deshalb
+konstruktionsbedingt nicht um mehr als den Direktlichtanteil fallen. Sobald die
+Messung Grün und Blau mitzählt (Luma) oder in linearem Licht rechnet, liegt der
+Verlust klar über der Schranke. Es ist also ein Widerspruch zwischen zwei
+Festlegungen desselben Entwurfs (§2 gegen das Messverfahren in §6), nicht ein
+zu schwacher Schatten. **Nichts wurde nachgestellt, um die Zahl zu heben** —
+weder Nachtseitenfüllung noch Kernschattenfarbe noch eine Schwelle. Ob §6 auf
+Luma umgestellt oder die Kernschattenfarbe dunkler gesetzt wird, ist eine
+Entscheidung des Auftraggebers.
+
+Im Bild ist es unmissverständlich ein **Blutmond**: eine vollständig
+ziegelrote Scheibe, auf der Mare und Krater als dunklere Flecken weiterhin zu
+erkennen sind; mit ausgeschaltetem Schalter steht an derselben Stelle ein
+heller grauer Vollmond. Der Verlauf über die Scheibe ist glatt, es gibt keine
+Kante quer durch sie hindurch.
+
+### (2) Ein Viertel nach dem Eintritt — Halbschattenrand
+
+Zeit jd 2451564,5902656675 = `eintritt + 0,25 · (austritt − eintritt)`
+(21.01.2000 02:09:59 UT). Geometrie dort: Querablage 3710,5 km,
+Kernschattenradius 4747,0 km, Mondradius 1737,4 km — wegen 3710,5 <
+4747,0 + 1737,4, aber > 4747,0 − 1737,4 steht der Mond **teilweise** im
+Kernschatten: Ein 701 km breiter Streifen des Randes (20 % des Mondradius)
+liegt außerhalb und ist im Bild als hellerer Saum unten rechts zu sehen.
+
+| Größe | Wert |
+|---|---:|
+| Differenz auf der Scheibe: Median / Maximum / Minimum | 79 / 147 / 28 |
+| **größter Sprung benachbarter Pixel längs der Mittelzeile (y = 400) — Kriterium ≤ 40** | **29** |
+| größter Sprung benachbarter Pixel über alle Zeilen der Scheibe | 55 |
+| davon Paare über 40 | 49 von 94 250 (0,05 %) |
+| an genau diesen 49 Stellen der Albedo-Sprung im Bild **ohne** Schatten | Median 46, Mittel 47,7, **Minimum 43** |
+| Sprung des reinen Schattenfaktors (Luma-Verhältnis an/aus, texturfrei), in Einheiten von 255 | **max 22,8**, Mittel 1,90 |
+
+Das Kriterium ist erfüllt, und zwar auch dort, wo die rohe Zahl zunächst
+darüber liegt: Die 49 Pixelpaare mit einem Sprung über 40 sitzen **nicht** am
+Schattenrand, sondern verstreut im Scheibeninneren (22 … 127 px vom
+Mittelpunkt) — an jeder dieser Stellen springt schon das Bild **ohne** Schatten
+um mindestens 43 Stufen: Es sind Kraterränder und Marekanten der Albedotextur.
+Die Differenz zweier Bilder ist proportional zur örtlichen Albedo, eine harte
+Texturkante erzeugt also auch bei völlig glattem Schattenverlauf eine harte
+Kante im Differenzbild. Der Schatten selbst, texturfrei als Verhältnis der
+Luma gemessen, springt nirgends um mehr als 22,8 von 255 — der Halbschatten ist
+ein stetiger Übergang.
+
+### (3) Datumsfeld — das Kriterium aus Phase 3
+
+Das Datumsfeld (`ui/panels/TimePanel.tsx`) setzt `dateToJd(Date.UTC(2000, 0,
+21))` = **jd 2451564,5**, also 00:00 UT; eine Uhrzeit-Eingabe gibt es nicht,
+die Tageszeit stellt der Nutzer über den Zeitregler ein. Beide Schritte
+nachgestellt:
+
+| Zeitpunkt | jd | Querablage | r_u | Lage |
+|---|---:|---:|---:|---|
+| Datumsfeld allein (00:00 UT) | 2451564,5 | 11 031,4 km | 4748,1 km | außerhalb (nicht einmal partiell) |
+| Datumsfeld + Zeitregler auf 03:00 UT | **2451564,625** | 2084,2 km | 4746,5 km | **total** (2662,4 km Abstand zum Kernschattenrand) |
+
+Aufnahme bei jd 2451564,625 (voller Kalendertag plus 3 h, kein Wert aus der
+Suche): Median max(R,G,B) **24** mit Schatten gegen **86** ohne (72,09 %),
+Mittel R/G/B **22,07 / 5,59 / 1,15**, **R/B = 19,26**, 94 541 von 94 597
+Scheibenpixeln mit Differenz über 30, größte Differenz 146. Das Bild zeigt
+denselben Blutmond wie zum Maximum — die Finsternis lässt sich also über
+Datumsfeld und Zeitregler nachstellen, ohne die Kinoszene zu benutzen.
+
+### Weitere Beobachtungen
+
+- Die Browserkonsole meldet über den ganzen Prüflauf ab dem Seitenaufruf (rund
+  20 Zustandswechsel, 7 Aufnahmen) **0 Fehler und 0 Warnungen**.
+- Der Schalter wirkt in beide Richtungen: Die Aufnahme nach dem
+  Wiedereinschalten stimmt Pixel für Pixel mit der Aufnahme davor überein
+  (Kontrolle in (1): 0 abweichende Pixel).
+- Der Zeitsprung bleibt nach dem Tick stehen und läuft nur mit dem Zeitraffer
+  der Szene weiter (0,0035 d/s) — wie in §4 vorgesehen.
+- Die Belichtung kompensiert den Schatten **nicht**: `render/lighting.ts`
+  belichtet auf den Kamerazielkörper aus dessen Sonnenabstand, der Schatten ist
+  eine reine Shader-Multiplikation und für den Belichtungsmesser unsichtbar
+  (`renderer.toneMappingExposure` steht in beiden Zuständen auf 1,0). Der
+  gemessene Unterschied ist also der Schatten selbst, nicht eine nachgeführte
+  Blende.

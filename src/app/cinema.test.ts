@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { advanceCinema, blendedRate, RATE_BLEND_SEC } from './cinema';
-import { DEFAULT_STATE } from '../store';
+import { advanceCinema, blendedRate, RATE_BLEND_SEC, tickCinema } from './cinema';
+import { DEFAULT_STATE, useStore } from '../store';
+import { naechsteMondfinsternis } from '../sim/finsternis';
+import { bodyIndex } from '../data/index';
+import { J2000 } from '../sim/time';
 import { SCENES } from '../data/scenes';
 import { plannedSceneAt } from '../sim/director';
 
@@ -58,5 +61,61 @@ describe('blendedRate', () => {
   it('kommt mit Stillstand zurecht', () => {
     expect(Number.isFinite(blendedRate(0, 30, 0.5))).toBe(true);
     expect(Number.isFinite(blendedRate(30, 0, 0.5))).toBe(true);
+  });
+});
+
+describe('tickCinema — Zeitsprung auf die nächste Mondfinsternis', () => {
+  const indexMondfinsternis = SCENES.findIndex((s) => s.id === 'mondfinsternis');
+
+  /** Stellt das Kino so, dass der nächste Tick auf die Szene `nummer` wechselt. */
+  function kinoVorSzene(nummer: number, jd: number): void {
+    const vorige = SCENES[nummer - 1]!;
+    useStore.setState({
+      cinema: {
+        ...DEFAULT_STATE.cinema,
+        running: true, nummer: nummer - 1,
+        elapsedSec: vorige.durationSec + 1, seed: 1, shuffle: false,
+      },
+      time: { ...DEFAULT_STATE.time, jd },
+    });
+  }
+
+  it('setzt die Zeit beim Wechsel auf die Szene kurz vor den Eintritt', () => {
+    kinoVorSzene(indexMondfinsternis, J2000);
+    tickCinema(0.016);
+
+    const f = naechsteMondfinsternis(bodyIndex, J2000)!;
+    expect(f).not.toBeNull();
+    const erwartet = f.eintrittJd - 0.1 * (f.austrittJd - f.eintrittJd);
+
+    const nachher = useStore.getState();
+    expect(nachher.cinema.nummer).toBe(indexMondfinsternis);
+    expect(nachher.time.jd).toBeCloseTo(erwartet, 9);
+    // Die Finsternis vom 21.01.2000 — die Zeit landet also im Januar 2000,
+    // nicht beim Startwert J2000 (jd 2451545).
+    expect(nachher.time.jd).toBeGreaterThan(2451560);
+    expect(nachher.time.jd).toBeLessThan(2451570);
+  });
+
+  it('lässt die Zeit beim Wechsel auf eine Szene ohne zeitpunkt stehen', () => {
+    // Gegenprobe: Nur Szenen mit `zeitpunkt` springen. Der Zeitraffer selbst
+    // läuft nicht in tickCinema, `time.jd` bleibt hier also exakt stehen.
+    const ohne = SCENES.findIndex((s, i) => i > 0 && s.zeitpunkt === undefined);
+    kinoVorSzene(ohne, J2000);
+    tickCinema(0.016);
+
+    const nachher = useStore.getState();
+    expect(nachher.cinema.nummer).toBe(ohne);
+    expect(nachher.time.jd).toBe(J2000);
+  });
+
+  it('lässt die Zeit innerhalb der Szene stehen, springt nur beim Wechsel', () => {
+    kinoVorSzene(indexMondfinsternis, J2000);
+    tickCinema(0.016);
+    const gesprungen = useStore.getState().time.jd;
+
+    tickCinema(0.016);
+    expect(useStore.getState().cinema.nummer).toBe(indexMondfinsternis);
+    expect(useStore.getState().time.jd).toBe(gesprungen);
   });
 });

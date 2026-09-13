@@ -98,6 +98,23 @@ export function cinemaTargetFor(
       };
     }
 
+    case 'sichtlinie': {
+      // Auf der Linie Blickziel → Standortkörper, davor stehend, Blick auf
+      // den STANDORTKÖRPER: `lookAtId` bestimmt hier nur die Linie, nicht
+      // das Blickziel (Entwurf §4). Azimut und Elevation der Szene wirken
+      // als Versatz auf die Kugelkoordinaten dieser Linie, wie bei den
+      // übrigen Bahntypen additiv.
+      const richtung = normiere({
+        x: blickziel.x - standort.x, y: blickziel.y - standort.y, z: blickziel.z - standort.z,
+      });
+      const az0 = Math.atan2(richtung.y, richtung.x) / GRAD;
+      const el0 = Math.asin(richtung.z) / GRAD;
+      return {
+        positionKm: aufKugel(standort, radius, az0 + azimutJetzt, el0 + elevationDeg),
+        lookAtKm: standort,
+      };
+    }
+
     case 'static':
     case 'orbit':
     case 'system':

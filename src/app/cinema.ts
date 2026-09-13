@@ -2,6 +2,8 @@ import { useStore } from '../store';
 import type { AppState } from '../store/types';
 import { SCENES } from '../data/scenes';
 import { plannedSceneAt } from '../sim/director';
+import { naechsteMondfinsternis } from '../sim/finsternis';
+import { bodyIndex } from '../data/index';
 
 /** So lange fährt der Zeitraffer beim Szenenwechsel auf den neuen Wert. */
 export const RATE_BLEND_SEC = 2;
@@ -66,10 +68,26 @@ export function tickCinema(dtSek: number): void {
     : plannedSceneAt(vorher.nummer, SCENES, vorher.seed, vorher.shuffle)
       .scene.timeRateDaysPerSec;
 
+  // Zeitsprung beim Wechsel AUF eine Szene mit `zeitpunkt` (Entwurf §4):
+  // Die Suche läuft ab der aktuellen Zeit, die Zeit landet um ein Zehntel
+  // der Durchgangsdauer vor dem Eintritt in den Kernschatten — der Zuschauer
+  // sieht den Mond also noch unverfinstert einlaufen. Findet die Suche
+  // nichts, bleibt die Zeit stehen und die Szene läuft ohne Sprung. Der
+  // Sprung bleibt nach der Szene bestehen: Das Kino setzt heute schon den
+  // Zeitraffer und stellt ihn nicht zurück, die Zeit ist im Kino die des Kinos.
+  let jdNeu = zustand.time.jd;
+  if (nachher.nummer !== vorher.nummer && geplant.scene.zeitpunkt === 'naechste-mondfinsternis') {
+    const finsternis = naechsteMondfinsternis(bodyIndex, zustand.time.jd);
+    if (finsternis !== null) {
+      jdNeu = finsternis.eintrittJd - 0.1 * (finsternis.austrittJd - finsternis.eintrittJd);
+    }
+  }
+
   useStore.setState({
     cinema: nachher,
     time: {
       ...zustand.time,
+      jd: jdNeu,
       paused: false,
       rateDaysPerSec: blendedRate(
         vonRate, geplant.scene.timeRateDaysPerSec, nachher.elapsedSec,

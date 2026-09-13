@@ -144,3 +144,66 @@ describe('cinemaTargetFor', () => {
     }
   });
 });
+
+describe('cinemaTargetFor — Bahntyp sichtlinie', () => {
+  /**
+   * Die Mondfinsternis-Kamera: Standort Mond, Linie zur Erde. Anders als bei
+   * den übrigen Bahntypen ist `lookAtId` hier NICHT das Blickziel, sondern
+   * legt nur die Linie fest, auf der die Kamera steht (Entwurf §4).
+   */
+  const sichtlinie = (elevationDeg: number): Scene => ({
+    id: 'test-sichtlinie',
+    titleKey: 'scene.mondfinsternis',
+    targetId: 'moon',
+    lookAtId: 'earth',
+    path: 'sichtlinie',
+    distanceBasis: 'bodyRadius',
+    params: { distanceInRadii: 4, elevationDeg, azimuthDeg: 0, azimuthRateDegPerSec: 0 },
+    durationSec: 45,
+    timeRateDaysPerSec: 0.0035,
+    variation: { azimuthDeg: [0, 0], elevationDeg: [0, 0], distanceFactor: [1, 1] },
+  });
+
+  const winkelZwischen = (
+    a: { x: number; y: number; z: number }, b: { x: number; y: number; z: number },
+  ): number => {
+    const la = Math.hypot(a.x, a.y, a.z);
+    const lb = Math.hypot(b.x, b.y, b.z);
+    const cos = (a.x * b.x + a.y * b.y + a.z * b.z) / (la * lb);
+    return Math.acos(Math.min(Math.max(cos, -1), 1));
+  };
+
+  it('blickt auf den Standortkörper, nicht auf das Linienziel', () => {
+    const ziel = cinemaTargetFor(feste(sichtlinie(0)), 0, jd, s);
+    const mond = scaledPositionAt('moon', bodyIndex, jd, s);
+    expect(abstand(ziel.lookAtKm, mond)).toBeLessThan(1);
+  });
+
+  it('stellt die Kamera ohne Versatz genau auf die Linie zum Linienziel', () => {
+    const ziel = cinemaTargetFor(feste(sichtlinie(0)), 0, jd, s);
+    const mond = scaledPositionAt('moon', bodyIndex, jd, s);
+    const erde = scaledPositionAt('earth', bodyIndex, jd, s);
+
+    const erwartet = scaledRadius(bodyIndex.moon!, s) * 4;
+    expect(abstand(ziel.positionKm, mond) / erwartet).toBeCloseTo(1, 6);
+
+    const zurKamera = {
+      x: ziel.positionKm.x - mond.x, y: ziel.positionKm.y - mond.y, z: ziel.positionKm.z - mond.z,
+    };
+    const zurErde = { x: erde.x - mond.x, y: erde.y - mond.y, z: erde.z - mond.z };
+    expect(winkelZwischen(zurKamera, zurErde)).toBeLessThan(1e-9);
+  });
+
+  it('kippt die Kamera um die vorgegebene Elevation aus der Linie', () => {
+    const ziel = cinemaTargetFor(feste(sichtlinie(10)), 0, jd, s);
+    const mond = scaledPositionAt('moon', bodyIndex, jd, s);
+    const erde = scaledPositionAt('earth', bodyIndex, jd, s);
+
+    const zurKamera = {
+      x: ziel.positionKm.x - mond.x, y: ziel.positionKm.y - mond.y, z: ziel.positionKm.z - mond.z,
+    };
+    const zurErde = { x: erde.x - mond.x, y: erde.y - mond.y, z: erde.z - mond.z };
+    const grad = (winkelZwischen(zurKamera, zurErde) * 180) / Math.PI;
+    expect(grad).toBeCloseTo(10, 6);
+  });
+});

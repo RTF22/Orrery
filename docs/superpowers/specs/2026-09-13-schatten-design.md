@@ -115,8 +115,8 @@ Schatten sind in jeder Stufe an, gesteuert nur über den Schalter.
   `uOkkluderAnzahl` (int), `uRingEbene` (Mitte, Normale, innen, außen als
   zwei vec4), `uRingAktiv` (float), `tRingSchatten` (sampler2D).
 
-- **Ring-Shader** (`rings.ts`): drei Uniforms mehr, `uPlanetOkkluder`
-  (vec4), `uSonnenWinkel` und `uRestlicht`; die Farbe wird
+- **Ring-Shader** (`rings.ts`): vier Uniforms mehr, `uPlanetOkkluder`
+  (vec4), `uSonnenRichtung` (vec3), `uSonnenWinkel` und `uRestlicht`; die Farbe wird
   `ring.rgb * (direkt * f + uFuellung * uTag * mix(uRestlicht, 1.0, f) +
   streu)`. Das **Direktlicht** löscht der Kernschatten also vollständig, von
   der **Nachtseitenfüllung** bleibt der Anteil
@@ -124,10 +124,11 @@ Schatten sind in jeder Stufe an, gesteuert nur über den Schalter.
   `rings.ts`, als Uniform gebunden wie `RING_STREUUNG`/`RING_SCHAERFE`), und
   `streu` bleibt ganz unbeschattet.
 
-  Begründung des Restlichts: Der verschattete Ring steht dicht neben Saturns
-  beleuchteter Tagseite und wird von ihr angestrahlt — **Planetenschein**,
-  dasselbe Argument wie beim aschgrauen Mondlicht. Die Höhe des Rests ist
-  damit nicht hergeleitet, 0,3 ist ein Gestaltungswert. Ohne Restlicht (der
+  Begründung des Restlichts (Entscheidung des Auftraggebers nach der
+  Sichtprüfung Task 4, 13.09.2026): Der verschattete Ring steht dicht neben
+  Saturns beleuchteter Tagseite und wird von ihr angestrahlt —
+  **Planetenschein**, dasselbe Argument wie beim aschgrauen Mondlicht. Die
+  Höhe des Rests ist damit nicht hergeleitet, 0,3 ist ein Gestaltungswert. Ohne Restlicht (der
   Zwischenstand mit vollständig beschatteter Füllung) sank der Sektor auf
   einen Median von 1,7 von 255 und las sich im Bild wie ein **Loch im Ring**:
   Durch die halbdurchsichtigen Ringbereiche (Alphakanal der Textur) schienen
@@ -138,8 +139,7 @@ Schatten sind in jeder Stufe an, gesteuert nur über den Schalter.
   Die Vorwärtsstreuung im Planetenschatten ist physikalisch tatsächlich
   fort, aber sie ist bereits ein Gestaltungswert am Gegenlicht; sie
   unangetastet zu lassen hält den Ringdurchflug (Szene `ringdurchflug`)
-  unverändert. (Entscheidung des Auftraggebers nach der Sichtprüfung Task 4,
-  13.09.2026)
+  unverändert.
 
 - **Schalter** `display.shadows` (Standard an) im Anzeigepanel, Text
   `display.shadows: 'Schatten'` in `ui/i18n/de.ts`. Aus setzt

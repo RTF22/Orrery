@@ -278,3 +278,30 @@ describe('Szenen — Stichproben', () => {
     expect(s.lookAtId ?? s.targetId).toBe('saturn');
   });
 });
+
+describe('Szene mondfinsternis', () => {
+  it('führt den Katalog auf mindestens 19 Szenen', () => {
+    expect(SCENES.length).toBeGreaterThanOrEqual(19);
+  });
+
+  it('steht als Sichtlinie zwischen Erde und Mond', () => {
+    const s = SCENES.find((x) => x.id === 'mondfinsternis')!;
+    expect(s).toBeDefined();
+    expect(s.path).toBe('sichtlinie');
+    expect(s.targetId).toBe('moon');
+    // lookAtId legt bei diesem Bahntyp nur die Linie fest, nicht das
+    // Blickziel (Entwurf §4) — die Kamera sitzt zwischen Erde und Mond und
+    // sieht die erdzugewandte, bei Vollmond beleuchtete Mondseite.
+    expect(s.lookAtId).toBe('earth');
+  });
+
+  it('springt auf die nächste Mondfinsternis und passt den Zeitraffer darauf an', () => {
+    const s = SCENES.find((x) => x.id === 'mondfinsternis')!;
+    expect(s.zeitpunkt).toBe('naechste-mondfinsternis');
+    // Ein typischer Kernschattendurchgang dauert rund 3,5 h = 0,146 d; bei
+    // 45 s Szenendauer muss der Zeitraffer in dieser Größenordnung liegen.
+    expect(s.timeRateDaysPerSec).toBeGreaterThanOrEqual(0.003);
+    expect(s.timeRateDaysPerSec).toBeLessThanOrEqual(0.004);
+    expect(s.durationSec * s.timeRateDaysPerSec).toBeGreaterThan(0.146);
+  });
+});
