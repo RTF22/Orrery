@@ -14,7 +14,12 @@ const tabellen: Record<Sprache, Record<Key, string>> = { de, en };
  */
 let aktuell: Sprache = 'de';
 
-export function setSprache(s: Sprache): void { aktuell = s; }
+/**
+ * Unbekannte Kennungen fallen auf Deutsch zurück — ein defektes URL-Fragment
+ * (Phase 4b) darf die Oberfläche nicht kippen; die eigentliche Validierung
+ * des Fragments ist Pflichtpunkt in 4b.
+ */
+export function setSprache(s: Sprache): void { aktuell = s === 'en' ? 'en' : 'de'; }
 export function sprache(): Sprache { return aktuell; }
 
 /** Locale für Intl: Deutsch de-DE, Englisch en-GB (Tag vor Monat, 24 h). */
@@ -24,7 +29,8 @@ export function locale(): 'de-DE' | 'en-GB' {
 
 /** Unbekannte Schlüssel fallen sichtbar auf, statt still zu verschwinden. */
 export function t(key: string): string {
-  return (tabellen[aktuell] as Record<string, string>)[key] ?? `[${key}]`;
+  const tabelle = tabellen[aktuell] ?? de;
+  return (tabelle as Record<string, string>)[key] ?? `[${key}]`;
 }
 
 /**

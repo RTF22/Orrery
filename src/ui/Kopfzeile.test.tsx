@@ -11,13 +11,13 @@ describe('Kopfzeile', () => {
 
   it('zeigt die aktive Sprache als gedrückt', () => {
     render(<Kopfzeile />);
-    expect(screen.getByRole('button', { name: 'Deutsch' }).getAttribute('aria-pressed')).toBe('true');
-    expect(screen.getByRole('button', { name: 'English' }).getAttribute('aria-pressed')).toBe('false');
+    expect(screen.getByRole('button', { name: 'Deutsch (DE)' }).getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByRole('button', { name: 'English (EN)' }).getAttribute('aria-pressed')).toBe('false');
   });
 
   it('setzt die Sprache im Store', () => {
     render(<Kopfzeile />);
-    fireEvent.click(screen.getByRole('button', { name: 'English' }));
+    fireEvent.click(screen.getByRole('button', { name: 'English (EN)' }));
     expect(useStore.getState().ui.language).toBe('en');
   });
 });

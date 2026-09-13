@@ -150,6 +150,11 @@ export function buildScene(
           istMond: body.kind === 'moon',
         }];
       });
+      // Die Kennung kommt aus dem Store, die Namen aus dem Auflöser (t() in
+      // app/main.tsx, gespiegelt durch useSprache). Beide folgen demselben
+      // Store-Schreibvorgang; Reacts Commit läuft als Microtask und damit
+      // vor dem nächsten Animationsframe, sodass Kennung und Tabelle hier
+      // nie auseinanderlaufen.
       labels.update(
         eintraege, ctx.camera, state.display.labels, state.display.markers, state.ui.language,
       );

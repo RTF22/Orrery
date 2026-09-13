@@ -14,7 +14,8 @@ describe('Schichtung', () => {
   it('render/ importiert nichts aus ui/', () => {
     const verstoesse = Object.entries(quellen)
       .filter(([pfad]) => !/\.test\.tsx?$/.test(pfad))
-      .filter(([, text]) => /from\s+['"](\.\.\/)+ui\//.test(text))
+      // erfasst `from '../ui/…'`, `import '../ui/…'` und `import('../ui/…')`.
+      .filter(([, text]) => /(?:from\s+|import\s*\(\s*|^\s*import\s+)['"](?:\.\.\/)+ui\//m.test(text))
       .map(([pfad]) => pfad);
     expect(verstoesse).toEqual([]);
   });

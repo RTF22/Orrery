@@ -2,6 +2,11 @@ import { useStore } from '../store';
 import { t } from './i18n';
 import type { Sprache } from './i18n';
 
+/**
+ * „DE"/„EN" sind Sprachcodes, keine übersetzbaren Texte — sie stehen bewusst
+ * als Literale und nicht in den Sprachdateien (Ausnahme von der
+ * Literalregel).
+ */
 const SPRACHEN: readonly (readonly [Sprache, string, string])[] = [
   ['de', 'DE', 'language.de'],
   ['en', 'EN', 'language.en'],
@@ -26,7 +31,7 @@ export function Kopfzeile(): React.JSX.Element {
               key={code}
               type="button"
               aria-pressed={aktiv}
-              aria-label={t(schluessel)}
+              aria-label={`${t(schluessel)} (${kurz})`}
               onClick={() => { setUi({ language: code }); }}
               className={`rounded border px-2 py-0.5 font-semibold ${
                 aktiv

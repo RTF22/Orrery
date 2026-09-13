@@ -18,10 +18,11 @@ describe('useSprache', () => {
     render(<Probe />);
     expect(screen.getByText('Zeit')).toBeTruthy();
     expect(document.documentElement.lang).toBe('de');
+    expect(document.title).toBe('Sonnensystem');
 
     act(() => { useStore.getState().setUi({ language: 'en' }); });
     expect(screen.getByText('Time')).toBeTruthy();
     expect(document.documentElement.lang).toBe('en');
-    expect(document.title).toBe(t('app.title'));
+    expect(document.title).toBe('Orrery');
   });
 });

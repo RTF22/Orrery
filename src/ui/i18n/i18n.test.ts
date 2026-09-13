@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach } from 'vitest';
 import { de } from './de';
 import { en } from './en';
 import { t, setSprache, sprache, locale, startSprache } from './index';
+import type { Sprache } from './index';
 import { bodies } from '../../data/index';
 
 /**
@@ -67,6 +68,12 @@ describe('Sprachressourcen', () => {
     setSprache('de');
     expect(t('body.earth.name')).toBe('Erde');
     expect(locale()).toBe('de-DE');
+  });
+
+  it('fällt bei unbekannter Kennung auf Deutsch zurück', () => {
+    setSprache('fr' as Sprache);
+    expect(sprache()).toBe('de');
+    expect(t('panel.time')).toBe('Zeit');
   });
 });
 
