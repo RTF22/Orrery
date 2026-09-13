@@ -69,6 +69,8 @@ function clamp(wert: number, min: number, max: number): number {
  * TS-Zwilling von SCHATTEN_GLSL_FUNKTIONEN weiter unten — wortgleiche
  * Rechnung, damit CPU (Okkluderfarbe/-tests) und GPU (Fragment-Shader)
  * dasselbe Ergebnis liefern (Präzedenz: beltPositionAE in belts.ts).
+ * Gleichheit sichert shadows.glsl-zwilling.test.ts durch mechanische
+ * Übersetzung des GLSL-Rumpfs ab.
  */
 export function sonnenAnteil(alpha: number, beta: number, gamma: number): number {
   if (gamma >= alpha + beta) return 1;
