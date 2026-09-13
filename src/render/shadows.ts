@@ -121,9 +121,6 @@ export function sonnenGeometrie(bodyId: string, index: BodyIndex, jd: number): S
   };
 }
 
-/** Appearance mit dem optionalen Kernschatten-Feld, das Task 2 offiziell in sim/types.ts einträgt (Entwurf §5). */
-type AppearanceMitUmbra = Body['appearance'] & { umbra?: { color: string } };
-
 /** sRGB-Kanalwert 0–1 → lineare Reflexion 0–1 (IEC 61966-2-1), wie srgbZuLinear in render/albedo.ts. */
 function srgbKanalZuLinear(kanal: number): number {
   return kanal <= 0.04045 ? kanal / 12.92 : Math.pow((kanal + 0.055) / 1.055, 2.4);
@@ -134,7 +131,7 @@ function srgbKanalZuLinear(kanal: number): number {
  * ohne Eintrag neutral [1, 1, 1].
  */
 export function kernschattenFarbeLinear(body: Body): readonly [number, number, number] {
-  const hex = (body.appearance as AppearanceMitUmbra).umbra?.color;
+  const hex = body.appearance.umbra?.color;
   if (!hex) return [1, 1, 1];
 
   const n = parseInt(hex.replace('#', ''), 16);

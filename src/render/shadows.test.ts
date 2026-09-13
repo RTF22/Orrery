@@ -205,6 +205,20 @@ describe('waehleOkkluder — Okkluderauswahl aus dargestellten Positionen/Radien
     expect(a.ring!.bodyId).toBe('saturn');
   });
 
+  it('saturn: sieben Katalogmonde ergeben genau MAX_OKKLUDER Kugeln', () => {
+    // Saturn führt sieben Monde im Katalog (mimas, enceladus, tethys,
+    // dione, rhea, titan, iapetus) — mehr als MAX_OKKLUDER, die Auswahl muss
+    // also tatsächlich kürzen und nicht bloß zufällig darunterbleiben.
+    const a = waehleOkkluder(getBody('saturn'), bodyIndex, position, radius);
+    expect(a.kugeln).toHaveLength(MAX_OKKLUDER);
+  });
+
+  it('titan: Saturn zuerst, insgesamt MAX_OKKLUDER Kugeln', () => {
+    const a = waehleOkkluder(getBody('titan'), bodyIndex, position, radius);
+    expect(a.kugeln).toHaveLength(MAX_OKKLUDER);
+    expect(a.kugeln[0]!.id).toBe('saturn');
+  });
+
   it('sun und ceres: leere Auswahl (nie Okkluder, nie beschattet)', () => {
     for (const id of ['sun', 'ceres']) {
       const a = waehleOkkluder(getBody(id), bodyIndex, position, radius);
@@ -220,23 +234,19 @@ describe('waehleOkkluder — Okkluderauswahl aus dargestellten Positionen/Radien
 });
 
 describe('kernschattenFarbeLinear — Blutmond-Farbe', () => {
-  it('Erde mit Kernschattenfarbe #ff9a5c ≈ linear [1, 0,323, 0,107]', () => {
-    // Feste Erd-Variante mit Umbra-Feld: Das offizielle
-    // Appearance.umbra-Feld kommt erst in Task 2 in den Datenkatalog
-    // (sim/types.ts, data/bodies/earth.ts) — dieser Test bleibt unabhängig
-    // davon, indem er das Feld nur lokal an eine Kopie der Erde anhängt.
-    const erdeMitKernschatten = {
-      ...getBody('earth'),
-      appearance: { ...getBody('earth').appearance, umbra: { color: '#ff9a5c' } },
-    };
-    const farbe = kernschattenFarbeLinear(erdeMitKernschatten);
+  it('Erde aus dem Katalog (#ff9a5c) ≈ linear [1, 0,323, 0,107]', () => {
+    // Seit Task 2 trägt der Datenkatalog selbst appearance.umbra
+    // (sim/types.ts, data/bodies/earth.ts) — kein lokal angehängtes
+    // Testfeld mehr nötig, kernschattenFarbeLinear liest bodyIndex['earth']
+    // direkt.
+    const farbe = kernschattenFarbeLinear(bodyIndex['earth']!);
     expect(farbe[0]).toBeCloseTo(1, 2);
     expect(farbe[1]).toBeCloseTo(0.323, 2);
     expect(farbe[2]).toBeCloseTo(0.107, 2);
   });
 
   it('Mars ohne Umbra-Feld → neutral [1, 1, 1]', () => {
-    expect(kernschattenFarbeLinear(getBody('mars'))).toEqual([1, 1, 1]);
+    expect(kernschattenFarbeLinear(bodyIndex['mars']!)).toEqual([1, 1, 1]);
   });
 });
 

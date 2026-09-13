@@ -13,6 +13,8 @@ export interface AppState {
     orbits: boolean; labels: boolean; markers: boolean;
     /** Asteroiden- und Kuipergürtel als Punktwolken (render/belts.ts). */
     belts: boolean;
+    /** Analytische Kugel-/Ring-Okkluder und Kernschattenfarbe (render/shadows.ts). */
+    shadows: boolean;
     bloom: boolean; brightness: number; lightFalloff: number;
     /**
      * Fülllicht der Nachtseite als Bruchteil des Tagniveaus desselben

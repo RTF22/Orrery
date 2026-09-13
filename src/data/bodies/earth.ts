@@ -36,6 +36,11 @@ export const earth: Body = {
   appearance: {
     textures: { albedo: 'textures/earth/albedo.jpg' },
     color: '#2a6fdb',
+    // Kernschattenfarbe (Blutmond): Gestaltungswert nahe einer
+    // Farbtemperatur von 2500 K, wie sie das durch die Erdatmosphäre
+    // gebrochene Sonnenuntergangslicht hat (Danjon-Skala L2–L3, „dunkelrot
+    // bis ziegelrot"). Linear ≈ 1,00 / 0,32 / 0,11 (Entwurf §2, §5).
+    umbra: { color: '#ff9a5c' },
   },
   info: { nameKey: 'body.earth.name', descriptionKey: 'body.earth.description' },
 };

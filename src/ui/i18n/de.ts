@@ -48,6 +48,7 @@ export const de = {
   'display.labels': 'Beschriftungen',
   'display.markers': 'Marker',
   'display.belts': 'Gürtel',
+  'display.shadows': 'Schatten',
   'display.bloom': 'Leuchten',
   'display.brightness': 'Helligkeit',
   'display.lightFalloff': 'Lichtabfall',
@@ -126,6 +127,10 @@ export const de = {
   'scene.iapetusSchief': 'Die geneigte Bahn des Iapetus',
   'scene.uranusGekippt': 'Der liegende Uranus',
   'scene.ceresGuertel': 'Ceres im Asteroidengürtel',
+  // Szene selbst kommt erst mit Task 6 (data/scenes.ts); der Schlüssel darf
+  // laut Task-2-Brief vor der Szene existieren, weil scenes.test.ts nur die
+  // Richtung Szene → Sprachschlüssel prüft, nicht umgekehrt.
+  'scene.mondfinsternis': 'Mondfinsternis',
   'model.limits': 'Modellgrenzen',
   'model.limits.text':
     'Keplerbahnen ohne gegenseitige Störungen. Volle Genauigkeit 1800 bis 2050.',

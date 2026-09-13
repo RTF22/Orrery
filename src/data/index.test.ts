@@ -314,6 +314,17 @@ describe('Katalog-Invarianten', () => {
     }
   });
 
+  it('trägt bei der Erde die Kernschattenfarbe des Blutmonds, sonst kein Umbra-Feld', () => {
+    // Task 2: Appearance.umbra?: { color: string } in sim/types.ts, nur bei
+    // der Erde befüllt (Entwurf §5) — alle übrigen Körper bleiben ohne
+    // Eintrag, weil es für sie keine belastbare Kernschattenfarbe gibt.
+    expect(bodyIndex['earth']?.appearance.umbra?.color).toBe('#ff9a5c');
+    for (const body of bodies) {
+      if (body.id === 'earth') continue;
+      expect(body.appearance.umbra, body.id).toBeUndefined();
+    }
+  });
+
   it('hält die Fact-Sheet-Albedo der Planeten und der Sternbedeckungswerte der Zwergplaneten', () => {
     // Fängt Zahlendreher beim Übertragen — Ausgangswerte siehe Quellenkommentare.
     const erwartet: Record<string, number> = {

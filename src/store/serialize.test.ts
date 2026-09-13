@@ -26,6 +26,16 @@ describe('toShareable', () => {
     expect(text).not.toContain('brightness');
     expect(text.length).toBeLessThan(300);
   });
+
+  it('nimmt eine Abweichung von display.shadows auf, der Standardzustand bleibt leer', () => {
+    // Task 2: display.shadows ist ein gewöhnliches Feld unter display —
+    // diff ist generisch, aber dieser Test belegt es konkret statt es nur
+    // anzunehmen.
+    const state = structuredClone(DEFAULT_STATE);
+    state.display.shadows = false;
+    expect(toShareable(state)).toEqual({ display: { shadows: false } });
+    expect(toShareable(structuredClone(DEFAULT_STATE))).toEqual({});
+  });
 });
 
 describe('Round-Trip', () => {

@@ -53,6 +53,14 @@ export interface Appearance {
    * Bilddatei.
    */
   rings?: { innerKm: number; outerKm: number; texture: string; profil?: RingBand[] };
+  /**
+   * Färbung des Kernschattens (Blutmond), sRGB-Hex wie `color`. Nur gesetzt,
+   * wo eine Atmosphäre das durchtretende Sonnenlicht nachweisbar rötet
+   * (Entwurf docs/superpowers/specs/2026-09-13-schatten-design.md, §2
+   * „Blutmond" und §5 „Datenkatalog"); Körper ohne Eintrag färben ihren
+   * Kernschatten neutral (render/shadows.ts, kernschattenFarbeLinear).
+   */
+  umbra?: { color: string };
 }
 
 /**
