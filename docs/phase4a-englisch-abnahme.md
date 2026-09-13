@@ -51,7 +51,7 @@ Zeitpanel (aus dem Zugriffsbaum, `browser_snapshot`): Statuszeile
 mit Wert `2000-01-31`. Kopfzeile: Gruppe „Sprache" mit Schaltfläche „Deutsch"
 (gedrückt) und „English".
 
-Screenshot: `E:\Claude\RTF\Test\Solarsystem\.playwright-mcp\a-de.png`.
+Screenshot: `.playwright-mcp/a-de.png`.
 
 ### Lage der Kopfzeile
 
@@ -75,9 +75,10 @@ Kopfzeile), **ohne Neuladen** (die Seite bleibt auf derselben Navigation),
 - `kopfzeile`: `"DEEN"`
 
 Damit sind Panel-Titel (u. a. „Time", „Scale", „Cinema mode", „Camera",
-„Display", „Bodies"), Kürzel-Übersicht (Himmelskörperliste im Panel „Bodies")
-und 3D-Labels vollständig englisch, insbesondere „Sun", „Earth" und „Moon"
-statt „Sonne", „Erde" und „Mond".
+„Display", „Bodies") und 3D-Labels vollständig englisch, insbesondere „Sun",
+„Earth" und „Moon" statt „Sonne", „Erde" und „Mond". Die Kürzel-Übersicht
+selbst (Panel „Tastenkürzel"/„Keyboard shortcuts", Taste `?`) ist ein eigenes,
+standardmäßig geschlossenes Panel und wird gesondert unten geprüft.
 
 ### Datum und Zeitraffer-Text im Zeitpanel (Englisch), wörtlich
 
@@ -107,7 +108,7 @@ auf Deutsch. Das native Datumsfeld selbst (`<input type="date">`) liefert in
 in HTML festgelegte Verhalten dieses Feldtyps und keine Eigenschaft der
 Anwendung.
 
-Screenshot: `E:\Claude\RTF\Test\Solarsystem\.playwright-mcp\a-en.png`.
+Screenshot: `.playwright-mcp/a-en.png`.
 
 ### Taste `L`
 
@@ -115,6 +116,36 @@ Screenshot: `E:\Claude\RTF\Test\Solarsystem\.playwright-mcp\a-en.png`.
 `{"lang":"de","title":"Sonnensystem","sprache":"de"}` (zurück auf Deutsch).
 Erneut `browser_press_key('l')` → `{"lang":"en","title":"Orrery","sprache":"en"}`
 (wieder Englisch). Beide Umschaltungen wirkten sofort, ohne Neuladen.
+
+### Kürzel-Übersicht (Panel „Tastenkürzel"/„Keyboard shortcuts", Taste `?`)
+
+In der ersten Fassung dieses Protokolls war „Kürzel-Übersicht" fälschlich mit
+der Himmelskörperliste im Panel „Bodies" gleichgesetzt. Die tatsächliche
+Kürzel-Übersicht ist ein eigenes, standardmäßig geschlossenes Panel
+(`Kuerzeluebersicht` in `src/ui/App.tsx`, `SHORTCUTS_PANEL`), das erst mit der
+Taste `?` erscheint und in der Abnahme oben nie geöffnet wurde. Nachgeholt:
+frisches `browser_navigate`, `quality.tier` auf `high`, 3 s gewartet, dann
+`browser_press_key('?')`. Per `browser_evaluate` alle `dt`/`dd`-Texte
+ausgelesen:
+
+Deutsch (Panel-Titel „Tastenkürzel▾"), wörtlich:
+
+```
+dt: ["H","F","Leertaste","◀ ▶","R","Pos1","C","N","L","?"]
+dd: ["Bedienoberfläche ein- und ausblenden","Vollbild","Zeit anhalten und fortsetzen","Zeitraffung verringern und erhöhen","Laufrichtung umkehren","Kamera zurücksetzen","Kino-Modus starten und beenden","Nächste Szene","Sprache umschalten","Diese Übersicht ein- und ausblenden"]
+```
+
+Danach Taste `L` (Umschalten zur Laufzeit, ohne Neuladen). Englisch
+(Panel-Titel „Keyboard shortcuts▾"), wörtlich:
+
+```
+dt: ["H","F","Space","◀ ▶","R","Home","C","N","L","?"]
+dd: ["Show or hide the interface","Fullscreen","Pause and resume time","Slow down and speed up time","Reverse direction","Reset camera","Start and stop cinema mode","Next scene","Switch language","Show or hide this overview"]
+```
+
+Damit sind Panel-Titel und Einträge der Kürzel-Übersicht vollständig englisch,
+insbesondere „Pos1" → „Home", „Leertaste" → „Space" und „Sprache umschalten"
+→ „Switch language", wie im Entwurf gefordert.
 
 ## Schritt 4: Startsprache aus dem Browser
 
@@ -151,10 +182,21 @@ Total messages: 3 (Errors: 0, Warnings: 0)
 Returning 0 messages for level "warning"
 ```
 
-Auf Stufe `info` sind es genau drei Meldungen, alle dieselbe harmlose
-Entwicklungshinweismeldung von React („Download the React DevTools …"), keine
-Fehler, keine Warnungen. Dieses Ergebnis wurde für jeden Einzelschritt
-(Navigation, Qualität setzen, Klick, je Taste `L`) einzeln bestätigt — an
+Die Kopfzeile „Total messages: 3" zählt alle Meldungen unabhängig von der
+Stufe; aufgeschlüsselt per Abfrage auf Stufe `debug` (schließt `info`,
+`warning` und `error` ein) sind es genau drei, wörtlich:
+
+```
+[DEBUG] [vite] connecting... @ http://localhost:5173/Orrery/@vite/client:882
+[DEBUG] [vite] connected. @ http://localhost:5173/Orrery/@vite/client:995
+[INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/Orrery/node_modules/.vite/deps/react-dom_client.js?v=0e3eb6ab:15804
+```
+
+Zwei reine Vite-Verbindungsmeldungen auf Stufe `debug` und eine
+React-Entwicklungshinweismeldung auf Stufe `info` — keine davon `warning`
+oder `error`. Dieses Ergebnis (0 Fehler, 0 Warnungen) wurde für jeden
+Einzelschritt (Navigation, Qualität setzen, Klick, je Taste `L`, sowie bei
+der Nachprüfung der Kürzel-Übersicht mit Taste `?`) einzeln bestätigt — an
 keiner Stelle trat ein Fehler oder eine Warnung auf.
 
 **Randbemerkung zu einer älteren, historischen Konsolen-Datei.** Eine
@@ -212,7 +254,7 @@ ist nicht Gegenstand von Phase 4a).
 | Kriterium | Nachweis | Ergebnis |
 |---|---|---|
 | Screenshot derselben Ansicht auf Deutsch und Englisch mit sichtbarer Kopfzeile | `a-de.png`, `a-en.png`, Kopfzeile in beiden bei `top 12–44`, Viewport `1282 × 1269` | erfüllt |
-| Umschalten zur Laufzeit ohne Neuladen; danach per DOM-Abfrage: Panel-Titel, Kürzel-Übersicht, ein Zeitraffer-Text und ein 3D-Label („Moon" statt „Mond") englisch; `document.documentElement.lang` = `en`, `document.title` englisch | Schritt 3 oben, ohne `browser_navigate` zwischen den Zuständen | erfüllt |
+| Umschalten zur Laufzeit ohne Neuladen; danach per DOM-Abfrage: Panel-Titel, Kürzel-Übersicht, ein Zeitraffer-Text und ein 3D-Label („Moon" statt „Mond") englisch; `document.documentElement.lang` = `en`, `document.title` englisch | Schritt 3 oben (Panel-Titel, Zeitraffer-Text, 3D-Label, `lang`/`title`) und Abschnitt „Kürzel-Übersicht" (Panel „Tastenkürzel"/„Keyboard shortcuts"), jeweils ohne `browser_navigate` zwischen den Zuständen | erfüllt |
 | Start mit `navigator.language = en-US` (Playwright-Kontext mit `locale`) zeigt Englisch ohne Klick | Playwright-MCP erlaubt keine Locale je Navigation (Werkzeuggrenze, siehe Schritt 4); ersatzweise Unit-Test `startSprache` (u. a. `startSprache('en-US', null) === 'en'`) plus Verdrahtungsnachweis im Browser mit der tatsächlichen Systemsprache (`de-DE` → `de`) | erfüllt, mit Einschränkung beim Nachweisweg (Werkzeuggrenze, kein Befund an der Anwendung) |
 | Browserkonsole ohne Fehler und Warnungen über den Prüflauf | Schritt 5 oben | erfüllt |
 | `npm run lint`, `npm test`, `npm run build` grün | Abschnitt „Lint, Test, Build" | erfüllt |
