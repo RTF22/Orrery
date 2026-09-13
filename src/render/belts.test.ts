@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import * as THREE from 'three';
 import {
   beltAttribute, beltPositionAE, beltHelligkeit, beltTagHelligkeit,
-  createBeltViews, BELT_ALBEDO, HAUPTGUERTEL_KEIM,
+  createBeltViews, BELT_ALBEDO, KUIPERGUERTEL_ALBEDO, HAUPTGUERTEL_KEIM,
 } from './belts';
 import { generateBelt, HAUPTGUERTEL, GM_SONNE_AE3_TAG2 } from '../sim/belts';
 import { positionInParentFrame, AU_KM } from '../sim/orbit';
@@ -167,6 +167,16 @@ describe('beltHelligkeit — Teilchen im Ceres-Kino', () => {
     // Entwurf begründet angehoben — nicht die Beleuchtung verändert.
     expect(BELT_ALBEDO).toBe(0.06);
   });
+
+  it('gibt dem Kuipergürtel die gemessene Albedo klassischer KBOs, 0,12', () => {
+    // Entwurf, Abschnitt 2: Die Kuiper-Wolke besteht zu 60 % aus kalten
+    // klassischen KBOs (Herschel „TNOs are Cool": Albedo ≈ 0,14), zu 25 %
+    // aus heißen (≈ 0,085) und zu 15 % aus Plutinos (≈ 0,08); gewichtet
+    // ≈ 0,12. Das ist ein Messwert, keine Sichtbarkeitszahl — der
+    // Hauptgürtel bleibt bei seinen 0,06.
+    expect(KUIPERGUERTEL_ALBEDO).toBe(0.12);
+    expect(KUIPERGUERTEL_ALBEDO).toBeGreaterThan(BELT_ALBEDO);
+  });
 });
 
 describe('createBeltViews', () => {
@@ -247,18 +257,19 @@ describe('createBeltViews', () => {
     expect(plutinoNah / aKuiper.length).toBeGreaterThan(0.15);
   });
 
-  it('gibt beiden Wolken dasselbe Material und dieselbe Albedo', () => {
+  it('gibt beiden Wolken dasselbe Material, aber je eine eigene Albedo', () => {
     const scene = new THREE.Scene();
     createBeltViews(scene);
     const [haupt, kuiper] = wolken(scene);
     const mH = haupt!.material as THREE.ShaderMaterial;
     const mK = kuiper!.material as THREE.ShaderMaterial;
-    // Derselbe Material-Typ heißt: gleiche Shader, gleiche Albedo — nur die
-    // Uniforms unterscheiden sich (uTag am jeweiligen Gürtelabstand).
+    // Derselbe Material-Typ heißt: gleiche Shader — nur die Uniforms
+    // unterscheiden sich: uTag am jeweiligen Gürtelabstand und die Albedo
+    // der jeweiligen Population (C-Typ im Hauptgürtel, KBOs draußen).
     expect(mK.vertexShader).toBe(mH.vertexShader);
     expect(mK.fragmentShader).toBe(mH.fragmentShader);
-    expect(mK.uniforms['uAlbedo']!.value).toBe(BELT_ALBEDO);
     expect(mH.uniforms['uAlbedo']!.value).toBe(BELT_ALBEDO);
+    expect(mK.uniforms['uAlbedo']!.value).toBe(KUIPERGUERTEL_ALBEDO);
     // Eigene Uniform-Objekte, sonst zöge ein uTag den anderen mit.
     expect(mK.uniforms).not.toBe(mH.uniforms);
   });

@@ -40,12 +40,23 @@ const HAUPTGUERTEL_ABSTAND_AE = 2.7;
 const KUIPERGUERTEL_ABSTAND_AE = 43;
 
 /**
- * Albedo der Gürtelteilchen: 0,06, der typische Wert dunkler C-Typ-
+ * Albedo der Hauptgürtel-Teilchen: 0,06, der typische Wert dunkler C-Typ-
  * Asteroiden, die den äußeren Hauptgürtel dominieren. Bewusst kein an die
  * Sichtbarkeit angepasster Wert — sichtbar werden die Teilchen über die
  * Punktgröße (siehe PUNKT_BASIS_PX), nicht über eine falsche Helligkeit.
  */
 export const BELT_ALBEDO = 0.06;
+
+/**
+ * Albedo der Kuipergürtel-Teilchen: 0,12. Die Kuiper-Wolke (sim/belts.ts)
+ * besteht zu 60 % aus kalten klassischen KBOs, zu 25 % aus heißen und zu
+ * 15 % aus Plutinos; die Herschel-Radiometrie („TNOs are Cool") misst dafür
+ * geometrische Albedos von rund 0,14, 0,085 und 0,08 — gewichtet 0,12.
+ * Wieder ein Messwert und keine Sichtbarkeitszahl (Entwurf, Abschnitt 2):
+ * Der Kuipergürtel ist schlicht doppelt so hell wie der C-Typ-dominierte
+ * Hauptgürtel.
+ */
+export const KUIPERGUERTEL_ALBEDO = 0.12;
 
 /**
  * Grundgröße eines Teilchens in geräteunabhängigen Pixeln. Mit
@@ -292,9 +303,15 @@ function baueGeometrie(eintrag: BeltEintrag, count: number): void {
  */
 export function createBeltViews(scene: THREE.Scene): BeltViews {
   const eintraege: BeltEintrag[] = [
-    { spec: HAUPTGUERTEL, keim: HAUPTGUERTEL_KEIM, mittlererAbstandAE: HAUPTGUERTEL_ABSTAND_AE },
-    { spec: KUIPERGUERTEL, keim: KUIPERGUERTEL_KEIM, mittlererAbstandAE: KUIPERGUERTEL_ABSTAND_AE },
-  ].map(({ spec, keim, mittlererAbstandAE }) => {
+    {
+      spec: HAUPTGUERTEL, keim: HAUPTGUERTEL_KEIM,
+      mittlererAbstandAE: HAUPTGUERTEL_ABSTAND_AE, albedo: BELT_ALBEDO,
+    },
+    {
+      spec: KUIPERGUERTEL, keim: KUIPERGUERTEL_KEIM,
+      mittlererAbstandAE: KUIPERGUERTEL_ABSTAND_AE, albedo: KUIPERGUERTEL_ALBEDO,
+    },
+  ].map(({ spec, keim, mittlererAbstandAE, albedo }) => {
     const material = new THREE.ShaderMaterial({
       transparent: true,
       depthWrite: false,
@@ -304,7 +321,7 @@ export function createBeltViews(scene: THREE.Scene): BeltViews {
         uKameraAE: { value: new THREE.Vector3() },
         uEinheitenProAE: { value: EINHEITEN_PRO_AE },
         uTag: { value: 0 },
-        uAlbedo: { value: BELT_ALBEDO },
+        uAlbedo: { value: albedo },
         uPunkt: { value: PUNKT_BASIS_PX },
         uPixelRatio: { value: 1 },
       },

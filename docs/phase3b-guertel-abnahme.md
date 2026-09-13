@@ -5,6 +5,8 @@
 Sichtprüfung Hauptgürtel) und Task 3 (Sichtprüfung Kuipergürtel); der
 Abschnitt „Sichtprüfung Kuipergürtel" wurde nach dem Gesamtreview am
 13.09.2026 mit berichtigtem Messverfahren neu aufgenommen (siehe dort).
+Nachtrag vom 13.09.2026: Kuipergürtel-Albedo auf 0,12 angehoben und
+nachgemessen (Abschnitt „(4) Nachmessung" der Sichtprüfung Kuipergürtel).
 **Prüfumgebung:** Windows 11, Desktop mit RTX 4060, Chromium (Playwright),
 Vite-Entwicklungsserver auf `localhost`, Fenster 1280 × 800 CSS-Pixel,
 `devicePixelRatio` 1, Qualitätsstufe `high` (50 000 Teilchen je Gürtel),
@@ -243,9 +245,11 @@ also mehr als das Doppelte der Belichtung, die die Pluto-Szene setzt. Das
 Kriterium stammt aus dem Entwurf und ist dort am Hauptgürtel im Ceres-Kino
 festgemacht (`uTag` 2,4176, Spitzenwert 47) — auf den Kuipergürtel bei 43 AE
 lässt es sich nicht übertragen, ohne die Albedo zu verfälschen. Sie wurde
-**nicht** angehoben und die Beleuchtung nicht angefasst; ob die Schwelle für
-den Kuipergürtel überhaupt gelten soll, ist eine Abnahmefrage und bleibt hier
-offen protokolliert.
+in diesem Durchgang **nicht** angehoben und die Beleuchtung nicht angefasst;
+die Frage ging als Entwurfsentscheidung an den Auftraggeber. Entscheidung und
+Nachmessung stehen in Abschnitt (4) unten: Der Kuipergürtel bekommt mit 0,12
+die gemessene Albedo seiner eigenen Population, und das Kriterium ist damit
+erfüllt.
 
 Sichtbar ist der Gürtel als Fläche gleichwohl zweifelsfrei: in der Systemschau
 als geschlossener, gleichmäßiger Staubring aus 22 305 aufgehellten Pixeln mit
@@ -303,6 +307,51 @@ Systemschau bei `kompakt`, Stufe `high`, beide Gürtel sichtbar (also
 Kriterium (unter 20 ms) erfüllt; wie in Task 2 liegen beide Messungen auf der
 Bildwiederholrate des Monitors (60 Hz, 16,67 ms), die Gürtel kosten also auch
 im äußeren Blickfeld keine messbare Zeit.
+
+### (4) Nachmessung mit Kuipergürtel-Albedo 0,12
+
+Entscheidung des Auftraggebers vom 13.09.2026 (Entwurf, Abschnitt 2): Der
+Kuipergürtel bekommt eine eigene Albedo von 0,12, den über die Zusammensetzung
+der Wolke gewichteten Herschel-Messwert klassischer KBOs und Plutinos; der
+Hauptgürtel bleibt bei 0,06 (`KUIPERGUERTEL_ALBEDO` und `BELT_ALBEDO` in
+render/belts.ts, je Wolke eine eigene Uniform `uAlbedo`). Beleuchtung,
+Belichtung und Punktgröße sind unverändert.
+
+Beide Aufbauten aus der Tabelle oben wurden mit demselben Verfahren neu
+aufgenommen (Differenz `display.belts` an gegen aus, Hauptgürtel über
+`setDrawRange(0, 0)` still, `uTag` vor dem Auslösen über acht Sekunden bis
+zur Konvergenz gelesen). Der Aufbau ist exakt reproduziert: Kameraposition
+(−2,5330 / −7,1237 / 1,5068) AE bzw. (0,7006 / 0,4793 / 11,9701) AE, `uTag`
+des Kuipergürtels 1,1217 bzw. 0,3289, `uTage` 2,40195 bzw. 0. Kontrolle: zwei
+Aufnahmen desselben Zustands unterscheiden sich in keinem Pixel.
+
+| Größe | Kino `pluto-charon` | Systemschau `kompakt` |
+|---|---:|---:|
+| Pixel, die der Kuipergürtel aufhellt | 1 950 (vorher 1 816) | 28 573 (vorher 22 305) |
+| Zuwachs je Teilchenpixel (p50 / p90) | 35 / 43 (vorher 19 / 22) | 11 / 13 (vorher 4 / 4) |
+| größter Zuwachs = freistehendes Teilchen | **43** (vorher 22) | 15 (vorher 4) |
+| davon Zuwachs > 10 | 1 582 | 15 018 |
+| davon Zuwachs > 20 | 1 346 | 0 |
+| davon Zuwachs > 30 | 1 100 | 0 |
+| Pixel mit Zuwachs > 40 (Kriterium) | **814** (vorher 0) | 0 |
+
+Rechenweg wie oben: 0,12 · 1,1217 / π = 0,042844 linear, nach three-ACES und
+sRGB **43,5** von 255 — gemessen 43. Systemschau: 0,12 · 0,3289 / π =
+0,012564 linear ergibt **11,4**, gemessen p50 11; das Maximum 15 entsteht,
+wo sich mehrere Teilchen auf einem Pixel überlagern. Beide Aufbauten stimmen
+wieder auf einen Zählschritt mit der Rechnung überein.
+
+Das Kriterium „Anzahl heller Pixel (> 40) ≫ 0" ist für den Kuipergürtel im
+Pluto-Kino mit 814 Pixeln jetzt **erfüllt**. Die Zahl der aufgehellten Pixel
+steigt nur mäßig (1 816 → 1 950 bzw. 22 305 → 28 573): Neu sichtbar werden
+Teilchen, deren Beitrag vorher unter den Rundungsschritt der Tonwertkurve
+fiel; die Wolke wird heller, nicht dichter. Die räumliche Verteilung im
+Pluto-Kino ist unverändert (Raster 8 × 5: Anstieg zur unteren linken Ecke,
+dort 143 Pixel je Rasterfeld gegen 0 bis 10 in der oberen rechten Ecke). In
+der Systemschau bleibt der Kuipergürtel mit p50 11 der blassere der beiden
+Ringe (Hauptgürtel dort p50 rund 30, hellstes Pixel 36, siehe Sichtprüfung
+Hauptgürtel), das Helligkeitsverhältnis der beiden Gürtel im Gesamtbild ist
+also erhalten.
 
 ### Weitere Beobachtungen
 

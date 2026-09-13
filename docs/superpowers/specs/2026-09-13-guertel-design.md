@@ -42,6 +42,19 @@ verändert.
   Punktgröße, nicht über eine falsche Helligkeit. Die Sichtprüfung misst,
   dass Teilchen im Ceres-Kino nicht unter 40 von 255 fallen; falls doch, wird
   die Albedo im Entwurf begründet angehoben, nicht die Beleuchtung.
+- **Albedo des Kuipergürtels 0,12** (Entscheidung vom 13.09.2026 nach der
+  Sichtprüfung). Die 0,06 des Hauptgürtels sind der Wert dunkler C-Typ-
+  Asteroiden und gelten für den Kuipergürtel nicht: Die Herschel-Radiometrie
+  („TNOs are Cool", Vilenius u. a. 2012/2014, Mommert u. a. 2012) misst für
+  kalte klassische KBOs geometrische Albedos um 0,14, für heiße klassische
+  um 0,085 und für Plutinos um 0,08. Mit der Zusammensetzung aus Abschnitt
+  3.2 (60 % kalt, 25 % heiß, 15 % Plutinos) ergibt das gewichtet 0,12. Das
+  ist also wieder ein Messwert der jeweiligen Population, keine
+  Sichtbarkeitszahl; der Kuipergürtel ist schlicht doppelt so hell wie der
+  Hauptgürtel. Nebenwirkung, nicht Zweck: Im Pluto-Kino kommt ein
+  freistehendes Teilchen damit rechnerisch auf 43 von 255 und erfüllt das
+  Kriterium > 40, das mit 0,06 (22 von 255) unerreichbar war. Je Gürtel eine
+  eigene Uniform `uAlbedo`, derselbe Shader.
 - **Qualitätsstufen** wie im Gesamtentwurf: 0 / 10 000 / 50 000 Teilchen für
   niedrig / mittel / hoch; `auto` verhält sich wie `medium`, so wie beim
   Pixeldichte-Deckel in `app/main.tsx`. Ein Stufenwechsel baut die Geometrie
