@@ -9,6 +9,12 @@ import {
   ringHelligkeit, ERSATZ_RING_GRAU, createRingViews,
 } from './rings';
 import { poleVector } from '../sim/frames';
+import { pickRadiusUnits } from './bodies';
+import { sonnenGeometrie } from './shadows';
+import { bodyIndex, getBody } from '../data/index';
+import { SCALE_PRESETS } from '../sim/scale';
+import { J2000 } from '../sim/time';
+import type { LightingSettings } from './lighting';
 
 describe('ringGeometrieDaten', () => {
   const daten = ringGeometrieDaten(2, 5, 64);
@@ -157,6 +163,119 @@ describe('createRingViews.ringTextur', () => {
   it('gibt für einen Körper ohne Ringe undefined zurück', () => {
     const ringe = createRingViews(new THREE.Scene());
     expect(ringe.ringTextur('earth')).toBeUndefined();
+    ringe.dispose();
+  });
+});
+
+/**
+ * Das ShaderMaterial der Ringscheibe eines Körpers. `createRingViews` legt die
+ * Meshes nur in der Szene ab und gibt sie nicht heraus; gesucht wird deshalb
+ * über die Geometrie — der äußerste Stützpunkt trägt exakt `outerKm` des
+ * jeweiligen Ringsystems (siehe ringGeometrieDaten), und die beiden
+ * Ringsysteme im Katalog (Saturn, Uranus) unterscheiden sich darin deutlich.
+ */
+function ringMesh(scene: THREE.Scene, bodyId: string): THREE.Mesh {
+  const aussenKm = getBody(bodyId).appearance.rings!.outerKm;
+  for (const kind of scene.children) {
+    if (!(kind instanceof THREE.Mesh)) continue;
+    const pos = kind.geometry.getAttribute('position');
+    let groesster = 0;
+    for (let i = 0; i < pos.count; i++) {
+      groesster = Math.max(groesster, Math.hypot(pos.getX(i), pos.getY(i)));
+    }
+    if (Math.abs(groesster - aussenKm) < 1) return kind;
+  }
+  throw new Error(`Keine Ringscheibe für ${bodyId} in der Szene`);
+}
+
+function ringMaterial(scene: THREE.Scene, bodyId: string): THREE.ShaderMaterial {
+  return ringMesh(scene, bodyId).material as THREE.ShaderMaterial;
+}
+
+const RING_LICHT: LightingSettings = {
+  brightness: 1, lightFalloff: 2, nightFill: 0.25, lightCompensation: 0.7,
+};
+
+/** Ruft update mit dem Standardaufbau der Tests auf; nur `schatten` wechselt. */
+function ringeAktualisieren(
+  ringe: ReturnType<typeof createRingViews>, schatten: boolean,
+): void {
+  ringe.update(
+    J2000, SCALE_PRESETS.schaubild, new THREE.Vector3(0, 0, 0), {}, RING_LICHT,
+    new THREE.Vector3(0, 0, 0), schatten,
+  );
+}
+
+describe('createRingViews — Planetenschatten auf dem Ring', () => {
+  it('näht die Schattenrechnung in den Ring-Fragment-Shader', () => {
+    const scene = new THREE.Scene();
+    const ringe = createRingViews(scene);
+    const { fragmentShader } = ringMaterial(scene, 'saturn');
+    expect(fragmentShader).toContain('float sonnenAnteil(');
+    expect(fragmentShader).toContain(
+      'kugelSchatten(vWeltPos, uPlanetOkkluder, uSonnenRichtung, uSonnenWinkel)',
+    );
+    // Der Schattenfaktor gehört allein auf den Direktanteil: uFuellung ist die
+    // künstlerische Nachtseitenfüllung, streu die Vorwärtsstreuung — beide
+    // bleiben unangetastet (Entwurf §2, Absatz „Ring-Shader").
+    expect(fragmentShader).toContain('* uTag * RECIPROCAL_PI * f;');
+    expect(fragmentShader).toContain('(direkt + uFuellung * uTag + streu)');
+    ringe.dispose();
+  });
+
+  it('legt die Schatten-Uniforms am Ringmaterial an', () => {
+    const scene = new THREE.Scene();
+    const ringe = createRingViews(scene);
+    const { uniforms } = ringMaterial(scene, 'saturn');
+    expect(uniforms['uPlanetOkkluder']!.value).toBeInstanceOf(THREE.Vector4);
+    expect(uniforms['uSonnenRichtung']!.value).toBeInstanceOf(THREE.Vector3);
+    expect(uniforms['uSonnenWinkel']!.value).toBe(0);
+    ringe.dispose();
+  });
+
+  it('setzt Saturn selbst als Okkluder seiner Ringe', () => {
+    const scene = new THREE.Scene();
+    const ringe = createRingViews(scene);
+    const { uniforms } = ringMaterial(scene, 'saturn');
+    ringeAktualisieren(ringe, true);
+
+    const okkluder = uniforms['uPlanetOkkluder']!.value as THREE.Vector4;
+    // w ist der dargestellte Planetenradius in Render-Einheiten — derselbe
+    // Wert, mit dem bodies.ts die Saturnkugel skaliert.
+    expect(okkluder.w).toBeCloseTo(pickRadiusUnits(getBody('saturn'), SCALE_PRESETS.schaubild), 9);
+    // xyz ist die dargestellte Mitte, also die Position der Ringscheibe selbst.
+    const mesh = ringMesh(scene, 'saturn');
+    expect(okkluder.x).toBeCloseTo(mesh.position.x, 9);
+    expect(okkluder.y).toBeCloseTo(mesh.position.y, 9);
+    expect(okkluder.z).toBeCloseTo(mesh.position.z, 9);
+    ringe.dispose();
+  });
+
+  it('nimmt Sonnenrichtung und Sonnenwinkel aus der echten Geometrie', () => {
+    const scene = new THREE.Scene();
+    const ringe = createRingViews(scene);
+    const { uniforms } = ringMaterial(scene, 'saturn');
+    ringeAktualisieren(ringe, true);
+
+    const sonne = sonnenGeometrie('saturn', bodyIndex, J2000);
+    expect(uniforms['uSonnenWinkel']!.value).toBeCloseTo(sonne.winkelRad, 12);
+    const richtung = uniforms['uSonnenRichtung']!.value as THREE.Vector3;
+    expect(richtung.x).toBeCloseTo(sonne.richtung.x, 12);
+    expect(richtung.y).toBeCloseTo(sonne.richtung.y, 12);
+    expect(richtung.z).toBeCloseTo(sonne.richtung.z, 12);
+    expect(richtung.length()).toBeCloseTo(1, 12);
+    ringe.dispose();
+  });
+
+  it('schaltet den Planetenschatten über den Radius ab', () => {
+    // Radius 0 macht kugelSchatten für jedes Fragment zu exakt 1 — der
+    // Schalter kostet damit keine Neuübersetzung des Materials.
+    const scene = new THREE.Scene();
+    const ringe = createRingViews(scene);
+    const { uniforms } = ringMaterial(scene, 'saturn');
+    ringeAktualisieren(ringe, true);
+    ringeAktualisieren(ringe, false);
+    expect((uniforms['uPlanetOkkluder']!.value as THREE.Vector4).w).toBe(0);
     ringe.dispose();
   });
 });

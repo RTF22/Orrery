@@ -8,6 +8,8 @@ import { kmToUnits, worldToRender } from './units';
 import { bodyLighting, irradianceFactor } from './lighting';
 import type { LightingSettings } from './lighting';
 import { ringProfilTexel } from './ringProfil';
+import { SCHATTEN_GLSL_FUNKTIONEN, sonnenGeometrie } from './shadows';
+import { pickRadiusUnits } from './bodies';
 
 /**
  * Stützpunkte einer Ringscheibe in der lokalen xy-Ebene.
@@ -197,8 +199,26 @@ const RING_VERTEX_SHADER = `
 // Ring exakt um π heller als der Planet bei gleicher Albedo. uFuellung *
 // uTag bleibt ungeteilt: Sie steht für einen künstlerischen Füllwert der
 // Nachtseite, keine Reflexion, und hat kein Vorbild im BRDF-Pfad.
+//
+// Planetenschatten auf dem Ring (Phase 3b-2, Entwurf §2 „Ring-Shader"):
+// `uPlanetOkkluder` trägt Mitte (xyz) und dargestellten Radius (w) des
+// Ringträgers in Render-Einheiten, kamerarelativ — dasselbe Bezugssystem, in
+// dem vWeltPos steht. Der Faktor f sitzt allein auf `direkt`: `uFuellung` ist
+// die künstlerische Nachtseitenfüllung und `streu` die Vorwärtsstreuung, die
+// im Kernschatten physikalisch zwar auch fort wäre, aber bereits selbst ein
+// Gestaltungswert ist — sie unangetastet zu lassen hält den Ringdurchflug
+// (Szene `ringdurchflug`) unverändert.
+//
+// Radius 0 ist zugleich der Aus-Schalter: kugelSchatten liefert mit w = 0 für
+// jedes Fragment exakt 1 (beta = 0, damit greift der Zweig „kleiner Okkluder
+// zentral" mit 1 − (0/alpha)² = 1). Der Schalter display.shadows kostet damit
+// keine Neuübersetzung des Materials, genauso wie bei den Körpern.
 const RING_FRAGMENT_SHADER = `
   #include <common>
+  ${SCHATTEN_GLSL_FUNKTIONEN}
+  uniform vec4 uPlanetOkkluder;
+  uniform vec3 uSonnenRichtung;
+  uniform float uSonnenWinkel;
   uniform sampler2D tRing;
   uniform vec3 uSonne;
   uniform float uTag;
@@ -215,7 +235,10 @@ const RING_FRAGMENT_SHADER = `
     vec3 L = normalize(uSonne - vWeltPos);
     vec3 V = normalize(-vWeltPos);            // Kamera sitzt im Ursprung
     vec3 N = normalize(vNormal);
-    float direkt = abs(dot(N, L)) * uTag * RECIPROCAL_PI; // beidseitig: ein Ring hat keine Rückseite
+    float f = uPlanetOkkluder.w > 0.0
+      ? kugelSchatten(vWeltPos, uPlanetOkkluder, uSonnenRichtung, uSonnenWinkel)
+      : 1.0;
+    float direkt = abs(dot(N, L)) * uTag * RECIPROCAL_PI * f; // beidseitig: ein Ring hat keine Rückseite
     float streu = uStreuung * pow(max(0.0, -dot(V, L)), uSchaerfe) * uTag * RECIPROCAL_PI;
     gl_FragColor = vec4(ring.rgb * (direkt + uFuellung * uTag + streu), ring.a);
   }
@@ -301,6 +324,7 @@ export interface RingViews {
     visible: Record<string, boolean>,
     licht: LightingSettings,
     sonneRender: THREE.Vector3,
+    schatten: boolean,
   ): void;
   /**
    * Die aktuell gebundene Textur des Rings eines Körpers, sonst `undefined`.
@@ -369,6 +393,11 @@ export function createRingViews(scene: THREE.Scene): RingViews {
         uFuellung: { value: 0 },
         uStreuung: { value: RING_STREUUNG },
         uSchaerfe: { value: RING_SCHAERFE },
+        // Schattenwurf des Ringträgers auf seine eigenen Ringe; w = 0 heißt
+        // „kein Schatten", siehe der Kommentar an RING_FRAGMENT_SHADER.
+        uPlanetOkkluder: { value: new THREE.Vector4() },
+        uSonnenRichtung: { value: new THREE.Vector3(1, 0, 0) },
+        uSonnenWinkel: { value: 0 },
       },
       vertexShader: RING_VERTEX_SHADER,
       fragmentShader: RING_FRAGMENT_SHADER,
@@ -381,7 +410,7 @@ export function createRingViews(scene: THREE.Scene): RingViews {
   }
 
   return {
-    update(jd, s, cameraKm, visible, licht, sonneRender) {
+    update(jd, s, cameraKm, visible, licht, sonneRender, schatten) {
       for (const { bodyId, mesh, material } of eintraege) {
         if (visible[bodyId] === false) { mesh.visible = false; continue; }
         mesh.visible = true;
@@ -425,6 +454,27 @@ export function createRingViews(scene: THREE.Scene): RingViews {
         (material.uniforms['uSonne']!.value as THREE.Vector3).copy(sonneRender);
         material.uniforms['uTag']!.value = licht.brightness * l.colorGain * distanzfaktor;
         material.uniforms['uFuellung']!.value = licht.nightFill;
+
+        // Schatten des Ringträgers auf seinen eigenen Ring. Der einzige
+        // mögliche Kugel-Okkluder eines Rings ist sein Planet (Entwurf §2,
+        // „Auswahl der Okkluder": „Ringe: nur der Planet"), die Auswahl aus
+        // shadows.ts braucht es hier also nicht. Mitte und Radius sind
+        // dargestellte Werte in Render-Einheiten — mesh.position ist genau die
+        // Planetenmitte, weil die Ringscheibe im Planetenmittelpunkt sitzt,
+        // und pickRadiusUnits liefert denselben Radius, mit dem bodies.ts die
+        // Kugel skaliert. Sonnenrichtung und -winkel dagegen stammen aus der
+        // echten Geometrie (sonnenGeometrie); die Begründung dazu steht am
+        // Interface SchattenUniforms in bodies.ts.
+        const okkluder = material.uniforms['uPlanetOkkluder']!.value as THREE.Vector4;
+        if (schatten) {
+          okkluder.set(r.x, r.y, r.z, pickRadiusUnits(body, s));
+          const sonne = sonnenGeometrie(bodyId, bodyIndex, jd);
+          (material.uniforms['uSonnenRichtung']!.value as THREE.Vector3)
+            .set(sonne.richtung.x, sonne.richtung.y, sonne.richtung.z);
+          material.uniforms['uSonnenWinkel']!.value = sonne.winkelRad;
+        } else {
+          okkluder.w = 0;
+        }
       }
     },
     ringTextur(bodyId) {

@@ -107,6 +107,7 @@ export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandl
       ringe.update(
         jd, state.scale, cameraKm, state.visible, belichtet,
         new THREE.Vector3(lichtRender.x, lichtRender.y, lichtRender.z),
+        state.display.shadows,
       );
 
       // Die Gürtel rechnen ihre Bahnen im Vertex-Shader (belts.ts) und
