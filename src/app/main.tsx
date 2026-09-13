@@ -8,6 +8,7 @@ import { attachCameraInput } from '../render/camera/input';
 import { startLoop } from './loop';
 import { tickCinema } from './cinema';
 import { useStore } from '../store';
+import { startSprache } from '../ui/i18n';
 import { App as Bedienoberflaeche } from '../ui/App';
 import type { QualityTier } from '../store/types';
 import { QUALITY_SETTINGS } from './quality';
@@ -105,6 +106,10 @@ const wurzelElement = document.getElementById('root');
 if (wurzelElement === null) {
   throw new Error('Wurzelelement "#root" wurde nicht gefunden.');
 }
+
+// Startsprache aus dem Browser; ein geteilter Zustand (URL-Fragment, Phase
+// 4b) wird hier später als zweiter Parameter eingesetzt.
+useStore.getState().setUi({ language: startSprache(navigator.language, null) });
 
 createRoot(wurzelElement).render(
   <StrictMode>

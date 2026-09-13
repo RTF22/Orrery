@@ -1,5 +1,6 @@
 import { useStore } from '../store';
 import { t } from './i18n';
+import { useSprache } from './i18n/useSprache';
 import { Panel } from './panels/Panel';
 import { TimePanel } from './panels/TimePanel';
 import { ScalePanel } from './panels/ScalePanel';
@@ -48,6 +49,9 @@ function Kuerzeluebersicht(): React.JSX.Element {
  * bis 19; hier steht zunächst das Gerüst mit Tastenkürzeln und Übersicht.
  */
 export function App(): React.JSX.Element | null {
+  // Muss vor allem anderen stehen, damit t() in diesem Durchlauf schon die
+  // neue Tabelle sieht.
+  useSprache();
   useShortcuts();
   const untaetig = useIdleHide();
   const versteckt = useStore((s) => s.ui.hidden);
