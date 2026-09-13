@@ -165,8 +165,15 @@ describe('tickCinema — Zeitsprung auf die nächste Mondfinsternis', () => {
       time: { ...DEFAULT_STATE.time, jd: J2000 },
     });
     tickCinema(0.016);
-    const gesprungen = useStore.getState().time.jd;
+
+    // Die Zeit mitten in die Finsternis verstellen: Spränge der zweite Tick
+    // erneut, landete er wieder vor dem Eintritt — der Test fiele. Ohne
+    // diese Verstellung schriebe ein zweiter Sprung denselben Wert und
+    // bliebe unsichtbar.
+    const f = naechsteMondfinsternis(bodyIndex, J2000)!;
+    const mitten = f.eintrittJd + 0.5 * (f.austrittJd - f.eintrittJd);
+    useStore.setState({ time: { ...useStore.getState().time, jd: mitten } });
     tickCinema(0.016);
-    expect(useStore.getState().time.jd).toBe(gesprungen);
+    expect(useStore.getState().time.jd).toBe(mitten);
   });
 });

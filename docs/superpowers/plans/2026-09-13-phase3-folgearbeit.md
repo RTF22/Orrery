@@ -13,7 +13,7 @@
 ## Globale Randbedingungen
 
 - Alles auf Deutsch (Commit-Texte, Kommentare, Tests). Umlaute korrekt.
-- Commits gehören allein Jens Fricke. Keine `Co-Authored-By`-Zeile, keine `Claude-Session`-Zeile; die Wörter „Claude" und „Anthropic" tauchen in Commit-Texten und versionierten Dateien nicht auf. Vor jedem Commit: `git log --format=%B -1 | grep -ci 'claude\|anthropic\|co-authored'` muss nach dem Commit 0 ergeben.
+- Keine Fremdzurechnung im Commit-Text: keine Co-Autor-Zeile, keine Sitzungs-URL, keine Werkzeugnamen. Vor jedem Commit prüfen: `git log --format=%B -1 | grep -ci 'co-authored\|session'` muss 0 ergeben.
 - Branch `phase3-folgearbeit` (von `master`), **kein Worktree**: der laufende Vite-Server auf Port 5173 (Basis `/Orrery/`) liefert dieses Verzeichnis aus. Erst `curl -s -o /dev/null -w '%{http_code}' http://localhost:5173/Orrery/` prüfen, keinen zweiten Server starten.
 - GLSL liegt in TS-Template-Literalen: **keine Backticks in Shader-Kommentaren**.
 - Playwright schreibt nur nach `.playwright-mcp/` (git-ignoriert). Skripte und Bilder werden nicht committet.
@@ -101,7 +101,7 @@ Der Wechsel des Typs darf das Bild nicht verändern. Vorgehen:
 npm run lint
 git add src/render/shadows.ts src/render/shadows.test.ts
 git commit -m "Schatten: schattenFaktor im Körper-Shader als Skalar statt vec3"
-git log --format=%B -1 | grep -ci 'claude\|anthropic\|co-authored'   # muss 0 sein
+git log --format=%B -1 | grep -ci 'co-authored\|session'   # muss 0 sein
 ```
 
 ---
@@ -230,7 +230,7 @@ Den Kommentar darüber („Zeitsprung beim Wechsel AUF eine Szene mit `zeitpunkt
 npm run lint
 git add src/app/cinema.ts src/app/cinema.test.ts src/data/scenes.ts
 git commit -m "Kino: Zeitsprung der Finsternis-Szene auch beim Start auf ihr (Playlist-Position 0, Neustart)"
-git log --format=%B -1 | grep -ci 'claude\|anthropic\|co-authored'   # muss 0 sein
+git log --format=%B -1 | grep -ci 'co-authored\|session'   # muss 0 sein
 ```
 
 ---
@@ -344,7 +344,7 @@ In `src/render/shadows.ts` im JSDoc von `sonnenAnteil` nach dem Satz „TS-Zwill
 ```bash
 git add src/render/shadows.glsl-zwilling.test.ts src/render/shadows.ts
 git commit -m "Schatten: Vergleichstest TS/GLSL für sonnenAnteil über mechanische Übersetzung des Shader-Rumpfs"
-git log --format=%B -1 | grep -ci 'claude\|anthropic\|co-authored'   # muss 0 sein
+git log --format=%B -1 | grep -ci 'co-authored\|session'   # muss 0 sein
 ```
 
 ---
@@ -436,7 +436,7 @@ Für jede geänderte Szene den Wert setzen und im Kommentar über der Szene eine
 ```bash
 git add src/data/scenes.ts
 git commit -m "Kino: Szenen galileisches-schattenspiel und saturn-streiflicht näher am Ziel, Schatten sichtbar (Messung 13.09.2026)"
-git log --format=%B -1 | grep -ci 'claude\|anthropic\|co-authored'   # muss 0 sein
+git log --format=%B -1 | grep -ci 'co-authored\|session'   # muss 0 sein
 ```
 
 Wählt Jens „bleibt wie es ist", entfällt Task 5; der Befund wird in `docs/phase3b-schatten-abnahme.md` unter „Offene Folgearbeit" als erledigt mit Verweis auf die Messwerte vermerkt (eigener kleiner Commit „Abnahme 3b-2: Szenenabstände geprüft, unverändert belassen").

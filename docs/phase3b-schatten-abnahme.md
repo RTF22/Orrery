@@ -601,8 +601,10 @@ Die in der Abnahme bewusst offen gelassenen Punkte, erledigt auf dem Branch
   Gegenprobe mit verstelltem Shader lässt den Test fallen.
 - **Szenenabstände geprüft, unverändert belassen.** `saturn-streiflicht`: Bei
   5 Radien (Ist) 75 617 Pixel Schattendifferenz mit deutlichem
-  Ringschattenband; bei 3,5 Radien ist die Kugel an drei Seiten angeschnitten,
-  bei 2,5 Radien füllt sie das Bild ohne Ringe. `galileisches-schattenspiel`:
+  Ringschattenband; bei 3,5 Radien (208 608 Pixel) ist die Kugel an drei
+  Seiten angeschnitten, bei 2,5 Radien (124 736 Pixel) füllt sie das Bild ohne
+  Ringe — näher heran gäbe mehr Schatten, die Komposition ist der Grund für
+  das Nein. `galileisches-schattenspiel`:
   bei 55, 30 und 15 Radien je 0 Schattenpixel in der Szene, weil zum
   Aufnahmezeitpunkt kein Mond vor der Sonne stand; ein berechneter
   Doppeltransit (Europa und Ganymed, jd 2451552,12 in Schaubild-Geometrie)

@@ -64,6 +64,18 @@ describe('Kino-Steuerung', () => {
     expect(useStore.getState().cinema.running).toBe(true);
   });
 
+  it('lässt elapsedSec beim Wiederanlauf nach Ruhe stehen', () => {
+    // app/cinema.ts#szenenBeginn wertet elapsedSec 0 als Szenenbeginn und
+    // löst dann den Zeitsprung der Finsternis-Szene aus. Setzte der
+    // Wiederanlauf den Zähler zurück, spränge die Zeit nach jeder Ruhepause
+    // erneut vor die Finsternis.
+    useStore.getState().setCinema({ running: true, pauseOnInput: true, idleResumeSec: 30, elapsedSec: 12 });
+    noteUserInput();
+    resumeIfIdle(Date.now() + 31_000);
+    expect(useStore.getState().cinema.running).toBe(true);
+    expect(useStore.getState().cinema.elapsedSec).toBe(12);
+  });
+
   it('nimmt nicht wieder auf, wenn der Kino-Modus von Hand beendet wurde', () => {
     startCinema();
     stopCinema();

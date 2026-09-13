@@ -8,9 +8,10 @@ const clamp = (v: number, lo: number, hi: number): number => Math.min(Math.max(v
 /**
  * Schneidet den Rumpf von `float sonnenAnteil(...) { ... }` aus dem
  * GLSL-Text und übersetzt ihn mechanisch nach JavaScript. Bewusst nur die
- * Konstrukte, die dort heute vorkommen — jede Erweiterung des Shaders, die
- * hier nicht abgebildet ist, lässt den Restprüfungs-Test unten fallen und
- * verlangt eine bewusste Ergänzung.
+ * Konstrukte, die dort heute vorkommen. Unbekannte Konstrukte fallen
+ * entweder in der Restprüfung unten auf oder schon beim Konstruieren der
+ * Funktion (ReferenceError/SyntaxError) — in beiden Fällen laut, nie still
+ * falsch.
  */
 function glslSonnenAnteilNachJs(quelle: string): { fn: Anteil; rumpf: string } {
   const kopf = 'float sonnenAnteil(float alpha, float beta, float gamma) {';
@@ -30,6 +31,8 @@ function glslSonnenAnteilNachJs(quelle: string): { fn: Anteil; rumpf: string } {
   return { fn: (a, b, g) => roh(a, b, g, clamp), rumpf };
 }
 
+// Geprüft wird die Rechenvorschrift in doppelter Genauigkeit, nicht die
+// Float-Genauigkeit der GPU.
 describe('sonnenAnteil — TS- und GLSL-Fassung rechnen gleich', () => {
   const { fn: glsl, rumpf } = glslSonnenAnteilNachJs(SCHATTEN_GLSL_FUNKTIONEN);
 
