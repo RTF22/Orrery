@@ -58,6 +58,24 @@ describe('bodyLighting — Tagseite', () => {
     expect(drei.dayLevel).toBeCloseTo(3 * eins.dayLevel, 12);
   });
 
+  it('gibt als Tagniveau, was der Renderweg tatsächlich umsetzt: brightness · E · colorGain', () => {
+    // Befund aus der Abnahme 3a (docs/phase3a-abnahme.md, Nachtrag): Pluto
+    // blieb bei 30 AE trotz Distanzausgleich bei einem Median von 21–25 von
+    // 255. Ursache war die Klemme der Farbverstärkung: dayLevel rechnete
+    // E^(1-c), das Material bekam aber nur MAX_COLOR_GAIN · E. Das Tagniveau
+    // muss die Größe sein, die auf dem Material auch ankommt — sonst prüfen
+    // die Schranken unten eine Zahl, die kein Pixel je erreicht.
+    for (const au of [1, 5.2, 9.6, 30, 97]) {
+      const s = { ...STANDARD, brightness: 1, lightFalloff: 2, lightCompensation: 0.85 };
+      const l = bodyLighting(au * AU_KM, s);
+      const e = irradianceFactor(au * AU_KM, 2);
+      expect(l.dayLevel).toBeCloseTo(e * l.colorGain, 12);
+      // Und diese gerenderte Größe folgt bis 97 AE dem Ausgleich E^(1-c) —
+      // die Klemme darf innerhalb des Katalogs nie greifen.
+      expect(l.dayLevel).toBeCloseTo(Math.pow(e, 1 - 0.85), 12);
+    }
+  });
+
   it('hält die Farbverstärkung in Grenzen', () => {
     const fern = bodyLighting(1e-6 * AU_KM, { ...STANDARD, lightCompensation: 1 });
     expect(fern.colorGain).toBeLessThanOrEqual(MAX_COLOR_GAIN);
@@ -95,15 +113,13 @@ describe('Standardeinstellung — kein Körper bleibt schwarz', () => {
   // sRGB-Ausgabe hebt das deutlich an. Vorher lag Neptun bei
   // „Realistisch" bei 0,0011 — im Bild gemessene 2 von 255, also schwarz.
   //
-  // HINWEIS ZUR AUSSAGEKRAFT: dayLevel ist NICHT dieselbe Größe wie die
-  // tatsächlich gerenderte Helligkeit, sobald der Distanzausgleich greift.
-  // bodyLighting() klemmt colorGain auf MAX_COLOR_GAIN, dayLevel selbst
-  // bleibt dabei aber ungeklemmt — ab der Entfernung, an der colorGain die
-  // Klemme erreicht, wächst dayLevel rechnerisch weiter, obwohl der
-  // Renderweg diesen Wert gar nicht mehr umsetzt. Dieser Test sichert
-  // deshalb nur dayLevel als Rechengröße ab, nicht das gerenderte Bild.
-  // Das ist eine bekannte, hier bewusst NICHT behobene Lücke am Renderweg
-  // (lighting.ts selbst) — eigens zu behandeln, nicht Teil dieser Fixrunde.
+  // dayLevel ist seit der Nachbesserung nach der Abnahme 3a dieselbe Größe,
+  // die das Material bekommt (brightness · E · colorGain, aus der geklemmten
+  // Verstärkung — siehe Test „gibt als Tagniveau, was der Renderweg
+  // tatsächlich umsetzt" oben). Die Schranken hier prüfen also das
+  // gerenderte Niveau, nicht mehr nur eine Rechengröße. Vorher klemmte
+  // MAX_COLOR_GAIN = 12 ab 4,3 AE, und dayLevel lief ungeklemmt weiter —
+  // dieser Block war grün, während Pluto im Bild bei 21–25 von 255 lag.
   //
   // Ausdrücklich nur EIN Körper von kind: 'dwarf' ausgenommen — Eris,
   // namentlich (b.id !== 'eris'), nicht die ganze Klasse. Nachgerechnet mit

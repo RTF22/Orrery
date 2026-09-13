@@ -226,12 +226,51 @@ Das ist kein Szenenfehler mehr, sondern die Beleuchtungsrechnung bei 30 AE —
 derselbe Befund wie bei den Saturnmonden im Kommentar zu „Enceladus-hell", und
 bleibt als offener Punkt stehen.
 
+## Nachtrag: Tagseite ferner Körper (13.09.2026)
+
+Die Ursache der dunklen Tagseite lag nicht am Distanzausgleich selbst, sondern
+an seiner Klemme: `bodyLighting` begrenzte die Farbverstärkung auf 12, rechnete
+`dayLevel` aber ungeklemmt weiter. Die Verstärkung `E^-0,85` erreicht 12 schon
+bei 4,3 AE; jenseits davon bekam das Material weniger, als die Formel versprach
+— bei Pluto (30 AE, „Realistisch") 12 statt 324, also ein 27-fach zu dunkles
+Tagniveau, während die Nachtseitenfüllung auf dem ungeklemmten Wert stand und
+ferne Körper damit gleichmäßig grau statt beleuchtet erschienen. Der
+Beleuchtungstest hatte diese Lücke im Kommentar benannt und ausdrücklich nur die
+Rechengröße geprüft.
+
+Behebung in `render/lighting.ts`: `dayLevel` ist jetzt `brightness · E ·
+colorGain`, also die Größe, die das Material tatsächlich bekommt; die Klemme
+liegt bei 1e5 und greift damit erst weit jenseits des Katalogs (Eris bei
+vollem Ausgleich braucht rund 9 500). Ausbrennen ist ausgeschlossen, weil auf
+dem Material `E^(1-c)` ankommt, jenseits von 1 AE also höchstens 1. Ein neuer
+Test hält fest, dass `dayLevel` bis 97 AE dem Ausgleich `E^(1-c)` folgt; die
+bestehenden 30-%- und 5-%-Schranken prüfen seither das gerenderte Niveau.
+Testzahl 691.
+
+Pixelmessung (Median der Scheibe, ohne Bahnlinien und Beschriftung, Preset
+„Schaubild"):
+
+| Körper | vorher | nachher |
+|---|---:|---:|
+| Pluto, Szene Nr. 9 | 25 | 43 |
+| Charon, Szene Nr. 9 | 15 | 23 |
+| Erde, Referenz bei 1 AE (Verstärkung 1, unverändert) | — | 51 |
+| Enceladus, Szene Nr. 13 | — | 34 |
+
+Pluto steht damit bei 84 % der Erde, passend zu `E^0,15` = 0,54 im linearen
+Raum nach Tonemapping. Was bleibt, ist die Gesamtbelichtung: Auch die Erde
+liegt auf der vollen Tagseite nur bei einem Median von 51, weil der
+Lambert-Anteil des Materials das Licht mit 1/π gewichtet und die Texturen
+selbst mittelgrau sind (Enceladus-Karte: Median 115 von 255). Das betrifft
+alle Körper gleichermaßen und ist eine Frage des Standardwerts von
+`brightness`, nicht der Abstandsrechnung — siehe „Offene Punkte".
+
 ## Offene Punkte
 
-- **Tagseite ferner Körper zu dunkel.** Pluto erreicht bei 30 AE trotz
-  Distanzausgleich nur einen Median von 21–25 von 255 (Nachtrag oben), die
-  Saturnmonde zeigen dieselbe Dämpfung. Zu prüfen in `render/lighting.ts`, ob
-  Distanzausgleich oder Helligkeit für die äußeren Körper nachgeführt werden.
+- **Gesamtbelichtung.** Die volle Tagseite der Erde erreicht nur einen Median
+  von 51 von 255 (Nachtrag oben). Ob der Standardwert `brightness` 1 angehoben
+  wird, ist eine Gestaltungsentscheidung mit Blick auf Sonne, Bloom und den
+  Regler „Nachtseite", und wurde hier bewusst nicht mitentschieden.
 - **Sechs Körper ohne Textur** (fünf Uranusmonde, Deimos), begründet in
   `ASSETS.md`; die Ausweichfarbe trägt sie. Bleibt offen, bis eine amtliche
   Karte mit weniger als etwa 40 % Datenlücke auftaucht.
