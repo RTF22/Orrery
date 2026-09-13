@@ -15,10 +15,13 @@ describe('useSprache', () => {
   afterEach(() => { setSprache('de'); });
 
   it('zeichnet mit der Sprache aus dem Store und setzt lang und title', () => {
+    // Titel ist in beiden Sprachen der Produktname; der Vorbelegung mit 'x'
+    // weist nach, dass der Effekt ihn wirklich setzt.
+    document.title = 'x';
     render(<Probe />);
     expect(screen.getByText('Zeit')).toBeTruthy();
     expect(document.documentElement.lang).toBe('de');
-    expect(document.title).toBe('Sonnensystem');
+    expect(document.title).toBe('Orrery');
 
     act(() => { useStore.getState().setUi({ language: 'en' }); });
     expect(screen.getByText('Time')).toBeTruthy();

@@ -4,7 +4,7 @@
  * später eine reine Datenfrage.
  */
 export const de = {
-  'app.title': 'Sonnensystem',
+  'app.title': 'Orrery',
   'panel.time': 'Zeit',
   'panel.scale': 'Maßstab',
   'panel.camera': 'Kamera',
