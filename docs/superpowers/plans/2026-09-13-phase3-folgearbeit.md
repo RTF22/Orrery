@@ -446,7 +446,7 @@ Wählt Jens „bleibt wie es ist", entfällt Task 5; der Befund wird in `docs/ph
 ### Abschluss
 
 - [ ] `npm run lint`, `npm test`, `npm run build` auf dem Branch, Ausgabe zeigen.
-- [ ] `docs/phase3b-schatten-abnahme.md`: Abschnitt „Offene Folgearbeit" um den Stand ergänzen (drei Punkte erledigt mit Commit-Kürzel, Szenen laut Ruling). `CLAUDE.md` (lokal, nicht versioniert) im Abschnitt „Stand" nachziehen.
+- [ ] `docs/phase3b-schatten-abnahme.md`: Abschnitt „Offene Folgearbeit" um den Stand ergänzen (drei Punkte erledigt mit Commit-Kürzel, Szenen laut Ruling). die lokale Projektanleitung (nicht versioniert) im Abschnitt „Stand" nachziehen.
 - [ ] Fast-Forward nach `master` (`git checkout master && git merge --ff-only phase3-folgearbeit`), Branch löschen, `.playwright-mcp/` leeren.
 
 ## Rulings

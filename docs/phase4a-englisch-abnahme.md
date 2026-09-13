@@ -8,6 +8,8 @@ Namensauflöser, Schichtentest über `import.meta.glob`; dazu zwei Fix-Commits).
 `http://localhost:5173/Orrery/`, Browserfenster 1282 × 1269 CSS-Pixel,
 Qualitätsstufe `high` (per `window.store.setState`), Zeit nicht angehalten
 (für dieses Protokoll nicht nötig, da keine Bildvergleiche gemessen werden).
+**Nachtrag:** Der zugängliche Name der Sprachschaltflächen lautet seit
+Commit A „Deutsch (DE)"/„English (EN)"; die übrigen Werte sind unverändert.
 
 Geprüft wird die Sprachumschaltung selbst: Startsprache aus dem Browser,
 Kopfzeile mit den Schaltflächen „DE"/„EN", Taste `L`, Umschalten zur Laufzeit
@@ -48,10 +50,12 @@ Ergebnis (wörtlich):
 
 Zeitpanel (aus dem Zugriffsbaum, `browser_snapshot`): Statuszeile
 „31.01.2000, 04:44", Geschwindigkeit „1 Tag/s", Datumsfeld (Textbox „Datum")
-mit Wert `2000-01-31`. Kopfzeile: Gruppe „Sprache" mit Schaltfläche „Deutsch"
-(gedrückt) und „English".
+mit Wert `2000-01-31`. Kopfzeile: Gruppe „Sprache" mit Schaltfläche
+„Deutsch (DE)" (gedrückt) und „English (EN)" (Stand nach Fix-Commit A;
+zugänglicher Name seither mit Kürzel, siehe Nachtrag im Kopf).
 
-Screenshot: `.playwright-mcp/a-de.png`.
+Screenshot: `.playwright-mcp/a-de.png` (nicht versioniert; der Ordner wird
+nach der Abnahme geleert).
 
 ### Lage der Kopfzeile
 
@@ -108,7 +112,8 @@ auf Deutsch. Das native Datumsfeld selbst (`<input type="date">`) liefert in
 in HTML festgelegte Verhalten dieses Feldtyps und keine Eigenschaft der
 Anwendung.
 
-Screenshot: `.playwright-mcp/a-en.png`.
+Screenshot: `.playwright-mcp/a-en.png` (nicht versioniert; der Ordner wird
+nach der Abnahme geleert).
 
 ### Taste `L`
 

@@ -478,7 +478,7 @@ import { describe, it, expect } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-/** render/ darf ui/ nicht kennen (Entwurf 4a, §4.3; CLAUDE-Schichtregel). */
+/** render/ darf ui/ nicht kennen (Entwurf 4a, §4.3; Schichtregel der Projektanleitung). */
 describe('Schichtung', () => {
   it('render/ importiert nichts aus ui/', () => {
     const ordner = join(__dirname);
@@ -700,7 +700,7 @@ git log --format=%B -1 | grep -ci 'co-authored\|session'   # muss 0 sein
 ### Abschluss
 
 - [ ] `npm run lint`, `npm test`, `npm run build` auf dem Branch, Ausgabe zeigen.
-- [ ] `README.md`: im Abschnitt zum Stand „Phase 4 (Komfort: Presets, URL-Sharing, Englisch, Infopanel)" → Englisch als erledigt markieren (ein Halbsatz). `CLAUDE.md` (lokal) Stand nachziehen.
+- [ ] `README.md`: im Abschnitt zum Stand „Phase 4 (Komfort: Presets, URL-Sharing, Englisch, Infopanel)" → Englisch als erledigt markieren (ein Halbsatz). die lokale Projektanleitung im Abschnitt „Stand" nachziehen.
 - [ ] Fast-Forward nach `master`, Branch `englisch` löschen, `.playwright-mcp/` leeren. Tag: keiner (Phase 4 wird erst nach 4c getaggt).
 
 ## Rulings
