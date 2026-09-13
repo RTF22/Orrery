@@ -237,13 +237,30 @@ export const SCENES: readonly Scene[] = [
     targetId: 'pluto',
     path: 'orbit',
     distanceBasis: 'bodyRadius',
-    params: { distanceInRadii: 55, elevationDeg: 20, azimuthDeg: 0, azimuthRateDegPerSec: 1.5 },
+    params: { distanceInRadii: 55, elevationDeg: 20, azimuthDeg: 70.5, azimuthRateDegPerSec: 1.5 },
     durationSec: 45,
     timeRateDaysPerSec: 0.3,
     // Elevation additiv: Basiswert 20° plus Versatz [-10, 10] ergibt den
     // beabsichtigten absoluten Bereich 10–30°.
+    //
+    // Azimut auf die Sonnenrichtung (Nachbesserung nach der Abnahme, siehe
+    // docs/phase3a-abnahme.md, „Offene Punkte"): Mit Azimut 0° und Variation
+    // 0–360° zeigte die Szene das Paar in beiden geprüften Ziehungen nahezu
+    // unbeleuchtet — Pluto als Sichel mit höchstens 30 von 255, in der
+    // zweiten Ziehung als schwarze Scheibe vor der Sonne. Dieselbe Herleitung
+    // wie bei enceladus-hell und triton-rueckwaerts: Richtung Pluto→Sonne zur
+    // Epoche J2000 aus Plutos Bahnelementen über positionAt (heliozentrisch
+    // x=−1 479 738 352, y=−4 177 504 519, z=875 270 168 km, 30,20 AE) —
+    // −plutoPos normiert ergibt Azimut 70,495°, Elevation −11,17°. Charon
+    // steht nur 19 596 km daneben, die Parallaxe zur Sonne ist mit
+    // arctan(19 596 / 4 517 000 000) ≈ 0,0002° belanglos. Bei Elevation
+    // 10–30° und Sonnenelevation −11° liegt der Phasenwinkel zwischen rund
+    // 21° und 41° zuzüglich der Azimutstreuung: eine deutlich beleuchtete,
+    // leicht angeschnittene Scheibe statt einer Sichel. scenes.test.ts
+    // rechnet den Azimut aus denselben Bahnelementen nach, statt die Zahl
+    // nur zu wiederholen.
     variation: {
-      azimuthDeg: [0, 360], elevationDeg: [-10, 10], distanceFactor: [0.8, 1.5],
+      azimuthDeg: [-20, 20], elevationDeg: [-10, 10], distanceFactor: [0.8, 1.5],
     },
   },
   {

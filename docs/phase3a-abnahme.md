@@ -198,13 +198,40 @@ Hauptentwurfs.
   erzeugt — eine Korrektur der Kontrollrechnung, keine Aufweichung der
   1-%-Schranke.
 
+## Nachtrag: Pluto–Charon auf Sonnenrichtung (13.09.2026)
+
+Der Befund aus der Sichtprüfung ist behoben: Die Szene steht jetzt wie
+„Enceladus-hell" und „Triton-rückwärts" auf der berechneten Sonnenrichtung —
+Azimut 70,5° (Richtung Pluto→Sonne zur Epoche J2000 aus Plutos Bahnelementen,
+Elevation der Sonne −11,17°) mit Streuung ±20° statt 0–360°.
+`scenes.test.ts` rechnet den Azimut aus denselben Bahnelementen nach, statt die
+Zahl zu wiederholen; Testzahl damit 690.
+
+Dieselbe Messung wie oben, ohne Bahnlinien und Beschriftung, nach dem Neuladen
+der Seite:
+
+| Variation | Pluto | Charon |
+|---|---|---|
+| Nr. 9 (erste Runde) | volle Scheibe 27 × 27 px, Maximum 217, Median 25 | 13 × 12 px, Maximum 36 |
+| Nr. 27 (zweite Runde) | volle Scheibe 23 × 22 px, Maximum 36, Median 21 | 14 × 12 px, Maximum 42 |
+
+Beide Ziehungen zeigen das Paar als volle, sonnenzugewandte Scheiben; die
+Scheibengrößen passen zu 55 Plutoradien mal Abstandsfaktor 1,2 beziehungsweise
+1,45. Das Maximum von 217 in der ersten Ziehung stammt von den hellen
+Eisflächen der New-Horizons-Karte, die zweite Ziehung zeigt (0,3 Tage/s
+Zeitraffer, 6,4 Tage Rotation) eine andere Hemisphäre — darunter den
+unbelichteten Kartenteil, siehe `ASSETS.md`. Der Median der Tagseite bleibt in
+beiden Fällen bei 21–25 von 255, nur knapp über der Nachtseite der Erde (16).
+Das ist kein Szenenfehler mehr, sondern die Beleuchtungsrechnung bei 30 AE —
+derselbe Befund wie bei den Saturnmonden im Kommentar zu „Enceladus-hell", und
+bleibt als offener Punkt stehen.
+
 ## Offene Punkte
 
-- **Pluto–Charon nahezu unbeleuchtet.** Die Szene sollte wie „Enceladus-hell"
-  und „Triton-rückwärts" auf die berechnete Sonnenrichtung ausgerichtet werden
-  (Azimut aus der Sonnenposition statt Variation 0–360°), damit das Paar in
-  jeder Variation eine Tagseite zeigt. Zusätzlich prüfen, ob der Distanzausgleich
-  bei 39 AE genügt: Selbst die Sichel erreicht nur 30 von 255.
+- **Tagseite ferner Körper zu dunkel.** Pluto erreicht bei 30 AE trotz
+  Distanzausgleich nur einen Median von 21–25 von 255 (Nachtrag oben), die
+  Saturnmonde zeigen dieselbe Dämpfung. Zu prüfen in `render/lighting.ts`, ob
+  Distanzausgleich oder Helligkeit für die äußeren Körper nachgeführt werden.
 - **Sechs Körper ohne Textur** (fünf Uranusmonde, Deimos), begründet in
   `ASSETS.md`; die Ausweichfarbe trägt sie. Bleibt offen, bis eine amtliche
   Karte mit weniger als etwa 40 % Datenlücke auftaucht.

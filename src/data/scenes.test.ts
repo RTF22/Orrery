@@ -168,6 +168,21 @@ describe('Szenen — Stichproben', () => {
     expect(Math.abs(s.variation.azimuthDeg[1])).toBeLessThanOrEqual(20);
   });
 
+  it('richtet Pluto–Charon auf die berechnete Sonnenrichtung aus', () => {
+    const s = SCENES.find((x) => x.id === 'pluto-charon')!;
+    // Anders als bei Enceladus und Triton wird die Sonnenrichtung hier nicht
+    // als Zahl hinterlegt, sondern aus Plutos Bahnelementen zur Epoche J2000
+    // gerechnet — dieselbe Konvention wie aufKugel() in render/camera/
+    // cinema.ts: Azimut ekliptikal von +x nach +y. Der Befund der Abnahme
+    // (docs/phase3a-abnahme.md): Mit Azimut 0° und Variation 0–360° zeigte
+    // die Szene das Paar in beiden geprüften Ziehungen nahezu unbeleuchtet.
+    const pluto = positionAt('pluto', bodyIndex, J2000);
+    const azimutSonne = ((Math.atan2(-pluto.y, -pluto.x) * 180) / Math.PI + 360) % 360;
+    expect(s.params.azimuthDeg).toBeCloseTo(azimutSonne, 1);
+    expect(Math.abs(s.variation.azimuthDeg[0])).toBeLessThanOrEqual(20);
+    expect(Math.abs(s.variation.azimuthDeg[1])).toBeLessThanOrEqual(20);
+  });
+
   it('baut Triton-rückwärts und Iapetus-schief planetenzentriert auf', () => {
     // Rückläufigkeit und Bahnneigung sind Bahn-Eigenschaften und werden nur
     // planetenzentriert sichtbar — beide Szenen zielen deshalb auf den
