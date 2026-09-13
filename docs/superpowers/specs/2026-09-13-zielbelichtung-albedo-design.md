@@ -117,15 +117,27 @@ kein einstellbarer Zustand.
 (die Sonne trägt das Feld nicht; sie leuchtet selbst). Quellenpflicht wie bei den
 Bahnelementen: Quellenkommentar je Datensatz, keine Zahl aus dem Gedächtnis.
 
-Quellen in dieser Reihenfolge:
+Quellen (am 13.09.2026 geprüft; die JPL-Satellitentabelle `sats/phys_par`
+führt keine Albedo mehr, und die Small-Body Database hat für Eris, Haumea und
+Makemake keinen Albedo-Eintrag — beide scheiden aus):
 
-1. NSSDC Planetary Fact Sheets (`nssdc.gsfc.nasa.gov/planetary/factsheet/`) für
-   Planeten, Erdmond, Pluto und Charon — Zeile „Geometric albedo".
-2. JPL Solar System Dynamics, „Planetary Satellite Physical Parameters"
-   (`ssd.jpl.nasa.gov/sats/phys_par/`) für alle übrigen Monde — Spalte
-   „Geometric albedo", mit Quellenkürzel der Tabelle.
-3. JPL Small-Body Database (`ssd.jpl.nasa.gov/tools/sbdb_lookup.html`) für Ceres,
-   Eris, Haumea und Makemake — Parameter „albedo".
+1. NSSDC Planetary Fact Sheets (`nssdc.gsfc.nasa.gov/planetary/factsheet/`),
+   Einzelblätter je Planet, Zeile „Geometric albedo" — für die acht Planeten,
+   den Erdmond (`moonfact.html`), Phobos und Deimos (Abschnitt „Satellites of
+   Mars" in `marsfact.html`), Pluto und Charon (`plutofact.html`).
+2. NSSDC Satellite Fact Sheets (`joviansatfact.html`, `saturniansatfact.html`,
+   `uraniansatfact.html`, `neptuniansatfact.html`), Zeile „Visual geometric
+   albedo" — für alle übrigen Monde. Iapetus steht dort mit zwei Werten
+   („0.05 / 0.5" für Vorder- und Rückseite); der Katalog trägt das Mittel
+   0,275 und die Textur die Dichotomie.
+3. JPL Small-Body Database (`ssd-api.jpl.nasa.gov/sbdb.api?sstr=1&phys-par=1`)
+   für Ceres — Parameter „albedo" mit dort genannter Referenz.
+4. Begutachtete Sternbedeckungsarbeiten für die drei fernen Zwergplaneten:
+   Eris — Sicardy et al., Nature 478, 493 (2011), doi 10.1038/nature10550;
+   Haumea — Ortiz et al., Nature 550, 219 (2017), arXiv:2006.03113;
+   Makemake — Ortiz et al., Nature 491, 566 (2012), doi 10.1038/nature11597.
+   Genommen wird jeweils die V-Band-Albedo aus der Zusammenfassung, die
+   Unsicherheit steht im Quellenkommentar.
 
 Die geometrische Albedo ist streng genommen die Rückstrahlung bei Phasenwinkel 0
 und kann durch den Oppositionseffekt über 1 liegen (Enceladus 1,4 in manchen
