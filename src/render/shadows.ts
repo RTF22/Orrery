@@ -178,11 +178,16 @@ export function waehleOkkluder(
   const p0 = position(body.id);
   if (!p0) return { kugeln: [], ring: null };
 
-  const satellit = isSatellite(body) && body.parent !== null;
-  const mutter = satellit ? (index[body.parent as string] ?? null) : null;
-  const geschwister = satellit
-    ? Object.values(index).filter((c) => c.id !== body.id && c.parent === body.parent && c.kind === 'moon')
-    : Object.values(index).filter((c) => c.parent === body.id && c.kind === 'moon');
+  let mutter: Body | null = null;
+  let geschwister: Body[];
+  if (isSatellite(body) && body.parent !== null) {
+    mutter = index[body.parent] ?? null;
+    geschwister = Object.values(index).filter(
+      (c) => c.id !== body.id && c.parent === body.parent && c.kind === 'moon',
+    );
+  } else {
+    geschwister = Object.values(index).filter((c) => c.parent === body.id && c.kind === 'moon');
+  }
 
   const kugeln: Okkluder[] = [];
 
@@ -212,7 +217,7 @@ export function waehleOkkluder(
   }
 
   let ring: RingOkkluder | null = null;
-  const traegerId = satellit ? (body.parent as string) : body.id;
+  const traegerId = isSatellite(body) && body.parent !== null ? body.parent : body.id;
   const traeger = index[traegerId];
   if (traeger?.appearance.rings) {
     const traegerMitte = position(traegerId);
