@@ -48,6 +48,10 @@ Ergebnis (wörtlich):
   Startansicht): `["Pluto","Ceres","Venus","Neptun","Sonne","Erde","Mars","Merkur","Jupiter","Uranus","Saturn","Eris","Charon","Iapetus","Triton","Mond","Kallisto","Io","Europa","Ganymed","Miranda","Dione","Oberon","Rhea","Umbriel","Titania","Titan","Enceladus","Mimas","Haumea","Tethys","Makemake","Ariel"]`
 - `kopfzeile`: `"DEEN"` (Textinhalt der beiden Schaltflächen ohne Trenner)
 
+Nachtrag: Seit Commit `0d4938f` lautet `app.title` in beiden Sprachen
+„Orrery" (Produktname, wie `index.html`); der deutsche Titel ist damit
+ebenfalls „Orrery".
+
 Zeitpanel (aus dem Zugriffsbaum, `browser_snapshot`): Statuszeile
 „31.01.2000, 04:44", Geschwindigkeit „1 Tag/s", Datumsfeld (Textbox „Datum")
 mit Wert `2000-01-31`. Kopfzeile: Gruppe „Sprache" mit Schaltfläche
@@ -121,6 +125,10 @@ nach der Abnahme geleert).
 `{"lang":"de","title":"Sonnensystem","sprache":"de"}` (zurück auf Deutsch).
 Erneut `browser_press_key('l')` → `{"lang":"en","title":"Orrery","sprache":"en"}`
 (wieder Englisch). Beide Umschaltungen wirkten sofort, ohne Neuladen.
+
+Nachtrag: Seit Commit `0d4938f` lautet `app.title` in beiden Sprachen
+„Orrery" (Produktname, wie `index.html`); der deutsche Titel ist damit
+ebenfalls „Orrery".
 
 ### Kürzel-Übersicht (Panel „Tastenkürzel"/„Keyboard shortcuts", Taste `?`)
 
