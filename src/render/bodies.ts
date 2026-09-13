@@ -10,6 +10,11 @@ import { BLOOM_LAYER } from './postfx';
 import { bodyLighting } from './lighting';
 import type { LightingSettings } from './lighting';
 import { albedoFaktor, farbMittelLinear, mittlereReflexion } from './albedo';
+import {
+  MAX_OKKLUDER, sonnenGeometrie, waehleOkkluder,
+  SCHATTEN_GLSL_KOERPER_PARS, SCHATTEN_GLSL_KOERPER_ANWENDUNG,
+  SCHATTEN_GLSL_VERTEX_PARS, SCHATTEN_GLSL_VERTEX,
+} from './shadows';
 
 /** Untergrenze, damit Geometrie nie auf null kollabiert. */
 export const MIN_RADIUS_UNITS = 1e-4;
@@ -38,8 +43,66 @@ export interface BodyViews {
     cameraKm: THREE.Vector3,
     visible: Record<string, boolean>,
     licht: LightingSettings,
+    schatten: boolean,
   ): void;
   meshes: Map<string, THREE.Mesh>;
+}
+
+/**
+ * Die Uniforms des Schattenbausteins (render/shadows.ts) je Körper.
+ *
+ * Zwei Bezugssysteme treffen hier aufeinander, und das ist Absicht (Entwurf
+ * §2, "Sonnenrichtung und Sonnenwinkel aus der echten Geometrie"):
+ * `uSonnenRichtung` und `uSonnenWinkel` kommen aus der **echten**,
+ * unkomprimierten Geometrie (`sonnenGeometrie` → `positionAt`), Okkluder und
+ * Fragmentposition dagegen aus den **dargestellten** Positionen und Radien.
+ * Das geht auf, weil `scaledPositionAt` Radien und Mondabstände innerhalb
+ * eines Planetensystems mit demselben `sizeScale` skaliert: Die dargestellte
+ * Geometrie ist der echten dort exakt ähnlich, und Ähnlichkeit erhält Winkel.
+ * Der Sonnenwinkel als bloße Zahl macht die Rechnung unabhängig davon, wo die
+ * dargestellte (gedämpfte, komprimiert nahe) Sonne steht. Mit der
+ * dargestellten Sonnenposition stünde bei „Schaubild" der Mond 50-fach weiter
+ * von der Erde, die Sonne aber weiter bei 1 AE — die Sonnenrichtung am Mond
+ * wiche um 7° von der an der Erde ab und der Erdschatten läge am falschen Ort.
+ *
+ * Längen sind durchgehend Render-Einheiten, kamerarelativ — dasselbe System,
+ * in dem `vSchattenPos` im Shader steht.
+ */
+interface SchattenUniforms {
+  uSonnenRichtung: { value: THREE.Vector3 };
+  uSonnenWinkel: { value: number };
+  uOkkluder: { value: THREE.Vector4[] };
+  uOkkluderFarbe: { value: THREE.Vector3[] };
+  uOkkluderAnzahl: { value: number };
+  uRingEbeneA: { value: THREE.Vector4 };
+  uRingEbeneB: { value: THREE.Vector4 };
+  uRingAktiv: { value: number };
+  tRingSchatten: { value: THREE.Texture };
+}
+
+/**
+ * 1×1-Textur aus lauter Nullen — Alpha 0, der Shader liest daraus den
+ * Durchlass 1. Sie belegt `tRingSchatten` bei jedem Körper ohne Ringträger;
+ * ein unbelegter sampler2D wäre in WebGL ein Übersetzungs- bzw. Bindefehler.
+ */
+function leereRingTextur(): THREE.DataTexture {
+  const textur = new THREE.DataTexture(new Uint8Array([0, 0, 0, 0]), 1, 1, THREE.RGBAFormat);
+  textur.needsUpdate = true;
+  return textur;
+}
+
+function neueSchattenUniforms(leer: THREE.Texture): SchattenUniforms {
+  return {
+    uSonnenRichtung: { value: new THREE.Vector3(1, 0, 0) },
+    uSonnenWinkel: { value: 0 },
+    uOkkluder: { value: Array.from({ length: MAX_OKKLUDER }, () => new THREE.Vector4()) },
+    uOkkluderFarbe: { value: Array.from({ length: MAX_OKKLUDER }, () => new THREE.Vector3(1, 1, 1)) },
+    uOkkluderAnzahl: { value: 0 },
+    uRingEbeneA: { value: new THREE.Vector4() },
+    uRingEbeneB: { value: new THREE.Vector4() },
+    uRingAktiv: { value: 0 },
+    tRingSchatten: { value: leer },
+  };
 }
 
 type KoerperMaterial = THREE.MeshBasicMaterial | THREE.MeshStandardMaterial;
@@ -64,6 +127,8 @@ interface KoerperEintrag {
   material: KoerperMaterial;
   basisFarbe: THREE.Color;
   albedoFaktor: number;
+  /** Nur bei MeshStandardMaterial belegt: Die Sonne leuchtet selbst und wird nie beschattet. */
+  schatten: SchattenUniforms | null;
 }
 
 /** Messformat der Texturauswertung — dasselbe wie in scripts/textur-mittel.py. */
@@ -128,10 +193,19 @@ function ladeAlbedo(
   );
 }
 
-export function createBodyViews(scene: THREE.Scene): BodyViews {
+/**
+ * @param ringTextur Liefert die Ringtextur eines Ringträgers (rings.ts). Ohne
+ *   sie bleibt der Ringschatten bei der leeren Textur, also wirkungslos —
+ *   praktisch nur in Tests, die die Ringe nicht mit aufbauen.
+ */
+export function createBodyViews(
+  scene: THREE.Scene, ringTextur?: (bodyId: string) => THREE.Texture | undefined,
+): BodyViews {
   const lader = new THREE.TextureLoader();
   const meshes = new Map<string, THREE.Mesh>();
   const eintraege = new Map<string, KoerperEintrag>();
+  // Eine einzige leere Textur für alle Körper ohne Ringträger.
+  const leereTextur = leereRingTextur();
 
   for (const body of bodies) {
     const fallbackFarbe = new THREE.Color(body.appearance.color);
@@ -150,8 +224,33 @@ export function createBodyViews(scene: THREE.Scene): BodyViews {
       // Bis die Textur steht (und dauerhaft bei Körpern ohne Textur): die
       // Ausweichfarbe so skalieren, dass ihr Mittel der Albedo entspricht.
       albedoFaktor: albedoFaktor(body.physical.albedo, farbMittelLinear(body.appearance.color)),
+      schatten: material instanceof THREE.MeshStandardMaterial
+        ? neueSchattenUniforms(leereTextur) : null,
     };
     eintraege.set(body.id, eintrag);
+
+    // Der Schattenbaustein wird in Threes eigenen Standard-Shader eingenäht
+    // (Entwurf §2, "Einbau in MeshStandardMaterial"), damit Textur,
+    // Lambert-BRDF und das Emissiv-Fülllicht aus Phase 3a unverändert
+    // bleiben. Alle Körper bekommen denselben Programm-Cacheschlüssel: Der
+    // Quelltext ist für jeden identisch, nur die Uniforms unterscheiden sich
+    // — ohne den Schlüssel übersetzte three den Baustein je Material neu.
+    const schatten = eintrag.schatten;
+    if (schatten !== null) {
+      material.onBeforeCompile = (shader) => {
+        Object.assign(shader.uniforms, schatten);
+        shader.vertexShader = shader.vertexShader
+          .replace('#include <common>', `#include <common>\n${SCHATTEN_GLSL_VERTEX_PARS}`)
+          .replace('#include <project_vertex>', `#include <project_vertex>\n${SCHATTEN_GLSL_VERTEX}`);
+        shader.fragmentShader = shader.fragmentShader
+          .replace('#include <common>', `#include <common>\n${SCHATTEN_GLSL_KOERPER_PARS}`)
+          .replace(
+            '#include <lights_fragment_end>',
+            `#include <lights_fragment_end>\n${SCHATTEN_GLSL_KOERPER_ANWENDUNG}`,
+          );
+      };
+      material.customProgramCacheKey = () => 'schatten';
+    }
     ladeAlbedo(lader, body.appearance.textures.albedo, eintrag, body.physical.albedo);
 
     // Einheitskugel; die tatsächliche Größe kommt über scale.
@@ -163,9 +262,19 @@ export function createBodyViews(scene: THREE.Scene): BodyViews {
     meshes.set(body.id, mesh);
   }
 
+  // Dargestellte Positionen und Radien des laufenden Bildes (Render-
+  // Einheiten, kamerarelativ). Sie entstehen in Phase 1 der Aktualisierung
+  // und sind in Phase 2 die Eingabe der Okkluderauswahl — außerhalb der
+  // Schleife angelegt, damit pro Bild keine zwei Maps neu entstehen.
+  const positionen = new Map<string, Vec3>();
+  const radien = new Map<string, number>();
+
   return {
     meshes,
-    update(jd, s, cameraKm, visible, licht) {
+    update(jd, s, cameraKm, visible, licht, schatten) {
+      positionen.clear();
+      radien.clear();
+
       for (const body of bodies) {
         const mesh = meshes.get(body.id);
         if (!mesh) continue;
@@ -179,6 +288,12 @@ export function createBodyViews(scene: THREE.Scene): BodyViews {
 
         const radius = pickRadiusUnits(body, s);
         mesh.scale.setScalar(radius);
+
+        // Nur sichtbare Körper werfen Schatten: Was nicht im Bild steht, darf
+        // auch nicht verdunkeln. Ausgeblendete Körper fehlen deshalb in
+        // beiden Tabellen, und waehleOkkluder lässt sie damit weg.
+        positionen.set(body.id, { x: r.x, y: r.y, z: r.z });
+        radien.set(body.id, radius);
 
         // Beleuchtung pro Körper: Das Punktlicht gilt für alle gemeinsam,
         // der Abstandsausgleich und das Fülllicht der Nachtseite hängen am
@@ -200,6 +315,48 @@ export function createBodyViews(scene: THREE.Scene): BodyViews {
         const pol = poleVector(body.physical.pole.raDeg, body.physical.pole.decDeg);
         mesh.quaternion.copy(poleAusrichtung(pol));
         mesh.rotateY(rotationAt(body, jd));
+      }
+
+      // Phase 2: Okkluder je Körper. Sie braucht die dargestellten Positionen
+      // und Radien *aller* Körper und kann deshalb erst laufen, wenn Phase 1
+      // vollständig durch ist.
+      for (const body of bodies) {
+        const u = eintraege.get(body.id)?.schatten;
+        if (u === undefined || u === null) continue;
+
+        if (!schatten) {
+          // Der Schalter schaltet nur die Uniforms ab, nicht das Programm —
+          // so wird beim Umlegen nichts neu übersetzt (Entwurf §2, "Schalter").
+          u.uOkkluderAnzahl.value = 0;
+          u.uRingAktiv.value = 0;
+          continue;
+        }
+
+        const sonne = sonnenGeometrie(body.id, bodyIndex, jd);
+        u.uSonnenRichtung.value.set(sonne.richtung.x, sonne.richtung.y, sonne.richtung.z);
+        u.uSonnenWinkel.value = sonne.winkelRad;
+
+        const auswahl = waehleOkkluder(
+          body, bodyIndex, (id) => positionen.get(id), (id) => radien.get(id),
+        );
+        for (let i = 0; i < auswahl.kugeln.length; i++) {
+          const { mitte, radius, farbe } = auswahl.kugeln[i]!;
+          u.uOkkluder.value[i]!.set(mitte.x, mitte.y, mitte.z, radius);
+          u.uOkkluderFarbe.value[i]!.set(farbe[0], farbe[1], farbe[2]);
+        }
+        u.uOkkluderAnzahl.value = auswahl.kugeln.length;
+
+        const ring = auswahl.ring;
+        if (ring !== null) {
+          u.uRingEbeneA.value.set(ring.mitte.x, ring.mitte.y, ring.mitte.z, ring.innen);
+          u.uRingEbeneB.value.set(ring.normale.x, ring.normale.y, ring.normale.z, ring.aussen);
+          // Pro Bild neu abgefragt: rings.ts tauscht den Uniform-Wert aus,
+          // sobald das Ringbild geladen ist (siehe ladeRingTextur dort).
+          u.tRingSchatten.value = ringTextur?.(ring.bodyId) ?? leereTextur;
+          u.uRingAktiv.value = 1;
+        } else {
+          u.uRingAktiv.value = 0;
+        }
       }
     },
   };

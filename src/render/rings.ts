@@ -303,6 +303,16 @@ export interface RingViews {
     sonneRender: THREE.Vector3,
   ): void;
   /**
+   * Die aktuell gebundene Textur des Rings eines Körpers, sonst `undefined`.
+   *
+   * Der Körper-Shader (bodies.ts) sampelt für den Ringschatten genau dasselbe
+   * Bild, das die Ringscheibe zeichnet. Der Wert wird bewusst pro Bild neu
+   * abgefragt statt einmal gemerkt: `ladeRingTextur` ersetzt den
+   * Uniform-Wert, sobald das Bild da ist — ein einmal gemerkter Verweis zeigte
+   * dauerhaft auf die Ersatz- bzw. Profiltextur.
+   */
+  ringTextur(bodyId: string): THREE.Texture | undefined;
+  /**
    * Entfernt jede Ringscheibe aus der Szene und gibt Geometrie, ShaderMaterial
    * und die aktuell gebundene Textur (Ersatztextur oder nachgeladenes Bild,
    * siehe ladeRingTextur) frei — analog zu SceneHandle.dispose() in scene.ts.
@@ -416,6 +426,10 @@ export function createRingViews(scene: THREE.Scene): RingViews {
         material.uniforms['uTag']!.value = licht.brightness * l.colorGain * distanzfaktor;
         material.uniforms['uFuellung']!.value = licht.nightFill;
       }
+    },
+    ringTextur(bodyId) {
+      const eintrag = eintraege.find((e) => e.bodyId === bodyId);
+      return eintrag?.material.uniforms['tRing']?.value as THREE.Texture | undefined;
     },
     dispose() {
       for (const { mesh, material } of eintraege) {

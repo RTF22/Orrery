@@ -38,8 +38,11 @@ export interface SceneHandle {
  * der Sonnenposition, das die Planeten beleuchtet.
  */
 export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandle {
-  const koerper = createBodyViews(ctx.scene);
+  // Die Ringe zuerst: Der Körper-Shader sampelt für den Ringschatten die
+  // Textur, die die Ringscheibe selbst zeichnet, und bekommt sie hier als
+  // Abfrage gereicht (siehe RingViews.ringTextur).
   const ringe = createRingViews(ctx.scene);
+  const koerper = createBodyViews(ctx.scene, (id) => ringe.ringTextur(id));
   const guertel = createBeltViews(ctx.scene);
   const bahnen = createOrbitLines(ctx.scene);
   // Einmalig aufgebaut: Sterne stehen fest auf einer sehr großen Kugel um den
@@ -91,7 +94,7 @@ export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandl
       // jeden Frame.
       bahnen.update(cameraKm, state.visible, state.display.orbits, jd, state.scale);
 
-      koerper.update(jd, state.scale, cameraKm, state.visible, belichtet);
+      koerper.update(jd, state.scale, cameraKm, state.visible, belichtet, state.display.shadows);
 
       // Das Licht sitzt an der (kamerarelativen) Sonnenposition.
       const sonnenpositionKm = scaledPositionAt('sun', bodyIndex, jd, state.scale);

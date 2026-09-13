@@ -1,8 +1,12 @@
+// @vitest-environment jsdom
+// createRingViews lädt beim Aufbau die Ringtextur über THREE.TextureLoader,
+// das dafür ein document braucht. In jsdom wird kein Bild geladen — es bleibt
+// die Ersatz- bzw. Profiltextur stehen, und genau die gibt ringTextur zurück.
 import { describe, it, expect } from 'vitest';
 import * as THREE from 'three';
 import {
   ringGeometrieDaten, ringAusrichtung, vorwaertsstreuung,
-  ringHelligkeit, ERSATZ_RING_GRAU,
+  ringHelligkeit, ERSATZ_RING_GRAU, createRingViews,
 } from './rings';
 import { poleVector } from '../sim/frames';
 
@@ -138,5 +142,21 @@ describe('ringHelligkeit — die Ersatztextur muss sichtbar bleiben', () => {
     // 0,5 · (0,4/π + 0,25 + 0,85/π)
     const erwartet = 0.5 * (0.4 / Math.PI + 0.25 + 0.85 / Math.PI);
     expect(ringHelligkeit(0.5, 0.4, -1, 1, 0.25)).toBeCloseTo(erwartet, 12);
+  });
+});
+
+describe('createRingViews.ringTextur', () => {
+  it('gibt die gebundene Ringtextur des Ringträgers zurück', () => {
+    // Der Körper-Shader (bodies.ts) sampelt genau diese Textur für den
+    // Ringschatten — dasselbe Bild, das die Ringscheibe selbst zeichnet.
+    const ringe = createRingViews(new THREE.Scene());
+    expect(ringe.ringTextur('saturn')).toBeInstanceOf(THREE.Texture);
+    ringe.dispose();
+  });
+
+  it('gibt für einen Körper ohne Ringe undefined zurück', () => {
+    const ringe = createRingViews(new THREE.Scene());
+    expect(ringe.ringTextur('earth')).toBeUndefined();
+    ringe.dispose();
   });
 });
