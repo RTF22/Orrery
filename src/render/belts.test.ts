@@ -200,6 +200,51 @@ describe('createBeltViews', () => {
     }
   });
 
+  it('füllt die zweite Wolke aus KUIPERGUERTEL, nicht noch einmal aus dem Hauptgürtel', () => {
+    const scene = new THREE.Scene();
+    const views = createBeltViews(scene);
+    views.update(J2000, 0.4, kamera, 'medium', true, licht, 1);
+    const [haupt, kuiper] = wolken(scene);
+
+    // Erste Spur von aElem1 ist die große Halbachse in AE (beltAttribute).
+    const halbachsen = (p: THREE.Points): number[] => {
+      const roh = p.geometry.getAttribute('aElem1').array as Float32Array;
+      const a: number[] = [];
+      for (let i = 0; i < roh.length; i += 4) a.push(roh[i]!);
+      return a;
+    };
+
+    const aHaupt = halbachsen(haupt!);
+    for (const a of aHaupt) expect(a).toBeGreaterThanOrEqual(2.1);
+    for (const a of aHaupt) expect(a).toBeLessThanOrEqual(3.3);
+
+    // Kuipergürtel: klassischer Gürtel mit weichem Rand (38,5 … 48,5 AE)
+    // und Plutinos um 39,4 AE — beide Bereiche zusammen 38,4 … 48,5 AE.
+    const aKuiper = halbachsen(kuiper!);
+    for (const a of aKuiper) expect(a).toBeGreaterThanOrEqual(38.4);
+    for (const a of aKuiper) expect(a).toBeLessThanOrEqual(48.5);
+    // Die Plutinos sind rund 15 % der Wolke und liegen als Glocke um
+    // 39,4 AE; ohne sie wäre die zweite Population verloren gegangen.
+    const plutinoNah = aKuiper.filter((a) => a > 38.9 && a < 39.9).length;
+    expect(plutinoNah / aKuiper.length).toBeGreaterThan(0.1);
+  });
+
+  it('gibt beiden Wolken dasselbe Material und dieselbe Albedo', () => {
+    const scene = new THREE.Scene();
+    createBeltViews(scene);
+    const [haupt, kuiper] = wolken(scene);
+    const mH = haupt!.material as THREE.ShaderMaterial;
+    const mK = kuiper!.material as THREE.ShaderMaterial;
+    // Derselbe Material-Typ heißt: gleiche Shader, gleiche Albedo — nur die
+    // Uniforms unterscheiden sich (uTag am jeweiligen Gürtelabstand).
+    expect(mK.vertexShader).toBe(mH.vertexShader);
+    expect(mK.fragmentShader).toBe(mH.fragmentShader);
+    expect(mK.uniforms['uAlbedo']!.value).toBe(BELT_ALBEDO);
+    expect(mH.uniforms['uAlbedo']!.value).toBe(BELT_ALBEDO);
+    // Eigene Uniform-Objekte, sonst zöge ein uTag den anderen mit.
+    expect(mK.uniforms).not.toBe(mH.uniforms);
+  });
+
   it('baut die Geometrie nur bei einem Stufenwechsel neu auf', () => {
     const scene = new THREE.Scene();
     const views = createBeltViews(scene);

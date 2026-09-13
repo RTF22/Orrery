@@ -1,7 +1,8 @@
 # Phase 3b-1 — Gürtel: Abnahmeprotokoll
 
 **Datum:** 13.09.2026
-**Stand:** Zweig `guertel`, Task 2 (Punktwolke im Renderer, Schalter, Sichtprüfung)
+**Stand:** Zweig `guertel`, Task 2 (Punktwolke im Renderer, Schalter,
+Sichtprüfung Hauptgürtel) und Task 3 (Sichtprüfung Kuipergürtel)
 **Prüfumgebung:** Windows 11, Desktop mit RTX 4060, Chromium (Playwright),
 Vite-Entwicklungsserver auf `localhost`, Fenster 1280 × 800 CSS-Pixel,
 `devicePixelRatio` 1, Qualitätsstufe `high` (50 000 Teilchen je Gürtel),
@@ -123,3 +124,130 @@ keine messbare Zeit; der Median ist eine obere Schranke, kein Kostenwert.
   Warnungen (insbesondere keinen Shader-Übersetzungsfehler).
 - Der Kuipergürtel wird technisch mit angelegt (`uTag` 0,3289 in der
   Systemschau), ist aber erst in Task 3 Gegenstand der Sichtprüfung.
+
+## Sichtprüfung Kuipergürtel
+
+Aufgenommen am 13.09.2026 in derselben Prüfumgebung (Windows 11, RTX 4060,
+Chromium, 1280 × 800 CSS-Pixel, `devicePixelRatio` 1, Stufe `high` mit
+50 000 Teilchen je Gürtel).
+
+### Aufbau
+
+| Größe | Kinoszene `pluto-charon` | Systemschau bei `kompakt` |
+|---|---|---|
+| Kameramodus | `cinema`, Szenennummer 9 (`SCENES.indexOf('pluto-charon')`), `shuffle` aus, `seed` 20260912 | `free`, Ziel Sonne, Azimut 0,6, Elevation 1,5 rad (85,9°) |
+| Maßstabs-Preset | „Schaubild" (`distanceExponent` 0,6) | **„kompakt" (`distanceExponent` 0,4)** |
+| `camera.distance` | von der Szene gesetzt (55 Plutoradien) | 1,7952 · 10⁹ km = 12,0 AE |
+| Kameraposition (heliozentrisch, komprimiert) | (−2,5330 / −7,1237 / 1,5068) AE | (0,7005 / 0,4791 / 11,9697) AE |
+| Bildfeld in der Ekliptik | — | 11,2 AE senkrecht (2 · 12 · tan 25°); der Gürtel hat dargestellt 9,45 AE Durchmesser und liegt vollständig im Bild |
+| `cinema.elapsedSec` | 8,0065 s (von 45 s Szenendauer) | — |
+| Zeit | jd 2451547,40195 (`uTage` 2,40195), angehalten | jd 2451545,0 (J2000, `uTage` 0), angehalten |
+| `uTag` des Kuipergürtels | **1,1217** | **0,3360** |
+| `uTag` des Hauptgürtels (nachrichtlich) | 5,9037 | 1,7683 |
+| Bedienoberfläche | ausgeblendet (`ui.hidden`) | ausgeblendet |
+| Bahnlinien / Beschriftungen / Marker | aus (nur für die Messung) | aus |
+
+Der `uTag`-Unterschied ist wieder die Zielbelichtung (render/exposure.ts): Im
+Kino belichtet die Kamera auf Pluto bei rund 30,4 AE, in der Systemschau auf
+die Sonne. Der Kuipergürtel ist deshalb in der Pluto-Szene rund dreimal
+heller als in der Systemschau.
+
+Dargestellte Lage bei `kompakt` (r' = r^0,4): Der klassische Gürtel 39 … 48 AE
+liegt bei 4,329 … 4,704 AE, mit den weichen Rändern der Verteilung
+(38,5 … 48,5 AE, sim/belts.ts) bei 4,307 … 4,724 AE — Durchmesser 9,45 AE.
+Das ausgewertete Band unten ist mit 4,28 … 4,74 AE geringfügig weiter gefasst.
+Pluto steht zur Epoche bei 30,09 AE echt (aus der Kameraposition der Szene
+zurückgerechnet), also bei 3,90 AE dargestellt — innerhalb des Rings, wie es
+seiner Nähe zum Perihel (1989) entspricht.
+
+### (1) Helligkeit und Anzahl der Teilchenpixel
+
+Wieder als Differenz zweier sonst identischer Bilder. Damit **nur** der
+Kuipergürtel gezählt wird, war im Vergleichsbildpaar jeweils allein seine
+Punktwolke sichtbar (die Hauptgürtel-Wolke war im laufenden Bild
+ausgeblendet); zwei Aufnahmen desselben Zustands unterscheiden sich in
+keinem einzigen Pixel, das Verfahren hat also kein Rauschen.
+
+| Größe | Kino `pluto-charon` | Systemschau `kompakt` |
+|---|---:|---:|
+| Pixel, die der Kuipergürtel aufhellt | 1 989 | 33 343 |
+| Zuwachs je Teilchenpixel (p50 / p90) | 35 / 44 | 9 / 13 |
+| größter Zuwachs = Helligkeit eines freistehenden Teilchens | **44** | 14 |
+| Pixel mit Absolutwert > 40 (Kriterium) | **846** | 222 (davon der weit überwiegende Teil Sterne unter den Teilchen) |
+
+Rechenweg des Spitzenwerts wie beim Hauptgürtel: 0,06 · 1,1217 / π = 0,02142
+linear, nach ACES-Tonemapping und sRGB 44 von 255 — genau der gemessene
+Zuwachs. In der Systemschau ergibt 0,06 · 0,3360 / π = 0,006416 linear
+gemessene 14 von 255.
+
+Das Kriterium „Anzahl heller Pixel (> 40) ≫ 0" ist in der **Kinoszene
+`pluto-charon` erfüllt** (846 Pixel, Teilchenwert 44 von 255) — das ist die
+Szene, in der der Kuipergürtel gezeigt wird. In der Systemschau bleibt er mit
+14 von 255 deutlich darunter, weil die Kamera dort auf die Sonne belichtet;
+sichtbar ist er trotzdem zweifelsfrei als geschlossener, gleichmäßiger
+Staubring aus über 33 000 aufgehellten Pixeln (Bild und Radialprofil unten).
+Die Albedo wurde **nicht** angehoben und die Beleuchtung nicht angefasst.
+
+Räumliche Verteilung in der Pluto-Szene (Pixel mit Zuwachs > 5, Raster
+8 × 5 über das Bild): 1 731 Pixel, gleichmäßig über das ganze Bildfeld
+gestreut mit sanftem Anstieg zur unteren linken Ecke hin (dort blickt die
+Kamera in die dichte, sonnennahe Seite des Gürtels: 128 Pixel je Rasterfeld
+gegen 0 bis 9 in der oberen rechten Ecke). Der Gürtel erscheint dort also
+richtigerweise nicht als Ring, sondern als Staub rings um den Betrachter, der
+selbst im Gürtel steht.
+
+### (2) Radialprofil der Systemschau — Lage und Kompression
+
+Jedes Bildpixel als Sehstrahl in die Ekliptik (z = 0) zurückgerechnet (Kamera
+in AE, Blick auf den Ursprung, FOV 50° senkrecht), Ringe von 0,05 AE,
+gezählt der **dargestellte** Radius, weil genau er die Lage im Bild
+beschreibt. Schwelle: Zuwachs > 5 von 255 (die Sterne bringen es im
+Differenzbild auf höchstens 1).
+
+| Band (dargestellt) | Anteil aufgehellter Pixel | erwartet |
+|---|---:|---|
+| 0,00 … 4,00 AE | **0,53 %** | nahe null |
+| 4,00 … 4,28 AE | 7,66 % | weicher innerer Rand |
+| **4,28 … 4,74 AE (Gürtel)** | **20,30 %** | Gürtel |
+| 4,74 … 5,00 AE | 5,74 % | weicher äußerer Rand |
+| 5,00 … 8,00 AE | **0,08 %** | nahe null |
+
+Der Verlauf ist eine glatte Glocke: 0,0 % bis 2,90 AE, 1,8 % bei 3,70 AE,
+3,8 % bei 4,00 AE, Anstieg über 14,3 % bei 4,25 AE auf das Maximum
+**24,2 % bei 4,50 AE**, Abfall auf 7,6 % bei 4,80 AE, 1,5 % bei 5,00 AE und
+0,0 % ab 5,55 AE. Lage und Kompression stimmen damit: Das Maximum liegt in
+der Mitte des erwarteten Bandes 4,28 … 4,74 AE, innen und außen ist das Feld
+praktisch leer.
+
+Die schwachen Ausläufer zwischen 3,0 und 4,0 AE und zwischen 5,0 und 5,5 AE
+sind kein Materie außerhalb des Gürtels, sondern die Inklination: Der
+Sehstrahl wird auf die Ekliptik zurückgerechnet, ein Teilchen 12° über der
+Bahnebene erscheint aus 12 AE Höhe deshalb um einige Zehntel AE versetzt.
+
+### (3) Bildrate bei 100 000 Teilchen
+
+Median der Framezeit über 3 s mit `performance.now()` (je 179 Bilder),
+Systemschau bei `kompakt`, Stufe `high`, beide Gürtel sichtbar (also
+100 000 Teilchen in zwei Draw-Calls):
+
+| Zustand | Median | 90 % | Maximum |
+|---|---:|---:|---:|
+| Gürtel an | **16,70 ms** | 17,10 ms | 19,60 ms |
+| Gürtel aus | 16,70 ms | 17,20 ms | 19,40 ms |
+
+Kriterium (unter 20 ms) erfüllt; wie in Task 2 liegen beide Messungen auf der
+Bildwiederholrate des Monitors (60 Hz, 16,67 ms), die Gürtel kosten also auch
+im äußeren Blickfeld keine messbare Zeit.
+
+### Weitere Beobachtungen
+
+- Der Schalter „Gürtel" blendet auch bei `kompakt` beide Wolken sofort aus und
+  wieder ein; der Stufenwechsel baut sie mit 10 000 (`medium`) bzw. 50 000
+  (`high`) Teilchen je Wolke neu auf.
+- Die Browserkonsole meldet über den ganzen Prüflauf weder Fehler noch
+  Warnungen.
+- Im Gesamtbild der Systemschau stehen beide Gürtel richtig zueinander: der
+  Hauptgürtel als schmaler heller Ring bei 1,35 … 1,61 AE dargestellt
+  (2,1 … 3,3 AE echt), der Kuipergürtel als breiter, deutlich blasserer Ring
+  weit außen — genau das Bild, das die Abstandskompression bei k = 0,4
+  erzeugen soll.
