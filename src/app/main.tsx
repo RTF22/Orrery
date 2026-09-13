@@ -8,7 +8,7 @@ import { attachCameraInput } from '../render/camera/input';
 import { startLoop } from './loop';
 import { tickCinema } from './cinema';
 import { useStore } from '../store';
-import { startSprache } from '../ui/i18n';
+import { t, startSprache } from '../ui/i18n';
 import { App as Bedienoberflaeche } from '../ui/App';
 import type { QualityTier } from '../store/types';
 import { QUALITY_SETTINGS } from './quality';
@@ -46,7 +46,7 @@ function App(): React.JSX.Element {
       // Planeten für die Prüfung der Beleuchtung.
       w.store = useStore;
     }
-    const szene = buildScene(ctx, overlay);
+    const szene = buildScene(ctx, overlay, (key) => t(key));
     const postfx = createPostFx(ctx);
     // Ziehen dreht, Rad und Zwei-Finger-Geste zoomen — geschrieben wird
     // ausschließlich in den Store, gelesen im nächsten Bild vom Controller.

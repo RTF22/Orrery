@@ -37,7 +37,11 @@ export interface SceneHandle {
  * Baut die Szene auf: die Körper-Meshes (Task 10) sowie ein Punktlicht an
  * der Sonnenposition, das die Planeten beleuchtet.
  */
-export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandle {
+export function buildScene(
+  ctx: RenderContext,
+  overlay: HTMLElement,
+  name: (key: string) => string,
+): SceneHandle {
   // Die Ringe zuerst: Der Körper-Shader sampelt für den Ringschatten die
   // Textur, die die Ringscheibe selbst zeichnet, und bekommt sie hier als
   // Abfrage gereicht (siehe RingViews.ringTextur).
@@ -51,7 +55,7 @@ export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandl
   createStarfield(ctx.scene);
 
   // Beschriftungen und Ersatzglyphen liegen als HTML über der Canvas.
-  const labels = createLabelOverlay(overlay);
+  const labels = createLabelOverlay(overlay, name);
 
   const licht = new THREE.PointLight(0xffffff, 1, 0, 2);
   ctx.scene.add(licht);
@@ -146,7 +150,9 @@ export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandl
           istMond: body.kind === 'moon',
         }];
       });
-      labels.update(eintraege, ctx.camera, state.display.labels, state.display.markers);
+      labels.update(
+        eintraege, ctx.camera, state.display.labels, state.display.markers, state.ui.language,
+      );
     },
     dispose() {
       labels.dispose();

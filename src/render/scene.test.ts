@@ -25,9 +25,15 @@ vi.mock('./belts', () => ({
 }));
 
 // Das Label-Overlay legt DOM-Knoten an; in der Node-Testumgebung gibt es
-// kein document. Hier interessiert nur die Bahnlinien-Verdrahtung.
+// kein document. Hier interessiert nur die Bahnlinien-Verdrahtung. Der
+// Mock nimmt den Namensauflöser (zweiter Parameter von createLabelOverlay)
+// und die Sprache (fünfter Parameter von update) entgegen, wertet sie aber
+// nicht aus.
 vi.mock('./labels', () => ({
-  createLabelOverlay: () => ({ update: vi.fn(), dispose: vi.fn() }),
+  createLabelOverlay: () => ({
+    update: vi.fn(),
+    dispose: vi.fn(),
+  }),
 }));
 
 const rebuildSpion = vi.fn();
@@ -63,14 +69,14 @@ function fakeContext(): import('./renderer').RenderContext {
 describe('buildScene — Bahnlinien-Rebuild-Disziplin', () => {
   it('baut die Bahnform beim ersten Frame auf', () => {
     rebuildSpion.mockClear();
-    const szene = buildScene(fakeContext(), fakeOverlay);
+    const szene = buildScene(fakeContext(), fakeOverlay, (k) => k);
     szene.update(2451545.0, 0.016, DEFAULT_STATE);
     expect(rebuildSpion).toHaveBeenCalledTimes(1);
   });
 
   it('ruft rebuild NICHT erneut auf, solange sich die Maßstabsreferenz nicht ändert', () => {
     rebuildSpion.mockClear();
-    const szene = buildScene(fakeContext(), fakeOverlay);
+    const szene = buildScene(fakeContext(), fakeOverlay, (k) => k);
     for (let i = 0; i < 50; i++) {
       szene.update(2451545.0 + i, 0.016, DEFAULT_STATE);
     }
@@ -83,7 +89,7 @@ describe('buildScene — Bahnlinien-Rebuild-Disziplin', () => {
 
   it('ruft rebuild erneut auf, sobald sich die Maßstabseinstellungen ändern', () => {
     rebuildSpion.mockClear();
-    const szene = buildScene(fakeContext(), fakeOverlay);
+    const szene = buildScene(fakeContext(), fakeOverlay, (k) => k);
     szene.update(2451545.0, 0.016, DEFAULT_STATE);
     const geaendert = { ...DEFAULT_STATE, scale: { ...DEFAULT_STATE.scale, sizeScale: 99 } };
     szene.update(2451546.0, 0.016, geaendert);
@@ -100,7 +106,7 @@ describe('buildScene — die Kamera belichtet auf das Ziel', () => {
 
   it('reicht bei Ziel Sonne die Helligkeit mal π an die Körper', () => {
     koerperUpdateSpion.mockClear();
-    const szene = buildScene(fakeContext(), fakeOverlay);
+    const szene = buildScene(fakeContext(), fakeOverlay, (k) => k);
     szene.update(2451545.0, 0.016, DEFAULT_STATE);
     // Standardziel ist die Sonne im Ursprung: Referenz 1 AE, Faktor π.
     expect(letztesLicht().brightness).toBeCloseTo(DEFAULT_STATE.display.brightness * Math.PI, 10);
@@ -111,7 +117,7 @@ describe('buildScene — die Kamera belichtet auf das Ziel', () => {
 
   it('kalibriert das Punktlicht auf die belichtete Helligkeit', () => {
     const ctx = fakeContext();
-    const szene = buildScene(ctx, fakeOverlay);
+    const szene = buildScene(ctx, fakeOverlay, (k) => k);
     szene.update(2451545.0, 0.016, DEFAULT_STATE);
     const licht = ctx.scene.children.find((o) => o instanceof THREE.PointLight) as THREE.PointLight;
     const auEinheiten = kmToUnits(AU_KM);
@@ -122,7 +128,7 @@ describe('buildScene — die Kamera belichtet auf das Ziel', () => {
 
   it('belichtet im ersten Frame direkt auf ein fernes Ziel und zieht danach gedämpft nach', () => {
     koerperUpdateSpion.mockClear();
-    const szene = buildScene(fakeContext(), fakeOverlay);
+    const szene = buildScene(fakeContext(), fakeOverlay, (k) => k);
     const neptun = {
       ...DEFAULT_STATE,
       scale: { ...SCALE_PRESETS.realistisch, preset: 'realistisch' },

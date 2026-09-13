@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import type { Vec3 } from '../sim/types';
-import { t } from '../ui/i18n';
 
 /** Unterhalb dieser projizierten Größe braucht ein Körper eine Ersatzglyphe. */
 export const MARKER_MIN_PIXEL = 3;
@@ -96,6 +95,11 @@ export interface LabelOverlay {
     camera: THREE.PerspectiveCamera,
     zeigeLabels: boolean,
     zeigeMarker: boolean,
+    /**
+     * Kennung der Sprache, in der die Namen gerade gelten; ändert sie sich,
+     * werden alle vorhandenen Einträge über den Auflöser neu beschriftet.
+     */
+    sprache: string,
   ): void;
   dispose(): void;
 }
@@ -116,12 +120,20 @@ function ueberlappt(
  * bleibt bei jedem Zoom scharf, und die Größe folgt der Systemschrift des
  * Betrachters statt einer festen Pixelgröße.
  */
-export function createLabelOverlay(container: HTMLElement): LabelOverlay {
+export function createLabelOverlay(
+  container: HTMLElement,
+  name: (key: string) => string,
+): LabelOverlay {
   const wurzel = document.createElement('div');
   wurzel.className = 'label-overlay';
   container.appendChild(wurzel);
 
-  const knoten = new Map<string, { wrapper: HTMLElement; glyphe: HTMLElement; text: HTMLElement }>();
+  const knoten = new Map<
+    string,
+    { wrapper: HTMLElement; glyphe: HTMLElement; text: HTMLElement; nameKey: string }
+  >();
+  /** Zuletzt beschriftete Sprache; null vor dem ersten update(). */
+  let beschriftetIn: string | null = null;
 
   const hole = (eintrag: LabelEintrag) => {
     const vorhanden = knoten.get(eintrag.id);
@@ -134,17 +146,26 @@ export function createLabelOverlay(container: HTMLElement): LabelOverlay {
     glyphe.style.backgroundColor = eintrag.farbe;
     const text = document.createElement('span');
     text.className = 'koerper-name';
-    text.textContent = t(eintrag.nameKey);
+    text.textContent = name(eintrag.nameKey);
     wrapper.append(glyphe, text);
     wurzel.appendChild(wrapper);
 
-    const neu = { wrapper, glyphe, text };
+    const neu = { wrapper, glyphe, text, nameKey: eintrag.nameKey };
     knoten.set(eintrag.id, neu);
     return neu;
   };
 
   return {
-    update(eintraege, camera, zeigeLabels, zeigeMarker) {
+    update(eintraege, camera, zeigeLabels, zeigeMarker, sprache) {
+      // Sprachwechsel: Neu angelegte Einträge werden ohnehin über name()
+      // beschriftet (siehe hole oben); hier geht es nur um bereits
+      // vorhandene Knoten, deren textContent sonst in der alten Sprache
+      // stehen bliebe.
+      if (sprache !== beschriftetIn) {
+        beschriftetIn = sprache;
+        for (const k of knoten.values()) k.text.textContent = name(k.nameKey);
+      }
+
       const breite = wurzel.clientWidth;
       const hoehe = wurzel.clientHeight;
 

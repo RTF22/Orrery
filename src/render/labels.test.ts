@@ -1,5 +1,7 @@
 // @vitest-environment jsdom
-import { describe, it, expect } from 'vitest';
+import {
+  describe, it, expect, beforeEach,
+} from 'vitest';
 import * as THREE from 'three';
 import {
   apparentRadiusPixels, needsMarker, MARKER_MIN_PIXEL, zeigeLabel, LABEL_MIN_PIXEL_MOND,
@@ -106,13 +108,25 @@ describe('createLabelOverlay — Rang vor Tiefe (Flackern bei Mondüberlappung)'
     };
   }
 
+  /**
+   * Namenstabelle für den Auflöser — von den einzelnen Tests umgesetzt.
+   * createLabelOverlay bekommt den Auflöser einmalig beim Aufbau, liest
+   * `namen` also erst bei jedem `hole()`/Neubeschriften-Durchlauf aus.
+   * Vor jedem Test auf die Standardtabelle zurückgesetzt, damit einzelne
+   * Tests (etwa der Sprachwechsel) sie gefahrlos überschreiben können.
+   */
+  let namen: Record<string, string>;
+  beforeEach(() => {
+    namen = { 'body.jupiter.name': 'Jupiter', 'body.io.name': 'Io', 'body.europa.name': 'Europa' };
+  });
+
   /** Baut das Overlay in einem DOM-Container auf und erzwingt eine feste
    * Größe — jsdom layoutet nicht wirklich, `clientWidth`/`clientHeight`
    * blieben sonst 0 und apparentRadiusPixels läge dann immer bei 0. */
   function baueOverlay() {
     const container = document.createElement('div');
     document.body.appendChild(container);
-    const overlay = createLabelOverlay(container);
+    const overlay = createLabelOverlay(container, (key) => namen[key] ?? key);
     const wurzel = container.querySelector('.label-overlay') as HTMLElement;
     Object.defineProperty(wurzel, 'clientWidth', { value: BREITE, configurable: true });
     Object.defineProperty(wurzel, 'clientHeight', { value: HOEHE, configurable: true });
@@ -141,7 +155,7 @@ describe('createLabelOverlay — Rang vor Tiefe (Flackern bei Mondüberlappung)'
       const kamera = testKamera();
       // Reihenfolge im Eingabe-Array bewusst Mond-vor-Planet: Die Sortierung
       // im Overlay muss das Ergebnis bestimmen, nicht die Eingabereihenfolge.
-      overlay.update([io, jupiter], kamera, true, true);
+      overlay.update([io, jupiter], kamera, true, true, 'de');
 
       const jupiterKnoten = wrapperVon(container, 'Jupiter');
       expect(jupiterKnoten).toBeTruthy();
@@ -162,7 +176,7 @@ describe('createLabelOverlay — Rang vor Tiefe (Flackern bei Mondüberlappung)'
     const europa = koerper('europa', 'body.europa.name', true, 800, 50);
 
     const { overlay, container } = baueOverlay();
-    overlay.update([europa, io], testKamera(), true, true);
+    overlay.update([europa, io], testKamera(), true, true, 'de');
 
     const ioKnoten = wrapperVon(container, 'Io');
     expect(ioKnoten).toBeTruthy();
@@ -179,7 +193,7 @@ describe('createLabelOverlay — Rang vor Tiefe (Flackern bei Mondüberlappung)'
     const europa = koerper('europa', 'body.europa.name', true, 800, 50);
 
     const { overlay, container } = baueOverlay();
-    overlay.update([io, europa], testKamera(), true, true);
+    overlay.update([io, europa], testKamera(), true, true, 'de');
 
     const ioKnoten = wrapperVon(container, 'Io');
     const europaKnoten = wrapperVon(container, 'Europa');
@@ -199,12 +213,30 @@ describe('createLabelOverlay — Rang vor Tiefe (Flackern bei Mondüberlappung)'
     const europa = koerper('europa', 'body.europa.name', true, 800, 1);
 
     const { overlay, container } = baueOverlay();
-    overlay.update([europa, io], testKamera(), true, true);
+    overlay.update([europa, io], testKamera(), true, true, 'de');
 
     const ioKnoten = wrapperVon(container, 'Io');
     expect(ioKnoten).toBeTruthy();
     expect(ioKnoten?.querySelector<HTMLElement>('.koerper-glyphe')?.hidden).toBe(false);
     // Europa hat keinen Platz bekommen — kein DOM-Knoten für sie.
     expect(wrapperVon(container, 'Europa')).toBeUndefined();
+  });
+
+  it('beschriftet vorhandene Einträge neu, wenn sich die Sprache ändert', () => {
+    namen = { 'body.moon.name': 'Mond' };
+    const { overlay, container } = baueOverlay();
+    const kamera = testKamera();
+    const eintraege = [koerper('moon', 'body.moon.name', false, 10, 20)];
+    overlay.update(eintraege, kamera, true, true, 'de');
+    expect(wrapperVon(container, 'Mond')).toBeDefined();
+
+    namen = { 'body.moon.name': 'Moon' };
+    // Gleiche Sprache: kein Neubeschriften, der Auflöser wird nicht befragt.
+    overlay.update(eintraege, kamera, true, true, 'de');
+    expect(wrapperVon(container, 'Mond')).toBeDefined();
+
+    overlay.update(eintraege, kamera, true, true, 'en');
+    expect(wrapperVon(container, 'Moon')).toBeDefined();
+    expect(wrapperVon(container, 'Mond')).toBeUndefined();
   });
 });
