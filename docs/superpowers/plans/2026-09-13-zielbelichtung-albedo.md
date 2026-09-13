@@ -20,7 +20,7 @@
 - **Quellenpflicht:** Jeder Albedowert trägt seinen Quellenkommentar mit Blattname, Zeilenbezeichnung und Abrufdatum. Die Zahlen in Task 4 sind **Ausgangswerte, die gegen die genannte Quelle geprüft werden müssen** — weicht die Quelle ab, gilt die Quelle.
 - **Kein Screenshot-Vergleich:** Gerenderte Bilder werden nicht automatisiert verglichen. Wo es auf das Bild ankommt, steht eine Sichtprüfung mit Pixelmessung im Task (Playwright-Screenshot, Auswertung mit Python/Pillow; Screenshots vor dem Commit aus dem Projektstamm entfernen, `.playwright-mcp/` löschen, nur gezielt `git add`).
 - **Ein Umsetzer gleichzeitig:** Sichtprüfungen teilen sich den Browser; nie zwei Umsetzer parallel.
-- **Entwicklungsserver:** Auf Port 5173 läuft meist schon ein Vite-Server dieses Projekts (Basis `/Solarsystem/`); erst mit `curl -s -o /dev/null -w '%{http_code}' http://localhost:5173/Solarsystem/` prüfen, statt einen zweiten zu starten. Im Entwicklungslauf liegen `window.store`, `window.renderer` und `window.scene` bereit.
+- **Entwicklungsserver:** Auf Port 5173 läuft meist schon ein Vite-Server dieses Projekts (Basis `/Orrery/`); erst mit `curl -s -o /dev/null -w '%{http_code}' http://localhost:5173/Orrery/` prüfen, statt einen zweiten zu starten. Im Entwicklungslauf liegen `window.store`, `window.renderer` und `window.scene` bereit.
 
 ---
 

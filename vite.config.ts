@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   // Pages liegt später in einem Unterpfad — gleich zu Beginn setzen,
   // damit die spätere Veröffentlichung keine Pfadüberraschungen bringt.
-  base: '/Solarsystem/',
+  base: '/Orrery/',
   plugins: [react(), tailwindcss()],
   test: {
     environment: 'node',
