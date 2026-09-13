@@ -7,7 +7,7 @@ export const DEFAULT_STATE: AppState = {
   time: { jd: J2000, rateDaysPerSec: 1, paused: false },
   scale: { ...SCALE_PRESETS.schaubild, preset: 'schaubild' },
   display: {
-    orbits: true, labels: true, markers: true,
+    orbits: true, labels: true, markers: true, belts: true,
     bloom: true, brightness: 1, lightFalloff: 2,
     // Ohne diese beiden Standardwerte bliebe die abgewandte Hälfte jedes
     // Körpers bei absolut null und die äußeren Planeten bei rund einem

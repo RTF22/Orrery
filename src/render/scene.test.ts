@@ -18,6 +18,12 @@ vi.mock('./rings', () => ({
   createRingViews: () => ({ update: vi.fn(), dispose: vi.fn() }),
 }));
 
+// Die Gürtel legen beim ersten update() bis zu 50 000 Bahnelemente je Wolke
+// an (belts.ts); geprüft wird das dort. Hier zählt nur die Verdrahtung.
+vi.mock('./belts', () => ({
+  createBeltViews: () => ({ update: vi.fn(), dispose: vi.fn() }),
+}));
+
 // Das Label-Overlay legt DOM-Knoten an; in der Node-Testumgebung gibt es
 // kein document. Hier interessiert nur die Bahnlinien-Verdrahtung.
 vi.mock('./labels', () => ({
@@ -39,13 +45,14 @@ const { kmToUnits } = await import('./units');
 const fakeOverlay = {} as HTMLElement;
 
 // Der WebGLRenderer selbst braucht einen echten Canvas/GL-Kontext, den es in
-// der Node-Testumgebung nicht gibt. buildScene liest ctx.renderer nirgends,
-// daher genügt hier ein Platzhalter statt einer echten Instanz.
+// der Node-Testumgebung nicht gibt. buildScene liest davon nur die
+// Pixeldichte (für die Punktgröße der Gürtel), daher genügt hier ein
+// Platzhalter mit genau dieser Methode statt einer echten Instanz.
 function fakeContext(): import('./renderer').RenderContext {
   return {
     scene: new THREE.Scene(),
     camera: new THREE.PerspectiveCamera(),
-    renderer: {} as unknown as THREE.WebGLRenderer,
+    renderer: { getPixelRatio: () => 1 } as unknown as THREE.WebGLRenderer,
     resize: () => {},
     setPixelRatioCap: () => {},
     afterResize: null,

@@ -9,6 +9,7 @@ const SCHALTER: readonly (readonly [keyof AppState['display'], string])[] = [
   ['orbits', 'display.orbits'],
   ['labels', 'display.labels'],
   ['markers', 'display.markers'],
+  ['belts', 'display.belts'],
   ['bloom', 'display.bloom'],
 ];
 

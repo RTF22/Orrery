@@ -47,6 +47,7 @@ export const de = {
   'display.orbits': 'Bahnlinien',
   'display.labels': 'Beschriftungen',
   'display.markers': 'Marker',
+  'display.belts': 'Gürtel',
   'display.bloom': 'Leuchten',
   'display.brightness': 'Helligkeit',
   'display.lightFalloff': 'Lichtabfall',

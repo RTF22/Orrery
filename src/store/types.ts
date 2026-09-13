@@ -11,6 +11,8 @@ export interface AppState {
   scale: { sizeScale: number; distanceExponent: number; sunDamping: number; preset: string | null };
   display: {
     orbits: boolean; labels: boolean; markers: boolean;
+    /** Asteroiden- und Kuipergürtel als Punktwolken (render/belts.ts). */
+    belts: boolean;
     bloom: boolean; brightness: number; lightFalloff: number;
     /**
      * Fülllicht der Nachtseite als Bruchteil des Tagniveaus desselben

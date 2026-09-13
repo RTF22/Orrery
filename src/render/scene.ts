@@ -3,6 +3,7 @@ import type { RenderContext } from './renderer';
 import type { AppState } from '../store/types';
 import { createBodyViews } from './bodies';
 import { createRingViews } from './rings';
+import { createBeltViews } from './belts';
 import { createOrbitLines } from './orbits';
 import { createStarfield } from './starfield';
 import { createLabelOverlay } from './labels';
@@ -39,6 +40,7 @@ export interface SceneHandle {
 export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandle {
   const koerper = createBodyViews(ctx.scene);
   const ringe = createRingViews(ctx.scene);
+  const guertel = createBeltViews(ctx.scene);
   const bahnen = createOrbitLines(ctx.scene);
   // Einmalig aufgebaut: Sterne stehen fest auf einer sehr großen Kugel um den
   // Ursprung und werden — anders als Körper und Bahnen — nie pro Frame neu
@@ -104,6 +106,16 @@ export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandl
         new THREE.Vector3(lichtRender.x, lichtRender.y, lichtRender.z),
       );
 
+      // Die Gürtel rechnen ihre Bahnen im Vertex-Shader (belts.ts) und
+      // brauchen deshalb nur den Kompressionsexponenten, nicht den ganzen
+      // Maßstab: Größen gibt es bei Punkten keine. Die Pixeldichte kommt
+      // vom Renderer, damit ein Teilchen auf jedem Bildschirm gleich groß
+      // erscheint.
+      guertel.update(
+        jd, state.scale.distanceExponent, cameraKm, state.quality.tier,
+        state.display.belts, belichtet, ctx.renderer.getPixelRatio(),
+      );
+
       // Kalibrierung: Bei 1 AE Abstand vom Licht soll die Bestrahlungsstärke
       // exakt die belichtete Helligkeit betragen — `brightness` mal
       // Zielbelichtung, siehe exposure.ts — unabhängig vom gewählten
@@ -135,6 +147,7 @@ export function buildScene(ctx: RenderContext, overlay: HTMLElement): SceneHandl
     dispose() {
       labels.dispose();
       ringe.dispose();
+      guertel.dispose();
     },
   };
 }
