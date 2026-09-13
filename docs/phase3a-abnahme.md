@@ -258,7 +258,11 @@ Pixelmessung (Median der Scheibe, ohne Bahnlinien und Beschriftung, Preset
 | Enceladus, Szene Nr. 13 | — | 34 |
 
 Pluto steht damit bei 84 % der Erde, passend zu `E^0,15` = 0,54 im linearen
-Raum nach Tonemapping. Was bleibt, ist die Gesamtbelichtung: Auch die Erde
+Raum nach Tonemapping. Die Ringe gehen denselben Weg (`render/rings.ts` rechnet
+`uTag` aus derselben geklemmten Verstärkung): In „Uranus gekippt" liegt `uTag`
+jetzt bei 0,58 statt 0,33, Planet und Ringe sind im Bild klar getrennt, die
+Planetenscheibe erreicht auf der Mittellinie einen Median von 77–81 ohne
+Überstrahlung (99. Perzentil des Bildes 95). Was bleibt, ist die Gesamtbelichtung: Auch die Erde
 liegt auf der vollen Tagseite nur bei einem Median von 51, weil der
 Lambert-Anteil des Materials das Licht mit 1/π gewichtet und die Texturen
 selbst mittelgrau sind (Enceladus-Karte: Median 115 von 255). Das betrifft

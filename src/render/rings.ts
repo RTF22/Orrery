@@ -133,8 +133,10 @@ export function ringHelligkeit(
  * 128 ist ein Sichtbarkeitswert, kein Albedowert — und das mit Absicht. Der
  * Vorgänger (RGB 38, linear rund 2 %) war aus der realen Albedo des
  * Uranusrings (etwa 0,05) hergeleitet und im Bild schlicht nicht vorhanden:
- * In der Kinoszene `uranus-gekippt` liegt uTag bei 0,33 (Preset Schaubild,
- * Standardbeleuchtung; die Klemme MAX_COLOR_GAIN greift dort bereits), die
+ * In der Kinoszene `uranus-gekippt` lag uTag bei 0,33 (Preset Schaubild,
+ * Standardbeleuchtung; die damalige Klemme MAX_COLOR_GAIN = 12 griff dort
+ * bereits — seit der Nachbesserung nach der Abnahme 3a liegt die Klemme bei
+ * 1e5 und uTag in dieser Szene bei 0,58, abgelesen am 13.09.2026), die
  * Summe aus Direktlicht und Nachtseitenfüllung bei 0,14 — das Fragment
  * landete bei 0,003 linear, und das ACES-Tonemapping (renderer.ts) drückt
  * alles unter rund 0,01 auf 0 von 255. Pixelmessung am 12.09.2026: 0 an
@@ -395,12 +397,14 @@ export function createRingViews(scene: THREE.Scene): RingViews {
         // nimmt bewusst denselben geklemmten Weg wie das Material des
         // Planeten — colorGain (in bodies.ts über material.color) mal
         // irradianceFactor, mal brightness als Bezugsgröße der ganzen
-        // Kalibrierung (siehe lighting.ts) — statt des ungeklemmten
-        // dayLevel. Unklemmt sind beide Wege identisch (E^-c * E = E^(1-c) =
-        // dayLevel/brightness); nur wenn lightCompensation den Regler an den
-        // Rand treibt, greift die Klemme aus MAX_COLOR_GAIN/MIN_COLOR_GAIN
-        // und hält Ring und Planet gemeinsam im selben Rahmen, statt dass
-        // der Ring ungebremst über den Planeten hinauswächst. Der zweite,
+        // Kalibrierung (siehe lighting.ts). Seit der Nachbesserung nach der
+        // Abnahme 3a rechnet lighting.ts sein dayLevel aus genau derselben
+        // geklemmten Verstärkung, beide Wege sind also immer identisch
+        // (brightness * E^-c * E = dayLevel); die Klemme aus
+        // MAX_COLOR_GAIN/MIN_COLOR_GAIN greift erst weit jenseits des
+        // Katalogs und hält dort Ring und Planet gemeinsam im selben Rahmen,
+        // statt dass der Ring ungebremst über den Planeten hinauswächst. Der
+        // zweite,
         // unabhängige Bruch — Three gewichtet den Planeten intern mit 1/π,
         // dieses ShaderMaterial nicht — sitzt nicht hier, sondern in
         // RECIPROCAL_PI im Fragment-Shader oben.
