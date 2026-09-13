@@ -1,12 +1,27 @@
 import { jdToDate, dateToJd } from '../sim/time';
-import { t } from './i18n';
+import { t, locale } from './i18n';
 
-const FORMAT = new Intl.DateTimeFormat('de-DE', {
-  day: '2-digit', month: '2-digit', year: 'numeric',
-  hour: '2-digit', minute: '2-digit', timeZone: 'UTC',
-});
+/** Ein Formatierer je Locale, beim ersten Gebrauch gebaut. */
+const datumsformate = new Map<string, Intl.DateTimeFormat>();
 
-export const formatJd = (jd: number): string => FORMAT.format(jdToDate(jd));
+function datumsformat(): Intl.DateTimeFormat {
+  const l = locale();
+  let f = datumsformate.get(l);
+  if (f === undefined) {
+    f = new Intl.DateTimeFormat(l, {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit', timeZone: 'UTC',
+    });
+    datumsformate.set(l, f);
+  }
+  return f;
+}
+
+export const formatJd = (jd: number): string => datumsformat().format(jdToDate(jd));
+
+/** Zahl in der Locale der aktuellen Sprache, gerundet auf maxStellen. */
+export const formatZahl = (n: number, maxStellen = 2): string =>
+  n.toLocaleString(locale(), { maximumFractionDigits: maxStellen });
 
 /**
  * Wählt die Einheit nach Größenordnung, damit die Anzeige über den ganzen
@@ -17,11 +32,10 @@ export function formatRate(tageProSekunde: number): string {
   if (tageProSekunde === 0) return t('time.rate.paused');
   const vorzeichen = tageProSekunde < 0 ? '−' : '';
   const betrag = Math.abs(tageProSekunde);
-  const zahl = (n: number): string => n.toLocaleString('de-DE', { maximumFractionDigits: 2 });
 
   /** „1 Tag/s", aber „2,5 Tage/s" — der Numerus richtet sich nach der Anzeige. */
   const mitEinheit = (wert: number, stamm: string): string => {
-    const text = zahl(wert);
+    const text = formatZahl(wert);
     return `${vorzeichen}${text} ${t(`${stamm}${text === '1' ? '' : 's'}`)}`;
   };
 

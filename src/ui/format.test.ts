@@ -1,6 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { formatJd, formatRate, isOutOfRange } from './format';
-import { dateToJd } from '../sim/time';
+import { describe, it, expect, afterEach } from 'vitest';
+import { formatJd, formatRate, formatZahl, isOutOfRange } from './format';
+import { dateToJd, J2000 } from '../sim/time';
+import { setSprache } from './i18n';
 
 describe('formatJd', () => {
   it('gibt deutsches Datumsformat aus', () => {
@@ -26,6 +27,30 @@ describe('formatRate', () => {
 
   it('verwendet das deutsche Dezimalkomma', () => {
     expect(formatRate(2.5 * 365.25)).toContain(',');
+  });
+});
+
+describe('Formatierung je Sprache', () => {
+  afterEach(() => { setSprache('de'); });
+
+  it('formatiert Zahlen mit der Locale der Sprache', () => {
+    expect(formatZahl(1234.5)).toBe('1.234,5');
+    setSprache('en');
+    expect(formatZahl(1234.5)).toBe('1,234.5');
+    expect(formatZahl(0.123456, 3)).toBe('0.123');
+  });
+
+  it('formatiert das Datum mit Tag vor Monat in beiden Sprachen', () => {
+    // J2000 = 1. Januar 2000, 12:00 UTC
+    expect(formatJd(J2000)).toMatch(/^01\.01\.2000, 12:00$/);
+    setSprache('en');
+    expect(formatJd(J2000)).toMatch(/^01\/01\/2000, 12:00$/);
+  });
+
+  it('übersetzt die Zeitraffer-Einheit', () => {
+    setSprache('en');
+    expect(formatRate(2.5)).toBe('2.5 days/s');
+    expect(formatRate(1)).toBe('1 day/s');
   });
 });
 

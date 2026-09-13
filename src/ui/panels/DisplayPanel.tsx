@@ -2,6 +2,7 @@ import { useId } from 'react';
 import { useStore } from '../../store';
 import type { AppState } from '../../store/types';
 import { t } from '../i18n';
+import { formatZahl } from '../format';
 import { Panel } from './Panel';
 
 /** Schalter und zugehöriger Sprachschlüssel. */
@@ -13,8 +14,6 @@ const SCHALTER: readonly (readonly [keyof AppState['display'], string])[] = [
   ['shadows', 'display.shadows'],
   ['bloom', 'display.bloom'],
 ];
-
-const zahl = (n: number): string => n.toLocaleString('de-DE', { maximumFractionDigits: 2 });
 
 export function DisplayPanel(): React.JSX.Element {
   const display = useStore((s) => s.display);
@@ -41,7 +40,7 @@ export function DisplayPanel(): React.JSX.Element {
         <label htmlFor={helligkeitId} className="flex flex-col gap-1">
           <span className="flex justify-between">
             <span>{t('display.brightness')}</span>
-            <span className="font-mono tabular-nums">{zahl(display.brightness)}</span>
+            <span className="font-mono tabular-nums">{formatZahl(display.brightness)}</span>
           </span>
           <input
             id={helligkeitId}
@@ -55,7 +54,7 @@ export function DisplayPanel(): React.JSX.Element {
         <label htmlFor={abfallId} className="flex flex-col gap-1">
           <span className="flex justify-between">
             <span>{t('display.lightFalloff')}</span>
-            <span className="font-mono tabular-nums">{zahl(display.lightFalloff)}</span>
+            <span className="font-mono tabular-nums">{formatZahl(display.lightFalloff)}</span>
           </span>
           {/* 2 ist der physikalische Wert; kleinere Exponenten heben die
               äußeren Planeten an, ohne die inneren auszubrennen. */}
@@ -70,7 +69,7 @@ export function DisplayPanel(): React.JSX.Element {
         <label htmlFor={nachtId} className="flex flex-col gap-1">
           <span className="flex justify-between">
             <span>{t('display.nightFill')}</span>
-            <span className="font-mono tabular-nums">{zahl(display.nightFill)}</span>
+            <span className="font-mono tabular-nums">{formatZahl(display.nightFill)}</span>
           </span>
           {/* 0 ist der physikalisch korrekte Wert — und genau der, bei dem
               die abgewandte Hälfte jedes Körpers absolut schwarz bleibt. */}
@@ -86,7 +85,7 @@ export function DisplayPanel(): React.JSX.Element {
         <label htmlFor={ausgleichId} className="flex flex-col gap-1">
           <span className="flex justify-between">
             <span>{t('display.lightCompensation')}</span>
-            <span className="font-mono tabular-nums">{zahl(display.lightCompensation)}</span>
+            <span className="font-mono tabular-nums">{formatZahl(display.lightCompensation)}</span>
           </span>
           {/* 0 lässt den Abstandsabfall unangetastet (Neptun rund ein Prozent
               des Erdniveaus), 1 macht alle Körper gleich hell. */}

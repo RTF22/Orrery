@@ -2,6 +2,7 @@ import { useId } from 'react';
 import { useStore } from '../../store';
 import type { CameraMode } from '../../store/types';
 import { t } from '../i18n';
+import { formatZahl } from '../format';
 import { Panel } from './Panel';
 
 // Der vierte Modus ist auswählbar, startet den Director aber nicht — das
@@ -27,7 +28,7 @@ const BLICKWINKEL: readonly (readonly [string, number, number])[] = [
 ];
 
 const abstandText = (km: number): string =>
-  `${(km / 1e6).toLocaleString('de-DE', { maximumFractionDigits: 2 })} Mio. km`;
+  `${formatZahl(km / 1e6)} ${t('unit.millionKm')}`;
 
 export function CameraPanel(): React.JSX.Element {
   const camera = useStore((s) => s.camera);

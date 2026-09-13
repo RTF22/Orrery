@@ -3,6 +3,7 @@ import { useStore } from '../../store';
 import { SCALE_PRESETS } from '../../sim/scale';
 import type { ScaleSettings } from '../../sim/scale';
 import { t } from '../i18n';
+import { formatZahl } from '../format';
 import { Panel } from './Panel';
 import { tweenScale } from '../tween';
 
@@ -21,9 +22,6 @@ const reglerZuGroesse = (v: number): number =>
 const groesseZuRegler = (g: number): number =>
   Math.log(Math.min(Math.max(g, GROESSE_MIN), GROESSE_MAX) / GROESSE_MIN)
   / Math.log(GROESSE_MAX / GROESSE_MIN);
-
-const zahl = (n: number, stellen = 2): string =>
-  n.toLocaleString('de-DE', { maximumFractionDigits: stellen });
 
 export function ScalePanel(): React.JSX.Element {
   const scale = useStore((s) => s.scale);
@@ -81,7 +79,7 @@ export function ScalePanel(): React.JSX.Element {
         <label htmlFor={groesseId} className="flex flex-col gap-1">
           <span className="flex justify-between">
             <span>{t('scale.size')}</span>
-            <span className="font-mono tabular-nums">{zahl(scale.sizeScale, 1)}×</span>
+            <span className="font-mono tabular-nums">{formatZahl(scale.sizeScale, 1)}×</span>
           </span>
           <input
             id={groesseId}
@@ -95,7 +93,7 @@ export function ScalePanel(): React.JSX.Element {
         <label htmlFor={abstandId} className="flex flex-col gap-1">
           <span className="flex justify-between">
             <span>{t('scale.distance')}</span>
-            <span className="font-mono tabular-nums">{zahl(scale.distanceExponent)}</span>
+            <span className="font-mono tabular-nums">{formatZahl(scale.distanceExponent)}</span>
           </span>
           <input
             id={abstandId}
@@ -109,7 +107,7 @@ export function ScalePanel(): React.JSX.Element {
         <label htmlFor={sonneId} className="flex flex-col gap-1">
           <span className="flex justify-between">
             <span>{t('scale.sunDamping')}</span>
-            <span className="font-mono tabular-nums">{zahl(scale.sunDamping)}</span>
+            <span className="font-mono tabular-nums">{formatZahl(scale.sunDamping)}</span>
           </span>
           <input
             id={sonneId}
