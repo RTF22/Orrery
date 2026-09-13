@@ -42,8 +42,9 @@ export interface Scene {
   durationSec: number;
   timeRateDaysPerSec: number;
   /**
-   * Verlangt beim Wechsel AUF diese Szene einen Zeitsprung: `tickCinema`
-   * (app/cinema.ts) sucht dann mit `naechsteMondfinsternis` (sim/finsternis.ts)
+   * Verlangt beim Beginn dieser Szene (Wechsel oder Kinostart auf ihr) einen
+   * Zeitsprung: `tickCinema` (app/cinema.ts) sucht dann mit
+   * `naechsteMondfinsternis` (sim/finsternis.ts)
    * die nächste Mondfinsternis ab der aktuellen Zeit und stellt `time.jd`
    * kurz vor deren Eintritt. Der Sprung bleibt nach der Szene bestehen — die
    * Zeit ist im Kino die des Kinos (Entwurf §4). Findet die Suche nichts,

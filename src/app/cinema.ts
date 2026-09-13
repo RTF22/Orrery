@@ -50,6 +50,21 @@ export function blendedRate(vonRate: number, nachRate: number, elapsedSec: numbe
 }
 
 /**
+ * Beginnt mit diesem Tick eine Szene? Beim Wechsel der Nummer offensichtlich.
+ * Außerdem, wenn `elapsedSec` vor dem Tick 0 war: startCinema und nextScene
+ * (ui/cinemaControl.ts) setzen den Zähler auf 0, damit springt eine Szene
+ * mit `zeitpunkt` auch an Playlist-Position 0 und nach einem Neustart auf
+ * ihr. Der Wiederanlauf nach Ruhe (resumeIfIdle) lässt den Zähler stehen
+ * und zählt deshalb nicht als Beginn — kein zweiter Sprung mitten in der
+ * Szene.
+ */
+export function szenenBeginn(
+  vorher: AppState['cinema'], nachher: AppState['cinema'],
+): boolean {
+  return nachher.nummer !== vorher.nummer || vorher.elapsedSec === 0;
+}
+
+/**
  * Ein Bild im Kino-Modus: Szene fortschalten und den Zeitraffer der Szene
  * angleichen. Wird aus der Renderschleife gerufen, nicht aus React.
  */
@@ -68,15 +83,16 @@ export function tickCinema(dtSek: number): void {
     : plannedSceneAt(vorher.nummer, SCENES, vorher.seed, vorher.shuffle)
       .scene.timeRateDaysPerSec;
 
-  // Zeitsprung beim Wechsel AUF eine Szene mit `zeitpunkt` (Entwurf §4):
-  // Die Suche läuft ab der aktuellen Zeit, die Zeit landet um ein Zehntel
-  // der Durchgangsdauer vor dem Eintritt in den Kernschatten — der Zuschauer
-  // sieht den Mond also noch unverfinstert einlaufen. Findet die Suche
-  // nichts, bleibt die Zeit stehen und die Szene läuft ohne Sprung. Der
-  // Sprung bleibt nach der Szene bestehen: Das Kino setzt heute schon den
-  // Zeitraffer und stellt ihn nicht zurück, die Zeit ist im Kino die des Kinos.
+  // Zeitsprung beim Beginn einer Szene mit `zeitpunkt` (Entwurf §4; Beginn
+  // siehe szenenBeginn): Die Suche läuft ab der aktuellen Zeit, die Zeit
+  // landet um ein Zehntel der Durchgangsdauer vor dem Eintritt in den
+  // Kernschatten — der Zuschauer sieht den Mond also noch unverfinstert
+  // einlaufen. Findet die Suche nichts, bleibt die Zeit stehen und die
+  // Szene läuft ohne Sprung. Der Sprung bleibt nach der Szene bestehen:
+  // Das Kino setzt heute schon den Zeitraffer und stellt ihn nicht zurück,
+  // die Zeit ist im Kino die des Kinos.
   let jdNeu = zustand.time.jd;
-  if (nachher.nummer !== vorher.nummer && geplant.scene.zeitpunkt === 'naechste-mondfinsternis') {
+  if (szenenBeginn(vorher, nachher) && geplant.scene.zeitpunkt === 'naechste-mondfinsternis') {
     const finsternis = naechsteMondfinsternis(bodyIndex, zustand.time.jd);
     if (finsternis !== null) {
       jdNeu = finsternis.eintrittJd - 0.1 * (finsternis.austrittJd - finsternis.eintrittJd);

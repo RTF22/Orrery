@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { advanceCinema, blendedRate, RATE_BLEND_SEC, tickCinema } from './cinema';
+import { advanceCinema, blendedRate, RATE_BLEND_SEC, tickCinema, szenenBeginn } from './cinema';
 import { DEFAULT_STATE, useStore } from '../store';
 import { naechsteMondfinsternis } from '../sim/finsternis';
 import { bodyIndex } from '../data/index';
@@ -64,6 +64,25 @@ describe('blendedRate', () => {
   });
 });
 
+describe('szenenBeginn', () => {
+  const basis = { ...DEFAULT_STATE.cinema, running: true, nummer: 3, elapsedSec: 12 };
+
+  it('erkennt den Nummernwechsel', () => {
+    expect(szenenBeginn(basis, { ...basis, nummer: 4, elapsedSec: 0.2 })).toBe(true);
+  });
+
+  it('erkennt den frischen Start: elapsedSec war 0', () => {
+    // startCinema und nextScene setzen elapsedSec auf 0 — auch ohne
+    // Nummernwechsel beginnt damit eine Szene.
+    expect(szenenBeginn({ ...basis, elapsedSec: 0 }, { ...basis, elapsedSec: 0.016 })).toBe(true);
+  });
+
+  it('zählt einen laufenden Tick und den Wiederanlauf nach Ruhe nicht als Beginn', () => {
+    // resumeIfIdle lässt elapsedSec stehen: kein zweiter Sprung mitten in der Szene.
+    expect(szenenBeginn(basis, { ...basis, elapsedSec: 12.016 })).toBe(false);
+  });
+});
+
 describe('tickCinema — Zeitsprung auf die nächste Mondfinsternis', () => {
   const indexMondfinsternis = SCENES.findIndex((s) => s.id === 'mondfinsternis');
 
@@ -116,6 +135,38 @@ describe('tickCinema — Zeitsprung auf die nächste Mondfinsternis', () => {
 
     tickCinema(0.016);
     expect(useStore.getState().cinema.nummer).toBe(indexMondfinsternis);
+    expect(useStore.getState().time.jd).toBe(gesprungen);
+  });
+
+  it('springt auch, wenn das Kino direkt auf der Finsternis-Szene startet', () => {
+    // Playlist-Position 0 oder Neustart auf der Szene: keine Nummernänderung,
+    // aber elapsedSec 0 wie nach startCinema.
+    useStore.setState({
+      cinema: {
+        ...DEFAULT_STATE.cinema,
+        running: true, nummer: indexMondfinsternis, elapsedSec: 0, seed: 1, shuffle: false,
+      },
+      time: { ...DEFAULT_STATE.time, jd: J2000 },
+    });
+    tickCinema(0.016);
+
+    const f = naechsteMondfinsternis(bodyIndex, J2000)!;
+    const erwartet = f.eintrittJd - 0.1 * (f.austrittJd - f.eintrittJd);
+    expect(useStore.getState().cinema.nummer).toBe(indexMondfinsternis);
+    expect(useStore.getState().time.jd).toBeCloseTo(erwartet, 9);
+  });
+
+  it('springt nach dem Start nur einmal', () => {
+    useStore.setState({
+      cinema: {
+        ...DEFAULT_STATE.cinema,
+        running: true, nummer: indexMondfinsternis, elapsedSec: 0, seed: 1, shuffle: false,
+      },
+      time: { ...DEFAULT_STATE.time, jd: J2000 },
+    });
+    tickCinema(0.016);
+    const gesprungen = useStore.getState().time.jd;
+    tickCinema(0.016);
     expect(useStore.getState().time.jd).toBe(gesprungen);
   });
 });
