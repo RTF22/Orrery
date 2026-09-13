@@ -1,9 +1,11 @@
 import type { QualityTier } from '../store/types';
 
+// beltParticles: Teilchen je Gürtel; gespiegelt in sim/belts.ts (BELT_PARTICLES),
+// weil sim/ nichts aus app/ importieren darf. quality.test.ts prüft die Gleichheit.
 export const QUALITY_SETTINGS = {
-  low:    { textureSize: 1024, bloom: false, pixelRatioCap: 1.0 },
-  medium: { textureSize: 2048, bloom: true,  pixelRatioCap: 1.5 },
-  high:   { textureSize: 8192, bloom: true,  pixelRatioCap: 2.0 },
+  low:    { textureSize: 1024, bloom: false, pixelRatioCap: 1.0, beltParticles: 0 },
+  medium: { textureSize: 2048, bloom: true,  pixelRatioCap: 1.5, beltParticles: 10_000 },
+  high:   { textureSize: 8192, bloom: true,  pixelRatioCap: 2.0, beltParticles: 50_000 },
 } as const;
 
 /** Mindestens so viele Messwerte, bevor überhaupt eingestuft wird. */

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { detectTier, QUALITY_SETTINGS } from './quality';
+import { beltCount } from '../sim/belts';
 
 describe('detectTier', () => {
   it('bleibt bei guter Framezeit auf hoher Stufe', () => {
@@ -32,5 +33,13 @@ describe('QUALITY_SETTINGS', () => {
   it('schaltet Bloom nur auf niedriger Stufe ab', () => {
     expect(QUALITY_SETTINGS.low.bloom).toBe(false);
     expect(QUALITY_SETTINGS.medium.bloom).toBe(true);
+  });
+
+  it('spiegelt die Gürtel-Teilchenzahl aus sim/belts', () => {
+    // sim/ darf nichts aus app/ importieren; die Zahlen stehen deshalb in
+    // beiden Tabellen und müssen hier gleich bleiben.
+    expect(QUALITY_SETTINGS.low.beltParticles).toBe(beltCount('low'));
+    expect(QUALITY_SETTINGS.medium.beltParticles).toBe(beltCount('medium'));
+    expect(QUALITY_SETTINGS.high.beltParticles).toBe(beltCount('high'));
   });
 });
