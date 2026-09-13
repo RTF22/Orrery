@@ -12,10 +12,17 @@ export const DEFAULT_STATE: AppState = {
     // Ohne diese beiden Standardwerte bliebe die abgewandte Hälfte jedes
     // Körpers bei absolut null und die äußeren Planeten bei rund einem
     // Prozent des Erdniveaus — im Dauerlauf sichtbar als schwarze Scheiben.
-    // Die Werte sind an Pixelmessungen kalibriert, nicht geschätzt: Bei
-    // 0,25 / 0,85 liegt die Nachtseite der Erde im Mittel bei 16 statt 4
+    // Beide Werte sind an Pixelmessungen kalibriert, nicht geschätzt.
+    // nightFill 0,25: Die Nachtseite der Erde liegt im Mittel bei 16 statt 4
     // von 255 — Umrisse sind erkennbar, der Terminator bleibt deutlich.
-    nightFill: 0.25, lightCompensation: 0.85,
+    // lightCompensation 0,7: Seit die Kamera auf ihr Ziel belichtet
+    // (render/lighting.ts, targetExposure), bestimmt der Ausgleich nur noch
+    // die Staffelung der übrigen Körper im selben Bild, nicht die Helligkeit
+    // des betrachteten. In der Systemschau zeigt 0,7 Neptun mit 136 und
+    // Uranus mit 108 (Maximum) bzw. 74,5 (Median) von 255, weit über dem
+    // Kriterium 40/12 des Entwurfs, bei physikalischerer Abstufung als 0,85
+    // (docs/phase3a-abnahme.md, Nachtrag 13.09.2026).
+    nightFill: 0.25, lightCompensation: 0.7,
   },
   camera: {
     mode: 'free', targetId: 'sun', distance: 8e8,

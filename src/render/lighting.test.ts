@@ -67,13 +67,14 @@ describe('bodyLighting — Tagseite', () => {
     // muss die Größe sein, die auf dem Material auch ankommt — sonst prüfen
     // die Schranken unten eine Zahl, die kein Pixel je erreicht.
     for (const au of [1, 5.2, 9.6, 30, 97]) {
-      const s = { ...STANDARD, brightness: 1, lightFalloff: 2, lightCompensation: 0.85 };
+      const c = STANDARD.lightCompensation;
+      const s = { ...STANDARD, brightness: 1, lightFalloff: 2, lightCompensation: c };
       const l = bodyLighting(au * AU_KM, s);
       const e = irradianceFactor(au * AU_KM, 2);
       expect(l.dayLevel).toBeCloseTo(e * l.colorGain, 12);
       // Und diese gerenderte Größe folgt bis 97 AE dem Ausgleich E^(1-c) —
       // die Klemme darf innerhalb des Katalogs nie greifen.
-      expect(l.dayLevel).toBeCloseTo(Math.pow(e, 1 - 0.85), 12);
+      expect(l.dayLevel).toBeCloseTo(Math.pow(e, 1 - c), 12);
     }
   });
 
@@ -110,9 +111,8 @@ describe('Standardeinstellung — kein Körper bleibt schwarz', () => {
   // Der Befund aus dem 30-Minuten-Dauerlauf: Planeten waren vollständig
   // schwarz. Dieser Block ist die Regressionsschranke dafür. Geprüft wird
   // absolut (Anteil der Helligkeitseinstellung), nicht als Verhältnis
-  // zwischen den Planeten: Lesbar ist ein Körper ab etwa 0,15 linear — die
-  // sRGB-Ausgabe hebt das deutlich an. Vorher lag Neptun bei
-  // „Realistisch" bei 0,0011 — im Bild gemessene 2 von 255, also schwarz.
+  // zwischen den Planeten. Vorher lag Neptun bei „Realistisch" bei 0,0011 —
+  // im Bild gemessene 2 von 255, also schwarz.
   //
   // dayLevel ist seit der Nachbesserung nach der Abnahme 3a dieselbe Größe,
   // die das Material bekommt (brightness · E · colorGain, aus der geklemmten
@@ -122,49 +122,68 @@ describe('Standardeinstellung — kein Körper bleibt schwarz', () => {
   // MAX_COLOR_GAIN = 12 ab 4,3 AE, und dayLevel lief ungeklemmt weiter —
   // dieser Block war grün, während Pluto im Bild bei 21–25 von 255 lag.
   //
-  // Ausdrücklich nur EIN Körper von kind: 'dwarf' ausgenommen — Eris,
-  // namentlich (b.id !== 'eris'), nicht die ganze Klasse. Nachgerechnet mit
-  // DEFAULT_STATE.display bei Preset „Realistisch", jd = J2000 (genau der
-  // von STANDARD/abstandKm tatsächlich verwendete Zustand):
+  // Was die Schranken seit der Zielbelichtung bedeuten: Die Kamera belichtet
+  // auf ihr Ziel (targetExposure), der betrachtete Körper erreicht also
+  // immer die Referenz — unabhängig vom Distanzausgleich. dayLevel bei
+  // Helligkeit 1 ist dann genau die Strahldichte einer weißen Fläche in der
+  // Systemschau (Ziel Sonne, Faktor π, den Three mit 1/π wieder kürzt):
+  // die eine Ansicht, in der alle Körper mit einer gemeinsamen Belichtung
+  // nebeneinander stehen. Dort und nur dort entscheidet der Ausgleich über
+  // Sichtbarkeit. Kriterium des Entwurfs (Abschnitt 5) für diese Ansicht:
+  // fernster Planet über 40 von 255 auf der Tagseite, über 12 auf der
+  // Nachtseite — nach ACES und sRGB entspricht das linear rund 0,039 bzw.
+  // 0,013 für eine weiße Fläche.
   //
-  //   Körper     Abstand [AE]  dayLevel  Schranke 0,3
-  //   Ceres      2,55          0,7555    besteht deutlich
-  //   Pluto      30,20         0,3598    besteht
-  //   Haumea     51,35         0,3068    besteht, 2 % Reserve
-  //   Makemake   51,45         0,3066    besteht, 2 % Reserve
-  //   Eris       97,23         0,2533    fällt durch
+  // Nachgerechnet mit DEFAULT_STATE.display (lightCompensation 0,7) bei
+  // Preset „Realistisch", jd = J2000 — dem Preset mit den größten Abständen
+  // und genau dem von STANDARD/abstandKm verwendeten Zustand:
   //
-  // Nur Eris unterschreitet die 30-%-Schranke real und nachvollziehbar:
-  // Diese Regressionsschranke wurde für die Planeten kalibriert (bis
-  // Neptun, ≈30 AE bei „Realistisch"). Eris steht im Aphel rund 98 AE von
-  // der Sonne entfernt, mehr als dreimal so weit wie Neptun — bei
-  // quadratischem Lichtabfall und demselben, für ≤30 AE kalibrierten
-  // lightCompensation-Wert reicht das nicht mehr für 30 %, keine Regression.
-  // Ceres, Pluto, Haumea und Makemake werden von diesem Test dagegen
-  // TATSÄCHLICH geprüft — Haumea und Makemake mit nur rund 2 % Reserve: Ein
-  // künftiger Fehler, der ihr dayLevel um mehr als das senkt (z. B. eine
-  // falsche große Halbachse), fiele hier auf. Jeder künftig ergänzte
-  // Zwergplanet bleibt ebenfalls im Prüfumfang, solange er nicht wie Eris
-  // einzeln und begründet ausgenommen wird. Ob der Distanzausgleich künftig
-  // auch über Neptun hinaus gezielt nachgezogen wird, ist eine eigene, hier
-  // bewusst nicht mitentschiedene Abwägung am Renderweg (Task-10-Bericht).
-  const koerperOhneEris = bodies.filter((b) => b.kind !== 'star' && b.id !== 'eris');
+  //   Körper     Abstand [AE]  dayLevel  Nachtseite  Schranke 0,06 / 0,015
+  //   Ceres      2,55          0,5708    0,1427      besteht deutlich
+  //   Neptun     30,12         0,1296    0,0324      besteht
+  //   Pluto      30,20         0,1294    0,0324      besteht
+  //   Haumea     51,35         0,0941    0,0235      besteht
+  //   Makemake   51,45         0,0940    0,0235      besteht
+  //   Eris       97,23         0,0642    0,0160      besteht, 7 % Reserve
+  //
+  // Die Schranken liegen über dem Kriterium des Entwurfs (0,039 / 0,013)
+  // und 7 % unter Eris, dem fernsten Körper des Katalogs. Damit prüft der
+  // Block ALLE Körper — die frühere Ausnahme für Eris (bei 0,85 kalibrierte
+  // 30-%-Schranke, die Eris mit 0,2533 verfehlte) entfällt. Ein künftiger
+  // Fehler, der das Niveau eines fernen Körpers um mehr als diese Reserve
+  // senkt (falsche große Halbachse, eine wieder greifende Klemme, ein
+  // versehentlich gesenkter Ausgleich: schon 0,65 drückt Eris auf 0,041),
+  // fällt hier auf. Die Messung, die diese Kalibrierung trägt, steht in
+  // docs/phase3a-abnahme.md (Nachtrag 13.09.2026): Systemschau bei 0,7,
+  // Neptun 136, Uranus 108 (Maximum) bzw. 74,5 (Median) von 255.
+  const koerper = bodies.filter((b) => b.kind !== 'star');
   const presets = ['realistisch', 'schaubild', 'kompakt'] as const;
 
-  it('hält jede Tagseite bei jedem Maßstabs-Preset über 30 % der Helligkeit', () => {
+  it('steht auf dem in der Systemschau gemessenen Distanzausgleich 0,7', () => {
+    // Seit der Zielbelichtung bestimmt der Ausgleich nicht mehr, wie hell der
+    // betrachtete Körper ist (das regelt targetExposure), sondern nur die
+    // Staffelung der übrigen Körper im selben Bild. Der Wert ist gemessen,
+    // nicht geschätzt (docs/phase3a-abnahme.md, Nachtrag 13.09.2026):
+    // Systemschau bei 0,7 zeigt Neptun mit 136 und Uranus mit 108 (Maximum)
+    // bzw. 74,5 (Median) von 255 — weit über dem Kriterium 40 bzw. 12 des
+    // Entwurfs, bei physikalischerer Abstufung als mit 0,85.
+    expect(STANDARD.lightCompensation).toBe(0.7);
+  });
+
+  it('hält jede Tagseite bei jedem Maßstabs-Preset über 6 % der Helligkeit — auch Eris', () => {
     for (const preset of presets) {
-      for (const body of koerperOhneEris) {
+      for (const body of koerper) {
         const l = bodyLighting(abstandKm(body.id, SCALE_PRESETS[preset]), STANDARD);
-        expect(l.dayLevel / STANDARD.brightness).toBeGreaterThan(0.3);
+        expect(l.dayLevel / STANDARD.brightness, `${body.id} @ ${preset}`).toBeGreaterThan(0.06);
       }
     }
   });
 
-  it('hält jede Nachtseite bei jedem Preset über 5 % der Helligkeit', () => {
+  it('hält jede Nachtseite bei jedem Preset über 1,5 % der Helligkeit — auch Eris', () => {
     for (const preset of presets) {
-      for (const body of koerperOhneEris) {
+      for (const body of koerper) {
         const l = bodyLighting(abstandKm(body.id, SCALE_PRESETS[preset]), STANDARD);
-        expect(l.emissiveIntensity * Math.PI / STANDARD.brightness).toBeGreaterThan(0.05);
+        expect(l.emissiveIntensity * Math.PI / STANDARD.brightness, `${body.id} @ ${preset}`).toBeGreaterThan(0.015);
       }
     }
   });
@@ -187,7 +206,7 @@ describe('targetExposure — die Kamera belichtet auf das Ziel', () => {
     // der weißen Fläche ist also dayLevel / π — und die muss am Ziel genau
     // EXPOSURE_REFERENCE sein, bei jedem Abstand und jedem Ausgleich.
     for (const au of [0.4, 1, 5.2, 30, 97]) {
-      for (const c of [0, 0.85, 1]) {
+      for (const c of [0, 0.7, 1]) {
         const s = { ...STANDARD, brightness: 1, lightCompensation: c };
         const exposure = targetExposure(au * AU_KM, s);
         const l = bodyLighting(au * AU_KM, { ...s, brightness: s.brightness * exposure });

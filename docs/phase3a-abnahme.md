@@ -342,15 +342,41 @@ eigener, kleiner Folgetask (siehe „Offene Punkte").
 Dieser Task ändert keinen Code; der automatische Testlauf bleibt bei 720
 Tests.
 
+### Folgetask: Standardwert gesenkt (13.09.2026)
+
+Die Empfehlung ist umgesetzt: `display.lightCompensation` steht jetzt
+standardmäßig auf 0,7 (`store/index.ts`). Der Regler bleibt, die
+Serialisierung ändert sich nicht. Die Bildwerte der Systemschau bei 0,7
+stehen in der Tabelle oben (Neptun 136, Uranus 108 bzw. 74,5); eine neue
+Aufnahme war nicht nötig, weil sich am Renderweg nichts geändert hat und die
+Messung denselben Wert über den Regler gesetzt hatte.
+
+Die Regressionsschranken in `render/lighting.test.ts` („Standardeinstellung —
+kein Körper bleibt schwarz") waren auf 0,85 kalibriert (Tagseite über 30 %,
+Nachtseite über 5 % der Helligkeit, Eris ausgenommen) und sind neu
+hergeleitet. Seit der Zielbelichtung ist `dayLevel` bei Helligkeit 1 genau
+die Strahldichte einer weißen Fläche in der Systemschau, der einzigen
+Ansicht, in der der Ausgleich über Sichtbarkeit entscheidet. Das Kriterium
+des Entwurfs (40 bzw. 12 von 255) entspricht dort nach ACES und sRGB linear
+rund 0,039 bzw. 0,013. Werte bei 0,7, Preset „Realistisch", J2000:
+
+| Körper | Abstand [AE] | Tagseite | Nachtseite |
+|---|---:|---:|---:|
+| Ceres | 2,55 | 0,5708 | 0,1427 |
+| Neptun | 30,12 | 0,1296 | 0,0324 |
+| Pluto | 30,20 | 0,1294 | 0,0324 |
+| Haumea / Makemake | 51,4 | 0,0941 | 0,0235 |
+| Eris | 97,23 | 0,0642 | 0,0160 |
+
+Neue Schranken: Tagseite über 0,06, Nachtseite über 0,015 der Helligkeit,
+bei allen drei Maßstabs-Presets. Sie liegen über dem Kriterium des Entwurfs
+und 7 % unter Eris; damit prüft der Block jetzt **alle** Körper, die
+Ausnahme für Eris entfällt. Ein versehentlich gesenkter Ausgleich fiele auf
+(0,65 drückt Eris auf 0,041). Ein weiterer Test hält den Standardwert selbst
+mit Verweis auf diese Messung fest. Testlauf: 721 Tests.
+
 ## Offene Punkte
 
-- **Distanzausgleich senken.** Der Nachtrag oben empfiehlt, den Standardwert
-  von `display.lightCompensation` (aktuell 0,85) auf 0,7 zu senken, allein
-  gestützt auf die Systemschau (Neptun, Uranus bleiben bei 0,7 deutlich über
-  den Schranken 40/12); der Wert wirkt nicht auf die Helligkeit des jeweils
-  belichteten Körpers selbst, nur auf die Staffelung der übrigen Körper im
-  selben Bild. Die Änderung des Werts selbst und die Neuherleitung der
-  Schranken in `lighting.test.ts` bleiben ein eigener, kleiner Folgetask.
 - **Sechs Körper ohne Textur** (fünf Uranusmonde, Deimos), begründet in
   `ASSETS.md`; die Ausweichfarbe trägt sie. Bleibt offen, bis eine amtliche
   Karte mit weniger als etwa 40 % Datenlücke auftaucht.
