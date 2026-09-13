@@ -1,6 +1,7 @@
 import { useStore } from '../store';
 import { t } from './i18n';
 import { useSprache } from './i18n/useSprache';
+import { Kopfzeile } from './Kopfzeile';
 import { Panel } from './panels/Panel';
 import { TimePanel } from './panels/TimePanel';
 import { ScalePanel } from './panels/ScalePanel';
@@ -12,16 +13,21 @@ import { useShortcuts, SHORTCUTS_PANEL } from './shortcuts/useShortcuts';
 import { useIdleHide } from './idle';
 import { useWakeLock } from './wakeLock';
 
-/** Belegung für die Übersicht — Wirkung als Sprachschlüssel. */
-const KUERZEL: readonly (readonly [string, string])[] = [
+/**
+ * Belegung für die Übersicht — Wirkung als Sprachschlüssel. Die Taste selbst
+ * ist entweder ein Literal (Buchstaben wie „H") oder, wenn sie einen Namen
+ * statt eines Symbols trägt, ebenfalls ein Sprachschlüssel.
+ */
+const KUERZEL: readonly (readonly [string | { key: string }, string])[] = [
   ['H', 'shortcuts.toggleUi'],
   ['F', 'shortcuts.fullscreen'],
-  ['␣', 'shortcuts.pause'],
-  ['◀ ▶', 'shortcuts.rate'],
+  [{ key: 'key.space' }, 'shortcuts.pause'],
+  [{ key: 'key.arrows' }, 'shortcuts.rate'],
   ['R', 'shortcuts.reverse'],
-  ['Pos1', 'shortcuts.resetCamera'],
+  [{ key: 'key.home' }, 'shortcuts.resetCamera'],
   ['C', 'shortcuts.cinema'],
   ['N', 'shortcuts.nextScene'],
+  ['L', 'shortcuts.language'],
   ['?', 'shortcuts.toggleHelp'],
 ];
 
@@ -29,12 +35,15 @@ function Kuerzeluebersicht(): React.JSX.Element {
   return (
     <Panel id={SHORTCUTS_PANEL} title={t('shortcuts.title')}>
       <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
-        {KUERZEL.map(([taste, schluessel]) => (
-          <div key={taste} className="contents">
-            <dt className="font-mono text-xs opacity-80">{taste}</dt>
-            <dd className="m-0">{t(schluessel)}</dd>
-          </div>
-        ))}
+        {KUERZEL.map(([taste, schluessel]) => {
+          const label = typeof taste === 'string' ? taste : t(taste.key);
+          return (
+            <div key={schluessel} className="contents">
+              <dt className="font-mono text-xs opacity-80">{label}</dt>
+              <dd className="m-0">{t(schluessel)}</dd>
+            </div>
+          );
+        })}
       </dl>
     </Panel>
   );
@@ -67,6 +76,7 @@ export function App(): React.JSX.Element | null {
   return (
     <div className="pointer-events-none fixed inset-0 flex flex-col gap-2 p-3 text-slate-100">
       <div className="flex w-72 max-w-full flex-col gap-2 overflow-y-auto">
+        <Kopfzeile />
         <TimePanel />
         <ScalePanel />
         <CinemaPanel />

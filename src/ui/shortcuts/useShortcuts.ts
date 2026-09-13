@@ -52,6 +52,9 @@ export function handleShortcut(taste: string): boolean {
     case 'n':
       nextScene();
       return true;
+    case 'l':
+      s.setUi({ language: s.ui.language === 'de' ? 'en' : 'de' });
+      return true;
     case 'Home':
       s.setCamera({ ...DEFAULT_STATE.camera });
       return true;

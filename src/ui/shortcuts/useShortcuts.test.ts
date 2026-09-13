@@ -62,4 +62,11 @@ describe('handleShortcut', () => {
   it('lässt unbelegte Tasten unangetastet', () => {
     expect(handleShortcut('x')).toBe(false);
   });
+
+  it('schaltet die Sprache mit L um', () => {
+    handleShortcut('l');
+    expect(useStore.getState().ui.language).toBe('en');
+    handleShortcut('l');
+    expect(useStore.getState().ui.language).toBe('de');
+  });
 });
