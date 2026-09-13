@@ -2,7 +2,7 @@
 
 - **Datum:** 2026-09-11
 - **Status:** Entwurf zur Freigabe
-- **Grundlage:** `solar_prompt.txt` und das darauf folgende Brainstorming-Interview
+- **Grundlage:** `docs/ursprungsprompt.md` (ursprünglich `solar_prompt.txt`) und das darauf folgende Brainstorming-Interview
 
 ---
 
