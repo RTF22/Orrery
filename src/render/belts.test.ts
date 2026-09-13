@@ -71,13 +71,23 @@ describe('beltPositionAE — dieselbe Ekliptik wie die Planeten', () => {
     expect(weg).toBeGreaterThan(0.1);
   });
 
+  // Zweites Teilchen am Deckel der Exzentrizitätsverteilung (e = 0,35, siehe
+  // sim/belts.ts): Dort ist die Keplergleichung am steifsten, und dort muss
+  // sich zeigen, dass fünf Newton-Schritte noch genügen.
+  const elRand = {
+    a: 3.2, e: 0.35, inc: 0.52, node: 4.7, peri: 5.3, m0: 0.9,
+    n: Math.sqrt(GM_SONNE_AE3_TAG2 / 3.2 ** 3),
+  };
+
   it('folgt zu jedem Zeitpunkt der Kepler-Lösung, nicht nur zur Epoche', () => {
-    for (const tage of [37, 400, 3650]) {
-      const soll = positionInParentFrame(alsOrbit(el), J2000 + tage);
-      const ist = beltPositionAE(el, tage, 1);
-      expect(ist.x).toBeCloseTo(soll.x / AU_KM, 6);
-      expect(ist.y).toBeCloseTo(soll.y / AU_KM, 6);
-      expect(ist.z).toBeCloseTo(soll.z / AU_KM, 6);
+    for (const teilchen of [el, elRand]) {
+      for (const tage of [37, 400, 3650]) {
+        const soll = positionInParentFrame(alsOrbit(teilchen), J2000 + tage);
+        const ist = beltPositionAE(teilchen, tage, 1);
+        expect(ist.x).toBeCloseTo(soll.x / AU_KM, 6);
+        expect(ist.y).toBeCloseTo(soll.y / AU_KM, 6);
+        expect(ist.z).toBeCloseTo(soll.z / AU_KM, 6);
+      }
     }
   });
 
@@ -90,6 +100,7 @@ describe('beltPositionAE — dieselbe Ekliptik wie die Planeten', () => {
       expect(rNeu).toBeCloseTo(compressDistance(rRoh * AU_KM, k) / AU_KM, 9);
       // Die Richtung bleibt unangetastet — nur der Betrag ändert sich.
       expect(komprimiert.x / rNeu).toBeCloseTo(roh.x / rRoh, 10);
+      expect(komprimiert.y / rNeu).toBeCloseTo(roh.y / rRoh, 10);
       expect(komprimiert.z / rNeu).toBeCloseTo(roh.z / rRoh, 10);
     }
   });
@@ -223,10 +234,17 @@ describe('createBeltViews', () => {
     const aKuiper = halbachsen(kuiper!);
     for (const a of aKuiper) expect(a).toBeGreaterThanOrEqual(38.4);
     for (const a of aKuiper) expect(a).toBeLessThanOrEqual(48.5);
-    // Die Plutinos sind rund 15 % der Wolke und liegen als Glocke um
+    // Die Plutinos sind 15 % der Wolke und liegen als Glocke (σ 0,3 AE) um
     // 39,4 AE; ohne sie wäre die zweite Population verloren gegangen.
+    // Rechnung für das Fenster 38,9 … 39,9 AE (= μ ± 1,667σ): davon fallen
+    // 90,5 % der Plutinos hinein, also 0,15 · 0,905 = 13,6 % der Wolke.
+    // Der klassische Gürtel (85 %, Plateau mit Rampe 38,5 → 39,5 AE) legt
+    // 0,82 von 9 Masseeinheiten in dasselbe Fenster, also 0,85 · 9,1 % =
+    // 7,7 %. Erwartet sind damit 21,3 %, ohne Plutinos nur 7,7 % — die
+    // Schwelle steht deshalb bei 15 % und nicht bei den ursprünglichen
+    // 10 %, die vom Wert ohne Plutinos nur 2,3 Prozentpunkte entfernt lagen.
     const plutinoNah = aKuiper.filter((a) => a > 38.9 && a < 39.9).length;
-    expect(plutinoNah / aKuiper.length).toBeGreaterThan(0.1);
+    expect(plutinoNah / aKuiper.length).toBeGreaterThan(0.15);
   });
 
   it('gibt beiden Wolken dasselbe Material und dieselbe Albedo', () => {
@@ -243,6 +261,32 @@ describe('createBeltViews', () => {
     expect(mH.uniforms['uAlbedo']!.value).toBe(BELT_ALBEDO);
     // Eigene Uniform-Objekte, sonst zöge ein uTag den anderen mit.
     expect(mK.uniforms).not.toBe(mH.uniforms);
+  });
+
+  it('trägt im Shader-Quelltext die logdepthbuf-Includes und die Kernzeilen der Rechnung', () => {
+    // Der Shader selbst lässt sich nicht ausführen, sein Quelltext aber
+    // lesen. Geprüft werden die Zeilen, deren Fehlen still schiefgeht: die
+    // logarithmische Tiefe (ohne sie z-Fighting über 30 Größenordnungen
+    // Abstand, sichtbar erst weit draußen), die Abstandskompression und die
+    // beiden Zeilen, deren TS-Zwilling beltPositionAE oben nachgemessen
+    // wird. Die Konstanten sind nicht exportiert; der Quelltext kommt
+    // deshalb aus dem Material der erzeugten Punktwolke.
+    const scene = new THREE.Scene();
+    createBeltViews(scene);
+    const material = wolken(scene)[0]!.material as THREE.ShaderMaterial;
+
+    expect(material.vertexShader).toContain('#include <logdepthbuf_pars_vertex>');
+    expect(material.vertexShader).toContain('#include <logdepthbuf_vertex>');
+    // Abstandskompression mit Fixpunkt 1 AE (compressDistance, sim/scale.ts).
+    expect(material.vertexShader).toContain('pow(r, uK)');
+    // Knotendrehung: dieselbe Achsenwahl wie positionInParentFrame und wie
+    // die y-Zeile in beltPositionAE.
+    expect(material.vertexShader).toContain('sinN * xEbene + cosN * yEbene * cosI');
+    // Newton-Schritt der Keplergleichung, wortgleich zum TS-Zwilling.
+    expect(material.vertexShader).toContain('E -= (E - e * sin(E) - M) / (1.0 - e * cos(E));');
+
+    expect(material.fragmentShader).toContain('#include <logdepthbuf_pars_fragment>');
+    expect(material.fragmentShader).toContain('#include <logdepthbuf_fragment>');
   });
 
   it('baut die Geometrie nur bei einem Stufenwechsel neu auf', () => {

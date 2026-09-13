@@ -88,6 +88,15 @@ export interface BeltSpec {
  * Die Breite w ist der Gauß-Parameter in exp(−((a−a_res)/w)²); die
  * Halbwertsbreite beträgt 1,665·w, also 0,017 bis 0,033 AE — die 3:1- und
  * 2:1-Lücken sind in der MPC-Verteilung breiter als 7:3.
+ *
+ * Zwei der fünf Lücken sind im erzeugten Gürtel nicht (oder nur halb) zu
+ * sehen: Die 4:1-Lücke bei 2,0656 AE liegt vor der unteren Bereichsgrenze
+ * 2,1 AE, ihr Einbruch ist dort schon wieder auf über 99 % abgeklungen und
+ * trägt nichts bei; die 2:1-Lücke bei 3,2787 AE wird von der oberen Grenze
+ * 3,3 AE halbiert, von ihr liegt also nur die innere Flanke im Bereich. Beide
+ * bleiben in der Liste, weil sie die Kanten richtig ausdünnen und weil die
+ * Tabelle die Resonanzen physikalisch vollständig beschreiben soll — geprüft
+ * wird die Lückenwirkung deshalb an der 3:1-Lücke (belts.test.ts).
  */
 const RESONANZEN: ReadonlyArray<{ p: number; q: number; w: number }> = [
   { p: 1, q: 4, w: 0.012 },

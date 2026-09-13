@@ -92,9 +92,17 @@ dargestellt; Ceres (2,77 AE) bei 1,50 AE — mitten im Gürtel.
   (Dichte bei 2,502 ± 0,01 AE unter 25 % der Nachbarschaft), mittlere e und i
   im erwarteten Bereich, Anzahl je Qualitätsstufe.
 - Sichtprüfung mit Pixelmessung im Ceres-Kino (`ceres-guertel`) und aus der
-  Systemschau: Teilchen sichtbar, Lücken bei 2,5 AE und 3,28 AE als dunkle
-  Ringe erkennbar (Radialprofil aus dem Screenshot über Pillow); Framezeit
-  bei 50 000 Teilchen im Median unter 20 ms.
+  Systemschau: Teilchen sichtbar; das Bild belegt einen geschlossenen Ring
+  mit weichen Rändern und einem Dichtemaximum bei 2,6 … 2,8 AE (Radialprofil
+  aus dem Screenshot über Pillow); Framezeit bei 50 000 Teilchen im Median
+  unter 20 ms.
+- Die **Kirkwood-Lücken werden auf der a-Verteilung geprüft**
+  (`sim/belts.test.ts`), nicht im Bild. Grund: Die Lücken sind Lücken in der
+  großen Halbachse und nur 0,02 … 0,03 AE breit. Der Momentanabstand eines
+  Teilchens streut um a herum mit der Exzentrizität (Rayleigh, σ = 0,10, also
+  rund ± 0,3 AE), dazu kommt die Projektion einer bis zu 30° geneigten Bahn
+  auf die Bildebene. Eine 0,02 AE schmale Lücke in a ist im Momentanbild
+  daher grundsätzlich verschmiert und kein erfüllbares Bildkriterium.
 
 ## 6. Abgrenzung
 

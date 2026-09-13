@@ -96,12 +96,21 @@ describe('generateBelt: Hauptgürtel', () => {
   });
 
   it('zeigt die Kirkwood-Lücke bei 3:1 (2,502 AE)', () => {
-    const gross = generateBelt(HAUPTGUERTEL, 20_000, 11);
+    // 100 000 Teilchen statt 20 000 — nicht aus Gründlichkeit, sondern
+    // wegen des Abstands zur Schwelle: Erwartet wird ein Verhältnis von
+    // rund 0,218 (das Integral über 1 − 0,9·exp(−x²) im 0,02 AE breiten
+    // Lückenfenster gegen die ungestörte Nachbarschaft), geprüft wird gegen
+    // 0,25. Bei 20 000 Teilchen liegen nur rund 90 Teilchen im Fenster; die
+    // Streuung des Verhältnisses ist dann σ ≈ 0,022 und der Abstand zur
+    // Schwelle nur 1,4 σ — der Test würde je nach Keim gelegentlich
+    // umkippen. Bei 100 000 sind es rund 500 gegen 2 280, also σ ≈ 0,010
+    // und rund 3 σ Luft. Kosten: 26 ms statt 10 ms je Lauf (gemessen).
+    const gross = generateBelt(HAUPTGUERTEL, 100_000, 11);
     const inLuecke = anzahlIm(gross.a, 2.492, 2.512);
     const links = anzahlIm(gross.a, 2.45, 2.47);
     const rechts = anzahlIm(gross.a, 2.54, 2.56);
     const nachbarn = (links + rechts) / 2;
-    expect(nachbarn).toBeGreaterThan(100); // sonst wäre der Vergleich wertlos
+    expect(nachbarn).toBeGreaterThan(1000); // sonst wäre der Vergleich wertlos
     expect(inLuecke).toBeLessThan(0.25 * nachbarn);
   });
 });

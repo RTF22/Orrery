@@ -2,7 +2,9 @@
 
 **Datum:** 13.09.2026
 **Stand:** Zweig `guertel`, Task 2 (Punktwolke im Renderer, Schalter,
-Sichtprüfung Hauptgürtel) und Task 3 (Sichtprüfung Kuipergürtel)
+Sichtprüfung Hauptgürtel) und Task 3 (Sichtprüfung Kuipergürtel); der
+Abschnitt „Sichtprüfung Kuipergürtel" wurde nach dem Gesamtreview am
+13.09.2026 mit berichtigtem Messverfahren neu aufgenommen (siehe dort).
 **Prüfumgebung:** Windows 11, Desktop mit RTX 4060, Chromium (Playwright),
 Vite-Entwicklungsserver auf `localhost`, Fenster 1280 × 800 CSS-Pixel,
 `devicePixelRatio` 1, Qualitätsstufe `high` (50 000 Teilchen je Gürtel),
@@ -53,7 +55,34 @@ der Schwelle, weil die Kamera dort auf die Sonne belichtet (`uTag` 1,73 statt
 Pixel bilden im Bild einen geschlossenen Staubring (siehe Radialprofil unten,
 Dichte über 20 % der Ringfläche im Kern des Gürtels). Rechenweg des
 Spitzenwerts: 0,06 · 1,7311 / π = 0,0331 linear, nach ACES-Tonemapping und
-sRGB 35 bis 36 von 255.
+sRGB 34 von 255 auf schwarzem Untergrund, 36 im Höchstfall über einem
+schwachen Untergrund (Rechenweg unten).
+
+### Rechenweg vom linearen Wert zum Pixelwert
+
+Alle Herleitungen unten benutzen dieselbe Kette. Sie ist die des Renderers:
+der Gürtel-Fragmentshader schreibt den linearen Grauwert
+`L = Albedo · uTag / π` (belts.ts, `beltHelligkeit`), die Zwischenziele der
+Nachbearbeitung sind linear, und erst der `OutputPass` (postfx.ts) wendet das
+Tonemapping des Renderers und die sRGB-Ausgabe an. Das Tonemapping ist
+`ACESFilmicToneMapping` von three mit `toneMappingExposure` = 1:
+
+```
+c = L · toneMappingExposure / 0,6
+y = RRTAndODTFit(c) = (c·(c + 0,0245786) − 0,000090537)
+                      / (c·(0,983729·c + 0,432951) + 0,238081)
+Pixel = 255 · sRGB(y),  sRGB(y) = 1,055·y^(1/2,4) − 0,055 (y > 0,0031308)
+```
+
+Die ACES-Matrizen lassen Grau unverändert (jede Zeilensumme ist eins) und
+entfallen deshalb in der Rechnung. Der Vergleichswert der Messung ist der
+**Zuwachs** eines Pixels zwischen „Gürtel an" und „Gürtel aus". Auf
+schwarzem Untergrund ist er `255·sRGB(RRTAndODTFit(L/0,6))`; über einem
+schwach beleuchteten Untergrund `b` ist er
+`255·(sRGB(RRT((L+b)/0,6)) − sRGB(RRT(b/0,6)))` und kann dort etwas **größer**
+ausfallen, weil die Kette im Fußpunkt konvex ist (die ACES-Zehe schneidet
+kleine Werte weg, die sRGB-Kennlinie hebt sie danach steil an). Für
+0,06 · 1,7311 / π liegt dieses Maximum bei 36,6 — daher die gemessenen 36.
 
 ### (2) Radialprofil — die Kirkwood-Lücken sind im Bild nicht messbar
 
@@ -131,6 +160,27 @@ Aufgenommen am 13.09.2026 in derselben Prüfumgebung (Windows 11, RTX 4060,
 Chromium, 1280 × 800 CSS-Pixel, `devicePixelRatio` 1, Stufe `high` mit
 50 000 Teilchen je Gürtel).
 
+> **Neu aufgenommen nach dem Gesamtreview (13.09.2026).** Die erste Fassung
+> dieses Abschnitts nannte Teilchenwerte (44 bzw. 14 von 255), die über dem
+> lagen, was die Tonwertkurve aus dem protokollierten `uTag` hergibt (22 bzw.
+> 4). Ursache war das Messverfahren, nicht der Renderer: Um allein die
+> Kuiper-Wolke zu zählen, war ihre Sichtbarkeit im laufenden Bild über einen
+> `visible`-Getter erzwungen worden. Damit lief aber auch
+> `verdunkleSzeneAusserBloom` (postfx.ts) ins Leere, das durchsichtige
+> Objekte vor dem Bloom-Durchgang ausblendet — die Wolke geriet in den
+> Bloom-Quellframe und bekam ihren eigenen Lichtkranz oben drauf. Die
+> Messung unten benutzt stattdessen den echten Schalter `display.belts` und
+> legt den Hauptgürtel über `setDrawRange(0, 0)` still; sie greift damit
+> nirgends in die Sichtbarkeitslogik ein. Messung und Rechnung stimmen nun
+> überein. Die Zahlen der Sichtprüfung Hauptgürtel (Task 2) sind davon nicht
+> berührt: Dort wurde von Anfang an nur `display.belts` geschaltet.
+>
+> Zusätzlich war der Systemschau-`uTag` mit 0,3360 protokolliert worden,
+> bevor der Belichtungsmesser (`render/exposure.ts`, Zeitkonstante 1 s)
+> eingeschwungen war; der konvergierte Wert ist 0,3289. Für diese Aufnahme
+> wurde `uTag` im angehaltenen Zustand so lange mehrfach gelesen, bis er sich
+> über mehrere Sekunden nicht mehr änderte, und erst dann ausgelöst.
+
 ### Aufbau
 
 | Größe | Kinoszene `pluto-charon` | Systemschau bei `kompakt` |
@@ -142,8 +192,8 @@ Chromium, 1280 × 800 CSS-Pixel, `devicePixelRatio` 1, Stufe `high` mit
 | Bildfeld in der Ekliptik | — | 11,2 AE senkrecht (2 · 12 · tan 25°); der Gürtel hat dargestellt 9,45 AE Durchmesser und liegt vollständig im Bild |
 | `cinema.elapsedSec` | 8,0065 s (von 45 s Szenendauer) | — |
 | Zeit | jd 2451547,40195 (`uTage` 2,40195), angehalten | jd 2451545,0 (J2000, `uTage` 0), angehalten |
-| `uTag` des Kuipergürtels | **1,1217** | **0,3360** |
-| `uTag` des Hauptgürtels (nachrichtlich) | 5,9037 | 1,7683 |
+| `uTag` des Kuipergürtels | **1,1217** | **0,3289** |
+| `uTag` des Hauptgürtels (nachrichtlich) | 5,9037 | 1,7311 |
 | Bedienoberfläche | ausgeblendet (`ui.hidden`) | ausgeblendet |
 | Bahnlinien / Beschriftungen / Marker | aus (nur für die Messung) | aus |
 
@@ -162,59 +212,74 @@ seiner Nähe zum Perihel (1989) entspricht.
 
 ### (1) Helligkeit und Anzahl der Teilchenpixel
 
-Wieder als Differenz zweier sonst identischer Bilder. Damit **nur** der
-Kuipergürtel gezählt wird, war im Vergleichsbildpaar jeweils allein seine
-Punktwolke sichtbar (die Hauptgürtel-Wolke war im laufenden Bild
-ausgeblendet); zwei Aufnahmen desselben Zustands unterscheiden sich in
-keinem einzigen Pixel, das Verfahren hat also kein Rauschen.
+Wieder als Differenz zweier sonst identischer Bilder, geschaltet über
+`display.belts`. Damit **nur** der Kuipergürtel gezählt wird, ist die
+Hauptgürtel-Wolke über `geometry.setDrawRange(0, 0)` stillgelegt — sie zeichnet
+dann in keinem der beiden Durchgänge, ohne dass in die Sichtbarkeitslogik
+eingegriffen würde. Kontrollmessung: zwei Aufnahmen desselben Zustands
+unterscheiden sich in keinem einzigen Pixel, das Verfahren hat also kein
+Rauschen.
 
 | Größe | Kino `pluto-charon` | Systemschau `kompakt` |
 |---|---:|---:|
-| Pixel, die der Kuipergürtel aufhellt | 1 989 | 33 343 |
-| Zuwachs je Teilchenpixel (p50 / p90) | 35 / 44 | 9 / 13 |
-| größter Zuwachs = Helligkeit eines freistehenden Teilchens | **44** | 14 |
-| Pixel mit Absolutwert > 40 (Kriterium) | **846** | 222 (davon der weit überwiegende Teil Sterne unter den Teilchen) |
+| Pixel, die der Kuipergürtel aufhellt | 1 816 | 22 305 |
+| Zuwachs je Teilchenpixel (p50 / p90) | 19 / 22 | 4 / 4 |
+| größter Zuwachs = Helligkeit eines freistehenden Teilchens | **22** | 4 |
+| davon Zuwachs > 10 | 1 252 | 0 |
+| davon Zuwachs > 20 | 792 | 0 |
+| Pixel mit Zuwachs > 40 (Kriterium) | **0** | 0 |
 
-Rechenweg des Spitzenwerts wie beim Hauptgürtel: 0,06 · 1,1217 / π = 0,02142
-linear, nach ACES-Tonemapping und sRGB 44 von 255 — genau der gemessene
-Zuwachs. In der Systemschau ergibt 0,06 · 0,3360 / π = 0,006416 linear
-gemessene 14 von 255.
+Rechenweg des Spitzenwerts nach der Kette oben: 0,06 · 1,1217 / π = 0,021422
+linear, nach three-ACES (`c = L/0,6`, `RRTAndODTFit`) und sRGB **22,1** von
+255 auf schwarzem Untergrund — gemessen 22. In der Systemschau ergibt
+0,06 · 0,3289 / π = 0,006282 linear **3,75**, gemessen 4. Beide Aufbauten
+stimmen damit auf einen Zählschritt genau mit der Rechnung überein.
 
-Das Kriterium „Anzahl heller Pixel (> 40) ≫ 0" ist in der **Kinoszene
-`pluto-charon` erfüllt** (846 Pixel, Teilchenwert 44 von 255) — das ist die
-Szene, in der der Kuipergürtel gezeigt wird. In der Systemschau bleibt er mit
-14 von 255 deutlich darunter, weil die Kamera dort auf die Sonne belichtet;
-sichtbar ist er trotzdem zweifelsfrei als geschlossener, gleichmäßiger
-Staubring aus über 33 000 aufgehellten Pixeln (Bild und Radialprofil unten).
-Die Albedo wurde **nicht** angehoben und die Beleuchtung nicht angefasst.
+Das Kriterium „Anzahl heller Pixel (> 40) ≫ 0" ist für den Kuipergürtel
+**nicht erfüllt** — in keinem der beiden Aufbauten. Bei einer Albedo von 0,06
+und `uTag` 1,1217 kann ein Teilchen im Kino gar nicht über 22 von 255 kommen;
+die Schwelle 40 verlangt (bei sonst gleicher Kette) einen `uTag` von rund 2,3,
+also mehr als das Doppelte der Belichtung, die die Pluto-Szene setzt. Das
+Kriterium stammt aus dem Entwurf und ist dort am Hauptgürtel im Ceres-Kino
+festgemacht (`uTag` 2,4176, Spitzenwert 47) — auf den Kuipergürtel bei 43 AE
+lässt es sich nicht übertragen, ohne die Albedo zu verfälschen. Sie wurde
+**nicht** angehoben und die Beleuchtung nicht angefasst; ob die Schwelle für
+den Kuipergürtel überhaupt gelten soll, ist eine Abnahmefrage und bleibt hier
+offen protokolliert.
 
-Räumliche Verteilung in der Pluto-Szene (Pixel mit Zuwachs > 5, Raster
-8 × 5 über das Bild): 1 731 Pixel, gleichmäßig über das ganze Bildfeld
-gestreut mit sanftem Anstieg zur unteren linken Ecke hin (dort blickt die
-Kamera in die dichte, sonnennahe Seite des Gürtels: 128 Pixel je Rasterfeld
-gegen 0 bis 9 in der oberen rechten Ecke). Der Gürtel erscheint dort also
-richtigerweise nicht als Ring, sondern als Staub rings um den Betrachter, der
-selbst im Gürtel steht.
+Sichtbar ist der Gürtel als Fläche gleichwohl zweifelsfrei: in der Systemschau
+als geschlossener, gleichmäßiger Staubring aus 22 305 aufgehellten Pixeln mit
+einem Dichtemaximum von 26 % der Ringfläche (Radialprofil unten), in der
+Pluto-Szene als Staub rings um den Betrachter.
+
+Räumliche Verteilung in der Pluto-Szene (Pixel mit Zuwachs > 0, Raster
+8 × 5 über das Bild): 1 816 Pixel, über das ganze Bildfeld gestreut mit
+Anstieg zur unteren linken Ecke hin (dort blickt die Kamera in die dichte,
+sonnennahe Seite des Gürtels: 134 Pixel je Rasterfeld gegen 0 bis 9 in der
+oberen rechten Ecke). Der Gürtel erscheint dort also richtigerweise nicht als
+Ring, sondern als Staub rings um den Betrachter, der selbst im Gürtel steht.
 
 ### (2) Radialprofil der Systemschau — Lage und Kompression
 
 Jedes Bildpixel als Sehstrahl in die Ekliptik (z = 0) zurückgerechnet (Kamera
 in AE, Blick auf den Ursprung, FOV 50° senkrecht), Ringe von 0,05 AE,
 gezählt der **dargestellte** Radius, weil genau er die Lage im Bild
-beschreibt. Schwelle: Zuwachs > 5 von 255 (die Sterne bringen es im
-Differenzbild auf höchstens 1).
+beschreibt. Schwelle: jeder Zuwachs > 0 — da der Spitzenwert eines Teilchens
+hier nur 4 von 255 beträgt, wäre die in Task 2 benutzte Schwelle 5 blind; die
+Kontrollmessung oben (null abweichende Pixel zwischen zwei Aufnahmen
+desselben Zustands) zeigt, dass auch ein Zuwachs von 1 kein Rauschen ist.
 
 | Band (dargestellt) | Anteil aufgehellter Pixel | erwartet |
 |---|---:|---|
-| 0,00 … 4,00 AE | **0,53 %** | nahe null |
-| 4,00 … 4,28 AE | 7,66 % | weicher innerer Rand |
-| **4,28 … 4,74 AE (Gürtel)** | **20,30 %** | Gürtel |
-| 4,74 … 5,00 AE | 5,74 % | weicher äußerer Rand |
-| 5,00 … 8,00 AE | **0,08 %** | nahe null |
+| 0,00 … 4,00 AE | **0,59 %** | nahe null |
+| 4,00 … 4,28 AE | 8,48 % | weicher innerer Rand |
+| **4,28 … 4,74 AE (Gürtel)** | **22,05 %** | Gürtel |
+| 4,74 … 5,00 AE | 6,63 % | weicher äußerer Rand |
+| 5,00 … 8,00 AE | **0,09 %** | nahe null |
 
-Der Verlauf ist eine glatte Glocke: 0,0 % bis 2,90 AE, 1,8 % bei 3,70 AE,
-3,8 % bei 4,00 AE, Anstieg über 14,3 % bei 4,25 AE auf das Maximum
-**24,2 % bei 4,50 AE**, Abfall auf 7,6 % bei 4,80 AE, 1,5 % bei 5,00 AE und
+Der Verlauf ist eine glatte Glocke: 0,0 % bis 2,90 AE, 2,0 % bei 3,70 AE,
+4,3 % bei 4,00 AE, Anstieg über 15,9 % bei 4,25 AE auf das Maximum
+**26,0 % bei 4,50 AE**, Abfall auf 8,8 % bei 4,80 AE, 1,7 % bei 5,00 AE und
 0,0 % ab 5,55 AE. Lage und Kompression stimmen damit: Das Maximum liegt in
 der Mitte des erwarteten Bandes 4,28 … 4,74 AE, innen und außen ist das Feld
 praktisch leer.
