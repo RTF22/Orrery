@@ -318,14 +318,26 @@ optisch geschätzt (die Sonne desselben Bildes projiziert exakt auf die
 Bildmitte 640/400).
 
 Das Kriterium aus dem Entwurf (Neptun Maximum über 40, Median über 12) ist
-beim Kandidatenwert 0,7 mit großem Abstand erfüllt (136 gegenüber 40 bzw.
-12). **Empfehlung:** Der Distanzausgleich lässt sich auf 0,7 senken. Task 6
-maß mehrere 99. Perzentile nahe der 250er-Schwelle (Pluto 231, Enceladus 237,
-Erde 242); eine Senkung schafft dort Abstand, ohne die am weitesten
-entfernten Körper der Systemschau unsichtbar zu machen. Die Änderung des
-Standardwerts selbst und die Neuherleitung der Schranken in
-`lighting.test.ts` bleiben ein eigener, kleiner Folgetask (siehe „Offene
-Punkte").
+beim Kandidatenwert 0,7 mit großem Abstand erfüllt (Neptun 136/136, Uranus
+108/74,5 gegenüber 40 bzw. 12).
+
+Der Distanzausgleich wirkt dabei nur auf das Verhältnis der Körper
+zueinander, nicht auf die Helligkeit des Körpers, auf den die Kamera gerade
+belichtet: `targetExposure` in `render/lighting.ts` setzt die Belichtung so,
+dass am Ziel stets `EXPOSURE_REFERENCE · π` ankommt — der Faktor `E^(1-c)`
+aus dem Distanzausgleich kürzt sich gegen seinen eigenen Kehrwert in der
+Belichtung heraus. Deshalb ändert `lightCompensation` weder den Median noch
+das 99. Perzentil von Erde, Pluto oder Enceladus in ihren eigenen Nahszenen
+aus Task 6 (dort ist jeweils der gezeigte Körper selbst das Belichtungsziel);
+diese Werte taugen nicht als Argument für eine Senkung. **Empfehlung:** Der
+Distanzausgleich lässt sich auf 0,7 senken, allein gestützt auf das
+Systemschau-Kriterium oben — Neptun und Uranus bleiben bei diesem Wert
+deutlich sichtbar, während der Helligkeitsunterschied zwischen nahen und
+fernen Körpern in solchen Weitwinkelblicken etwas physikalischer ausfällt.
+Die Wahl bleibt eine Gestaltungsentscheidung über diese Staffelung, keine
+durch Ausbrennen erzwungene Korrektur. Die Änderung des Standardwerts selbst
+und die Neuherleitung der Schranken in `lighting.test.ts` bleiben ein
+eigener, kleiner Folgetask (siehe „Offene Punkte").
 
 Dieser Task ändert keinen Code; der automatische Testlauf bleibt bei 720
 Tests.
@@ -333,11 +345,12 @@ Tests.
 ## Offene Punkte
 
 - **Distanzausgleich senken.** Der Nachtrag oben empfiehlt, den Standardwert
-  von `display.lightCompensation` (aktuell 0,85) auf 0,7 zu senken, weil
-  Task 6 mehrere 99. Perzentile nahe der 250er-Schwelle maß und die
-  Systemschau bei 0,7 die entferntesten Körper weiterhin deutlich zeigt. Die
-  Änderung des Werts selbst und die Neuherleitung der Schranken in
-  `lighting.test.ts` bleiben ein eigener, kleiner Folgetask.
+  von `display.lightCompensation` (aktuell 0,85) auf 0,7 zu senken, allein
+  gestützt auf die Systemschau (Neptun, Uranus bleiben bei 0,7 deutlich über
+  den Schranken 40/12); der Wert wirkt nicht auf die Helligkeit des jeweils
+  belichteten Körpers selbst, nur auf die Staffelung der übrigen Körper im
+  selben Bild. Die Änderung des Werts selbst und die Neuherleitung der
+  Schranken in `lighting.test.ts` bleiben ein eigener, kleiner Folgetask.
 - **Sechs Körper ohne Textur** (fünf Uranusmonde, Deimos), begründet in
   `ASSETS.md`; die Ausweichfarbe trägt sie. Bleibt offen, bis eine amtliche
   Karte mit weniger als etwa 40 % Datenlücke auftaucht.
