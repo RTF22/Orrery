@@ -1,5 +1,11 @@
+// @vitest-environment jsdom
 import { describe, it, expect } from 'vitest';
-import { apparentRadiusPixels, needsMarker, MARKER_MIN_PIXEL } from './labels';
+import * as THREE from 'three';
+import {
+  apparentRadiusPixels, needsMarker, MARKER_MIN_PIXEL, zeigeLabel, LABEL_MIN_PIXEL_MOND,
+  createLabelOverlay,
+} from './labels';
+import type { LabelEintrag } from './labels';
 
 describe('apparentRadiusPixels', () => {
   it('halbiert sich bei doppeltem Abstand', () => {
@@ -34,5 +40,171 @@ describe('needsMarker', () => {
   it('greift oberhalb der Schwelle nicht', () => {
     expect(needsMarker(MARKER_MIN_PIXEL + 0.1)).toBe(false);
     expect(needsMarker(500)).toBe(false);
+  });
+});
+
+describe('zeigeLabel', () => {
+  it('beschriftet Planeten unabhängig von ihrer Größe', () => {
+    expect(zeigeLabel(0.1, false)).toBe(true);
+  });
+
+  it('beschriftet einen Mond erst ab der Schwelle', () => {
+    expect(zeigeLabel(LABEL_MIN_PIXEL_MOND - 0.1, true)).toBe(false);
+    expect(zeigeLabel(LABEL_MIN_PIXEL_MOND + 0.1, true)).toBe(true);
+  });
+
+  it('hält die Mondschwelle über der Markerschwelle', () => {
+    // Sonst stünden in der Systemschau 20 Mondlabels übereinander — genau
+    // der Zustand, den die Schwelle verhindern soll.
+    expect(LABEL_MIN_PIXEL_MOND).toBeGreaterThan(MARKER_MIN_PIXEL);
+  });
+});
+
+describe('createLabelOverlay — Rang vor Tiefe (Flackern bei Mondüberlappung)', () => {
+  // Gemeinsame Kamera für alle Fälle: FOV und Clipping wie in renderer.ts
+  // (siehe dortige PerspectiveCamera(50, ..., 0.001, 1e12)), Kamera im
+  // Ursprung mit Standardausrichtung (Blick entlang -Z) — genau die
+  // Konvention, in der scene.ts renderPos an das Overlay übergibt.
+  const FOV = 50;
+  const BREITE = 1000;
+  const HOEHE = 1000;
+
+  function testKamera(): THREE.PerspectiveCamera {
+    const kamera = new THREE.PerspectiveCamera(FOV, BREITE / HOEHE, 0.001, 1e12);
+    kamera.position.set(0, 0, 0);
+    kamera.updateProjectionMatrix();
+    return kamera;
+  }
+
+  /**
+   * radiusUnits, damit ein Körper in `abstand` Render-Einheiten genau
+   * `radiusPixelZiel` Bildschirmpixel misst — Umkehrung von
+   * apparentRadiusPixels, damit die Testkörper einen gewünschten Wert
+   * relativ zu MARKER_MIN_PIXEL/LABEL_MIN_PIXEL_MOND treffen, statt ihn zu
+   * behaupten.
+   */
+  function radiusFuer(radiusPixelZiel: number, abstand: number): number {
+    const sichtbareHoehe = 2 * Math.tan((FOV * Math.PI / 180) / 2) * abstand;
+    return (radiusPixelZiel * sichtbareHoehe) / HOEHE;
+  }
+
+  /** Baut einen Kandidaten, der direkt vor der Kamera auf der Blickachse
+   * steht (x = y = 0) — alle so gebauten Körper projizieren exakt auf
+   * denselben Bildschirmpunkt (Bildmitte) und überlappen sich damit
+   * garantiert, unabhängig von den konkreten Pixelwerten. */
+  function koerper(
+    id: string, nameKey: string, istMond: boolean, abstand: number, radiusPixelZiel: number,
+  ): LabelEintrag {
+    return {
+      id,
+      nameKey,
+      farbe: '#ffffff',
+      renderPos: { x: 0, y: 0, z: -abstand },
+      radiusUnits: radiusFuer(radiusPixelZiel, abstand),
+      sichtbar: true,
+      istMond,
+    };
+  }
+
+  /** Baut das Overlay in einem DOM-Container auf und erzwingt eine feste
+   * Größe — jsdom layoutet nicht wirklich, `clientWidth`/`clientHeight`
+   * blieben sonst 0 und apparentRadiusPixels läge dann immer bei 0. */
+  function baueOverlay() {
+    const container = document.createElement('div');
+    document.body.appendChild(container);
+    const overlay = createLabelOverlay(container);
+    const wurzel = container.querySelector('.label-overlay') as HTMLElement;
+    Object.defineProperty(wurzel, 'clientWidth', { value: BREITE, configurable: true });
+    Object.defineProperty(wurzel, 'clientHeight', { value: HOEHE, configurable: true });
+    return { overlay, container };
+  }
+
+  function wrapperVon(container: HTMLElement, angezeigterName: string): HTMLElement | undefined {
+    return Array.from(container.querySelectorAll<HTMLElement>('.koerper-label'))
+      .find((w) => w.querySelector('.koerper-name')?.textContent === angezeigterName);
+  }
+
+  it(
+    'zeigt das Planetenlabel, wenn ein näherer, überlappender Mond ebenfalls ein Label will '
+    + '(der gemeldete Fall: Mond zieht vor dem Planeten durch dessen Beschriftung)',
+    () => {
+      // Jupiter: 1000 Einheiten entfernt, 100 Pixel groß — weit über jeder
+      // Schwelle, zeigt sicher Text.
+      const jupiter = koerper('jupiter', 'body.jupiter.name', false, 1000, 100);
+      // Io: NÄHER als Jupiter (500 < 1000, also kleinere/vordere Tiefe) und
+      // mit 50 Pixeln ebenfalls klar über LABEL_MIN_PIXEL_MOND (8) — Io
+      // würde bei reiner Tiefensortierung zuerst verarbeitet und Jupiters
+      // Platz belegen. Genau dieser Fall soll jetzt nicht mehr passieren.
+      const io = koerper('io', 'body.io.name', true, 500, 50);
+
+      const { overlay, container } = baueOverlay();
+      const kamera = testKamera();
+      // Reihenfolge im Eingabe-Array bewusst Mond-vor-Planet: Die Sortierung
+      // im Overlay muss das Ergebnis bestimmen, nicht die Eingabereihenfolge.
+      overlay.update([io, jupiter], kamera, true, true);
+
+      const jupiterKnoten = wrapperVon(container, 'Jupiter');
+      expect(jupiterKnoten).toBeTruthy();
+      expect(jupiterKnoten?.hidden).toBe(false);
+      expect(jupiterKnoten?.querySelector<HTMLElement>('.koerper-name')?.hidden).toBe(false);
+
+      // Io hat in diesem Frame nie einen Platz bekommen — es existiert für
+      // Io deshalb noch gar kein DOM-Knoten (hole() wird erst nach der
+      // Kollisionsprüfung aufgerufen).
+      expect(wrapperVon(container, 'Io')).toBeUndefined();
+    },
+  );
+
+  it('lässt innerhalb desselben Rangs weiterhin den vorderen Körper gewinnen (Mond gegen Mond)', () => {
+    // Beide Monde, beide mit vollem Textlabel (50 Pixel, über der
+    // Mondschwelle) — Io ist näher (500 < 800) und muss wie bisher gewinnen.
+    const io = koerper('io', 'body.io.name', true, 500, 50);
+    const europa = koerper('europa', 'body.europa.name', true, 800, 50);
+
+    const { overlay, container } = baueOverlay();
+    overlay.update([europa, io], testKamera(), true, true);
+
+    const ioKnoten = wrapperVon(container, 'Io');
+    expect(ioKnoten).toBeTruthy();
+    expect(ioKnoten?.querySelector<HTMLElement>('.koerper-name')?.hidden).toBe(false);
+    expect(wrapperVon(container, 'Europa')).toBeUndefined();
+  });
+
+  it('lässt eine bloße Mond-Glyphe keine Beschriftung eines anderen Körpers verdrängen', () => {
+    // Io zeigt nur eine Glyphe (1 Pixel, unter MARKER_MIN_PIXEL 3 und weit
+    // unter der Textschwelle), Europa zeigt volles Text-Label (50 Pixel) —
+    // beide am selben Bildpunkt. Io ist näher und würde bei ungefilterter
+    // Kollisionsprüfung trotzdem zuerst platziert.
+    const io = koerper('io', 'body.io.name', true, 500, 1);
+    const europa = koerper('europa', 'body.europa.name', true, 800, 50);
+
+    const { overlay, container } = baueOverlay();
+    overlay.update([io, europa], testKamera(), true, true);
+
+    const ioKnoten = wrapperVon(container, 'Io');
+    const europaKnoten = wrapperVon(container, 'Europa');
+    expect(ioKnoten).toBeTruthy();
+    expect(ioKnoten?.querySelector<HTMLElement>('.koerper-glyphe')?.hidden).toBe(false);
+    expect(ioKnoten?.querySelector<HTMLElement>('.koerper-name')?.hidden).toBe(true);
+    // Europas Textlabel bleibt trotz der näheren, überlappenden Io-Glyphe
+    // sichtbar.
+    expect(europaKnoten).toBeTruthy();
+    expect(europaKnoten?.querySelector<HTMLElement>('.koerper-name')?.hidden).toBe(false);
+  });
+
+  it('lässt zwei bloße Glyphen weiterhin gegenseitig ausweichen', () => {
+    // Beide unter MARKER_MIN_PIXEL, beide ohne Text (unter der
+    // Mondschwelle) — Io ist näher und muss wie bisher gewinnen.
+    const io = koerper('io', 'body.io.name', true, 500, 1);
+    const europa = koerper('europa', 'body.europa.name', true, 800, 1);
+
+    const { overlay, container } = baueOverlay();
+    overlay.update([europa, io], testKamera(), true, true);
+
+    const ioKnoten = wrapperVon(container, 'Io');
+    expect(ioKnoten).toBeTruthy();
+    expect(ioKnoten?.querySelector<HTMLElement>('.koerper-glyphe')?.hidden).toBe(false);
+    // Europa hat keinen Platz bekommen — kein DOM-Knoten für sie.
+    expect(wrapperVon(container, 'Europa')).toBeUndefined();
   });
 });

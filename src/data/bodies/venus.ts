@@ -22,7 +22,16 @@ export const venus: Body = {
     radiusKm: 6051.8,
     massKg: 4.8673e24,
     rotationPeriodH: -5832.6,
-    axialTiltDeg: 177.36,
+    // Pol aus dem IAU-Bericht über Rotationselemente (Archinal et al.).
+    // Kontrollrechnung: Der Winkel zwischen diesem Pol und der eigenen
+    // Bahnnormale beträgt 2,64° — nicht die vielzitierten 177,36°. Das ist
+    // dieselbe Nordpol-Konvention wie bei Uranus (siehe Kommentar dort): Die
+    // 177,36° stecken die Rückläufigkeit als 180° − 2,64° in die Zahl, die
+    // hier bereits das negative Vorzeichen von rotationPeriodH trägt. Mit
+    // dem alten axialTiltDeg: 177.36 zusammen mit der schon negativen
+    // Periode wäre die Rückläufigkeit doppelt gezählt gewesen. Mit Pol
+    // (< 90° zur Bahnnormale) plus negativer Periode ist es richtig.
+    pole: { raDeg: 272.76, decDeg: 67.16 },
     rotationAtEpochDeg: 0,
   },
   appearance: {

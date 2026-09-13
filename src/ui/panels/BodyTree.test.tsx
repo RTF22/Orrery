@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { BodyTree, buildTree } from './BodyTree';
+import { BodyTree, buildTree, kaskadierendeSichtbarkeit } from './BodyTree';
 import { bodies } from '../../data/index';
 import { useStore, DEFAULT_STATE } from '../../store';
 
@@ -14,8 +14,16 @@ describe('buildTree', () => {
     expect(baum[0]!.body.id).toBe('sun');
   });
 
-  it('hängt die acht Planeten unter die Sonne', () => {
-    expect(buildTree(bodies)[0]!.children).toHaveLength(8);
+  it('hängt die acht Planeten und die fünf Zwergplaneten unter die Sonne', () => {
+    // Seit Task 10 hängen unter der Sonne nicht mehr nur die acht Planeten,
+    // sondern zusätzlich Pluto, Ceres, Eris, Haumea und Makemake (parent:
+    // 'sun', kind: 'dwarf') — macht 13 statt 8 direkte Kinder.
+    const kinder = buildTree(bodies)[0]!.children;
+    expect(kinder).toHaveLength(13);
+    expect(kinder.filter((k) => k.body.kind === 'planet')).toHaveLength(8);
+    expect(kinder.filter((k) => k.body.kind === 'dwarf').map((k) => k.body.id).sort()).toEqual(
+      ['ceres', 'eris', 'haumea', 'makemake', 'pluto'],
+    );
   });
 
   it('hängt den Mond unter die Erde', () => {
@@ -61,5 +69,63 @@ describe('BodyTree', () => {
     render(<BodyTree />);
     fireEvent.click(screen.getByLabelText(/Neptun anzeigen/));
     expect(useStore.getState().visible.neptune).toBe(false);
+  });
+});
+
+describe('BodyTree mit Monden', () => {
+  it('zeigt Mondgruppen zunächst eingeklappt', () => {
+    // toBeTruthy()/toBeNull() statt toBeInTheDocument(): jest-dom liegt zwar
+    // als Abhängigkeit vor, ist aber in src/test/setup.ts nicht eingebunden,
+    // und alle bestehenden Paneltests prüfen Präsenz auf diese Weise.
+    render(<BodyTree />);
+    expect(screen.getByText('Jupiter')).toBeTruthy();
+    expect(screen.queryByText('Europa')).toBeNull();
+  });
+
+  it('klappt eine Gruppe auf Klick auf', () => {
+    // fireEvent aus @testing-library/react, nicht user-event: Letzteres ist
+    // keine Abhängigkeit dieses Projekts, und alle bestehenden Paneltests
+    // arbeiten mit fireEvent.
+    render(<BodyTree />);
+    fireEvent.click(screen.getByRole('button', { name: /Jupiter aufklappen/ }));
+    expect(screen.getByText('Europa')).toBeTruthy();
+  });
+
+  it('blendet mit dem Planeten auch seine Monde aus', () => {
+    useStore.setState({ visible: {} });
+    kaskadierendeSichtbarkeit('jupiter').forEach((id) => {
+      expect(['jupiter', 'io', 'europa', 'ganymede', 'callisto']).toContain(id);
+    });
+    expect(kaskadierendeSichtbarkeit('jupiter')).toHaveLength(5);
+  });
+
+  // Der Test oben prüft nur die reine Funktion. Der tatsächlich verdrahtete
+  // Weg — Klick auf das Kästchen, toggleVisible je Nachkomme, resultierender
+  // Store-Zustand — braucht einen echten Verhaltenstest, sonst bliebe ein
+  // Fehler wie "die Kaskade toggelt im UI gar nicht" unbemerkt.
+  const galileischeMonde = ['io', 'europa', 'ganymede', 'callisto'];
+
+  it('schaltet beim Ausblenden Jupiters über das Kästchen alle vier Galileischen Monde mit aus', () => {
+    render(<BodyTree />);
+    fireEvent.click(screen.getByRole('button', { name: /Jupiter aufklappen/ }));
+    fireEvent.click(screen.getByLabelText(/Jupiter anzeigen/));
+
+    const { visible } = useStore.getState();
+    expect(visible.jupiter).toBe(false);
+    galileischeMonde.forEach((id) => { expect(visible[id]).toBe(false); });
+  });
+
+  it('macht beim Wiedereinblenden Jupiters alle vier Monde erneut sichtbar', () => {
+    render(<BodyTree />);
+    fireEvent.click(screen.getByRole('button', { name: /Jupiter aufklappen/ }));
+    const kaestchen = screen.getByLabelText(/Jupiter anzeigen/);
+    fireEvent.click(kaestchen); // ausblenden
+    fireEvent.click(kaestchen); // wieder einblenden
+
+    const { visible } = useStore.getState();
+    // toggleVisible entfernt den Schlüssel beim Wiedereinblenden vollständig
+    // (siehe store/index.ts) statt ihn auf true zu setzen.
+    expect(visible.jupiter).toBeUndefined();
+    galileischeMonde.forEach((id) => { expect(visible[id]).toBeUndefined(); });
   });
 });

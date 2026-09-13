@@ -21,7 +21,11 @@ export const mercury: Body = {
     radiusKm: 2439.7,
     massKg: 3.3010e23,
     rotationPeriodH: 1407.6,
-    axialTiltDeg: 0.034,
+    // Pol aus dem IAU-Bericht über Rotationselemente (Archinal et al.).
+    // Kontrollrechnung: Winkel zur eigenen Bahnnormale 0,034° — der bekannte
+    // Wert für Merkur (0,034°): Die Rotationsachse steht nahezu senkrecht
+    // auf der eigenen (gegen die Ekliptik um 7° geneigten) Bahnebene.
+    pole: { raDeg: 281.0103, decDeg: 61.4155 },
     rotationAtEpochDeg: 0,
   },
   appearance: {

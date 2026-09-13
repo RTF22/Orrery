@@ -8,6 +8,12 @@ vi.mock('./bodies', () => ({
   createBodyViews: () => ({ meshes: new Map(), update: vi.fn() }),
 }));
 
+// Dieselbe Begründung wie bei createBodyViews: createRingViews lädt beim
+// Aufbau die Ringtextur über THREE.TextureLoader (siehe rings.ts).
+vi.mock('./rings', () => ({
+  createRingViews: () => ({ update: vi.fn(), dispose: vi.fn() }),
+}));
+
 // Das Label-Overlay legt DOM-Knoten an; in der Node-Testumgebung gibt es
 // kein document. Hier interessiert nur die Bahnlinien-Verdrahtung.
 vi.mock('./labels', () => ({

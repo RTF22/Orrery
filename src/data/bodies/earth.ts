@@ -24,7 +24,11 @@ export const earth: Body = {
     radiusKm: 6371.000,
     massKg: 5.9722e24,
     rotationPeriodH: 23.9345,
-    axialTiltDeg: 23.44,
+    // Pol aus dem IAU-Bericht über Rotationselemente (Archinal et al.).
+    // Kontrollrechnung: Winkel zur eigenen Bahnnormale 23,44° — die Erdbahn
+    // *ist* die Ekliptik, deshalb ist das zugleich die bekannte Schiefe der
+    // Ekliptik (23,44°).
+    pole: { raDeg: 0.00, decDeg: 90.00 },
     rotationAtEpochDeg: 0,
   },
   appearance: {

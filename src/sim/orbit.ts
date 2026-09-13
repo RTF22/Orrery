@@ -1,6 +1,7 @@
 import type { Body, BodyIndex, OrbitElements, Vec3 } from './types';
 import { J2000, centuriesSinceJ2000 } from './time';
 import { solveKepler, normalizeAngle } from './kepler';
+import { equatorToEcliptic, poleVector, icrfKnotenVersatzDeg } from './frames';
 
 export const AU_KM = 149_597_870.7;
 
@@ -66,30 +67,61 @@ export function positionAt(id: string, index: BodyIndex, jd: number): Vec3 {
   if (!body) throw new Error(`Unbekannter Körper: ${id}`);
   if (body.orbit === null) return { x: 0, y: 0, z: 0 };
 
-  // 'parentEquator' verlangt eine Drehung von der Äquatorebene des
-  // Mutterkörpers in die Ekliptik. Diese Drehung ist in Phase 1 bewusst
-  // nicht implementiert — kein Körper der Phase-1-Daten braucht sie (der
-  // Erdmond läuft in der Ekliptik, siehe data/bodies/moon.ts), und
-  // ungetestet mitgeschleppter Code in dieser Schicht wäre ein Risiko.
-  // Die Jupiter- und Saturnmonde in Phase 3 benötigen sie tatsächlich;
-  // bis dahin verhindert dieser Schutz, dass ein solcher Datensatz
-  // stillschweigend an der falschen Stelle landet.
-  if (body.orbit.frame === 'parentEquator') {
-    throw new Error(
-      `Bezugsebene 'parentEquator' wird noch nicht unterstützt (Körper: ${id}). ` +
-      `Die Drehung von der Äquatorebene des Mutterkörpers in die Ekliptik ` +
-      `folgt erst in Phase 3 mit den Jupiter- und Saturnmonden.`,
-    );
+  if (body.parent === null) {
+    if (body.orbit.frame === 'parentEquator') {
+      throw new Error(
+        `Bezugsebene 'parentEquator' ohne Mutterkörper (Körper: ${id}). ` +
+        `Die Ebene ist ohne den Pol eines Mutterkörpers nicht definiert.`,
+      );
+    }
+    return positionInParentFrame(body.orbit, jd);
   }
 
-  const relativ = positionInParentFrame(body.orbit, jd);
-  if (body.parent === null) return relativ;
+  // 'parentEquator': Die Elemente sind auf die Äquator- bzw. Laplace-Ebene des
+  // Mutterkörpers bezogen — so gibt JPL die mittleren Elemente der Monde an.
+  // Erst die Drehung in die Ekliptik macht sie mit allem anderen vergleichbar.
+  // Der Mutterkörper-Lookup steht deshalb nur in diesem Zweig: Für 'ecliptic'
+  // wird der Pol des Mutterkörpers nicht gebraucht, nur seine Position (die
+  // gleich über den rekursiven positionAt-Aufruf angefragt wird). Ein fehlender
+  // Elternkörper fällt bei 'ecliptic' also durch dessen allgemeinen
+  // "Unbekannter Körper"-Check auf statt durch eine eigene, hier ungenutzte
+  // Mutterkörper-Prüfung — das hält beide Fehlermeldungen zueinander konsistent
+  // (jede Fehlermeldung kommt von der Stelle, die die fehlenden Daten wirklich braucht).
+  let orbitFuerBerechnung = body.orbit;
+  let pol: Vec3 | null = null;
+  if (body.orbit.frame === 'parentEquator') {
+    const mutter = index[body.parent];
+    if (!mutter) throw new Error(`Unbekannter Mutterkörper: ${body.parent}`);
+    pol = poleVector(mutter.physical.pole.raDeg, mutter.physical.pole.decDeg);
+
+    // JPLs Satellitenelemente messen node — und darauf aufbauend lp und L
+    // (lp = node + w, L = node + w + M, siehe Quellenblock in
+    // mars-monde.ts) — vom Knoten auf dem ICRF-Äquator, nicht vom Knoten
+    // auf der Ekliptik, den equatorToEcliptic() unten als Nullpunkt
+    // verwendet (Herleitung: icrfKnotenVersatzDeg in frames.ts). Alle drei
+    // Winkel bekommen deshalb denselben Versatz, bevor die allgemeine,
+    // ekliptikal rechnende Kepler-Formel läuft — numerisch wirkt sich am
+    // Ende nur der Versatz auf node aus (er kürzt sich in
+    // omega = lp − node und in M = L − lp exakt wieder heraus), aber alle
+    // drei mitzuverschieben hält den Zwischenzustand als vollständigen,
+    // in sich konsistenten Elementsatz lesbar.
+    const versatz = icrfKnotenVersatzDeg(pol);
+    orbitFuerBerechnung = {
+      ...body.orbit,
+      node: body.orbit.node + versatz,
+      lp: body.orbit.lp + versatz,
+      L: body.orbit.L + versatz,
+    };
+  }
+
+  const relativ = positionInParentFrame(orbitFuerBerechnung, jd);
+  const inEkliptik = pol ? equatorToEcliptic(relativ, pol) : relativ;
 
   const eltern = positionAt(body.parent, index, jd);
   return {
-    x: eltern.x + relativ.x,
-    y: eltern.y + relativ.y,
-    z: eltern.z + relativ.z,
+    x: eltern.x + inEkliptik.x,
+    y: eltern.y + inEkliptik.y,
+    z: eltern.z + inEkliptik.z,
   };
 }
 

@@ -1,8 +1,9 @@
 import * as THREE from 'three';
-import type { Body } from '../sim/types';
+import type { Body, Vec3 } from '../sim/types';
 import type { ScaleSettings } from '../sim/scale';
 import { scaledPositionAt, scaledRadius } from '../sim/scale';
 import { rotationAt } from '../sim/orbit';
+import { poleVector } from '../sim/frames';
 import { bodies, bodyIndex } from '../data/index';
 import { kmToUnits, worldToRender } from './units';
 import { BLOOM_LAYER } from './postfx';
@@ -14,6 +15,19 @@ export const MIN_RADIUS_UNITS = 1e-4;
 
 export function pickRadiusUnits(body: Body, s: ScaleSettings): number {
   return Math.max(kmToUnits(scaledRadius(body, s)), MIN_RADIUS_UNITS);
+}
+
+/**
+ * Quaternion, das die lokale y-Achse der Kugelgeometrie (dort liegen ihre
+ * Pole) auf die Polrichtung dreht. Ersetzt die frühere Kippung um die
+ * x-Achse, die zwar den Betrag der Achsneigung traf, aber eine willkürliche
+ * Richtung wählte — mit Ringen und Monden in derselben Ebene fällt das auf.
+ */
+export function poleAusrichtung(pole: Vec3): THREE.Quaternion {
+  return new THREE.Quaternion().setFromUnitVectors(
+    new THREE.Vector3(0, 1, 0),
+    new THREE.Vector3(pole.x, pole.y, pole.z).normalize(),
+  );
 }
 
 export interface BodyViews {
@@ -55,6 +69,12 @@ interface KoerperEintrag {
  * zeigt damit die Oberfläche selbst und nicht eine flache Einheitsfarbe.
  */
 function ladeAlbedo(lader: THREE.TextureLoader, pfad: string, eintrag: KoerperEintrag): void {
+  // Körper ohne belegte Textur (siehe ASSETS.md für die dokumentierten
+  // Lücken) tragen absichtlich einen leeren Pfad. Ohne diese Abfrage würde
+  // TextureLoader den leeren String gegen die Dokument-URL auflösen und pro
+  // Körper einen sinnlosen Netzwerk-Request auslösen, der ohnehin nur im
+  // stillen Fehlerzweig unten landet — die Fallback-Farbe bleibt so oder so.
+  if (pfad === '') return;
   lader.load(
     pfad,
     (textur) => {
@@ -133,10 +153,9 @@ export function createBodyViews(scene: THREE.Scene): BodyViews {
           }
         }
 
-        // Achsneigung und Eigenrotation: Pol zunächst auf die Ekliptik-Normale
-        // (z-Achse) drehen, dann um die Achsneigung und die Rotationsphase.
-        mesh.rotation.set(Math.PI / 2, 0, 0);
-        mesh.rotateX((body.physical.axialTiltDeg * Math.PI) / 180);
+        // Ausrichtung: Pol zuerst, dann die Eigenrotation um genau diese Achse.
+        const pol = poleVector(body.physical.pole.raDeg, body.physical.pole.decDeg);
+        mesh.quaternion.copy(poleAusrichtung(pol));
         mesh.rotateY(rotationAt(body, jd));
       }
     },

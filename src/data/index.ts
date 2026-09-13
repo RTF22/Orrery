@@ -9,9 +9,23 @@ import { saturn } from './bodies/saturn';
 import { uranus } from './bodies/uranus';
 import { neptune } from './bodies/neptune';
 import { moon } from './bodies/moon';
+import { marsMonde } from './bodies/mars-monde';
+import { jupiterMonde } from './bodies/jupiter-monde';
+import { saturnMonde } from './bodies/saturn-monde';
+import { uranusMonde } from './bodies/uranus-monde';
+import { neptunMonde } from './bodies/neptun-monde';
+import { plutoSystem } from './bodies/pluto-system';
+import { zwergplaneten } from './bodies/zwergplaneten';
 
 export const bodies: Body[] = [
   sun, mercury, venus, earth, mars, jupiter, saturn, uranus, neptune, moon,
+  ...marsMonde,
+  ...jupiterMonde,
+  ...saturnMonde,
+  ...uranusMonde,
+  ...neptunMonde,
+  ...plutoSystem,
+  ...zwergplaneten,
 ];
 
 export const bodyIndex: BodyIndex = Object.fromEntries(

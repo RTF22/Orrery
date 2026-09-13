@@ -23,7 +23,16 @@ export const neptune: Body = {
     radiusKm: 24622,
     massKg: 1.02409e26,
     rotationPeriodH: 16.11,
-    axialTiltDeg: 28.32,
+    // Pol aus dem IAU-Bericht über Rotationselemente (Archinal et al.),
+    // samt des dort für Neptun hinterlegten periodischen Korrekturglieds
+    // (abhängig von einer Neptun-eigenen Phase N), bei T = 0 (Epoche J2000)
+    // ausgewertet — der rohe konstante Wert (299,36 / 43,46) allein verfehlt
+    // die bekannte Achsneigung um 0,47°, mit dem Korrekturglied trifft sie.
+    // Wie beim Mond steht dieser Pol damit FEST und ist keine
+    // zeitveränderliche Nachführung.
+    // Kontrollrechnung: Winkel zur eigenen Bahnnormale 28,32° — der bekannte
+    // Wert für Neptun (28,32°).
+    pole: { raDeg: 299.3337, decDeg: 42.9504 },
     rotationAtEpochDeg: 0,
   },
   appearance: {

@@ -57,7 +57,25 @@ export const moon: Body = {
     radiusKm: 1737.4,
     massKg: 7.346e22,
     rotationPeriodH: 655.71984,
-    axialTiltDeg: 6.68,
+    // Pol: Der Mondpol hat keinen einfachen konstanten RA/Dec-Wert wie die
+    // Planeten — der IAU-Rotationsbericht gibt ihn als Formel mit einem
+    // linearen Term plus 13 periodischen Korrekturgliedern (abhängig von der
+    // Mondknotenphase), weil die Achse selbst im 18,6-Jahres-Knotenzyklus um
+    // den Ekliptikpol wandert (Cassinis Gesetze). Der hier hinterlegte Pol
+    // ist diese Formel bei T = 0 (Epoche J2000) ausgewertet und steht damit
+    // FEST — er nähert nur die Lage zu genau diesem Zeitpunkt an, nicht die
+    // tatsächliche, langsam wandernde Achse. Dieselbe bewusste Vereinfachung
+    // (mittlere/epochenfeste statt zeitveränderlicher Elemente) ist oben für
+    // die Bahnelemente dokumentiert.
+    // Kontrollrechnung, zweifach: (1) Winkel zur Ekliptiknormale ≈ 1,57°,
+    // nahe der bekannten 1,5424°-Cassini-Konstante (Neigung des Mondäquators
+    // gegen die Ekliptik). (2) Winkel zur eigenen Bahnnormale (Bahnelemente
+    // oben: i = 5,145°, node = 125,0445479°) ergibt 6,72° — der bekannte Wert
+    // für die Neigung gegen die eigene Bahn (6,68°). Beide folgen aus
+    // Cassinis drittem Gesetz (Ekliptikpol, Bahnpol und Rotationspol liegen
+    // auf einem Großkreis, Bahn- und Rotationspol auf entgegengesetzten
+    // Seiten): 5,145° + 1,5424° ≈ 6,68°.
+    pole: { raDeg: 266.8577, decDeg: 65.6411 },
     rotationAtEpochDeg: 0,
   },
   appearance: {
