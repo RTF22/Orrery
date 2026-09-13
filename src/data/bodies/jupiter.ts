@@ -28,6 +28,8 @@ export const jupiter: Body = {
     // Wert für Jupiter (3,13°).
     pole: { raDeg: 268.057, decDeg: 64.495 },
     rotationAtEpochDeg: 0,
+    // NSSDC Jupiter Fact Sheet, Zeile „Geometric albedo", abgerufen 13.09.2026.
+    albedo: 0.538,
   },
   appearance: {
     textures: { albedo: 'textures/jupiter/albedo.jpg' },

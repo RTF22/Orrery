@@ -37,6 +37,8 @@ export const mars: Body = {
     // anhand der beiden Werte oben in einem Satz umkehrbar.
     pole: { raDeg: 317.68143, decDeg: 52.88650 },
     rotationAtEpochDeg: 0,
+    // NSSDC Mars Fact Sheet, Zeile „Geometric albedo", abgerufen 13.09.2026.
+    albedo: 0.170,
   },
   appearance: {
     textures: { albedo: 'textures/mars/albedo.jpg' },

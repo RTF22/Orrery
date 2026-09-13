@@ -299,6 +299,34 @@ describe('Katalog-Invarianten', () => {
     };
     expect(kreuz.x * pol.x + kreuz.y * pol.y + kreuz.z * pol.z).toBeLessThan(0);
   });
+
+  it('trägt für jeden beleuchteten Körper eine geometrische Albedo, die Sonne keine', () => {
+    for (const body of bodies) {
+      if (body.kind === 'star') {
+        expect(body.physical.albedo, body.id).toBeUndefined();
+        continue;
+      }
+      // Grenzen aus der Physik: unter 0,02 gibt es im Katalog nichts (die
+      // dunkelsten Körper, Kometenkerne, liegen bei 0,04), über 1,5 auch
+      // nicht (Enceladus, der hellste, bei 1,4 in manchen Quellen).
+      expect(body.physical.albedo, body.id).toBeGreaterThan(0.02);
+      expect(body.physical.albedo, body.id).toBeLessThan(1.5);
+    }
+  });
+
+  it('hält die Fact-Sheet-Albedo der Planeten und der Sternbedeckungswerte der Zwergplaneten', () => {
+    // Fängt Zahlendreher beim Übertragen — Ausgangswerte siehe Quellenkommentare.
+    const erwartet: Record<string, number> = {
+      mercury: 0.142, venus: 0.689, earth: 0.434, mars: 0.170,
+      jupiter: 0.538, saturn: 0.499, uranus: 0.488, neptune: 0.442,
+      pluto: 0.52, charon: 0.42, moon: 0.12,
+      ceres: 0.090, eris: 0.96, haumea: 0.51, makemake: 0.77,
+      enceladus: 1.0, iapetus: 0.275, triton: 0.72,
+    };
+    for (const [id, albedo] of Object.entries(erwartet)) {
+      expect(getBody(id).physical.albedo, id).toBeCloseTo(albedo, 3);
+    }
+  });
 });
 
 describe('Pluto-System und Zwergplaneten (Task 10)', () => {

@@ -130,6 +130,8 @@ export const plutoSystem: readonly Body[] = [
       // NASA/JPL NSSDC Pluto Fact Sheet (132,99°/−6,16°).
       pole: { raDeg: 132.993, decDeg: -6.163 },
       rotationAtEpochDeg: 0,
+      // NSSDC Pluto Fact Sheet, Zeile „Geometric albedo", abgerufen 13.09.2026.
+      albedo: 0.52,
     },
     appearance: {
       // Ausweichfarbe für die Ladezeit der Textur (unten) und für den
@@ -194,6 +196,9 @@ export const plutoSystem: readonly Body[] = [
       // um dieselbe, gemeinsame Rotationsachse gebunden rotieren.
       pole: { raDeg: 132.993, decDeg: -6.163 },
       rotationAtEpochDeg: 0,
+      // NSSDC Pluto Fact Sheet, Abschnitt Charon, Zeile „Geometric albedo",
+      // abgerufen 13.09.2026.
+      albedo: 0.42,
     },
     appearance: {
       textures: { albedo: 'textures/charon/albedo.jpg' },

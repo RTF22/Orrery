@@ -30,6 +30,8 @@ export const earth: Body = {
     // Ekliptik (23,44°).
     pole: { raDeg: 0.00, decDeg: 90.00 },
     rotationAtEpochDeg: 0,
+    // NSSDC Earth Fact Sheet, Zeile „Geometric albedo", abgerufen 13.09.2026.
+    albedo: 0.434,
   },
   appearance: {
     textures: { albedo: 'textures/earth/albedo.jpg' },

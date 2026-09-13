@@ -182,6 +182,9 @@ export const uranusMonde: readonly Body[] = [
       rotationPeriodH: -33.92350,
       pole: { raDeg: 257.43, decDeg: -15.08 },
       rotationAtEpochDeg: 0,
+      // NSSDC Uranian Satellite Fact Sheet, Zeile „Visual geometric albedo",
+      // abgerufen 13.09.2026.
+      albedo: 0.32,
     },
     appearance: {
       textures: { albedo: '' },
@@ -214,6 +217,9 @@ export const uranusMonde: readonly Body[] = [
       rotationPeriodH: -60.48910,
       pole: { raDeg: 257.43, decDeg: -15.10 },
       rotationAtEpochDeg: 0,
+      // NSSDC Uranian Satellite Fact Sheet, Zeile „Visual geometric albedo",
+      // abgerufen 13.09.2026.
+      albedo: 0.39,
     },
     appearance: {
       textures: { albedo: '' },
@@ -244,6 +250,9 @@ export const uranusMonde: readonly Body[] = [
       rotationPeriodH: -99.46025,
       pole: { raDeg: 257.43, decDeg: -15.10 },
       rotationAtEpochDeg: 0,
+      // NSSDC Uranian Satellite Fact Sheet, Zeile „Visual geometric albedo",
+      // abgerufen 13.09.2026.
+      albedo: 0.21,
     },
     appearance: {
       textures: { albedo: '' },
@@ -274,6 +283,9 @@ export const uranusMonde: readonly Body[] = [
       rotationPeriodH: -208.94086,
       pole: { raDeg: 257.43, decDeg: -15.10 },
       rotationAtEpochDeg: 0,
+      // NSSDC Uranian Satellite Fact Sheet, Zeile „Visual geometric albedo",
+      // abgerufen 13.09.2026.
+      albedo: 0.27,
     },
     appearance: {
       textures: { albedo: '' },
@@ -304,6 +316,9 @@ export const uranusMonde: readonly Body[] = [
       rotationPeriodH: -323.11769,
       pole: { raDeg: 257.43, decDeg: -15.10 },
       rotationAtEpochDeg: 0,
+      // NSSDC Uranian Satellite Fact Sheet, Zeile „Visual geometric albedo",
+      // abgerufen 13.09.2026.
+      albedo: 0.23,
     },
     appearance: {
       textures: { albedo: '' },

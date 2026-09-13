@@ -115,6 +115,9 @@ export const marsMonde: readonly Body[] = [
       // als Bezug nimmt. Solange sie das nicht tut, wäre die Zahl eine
       // Genauigkeit, die es nicht gibt.
       rotationAtEpochDeg: 0,
+      // NSSDC Mars Fact Sheet, Abschnitt „Satellites of Mars", Zeile
+      // „Geometric albedo", abgerufen 13.09.2026.
+      albedo: 0.07,
     },
     appearance: {
       // Textur seit Task 11 gesetzt (Viking-Mosaik, siehe ASSETS.md); die
@@ -152,6 +155,9 @@ export const marsMonde: readonly Body[] = [
       pole: { raDeg: 319.03714, decDeg: 52.46339 },
       // Siehe Phobos; der IAU-Wert wäre hier W₀ = 79,39932954°.
       rotationAtEpochDeg: 0,
+      // NSSDC Mars Fact Sheet, Abschnitt „Satellites of Mars", Zeile
+      // „Geometric albedo", abgerufen 13.09.2026.
+      albedo: 0.08,
     },
     appearance: {
       // Task 11 fand keine amtliche USGS-/NASA-Globalkarte für Deimos (nur

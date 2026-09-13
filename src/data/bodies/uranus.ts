@@ -73,6 +73,8 @@ export const uranus: Body = {
     // Bahnnormale) plus negativer Periode ist es einfach und richtig.
     pole: { raDeg: 257.311, decDeg: -15.175 },
     rotationAtEpochDeg: 0,
+    // NSSDC Uranus Fact Sheet, Zeile „Geometric albedo", abgerufen 13.09.2026.
+    albedo: 0.488,
   },
   appearance: {
     textures: { albedo: 'textures/uranus/albedo.jpg' },

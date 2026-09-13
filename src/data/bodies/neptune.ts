@@ -34,6 +34,8 @@ export const neptune: Body = {
     // Wert für Neptun (28,32°).
     pole: { raDeg: 299.3337, decDeg: 42.9504 },
     rotationAtEpochDeg: 0,
+    // NSSDC Neptune Fact Sheet, Zeile „Geometric albedo", abgerufen 13.09.2026.
+    albedo: 0.442,
   },
   appearance: {
     textures: { albedo: 'textures/neptune/albedo.jpg' },

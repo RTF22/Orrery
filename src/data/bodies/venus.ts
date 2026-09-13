@@ -33,6 +33,8 @@ export const venus: Body = {
     // (< 90° zur Bahnnormale) plus negativer Periode ist es richtig.
     pole: { raDeg: 272.76, decDeg: 67.16 },
     rotationAtEpochDeg: 0,
+    // NSSDC Venus Fact Sheet, Zeile „Geometric albedo", abgerufen 13.09.2026.
+    albedo: 0.689,
   },
   appearance: {
     textures: { albedo: 'textures/venus/albedo.jpg' },

@@ -157,6 +157,9 @@ export const neptunMonde: readonly Body[] = [
       rotationPeriodH: -141.04786,
       pole: { raDeg: 299.36, decDeg: 41.17 },
       rotationAtEpochDeg: 0,
+      // NSSDC Neptunian Satellite Fact Sheet, Zeile „Visual geometric
+      // albedo", abgerufen 13.09.2026.
+      albedo: 0.72,
     },
     appearance: {
       textures: { albedo: 'textures/triton/albedo.jpg' },
