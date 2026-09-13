@@ -109,6 +109,27 @@ const RING_STREUUNG = 0.85;
 const RING_SCHAERFE = 6;
 
 /**
+ * Anteil der Nachtseitenfüllung, der im Kernschatten des Planeten auf dem
+ * Ring stehen bleibt („Planetenschein").
+ *
+ * Das Direktlicht löscht der Schatten vollständig; die Füllung nur bis auf
+ * diesen Rest. Vorgeschichte (Sichtprüfung Task 4, 13.09.2026, siehe
+ * docs/phase3b-schatten-abnahme.md): Zuerst blieb die Füllung unbeschattet —
+ * der Schatten kam über 27 von 255 nicht hinaus und war im Bild kaum zu
+ * sehen. Dann wurde sie vollständig mitbeschattet — der Schattensektor sank
+ * auf einen Median von 1,7 von 255 und las sich im Bild wie ein *Loch* im
+ * Ring: Durch die halbdurchsichtigen Ringbereiche (Alphakanal der Textur)
+ * schienen die Hintergrundsterne hindurch.
+ *
+ * Ein Rest ist auch physikalisch zu begründen: Der verschattete Ring steht
+ * dicht über Saturns beleuchteter Tagseite und wird von ihr angestrahlt —
+ * dasselbe Erdschein-Argument wie beim aschgrauen Mondlicht. Die Höhe des
+ * Rests ist damit nicht hergeleitet; 0,3 ist ein Gestaltungswert des
+ * Auftraggebers.
+ */
+export const RING_SCHATTEN_RESTLICHT = 0.3;
+
+/**
  * Gesamthelligkeit eines Ringfragments (linear, vor Tonemapping) — das
  * Gegenstück zur letzten Zeile von RING_FRAGMENT_SHADER als reine Funktion:
  * albedo · (|N·L| · uTag/π + Füllung · uTag + Streuung · uTag/π).
@@ -187,7 +208,9 @@ const RING_VERTEX_SHADER = `
 // Die Fragment-Zeile für die Streuung (`uStreuung * pow(max(0.0, -dot(V,
 // L)), uSchaerfe)`) bildet exakt dieselbe Formel wie vorwaertsstreuung()
 // oben ab: -dot(V, L) entspricht -cosWinkel, uStreuung der staerke, uSchaerfe
-// der schaerfe. Die Summenzeile in gl_FragColor spiegelt ringHelligkeit().
+// der schaerfe. Die Summenzeile in gl_FragColor spiegelt ringHelligkeit() für
+// den unbeschatteten Fall (f = 1; der Schattenfaktor kommt erst weiter unten
+// dazu und ist in der reinen Funktion nicht abgebildet).
 // Ändert sich eine dieser Stellen, muss ihr Gegenstück mitgehen — siehe
 // rings.test.ts für die geprüften Kennlinien.
 //
@@ -203,14 +226,12 @@ const RING_VERTEX_SHADER = `
 // Planetenschatten auf dem Ring (Phase 3b-2, Entwurf §2 „Ring-Shader"):
 // `uPlanetOkkluder` trägt Mitte (xyz) und dargestellten Radius (w) des
 // Ringträgers in Render-Einheiten, kamerarelativ — dasselbe Bezugssystem, in
-// dem vWeltPos steht. Der Faktor f sitzt auf `direkt` und auf der
-// Nachtseitenfüllung `uFuellung * uTag` (Entscheidung nach der Sichtprüfung
-// Task 4, 13.09.2026: ohne beschattete Füllung blieb der Planetenschatten auf
-// dem Ring bei höchstens 27 von 255 und damit unter dem Abnahmekriterium; ein
-// Ring hat anders als ein Mond keine Atmosphäre, die den Kernschatten
-// aufhellen könnte). Nur `streu` bleibt unbeschattet: Die Vorwärtsstreuung ist
-// ein reiner Gestaltungswert am Gegenlicht, und sie unangetastet zu lassen
-// hält den Ringdurchflug (Szene `ringdurchflug`) unverändert.
+// dem vWeltPos steht. Der Faktor f löscht `direkt` vollständig; die
+// Nachtseitenfüllung sinkt nur bis auf uRestlicht (= RING_SCHATTEN_RESTLICHT,
+// Planetenschein — Begründung und Vorgeschichte dort). `streu` bleibt ganz
+// unbeschattet: Die Vorwärtsstreuung ist ein reiner Gestaltungswert am
+// Gegenlicht, und sie unangetastet zu lassen hält den Ringdurchflug (Szene
+// `ringdurchflug`) unverändert.
 //
 // Radius 0 ist zugleich der Aus-Schalter: kugelSchatten liefert mit w = 0 für
 // jedes Fragment exakt 1 (beta = 0, damit greift der Zweig „kleiner Okkluder
@@ -228,6 +249,7 @@ const RING_FRAGMENT_SHADER = `
   uniform float uFuellung;
   uniform float uStreuung;
   uniform float uSchaerfe;
+  uniform float uRestlicht;
   varying vec2 vUv;
   varying vec3 vNormal;
   varying vec3 vWeltPos;
@@ -243,12 +265,15 @@ const RING_FRAGMENT_SHADER = `
       : 1.0;
     float direkt = abs(dot(N, L)) * uTag * RECIPROCAL_PI; // beidseitig: ein Ring hat keine Rückseite
     float streu = uStreuung * pow(max(0.0, -dot(V, L)), uSchaerfe) * uTag * RECIPROCAL_PI;
-    // f auf Direktlicht und Füllung, nicht auf die Streuung: Ein Ring hat
-    // keine Atmosphäre, die den Kernschatten aufhellen könnte — der Grund,
-    // aus dem die Füllung bei den Körpern stehen bleibt (Blutmond), gilt hier
-    // nicht. Die Streuung bleibt unbeschattet, damit der Ringdurchflug
-    // unverändert bleibt.
-    gl_FragColor = vec4(ring.rgb * ((direkt + uFuellung * uTag) * f + streu), ring.a);
+    // Der Schatten nimmt das Direktlicht ganz weg, von der Nachtseitenfuellung
+    // bleibt uRestlicht stehen: Der Ring im Schatten steht dicht neben Saturns
+    // beleuchteter Tagseite und wird von ihr angestrahlt (Planetenschein, wie
+    // das aschgraue Mondlicht). Ohne diesen Rest sah der Sektor im Bild aus wie
+    // ein Loch im Ring, durch dessen halbdurchsichtige Stellen die Sterne
+    // schienen. Die Streuung bleibt ganz unbeschattet, damit der Ringdurchflug
+    // gleich bleibt. Begruendung und Messwerte: RING_SCHATTEN_RESTLICHT.
+    // (ASCII im Shader-Quelltext, Umlaute nur im TS-Kommentar oben.)
+    gl_FragColor = vec4(ring.rgb * (direkt * f + uFuellung * uTag * mix(uRestlicht, 1.0, f) + streu), ring.a);
   }
 `;
 
@@ -401,6 +426,7 @@ export function createRingViews(scene: THREE.Scene): RingViews {
         uFuellung: { value: 0 },
         uStreuung: { value: RING_STREUUNG },
         uSchaerfe: { value: RING_SCHAERFE },
+        uRestlicht: { value: RING_SCHATTEN_RESTLICHT },
         // Schattenwurf des Ringträgers auf seine eigenen Ringe; w = 0 heißt
         // „kein Schatten", siehe der Kommentar an RING_FRAGMENT_SHADER.
         uPlanetOkkluder: { value: new THREE.Vector4() },

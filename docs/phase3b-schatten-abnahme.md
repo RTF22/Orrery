@@ -208,78 +208,77 @@ Kinoszene zu weit weg, hier steht sie zu weit in der Gegensonne).
 
 ### (2) Planetenschatten auf dem Ring — in der Szene
 
-**Nachmessung vom 13.09.2026 nach der Entwurfsänderung.** Der Schattenfaktor
-liegt seit dieser Änderung auch auf der Nachtseitenfüllung des Rings:
-`ring.rgb * ((direkt + uFuellung * uTag) * f + streu)`, siehe Entwurf §2,
-Absatz „Ring-Shader". Aufbau, Zeit und Einstellungen sind unverändert
-(`nightFill` auf dem Standardwert 0,25).
+**Zweite Nachmessung vom 13.09.2026, Stand mit Restlicht.** Der Kernschatten
+löscht das Direktlicht vollständig, von der Nachtseitenfüllung bleibt der
+Anteil `RING_SCHATTEN_RESTLICHT` = 0,3 stehen (Planetenschein, Entwurf §2,
+Absatz „Ring-Shader"): `ring.rgb * (direkt * f + uFuellung * uTag *
+mix(uRestlicht, 1.0, f) + streu)`. Aufbau, Zeit und Einstellungen sind
+unverändert (`nightFill` auf dem Standardwert 0,25, Stufe `high`, Scheibe
+(640,0/400,0) r = 160,0 px, `uPlanetOkkluder` w = 2911,6, `uRestlicht` 0,3).
 
 | Differenz > | Pixel | größte Komponente | Schwerpunkt | Abstand von der Scheibenmitte |
 |---:|---:|---|---:|---:|
-| 0 | 24 292 | 24 222 (99,7 %) | (798,2 / 567,8) | 1,44 R |
-| 10 | 22 064 | 22 020 (99,8 %) | (804,9 / 573,2) | 1,49 R |
-| 20 | **19 524** | 13 012 (66,6 %) | (814,4 / 579,0) | 1,56 R |
-| **30 (Kriterium)** | **16 979** | 10 484 (61,7 %) | (815,9 / 583,3) | 1,59 R |
-| 60 | 15 144 | 9 699 (64,0 %) | (816,6 / 584,3) | 1,60 R |
+| 0 | 24 289 | 24 219 (99,7 %) | (798,2 / 567,8) | 1,44 R |
+| 10 | 21 649 | 21 630 (99,9 %) | (807,1 / 574,6) | 1,51 R |
+| 20 | **18 612** | 10 916 (58,7 %) | (815,4 / 580,3) | 1,57 R |
+| **30 (Kriterium)** | **16 455** | 10 236 (62,2 %) | (817,0 / 584,3) | 1,60 R |
+| 60 | 10 474 | 8 830 (84,3 %) | (812,5 / 576,4) | 1,54 R |
 
-Größte Differenz **160 von 255**. Helligkeit in den Pixeln über 20: RGB
-(8,6 / 7,2 / 5,8) mit Schatten gegen (97,5 / 90,3 / 87,6) ohne; Median der
-Bildhelligkeit 1,7 gegen 90,3 — der Ring verliert im Kernschatten **98 %**
-seiner Bildhelligkeit. Das Kriterium („> 500 Pixel mit Differenz > 30") ist
-damit um den Faktor 34 übererfüllt.
+Größte Differenz **101 von 255**. Helligkeit in den Pixeln über 20: RGB
+(36,0 / 31,9 / 29,5) mit Schatten gegen (100,8 / 93,4 / 90,3) ohne; Median der
+Bildhelligkeit 92,7 → **28,0**, der Ring verliert im Kernschatten also rund
+**70 %** seiner Bildhelligkeit und bleibt dabei als Ring sichtbar. Das
+Kriterium („> 500 Pixel mit Differenz > 30") ist um den Faktor 33 erfüllt.
 
-Die größte zusammenhängende Komponente fasst bei Schwelle 30 nur 61,7 % der
-Pixel — aus demselben Grund wie beim Ringschatten auf dem Planeten (3): Der
-Schattenkeil läuft über die Cassini-Teilung und die dünnen Innenringe, wo
-kaum Licht wegzunehmen ist; dort fällt die Differenz unter die Schwelle und
-zerteilt die Fläche. Bei Schwelle 10 sind 99,8 % in einem Stück.
+Im Bild liest sich der Schatten jetzt als **dunkelgrauer Sektor**, in dem die
+Ringstruktur (B-Ring, Cassini-Teilung, A-Ring) weiterhin zu erkennen ist —
+nicht als Loch. Hintergrundsterne scheinen nirgends durch. Die größte
+zusammenhängende Komponente fasst bei Schwelle 30 nur 62,2 %, weil der Keil
+über die Cassini-Teilung und die dünnen Innenringe läuft, wo kaum Licht
+wegzunehmen ist; bei Schwelle 10 sind 99,9 % in einem Stück.
 
 **Kontrolle, dass außerhalb des Schattens nichts kippt:** Das ganze
-Differenzbild enthält 25 068 abweichende Pixel in genau zwei nennenswerten
-Zusammenhangskomponenten — dem Schattenkeil auf dem Ring (24 222 px) und der
-Ringschatten-Sichel auf dem Planeten (774 px, unverändert, siehe (1)). Die
-übrigen 72 Pixel verteilen sich auf 29 winzige Flecken **mit Differenz 1 von
-255**, sämtlich auf der Außenkante des A-Rings am Rand des Schattenkeils
-(Kantenglättung). Die unbeschienene Ringseite ist sonst Pixel für Pixel
-identisch: 77 572 der 101 864 sichtbaren Ringpixel weichen um exakt 0 ab.
-Kontrollaufnahme desselben Zustands: **0 abweichende Pixel**.
+Differenzbild hat 25 065 abweichende Pixel in genau zwei nennenswerten
+Zusammenhangskomponenten — dem Schattenkeil auf dem Ring (24 219 px) und der
+unveränderten Ringschatten-Sichel auf dem Planeten (774 px, siehe (1)). Die
+übrigen 72 Pixel sind 29 winzige Flecken mit einer größten Differenz von 3 von
+255 an der Außenkante des A-Rings entlang des Keilrandes (Kantenglättung).
+Kontrollaufnahme desselben Zustands: **0 abweichende Pixel**. Browserkonsole
+nach dem Neuladen: 0 Fehler, 0 Warnungen.
 
-Im Bild ist der Planetenschatten jetzt das, was die Cassini-Aufnahmen zeigen:
-ein scharf berandeter, tiefdunkler Keil, der rechts unterhalb des Planeten
-über den Ring läuft.
+Der Ringschatten auf dem Planeten (1) bleibt Zahl für Zahl unverändert —
+`bodies.ts` ist von der Änderung nicht berührt.
 
-#### Der Stand vor der Änderung (fürs Protokoll)
+#### Die beiden Stände davor (fürs Protokoll)
 
-Solange `uFuellung * uTag` unbeschattet blieb (Entwurfsstand bis 13.09.2026),
-sah dieselbe Messstelle so aus:
+| Differenz > | Füllung unbeschattet (erster Stand) | Füllung voll beschattet (Zwischenstand) | **mit Restlicht 0,3 (jetzt)** |
+|---:|---:|---:|---:|
+| 0 | 24 241 | 24 292 | 24 289 |
+| 10 | 16 494 | 22 064 | 21 649 |
+| 20 | 9 958 | 19 524 | 18 612 |
+| **30 (Kriterium)** | **0** | 16 979 | **16 455** |
+| größte Differenz | 27 von 255 | 160 von 255 | 101 von 255 |
+| Median an / aus | 107,0 / 132,7 | 1,7 / 90,3 | **28,0 / 92,7** |
 
-| Differenz > | Pixel | größte Komponente |
-|---:|---:|---|
-| 0 | 24 241 | 24 171 (99,7 %) |
-| 10 | 16 494 | 10 256 (62,2 %) |
-| 20 | 9 958 | 8 771 (88,1 %) |
-| **30 (Kriterium)** | **0** | — |
-
-Größte Differenz 27 von 255; Helligkeit RGB (108,0 / 98,7 / 93,0) gegen
-(132,5 / 122,6 / 116,6). Der Schattenkeil lag also schon damals vollständig
-und an der richtigen Stelle, blieb aber unter der Sichtbarkeitsschwelle der
-Abnahme. Die Ursache war rechnerisch gedeckelt:
-
-- `direkt` = |N·L| · uTag/π = sin 20,75° · 3,1416/π = **0,3543**
-- `uFuellung` · uTag = 0,25 · 3,1416 = **0,7854**
-
-Der Ring behielt im vollen Kernschatten 0,7854 von 1,1397, also 68,9 % seiner
-linearen Helligkeit; nach ACES-Tonemapping und sRGB blieben davon rund 25 von
-255 (gemessen 27 in der Szene, 28 auf der beschienenen Ringseite, siehe (4)).
-Kein Blickwinkel änderte daran etwas; eine Gegenprobe mit `nightFill` 0
-lieferte 11 390 Pixel über 30 und 94 % Helligkeitsverlust und zeigte damit,
-dass die Shader-Rechnung das gesamte Direktlicht bereits korrekt wegnahm.
-
-Die Entscheidung daraufhin (Entwurf §2, 13.09.2026): Auf dem **Ring** wird
-auch die Nachtseitenfüllung beschattet. Ein Ring hat anders als ein Mond keine
-Atmosphäre, die den Kernschatten aufhellen könnte — der Grund, der die Füllung
-bei den Körpern stehen lässt (Blutmond), gilt hier nicht. `streu` bleibt
-unbeschattet, damit die Szene `ringdurchflug` unverändert bleibt.
+- **Erster Stand** (`f` nur auf `direkt`): Der Schattenkeil lag vollständig
+  und an der richtigen Stelle, blieb aber unter der Sichtbarkeitsschwelle der
+  Abnahme. Ursache war rechnerisch gedeckelt: `direkt` = |N·L| · uTag/π =
+  sin 20,75° · 3,1416/π = 0,3543 gegen `uFuellung` · uTag = 0,25 · 3,1416 =
+  0,7854 — der Ring behielt 68,9 % seiner linearen Helligkeit, nach ACES und
+  sRGB rund 25 von 255. Kein Blickwinkel änderte daran etwas (siehe (4)); eine
+  Gegenprobe mit `nightFill` 0 ergab 11 390 Pixel über 30 und 94 %
+  Helligkeitsverlust und belegte, dass die Shader-Rechnung das Direktlicht
+  bereits vollständig wegnahm.
+- **Zwischenstand** (`f` auch auf der Füllung, ohne Rest): Kriterium mit
+  16 979 Pixeln erfüllt, aber der Sektor fiel auf einen Median von 1,7 von 255
+  und sah wie ein **Loch im Ring** aus — durch die halbdurchsichtigen
+  Ringbereiche (Alphakanal der Textur) schienen die Hintergrundsterne.
+- **Jetziger Stand**: Restlicht 0,3 der Füllung. Der Schatten ist mit 101 von
+  255 größter Differenz klar über dem Kriterium und bleibt im Bild ein Ring
+  im Schatten statt einer Lücke. Begründung des Rests: Der verschattete Ring
+  steht dicht neben Saturns beleuchteter Tagseite und wird von ihr angestrahlt
+  (Planetenschein, wie das aschgraue Mondlicht); die Höhe des Rests ist ein
+  Gestaltungswert des Auftraggebers.
 
 ### (3) Nahaufnahme der Tagseite — dieselbe Zeit, dieselbe Geometrie
 
@@ -385,9 +384,9 @@ GPU.
   Phasenwinkel bleibt über 140°. Bei `elapsedSec` 0 war die größte Differenz
   am höchsten (auf der Scheibe 24, außerhalb 50) und fiel bis `elapsedSec`
   33 s auf 15 bzw. 38. Deshalb ist `elapsedSec` 0 die Messstelle.
-- Nach der Entwurfsänderung (beschattete Nachtseitenfüllung auf dem Ring,
-  Abschnitt (2)) erfüllt die Szene selbst das Kriterium für den
-  Planetenschatten mit 16 979 Pixeln über 30 und einer größten Differenz von
-  160. Für den Ringschatten auf dem Planeten bleibt es bei der Nahaufnahme
+- Nach den beiden Entwurfsänderungen (beschattete Nachtseitenfüllung mit
+  Restlicht 0,3, Abschnitt (2)) erfüllt die Szene selbst das Kriterium für den
+  Planetenschatten mit 16 455 Pixeln über 30 und einer größten Differenz von
+  101. Für den Ringschatten auf dem Planeten bleibt es bei der Nahaufnahme
   (3): Dort liegt keine Rechenfrage vor, sondern schlicht die Nachtseite im
   Bild.

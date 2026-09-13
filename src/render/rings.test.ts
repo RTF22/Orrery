@@ -6,7 +6,7 @@ import { describe, it, expect } from 'vitest';
 import * as THREE from 'three';
 import {
   ringGeometrieDaten, ringAusrichtung, vorwaertsstreuung,
-  ringHelligkeit, ERSATZ_RING_GRAU, createRingViews,
+  ringHelligkeit, ERSATZ_RING_GRAU, createRingViews, RING_SCHATTEN_RESTLICHT,
 } from './rings';
 import { poleVector } from '../sim/frames';
 import { pickRadiusUnits } from './bodies';
@@ -215,13 +215,27 @@ describe('createRingViews — Planetenschatten auf dem Ring', () => {
     expect(fragmentShader).toContain(
       'kugelSchatten(vWeltPos, uPlanetOkkluder, uSonnenRichtung, uSonnenWinkel)',
     );
-    // Der Schattenfaktor gehört auf den Direktanteil *und* auf die
-    // Nachtseitenfüllung: Ein Ring hat keine Atmosphäre, die den Kernschatten
-    // aufhellen könnte (Entwurf §2, Absatz „Ring-Shader", Entscheidung nach
-    // der Sichtprüfung Task 4). Allein `streu` bleibt unbeschattet, damit der
-    // Ringdurchflug unverändert bleibt.
+    // Das Direktlicht verschwindet im Kernschatten vollständig, die
+    // Nachtseitenfüllung nur bis auf das Restlicht (Planetenschein, siehe
+    // RING_SCHATTEN_RESTLICHT); `streu` bleibt ganz unbeschattet, damit der
+    // Ringdurchflug unverändert bleibt (Entwurf §2, Absatz „Ring-Shader").
     expect(fragmentShader).toContain('float direkt = abs(dot(N, L)) * uTag * RECIPROCAL_PI;');
-    expect(fragmentShader).toContain('((direkt + uFuellung * uTag) * f + streu)');
+    expect(fragmentShader).toContain(
+      '(direkt * f + uFuellung * uTag * mix(uRestlicht, 1.0, f) + streu)',
+    );
+    ringe.dispose();
+  });
+
+  it('belegt das Restlicht des Planetenscheins mit dem Gestaltungswert', () => {
+    // Ein vollständig gelöschter Kernschatten sah in der Sichtprüfung wie ein
+    // Loch im Ring aus — durch die halbdurchsichtigen Ringbereiche schienen
+    // die Hintergrundsterne. Physikalisch beleuchtet Saturns Tagseite den
+    // verschatteten Ring (Planetenschein).
+    const scene = new THREE.Scene();
+    const ringe = createRingViews(scene);
+    expect(RING_SCHATTEN_RESTLICHT).toBeCloseTo(0.3, 12);
+    expect(ringMaterial(scene, 'saturn').uniforms['uRestlicht']!.value)
+      .toBeCloseTo(RING_SCHATTEN_RESTLICHT, 12);
     ringe.dispose();
   });
 
