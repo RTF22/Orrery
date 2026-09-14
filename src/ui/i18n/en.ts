@@ -141,4 +141,8 @@ export const en: Record<Key, string> = {
   'key.space': 'Space',
   'key.arrows': '◀ ▶',
   'unit.millionKm': 'million km',
+  'header.copyLink': 'Copy link',
+  'header.copied': 'Copied',
+  'header.copyFallback': 'Copy the address from the address bar',
+  'header.reset': 'Reset',
 };

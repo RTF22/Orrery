@@ -143,4 +143,8 @@ export const de = {
   'key.space': 'Leertaste',
   'key.arrows': '◀ ▶',
   'unit.millionKm': 'Mio. km',
+  'header.copyLink': 'Link kopieren',
+  'header.copied': 'Kopiert',
+  'header.copyFallback': 'Adresse in der Adresszeile kopieren',
+  'header.reset': 'Zurücksetzen',
 } as const;
