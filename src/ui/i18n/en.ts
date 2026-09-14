@@ -170,4 +170,10 @@ export const en: Record<Key, string> = {
   'thema.zwergplaneten.title': 'Dwarf planets',
   'thema.bahnelemente.title': 'Orbital elements',
   'thema.modell.title': 'Limits of the model',
+  'quelle.art.faktenblatt': 'Fact sheet',
+  'quelle.art.uebersicht': 'Overview',
+  'quelle.art.bildarchiv': 'Image archive',
+  'quelle.art.werkzeug': 'Tool',
+  'quelle.art.fachartikel': 'Technical',
+  'quelle.herausgeber.sonstige': 'Other',
 };

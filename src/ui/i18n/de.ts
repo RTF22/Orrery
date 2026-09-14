@@ -172,4 +172,10 @@ export const de = {
   'thema.zwergplaneten.title': 'Zwergplaneten',
   'thema.bahnelemente.title': 'Bahnelemente',
   'thema.modell.title': 'Grenzen des Modells',
+  'quelle.art.faktenblatt': 'Faktenblatt',
+  'quelle.art.uebersicht': 'Übersicht',
+  'quelle.art.bildarchiv': 'Bildarchiv',
+  'quelle.art.werkzeug': 'Werkzeug',
+  'quelle.art.fachartikel': 'Fachliches',
+  'quelle.herausgeber.sonstige': 'Weitere',
 } as const;
