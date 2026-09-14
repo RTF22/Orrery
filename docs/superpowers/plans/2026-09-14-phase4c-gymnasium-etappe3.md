@@ -3130,7 +3130,7 @@ git commit -m "Abnahme 4c Etappe 3: Gymnasium komplett"
 ## Abschluss
 
 - [ ] `npm run lint`, `npm test`, `npm run build` auf dem Branch, Ausgabe zeigen.
-- [ ] Die Kontrollen der lokalen Projektanleitung für versionierte Dateien und Commit-Texte ausführen (Ergebnis leer beziehungsweise 0); zusätzlich `git log master..gymnasium --format=%B | grep -ci 'co-authored|session'` → `0`.
+- [ ] Die Kontrollen der lokalen Projektanleitung für versionierte Dateien und Commit-Texte ausführen (Ergebnis leer beziehungsweise 0); zusätzlich `git log master..gymnasium --format=%B | grep -ci 'co-authored\|session'` → `0`.
 - [ ] Die lokale Projektanleitung im Abschnitt „Stand" nachziehen (4c-3 auf master, Testzahl, Achsneigungs-Korrektur, 62 Quellen, nächster Schritt 4c-4 Szenen; Rulings unten).
 - [ ] Fast-Forward nach `master`, Branch `gymnasium` löschen, `.playwright-mcp/` leeren. Tag: keiner (Phase 4 wird erst nach 4c-4 getaggt).
 - [ ] Rulings gesammelt an Jens melden.
