@@ -1,11 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
-// Vollständige Endung nötig: Im selben Ordner liegt auch datenblock.ts
-// (Kleinschreibung); auf einem großschreibungsunempfindlichen Dateisystem
-// (NTFS) findet die endungslose Auflösung sonst datenblock.ts zuerst und
-// „Datenblock" wäre undefined.
-import { Datenblock } from './Datenblock.tsx';
+import { Datenblock } from './Datenblock';
 import { useStore, DEFAULT_STATE } from '../../store';
 import { bodyIndex } from '../../data';
 

@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { datenzeilen } from './datenblock';
+import { datenzeilen } from './datenzeilen';
 import { bodyIndex } from '../../data';
 import { J2000 } from '../../sim/time';
 import { setSprache } from '../i18n';

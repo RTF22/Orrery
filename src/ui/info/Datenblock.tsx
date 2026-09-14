@@ -5,7 +5,7 @@ import { bodyIndex } from '../../data';
 import { useStore } from '../../store';
 import { t } from '../i18n';
 import { isOutOfRange } from '../format';
-import { datenzeilen } from './datenblock';
+import { datenzeilen } from './datenzeilen';
 import { useLiveJd } from './useLiveJd';
 
 export const VERWEIS_KNOPF = 'cursor-pointer text-sky-300 underline decoration-sky-300/50 underline-offset-2 hover:text-sky-200';
