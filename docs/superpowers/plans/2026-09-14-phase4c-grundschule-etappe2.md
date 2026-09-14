@@ -877,8 +877,8 @@ neighbourhood. The belt has almost empty gaps, the
 # Eris
 
 Eris ist ein [Zwergplanet](thema:zwergplaneten), fast so groß wie
-[Pluto](objekt:pluto), aber schwerer und
-dreimal so weit von der Sonne entfernt. Für eine Runde braucht sie über 550 Jahre.
+[Pluto](objekt:pluto), aber schwerer und im Mittel fast doppelt so weit von der
+Sonne entfernt. Für eine Runde braucht sie über 550 Jahre.
 Als Eris 2005 entdeckt wurde, mussten sich die Astronomen entscheiden, was ein
 Planet ist, und seitdem heißen Pluto und Eris Zwergplaneten. Eris hat einen kleinen
 Mond namens Dysnomia.
@@ -889,8 +889,8 @@ Mond namens Dysnomia.
 # Eris
 
 Eris is a [dwarf planet](thema:zwergplaneten), almost as big as
-[Pluto](objekt:pluto), but heavier and
-three times as far from the Sun. It needs over 550 years for one lap. When Eris was
+[Pluto](objekt:pluto), but heavier and on average almost twice as far from the
+Sun. It needs over 550 years for one lap. When Eris was
 discovered in 2005, astronomers had to decide what a planet is, and since then Pluto
 and Eris have been called dwarf planets. Eris has a small moon called Dysnomia.
 ```
@@ -1256,3 +1256,4 @@ Entscheidungen während der Planung, die vom Entwurf abweichen oder ihn präzisi
 7. **Kein neuer Testfall „Themenziel hat Text im selben Niveau".** Ein solcher Fall fiele heute für den Gymnasiumtext `thema-modell` (Verweis auf `bahnelemente`, Gymnasium-Text erst in 4c-4) durch. Bis dahin prüft ein Shell-Skript in Task 7 Schritt 3 und Task 8 Schritt 2 nur die Grundschule; der Testfall kommt in 4c-4, sobald alle Niveaus gefüllt sind.
 8. **Saturn-Nachtrag als Änderung des Etappe-1-Textes** (nur erster Satz, `[Ringen](thema:ringe)`), in Task 4 gebündelt, statt Etappe-1-Dateien unangetastet zu lassen; Erde bleibt unverändert, weil keiner der zehn Verweise sie betrifft.
 9. **Thema `modell` in Grundschule gehört zu dieser Etappe** (Entscheidung Jens, Liste der 16 Dateien), obwohl Entwurf §7 Punkt 4 es ursprünglich 4c-4 zuordnete; der Nachtrag in §7 zieht das nach. Damit hat der Knopf „Grenzen des Modells" im Datenblock auf dem Grundschul-Tab ein Ziel.
+10. **Eris: „im Mittel fast doppelt so weit" statt „dreimal so weit"** (Review Task 6): Die großen Halbachsen verhalten sich 67,8 zu 39,5 AE, also 1,7; „dreimal" galt nur für die Entfernungen 2005. Zeitlose Aussage korrigiert, damit der Text dem Datenblock nicht widerspricht (Ruling 5).
