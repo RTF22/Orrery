@@ -46,8 +46,9 @@ Phase 4a (Englisch, Sprachumschaltung zur Laufzeit) und Phase 4b (URL-Sharing,
 Sitzungswiederherstellung und Zurücksetzen in Etappe 1; benannte Ansichten
 speichern, laden, exportieren und importieren in Etappe 2) sind abgeschlossen.
 Phase 4c Etappe 1 (Infopanel-Gerüst: Niveaustufen, Datenblock mit Live-Werten,
-Quellenkarten, Kamerafahrt) ist abgeschlossen; Texte für alle Körper, Szenen
-und Themen folgen in 4c-2 bis 4c-4. Offen sind der Rest von 4c und Phase 5
+Quellenkarten, Kamerafahrt) und Etappe 2 (Grundschulstufe komplett: 35 Körper
+und 8 Themen in Deutsch und Englisch) sind abgeschlossen. Gymnasium folgt in
+4c-3, die Szenen beider Niveaus in 4c-4. Offen sind der Rest von 4c und Phase 5
 (Ambient-Sound, Qualitätsstufen, Texturkompression, Veröffentlichung).
 
 ## Entwicklung
