@@ -3,6 +3,7 @@ import { useStore } from '../../store';
 import type { AppState } from '../../store/types';
 import { t } from '../i18n';
 import { formatZahl } from '../format';
+import { useSitzungMerken } from '../useSitzungMerken';
 import { Panel } from './Panel';
 
 /** Schalter und zugehöriger Sprachschlüssel. */
@@ -22,6 +23,7 @@ export function DisplayPanel(): React.JSX.Element {
   const abfallId = useId();
   const nachtId = useId();
   const ausgleichId = useId();
+  const [merken, setMerken] = useSitzungMerken();
 
   return (
     <Panel id="display" title={t('panel.display')}>
@@ -96,6 +98,15 @@ export function DisplayPanel(): React.JSX.Element {
             value={display.lightCompensation}
             onChange={(e) => { setDisplay({ lightCompensation: Number(e.target.value) }); }}
           />
+        </label>
+
+        <label className="mt-1 flex items-center gap-2 border-t border-white/10 pt-2">
+          <input
+            type="checkbox"
+            checked={merken}
+            onChange={(e) => { setMerken(e.target.checked); }}
+          />
+          <span>{t('display.rememberSession')}</span>
         </label>
       </div>
     </Panel>

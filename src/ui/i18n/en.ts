@@ -55,6 +55,7 @@ export const en: Record<Key, string> = {
   'display.lightFalloff': 'Light falloff',
   'display.nightFill': 'Night side',
   'display.lightCompensation': 'Distance compensation',
+  'display.rememberSession': 'Remember session',
   'shortcuts.title': 'Keyboard shortcuts',
   'shortcuts.toggleUi': 'Show or hide the interface',
   'shortcuts.fullscreen': 'Fullscreen',

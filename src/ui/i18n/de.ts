@@ -54,6 +54,7 @@ export const de = {
   'display.lightFalloff': 'Lichtabfall',
   'display.nightFill': 'Nachtseite',
   'display.lightCompensation': 'Distanzausgleich',
+  'display.rememberSession': 'Sitzung merken',
   'shortcuts.title': 'Tastenkürzel',
   'shortcuts.toggleUi': 'Bedienoberfläche ein- und ausblenden',
   'shortcuts.fullscreen': 'Vollbild',
