@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useStore } from '../../store';
-import { bodies, bodyIndex } from '../../data/index';
+import { bodies } from '../../data/index';
 import type { Body } from '../../sim/types';
-import { scaledRadius } from '../../sim/scale';
 import { t } from '../i18n';
 import { Panel } from './Panel';
+import { fahreZu } from '../kamerafahrt';
 
 export interface TreeNode { body: Body; children: TreeNode[] }
 
@@ -45,14 +45,9 @@ export function kaskadierendeSichtbarkeit(id: string): string[] {
   return ergebnis;
 }
 
-/** Abstand, aus dem ein Körper formatfüllend, aber vollständig zu sehen ist. */
-const FOKUS_FAKTOR = 8;
-const FOKUS_MIN_KM = 1e4;
-
 function Zeile({ knoten, tiefe }: { knoten: TreeNode; tiefe: number }): React.JSX.Element {
   const ziel = useStore((s) => s.camera.targetId);
   const versteckt = useStore((s) => s.visible[knoten.body.id] === false);
-  const setCamera = useStore((s) => s.setCamera);
   const toggleVisible = useStore((s) => s.toggleVisible);
   // Der Klappzustand lebt bewusst in useState statt im Store: Anders als
   // `visible` würde er sonst das geteilte URL-Fragment bei jedem Auf- und
@@ -64,19 +59,7 @@ function Zeile({ knoten, tiefe }: { knoten: TreeNode; tiefe: number }): React.JS
 
   const name = t(knoten.body.info.nameKey);
 
-  const fokussieren = (): void => {
-    const { camera, scale, time } = useStore.getState();
-    const radius = scaledRadius(bodyIndex[knoten.body.id] ?? knoten.body, scale);
-    setCamera({
-      targetId: knoten.body.id,
-      distance: Math.max(radius * FOKUS_FAKTOR, FOKUS_MIN_KM),
-      // Im freien Modus wird die Position des Körpers als Bezugspunkt
-      // eingefroren: Drehen und Zoomen wirken ab jetzt auf ihn, er zieht mit
-      // der Zeit aber daran vorbei. Geheftet und Verfolgung führen ihn
-      // ohnehin mit und brauchen keinen festen Punkt.
-      freezeJd: camera.mode === 'free' ? time.jd : null,
-    });
-  };
+  const fokussieren = (): void => { fahreZu(knoten.body.id); };
 
   // Blendet mit dem Körper auch alle seine Nachkommen aus bzw. wieder ein.
   // Zielzustand ist das Gegenteil des aktuellen Zustands dieser Zeile — jeder
