@@ -70,3 +70,31 @@ describe('pruefeZustand', () => {
     expect(pruefeZustand({ time: {}, display: { orbits: 'ja' }, visible: {} })).toEqual({});
   });
 });
+
+describe('pruefeZustand: Wertebereiche', () => {
+  it('verwirft Werte außerhalb des Regler- und Kamerabereichs feldweise', () => {
+    expect(pruefeZustand({
+      scale: { sizeScale: 5000, distanceExponent: 0.5 },
+      display: { brightness: -1, nightFill: 0.4 },
+      camera: { distance: 1e20, elevation: 3, azimuth: 1e6 },
+      time: { rateDaysPerSec: 1e9, jd: 2461294.5 },
+      cinema: { idleResumeSec: 0, seed: -12 },
+    })).toEqual({
+      scale: { distanceExponent: 0.5 },
+      display: { nightFill: 0.4 },
+      camera: { azimuth: 1e6 },
+      time: { jd: 2461294.5 },
+      cinema: { seed: -12 },
+    });
+  });
+
+  it('lässt die Grenzen selbst zu', () => {
+    const roh = { scale: { sizeScale: 1000 }, camera: { distance: 100 }, cinema: { idleResumeSec: 1 } };
+    expect(pruefeZustand(roh)).toEqual(roh);
+  });
+
+  it('prüft freezeJd nur, wenn es eine Zahl ist', () => {
+    expect(pruefeZustand({ camera: { freezeJd: null } })).toEqual({ camera: { freezeJd: null } });
+    expect(pruefeZustand({ camera: { freezeJd: -5 } })).toEqual({});
+  });
+});

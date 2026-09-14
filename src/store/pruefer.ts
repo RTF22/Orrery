@@ -36,6 +36,38 @@ const NULLBAR: Readonly<Record<string, 'number' | 'string'>> = {
 /** Records mit freien Schlüsseln und ausschließlich booleschen Werten. */
 const BOOLESCHE_RECORDS: ReadonlySet<string> = new Set(['visible', 'ui.panels']);
 
+/**
+ * Wertebereiche je Zahlpfad. Seit Etappe 2 liest der Import fremde Dateien,
+ * „endlich" genügt darum nicht mehr. Die Grenzen sind Zwillinge der Regler
+ * und der Kameraeingabe: GROESSE_MIN/MAX in ScalePanel, RATE_MAX in
+ * TimePanel, die Reglergrenzen in DisplayPanel und ScalePanel,
+ * MIN_/MAX_DISTANCE_KM und ELEVATION_GRENZE in render/camera/input.ts.
+ * store/ darf weder ui/ noch render/ importieren, deshalb stehen die Zahlen
+ * hier noch einmal; wer dort eine Grenze ändert, zieht sie hier nach. Ein
+ * Wert außerhalb fällt weg wie jedes andere ungültige Feld — nicht
+ * eingeklemmt, damit ein Eintrag aus einer Datei nie stillschweigend einen
+ * anderen Wert bekommt als den, der darin steht. Die Obergrenze der
+ * Julianischen Tage deckt das Datumsfeld ab (Jahr 275760 liegt bei rund
+ * 1,03e8).
+ */
+const BEREICHE: Readonly<Record<string, readonly [number, number]>> = {
+  'time.jd': [0, 2e8],
+  'time.rateDaysPerSec': [-365250, 365250],
+  'scale.sizeScale': [1, 1000],
+  'scale.distanceExponent': [0.35, 1],
+  'scale.sunDamping': [0.1, 1],
+  'display.brightness': [0.1, 20],
+  'display.lightFalloff': [0, 2],
+  'display.nightFill': [0, 0.5],
+  'display.lightCompensation': [0, 1],
+  'camera.distance': [1e2, 1e13],
+  'camera.elevation': [-Math.PI / 2, Math.PI / 2],
+  'camera.freezeJd': [0, 2e8],
+  'cinema.nummer': [0, 1e6],
+  'cinema.elapsedSec': [0, 1e7],
+  'cinema.idleResumeSec': [1, 3600],
+};
+
 /** Markierung für „dieses Feld fällt weg" — undefined wäre als Wert mehrdeutig. */
 const VERWORFEN = Symbol('verworfen');
 
@@ -60,7 +92,11 @@ function pruefeFeld(pfad: string, wert: unknown, standard: unknown): unknown {
   if (istPlain(standard)) return istPlain(wert) ? pruefeZweig(pfad, wert, standard) : VERWORFEN;
   const erwartet = NULLBAR[pfad] ?? typeof standard;
   if (typeof wert !== erwartet) return VERWORFEN;
-  if (typeof wert === 'number' && !Number.isFinite(wert)) return VERWORFEN;
+  if (typeof wert === 'number') {
+    if (!Number.isFinite(wert)) return VERWORFEN;
+    const bereich = BEREICHE[pfad];
+    if (bereich !== undefined && (wert < bereich[0] || wert > bereich[1])) return VERWORFEN;
+  }
   return wert;
 }
 
@@ -81,11 +117,12 @@ function pruefeZweig(pfad: string, wert: Plain, standard: Plain): Plain {
 /**
  * Feldweiser Prüfer für Zustände von außen (URL-Fragment, Ablage, Import).
  * Gleicht gegen die Form von DEFAULT_STATE ab: unbekannte Schlüssel fallen
- * weg, Typen müssen zum Standardwert passen, Zahlen endlich sein,
- * Aufzählungen in ihrer Liste liegen, das Kameraziel ein bekannter Körper
- * sein. Ungültig ist immer nur das einzelne Feld, nie der ganze Zustand —
- * ein Link aus einer älteren Version liefert so noch das Gültige. Das
- * Ergebnis ist ein Patch für fromShareable, kein vollständiger Zustand.
+ * weg, Typen müssen zum Standardwert passen, Zahlen endlich sein und
+ * innerhalb ihres Bereichs liegen (BEREICHE), Aufzählungen in ihrer Liste
+ * liegen, das Kameraziel ein bekannter Körper sein. Ungültig ist immer nur
+ * das einzelne Feld, nie der ganze Zustand — ein Link aus einer älteren
+ * Version liefert so noch das Gültige. Das Ergebnis ist ein Patch für
+ * fromShareable, kein vollständiger Zustand.
  */
 export function pruefeZustand(roh: unknown): Plain {
   return istPlain(roh) ? pruefeZweig('', roh, DEFAULT_STATE as unknown as Plain) : {};
