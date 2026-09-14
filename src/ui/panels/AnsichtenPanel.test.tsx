@@ -214,6 +214,18 @@ describe('AnsichtenPanel: exportieren und importieren', () => {
     expect(revokeObjectURL).toHaveBeenCalledWith('blob:orrery');
   });
 
+  it('exportiert schwebend gelöschte Einträge nicht', async () => {
+    const createObjectURL = vi.fn<(blob: Blob) => string>(() => 'blob:orrery');
+    Object.defineProperty(URL, 'createObjectURL', { value: createObjectURL, configurable: true });
+    Object.defineProperty(URL, 'revokeObjectURL', { value: vi.fn(), configurable: true });
+    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+    render(<AnsichtenPanel ablage={mitAnsichten([{ name: 'Saturn', state: {} }, { name: 'Erde', state: {} }])} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Löschen: Saturn' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Exportieren' }));
+    const blob = createObjectURL.mock.calls[0]?.[0] as Blob;
+    expect((JSON.parse(await blob.text()) as { ansichten: { name: string }[] }).ansichten.map((a) => a.name)).toEqual(['Erde']);
+  });
+
   it('importiert eine gültige Datei, hängt sie an und löst Namenskonflikte', async () => {
     const ablage = mitAnsichten([{ name: 'Saturn', state: {} }]);
     const { container } = render(<AnsichtenPanel ablage={ablage} />);

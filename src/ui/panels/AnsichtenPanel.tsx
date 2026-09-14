@@ -5,6 +5,7 @@ import {
   ansichtenLesen, ansichtenSchreiben, nameBereinigen, EXPORT_DATEINAME, NAME_MAX,
 } from '../../store/persist';
 import type { Ablage, Ansicht } from '../../store/persist';
+import type { Key } from '../i18n';
 import { t } from '../i18n';
 import { Panel } from './Panel';
 
@@ -24,7 +25,7 @@ interface Props {
 interface Umbenennung { alt: string; neu: string; doppelt: boolean }
 
 /** Meldung unter den Knöpfen; Schlüssel statt Text, damit ein Sprachwechsel sie mitnimmt. */
-interface Meldung { schluessel: string; anzahl: number }
+interface Meldung { schluessel: Key; anzahl: number }
 
 /**
  * Panel „Ansichten" (Entwurf §5.3): benannte Einstellungen speichern, laden,
@@ -42,7 +43,9 @@ export function AnsichtenPanel({ ablage = ablageHolen() }: Props): React.JSX.Ele
   /** Namen mit laufender Rückgängig-Frist. */
   const [schwebend, setSchwebend] = useState<ReadonlySet<string>>(() => new Set());
   const fristen = useRef(new Map<string, ReturnType<typeof setTimeout>>());
-  // Der Fristablauf sieht die Liste zum Zeitpunkt des Ablaufs, nicht die beim Klick.
+  // Der Fristablauf sieht die Liste zum Zeitpunkt des Ablaufs, nicht die beim
+  // Klick — nur Rückrufe, die nach dem Render laufen (Fristablauf, await im
+  // Import), lesen diesen Ref; synchrone Handler lesen liste direkt.
   const listeRef = useRef(liste);
   listeRef.current = liste;
 
@@ -88,6 +91,7 @@ export function AnsichtenPanel({ ablage = ablageHolen() }: Props): React.JSX.Ele
     const ansicht = ansichtErstellen(bereinigt, useStore.getState());
     aktualisiere(vorhanden ? liste.map((a) => (a.name === bereinigt ? ansicht : a)) : [...liste, ansicht]);
     setName('');
+    setUmbenennung(null);
   };
 
   const laden = (ansicht: Ansicht): void => {
@@ -127,9 +131,14 @@ export function AnsichtenPanel({ ablage = ablageHolen() }: Props): React.JSX.Ele
     setUmbenennung(null);
   };
 
+  // Schwebend gelöschte Einträge stehen zwar noch in der Ablage (die Frist
+  // läuft), gehören aber nicht mehr zur Liste — ein Export in diesem Moment
+  // soll sie nicht enthalten.
+  const exportierbar = liste.filter((a) => !schwebend.has(a.name));
+
   const exportieren = (): void => {
     setMeldung(null);
-    const url = URL.createObjectURL(new Blob([ansichtenExportieren(liste)], { type: 'application/json' }));
+    const url = URL.createObjectURL(new Blob([ansichtenExportieren(exportierbar)], { type: 'application/json' }));
     const a = document.createElement('a');
     a.href = url;
     a.download = EXPORT_DATEINAME;
@@ -263,7 +272,7 @@ export function AnsichtenPanel({ ablage = ablageHolen() }: Props): React.JSX.Ele
         )}
 
         <div className="flex flex-wrap gap-2 border-t border-white/10 pt-2">
-          <button type="button" className={KNOPF} onClick={exportieren} disabled={liste.length === 0}>
+          <button type="button" className={KNOPF} onClick={exportieren} disabled={exportierbar.length === 0}>
             {t('views.export')}
           </button>
           <button type="button" className={KNOPF} onClick={() => { dateiFeld.current?.click(); }}>

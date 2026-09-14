@@ -8,7 +8,7 @@ import {
   SCHLUESSEL_SITZUNG, SCHLUESSEL_MERKEN,
   ansichtErstellen, ansichtAnwenden, ansichtenLesen, ansichtenSchreiben,
   ansichtenExportieren, ansichtenImportieren, freierName, nameBereinigen,
-  SCHLUESSEL_ANSICHTEN, EXPORT_FORMAT,
+  SCHLUESSEL_ANSICHTEN, EXPORT_FORMAT, NAME_MAX,
 } from './persist';
 import type { Ablage, Ansicht } from './persist';
 import { ablageFake } from '../test/ablageFake';
@@ -336,5 +336,13 @@ describe('freierName und nameBereinigen', () => {
     expect(nameBereinigen(7)).toBeNull();
     expect(nameBereinigen('x'.repeat(81))).toBeNull();
     expect(nameBereinigen('x'.repeat(80))).toBe('x'.repeat(80));
+  });
+
+  it('hält den Suffix innerhalb von NAME_MAX', () => {
+    const lang = 'x'.repeat(NAME_MAX);
+    const frei = freierName(lang, new Set([lang]));
+    expect(frei.length).toBeLessThanOrEqual(NAME_MAX);
+    expect(frei.endsWith(' (2)')).toBe(true);
+    expect(nameBereinigen(frei)).toBe(frei);
   });
 });

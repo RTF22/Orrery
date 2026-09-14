@@ -12,7 +12,7 @@ import { encodePatch, fromShareable, mergePatch, toShareable } from './serialize
  */
 export type Profil = 'link' | 'sitzung' | 'ansicht';
 
-export const GESTRICHEN: Readonly<Record<Profil, readonly string[]>> = {
+const GESTRICHEN: Readonly<Record<Profil, readonly string[]>> = {
   link: ['quality', 'ui.hidden', 'ui.panels'],
   sitzung: [],
   ansicht: ['time.jd', 'time.paused', 'cinema', 'quality', 'ui'],
@@ -173,11 +173,17 @@ export function nameBereinigen(roh: unknown): string | null {
   return name.length > 0 && name.length <= NAME_MAX ? name : null;
 }
 
-/** Erster freier Name: „Mars", sonst „Mars (2)", „Mars (3)" … */
+/**
+ * Erster freier Name: „Mars", sonst „Mars (2)", „Mars (3)" … Der Kandidat
+ * bleibt innerhalb von NAME_MAX, damit der Eintrag beim nächsten Lesen nicht
+ * wegfällt — ein voller, 80 Zeichen langer Name würde mit angehängtem Suffix
+ * sonst die Grenze überschreiten und nameBereinigen läse ihn als null.
+ */
 export function freierName(name: string, vergeben: ReadonlySet<string>): string {
   if (!vergeben.has(name)) return name;
   for (let n = 2; ; n += 1) {
-    const kandidat = `${name} (${n})`;
+    const suffix = ` (${n})`;
+    const kandidat = name.slice(0, NAME_MAX - suffix.length).trimEnd() + suffix;
     if (!vergeben.has(kandidat)) return kandidat;
   }
 }

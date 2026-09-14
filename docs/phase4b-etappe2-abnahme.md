@@ -280,6 +280,8 @@ kein Fehler und keine Regression dieser Aufgabe.
 2. Der Namenssuffix „ (2)" (und höhere Zahlen bei mehrfachem Import) kann einen
    Namen über die Obergrenze von 80 Zeichen hinaus verlängern; beim nächsten Lesen
    fällt ein so verlängerter Eintrag aus dem Prüfer heraus und verschwindet.
+   Nachtrag 14.09.2026 (Nacharbeit-Commit): behoben — `freierName` kürzt den
+   Namen jetzt so, dass der Kandidat mit Suffix innerhalb von NAME_MAX bleibt.
 3. `ansichtAnwenden` setzt Felder, die eine Ansicht innerhalb ihrer eigenen Zweige
    (Maßstab, Darstellung, Kamera, Sichtbarkeit, Zeitrate) nicht nennt, auf den
    Standardwert zurück, statt sie wie im ursprünglichen Entwurfstext §4.5 (letzter

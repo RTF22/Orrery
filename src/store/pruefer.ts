@@ -48,7 +48,8 @@ const BOOLESCHE_RECORDS: ReadonlySet<string> = new Set(['visible', 'ui.panels'])
  * eingeklemmt, damit ein Eintrag aus einer Datei nie stillschweigend einen
  * anderen Wert bekommt als den, der darin steht. Die Obergrenze der
  * Julianischen Tage deckt das Datumsfeld ab (Jahr 275760 liegt bei rund
- * 1,03e8).
+ * 1,03e8). `camera.azimuth` (Winkel ohne Grenze, wickelt um) und
+ * `cinema.seed` (beliebige ganze Zahl) bleiben bewusst ohne Eintrag hier.
  */
 const BEREICHE: Readonly<Record<string, readonly [number, number]>> = {
   'time.jd': [0, 2e8],
