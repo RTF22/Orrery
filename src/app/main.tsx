@@ -8,10 +8,12 @@ import { attachCameraInput } from '../render/camera/input';
 import { startLoop } from './loop';
 import { tickCinema } from './cinema';
 import { useStore } from '../store';
-import { t, startSprache } from '../ui/i18n';
+import { t } from '../ui/i18n';
 import { App as Bedienoberflaeche } from '../ui/App';
 import type { QualityTier } from '../store/types';
 import { QUALITY_SETTINGS } from './quality';
+import { ablageHolen } from '../store/persist';
+import { sicherungStarten, startZustand } from './persistenz';
 
 /**
  * Einstiegspunkt der Anwendung.
@@ -107,9 +109,19 @@ if (wurzelElement === null) {
   throw new Error('Wurzelelement "#root" wurde nicht gefunden.');
 }
 
-// Startsprache aus dem Browser; ein geteilter Zustand (URL-Fragment, Phase
-// 4b) wird hier später als zweiter Parameter eingesetzt.
-useStore.getState().setUi({ language: startSprache(navigator.language, null) });
+// Startzustand: Fragment vor gesicherter Sitzung vor Standard, Sprache aus
+// dem Zustand oder vom Browser (app/persistenz.ts). Danach läuft die
+// gedrosselte Sicherung bis zum Schließen der Seite.
+const ablage = ablageHolen();
+useStore.getState().replaceAll(startZustand({
+  hash: window.location.hash,
+  fragmentEntfernen: () => {
+    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+  },
+  ablage,
+  navigatorLanguage: navigator.language,
+}));
+sicherungStarten(useStore, { ablage, ziel: window });
 
 createRoot(wurzelElement).render(
   <StrictMode>
