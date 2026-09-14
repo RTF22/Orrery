@@ -1,4 +1,5 @@
 import { jdToDate, dateToJd } from '../sim/time';
+import { AU_KM } from '../sim/orbit';
 import { t, locale } from './i18n';
 
 /** Ein Formatierer je Locale, beim ersten Gebrauch gebaut. */
@@ -50,3 +51,25 @@ const JD_2050 = dateToJd(new Date(Date.UTC(2050, 0, 1)));
 
 /** Außerhalb dieses Fensters sind die Bahnelemente nicht mehr belastbar. */
 export const isOutOfRange = (jd: number): boolean => jd < JD_1800 || jd > JD_2050;
+
+/**
+ * Abstand nach Größenordnung (Entwurf 4c §5.2): unter 1 Mio. km in km, sonst
+ * in Mio. km, ab 0,1 AE zusätzlich in AE. Zwei Nachkommastellen unter
+ * 10 Mio. km, danach eine.
+ */
+export function formatAbstand(km: number): string {
+  if (km < 1e6) return `${formatZahl(km, 0)} km`;
+  const mio = `${formatZahl(km / 1e6, km < 1e7 ? 2 : 1)} ${t('unit.millionKm')}`;
+  if (km < 0.1 * AU_KM) return mio;
+  return `${mio} (${formatZahl(km / AU_KM, 2)} ${t('unit.au')})`;
+}
+
+const HOCHGESTELLT = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+
+/** Masse als Mantisse mit zwei Nachkommastellen und hochgestelltem Zehnerexponenten. */
+export function formatMasse(kg: number): string {
+  const exponent = Math.floor(Math.log10(kg));
+  const mantisse = kg / 10 ** exponent;
+  const hoch = String(exponent).split('').map((z) => (z === '-' ? '⁻' : HOCHGESTELLT[Number(z)] ?? z)).join('');
+  return `${formatZahl(mantisse, 2)} · 10${hoch} kg`;
+}

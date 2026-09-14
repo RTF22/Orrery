@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { positionAt, AU_KM } from './orbit';
+import { positionAt, AU_KM, umlaufzeitTage } from './orbit';
 import { bodyIndex, getBody } from '../data/index';
 import { J2000 } from './time';
 
@@ -71,5 +71,17 @@ describe('positionAt', () => {
       const neigungGrad = Math.abs(Math.atan2(p.z, Math.hypot(p.x, p.y)) * 180 / Math.PI);
       expect(neigungGrad).toBeLessThan(8);
     }
+  });
+});
+
+describe('umlaufzeitTage (Kepler III)', () => {
+  it('liefert das siderische Jahr der Erde und den siderischen Monat', () => {
+    expect(umlaufzeitTage(bodyIndex.earth!, bodyIndex)).toBeCloseTo(365.25, 0);
+    expect(Math.abs(umlaufzeitTage(bodyIndex.earth!, bodyIndex)! - 365.25)).toBeLessThan(0.3);
+    expect(Math.abs(umlaufzeitTage(bodyIndex.moon!, bodyIndex)! - 27.32)).toBeLessThan(0.2);
+  });
+
+  it('ist für die Sonne null', () => {
+    expect(umlaufzeitTage(bodyIndex.sun!, bodyIndex)).toBeNull();
   });
 });

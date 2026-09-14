@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { formatJd, formatRate, formatZahl, isOutOfRange } from './format';
+import { formatJd, formatRate, formatZahl, formatAbstand, formatMasse, isOutOfRange } from './format';
 import { dateToJd, J2000 } from '../sim/time';
 import { setSprache } from './i18n';
 
@@ -63,5 +63,29 @@ describe('isOutOfRange', () => {
   it('warnt außerhalb', () => {
     expect(isOutOfRange(dateToJd(new Date(Date.UTC(1700, 0, 1))))).toBe(true);
     expect(isOutOfRange(dateToJd(new Date(Date.UTC(2200, 0, 1))))).toBe(true);
+  });
+});
+
+describe('formatAbstand und formatMasse', () => {
+  afterEach(() => { setSprache('de'); });
+
+  it('wählt km, Mio. km und AE nach Größenordnung', () => {
+    expect(formatAbstand(384400)).toBe('384.400 km');
+    expect(formatAbstand(5e6)).toBe('5 Mio. km');
+    expect(formatAbstand(1.234e7)).toBe('12,3 Mio. km');
+    expect(formatAbstand(149_597_870.7)).toBe('149,6 Mio. km (1 AE)');
+    expect(formatAbstand(1.4e9)).toBe('1.400 Mio. km (9,36 AE)');
+  });
+
+  it('formatiert in der englischen Locale', () => {
+    setSprache('en');
+    expect(formatAbstand(384400)).toBe('384,400 km');
+    expect(formatAbstand(149_597_870.7)).toBe('149.6 million km (1 AU)');
+  });
+
+  it('schreibt Massen als Mantisse mit hochgestelltem Exponenten', () => {
+    expect(formatMasse(5.9722e24)).toBe('5,97 · 10²⁴ kg');
+    expect(formatMasse(1.9885e30)).toBe('1,99 · 10³⁰ kg');
+    expect(formatMasse(1.0659e16)).toBe('1,07 · 10¹⁶ kg');
   });
 });

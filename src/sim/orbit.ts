@@ -151,3 +151,21 @@ export function rotationAt(body: Body, jd: number): number {
   const umdrehungen = stunden / body.physical.rotationPeriodH;
   return (body.physical.rotationAtEpochDeg * GRAD) + umdrehungen * 2 * Math.PI;
 }
+
+/** Gravitationskonstante in km³ kg⁻¹ s⁻² (CODATA 2018). */
+const G_KM3 = 6.674_30e-20;
+
+/**
+ * Siderische Umlaufzeit in Tagen aus dem dritten Keplerschen Gesetz mit der
+ * großen Halbachse zur Epoche und den Massen von Mutterkörper und Trabant —
+ * gerechnet statt tabelliert, damit der Datenblock nichts zeigt, was die
+ * Simulation nicht auch so bewegt. null für die Sonne (keine Bahn).
+ */
+export function umlaufzeitTage(body: Body, index: BodyIndex): number | null {
+  if (body.orbit === null || body.parent === null) return null;
+  const mutter = index[body.parent];
+  if (mutter === undefined) return null;
+  const aKm = body.orbit.a * AU_KM;
+  const mu = G_KM3 * (mutter.physical.massKg + body.physical.massKg);
+  return (2 * Math.PI * Math.sqrt(aKm ** 3 / mu)) / 86400;
+}
