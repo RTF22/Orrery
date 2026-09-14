@@ -32,6 +32,23 @@ const BREITE_MAX_ANTEIL = 0.6;
 const remPx = (): number =>
   (typeof document === 'undefined' ? 16 : parseFloat(getComputedStyle(document.documentElement).fontSize) || 16);
 
+/**
+ * Fensterbreite als Zustand statt einmalig beim Rendern gelesen: Die
+ * Höchstbreite des Panels hängt von ihr ab (60 % der Fensterbreite,
+ * Entwurf 4c §3.2) und muss deshalb einer Größenänderung des Fensters
+ * folgen, nicht nur dem ersten Aufruf.
+ */
+function useFensterbreite(): number | null {
+  const [breite, setBreite] = useState<number | null>(() => (typeof window === 'undefined' ? null : window.innerWidth));
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const bei = (): void => { setBreite(window.innerWidth); };
+    window.addEventListener('resize', bei);
+    return () => { window.removeEventListener('resize', bei); };
+  }, []);
+  return breite;
+}
+
 function useSchmal(): boolean {
   const abfrage = (): boolean =>
     typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia(SCHMAL_ABFRAGE).matches;
@@ -162,10 +179,19 @@ export function InfoPanel(): React.JSX.Element {
     if (neu !== undefined) setInfo({ niveau: neu });
   };
 
+  const fensterbreite = useFensterbreite();
   const breiteMax = Math.min(
     INFO_BREITE_MAX_REM,
-    typeof window === 'undefined' ? INFO_BREITE_MAX_REM : Math.floor((window.innerWidth * BREITE_MAX_ANTEIL) / remPx()),
+    fensterbreite === null ? INFO_BREITE_MAX_REM : Math.floor((fensterbreite * BREITE_MAX_ANTEIL) / remPx()),
   );
+  /**
+   * Tatsächlich dargestellte Breite: nie über die Höchstbreite hinaus, auch
+   * wenn ein aus Sitzung oder Link wiederhergestellter Store-Wert größer ist
+   * als in einem inzwischen schmaleren Fenster erlaubt. Der Store-Wert
+   * selbst bleibt unangetastet — hier wird nichts zurückgeschrieben, nur
+   * die Darstellung geklemmt.
+   */
+  const breite = Math.min(info.breiteRem, Math.max(INFO_BREITE_MIN_REM, breiteMax));
 
   if (!offen) {
     return (
@@ -185,12 +211,12 @@ export function InfoPanel(): React.JSX.Element {
     <aside
       aria-label={t('panel.info')}
       className="info-panel pointer-events-auto relative flex max-h-full flex-col rounded-lg border border-white/10 bg-slate-900/70 text-slate-100 backdrop-blur-md"
-      style={{ width: `${info.breiteRem}rem` }}
+      style={{ width: `${breite}rem` }}
     >
       {schmal ? null : (
         <Griff
           richtung="senkrecht"
-          wert={info.breiteRem}
+          wert={breite}
           min={INFO_BREITE_MIN_REM}
           max={Math.max(INFO_BREITE_MIN_REM, breiteMax)}
           schritt={1}

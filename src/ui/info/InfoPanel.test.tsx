@@ -102,6 +102,31 @@ describe('InfoPanel', () => {
     expect(useStore.getState().ui.info.teilung).toBe(0.6);
   });
 
+  it('Breite wird auf 60 % der Fensterbreite gekappt', async () => {
+    useStore.getState().setInfo({ breiteRem: 100 });
+    render(<InfoPanel />);
+    await titel('Sonne');
+    const aside = document.querySelector('aside.info-panel') as HTMLElement;
+    // jsdom-Fensterbreite 1024: floor(1024 · 0,6 / 16) = 38.
+    expect(aside.style.width).toBe('38rem');
+    const griff = screen.getByRole('separator', { name: 'Breite des Infopanels' });
+    expect(griff.getAttribute('aria-valuenow')).toBe('38');
+    expect(griff.getAttribute('aria-valuemax')).toBe('38');
+  });
+
+  it('Höchstbreite folgt dem Fenster', async () => {
+    useStore.getState().setInfo({ breiteRem: 100 });
+    render(<InfoPanel />);
+    await titel('Sonne');
+    const urspruenglich = window.innerWidth;
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 640 });
+    act(() => { window.dispatchEvent(new Event('resize')); });
+    const aside = document.querySelector('aside.info-panel') as HTMLElement;
+    // floor(640 · 0,6 / 16) = 24.
+    expect(aside.style.width).toBe('24rem');
+    Object.defineProperty(window, 'innerWidth', { configurable: true, value: urspruenglich });
+  });
+
   it('klappt zu und auf', async () => {
     render(<InfoPanel />);
     await titel('Sonne');
