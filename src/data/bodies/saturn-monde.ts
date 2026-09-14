@@ -210,7 +210,7 @@ export const saturnMonde: readonly Body[] = [
       // Helles, leicht bräunliches Eisgrau; Albedo 0,6 laut Fact Sheet.
       color: '#b8b3aa',
     },
-    info: { nameKey: 'body.mimas.name', descriptionKey: 'body.mimas.description' },
+    info: { nameKey: 'body.mimas.name' },
   },
   {
     id: 'enceladus',
@@ -249,7 +249,7 @@ export const saturnMonde: readonly Body[] = [
       // deshalb nahezu reines Weiß statt eines Grautons.
       color: '#f5f6f4',
     },
-    info: { nameKey: 'body.enceladus.name', descriptionKey: 'body.enceladus.description' },
+    info: { nameKey: 'body.enceladus.name' },
   },
   {
     id: 'tethys',
@@ -286,7 +286,7 @@ export const saturnMonde: readonly Body[] = [
       // Helles Eis, Albedo 0,8 laut Fact Sheet.
       color: '#d9d5c9',
     },
-    info: { nameKey: 'body.tethys.name', descriptionKey: 'body.tethys.description' },
+    info: { nameKey: 'body.tethys.name' },
   },
   {
     id: 'dione',
@@ -321,7 +321,7 @@ export const saturnMonde: readonly Body[] = [
       // Eisgrau, Albedo 0,7 laut Fact Sheet.
       color: '#c4c0b6',
     },
-    info: { nameKey: 'body.dione.name', descriptionKey: 'body.dione.description' },
+    info: { nameKey: 'body.dione.name' },
   },
   {
     id: 'rhea',
@@ -354,7 +354,7 @@ export const saturnMonde: readonly Body[] = [
       // Eisgrau, Albedo 0,7 laut Fact Sheet.
       color: '#c9c5bb',
     },
-    info: { nameKey: 'body.rhea.name', descriptionKey: 'body.rhea.description' },
+    info: { nameKey: 'body.rhea.name' },
   },
   {
     id: 'titan',
@@ -389,7 +389,7 @@ export const saturnMonde: readonly Body[] = [
       // Albedo 0,22 laut Fact Sheet, keine feste Oberfläche sichtbar.
       color: '#e3a857',
     },
-    info: { nameKey: 'body.titan.name', descriptionKey: 'body.titan.description' },
+    info: { nameKey: 'body.titan.name' },
   },
   {
     id: 'iapetus',
@@ -436,6 +436,6 @@ export const saturnMonde: readonly Body[] = [
       // — diese Dichotomie zeigt seit Task 11 die Textur (siehe ASSETS.md).
       color: '#7c7468',
     },
-    info: { nameKey: 'body.iapetus.name', descriptionKey: 'body.iapetus.description' },
+    info: { nameKey: 'body.iapetus.name' },
   },
 ];

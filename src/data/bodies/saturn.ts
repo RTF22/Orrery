@@ -49,5 +49,5 @@ export const saturn: Body = {
     // Alphakanal, siehe ASSETS.md, Abschnitt "Ringtextur"), Task 13.
     rings: { innerKm: 74658, outerKm: 136780, texture: 'textures/saturn/ring.png' },
   },
-  info: { nameKey: 'body.saturn.name', descriptionKey: 'body.saturn.description' },
+  info: { nameKey: 'body.saturn.name' },
 };

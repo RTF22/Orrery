@@ -34,5 +34,5 @@ export const mercury: Body = {
     textures: { albedo: 'textures/mercury/albedo.jpg' },
     color: '#8c8680',
   },
-  info: { nameKey: 'body.mercury.name', descriptionKey: 'body.mercury.description' },
+  info: { nameKey: 'body.mercury.name' },
 };

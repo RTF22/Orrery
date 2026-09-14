@@ -92,5 +92,5 @@ export const uranus: Body = {
     // gerechnet (siehe URANUS_RINGPROFIL unten).
     rings: { innerKm: 37800, outerKm: 51600, texture: '', profil: URANUS_RINGPROFIL },
   },
-  info: { nameKey: 'body.uranus.name', descriptionKey: 'body.uranus.description' },
+  info: { nameKey: 'body.uranus.name' },
 };

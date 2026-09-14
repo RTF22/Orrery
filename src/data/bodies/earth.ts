@@ -42,5 +42,5 @@ export const earth: Body = {
     // bis ziegelrot"). Linear ≈ 1,00 / 0,32 / 0,11 (Entwurf §2, §5).
     umbra: { color: '#ff9a5c' },
   },
-  info: { nameKey: 'body.earth.name', descriptionKey: 'body.earth.description' },
+  info: { nameKey: 'body.earth.name' },
 };

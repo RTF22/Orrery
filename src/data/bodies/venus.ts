@@ -40,5 +40,5 @@ export const venus: Body = {
     textures: { albedo: 'textures/venus/albedo.jpg' },
     color: '#e8c39e',
   },
-  info: { nameKey: 'body.venus.name', descriptionKey: 'body.venus.description' },
+  info: { nameKey: 'body.venus.name' },
 };

@@ -169,7 +169,7 @@ export const jupiterMonde: readonly Body[] = [
       textures: { albedo: 'textures/io/albedo.jpg' },
       color: '#d8c257',
     },
-    info: { nameKey: 'body.io.name', descriptionKey: 'body.io.description' },
+    info: { nameKey: 'body.io.name' },
   },
   {
     id: 'europa',
@@ -201,7 +201,7 @@ export const jupiterMonde: readonly Body[] = [
       textures: { albedo: 'textures/europa/albedo.jpg' },
       color: '#d9cdb0',
     },
-    info: { nameKey: 'body.europa.name', descriptionKey: 'body.europa.description' },
+    info: { nameKey: 'body.europa.name' },
   },
   {
     id: 'ganymede',
@@ -235,7 +235,7 @@ export const jupiterMonde: readonly Body[] = [
       textures: { albedo: 'textures/ganymede/albedo.jpg' },
       color: '#8a8175',
     },
-    info: { nameKey: 'body.ganymede.name', descriptionKey: 'body.ganymede.description' },
+    info: { nameKey: 'body.ganymede.name' },
   },
   {
     id: 'callisto',
@@ -267,6 +267,6 @@ export const jupiterMonde: readonly Body[] = [
       textures: { albedo: 'textures/callisto/albedo.jpg' },
       color: '#5f564c',
     },
-    info: { nameKey: 'body.callisto.name', descriptionKey: 'body.callisto.description' },
+    info: { nameKey: 'body.callisto.name' },
   },
 ];

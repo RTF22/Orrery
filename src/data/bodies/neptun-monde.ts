@@ -167,6 +167,6 @@ export const neptunMonde: readonly Body[] = [
       // Voyager 2 beobachteten „Cantaloupe"-Färbung.
       color: '#e8d4c8',
     },
-    info: { nameKey: 'body.triton.name', descriptionKey: 'body.triton.description' },
+    info: { nameKey: 'body.triton.name' },
   },
 ];

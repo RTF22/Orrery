@@ -126,7 +126,7 @@ export const marsMonde: readonly Body[] = [
       textures: { albedo: 'textures/phobos/albedo.jpg' },
       color: '#6b6259',
     },
-    info: { nameKey: 'body.phobos.name', descriptionKey: 'body.phobos.description' },
+    info: { nameKey: 'body.phobos.name' },
   },
   {
     id: 'deimos',
@@ -167,6 +167,6 @@ export const marsMonde: readonly Body[] = [
       textures: { albedo: '' },
       color: '#7a7067',
     },
-    info: { nameKey: 'body.deimos.name', descriptionKey: 'body.deimos.description' },
+    info: { nameKey: 'body.deimos.name' },
   },
 ];

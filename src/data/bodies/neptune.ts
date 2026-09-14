@@ -41,5 +41,5 @@ export const neptune: Body = {
     textures: { albedo: 'textures/neptune/albedo.jpg' },
     color: '#3b5bdb',
   },
-  info: { nameKey: 'body.neptune.name', descriptionKey: 'body.neptune.description' },
+  info: { nameKey: 'body.neptune.name' },
 };

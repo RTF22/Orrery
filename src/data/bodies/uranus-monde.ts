@@ -191,7 +191,7 @@ export const uranusMonde: readonly Body[] = [
       // Mittelhelles Eisgrau, Albedo 0,32 laut Fact Sheet.
       color: '#a8a5a0',
     },
-    info: { nameKey: 'body.miranda.name', descriptionKey: 'body.miranda.description' },
+    info: { nameKey: 'body.miranda.name' },
   },
   {
     id: 'ariel',
@@ -226,7 +226,7 @@ export const uranusMonde: readonly Body[] = [
       // Hellstes Eisgrau der fünf großen Uranusmonde, Albedo 0,39.
       color: '#c7c3ba',
     },
-    info: { nameKey: 'body.ariel.name', descriptionKey: 'body.ariel.description' },
+    info: { nameKey: 'body.ariel.name' },
   },
   {
     id: 'umbriel',
@@ -259,7 +259,7 @@ export const uranusMonde: readonly Body[] = [
       // Dunkelstes der fünf großen Uranusmonde, Albedo nur 0,21.
       color: '#6b6560',
     },
-    info: { nameKey: 'body.umbriel.name', descriptionKey: 'body.umbriel.description' },
+    info: { nameKey: 'body.umbriel.name' },
   },
   {
     id: 'titania',
@@ -292,7 +292,7 @@ export const uranusMonde: readonly Body[] = [
       // Mittleres Eisgrau, Albedo 0,27 — größter Uranusmond.
       color: '#948e84',
     },
-    info: { nameKey: 'body.titania.name', descriptionKey: 'body.titania.description' },
+    info: { nameKey: 'body.titania.name' },
   },
   {
     id: 'oberon',
@@ -326,6 +326,6 @@ export const uranusMonde: readonly Body[] = [
       // der fünf großen Uranusmonde.
       color: '#8a7f74',
     },
-    info: { nameKey: 'body.oberon.name', descriptionKey: 'body.oberon.description' },
+    info: { nameKey: 'body.oberon.name' },
   },
 ];

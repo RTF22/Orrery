@@ -28,5 +28,5 @@ export const sun: Body = {
     textures: { albedo: 'textures/sun/albedo.jpg' },
     color: '#fdb813',
   },
-  info: { nameKey: 'body.sun.name', descriptionKey: 'body.sun.description' },
+  info: { nameKey: 'body.sun.name' },
 };

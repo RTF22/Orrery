@@ -85,7 +85,7 @@ export interface Body {
   orbit: OrbitElements | null;
   physical: PhysicalData;
   appearance: Appearance;
-  info: { nameKey: string; descriptionKey: string };
+  info: { nameKey: string };
 }
 
 export type BodyIndex = Record<string, Body>;

@@ -92,7 +92,7 @@ export const zwergplaneten: readonly Body[] = [
       textures: { albedo: 'textures/ceres/albedo.jpg' },
       color: '#6e6a63',
     },
-    info: { nameKey: 'body.ceres.name', descriptionKey: 'body.ceres.description' },
+    info: { nameKey: 'body.ceres.name' },
   },
   {
     id: 'eris',
@@ -148,7 +148,7 @@ export const zwergplaneten: readonly Body[] = [
       textures: { albedo: 'textures/eris/albedo.jpg' },
       color: '#f1efe9',
     },
-    info: { nameKey: 'body.eris.name', descriptionKey: 'body.eris.description' },
+    info: { nameKey: 'body.eris.name' },
   },
   {
     id: 'haumea',
@@ -207,7 +207,7 @@ export const zwergplaneten: readonly Body[] = [
       textures: { albedo: 'textures/haumea/albedo.jpg' },
       color: '#e6e2da',
     },
-    info: { nameKey: 'body.haumea.name', descriptionKey: 'body.haumea.description' },
+    info: { nameKey: 'body.haumea.name' },
   },
   {
     id: 'makemake',
@@ -261,6 +261,6 @@ export const zwergplaneten: readonly Body[] = [
       textures: { albedo: 'textures/makemake/albedo.jpg' },
       color: '#d9a679',
     },
-    info: { nameKey: 'body.makemake.name', descriptionKey: 'body.makemake.description' },
+    info: { nameKey: 'body.makemake.name' },
   },
 ];

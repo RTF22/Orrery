@@ -142,7 +142,7 @@ export const plutoSystem: readonly Body[] = [
       textures: { albedo: 'textures/pluto/albedo.jpg' },
       color: '#d3b58f',
     },
-    info: { nameKey: 'body.pluto.name', descriptionKey: 'body.pluto.description' },
+    info: { nameKey: 'body.pluto.name' },
   },
   {
     id: 'charon',
@@ -207,6 +207,6 @@ export const plutoSystem: readonly Body[] = [
       // Ausweichfarbe, da eine einzelne Polkappe erst eine Textur zeigen kann.
       color: '#a89e94',
     },
-    info: { nameKey: 'body.charon.name', descriptionKey: 'body.charon.description' },
+    info: { nameKey: 'body.charon.name' },
   },
 ];
