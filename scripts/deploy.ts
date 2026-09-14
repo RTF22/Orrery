@@ -3,7 +3,7 @@
  *
  * Aufruf aus dem Projektstamm, nach `npm run build`:
  *   node scripts/deploy.ts             hochladen
- *   node scripts/deploy.ts --trocken   nur verbinden und Zielverzeichnis auflisten
+ *   node scripts/deploy.ts --trocken   nur verbinden und Zielverzeichnis auflisten (legt nichts an)
  *
  * Zugangsdaten stehen in `.env.local` (git-ignoriert), Vorlage in `.env.example`:
  *   DEPLOY_HOST, DEPLOY_USER, DEPLOY_PASSWORD, DEPLOY_DIR, optional DEPLOY_PORT, DEPLOY_SECURE.
@@ -102,7 +102,13 @@ async function hauptlauf(): Promise<void> {
     console.log(`Verbunden mit ${konfig.host}:${konfig.port}${konfig.secure ? ' (FTPS)' : ' (unverschlüsselt)'}`);
 
     if (trocken) {
-      await client.ensureDir(konfig.dir);
+      // Nur lesen: ensureDir würde das Zielverzeichnis anlegen.
+      try {
+        await client.cd(konfig.dir);
+      } catch {
+        console.log(`${konfig.dir} existiert noch nicht und würde beim Hochladen angelegt`);
+        return;
+      }
       const eintraege = await client.list();
       console.log(`Inhalt von ${konfig.dir}: ${eintraege.length} Einträge`);
       for (const e of eintraege) console.log(`  ${e.isDirectory ? 'd' : '-'} ${e.name}`);
