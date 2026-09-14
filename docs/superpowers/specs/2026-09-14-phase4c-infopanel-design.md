@@ -328,7 +328,9 @@ Text"). Punkt 2 bis 4 lauten seitdem:
 2. **4c-2 Grundschule komplett:** 33 fehlende Körper und alle 8 Themen (auch
    `modell`) in Deutsch und Englisch, 82 Dateien; dazu `thema:`-Verweise in rund
    zehn Körpertexten (Mond, Saturn, Uranus, Venus, Pluto, Ceres, Eris). Abnahme:
-   Auf dem Grundschul-Tab führt kein Verweis auf „kein Text".
+   Auf dem Grundschul-Tab führt kein `objekt:`- oder `thema:`-Verweis auf „kein
+   Text"; `szene:`-Verweise sind bis 4c-4 ausgenommen und werden im Protokoll
+   getrennt gezählt (Präzisierung nach der Abschlussprüfung 4c-2, Plan Ruling 12).
 3. **4c-3 Gymnasium komplett:** 33 Körper und 7 Themen in Deutsch und Englisch,
    Quellenkatalog auf rund 60 Quellen.
 4. **4c-4 Szenen:** 19 Szenen in beiden Niveaus und Sprachen (`mondfinsternis`

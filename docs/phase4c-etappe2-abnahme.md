@@ -20,6 +20,25 @@ Grundschul-Tab. Alle Abfragen liefen per `browser_run_code_unsafe` gegen
 `window.store`, das DOM und (für Schritt 4) echte Playwright-Klicks, nicht gegen
 Bildschirmfotos allein.
 
+**Nachtrag nach Abschlussprüfung (14.09.2026):** Nach dieser Abnahme wurden in
+einer Fix-Welle 15 Grundschultexte wörtlich auf den Planstand gebracht (Commit
+„Grundschultexte: Phobos-Umlauf, Dione, Makemake, Ringbreite, Verweise Haumea,
+Makemake, Rhea; Saturn neu umbrochen; Plan nachgezogen"): `objekt-phobos`
+(de/en, Umlauf statt Aufgangszahl: „umrundet ihn dreimal am Tag und geht dabei
+im Westen auf" statt „erscheint dreimal am Tag am Himmel"), `objekt-saturn`
+(de/en, neu umbrochen), `objekt-mimas` (en, „films" statt „movies"),
+`objekt-dione` (de/en, „Seite, die beim Umlauf hinten liegt"/„trailing side"
+statt Rückseite/far side), `objekt-rhea` (de/en, Verweis auf
+`objekt:iapetus`), `objekt-haumea` und `objekt-makemake` (de/en, Verweis auf
+`thema:zwergplaneten`; Makemake „gut halb so groß" statt „zwei Drittel"),
+`thema-ringe` (de/en, Ringbreite als Durchmesser: „von einem Rand zum anderen
+… über 250 000 Kilometer" statt „200 000 Kilometer breit"). Kein Programmcode
+geändert; `npx vitest run src/data/texte` blieb mit unveränderter Fallzahl
+(486) grün, eine neue Sichtprüfung war dafür nicht nötig. Schritt 5 dieses
+Protokolls (Maschineller Rundgang) und der Abschnitt „Kriterium — bewertet"
+wurden anschließend neu gemessen und unten neu gefasst; die Schritte 1 bis 4
+und 6 bis 8 sind unverändert der Stand vor der Fix-Welle.
+
 ## Schritt 1: Server und Stand
 
 `curl -s -o /dev/null -w '%{http_code}' http://localhost:5173/Orrery/` → `200`.
@@ -162,20 +181,64 @@ Hinweis. Erfüllt.
 Datenblock geklickt: Panelkopf „Grenzen des Modells", kein Hinweis „kein Text".
 Uhr danach zurück auf `jd: 2451545` (J2000) gesetzt.
 
-**Maschineller Rundgang.** Über alle 35 Körper und 8 Themen, beide Sprachen,
-wurde jeder Verweisknopf im `[role=tabpanel]`, der kein `objekt:`- oder
-externer Verweis ist (also jeder `szene:`- und `thema:`-Knopf; `quelle:`- und
-externe Verweise sind ohnehin `<a>`, keine `<button>`, siehe Schritt 4), aus
-dem Quelltext der 43 betroffenen Grundschuldateien je Sprache ermittelt (kleines
-Node-Skript gegen `src/data/texte/{de,en}/grundschule/*.md`, dieselbe
-Regel-Erkennung wie Task 7 Schritt 3) und einzeln angeklickt, mit vorherigem
-frischem Besuch der jeweiligen Ausgangskennung (`setInfo({ niveau:
-'grundschule', thema: null })`, dann `setCamera`/`setInfo({ thema })`) vor
-jedem einzelnen Klick, damit kein Knopf durch einen vorherigen Klick bereits
-verschwunden ist. Erwartungsgemäß 28 nicht-`objekt:`-Verweise je Sprache (56
-insgesamt): geprüfte Knöpfe **56**, Indexfehler (Knopftext passte nicht zur
-erwarteten Position) **0**, Sackgassen (Absatz mit „kein Text" nach dem Klick)
-**0**. Erfüllt — Kernaussage des Kriteriums dieser Etappe.
+**Maschineller Rundgang (präzisiert nach der Abschlussprüfung, Plan Ruling
+12).** Die ursprüngliche Fassung dieses Absatzes maß nur `szene:`- und
+`thema:`-Knöpfe (28 je Sprache, 56 insgesamt; `objekt:`-Knöpfe blieben
+außen vor) und meldete „Sackgassen 0". Das war eine Nichtmessung, keine
+Bestätigung: Der Hinweis `info.keinText` hängt in `InfoPanel.tsx` an der
+Variablen `frisch`, die erst wahr wird, nachdem das faule
+`import.meta.glob`-Versprechen aufgelöst hat; unmittelbar nach einem Klick
+stand der Absatz „kein Text" noch nicht im DOM, und die damalige Prüfung
+bewertete diesen Moment statt des eingeschwungenen Zustands. Von den 56
+Knöpfen jenes Laufs waren zudem 34 `szene:`-Knöpfe, davon 30 auf Szenen ohne
+Grundschultext — mit richtigem Abwarten zeigen genau diese 30 den Hinweis,
+wie die Messung unten bestätigt.
+
+Zweite, korrigierte Messung: Für jeden der 43 Grundschul-Einträge (35 Körper,
+8 Themen) je Sprache wurde jeder Verweisknopf im `[role=tabpanel]` einzeln
+angeklickt (`quelle:`- und externe Verweise sind `<a>`, keine `<button>`,
+bleiben also strukturell außen vor, siehe Schritt 4). Vor jedem Klick wurde
+der Ausgangseintrag frisch gesetzt (`setInfo({ niveau: 'grundschule', thema
+})` beziehungsweise `setCamera({ targetId })`), nach jedem Szenen-Klick das
+Kino über einen synthetischen `KeyboardEvent('keydown', { key: 'Escape' })`
+beendet (ruft denselben `stopCinema()`-Pfad wie die echte Taste) und
+`document.documentElement.requestFullscreen` für die Laufzeit durch eine
+ablehnende Funktion ersetzt, damit ein tatsächlicher Vollbildwechsel die
+Messung nicht stört. Bewertet wurde erst, nachdem Panelkopf oder Textinhalt
+sich änderten oder der Absatz von `info.keinText` erschien (Pollen alle
+30 ms, bis zu 3 s), zusätzlich mit einer Stabilisierungswartezeit vor jedem
+Reset und nach jedem erkannten Wechsel.
+
+Getrennt gezählt (beide Sprachen zusammen):
+
+**(a) `objekt:`- und `thema:`-Knöpfe: 194 geklickt (je 97 in Deutsch und
+Englisch), 0 Sackgassen.** Ein erster Durchlauf ohne Stabilisierungswartezeit
+zeigte kurzzeitig zwei falsche Treffer (`thema:gebundene-rotation` → Mond,
+`thema:achsneigung` → Venus, jeweils Deutsch), beide unmittelbar nach einem
+Szenen-Klick im selben Abschnitt; eine sofortige manuelle Einzelprüfung
+beider Ziele zeigte sofort den korrekten Text ohne jeden Hinweis, danach
+lieferte der Lauf mit Stabilisierungswartezeit für denselben Abschnitt 0
+Sackgassen. Ebenso zeigte ein Klick auf `szene:ceres-guertel` (aus
+`objekt-ceres`, Deutsch) im ersten Durchlauf fälschlich „kein Wechsel"
+erkannt und wurde als „hat Text" gezählt; eine manuelle Einzelprüfung
+bestätigte den korrekten Hinweis „kein Text", die Wiederholung mit der
+robusteren Fassung ordnete den Fall korrekt ein. Beide Artefakte sind ein
+Messproblem des Testaufbaus (siehe oben), kein Befund am Programm.
+
+**(b) `szene:`-Knöpfe: 34 geklickt (je 17 in Deutsch und Englisch), 30 zeigen
+„kein Text", 4 zeigen Text.** Die vier Treffer mit Text sind je zweimal
+`mondfinsternis`, verlinkt aus `objekt-moon.md` und `thema-finsternis.md`
+(beide Sprachen). Das ist bis 4c-4 so vorgesehen (Ruling 2, Entwurfs-Nachtrag
+§7) und zählt nicht als Sackgasse des Kriteriums dieser Etappe. Die 13
+distinkten Szenen-Kennungen ohne Grundschultext: `systemblick`,
+`merkurjagd`, `phobos-tiefflug`, `jupiter-vorbeiflug`, `enceladus-hell`,
+`titan-dunst`, `iapetus-schief`, `uranus-gekippt`, `ferne-sonne`,
+`triton-rueckwaerts`, `pluto-charon`, `ceres-guertel`, `ringdurchflug`.
+
+Erfüllt im Sinn des präzisierten Kriteriums: Kein `objekt:`- oder `thema:`-
+Verweis auf dem Grundschul-Tab führt auf „kein Text"; die 30 `szene:`-Treffer
+sind offen ausgewiesen und bis 4c-4 erwartet, nicht Teil des Kriteriums
+dieser Etappe.
 
 ## Schritt 6: Gymnasium-Tab bei Körpern ohne Text
 
@@ -230,8 +293,12 @@ Aufgabe. `git status --short` vor dem Commit dieses Protokolls weiterhin leer
 1. Gymnasium- und Hochschul-Tab zeigen bei 33 Körpern und 7 Themen noch den
    Hinweis „kein Text" (4c-3, 4c-4); insbesondere führt der Verweis
    „Bahnelemente" im Gymnasiumtext `thema-modell` bis 4c-4 auf „kein Text".
-2. Szenen haben auf dem Grundschul-Tab außer `mondfinsternis` noch keinen Text
-   (4c-4).
+2. 13 auf dem Grundschul-Tab verlinkte Szenen-Kennungen haben außer
+   `mondfinsternis` noch keinen Text (4c-4): `systemblick`, `merkurjagd`,
+   `phobos-tiefflug`, `jupiter-vorbeiflug`, `enceladus-hell`, `titan-dunst`,
+   `iapetus-schief`, `uranus-gekippt`, `ferne-sonne`, `triton-rueckwaerts`,
+   `pluto-charon`, `ceres-guertel`, `ringdurchflug` (34 Verweisstellen über
+   beide Sprachen, siehe Schritt 5).
 3. Zahlen in den Texten sind gerundete Richtwerte, die Kennzahlen stehen im
    Datenblock.
 4. Der Dateitest prüft Themenziele nur auf Existenz im Katalog, nicht auf
@@ -240,25 +307,31 @@ Aufgabe. `git status --short` vor dem Commit dieses Protokolls weiterhin leer
 ## Kriterium — bewertet
 
 Zitat aus dem Entwurf (`docs/superpowers/specs/2026-09-14-phase4c-infopanel-
-design.md`, Abschnitt 7, Nachtrag): **„4c-2 Grundschule komplett: 33 fehlende
-Körper und alle 8 Themen (auch `modell`) in Deutsch und Englisch, 82 Dateien
-… Abnahme: Auf dem Grundschul-Tab führt kein Verweis auf ‚kein Text'."** In
-der Fassung des Task-8-Auftrags: „Grundschule komplett: 35 Körper und 8
-Themen, Deutsch und Englisch, keine Sackgasse auf dem Grundschul-Tab" (beide
-Formulierungen decken sich: 33 neue plus die aus 4c-1 bereits vorhandenen
-Erde und Saturn ergeben 35).
+design.md`, Abschnitt 7, Nachtrag, Fassung nach der Abschlussprüfung): **„4c-2
+Grundschule komplett: 33 fehlende Körper und alle 8 Themen (auch `modell`) in
+Deutsch und Englisch, 82 Dateien … Abnahme: Auf dem Grundschul-Tab führt kein
+`objekt:`- oder `thema:`-Verweis auf „kein Text"; `szene:`-Verweise sind bis
+4c-4 ausgenommen und werden im Protokoll getrennt gezählt."** Der
+ursprüngliche Wortlaut „kein Verweis führt auf ‚kein Text'" war in dieser
+Etappe wörtlich unerfüllbar, weil 13 verlinkte Szenen laut Nachtrag erst in
+4c-4 einen Text bekommen, obwohl Ruling 2 die Szenenverweise schon jetzt
+verlangt; die „0 Sackgassen" des ersten Protokollstands (siehe die alte
+Fassung des Maschinellen Rundgangs in Schritt 5) waren deshalb eine
+Nichtmessung statt einer Bestätigung (Plan Ruling 12).
 
-Bewertung: erfüllt. Alle 35 Körper und alle 8 Themen zeigen in beiden Sprachen
-vollständigen, textlich stimmigen Inhalt (Schritt 3), Stichproben auf Objekt-,
-Szenen- und Quellenverweise funktionieren wie vorgesehen (Schritt 4), die im
-Entwurf benannte frühere Sackgassen-Quelle (ein `thema:`-Verweis ohne Ziel) ist
-behoben und wurde sowohl gezielt (Schritt 5, Mond/Ceres/„Grenzen des Modells")
-als auch erschöpfend maschinell über alle 56 nicht-objektbezogenen Verweise
-beider Sprachen mit 0 Treffern bestätigt (Schritt 5, maschineller Rundgang).
-Das Kriterium „4c-2 Grundschule komplett" aus dem Entwurfs-Nachtrag gilt damit
-als vollständig erfüllt. Das bereits seit 4c-1 erfüllte Kriterium „Infopanel
-mit abgeleiteten Live-Werten" bleibt unverändert erfüllt (nicht Gegenstand
-dieser Etappe).
+Bewertung: erfüllt im Sinn des präzisierten Kriteriums. Alle 35 Körper und
+alle 8 Themen zeigen in beiden Sprachen vollständigen, textlich stimmigen
+Inhalt (Schritt 3), Stichproben auf Objekt-, Szenen- und Quellenverweise
+funktionieren wie vorgesehen (Schritt 4). Der erschöpfende maschinelle
+Rundgang (Schritt 5, zweite Messung) bestätigt 0 Sackgassen über alle 194
+`objekt:`- und `thema:`-Knöpfe beider Sprachen; die 34 `szene:`-Knöpfe sind
+getrennt ausgewiesen (30 zeigen „kein Text" — bis 4c-4 so vorgesehen, kein
+Kriteriumsverstoß —, 4 zeigen den vorhandenen Text zu `mondfinsternis`). Das
+präzisierte Kriterium „4c-2 Grundschule komplett" gilt damit als erfüllt; die
+noch offene Reichweite bis 4c-4 (Szenentexte) steht ausgewiesen im Protokoll,
+statt verschwiegen zu werden. Das bereits seit 4c-1 erfüllte Kriterium
+„Infopanel mit abgeleiteten Live-Werten" bleibt unverändert erfüllt (nicht
+Gegenstand dieser Etappe).
 
 ## Commit-Prüfung
 
