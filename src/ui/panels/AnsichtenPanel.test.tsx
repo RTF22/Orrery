@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
 import { AnsichtenPanel } from './AnsichtenPanel';
 import { useStore, DEFAULT_STATE } from '../../store';
-import { SCHLUESSEL_ANSICHTEN } from '../../store/persist';
+import { SCHLUESSEL_ANSICHTEN, EXPORT_FORMAT } from '../../store/persist';
 import type { Ansicht } from '../../store/persist';
 import { setSprache } from '../i18n';
 import { ablageFake } from '../../test/ablageFake';
@@ -173,5 +173,80 @@ describe('AnsichtenPanel: löschen mit Rückgängig', () => {
     act(() => { vi.advanceTimersByTime(6000); });
     expect(gespeichert(ablage)).toEqual([{ name: 'Saturn', state: { display: { orbits: false } } }]);
     expect(screen.getByRole('button', { name: 'Ansicht laden: Saturn' })).toBeTruthy();
+  });
+});
+
+describe('AnsichtenPanel: exportieren und importieren', () => {
+  const dateiFeld = (container: HTMLElement): HTMLInputElement =>
+    container.querySelector('input[type="file"]') as HTMLInputElement;
+
+  const exportDatei = (ansichten: unknown): File =>
+    new File([JSON.stringify({ format: EXPORT_FORMAT, version: 1, ansichten })], 'a.json', { type: 'application/json' });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    // jsdom kennt keine Blob-URLs; die Stubs aus dem Export-Test wieder entfernen.
+    Reflect.deleteProperty(URL, 'createObjectURL');
+    Reflect.deleteProperty(URL, 'revokeObjectURL');
+  });
+
+  it('Exportieren ist ohne Ansichten deaktiviert', () => {
+    render(<AnsichtenPanel ablage={ablageFake()} />);
+    expect((screen.getByRole('button', { name: 'Exportieren' }) as HTMLButtonElement).disabled).toBe(true);
+  });
+
+  it('exportiert die Liste als JSON-Datei mit Umschlag über einen Download-Link', async () => {
+    const createObjectURL = vi.fn<(blob: Blob) => string>(() => 'blob:orrery');
+    const revokeObjectURL = vi.fn();
+    Object.defineProperty(URL, 'createObjectURL', { value: createObjectURL, configurable: true });
+    Object.defineProperty(URL, 'revokeObjectURL', { value: revokeObjectURL, configurable: true });
+    let dateiname = '';
+    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) {
+      dateiname = this.download;
+    });
+    render(<AnsichtenPanel ablage={mitAnsichten([{ name: 'Saturn', state: { scale: { sizeScale: 7 } } }])} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Exportieren' }));
+    expect(dateiname).toBe('orrery-ansichten.json');
+    const blob = createObjectURL.mock.calls[0]?.[0] as Blob;
+    expect(JSON.parse(await blob.text())).toEqual({
+      format: EXPORT_FORMAT, version: 1, ansichten: [{ name: 'Saturn', state: { scale: { sizeScale: 7 } } }],
+    });
+    expect(revokeObjectURL).toHaveBeenCalledWith('blob:orrery');
+  });
+
+  it('importiert eine gültige Datei, hängt sie an und löst Namenskonflikte', async () => {
+    const ablage = mitAnsichten([{ name: 'Saturn', state: {} }]);
+    const { container } = render(<AnsichtenPanel ablage={ablage} />);
+    const datei = exportDatei([{ name: 'Saturn', state: {} }, { name: 'Erde', state: { display: { orbits: false } } }]);
+    fireEvent.change(dateiFeld(container), { target: { files: [datei] } });
+    await waitFor(() => { expect(screen.getByRole('button', { name: 'Ansicht laden: Erde' })).toBeTruthy(); });
+    expect(gespeichert(ablage).map((a) => a.name)).toEqual(['Saturn', 'Saturn (2)', 'Erde']);
+    expect(screen.getByRole('status').textContent).toBe('');
+  });
+
+  it('meldet eine fremde Datei und übernimmt nichts', async () => {
+    const ablage = mitAnsichten([{ name: 'Saturn', state: {} }]);
+    const { container } = render(<AnsichtenPanel ablage={ablage} />);
+    fireEvent.change(dateiFeld(container), { target: { files: [new File(['kein json'], 'x.json')] } });
+    await waitFor(() => { expect(screen.getByRole('status').textContent).toBe('Datei ist kein Ansichten-Export'); });
+    expect(gespeichert(ablage).map((a) => a.name)).toEqual(['Saturn']);
+  });
+
+  it('meldet eine Datei ohne gültigen Eintrag', async () => {
+    const { container } = render(<AnsichtenPanel ablage={ablageFake()} />);
+    fireEvent.change(dateiFeld(container), { target: { files: [exportDatei([{ name: '', state: {} }])] } });
+    await waitFor(() => { expect(screen.getByRole('status').textContent).toBe('Datei enthält keine gültige Ansicht'); });
+    expect(screen.getByText('Noch keine Ansichten gespeichert.')).toBeTruthy();
+  });
+
+  it('nennt die Zahl der verworfenen Einträge; die Meldung geht beim nächsten Erfolg', async () => {
+    const ablage = ablageFake();
+    const { container } = render(<AnsichtenPanel ablage={ablage} />);
+    fireEvent.change(dateiFeld(container), { target: { files: [exportDatei([{ name: 'Erde', state: {} }, { name: '', state: {} }, 7])] } });
+    await waitFor(() => { expect(screen.getByRole('status').textContent).toBe('Verworfene Einträge: 2'); });
+    expect(gespeichert(ablage).map((a) => a.name)).toEqual(['Erde']);
+    fireEvent.change(namensfeld(), { target: { value: 'Mars' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Speichern' }));
+    expect(screen.getByRole('status').textContent).toBe('');
   });
 });

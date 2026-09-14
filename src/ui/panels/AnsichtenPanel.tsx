@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useStore } from '../../store';
 import {
-  ablageHolen, ansichtAnwenden, ansichtErstellen, ansichtenLesen, ansichtenSchreiben,
-  nameBereinigen, NAME_MAX,
+  ablageHolen, ansichtAnwenden, ansichtErstellen, ansichtenExportieren, ansichtenImportieren,
+  ansichtenLesen, ansichtenSchreiben, nameBereinigen, EXPORT_DATEINAME, NAME_MAX,
 } from '../../store/persist';
 import type { Ablage, Ansicht } from '../../store/persist';
 import { t } from '../i18n';
@@ -23,13 +23,16 @@ interface Props {
 /** Laufendes Umbenennen einer Zeile; `doppelt` markiert einen abgelehnten Namen. */
 interface Umbenennung { alt: string; neu: string; doppelt: boolean }
 
+/** Meldung unter den Knöpfen; Schlüssel statt Text, damit ein Sprachwechsel sie mitnimmt. */
+interface Meldung { schluessel: string; anzahl: number }
+
 /**
  * Panel „Ansichten" (Entwurf §5.3): benannte Einstellungen speichern, laden,
- * umbenennen und löschen (fünf Sekunden Rückgängig). Die Liste lebt als
- * React-Zustand hier und wird bei jeder Änderung in die Ablage geschrieben;
- * sie geht nicht durch den Store, weil sie weder im Link noch in der Sitzung
- * mitreisen darf. Ein Löschen schreibt erst beim Ablauf der Frist — bis
- * dahin steht der Eintrag noch in der Ablage.
+ * umbenennen und löschen (fünf Sekunden Rückgängig), als JSON-Datei exportieren
+ * und importieren. Die Liste lebt als React-Zustand hier und wird bei jeder
+ * Änderung in die Ablage geschrieben; sie geht nicht durch den Store, weil sie
+ * weder im Link noch in der Sitzung mitreisen darf. Ein Löschen schreibt erst
+ * beim Ablauf der Frist — bis dahin steht der Eintrag noch in der Ablage.
  */
 export function AnsichtenPanel({ ablage = ablageHolen() }: Props): React.JSX.Element {
   const replaceAll = useStore((s) => s.replaceAll);
@@ -42,6 +45,9 @@ export function AnsichtenPanel({ ablage = ablageHolen() }: Props): React.JSX.Ele
   // Der Fristablauf sieht die Liste zum Zeitpunkt des Ablaufs, nicht die beim Klick.
   const listeRef = useRef(liste);
   listeRef.current = liste;
+
+  const [meldung, setMeldung] = useState<Meldung | null>(null);
+  const dateiFeld = useRef<HTMLInputElement | null>(null);
 
   // Laufende Fristen überleben das Panel nicht (etwa beim Ausblenden der
   // Oberfläche mit H); der Eintrag bleibt dann in der Ablage.
@@ -78,16 +84,19 @@ export function AnsichtenPanel({ ablage = ablageHolen() }: Props): React.JSX.Ele
   const speichern = (): void => {
     if (bereinigt === '') return;
     fristAbbrechen(bereinigt);
+    setMeldung(null);
     const ansicht = ansichtErstellen(bereinigt, useStore.getState());
     aktualisiere(vorhanden ? liste.map((a) => (a.name === bereinigt ? ansicht : a)) : [...liste, ansicht]);
     setName('');
   };
 
   const laden = (ansicht: Ansicht): void => {
+    setMeldung(null);
     replaceAll(ansichtAnwenden(useStore.getState(), ansicht));
   };
 
   const loeschen = (n: string): void => {
+    setMeldung(null);
     setSchwebend((s) => new Set(s).add(n));
     fristen.current.set(n, setTimeout(() => {
       fristen.current.delete(n);
@@ -113,8 +122,32 @@ export function AnsichtenPanel({ ablage = ablageHolen() }: Props): React.JSX.Ele
       setUmbenennung({ ...umbenennung, doppelt: true });
       return;
     }
+    setMeldung(null);
     aktualisiere(liste.map((a) => (a.name === umbenennung.alt ? { ...a, name: neu } : a)));
     setUmbenennung(null);
+  };
+
+  const exportieren = (): void => {
+    setMeldung(null);
+    const url = URL.createObjectURL(new Blob([ansichtenExportieren(liste)], { type: 'application/json' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = EXPORT_DATEINAME;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importieren = async (datei: File): Promise<void> => {
+    const ergebnis = ansichtenImportieren(await datei.text(), listeRef.current);
+    if (ergebnis.fehler !== null) {
+      setMeldung({
+        schluessel: ergebnis.fehler === 'umschlag' ? 'views.importInvalid' : 'views.importEmpty',
+        anzahl: 0,
+      });
+      return;
+    }
+    aktualisiere(ergebnis.liste);
+    setMeldung(ergebnis.verworfen > 0 ? { schluessel: 'views.importSkipped', anzahl: ergebnis.verworfen } : null);
   };
 
   /** Eine Zeile: gewöhnlich, im Umbenennen oder mit laufender Rückgängig-Frist. */
@@ -220,6 +253,31 @@ export function AnsichtenPanel({ ablage = ablageHolen() }: Props): React.JSX.Ele
             ))}
           </ul>
         )}
+
+        <div className="flex flex-wrap gap-2 border-t border-white/10 pt-2">
+          <button type="button" className={KNOPF} onClick={exportieren} disabled={liste.length === 0}>
+            {t('views.export')}
+          </button>
+          <button type="button" className={KNOPF} onClick={() => { dateiFeld.current?.click(); }}>
+            {t('views.import')}
+          </button>
+          <input
+            ref={dateiFeld}
+            type="file"
+            accept=".json,application/json"
+            hidden
+            onChange={(e) => {
+              const datei = e.target.files?.[0];
+              // Zurücksetzen, damit dieselbe Datei erneut gewählt werden kann.
+              e.target.value = '';
+              if (datei !== undefined) void importieren(datei);
+            }}
+          />
+        </div>
+        {/* Immer im Baum, damit die Live-Region beim ersten Text schon existiert. */}
+        <p role="status" className="m-0 text-amber-200">
+          {meldung === null ? '' : t(meldung.schluessel).replace('{n}', String(meldung.anzahl))}
+        </p>
       </div>
     </Panel>
   );
