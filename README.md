@@ -34,10 +34,14 @@ Phase 3 der Roadmap ist abgeschlossen. Enthalten sind:
 - Getrennte Maßstabsregler für Größe und Abstand mit rastenden Presets.
 - Kino-Modus mit Szenen-Playlist, Director und Dauerlauf-Nachweis.
 - Englische Oberfläche mit Umschaltung zur Laufzeit (Kopfzeile, Taste L).
+- Geteilte Links (`#p=…`), automatische Sitzungswiederherstellung (abschaltbar)
+  und Zurücksetzen in der Kopfzeile.
 
-Phase 4a (Englisch, Sprachumschaltung zur Laufzeit) ist abgeschlossen. Offen sind
-Phase 4b (Presets, URL-Sharing, Sitzungswiederherstellung), 4c (Infopanel) und
-Phase 5 (Ambient-Sound, Qualitätsstufen, Texturkompression, Veröffentlichung).
+Phase 4a (Englisch, Sprachumschaltung zur Laufzeit) und Phase 4b Etappe 1
+(URL-Sharing, Sitzungswiederherstellung, Zurücksetzen) sind abgeschlossen. Offen
+sind Phase 4b Etappe 2 (Ansichten speichern, laden, exportieren, importieren),
+4c (Infopanel) und Phase 5 (Ambient-Sound, Qualitätsstufen, Texturkompression,
+Veröffentlichung).
 
 ## Entwicklung
 
