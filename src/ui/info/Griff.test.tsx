@@ -40,6 +40,15 @@ describe('Griff', () => {
     expect(fremd).toBe(true);
   });
 
+  it('Anfassen setzt den Fokus, damit Pfeiltasten sofort wirken', () => {
+    render(breite(() => {}));
+    const griff = screen.getByRole('separator');
+    expect(document.activeElement).not.toBe(griff);
+    fireEvent.pointerDown(griff, { clientX: 400, pointerId: 1, button: 0 });
+    expect(document.activeElement).toBe(griff);
+    fireEvent.pointerUp(griff, { pointerId: 1 });
+  });
+
   it('Ziehen rechnet den Versatz über ausVersatz um und klemmt an den Grenzen', () => {
     const onWert = vi.fn();
     render(breite(onWert));

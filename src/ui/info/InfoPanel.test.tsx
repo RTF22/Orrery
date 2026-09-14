@@ -114,6 +114,13 @@ describe('InfoPanel', () => {
     expect(griff.getAttribute('aria-valuemax')).toBe('38');
   });
 
+  it('füllt die Fensterhöhe (Griff-Höhe hängt daran)', async () => {
+    render(<InfoPanel />);
+    await titel('Sonne');
+    const aside = document.querySelector('aside.info-panel') as HTMLElement;
+    expect(aside.className.split(' ')).toContain('h-full');
+  });
+
   it('Höchstbreite folgt dem Fenster', async () => {
     useStore.getState().setInfo({ breiteRem: 100 });
     render(<InfoPanel />);

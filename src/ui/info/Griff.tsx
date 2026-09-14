@@ -36,7 +36,12 @@ export function Griff(p: Props): React.JSX.Element {
     // dann, wenn der Zeiger über die Canvas wandert.
     e.currentTarget.setPointerCapture?.(e.pointerId);
     start.current = { pos: position(e), wert: p.wert };
+    // preventDefault unterdrückt auch die Standard-Fokussierung eines
+    // <div tabIndex={0}> durch den Klick (sonst würde hier die
+    // Textauswahl starten) — deshalb den Fokus von Hand setzen, damit
+    // Pfeiltasten sofort nach dem Anfassen wirken, ohne extra Tab.
     e.preventDefault();
+    e.currentTarget.focus();
   };
   const onPointerMove = (e: PointerEvent<HTMLDivElement>): void => {
     if (start.current === null) return;

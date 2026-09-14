@@ -1,15 +1,17 @@
 # Phase 4c — Etappe 1: Abnahmeprotokoll
 
 **Datum:** 14.09.2026
-**Stand:** Zweig `infopanel`, Commit `816a4e6` (Task 1 bis 11 der Etappe 1: Textkatalog
-und -lader, Namensauflöser, Datenblock mit Live-Werten, Markdown-Renderer mit
-Verweisen, Quellenkatalog und -karten, Infopanel-Gerüst mit Niveau-Tabs, Breiten-
-und Teilungsgriff, Taste `I`, Ausweichtitel bis zum Laden, Höchstbreite 60 % der
-Fensterbreite).
+**Stand:** Zweig `infopanel`, Basis-Commit `83f7b05` (Task 1 bis 11 der Etappe 1:
+Textkatalog und -lader, Namensauflöser, Datenblock mit Live-Werten, Markdown-
+Renderer mit Verweisen, Quellenkatalog und -karten, Infopanel-Gerüst mit
+Niveau-Tabs, Breiten- und Teilungsgriff, Taste `I`, Ausweichtitel bis zum Laden,
+Höchstbreite 60 % der Fensterbreite), ergänzt um eine Fix-Runde (siehe Abschnitt
+„Während der Abnahme behoben") im selben Commit wie dieser Protokollstand.
 **Prüfumgebung:** Windows 11, Desktop mit RTX 4060, Chromium (Playwright),
 Vite-Entwicklungsserver auf `http://localhost:5173/Orrery/`, Browserfenster
-1280 × 800 CSS-Pixel (für Schritt 10 kurzzeitig 400 × 900), Qualitätsstufe nach
-jeder Navigation per `window.store.setState` auf `high` gesetzt.
+1280 × 800 CSS-Pixel (für Schritt 10 kurzzeitig 400 × 900, für die Nachmessung
+der Fix-Runde kurzzeitig 2560 × 1440), Qualitätsstufe nach jeder Navigation per
+`window.store.setState` auf `high` gesetzt.
 
 Geprüft wird das Infopanel-Gerüst der Etappe 1: Grundzustand, animierte
 Kamerafahrt beim Fokuswechsel, Verweise (Themen, Objekte, externe Quellen),
@@ -181,9 +183,9 @@ früheren Aufgabe (`.playwright-mcp/info-panel.png`, Zeitstempel 15:57, älter a
 diese Sitzung) zeigt exakt dieselbe kleine, rund 190 px hohe Spalte oben rechts
 — das Verhalten ist also reproduzierbar und keine Eigenart dieses Prüflaufs.
 Unter 900 px Fensterbreite (Schritt 10) bekommt der Bogen dagegen eine explizite
-Höhe (45 % des Fensters) und ist davon nicht betroffen. Als Befund unten unter
-„Bekannte Unschärfen" aufgenommen; keine Änderung am Code vorgenommen, da
-außerhalb des Auftragsumfangs dieser Aufgabe.
+Höhe (45 % des Fensters) und ist davon nicht betroffen. Diese Werte sind der
+Stand **vor** dem Fix (siehe „Während der Abnahme behoben" unten für die
+Nachmessung nach der Korrektur).
 
 ## Schritt 7: Tastatur
 
@@ -196,8 +198,8 @@ einem einfachen `<div tabIndex={0}>` auch die Standard-Fokussierung durch den
 Klick unterdrückt — ein Browser-Verhalten, keine Store-Frage. Mit
 programmatischem `.focus()` (z. B. über Tab-Navigation erreichbar) funktioniert
 die Tastatursteuerung wie vorgesehen: `ArrowLeft` erhöhte `breiteRem` von
-`36,5` auf `37,5` (Schritt `1`). Als Befund unten vermerkt: Ein Griff lässt
-sich per Maus ziehen, aber nicht per Klick fokussieren — nur per Tab.
+`36,5` auf `37,5` (Schritt `1`). Diese Werte sind der Stand **vor** dem Fix
+(siehe „Während der Abnahme behoben" unten für die Nachmessung).
 
 **Niveau-Tabs.** Klick auf den aktiven Tab („Gymnasium", ein echtes
 `<button role="tab">`) fokussierte ihn korrekt
@@ -313,19 +315,25 @@ davon `warning` oder `error`. 0 Fehler, 0 Warnungen. Erfüllt.
 
 ## Lint, Test, Build
 
+Erstlauf (vor der Fix-Runde, 1122 Tests) und Lauf nach der Fix-Runde (1124
+Tests, zwei neue Tests für die Fokus- und Höhen-Korrektur, siehe „Während der
+Abnahme behoben") waren beide grün; es folgen die Schlusszeilen nach der
+Fix-Runde:
+
 ```
+$ npx vitest run
+ Test Files  76 passed (76)
+      Tests  1124 passed (1124)
+   Start at  16:46:09
+   Duration  9.97s (environment 46%, setup 27%, tests 17%, transform 5%, import 5%, worker 1%)
+
+$ npx tsc -b
+(Exit-Code 0, keine Ausgabe)
+
 $ npm run lint
 npm notice run orrery@0.0.0 lint
 npm notice run eslint .
 (Exit-Code 0, keine Ausgabe von eslint)
-
-$ npm test
-npm notice run orrery@0.0.0 test
-npm notice run vitest run
- Test Files  76 passed (76)
-      Tests  1122 passed (1122)
-   Start at  16:37:41
-   Duration  9.97s (environment 46%, setup 27%, tests 18%, transform 5%, import 4%, worker 1%)
 
 $ npm run build
 npm notice run orrery@0.0.0 build
@@ -334,14 +342,77 @@ npm notice run tsc -b && vite build
 dist/index.html                    0.60 kB │ gzip:   0.38 kB
 dist/assets/index-bYYUErPs.css    20.88 kB │ gzip:   4.80 kB
 … (Text-/Szenen-Häppchen als eigene Chunks, je unter 2 kB)
-dist/assets/index-B_ve7os6.js  1 167.87 kB │ gzip: 313.22 kB
-✓ built in 487ms
+dist/assets/index-DFb686mw.js  1 167.90 kB │ gzip: 313.23 kB
+✓ built in 468ms
 (!) Some chunks are larger than 500 kB after minification …
 ```
 
 Der Hinweis auf die Chunk-Größe ist derselbe allgemeine Vite-Hinweis wie in
 früheren Etappen, kein Fehler und keine Regression dieser Aufgabe.
-`git status --short` nach allen drei Läufen weiterhin leer.
+`git status --short` nach allen Läufen weiterhin leer.
+
+## Während der Abnahme behoben
+
+Die beiden folgenden, in Schritt 6 und 7 gefundenen Befunde waren echte
+Mängel und wurden noch in dieser Abnahme behoben (Ruling des Controllers),
+statt nur als Unschärfe stehen zu bleiben. Die „vor dem Fix"-Werte stehen
+weiterhin unverändert in Schritt 6 und 7 oben; hier folgt jeweils die
+Nachmessung nach der Korrektur.
+
+1. **Desktop-Spalte ohne wirksame Höhe (Schritt 6).** Ursache: Die
+   Wurzelebene der Oberfläche (`src/ui/App.tsx`) verwendet `items-start`
+   statt einer Höhenvorgabe für ihre Spalten; `aside.info-panel` selbst
+   setzte nur `max-h-full`, keine eigene Höhe, wodurch die inneren
+   Flex-Segmente keinen freien Raum zum Verteilen hatten (siehe Befund oben).
+   **Fix:** `src/ui/info/InfoPanel.tsx` — die Klasse `h-full` ergänzt
+   (zusätzlich zu `max-h-full`); die Wurzelebene bleibt bei `items-start`
+   (die linke Spalte soll weiter oben ausgerichtet bleiben), sie hat aber
+   über `fixed inset-0` selbst eine feste Höhe, gegen die `h-full` prozentual
+   auflöst. Test `src/ui/info/InfoPanel.test.tsx` („füllt die Fensterhöhe
+   (Griff-Höhe hängt daran)"): prüft, dass `aside.info-panel` die Klasse
+   `h-full` trägt — zuerst RED (Klasse fehlte), nach dem Fix GREEN.
+
+   Nachmessung im Browser bei 2560 × 1440 (Desktop RTX 4060, echte
+   Neuladung über `about:blank`, Qualitätsstufe `high`):
+   `document.querySelector('aside.info-panel').getBoundingClientRect().height`
+   → `1416` px = `1440 − 2 · 12` px (Wurzelpolster `p-3` = 12 px oben und
+   unten) — wie erwartet. Bei Standardwerten (`teilung: 0.65`,
+   `breiteRem: 24`) passt der Gymnasial- **und** der Hochschultext (dort in
+   dieser Etappe identisch mit dem Gymnasialtext samt Hinweis, siehe Bekannte
+   Unschärfe 4) der Erde bei dieser großen Fensterhöhe vollständig ins obere
+   Segment: `[role=tabpanel].scrollHeight` (`865` px) = `.clientHeight`
+   (`865` px), kein Überlauf — nachvollziehbar bei 865 px verfügbarer Höhe
+   für wenige Absätze Text. Um den Rollmechanismus selbst zu belegen, wurde
+   `teilung` probeweise auf `0,3` verkleinert (kleineres oberes Segment, wie
+   es ein Ziehen des Teilungsgriffs nach oben bewirken würde):
+   `scrollHeight: 626` px `> clientHeight: 408` px — echter Überlauf, das
+   Segment rollt jetzt unabhängig, wie vorgesehen. Vor dem Fix war die
+   `tabpanel`-Höhe unabhängig von `teilung` immer bei rund 16 px eingefroren
+   (siehe Schritt 6 oben); jetzt reagiert sie auf `teilung` und die
+   Fensterhöhe wie im Entwurf beschrieben.
+
+2. **Breiten- und Teilungsgriff per Klick nicht fokussierbar (Schritt 7).**
+   Ursache: `onPointerDown` in `src/ui/info/Griff.tsx` rief unbedingt
+   `e.preventDefault()` auf, was bei den `<div role="separator"
+   tabIndex={0}>`-Griffen auch die Standard-Fokussierung durch einen
+   einfachen Mausklick unterdrückte. **Fix:** direkt nach `preventDefault()`
+   `e.currentTarget.focus()` aufgerufen (mit Kommentar, warum der Fokus von
+   Hand gesetzt werden muss). Test `src/ui/info/Griff.test.tsx` („Anfassen
+   setzt den Fokus, damit Pfeiltasten sofort wirken"): nach
+   `fireEvent.pointerDown` ist `document.activeElement` der Griff — zuerst
+   RED (Fokus blieb auf `<body>`), nach dem Fix GREEN.
+
+   Nachmessung im Browser (Wiederholung von Schritt 7, Breitengriff): Klick
+   auf den Griff (`page.mouse.click` auf seine Mitte, kein Ziehen) setzt den
+   Fokus jetzt korrekt (`document.activeElement.getAttribute('aria-label')`
+   → `Breite des Infopanels`); anschließendes `ArrowLeft` erhöhte
+   `ui.info.breiteRem` von `24` auf `25` (Schritt `1`, wie erwartet) — vor
+   dem Fix blieb der Fokus beim Klick auf `<body>` und die Pfeiltaste wirkte
+   nicht.
+
+Beide Fixes wurden bei 2560 × 1440 auf dem Desktop mit RTX 4060 geprüft, die
+Konsole blieb dabei frei von Fehlern und Warnungen (`browser_console_messages`,
+Stufe `warning`: 0/0).
 
 ## Bekannte Unschärfen
 
@@ -352,29 +423,6 @@ früheren Etappen, kein Fehler und keine Regression dieser Aufgabe.
    „zu", weil der Standard dort nicht gespeichert ist.
 4. Hochschul-Tab zeigt den Gymnasialtext mit Hinweis.
 5. Mobilprüfung nur als Sichtkontrolle bei 400 px.
-6. **Desktop-Spalte ohne wirksame Höhe (neu, Schritt 6):** Bei Fensterbreiten
-   ≥ 900 px berechnet sich `aside.info-panel` nur auf rund 190 px Höhe statt auf
-   die verfügbare Fensterhöhe, weil die Wurzelebene der Oberfläche
-   (`src/ui/App.tsx`) `items-start` statt einer Höhenvorgabe für ihre Spalten
-   verwendet und die inneren Flex-Segmente (`tabpanel`/Quellen, je
-   `flex: … 1 0px`) dadurch keinen freien Raum zum Verteilen haben. Sichtbare
-   Folge: Das obere Textsegment ist auf rund 16 px (nur Innenabstand)
-   zusammengedrückt, das untere Quellen-Segment bleibt bei seiner
-   Mindesthöhe (96 px) stehen; der Teilungsgriff ändert `ui.info.teilung`
-   im Store korrekt, ohne sichtbare Wirkung. Reproduzierbar, auch anhand eines
-   älteren, vor dieser Sitzung entstandenen Screenshots
-   (`.playwright-mcp/info-panel.png`) bestätigt. Der schmale Bogen (< 900 px)
-   ist nicht betroffen, da er eine eigene, feste Höhe (45 % des Fensters)
-   bekommt. Nicht behoben, da außerhalb des Auftragsumfangs dieser Aufgabe.
-7. **Breiten- und Teilungsgriff per Klick nicht fokussierbar (neu, Schritt 7):**
-   `Griff.tsx` ruft in `onPointerDown` unbedingt `e.preventDefault()` auf, was
-   bei den beiden `<div role="separator" tabIndex={0}>`-Griffen auch die
-   Standard-Fokussierung durch einen einfachen Mausklick unterdrückt. Ziehen
-   mit der Maus funktioniert unverändert, Pfeiltasten funktionieren nach Fokus
-   über Tab-Navigation oder programmatisches `.focus()` einwandfrei — nur der
-   naheliegende Weg „klicken, dann Pfeiltaste" (ohne zu ziehen) erreicht den
-   Griff nicht. Nicht behoben, da außerhalb des Auftragsumfangs dieser
-   Aufgabe.
 
 ## Kriterium aus dem Gesamtentwurf — bewertet
 
@@ -393,12 +441,12 @@ Teilungsgriff lassen sich mit Maus und Tastatur bedienen und wirken auf den
 Store korrekt (Schritt 6, 7), Link und Sitzung geben Niveau beziehungsweise
 Niveau und Breite zuverlässig wieder (Schritt 9), die Darstellung bricht bei
 400 px nicht ab (Schritt 10), die Konsole blieb frei von Fehlern und Warnungen
-(Schritt 11). Zwei in dieser Prüfung neu gefundene Layout-/Bedienbarkeits-
-Einschränkungen (Bekannte Unschärfen 6 und 7 — die Desktop-Spalte nutzt die
-verfügbare Höhe nicht, die Griffe sind per Klick nicht fokussierbar) mindern
-die Bedienqualität, verhindern aber nicht, dass abgeleitete Live-Werte
-angezeigt und aktualisiert werden; das Kriterium selbst gilt damit als
-erfüllt, die beiden Befunde bleiben als offene Nacharbeit vermerkt.
+(Schritt 11). Zwei in dieser Prüfung gefundene Layout-/Bedienbarkeits-
+Einschränkungen (die Desktop-Spalte nutzte die verfügbare Höhe nicht, die
+Griffe waren per Klick nicht fokussierbar) minderten zunächst die
+Bedienqualität, ohne die Anzeige und Aktualisierung der Live-Werte selbst zu
+verhindern; beide wurden noch in dieser Abnahme behoben (Abschnitt „Während
+der Abnahme behoben"). Das Kriterium gilt damit vollständig als erfüllt.
 
 ## Abweichungen vom Plan
 
@@ -422,13 +470,19 @@ Bekannten Unschärfen):
 
 ## Commit-Prüfung
 
+Erster Abnahme-Commit (`"Abnahme 4c Etappe 1: Infopanel-Gerüst"`, vom
+Controller später mit einem Korrektur-Nachfolgecommit zu `83f7b05`
+zusammengefasst) und die Fix-Runde dieses Nachtrags
+(`"Infopanel: Spalte füllt die Fensterhöhe, Griffe nehmen beim Anfassen den
+Fokus; Abnahme nachgezogen"`) wurden jeweils gleich geprüft:
+
 ```
-git add docs/phase4c-etappe1-abnahme.md README.md
-git commit -m "Abnahme 4c Etappe 1: Infopanel-Gerüst"
+git add …
+git commit -m "…"
 git log --format=%B -1 | grep -ci 'co-authored\|session'
 ```
 
-Ergebnis der letzten Zeile: `0`. Zusätzlich gegen die beiden nicht zu
-nennenden Namen aus der Vorgabe geprüft (ebenfalls `0` Treffer) sowie
-`git ls-files -z | xargs -0 grep -liE …` gegen dieselben beiden Namen über das
-gesamte Repository — leer.
+Ergebnis der letzten Zeile jeweils: `0`. Zusätzlich gegen die beiden nicht zu
+nennenden Namen aus der Vorgabe geprüft (ebenfalls `0` Treffer je Commit)
+sowie `git ls-files -z | xargs -0 grep -liE …` gegen dieselben beiden Namen
+über das gesamte Repository — leer.

@@ -210,7 +210,7 @@ export function InfoPanel(): React.JSX.Element {
   return (
     <aside
       aria-label={t('panel.info')}
-      className="info-panel pointer-events-auto relative flex max-h-full flex-col rounded-lg border border-white/10 bg-slate-900/70 text-slate-100 backdrop-blur-md"
+      className="info-panel pointer-events-auto relative flex h-full max-h-full flex-col rounded-lg border border-white/10 bg-slate-900/70 text-slate-100 backdrop-blur-md"
       style={{ width: `${breite}rem` }}
     >
       {schmal ? null : (
