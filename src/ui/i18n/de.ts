@@ -208,4 +208,6 @@ export const de = {
   'info.modellgrenzen': 'Grenzen des Modells',
   'info.neuerTab': 'öffnet neuen Tab',
   'info.keineQuellen': 'Keine Quellen zu diesem Text.',
+  'info.griff.breite': 'Breite des Infopanels',
+  'info.griff.teilung': 'Teilung zwischen Text und Quellen',
 } as const;

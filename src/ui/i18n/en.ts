@@ -206,4 +206,6 @@ export const en: Record<Key, string> = {
   'info.modellgrenzen': 'Limits of the model',
   'info.neuerTab': 'opens in a new tab',
   'info.keineQuellen': 'No sources for this text.',
+  'info.griff.breite': 'Width of the info panel',
+  'info.griff.teilung': 'Split between text and sources',
 };
