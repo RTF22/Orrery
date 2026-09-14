@@ -1,6 +1,8 @@
 import { DEFAULT_STATE } from './index';
 import { SCALE_PRESETS } from '../sim/scale';
 import { bodyIndex } from '../data';
+import { istThema, NIVEAUS } from '../data/themen';
+import { INFO_BREITE_MAX_REM, INFO_BREITE_MIN_REM, INFO_TEILUNG_MAX, INFO_TEILUNG_MIN } from './types';
 
 export type Plain = Record<string, unknown>;
 
@@ -25,12 +27,14 @@ const AUFZAEHLUNGEN: Readonly<Record<string, readonly string[]>> = {
   'quality.tier': ['auto', 'low', 'medium', 'high'],
   'ui.language': ['de', 'en'],
   'scale.preset': Object.keys(SCALE_PRESETS),
+  'ui.info.niveau': NIVEAUS,
 };
 
 /** Felder, die null sein dürfen, mit dem Typ des Nicht-null-Falls. */
 const NULLBAR: Readonly<Record<string, 'number' | 'string'>> = {
   'camera.freezeJd': 'number',
   'scale.preset': 'string',
+  'ui.info.thema': 'string',
 };
 
 /** Records mit freien Schlüsseln und ausschließlich booleschen Werten. */
@@ -67,6 +71,8 @@ const BEREICHE: Readonly<Record<string, readonly [number, number]>> = {
   'cinema.nummer': [0, 1e6],
   'cinema.elapsedSec': [0, 1e7],
   'cinema.idleResumeSec': [1, 3600],
+  'ui.info.breiteRem': [INFO_BREITE_MIN_REM, INFO_BREITE_MAX_REM],
+  'ui.info.teilung': [INFO_TEILUNG_MIN, INFO_TEILUNG_MAX],
 };
 
 /** Markierung für „dieses Feld fällt weg" — undefined wäre als Wert mehrdeutig. */
@@ -89,6 +95,9 @@ function pruefeFeld(pfad: string, wert: unknown, standard: unknown): unknown {
   }
   if (pfad === 'camera.targetId') {
     return typeof wert === 'string' && Object.hasOwn(bodyIndex, wert) ? wert : VERWORFEN;
+  }
+  if (pfad === 'ui.info.thema') {
+    return typeof wert === 'string' && istThema(wert) ? wert : VERWORFEN;
   }
   if (istPlain(standard)) return istPlain(wert) ? pruefeZweig(pfad, wert, standard) : VERWORFEN;
   const erwartet = NULLBAR[pfad] ?? typeof standard;

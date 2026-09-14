@@ -37,7 +37,12 @@ export const DEFAULT_STATE: AppState = {
   },
   visible: {},
   quality: { tier: 'auto' },
-  ui: { hidden: false, panels: { time: true, scale: true, camera: true, tree: true }, language: 'de' },
+  ui: {
+    hidden: false,
+    panels: { time: true, scale: true, camera: true, tree: true },
+    language: 'de',
+    info: { niveau: 'gymnasium', breiteRem: 24, teilung: 0.65, thema: null },
+  },
 };
 
 interface Actions {
@@ -46,6 +51,7 @@ interface Actions {
   setDisplay(patch: Partial<AppState['display']>): void;
   setCamera(patch: Partial<AppState['camera']>): void;
   setUi(patch: Partial<AppState['ui']>): void;
+  setInfo(patch: Partial<AppState['ui']['info']>): void;
   setCinema(patch: Partial<AppState['cinema']>): void;
   toggleVisible(id: string): void;
   replaceAll(state: AppState): void;
@@ -63,6 +69,7 @@ export const useStore = create<AppState & Actions>((set) => ({
   setDisplay: (p) => set((s) => ({ display: { ...s.display, ...p } })),
   setCamera: (p) => set((s) => ({ camera: { ...s.camera, ...p } })),
   setUi: (p) => set((s) => ({ ui: { ...s.ui, ...p } })),
+  setInfo: (p) => set((s) => ({ ui: { ...s.ui, info: { ...s.ui.info, ...p } } })),
   setCinema: (p) => set((s) => ({ cinema: { ...s.cinema, ...p } })),
   // Blendet aus, indem der Schlüssel auf `false` gesetzt wird; blendet wieder
   // ein, indem der Schlüssel vollständig entfernt wird. `visible` enthält so

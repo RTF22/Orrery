@@ -98,3 +98,20 @@ describe('pruefeZustand: Wertebereiche', () => {
     expect(pruefeZustand({ camera: { freezeJd: -5 } })).toEqual({});
   });
 });
+
+describe('pruefeZustand: ui.info', () => {
+  it('nimmt Niveau, Breite, Teilung und ein bekanntes Thema', () => {
+    expect(pruefeZustand({
+      ui: { info: { niveau: 'hochschule', breiteRem: 30, teilung: 0.5, thema: 'modell' } },
+    })).toEqual({ ui: { info: { niveau: 'hochschule', breiteRem: 30, teilung: 0.5, thema: 'modell' } } });
+  });
+
+  it('verwirft unbekanntes Niveau, Werte außerhalb der Bereiche und unbekannte Themen feldweise', () => {
+    expect(pruefeZustand({
+      ui: { info: { niveau: 'kita', breiteRem: 5, teilung: 1.5, thema: 'gibt-es-nicht' } },
+    })).toEqual({});
+    expect(pruefeZustand({ ui: { info: { thema: null, breiteRem: 18 } } }))
+      .toEqual({ ui: { info: { thema: null, breiteRem: 18 } } });
+    expect(pruefeZustand({ ui: { info: { thema: 7 } } })).toEqual({});
+  });
+});

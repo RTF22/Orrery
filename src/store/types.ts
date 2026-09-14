@@ -1,5 +1,18 @@
+import type { Niveau } from '../data/themen';
+
 export type CameraMode = 'free' | 'attached' | 'follow' | 'cinema';
 export type QualityTier = 'auto' | 'low' | 'medium' | 'high';
+
+/**
+ * Grenzen des Infopanels (Entwurf 4c §3.2, §4.6). Zwillinge der Griffe in
+ * ui/info/Griff.tsx und der Bereiche in store/pruefer.ts. Die Obergrenze
+ * der Breite ist absichtlich weit; die wirksame Obergrenze (60 % der
+ * Fensterbreite) rechnet das Panel selbst aus.
+ */
+export const INFO_BREITE_MIN_REM = 18;
+export const INFO_BREITE_MAX_REM = 200;
+export const INFO_TEILUNG_MIN = 0.2;
+export const INFO_TEILUNG_MAX = 0.9;
 
 /**
  * Der gesamte einstellbare Zustand der Anwendung — eine einzige serialisierbare
@@ -59,5 +72,12 @@ export interface AppState {
     panels: Record<string, boolean>;
     /** Muss mit `Sprache` in ui/i18n/index.ts übereinstimmen; i18n.test.ts prüft die Tabellen. */
     language: 'de' | 'en';
+    /**
+     * Infopanel (Entwurf 4c §4.6): Niveaustufe der Texte, Breite der
+     * rechten Spalte in rem, Anteil des oberen Segments (0,2 bis 0,9) und
+     * ein per Verweis gewähltes Thema, das bis zum nächsten Ziel- oder
+     * Szenenwechsel den Text stellt.
+     */
+    info: { niveau: Niveau; breiteRem: number; teilung: number; thema: string | null };
   };
 }

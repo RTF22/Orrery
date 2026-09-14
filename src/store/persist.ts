@@ -13,7 +13,9 @@ import { encodePatch, fromShareable, mergePatch, toShareable } from './serialize
 export type Profil = 'link' | 'sitzung' | 'ansicht';
 
 const GESTRICHEN: Readonly<Record<Profil, readonly string[]>> = {
-  link: ['quality', 'ui.hidden', 'ui.panels'],
+  // Breite und Teilung hängen am Bildschirm, das Thema an der Sitzung
+  // (Entwurf 4c §4.6); nur das Niveau reist im Link mit.
+  link: ['quality', 'ui.hidden', 'ui.panels', 'ui.info.breiteRem', 'ui.info.teilung', 'ui.info.thema'],
   sitzung: [],
   ansicht: ['time.jd', 'time.paused', 'cinema', 'quality', 'ui'],
 };
@@ -50,11 +52,16 @@ export function linkErzeugen(state: AppState, ort: { origin: string; pathname: s
   return `${ort.origin}${ort.pathname}${FRAGMENT_PRAEFIX}${encodePatch(patchFuer(state, 'link'))}`;
 }
 
-/** Standardzustand, aber Sprache und Qualitätsstufe des aktuellen Zustands bleiben. */
+/**
+ * Standardzustand, aber Sprache, Qualitätsstufe und die Vorlieben des
+ * Infopanels (Niveau, Breite, Teilung) des aktuellen Zustands bleiben; ein
+ * gewähltes Thema fällt weg wie jede andere Ansichtseinstellung.
+ */
 export function zurueckgesetzt(aktuell: AppState): AppState {
   const s = structuredClone(DEFAULT_STATE);
   s.ui.language = aktuell.ui.language;
   s.quality.tier = aktuell.quality.tier;
+  s.ui.info = { ...aktuell.ui.info, thema: null };
   return s;
 }
 

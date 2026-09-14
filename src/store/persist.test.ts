@@ -346,3 +346,21 @@ describe('freierName und nameBereinigen', () => {
     expect(nameBereinigen(frei)).toBe(frei);
   });
 });
+
+describe('ui.info in den Profilen', () => {
+  it('link behält das Niveau, streicht Breite, Teilung und Thema', () => {
+    expect(filtereProfil({
+      ui: { info: { niveau: 'grundschule', breiteRem: 30, teilung: 0.4, thema: 'modell' } },
+    }, 'link')).toEqual({ ui: { info: { niveau: 'grundschule' } } });
+    expect(filtereProfil({ ui: { info: { breiteRem: 30 } } }, 'link')).toEqual({});
+  });
+
+  it('zurueckgesetzt behält Niveau, Breite und Teilung, löscht das Thema', () => {
+    const aktuell = structuredClone(DEFAULT_STATE);
+    aktuell.ui.info = { niveau: 'hochschule', breiteRem: 40, teilung: 0.3, thema: 'modell' };
+    aktuell.scale.sizeScale = 3;
+    const s = zurueckgesetzt(aktuell);
+    expect(s.ui.info).toEqual({ niveau: 'hochschule', breiteRem: 40, teilung: 0.3, thema: null });
+    expect(s.scale.sizeScale).toBe(DEFAULT_STATE.scale.sizeScale);
+  });
+});

@@ -162,4 +162,12 @@ export const en: Record<Key, string> = {
   'views.importInvalid': 'File is not a views export',
   'views.importEmpty': 'File contains no valid view',
   'views.importSkipped': 'Discarded entries: {n}',
+  'thema.finsternis.title': 'Eclipses',
+  'thema.ringe.title': 'Ring systems',
+  'thema.gebundene-rotation.title': 'Tidal locking',
+  'thema.kirkwood-luecken.title': 'Kirkwood gaps',
+  'thema.achsneigung.title': 'Axial tilt',
+  'thema.zwergplaneten.title': 'Dwarf planets',
+  'thema.bahnelemente.title': 'Orbital elements',
+  'thema.modell.title': 'Limits of the model',
 };

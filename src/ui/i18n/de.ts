@@ -164,4 +164,12 @@ export const de = {
   'views.importInvalid': 'Datei ist kein Ansichten-Export',
   'views.importEmpty': 'Datei enthält keine gültige Ansicht',
   'views.importSkipped': 'Verworfene Einträge: {n}',
+  'thema.finsternis.title': 'Finsternisse',
+  'thema.ringe.title': 'Ringsysteme',
+  'thema.gebundene-rotation.title': 'Gebundene Rotation',
+  'thema.kirkwood-luecken.title': 'Kirkwood-Lücken',
+  'thema.achsneigung.title': 'Achsneigung',
+  'thema.zwergplaneten.title': 'Zwergplaneten',
+  'thema.bahnelemente.title': 'Bahnelemente',
+  'thema.modell.title': 'Grenzen des Modells',
 } as const;
