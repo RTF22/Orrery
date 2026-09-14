@@ -138,7 +138,15 @@ export function AnsichtenPanel({ ablage = ablageHolen() }: Props): React.JSX.Ele
   };
 
   const importieren = async (datei: File): Promise<void> => {
-    const ergebnis = ansichtenImportieren(await datei.text(), listeRef.current);
+    let text: string;
+    try {
+      text = await datei.text();
+    } catch {
+      // Datei nach der Wahl nicht mehr lesbar: wie eine fremde Datei behandeln.
+      setMeldung({ schluessel: 'views.importInvalid', anzahl: 0 });
+      return;
+    }
+    const ergebnis = ansichtenImportieren(text, listeRef.current);
     if (ergebnis.fehler !== null) {
       setMeldung({
         schluessel: ergebnis.fehler === 'umschlag' ? 'views.importInvalid' : 'views.importEmpty',

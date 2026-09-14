@@ -249,4 +249,14 @@ describe('AnsichtenPanel: exportieren und importieren', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Speichern' }));
     expect(screen.getByRole('status').textContent).toBe('');
   });
+
+  it('meldet eine nicht lesbare Datei wie eine fremde', async () => {
+    const ablage = mitAnsichten([{ name: 'Saturn', state: {} }]);
+    const { container } = render(<AnsichtenPanel ablage={ablage} />);
+    const datei = new File(['x'], 'x.json');
+    vi.spyOn(datei, 'text').mockRejectedValue(new Error('nicht lesbar'));
+    fireEvent.change(dateiFeld(container), { target: { files: [datei] } });
+    await waitFor(() => { expect(screen.getByRole('status').textContent).toBe('Datei ist kein Ansichten-Export'); });
+    expect(gespeichert(ablage).map((a) => a.name)).toEqual(['Saturn']);
+  });
 });
