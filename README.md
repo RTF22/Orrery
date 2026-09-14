@@ -36,12 +36,14 @@ Phase 3 der Roadmap ist abgeschlossen. Enthalten sind:
 - Englische Oberfläche mit Umschaltung zur Laufzeit (Kopfzeile, Taste L).
 - Geteilte Links (`#p=…`), automatische Sitzungswiederherstellung (abschaltbar)
   und Zurücksetzen in der Kopfzeile.
+- Benannte Ansichten: speichern, laden, umbenennen, löschen mit Rückgängig, als
+  JSON exportieren und importieren.
 
-Phase 4a (Englisch, Sprachumschaltung zur Laufzeit) und Phase 4b Etappe 1
-(URL-Sharing, Sitzungswiederherstellung, Zurücksetzen) sind abgeschlossen. Offen
-sind Phase 4b Etappe 2 (Ansichten speichern, laden, exportieren, importieren),
-4c (Infopanel) und Phase 5 (Ambient-Sound, Qualitätsstufen, Texturkompression,
-Veröffentlichung).
+Phase 4a (Englisch, Sprachumschaltung zur Laufzeit) und Phase 4b (URL-Sharing,
+Sitzungswiederherstellung und Zurücksetzen in Etappe 1; benannte Ansichten
+speichern, laden, exportieren und importieren in Etappe 2) sind abgeschlossen.
+Offen sind 4c (Infopanel) und Phase 5 (Ambient-Sound, Qualitätsstufen,
+Texturkompression, Veröffentlichung).
 
 ## Entwicklung
 
