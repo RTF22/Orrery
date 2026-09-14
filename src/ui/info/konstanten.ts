@@ -1,0 +1,37 @@
+/**
+ * Konstanten und reine Hilfsfunktionen rund um das Infopanel — bewusst ohne
+ * jeden Import (auch nicht aus `./InfoPanel`), damit `ui/shortcuts` sie
+ * nutzen kann, ohne die Komponente zu importieren (Fund der Abschlussprüfung
+ * von Etappe 1: Taste I und `InfoPanel.tsx` erwarteten sonst zwei
+ * unterschiedliche Standardwerte für dieselbe Frage „ist das Panel offen?").
+ */
+
+/** Schlüssel in ui.panels; anders als die anderen Panels ohne Standardeintrag (siehe infoOffen). */
+export const INFO_PANEL = 'info';
+
+/**
+ * Unterhalb wird die Spalte zum Bogen von unten (Entwurf 4c §3.4). Zwilling
+ * der Medienabfrage `@media (max-width: 899px)` in `src/index.css` — beide
+ * Stellen gehören zusammen und werden nur gemeinsam geändert.
+ */
+export const SCHMAL_ABFRAGE = '(max-width: 899px)';
+
+/**
+ * Gilt der Bildschirm als schmal? Ohne `window`/`matchMedia` (serverseitig,
+ * ältere Testumgebungen) gilt „nicht schmal" als sicherer Rückfall.
+ */
+export function istSchmal(): boolean {
+  return typeof window !== 'undefined'
+    && typeof window.matchMedia === 'function'
+    && window.matchMedia(SCHMAL_ABFRAGE).matches;
+}
+
+/**
+ * Ist das Infopanel offen? Ohne gespeicherten Wert gilt es auf breiten
+ * Bildschirmen als offen, auf schmalen als zu (Entwurf 4c §3.4) — dieselbe
+ * Regel für die Taste I (`ui/shortcuts/useShortcuts.ts`) wie für die
+ * Komponente selbst (`InfoPanel.tsx`).
+ */
+export function infoOffen(panels: Record<string, boolean>, schmal: boolean): boolean {
+  return panels[INFO_PANEL] ?? !schmal;
+}

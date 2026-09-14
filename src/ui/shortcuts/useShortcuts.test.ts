@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { handleShortcut, useShortcuts, SHORTCUTS_PANEL } from './useShortcuts';
 import { useStore, DEFAULT_STATE } from '../../store';
@@ -115,5 +115,19 @@ describe('handleShortcut', () => {
     expect(useStore.getState().ui.panels.info).toBe(false);
     handleShortcut('i');
     expect(useStore.getState().ui.panels.info).toBe(true);
+  });
+
+  it('öffnet das Infopanel auf schmalen Bildschirmen beim ersten Druck auf I', () => {
+    // Ohne gespeicherten Wert gilt das Panel auf schmalen Bildschirmen als
+    // zu (siehe infoOffen in ui/info/konstanten.ts); der erste Druck muss es
+    // also öffnen, nicht wie auf breiten Bildschirmen schließen.
+    const matchMedia = vi.fn((abfrage: string) => ({ abfrage, matches: true }));
+    vi.stubGlobal('matchMedia', matchMedia);
+    try {
+      expect(handleShortcut('i')).toBe(true);
+      expect(useStore.getState().ui.panels.info).toBe(true);
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });

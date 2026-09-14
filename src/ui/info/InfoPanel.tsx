@@ -19,11 +19,14 @@ import { Datenblock, VERWEIS_KNOPF } from './Datenblock';
 import { Quellenkarten } from './Quellenkarten';
 import { Griff } from './Griff';
 import { verweisAusfuehren } from './verweisAusfuehren';
+import { INFO_PANEL, SCHMAL_ABFRAGE, infoOffen } from './konstanten';
 
-/** Schlüssel in ui.panels; anders als die anderen Panels ohne Standardeintrag (siehe useSchmal). */
-export const INFO_PANEL = 'info';
-/** Unterhalb wird die Spalte zum Bogen von unten (Entwurf 4c §3.4). */
-export const SCHMAL_ABFRAGE = '(max-width: 899px)';
+// Re-Export: Bestehende Importstellen (u. a. Tests) holen die beiden
+// Konstanten weiterhin von hier; die eigentliche Definition liegt aber
+// importfrei in ./konstanten, damit ui/shortcuts sie nutzen kann, ohne
+// diese Komponente zu importieren.
+export { INFO_PANEL, SCHMAL_ABFRAGE };
+
 /** So lange bleibt eine Quellenkarte nach einem Verweis hervorgehoben. */
 const HERVORHEBUNG_MS = 1500;
 /** Höchstbreite als Anteil der Fensterbreite. */
@@ -109,7 +112,7 @@ export function InfoPanel(): React.JSX.Element {
   const setUi = useStore((s) => s.setUi);
   const panels = useStore((s) => s.ui.panels);
   const schmal = useSchmal();
-  const offen = panels[INFO_PANEL] ?? !schmal;
+  const offen = infoOffen(panels, schmal);
   const schluessel = useStore((s) => textSchluessel(aktuellerText(s)));
   const basis = useStore(grundlage);
   const kennung = useMemo<TextKennung>(() => {
@@ -128,9 +131,17 @@ export function InfoPanel(): React.JSX.Element {
   const [anzeige, setAnzeige] = useState<Anzeige | null>(null);
   useEffect(() => {
     let aktuell = true;
-    void ladeMitAusweich(language, info.niveau, kennung).then((geladen) => {
-      if (aktuell) setAnzeige({ schluessel, niveau: info.niveau, sprache: language, geladen });
-    });
+    void ladeMitAusweich(language, info.niveau, kennung)
+      .then((geladen) => {
+        if (aktuell) setAnzeige({ schluessel, niveau: info.niveau, sprache: language, geladen });
+      })
+      .catch(() => {
+        // Der faule Import (import.meta.glob-Ladefunktion) kann ablehnen —
+        // etwa wenn der Chunk nach einem Redeploy nicht mehr existiert oder
+        // das Netz mitten im Laden abbricht. Dann gilt „kein Text" wie bei
+        // einer fehlenden Datei, statt einer unbehandelten Ablehnung.
+        if (aktuell) setAnzeige({ schluessel, niveau: info.niveau, sprache: language, geladen: null });
+      });
     return () => { aktuell = false; };
   }, [schluessel, kennung, info.niveau, language]);
 
@@ -166,7 +177,11 @@ export function InfoPanel(): React.JSX.Element {
   );
   const body = kennung.art === 'objekt' ? bodyIndex[kennung.kennung] : undefined;
   const hinweise: string[] = [];
-  if (anzeige !== null && geladen === null) hinweise.push('info.keinText');
+  // frisch statt anzeige !== null: Während eines Wechsels (neue Kennung,
+  // neues Niveau oder neue Sprache) beschreibt der alte Anzeigestand sonst
+  // fälschlich den neuen — der Hinweis würde kurz den Stand des VORIGEN
+  // Ziels zeigen.
+  if (frisch && geladen === null) hinweise.push('info.keinText');
   if (geladen !== null && info.niveau === 'hochschule' && geladen.niveau !== 'hochschule') hinweise.push('info.hochschuleFolgt');
   if (geladen !== null && geladen.sprache !== language) hinweise.push('info.nichtUebersetzt');
 

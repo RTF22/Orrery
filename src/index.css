@@ -40,7 +40,9 @@ html, body, #root { height: 100%; margin: 0; background: #05070d; }
 .zeiger-aus, .zeiger-aus * { cursor: none !important; }
 
 /* Infopanel: rechte Spalte; unter 900 px ein Bogen von unten mit voller
-   Breite (Entwurf 4c §3.4). Die Breite kommt sonst aus dem Store. */
+   Breite (Entwurf 4c §3.4). Die Breite kommt sonst aus dem Store.
+   899px ist ein Zwilling von SCHMAL_ABFRAGE in src/ui/info/konstanten.ts —
+   beide Stellen nur gemeinsam ändern. */
 .info-reiter { writing-mode: vertical-rl; }
 @media (max-width: 899px) {
   .info-panel {

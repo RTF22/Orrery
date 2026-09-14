@@ -126,12 +126,15 @@ describe('InfoPanel', () => {
     render(<InfoPanel />);
     await titel('Sonne');
     const urspruenglich = window.innerWidth;
-    Object.defineProperty(window, 'innerWidth', { configurable: true, value: 640 });
-    act(() => { window.dispatchEvent(new Event('resize')); });
-    const aside = document.querySelector('aside.info-panel') as HTMLElement;
-    // floor(640 · 0,6 / 16) = 24.
-    expect(aside.style.width).toBe('24rem');
-    Object.defineProperty(window, 'innerWidth', { configurable: true, value: urspruenglich });
+    try {
+      Object.defineProperty(window, 'innerWidth', { configurable: true, value: 640 });
+      act(() => { window.dispatchEvent(new Event('resize')); });
+      const aside = document.querySelector('aside.info-panel') as HTMLElement;
+      // floor(640 · 0,6 / 16) = 24.
+      expect(aside.style.width).toBe('24rem');
+    } finally {
+      Object.defineProperty(window, 'innerWidth', { configurable: true, value: urspruenglich });
+    }
   });
 
   it('klappt zu und auf', async () => {

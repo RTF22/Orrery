@@ -315,17 +315,19 @@ davon `warning` oder `error`. 0 Fehler, 0 Warnungen. Erfüllt.
 
 ## Lint, Test, Build
 
-Erstlauf (vor der Fix-Runde, 1122 Tests) und Lauf nach der Fix-Runde (1124
-Tests, zwei neue Tests für die Fokus- und Höhen-Korrektur, siehe „Während der
-Abnahme behoben") waren beide grün; es folgen die Schlusszeilen nach der
-Fix-Runde:
+Drei Läufe insgesamt, alle grün: der Erstlauf vor jeder Fix-Runde (1122
+Tests), der Lauf nach der ersten Fix-Runde (1124 Tests, zwei neue Tests für
+die Fokus- und Höhen-Korrektur) und der Lauf nach der zweiten Fix-Welle aus
+der Abschlussprüfung des gesamten Branches (1126 Tests, zwei weitere neue
+Tests für Taste I und den Ladefehler; siehe „Während der Abnahme behoben").
+Es folgen die Schlusszeilen nach der zweiten Fix-Welle, dem aktuellen Stand:
 
 ```
 $ npx vitest run
- Test Files  76 passed (76)
-      Tests  1124 passed (1124)
-   Start at  16:46:09
-   Duration  9.97s (environment 46%, setup 27%, tests 17%, transform 5%, import 5%, worker 1%)
+ Test Files  77 passed (77)
+      Tests  1126 passed (1126)
+   Start at  17:25:11
+   Duration  9.69s (environment 46%, setup 26%, tests 17%, transform 5%, import 4%, worker 1%)
 
 $ npx tsc -b
 (Exit-Code 0, keine Ausgabe)
@@ -338,18 +340,19 @@ npm notice run eslint .
 $ npm run build
 npm notice run orrery@0.0.0 build
 npm notice run tsc -b && vite build
-✓ 138 modules transformed.
+✓ 139 modules transformed.
 dist/index.html                    0.60 kB │ gzip:   0.38 kB
 dist/assets/index-bYYUErPs.css    20.88 kB │ gzip:   4.80 kB
 … (Text-/Szenen-Häppchen als eigene Chunks, je unter 2 kB)
-dist/assets/index-DFb686mw.js  1 167.90 kB │ gzip: 313.23 kB
-✓ built in 468ms
+dist/assets/index-BZbmnsxO.js  1 168.12 kB │ gzip: 313.27 kB
+✓ built in 355ms
 (!) Some chunks are larger than 500 kB after minification …
 ```
 
 Der Hinweis auf die Chunk-Größe ist derselbe allgemeine Vite-Hinweis wie in
 früheren Etappen, kein Fehler und keine Regression dieser Aufgabe.
-`git status --short` nach allen Läufen weiterhin leer.
+`git status --short` nach allen Läufen weiterhin leer (nach dem jeweiligen
+Commit).
 
 ## Während der Abnahme behoben
 
@@ -414,15 +417,57 @@ Beide Fixes wurden bei 2560 × 1440 auf dem Desktop mit RTX 4060 geprüft, die
 Konsole blieb dabei frei von Fehlern und Warnungen (`browser_console_messages`,
 Stufe `warning`: 0/0).
 
+3. **Taste `I` auf schmalen Bildschirmen beim ersten Druck wirkungslos.**
+   Anders als die beiden Befunde oben stammt dieser nicht aus den Schritten
+   dieses Protokolls, sondern aus der Abschlussprüfung des gesamten Branches
+   (nach diesem Abnahme-Commit, vor dem Zusammenführen), und wurde in einer
+   eigenen Fix-Welle im selben Commit wie dieser Nachtrag behoben. Ursache:
+   `src/ui/shortcuts/useShortcuts.ts` und `src/ui/info/InfoPanel.tsx` legten
+   für „ist das Panel ohne gespeicherten Wert offen?" zwei unterschiedliche
+   Standardwerte fest — die Taste ging immer von „offen" aus, das Panel
+   selbst auf schmalen Bildschirmen von „zu"; der erste Druck auf schmalen
+   Bildschirmen schloss dadurch ein ohnehin schon zu geltendes Panel, statt
+   es zu öffnen. **Fix:** neues, importfreies Modul `src/ui/info/konstanten.ts`
+   mit der gemeinsamen Funktion `infoOffen` (und `istSchmal`, `INFO_PANEL`,
+   `SCHMAL_ABFRAGE`); `InfoPanel.tsx` importiert und re-exportiert
+   `INFO_PANEL`/`SCHMAL_ABFRAGE` von dort, damit bestehende Importstellen
+   gültig bleiben, und nutzt `infoOffen` selbst; `useShortcuts.ts` importiert
+   nur noch aus diesem Modul, nicht mehr aus der Komponente. Test
+   `src/ui/shortcuts/useShortcuts.test.ts` („öffnet das Infopanel auf schmalen
+   Bildschirmen beim ersten Druck auf I", `window.matchMedia` gestubbt auf
+   „schmal"): zuerst RED (erster Druck schloss statt zu öffnen), nach dem Fix
+   GREEN; der bestehende Test ohne Stub (jsdom ohne `matchMedia`) blieb
+   unverändert grün.
+
+   In derselben Fix-Welle, mit je einem Satz: Das faule Laden des Infotexts
+   (`ladeMitAusweich`) bekam ein `.catch`, das bei einer abgelehnten
+   Ladefunktion (fehlender Chunk nach einem Redeploy, Netzabbruch) den Hinweis
+   „kein Text" zeigt statt eine unbehandelte Ablehnung zu hinterlassen (Test
+   `src/ui/info/InfoPanel.laden.test.tsx` mit `../../data/texte` per
+   `vi.mock`/`vi.importActual` teilweise ersetzt, zuerst RED durch Timeout und
+   eine von Vitest gemeldete unbehandelte Ablehnung, danach GREEN). Die
+   Hinweiszeile „kein Text" prüft jetzt `frisch` statt nur `anzeige !== null`,
+   damit sie während eines Wechsels von Kennung, Niveau oder Sprache nicht
+   kurz den Stand des vorigen Ziels zeigt (bestehende Tests decken das
+   unverändert ab). Das neue Modul trägt außerdem am `SCHMAL_ABFRAGE`-Kommentar
+   und `src/index.css` an der `@media (max-width: 899px)`-Regel je einen
+   Hinweis, dass die 899-px-Schwelle dort und dort ein Zwilling ist und nur
+   gemeinsam geändert wird.
+
+   Nachmessung im Browser (400 × 900, echte Neuladung, `quality.tier` auf
+   `high`, ein einzelner Druck auf `I`): `document.querySelector('aside.info-
+   panel')` existiert, `window.store.getState().ui.panels.info === true` — der
+   erste Druck öffnet das Panel jetzt, statt es (schon zu geltend) erneut zu
+   schließen. Konsole (`browser_console_messages`, Stufe `warning`) danach 0
+   Fehler, 0 Warnungen.
+
 ## Bekannte Unschärfen
 
 1. Themen außer `modell` haben in dieser Etappe keinen Text (kommt in 4c-4).
 2. Achsneigung ist der Winkel zur Ekliptiknormale, bei Monden nicht zur eigenen
    Bahn.
-3. Taste `I` kippt auf schmalen Bildschirmen beim ersten Druck von „zu" auf
-   „zu", weil der Standard dort nicht gespeichert ist.
-4. Hochschul-Tab zeigt den Gymnasialtext mit Hinweis.
-5. Mobilprüfung nur als Sichtkontrolle bei 400 px.
+3. Hochschul-Tab zeigt den Gymnasialtext mit Hinweis.
+4. Mobilprüfung nur als Sichtkontrolle bei 400 px.
 
 ## Kriterium aus dem Gesamtentwurf — bewertet
 
@@ -472,9 +517,13 @@ Bekannten Unschärfen):
 
 Erster Abnahme-Commit (`"Abnahme 4c Etappe 1: Infopanel-Gerüst"`, vom
 Controller später mit einem Korrektur-Nachfolgecommit zu `83f7b05`
-zusammengefasst) und die Fix-Runde dieses Nachtrags
+zusammengefasst), die Fix-Runde dieses Nachtrags
 (`"Infopanel: Spalte füllt die Fensterhöhe, Griffe nehmen beim Anfassen den
-Fokus; Abnahme nachgezogen"`) wurden jeweils gleich geprüft:
+Fokus; Abnahme nachgezogen"`) und die weitere Fix-Welle aus der
+Abschlussprüfung des gesamten Branches
+(`"Infopanel: Taste I auch auf schmalen Bildschirmen beim ersten Druck;
+Ladefehler zeigen den Hinweis; Konstanten ohne Komponentenimport; Abnahme
+nachgezogen"`) wurden jeweils gleich geprüft:
 
 ```
 git add …
