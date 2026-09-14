@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { DEFAULT_STATE, useStore } from './index';
-import { toShareable, fromShareable, encodeState, decodeState } from './serialize';
+import { toShareable, fromShareable, encodeState, decodeState, encodePatch } from './serialize';
 import type { AppState } from './types';
 
 const abgewandelt = (): AppState => {
@@ -65,7 +65,7 @@ describe('Round-Trip', () => {
   // beschädigt oder der Aufruf hätte eine Deprecation-Warnung ausgelöst.
   it('behält ein Nicht-ASCII-Zeichen beim Kodieren und Dekodieren exakt bei', () => {
     const original = structuredClone(DEFAULT_STATE);
-    original.camera.targetId = 'jüpiter-testkörper';
+    original.visible['körper-über'] = true;
     expect(decodeState(encodeState(original))).toEqual(original);
   });
 });
@@ -127,5 +127,24 @@ describe('toggleVisible', () => {
 
     useStore.getState().toggleVisible('mercury');
     expect(useStore.getState().visible).toEqual({});
+  });
+});
+
+describe('decodeState — Prüfung (Pflichtpunkt 4b)', () => {
+  it('fällt bei unbekannter Sprache auf Deutsch zurück und behält den Rest', () => {
+    const s = decodeState(encodePatch({ ui: { language: 'fr' }, time: { paused: true } }));
+    expect(s.ui.language).toBe('de');
+    expect(s.time.paused).toBe(true);
+  });
+
+  it('verwirft ein Feld mit falschem Typ, nicht das Fragment', () => {
+    const s = decodeState(encodePatch({ time: { jd: 'x', rateDaysPerSec: 7 } }));
+    expect(s.time.jd).toBe(DEFAULT_STATE.time.jd);
+    expect(s.time.rateDaysPerSec).toBe(7);
+  });
+
+  it('lässt Funktionen im Zustand nicht in den Patch', () => {
+    const mitAktion = { ...structuredClone(DEFAULT_STATE), setTime: () => undefined } as unknown as AppState;
+    expect(toShareable(mitAktion)).toEqual({});
   });
 });

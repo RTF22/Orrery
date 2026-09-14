@@ -1,19 +1,9 @@
 import type { AppState } from './types';
 import { DEFAULT_STATE } from './index';
+import { GEFAEHRLICHE_SCHLUESSEL, pruefeZustand } from './pruefer';
+import type { Plain } from './pruefer';
 
-type Plain = Record<string, unknown>;
-
-/**
- * Schlüssel, die eine Zuweisung über eckige Klammern (`out[key] = ...`) auf
- * einem gewöhnlichen Objekt nicht als neue Eigenschaft anlegt, sondern als
- * Zugriff auf den Prototyp bzw. den Konstruktor selbst behandelt. `decodeState`
- * nimmt ein beliebiges URL-Fragment entgegen; `{"__proto__":{"boese":true}}`
- * ist gültiges JSON und würde ohne diesen Filter den Prototyp des
- * zurückgegebenen Zustands verändern, statt entweder einen gültigen Zustand
- * oder den Standardzustand zu liefern. Eine einzige Stelle für beide
- * Funktionen, damit die Liste nicht zweimal gepflegt werden muss.
- */
-const GEFAEHRLICHE_SCHLUESSEL = new Set(['__proto__', 'constructor', 'prototype']);
+export type { Plain };
 
 /**
  * Rekursiver Differenzbildner: nur Felder, die vom Standard abweichen.
@@ -35,7 +25,7 @@ const GEFAEHRLICHE_SCHLUESSEL = new Set(['__proto__', 'constructor', 'prototype'
 function diff(ist: Plain, soll: Plain): Plain {
   const out: Plain = {};
   for (const [key, wert] of Object.entries(ist)) {
-    if (GEFAEHRLICHE_SCHLUESSEL.has(key)) continue;
+    if (GEFAEHRLICHE_SCHLUESSEL.has(key) || typeof wert === 'function') continue;
     const standard = soll[key];
     if (wert !== null && typeof wert === 'object' && !Array.isArray(wert)
         && standard !== null && typeof standard === 'object') {
@@ -99,15 +89,28 @@ function fromBase64Url(fragment: string): string {
   return new TextDecoder().decode(Uint8Array.from(binaer, (c) => c.charCodeAt(0)));
 }
 
+export function encodePatch(patch: Plain): string {
+  return toBase64Url(JSON.stringify(patch));
+}
+
 export function encodeState(state: AppState): string {
-  return toBase64Url(JSON.stringify(toShareable(state)));
+  return encodePatch(toShareable(state));
+}
+
+/**
+ * Geprüfter Patch aus dem Fragment; leer bei fehlendem oder beschädigtem
+ * Fragment. Der Prüfer verwirft feldweise, siehe pruefer.ts — ein Fragment
+ * mit `ui.language: 'fr'` liefert daher den Rest, die Sprache fällt weg.
+ */
+export function decodePatch(fragment: string): Plain {
+  if (!fragment) return {};
+  try {
+    return pruefeZustand(JSON.parse(fromBase64Url(fragment)));
+  } catch {
+    return {};
+  }
 }
 
 export function decodeState(fragment: string): AppState {
-  if (!fragment) return structuredClone(DEFAULT_STATE);
-  try {
-    return fromShareable(JSON.parse(fromBase64Url(fragment)) as Plain);
-  } catch {
-    return structuredClone(DEFAULT_STATE);
-  }
+  return fromShareable(decodePatch(fragment));
 }
