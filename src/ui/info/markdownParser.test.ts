@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseInline, parseMarkdown, titelVon } from './markdown';
+import { parseInline, parseMarkdown, titelVon } from './markdownParser';
 
 const text = (t: string) => ({ typ: 'text' as const, text: t });
 

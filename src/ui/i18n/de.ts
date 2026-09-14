@@ -206,4 +206,6 @@ export const de = {
   'info.umlaufUm': 'um {name}',
   'info.ausserhalbFenster': 'Außerhalb des Genauigkeitsfensters 1800–2050.',
   'info.modellgrenzen': 'Grenzen des Modells',
+  'info.neuerTab': 'öffnet neuen Tab',
+  'info.keineQuellen': 'Keine Quellen zu diesem Text.',
 } as const;

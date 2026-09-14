@@ -204,4 +204,6 @@ export const en: Record<Key, string> = {
   'info.umlaufUm': 'around {name}',
   'info.ausserhalbFenster': 'Outside the accuracy window 1800–2050.',
   'info.modellgrenzen': 'Limits of the model',
+  'info.neuerTab': 'opens in a new tab',
+  'info.keineQuellen': 'No sources for this text.',
 };
