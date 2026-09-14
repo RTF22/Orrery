@@ -68,8 +68,15 @@ const HOCHGESTELLT = '⁰¹²³⁴⁵⁶⁷⁸⁹';
 
 /** Masse als Mantisse mit zwei Nachkommastellen und hochgestelltem Zehnerexponenten. */
 export function formatMasse(kg: number): string {
-  const exponent = Math.floor(Math.log10(kg));
-  const mantisse = kg / 10 ** exponent;
+  let exponent = Math.floor(Math.log10(kg));
+  let mantisse = kg / 10 ** exponent;
+  // Rundet die Mantisse auf zwei Nachkommastellen auf 10 (z. B. 9,995 → 10,00):
+  // ohne diese Prüfung entstünde „10 · 10ⁿ" statt „1 · 10ⁿ⁺¹" — der Exponent
+  // muss dieselbe Rundung mitgehen wie die angezeigte Mantisse.
+  if (Math.round(mantisse * 100) / 100 >= 10) {
+    exponent += 1;
+    mantisse /= 10;
+  }
   const hoch = String(exponent).split('').map((z) => (z === '-' ? '⁻' : HOCHGESTELLT[Number(z)] ?? z)).join('');
   return `${formatZahl(mantisse, 2)} · 10${hoch} kg`;
 }

@@ -88,4 +88,9 @@ describe('formatAbstand und formatMasse', () => {
     expect(formatMasse(1.9885e30)).toBe('1,99 · 10³⁰ kg');
     expect(formatMasse(1.0659e16)).toBe('1,07 · 10¹⁶ kg');
   });
+
+  it('erhöht den Exponenten, wenn die gerundete Mantisse auf 10 aufrundet', () => {
+    expect(formatMasse(9.995e24)).toBe('1 · 10²⁵ kg');
+    expect(formatMasse(9.994e24)).toBe('9,99 · 10²⁴ kg');
+  });
 });
