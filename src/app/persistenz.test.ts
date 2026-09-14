@@ -159,6 +159,28 @@ describe('sicherungStarten', () => {
     expect(() => { vi.advanceTimersByTime(2000); }).not.toThrow();
   });
 
+  it('schreibt nicht, wenn sich nur die Uhr bewegt', () => {
+    stop = sicherungStarten(useStore, { ablage, ziel });
+    useStore.getState().setTime({ jd: DEFAULT_STATE.time.jd + 1 });
+    vi.advanceTimersByTime(3000);
+    expect(gespeichert()).toBeUndefined();
+  });
+
+  it('schreibt bei einer echten Änderung mit Uhrstand, ruht danach und holt die Uhr bei pagehide nach', () => {
+    stop = sicherungStarten(useStore, { ablage, ziel });
+    useStore.getState().setTime({ jd: 2460000 });
+    useStore.getState().setScale({ sizeScale: 2 });
+    vi.advanceTimersByTime(1000);
+    expect(gespeichert()).toEqual({ time: { jd: 2460000 }, scale: { sizeScale: 2 }, ui: { language: 'de' } });
+    // Nur die Uhr läuft weiter: kein Schreibvorgang mehr.
+    useStore.getState().setTime({ jd: 2460001 });
+    vi.advanceTimersByTime(3000);
+    expect(gespeichert()).toEqual({ time: { jd: 2460000 }, scale: { sizeScale: 2 }, ui: { language: 'de' } });
+    // Beim Verlassen der Seite kommt der aktuelle Uhrstand mit.
+    handler.pagehide?.();
+    expect(gespeichert()).toEqual({ time: { jd: 2460001 }, scale: { sizeScale: 2 }, ui: { language: 'de' } });
+  });
+
   it('hört nach dem Abbestellen auf', () => {
     stop = sicherungStarten(useStore, { ablage, ziel });
     stop();

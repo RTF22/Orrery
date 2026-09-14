@@ -98,13 +98,19 @@ export function sitzungLesen(ablage: Ablage | null): Plain | null {
  * bewusst Deutsch gewählt hat, gar kein `ui.language` — und ein
  * englischsprachiger Browser läse beim nächsten Start wieder Englisch aus
  * `navigator.language`, weil `spracheAus(patch)` dann null ergibt.
+ * Als eigene Funktion, damit app/persistenz.ts den Patch vergleichen kann,
+ * ohne ihn zu schreiben.
  */
+export function sitzungsPatch(state: AppState): Plain {
+  const patch = patchFuer(state, 'sitzung');
+  patch.ui = { ...(istPlain(patch.ui) ? patch.ui : {}), language: state.ui.language };
+  return patch;
+}
+
 export function sitzungSchreiben(ablage: Ablage | null, state: AppState): boolean {
   try {
     if (ablage === null) return false;
-    const patch = patchFuer(state, 'sitzung');
-    patch.ui = { ...(istPlain(patch.ui) ? patch.ui : {}), language: state.ui.language };
-    ablage.setItem(SCHLUESSEL_SITZUNG, JSON.stringify(patch));
+    ablage.setItem(SCHLUESSEL_SITZUNG, JSON.stringify(sitzungsPatch(state)));
     return true;
   } catch {
     // Voll (QuotaExceededError) oder gesperrt: still, die Anwendung läuft weiter.

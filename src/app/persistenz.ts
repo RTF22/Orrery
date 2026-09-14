@@ -3,7 +3,7 @@ import type { AppState } from '../store/types';
 import { istPlain } from '../store/pruefer';
 import type { Plain } from '../store/pruefer';
 import { decodePatch, fromShareable } from '../store/serialize';
-import { FRAGMENT_PRAEFIX, sitzungLesen, sitzungMerkenLesen, sitzungSchreiben } from '../store/persist';
+import { FRAGMENT_PRAEFIX, sitzungLesen, sitzungMerkenLesen, sitzungSchreiben, sitzungsPatch } from '../store/persist';
 import type { Ablage } from '../store/persist';
 import { startSprache } from '../ui/i18n';
 import type { Sprache } from '../ui/i18n';
@@ -67,30 +67,52 @@ export interface SicherungUmgebung {
 type Store = Pick<typeof useStore, 'getState' | 'subscribe'>;
 
 /**
+ * Vergleichsschlüssel einer Sitzung ohne den Uhrstand: Im Leerlauf ändert
+ * sich nur time.jd, und das jedes Bild. Zwei Patches mit gleichem Schlüssel
+ * unterscheiden sich höchstens in der Uhr.
+ */
+function ohneUhr(patch: Plain): string {
+  const { time, ...rest } = patch;
+  if (!istPlain(time)) return JSON.stringify(rest);
+  const zeit = { ...time };
+  delete zeit.jd;
+  // Ein leer gewordener Zweig ist keine Abweichung mehr (wie in toShareable).
+  return JSON.stringify(Object.keys(zeit).length === 0 ? rest : { ...rest, time: zeit });
+}
+
+/**
  * Gedrosselte Sicherung: Die Schleife schreibt time.jd in jedem Bild in den
  * Store, eine Entprellung „eine Sekunde nach der letzten Änderung" käme bei
  * laufender Uhr also nie zum Zug. Stattdessen startet die erste Änderung
  * einen Timer, dessen Ablauf den dann aktuellen Stand schreibt — höchstens
- * einmal je Intervall. pagehide schreibt sofort. Die Präferenz wird bei
- * jedem Schreibversuch neu gelesen, damit der Hook useSitzungMerken keine
+ * einmal je Intervall, und nur, wenn sich seit dem letzten Schreiben mehr
+ * als die Uhr geändert hat; sonst schriebe die laufende Uhr im Leerlauf
+ * jede Sekunde auf die Platte. Den Uhrstand nimmt jeder Schreibvorgang mit,
+ * pagehide schreibt sofort und unbedingt. Die Präferenz wird bei jedem
+ * Schreibversuch neu gelesen, damit der Hook useSitzungMerken keine
  * Verbindung hierher braucht.
  */
 export function sicherungStarten(store: Store, u: SicherungUmgebung): () => void {
   const intervall = u.intervallMs ?? 1000;
   let timer: ReturnType<typeof setTimeout> | null = null;
+  // Der Startzustand gilt als gesichert: Ohne Nutzeraktion bleibt es still.
+  let zuletzt = ohneUhr(sitzungsPatch(store.getState()));
 
-  const schreiben = (): void => {
+  const schreiben = (unbedingt: boolean): void => {
     timer = null;
     if (u.ablage === null || !sitzungMerkenLesen(u.ablage)) return;
-    sitzungSchreiben(u.ablage, store.getState());
+    const state = store.getState();
+    const schluessel = ohneUhr(sitzungsPatch(state));
+    if (!unbedingt && schluessel === zuletzt) return;
+    if (sitzungSchreiben(u.ablage, state)) zuletzt = schluessel;
   };
   const sofort = (): void => {
     if (timer !== null) clearTimeout(timer);
-    schreiben();
+    schreiben(true);
   };
 
   const abbestellen = store.subscribe(() => {
-    if (timer === null) timer = setTimeout(schreiben, intervall);
+    if (timer === null) timer = setTimeout(() => { schreiben(false); }, intervall);
   });
   u.ziel.addEventListener('pagehide', sofort);
 

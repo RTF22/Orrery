@@ -156,6 +156,11 @@ englischsprachigem Browser, der bewusst Deutsch wählt, hätte sonst eine
 Sitzung ohne `ui.language`, und `startSprache` griffe beim nächsten Start
 wieder auf `navigator.language` zurück — die gewählte Sprache ginge verloren.
 
+Nachtrag 14.09.2026, zweiter: Der Timer schreibt nur, wenn sich seit dem letzten
+Schreiben mehr als `time.jd` geändert hat (Vergleich des Sitzungs-Patches ohne den
+Uhrstand). Im Leerlauf mit laufender Uhr entfällt damit das sekündliche Schreiben;
+jeder tatsächliche Schreibvorgang und `pagehide` nehmen den aktuellen Uhrstand mit.
+
 ### 4.3 Link kopieren
 
 `linkErzeugen(state, location): string` liefert Ursprung, Pfad und das Fragment
