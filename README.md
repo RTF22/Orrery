@@ -62,6 +62,23 @@ Im Entwicklungslauf liegen `window.store`, `window.renderer` und `window.scene`
 bereit, damit sich Szenen und Uniforms für Sichtprüfungen ohne Klickweg setzen und
 ablesen lassen.
 
+## Veröffentlichung
+
+Die Seite ist rein statisch und liegt später unter `https://www.jensfricke.com/Orrery/`,
+passend zur Vite-Basis `/Orrery/`. Hochgeladen wird per FTPS auf den Webspace:
+
+```
+cp .env.example .env.local   # Zugangsdaten eintragen (git-ignoriert)
+npm run deploy:trocken       # nur verbinden, Zielverzeichnis auflisten
+npm run deploy               # bauen und dist/ hochladen
+```
+
+`scripts/deploy.ts` lädt `dist/` vollständig hoch und entfernt danach in `assets/`
+nur die gehashten Bündel, die lokal nicht mehr existieren. Das Zielverzeichnis wird
+nie geleert. `public/.htaccess` regelt Kompression und Cache-Dauern auf dem Server.
+Bis zur Fertigstellung wird nicht veröffentlicht; das Skript läuft ausschließlich
+von Hand.
+
 ## Aufbau
 
 Vier Schichten mit streng einseitiger Abhängigkeit, jede kennt nur die unter ihr

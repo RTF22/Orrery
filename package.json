@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "deploy": "npm run build && node scripts/deploy.ts",
+    "deploy:trocken": "node scripts/deploy.ts --trocken",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -26,6 +28,7 @@
     "@types/react-dom": "^19.3.0",
     "@types/three": "^0.186.0",
     "@vitejs/plugin-react": "^6.1.1",
+    "basic-ftp": "^6.2.1",
     "eslint": "^10.10.0",
     "jsdom": "^30.0.1",
     "tailwindcss": "^4.3.3",

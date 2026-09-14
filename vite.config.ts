@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   test: {
     environment: 'node',
-    include: ['src/**/*.test.{ts,tsx}'],
+    include: ['src/**/*.test.{ts,tsx}', 'scripts/**/*.test.ts'],
     // Räumt nach Komponententests den DOM auf; für die node-Tests folgenlos.
     setupFiles: ['src/test/setup.ts'],
   },
