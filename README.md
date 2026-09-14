@@ -38,12 +38,17 @@ Phase 3 der Roadmap ist abgeschlossen. Enthalten sind:
   und Zurücksetzen in der Kopfzeile.
 - Benannte Ansichten: speichern, laden, umbenennen, löschen mit Rückgängig, als
   JSON exportieren und importieren.
+- Infopanel mit Erläuterungstexten in drei Niveaustufen, Kennzahlen und
+  Live-Werten, Verweisen in die Simulation und Quellenkarten (NASA, JPL, ESA,
+  Wikipedia).
 
 Phase 4a (Englisch, Sprachumschaltung zur Laufzeit) und Phase 4b (URL-Sharing,
 Sitzungswiederherstellung und Zurücksetzen in Etappe 1; benannte Ansichten
 speichern, laden, exportieren und importieren in Etappe 2) sind abgeschlossen.
-Offen sind 4c (Infopanel) und Phase 5 (Ambient-Sound, Qualitätsstufen,
-Texturkompression, Veröffentlichung).
+Phase 4c Etappe 1 (Infopanel-Gerüst: Niveaustufen, Datenblock mit Live-Werten,
+Quellenkarten, Kamerafahrt) ist abgeschlossen; Texte für alle Körper, Szenen
+und Themen folgen in 4c-2 bis 4c-4. Offen sind der Rest von 4c und Phase 5
+(Ambient-Sound, Qualitätsstufen, Texturkompression, Veröffentlichung).
 
 ## Entwicklung
 
