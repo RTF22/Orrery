@@ -79,10 +79,28 @@ charon/Charon/false/1  ceres/Ceres/false/6  eris/Eris/false/2
 haumea/Haumea/false/1  makemake/Makemake/false/2
 ```
 
-Nach `setUi({ language: 'en' })` und Wiederholung: alle 35 Köpfe in der
-englischen Fassung (`sun` → „The Sun", `mercury` → „Mercury", `moon` → „The
-Moon" usw.), `hinweisDe: false` und `hinweisNichtUebersetzt: false`
-(„Not translated yet") durchweg, `knoepfe` unverändert je Körper. Erfüllt.
+Nach `setUi({ language: 'en' })` und Wiederholung derselben Abfrage über alle
+35 Körper: durchweg `hinweis: false`, keine Zeile „Not translated yet", Köpfe
+gleich der jeweiligen englischen Überschrift. Vollständige Tabelle (id, kopf,
+hinweis, knoepfe), wörtlich aus dem Lauf:
+
+```
+sun/The Sun/false/2  mercury/Mercury/false/2  venus/Venus/false/2
+earth/The Earth/false/2  moon/The Moon/false/4  mars/Mars/false/3
+phobos/Phobos/false/2  deimos/Deimos/false/2  jupiter/Jupiter/false/6
+io/Io/false/2  europa/Europa/false/3  ganymede/Ganymede/false/3
+callisto/Callisto/false/2  saturn/Saturn/false/3  mimas/Mimas/false/1
+enceladus/Enceladus/false/2  tethys/Tethys/false/1  dione/Dione/false/2
+rhea/Rhea/false/2  titan/Titan/false/3  iapetus/Iapetus/false/2
+uranus/Uranus/false/4  miranda/Miranda/false/1  ariel/Ariel/false/2
+umbriel/Umbriel/false/1  titania/Titania/false/2  oberon/Oberon/false/1
+neptune/Neptune/false/2  triton/Triton/false/2  pluto/Pluto/false/5
+charon/Charon/false/1  ceres/Ceres/false/6  eris/Eris/false/2
+haumea/Haumea/false/1  makemake/Makemake/false/2
+```
+
+`knoepfe` je Körper identisch zur deutschen Tabelle oben (dieselben Verweise,
+nur übersetzter Linktext). Erfüllt.
 
 Die acht Themen (Deutsch, `setInfo({ niveau: 'grundschule' })` vor jeder
 Kennung, dann `setInfo({ thema: id })`): `finsternis` → „Finsternisse",
