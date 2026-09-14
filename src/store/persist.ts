@@ -2,7 +2,7 @@ import type { AppState } from './types';
 import { DEFAULT_STATE } from './index';
 import { istPlain, pruefeZustand } from './pruefer';
 import type { Plain } from './pruefer';
-import { encodePatch, toShareable } from './serialize';
+import { encodePatch, fromShareable, mergePatch, toShareable } from './serialize';
 
 /**
  * Drei Verwendungen desselben Diffs (Entwurf §3.1): Der Link lässt
@@ -12,7 +12,7 @@ import { encodePatch, toShareable } from './serialize';
  */
 export type Profil = 'link' | 'sitzung' | 'ansicht';
 
-const GESTRICHEN: Readonly<Record<Profil, readonly string[]>> = {
+export const GESTRICHEN: Readonly<Record<Profil, readonly string[]>> = {
   link: ['quality', 'ui.hidden', 'ui.panels'],
   sitzung: [],
   ansicht: ['time.jd', 'time.paused', 'cinema', 'quality', 'ui'],
@@ -142,4 +142,173 @@ export function sitzungMerkenSchreiben(ablage: Ablage | null, an: boolean): void
   } catch {
     // Gesperrt: nichts zu tun.
   }
+}
+
+/* ---------- Ansichten (Entwurf §3.3, §3.4, §4.5) ---------- */
+
+/** Eine benannte Einstellung; `state` ist ein Patch im Profil `ansicht`. */
+export interface Ansicht { name: string; state: Plain }
+
+export type ImportFehler = 'umschlag' | 'leer';
+
+export interface ImportErgebnis {
+  liste: Ansicht[];
+  /** Kennung statt Text: store/ kennt keine Sprachtabelle, das Panel übersetzt. */
+  fehler: ImportFehler | null;
+  /** Einträge, die wegen fehlendem Namen oder unbrauchbarem Zustand wegfielen. */
+  verworfen: number;
+}
+
+export const SCHLUESSEL_ANSICHTEN = 'orrery.ansichten.v1';
+export const EXPORT_FORMAT = 'orrery-ansichten';
+export const EXPORT_VERSION = 1;
+export const EXPORT_DATEINAME = 'orrery-ansichten.json';
+/** Längster erlaubter Name; längere Einträge aus Ablage oder Datei fallen weg. */
+export const NAME_MAX = 80;
+
+/** Gültiger Name: nichtleerer String nach dem Trimmen, höchstens NAME_MAX Zeichen. */
+export function nameBereinigen(roh: unknown): string | null {
+  if (typeof roh !== 'string') return null;
+  const name = roh.trim();
+  return name.length > 0 && name.length <= NAME_MAX ? name : null;
+}
+
+/** Erster freier Name: „Mars", sonst „Mars (2)", „Mars (3)" … */
+export function freierName(name: string, vergeben: ReadonlySet<string>): string {
+  if (!vergeben.has(name)) return name;
+  for (let n = 2; ; n += 1) {
+    const kandidat = `${name} (${n})`;
+    if (!vergeben.has(kandidat)) return kandidat;
+  }
+}
+
+export function ansichtErstellen(name: string, state: AppState): Ansicht {
+  return { name, state: patchFuer(state, 'ansicht') };
+}
+
+function holePfad(obj: Plain, pfad: readonly string[]): unknown {
+  let aktuell: unknown = obj;
+  for (const teil of pfad) {
+    if (!istPlain(aktuell) || !Object.hasOwn(aktuell, teil)) return undefined;
+    aktuell = aktuell[teil];
+  }
+  return aktuell;
+}
+
+function setzePfad(obj: Plain, pfad: readonly string[], wert: unknown): void {
+  const [kopf, ...rest] = pfad;
+  if (kopf === undefined) return;
+  if (rest.length === 0) { obj[kopf] = wert; return; }
+  const kind = obj[kopf];
+  const ziel = istPlain(kind) ? kind : {};
+  obj[kopf] = ziel;
+  setzePfad(ziel, rest, wert);
+}
+
+/** Gegenstück zu ohnePfad: Nur die genannten Pfade bleiben. */
+function nurPfade(patch: Plain, pfade: readonly string[]): Plain {
+  const out: Plain = {};
+  for (const pfad of pfade) {
+    const teile = pfad.split('.');
+    const wert = holePfad(patch, teile);
+    if (wert !== undefined) setzePfad(out, teile, wert);
+  }
+  return out;
+}
+
+/**
+ * Ansicht laden: Die Einstellungen (Maßstab, Darstellung, Kamera,
+ * Sichtbarkeit, Zeitrate) kommen vollständig aus der Ansicht — was sie
+ * nicht nennt, steht auf dem Standard. Vom aktuellen Zustand bleiben genau
+ * die Zweige, die das Profil `ansicht` streicht: Zeitpunkt, Pause, Kino,
+ * Qualität, Oberfläche. Ein Patch kennt keinen Unterschied zwischen
+ * „Standardwert" und „nicht enthalten"; würde man die Ansicht nur über den
+ * aktuellen Zustand legen, hielte eine Ansicht mit Bahnlinien (Standard)
+ * ausgeschaltete Bahnlinien nicht wieder an — siehe Ruling im Plan.
+ */
+export function ansichtAnwenden(aktuell: AppState, ansicht: Ansicht): AppState {
+  const bleibt = nurPfade(toShareable(aktuell), GESTRICHEN.ansicht);
+  return fromShareable(mergePatch(bleibt, ansicht.state));
+}
+
+/** Einzelner Eintrag aus Ablage oder Datei; null, wenn Name oder Zustand unbrauchbar. */
+function ansichtPruefen(roh: unknown): Ansicht | null {
+  if (!istPlain(roh)) return null;
+  const name = nameBereinigen(roh.name);
+  if (name === null || !istPlain(roh.state)) return null;
+  return { name, state: filtereProfil(pruefeZustand(roh.state), 'ansicht') };
+}
+
+function listePruefen(roh: unknown): { liste: Ansicht[]; verworfen: number } {
+  if (!Array.isArray(roh)) return { liste: [], verworfen: 0 };
+  const liste: Ansicht[] = [];
+  let verworfen = 0;
+  for (const eintrag of roh) {
+    const ansicht = ansichtPruefen(eintrag);
+    if (ansicht === null) verworfen += 1;
+    else liste.push(ansicht);
+  }
+  return { liste, verworfen };
+}
+
+/** Geprüfte Liste; Namen sind eindeutig, bei Dubletten zählt der erste Eintrag. */
+export function ansichtenLesen(ablage: Ablage | null): Ansicht[] {
+  try {
+    const text = ablage?.getItem(SCHLUESSEL_ANSICHTEN) ?? null;
+    if (text === null) return [];
+    const gesehen = new Set<string>();
+    const out: Ansicht[] = [];
+    for (const ansicht of listePruefen(JSON.parse(text)).liste) {
+      if (gesehen.has(ansicht.name)) continue;
+      gesehen.add(ansicht.name);
+      out.push(ansicht);
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+
+export function ansichtenSchreiben(ablage: Ablage | null, liste: readonly Ansicht[]): boolean {
+  try {
+    if (ablage === null) return false;
+    ablage.setItem(SCHLUESSEL_ANSICHTEN, JSON.stringify(liste));
+    return true;
+  } catch {
+    // Voll oder gesperrt: still, die Liste lebt im Panel weiter.
+    return false;
+  }
+}
+
+/** Datei mit Umschlag; eingerückt, damit sie von Hand lesbar bleibt. */
+export function ansichtenExportieren(liste: readonly Ansicht[]): string {
+  return JSON.stringify({ format: EXPORT_FORMAT, version: EXPORT_VERSION, ansichten: liste }, null, 2);
+}
+
+/**
+ * Import: Umschlag prüfen, jeden Eintrag prüfen, Namenskonflikte mit
+ * Vorhandenem und untereinander per Suffix auflösen. Bei „umschlag" oder
+ * „leer" bleibt die vorhandene Liste unverändert.
+ */
+export function ansichtenImportieren(text: string, vorhandene: readonly Ansicht[]): ImportErgebnis {
+  let roh: unknown = null;
+  try {
+    roh = JSON.parse(text);
+  } catch {
+    // Bleibt null
+  }
+  if (!istPlain(roh) || roh.format !== EXPORT_FORMAT || roh.version !== EXPORT_VERSION
+      || !Array.isArray(roh.ansichten)) {
+    return { liste: [...vorhandene], fehler: 'umschlag', verworfen: 0 };
+  }
+  const { liste: neue, verworfen } = listePruefen(roh.ansichten);
+  if (neue.length === 0) return { liste: [...vorhandene], fehler: 'leer', verworfen };
+  const vergeben = new Set(vorhandene.map((a) => a.name));
+  const liste = [...vorhandene];
+  for (const ansicht of neue) {
+    const name = freierName(ansicht.name, vergeben);
+    vergeben.add(name);
+    liste.push({ name, state: ansicht.state });
+  }
+  return { liste, fehler: null, verworfen };
 }

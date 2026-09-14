@@ -38,14 +38,19 @@ function diff(ist: Plain, soll: Plain): Plain {
   return out;
 }
 
-function merge(basis: Plain, patch: Plain): Plain {
+/**
+ * Rekursives Übereinanderlegen zweier Patches; das Gegenstück zu diff.
+ * Exportiert, weil ansichtAnwenden in persist.ts eine Ansicht über den
+ * aktuellen Zustand legt, bevor fromShareable daraus den Zustand baut.
+ */
+export function mergePatch(basis: Plain, patch: Plain): Plain {
   const out: Plain = { ...basis };
   for (const [key, wert] of Object.entries(patch)) {
     if (GEFAEHRLICHE_SCHLUESSEL.has(key)) continue;
     const vorhanden = out[key];
     if (wert !== null && typeof wert === 'object' && !Array.isArray(wert)
         && vorhanden !== null && typeof vorhanden === 'object') {
-      out[key] = merge(vorhanden as Plain, wert as Plain);
+      out[key] = mergePatch(vorhanden as Plain, wert as Plain);
     } else {
       out[key] = wert;
     }
@@ -64,7 +69,7 @@ export function toShareable(state: AppState): Plain {
 }
 
 export function fromShareable(patch: Plain): AppState {
-  return merge(
+  return mergePatch(
     structuredClone(DEFAULT_STATE) as unknown as Plain, patch,
   ) as unknown as AppState;
 }

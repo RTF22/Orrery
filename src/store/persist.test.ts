@@ -6,8 +6,11 @@ import {
   filtereProfil, patchFuer, linkErzeugen, zurueckgesetzt,
   sitzungLesen, sitzungSchreiben, sitzungLoeschen, sitzungMerkenLesen, sitzungMerkenSchreiben,
   SCHLUESSEL_SITZUNG, SCHLUESSEL_MERKEN,
+  ansichtErstellen, ansichtAnwenden, ansichtenLesen, ansichtenSchreiben,
+  ansichtenExportieren, ansichtenImportieren, freierName, nameBereinigen,
+  SCHLUESSEL_ANSICHTEN, EXPORT_FORMAT,
 } from './persist';
-import type { Ablage } from './persist';
+import type { Ablage, Ansicht } from './persist';
 import { ablageFake } from '../test/ablageFake';
 
 /** Ein Zustand, der in jedem Zweig vom Standard abweicht. */
@@ -180,5 +183,158 @@ describe('Präferenz „Sitzung merken"', () => {
     sitzungMerkenSchreiben(a, true);
     expect(a.daten.has(SCHLUESSEL_MERKEN)).toBe(false);
     expect(sitzungMerkenLesen(a)).toBe(true);
+  });
+});
+
+describe('Ansichten: erstellen und anwenden', () => {
+  it('ansichtErstellen nimmt nur das Profil ansicht mit', () => {
+    expect(ansichtErstellen('Alles', abgewandelt())).toEqual({
+      name: 'Alles',
+      state: {
+        time: { rateDaysPerSec: -30 },
+        scale: { sizeScale: 7, preset: null },
+        display: { orbits: false },
+        camera: { targetId: 'saturn', mode: 'attached' },
+        visible: { mercury: false },
+      },
+    });
+  });
+
+  it('ansichtAnwenden ersetzt die Einstellungen und behält Zeitpunkt, Pause, Kino, Qualität und Oberfläche', () => {
+    const aktuell = abgewandelt();
+    const ansicht: Ansicht = {
+      name: 'Erde',
+      state: { scale: { sizeScale: 3, preset: null }, display: { labels: false } },
+    };
+    const s = ansichtAnwenden(aktuell, ansicht);
+    // Aus der Ansicht:
+    expect(s.scale.sizeScale).toBe(3);
+    expect(s.scale.preset).toBeNull();
+    expect(s.display.labels).toBe(false);
+    // Nicht in der Ansicht, also Standard — eine Ansicht ersetzt die Einstellungen:
+    expect(s.display.orbits).toBe(true);
+    expect(s.camera.targetId).toBe('sun');
+    expect(s.camera.mode).toBe('free');
+    expect(s.visible).toEqual({});
+    expect(s.time.rateDaysPerSec).toBe(1);
+    // Bleibt vom aktuellen Zustand:
+    expect(s.time.jd).toBe(aktuell.time.jd);
+    expect(s.time.paused).toBe(true);
+    expect(s.cinema).toEqual(aktuell.cinema);
+    expect(s.quality.tier).toBe('high');
+    expect(s.ui).toEqual(aktuell.ui);
+  });
+
+  it('ansichtAnwenden mit leerer Ansicht liefert die Standard-Einstellungen zum aktuellen Moment', () => {
+    const s = ansichtAnwenden(abgewandelt(), { name: 'Leer', state: {} });
+    expect(s.scale).toEqual(DEFAULT_STATE.scale);
+    expect(s.time.jd).toBe(2461294.5);
+    expect(s.ui.language).toBe('en');
+  });
+});
+
+describe('Ansichten in der Ablage', () => {
+  const mars: Ansicht = { name: 'Mars', state: { camera: { targetId: 'mars' } } };
+
+  it('schreibt und liest die Liste zurück', () => {
+    const ablage = ablageFake();
+    expect(ansichtenSchreiben(ablage, [mars])).toBe(true);
+    expect(JSON.parse(ablage.daten.get(SCHLUESSEL_ANSICHTEN) ?? '')).toEqual([mars]);
+    expect(ansichtenLesen(ablage)).toEqual([mars]);
+  });
+
+  it('liefert [] ohne Eintrag, ohne Ablage und bei beschädigtem JSON, ohne zu löschen', () => {
+    expect(ansichtenLesen(ablageFake())).toEqual([]);
+    expect(ansichtenLesen(null)).toEqual([]);
+    const ablage = ablageFake();
+    ablage.daten.set(SCHLUESSEL_ANSICHTEN, '[{');
+    expect(ansichtenLesen(ablage)).toEqual([]);
+    expect(ablage.daten.get(SCHLUESSEL_ANSICHTEN)).toBe('[{');
+  });
+
+  it('prüft Namen und Zustände beim Lesen, streicht Profilfremdes und Dubletten', () => {
+    const ablage = ablageFake();
+    ablage.daten.set(SCHLUESSEL_ANSICHTEN, JSON.stringify([
+      { name: ' Gut ', state: { scale: { sizeScale: 3 }, time: { jd: 5, rateDaysPerSec: 2 }, ui: { language: 'fr' } } },
+      { name: '', state: {} },
+      { name: 'OhneZustand' },
+      { name: 'Gut', state: {} },
+      7,
+    ]));
+    expect(ansichtenLesen(ablage)).toEqual([
+      { name: 'Gut', state: { scale: { sizeScale: 3 }, time: { rateDaysPerSec: 2 } } },
+    ]);
+  });
+
+  it('wirft bei gesperrter oder voller Ablage nicht', () => {
+    expect(ansichtenLesen(werfend)).toEqual([]);
+    expect(ansichtenSchreiben(werfend, [mars])).toBe(false);
+    expect(ansichtenSchreiben(null, [mars])).toBe(false);
+  });
+});
+
+describe('Ansichten: Export und Import', () => {
+  const mars: Ansicht = { name: 'Mars', state: { camera: { targetId: 'mars' } } };
+
+  it('der Export trägt den Umschlag, der Import liest ihn zurück', () => {
+    const text = ansichtenExportieren([mars]);
+    expect(JSON.parse(text)).toEqual({ format: EXPORT_FORMAT, version: 1, ansichten: [mars] });
+    expect(ansichtenImportieren(text, [])).toEqual({ liste: [mars], fehler: null, verworfen: 0 });
+  });
+
+  it('lehnt fremde Dateien ab und lässt Vorhandenes stehen', () => {
+    const fremd = [
+      'kein json',
+      '{}',
+      '[]',
+      JSON.stringify({ format: 'x', version: 1, ansichten: [] }),
+      JSON.stringify({ format: EXPORT_FORMAT, version: 2, ansichten: [] }),
+      JSON.stringify({ format: EXPORT_FORMAT, version: 1, ansichten: {} }),
+    ];
+    for (const text of fremd) {
+      expect(ansichtenImportieren(text, [mars]), text).toEqual({ liste: [mars], fehler: 'umschlag', verworfen: 0 });
+    }
+  });
+
+  it('meldet „leer", wenn kein Eintrag gültig ist', () => {
+    const text = JSON.stringify({ format: EXPORT_FORMAT, version: 1, ansichten: [{ name: '', state: {} }, 'x'] });
+    expect(ansichtenImportieren(text, [mars])).toEqual({ liste: [mars], fehler: 'leer', verworfen: 2 });
+  });
+
+  it('übernimmt Gültiges, zählt Verworfenes und vergibt Suffixe bei Namenskonflikten', () => {
+    const text = JSON.stringify({
+      format: EXPORT_FORMAT, version: 1,
+      ansichten: [
+        { name: 'Mars', state: { scale: { sizeScale: 2 } } },
+        { name: 'Mars', state: {} },
+        { name: 'Erde', state: { time: { jd: 1 } } },
+        { name: 5, state: {} },
+      ],
+    });
+    expect(ansichtenImportieren(text, [mars])).toEqual({
+      liste: [
+        mars,
+        { name: 'Mars (2)', state: { scale: { sizeScale: 2 } } },
+        { name: 'Mars (3)', state: {} },
+        { name: 'Erde', state: {} },
+      ],
+      fehler: null,
+      verworfen: 1,
+    });
+  });
+});
+
+describe('freierName und nameBereinigen', () => {
+  it('zählt hoch, bis der Name frei ist', () => {
+    expect(freierName('Mars', new Set())).toBe('Mars');
+    expect(freierName('Mars', new Set(['Mars', 'Mars (2)']))).toBe('Mars (3)');
+  });
+
+  it('trimmt und lehnt leere, fremde und überlange Namen ab', () => {
+    expect(nameBereinigen('  Mars ')).toBe('Mars');
+    expect(nameBereinigen('   ')).toBeNull();
+    expect(nameBereinigen(7)).toBeNull();
+    expect(nameBereinigen('x'.repeat(81))).toBeNull();
+    expect(nameBereinigen('x'.repeat(80))).toBe('x'.repeat(80));
   });
 });
