@@ -36,7 +36,7 @@
 
 Jede Datei liegt unter `src/data/texte/de/grundschule/<art>-<id>.md` beziehungsweise `src/data/texte/en/grundschule/<art>-<id>.md` mit `<art>` = `objekt` oder `thema`. Nach Etappe 2 gibt es 96 Textdateien (14 aus Etappe 1, 66 Körper, 16 Themen); `dateien.test.ts` erzeugt je Datei fünf Fälle.
 
-**Themenverweise (Entscheidung Jens, 14.09.2026):** Mond → `gebundene-rotation` und `finsternis`; Saturn und Uranus → `ringe`; Uranus und Venus → `achsneigung`; Pluto, Ceres und Eris → `zwergplaneten`; Ceres → `kirkwood-luecken`. Sie stehen bereits in den Texten der Tasks 1, 2, 4, 5 und 6; Task 7 liefert die Ziele. Bis Task 7 fertig ist, führen diese Verweise auf dem Branch zum Hinweis „kein Text", was für Zwischencommits hingenommen wird.
+**Themenverweise (Entscheidung Jens, 14.09.2026):** Mond → `gebundene-rotation` und `finsternis`; Saturn und Uranus → `ringe`; Uranus und Venus → `achsneigung`; Pluto, Ceres, Eris, Haumea und Makemake → `zwergplaneten`; Ceres → `kirkwood-luecken` (zwölf Verweise; Haumea und Makemake nach der Abschlussprüfung ergänzt, Ruling 13). Dazu Rhea → `objekt:iapetus`. Sie stehen bereits in den Texten der Tasks 1, 2, 4, 5 und 6; Task 7 liefert die Ziele. Bis Task 7 fertig ist, führen diese Verweise auf dem Branch zum Hinweis „kein Text", was für Zwischencommits hingenommen wird.
 
 **Vorgehen je Text-Task (gilt für Task 1 bis 7):** Dateien wörtlich aus dem Plan anlegen → `npx vitest run src/data/texte` → alle Fälle grün (die Zahl der Dateien im Fall „gibt es" wächst mit) → Commit nur mit `git add src/data/texte`. Fällt der Wortgrenzen-Fall, den Text behutsam kürzen und die Kürzung im Report nennen; fällt der Verweis-Fall, ist die Kennung gegen die Kataloge zu prüfen, nie der Test zu ändern.
 
@@ -204,8 +204,8 @@ the Earth's shadow there is a [lunar eclipse](szene:mondfinsternis), more under
 
 Phobos ist der größere der beiden Monde des [Mars](objekt:mars) und trotzdem winzig:
 Er sieht aus wie eine Kartoffel und ist nur gut 20 Kilometer lang. Er fliegt so dicht
-und so schnell um den Mars, dass er dreimal am Tag am Himmel erscheint, und zwar im
-Westen! Ganz langsam kommt er dem Mars näher. In der Szene
+und so schnell um den Mars, dass er ihn dreimal am Tag umrundet und dabei im Westen
+aufgeht! Ganz langsam kommt er dem Mars näher. In der Szene
 [Tiefflug](szene:phobos-tiefflug) siehst du ihn ganz nah.
 ```
 
@@ -215,8 +215,8 @@ Westen! Ganz langsam kommt er dem Mars näher. In der Szene
 
 Phobos is the larger of the two moons of [Mars](objekt:mars) and still tiny: it
 looks like a potato and is only a good 20 kilometres long. It flies so close and so
-fast around Mars that it appears in the sky three times a day, and it rises in the
-west! Very slowly it is getting closer to Mars. In the scene
+fast around Mars that it circles it three times a day, rising in the west! Very
+slowly it is getting closer to Mars. In the scene
 [Low pass](szene:phobos-tiefflug) you see it up close.
 ```
 
@@ -404,14 +404,28 @@ git commit -m "Grundschultexte: Jupiter, Io, Europa, Ganymed, Kallisto"
 
 - [ ] **Schritt 1: Saturn-Text nachtragen**
 
-In `de/grundschule/objekt-saturn.md` den ersten Satz ändern, sonst nichts:
+Beide Dateien aus Etappe 1 bekommen im ersten Satz den Verweis `[Ringen](thema:ringe)` / `[rings](thema:ringe)`; der Text bleibt sonst gleich, wird aber neu umbrochen (Abschlussprüfung, Minor 5). Ganze Datei:
+
+`de/grundschule/objekt-saturn.md`:
 ```markdown
-Saturn ist der Planet mit den großen [Ringen](thema:ringe). Sie bestehen aus unzähligen Brocken aus
+# Der Saturn
+
+Saturn ist der Planet mit den großen [Ringen](thema:ringe). Sie bestehen aus
+unzähligen Brocken aus Eis, manche so klein wie Staub, andere so groß wie Häuser.
+Saturn ist ein Gasriese, fast zehnmal so breit wie die [Erde](objekt:earth), und so
+leicht, dass er auf einem riesigen Meer schwimmen würde. Sein größter Mond heißt
+[Titan](objekt:titan) und hat eine dichte, orangefarbene Lufthülle.
 ```
 
-In `en/grundschule/objekt-saturn.md` den ersten Satz ändern, sonst nichts:
+`en/grundschule/objekt-saturn.md`:
 ```markdown
-Saturn is the planet with the big [rings](thema:ringe). They are made of countless chunks of ice,
+# Saturn
+
+Saturn is the planet with the big [rings](thema:ringe). They are made of countless
+chunks of ice, some as small as dust, others as big as houses. Saturn is a gas
+giant, almost ten times as wide as the [Earth](objekt:earth), and so light that it
+would float on a giant sea. Its largest moon is called [Titan](objekt:titan) and has
+a thick, orange atmosphere.
 ```
 
 - [ ] **Schritt 2: Dateien anlegen**
@@ -434,7 +448,7 @@ beinahe zerbrochen.
 Mimas is a small icy moon of [Saturn](objekt:saturn), only about 400 kilometres
 across. It is famous for a single giant crater that is almost a third as wide as the
 whole moon. With that crater Mimas looks like an eye, and many people think it
-resembles a space station from the movies. The impact nearly broke the moon apart.
+resembles a space station from the films. The impact nearly broke the moon apart.
 ```
 
 `de/grundschule/objekt-enceladus.md`:
@@ -486,11 +500,11 @@ of it and behind it.
 ```markdown
 # Dione
 
-Dione ist ein Eismond des [Saturn](objekt:saturn), etwas größer als Tethys. Auf
-seiner Rückseite ziehen sich helle Streifen über die dunklere Oberfläche. Von Nahem
-sind das hohe Klippen aus Eis, die entstanden sind, als die Kruste des Mondes
-aufgerissen wurde. Dione zeigt Saturn immer dieselbe Seite, so wie unser
-[Mond](objekt:moon) der Erde.
+Dione ist ein Eismond des [Saturn](objekt:saturn), etwas größer als Tethys. Auf der
+Seite, die beim Umlauf hinten liegt, ziehen sich helle Streifen über die dunklere
+Oberfläche. Von Nahem sind das hohe Klippen aus Eis, die entstanden sind, als die
+Kruste des Mondes aufgerissen wurde. Dione zeigt Saturn immer dieselbe Seite, so wie
+unser [Mond](objekt:moon) der Erde.
 ```
 
 `en/grundschule/objekt-dione.md`:
@@ -498,9 +512,10 @@ aufgerissen wurde. Dione zeigt Saturn immer dieselbe Seite, so wie unser
 # Dione
 
 Dione is an icy moon of [Saturn](objekt:saturn), slightly bigger than Tethys. On its
-far side bright streaks run across the darker surface. Up close these are tall
-cliffs of ice that formed when the moon's crust was torn open. Dione always shows
-Saturn the same side, just as our [Moon](objekt:moon) does to the Earth.
+trailing side, the one that faces backwards as it orbits, bright streaks run across
+the darker surface. Up close these are tall cliffs of ice that formed when the moon's
+crust was torn open. Dione always shows Saturn the same side, just as our
+[Moon](objekt:moon) does to the Earth.
 ```
 
 `de/grundschule/objekt-rhea.md`:
@@ -510,8 +525,8 @@ Saturn the same side, just as our [Moon](objekt:moon) does to the Earth.
 Rhea ist der zweitgrößte Mond des [Saturn](objekt:saturn), gut 1500 Kilometer groß.
 Sie besteht überwiegend aus Eis mit einem kleinen Anteil Gestein und ist über und
 über mit Kratern bedeckt. Rhea ist der äußerste der großen Eismonde, die Saturn
-nah umkreisen; nur [Titan](objekt:titan) und Iapetus liegen weiter draußen. Für eine
-Runde um Saturn braucht sie viereinhalb Tage.
+nah umkreisen; nur [Titan](objekt:titan) und [Iapetus](objekt:iapetus) liegen weiter
+draußen. Für eine Runde um Saturn braucht sie viereinhalb Tage.
 ```
 
 `en/grundschule/objekt-rhea.md`:
@@ -521,8 +536,8 @@ Runde um Saturn braucht sie viereinhalb Tage.
 Rhea is the second largest moon of [Saturn](objekt:saturn), a good 1,500 kilometres
 across. It is made mostly of ice with a small share of rock and is covered all over
 with craters. Rhea is the outermost of the big icy moons that circle Saturn closely;
-only [Titan](objekt:titan) and Iapetus lie further out. It needs four and a half
-days for one lap around Saturn.
+only [Titan](objekt:titan) and [Iapetus](objekt:iapetus) lie further out. It needs
+four and a half days for one lap around Saturn.
 ```
 
 `de/grundschule/objekt-titan.md`:
@@ -899,42 +914,43 @@ and Eris have been called dwarf planets. Eris has a small moon called Dysnomia.
 ```markdown
 # Haumea
 
-Haumea ist ein Zwergplanet hinter [Neptun](objekt:neptune) und sieht aus wie ein
-Ei: Sie dreht sich so schnell, in nur vier Stunden, dass sie in die Länge gezogen
-wird. Ihre Oberfläche ist mit Eis bedeckt. Haumea hat zwei kleine Monde und sogar
-einen dünnen Ring, den man erst 2017 entdeckt hat, als sie vor einem Stern
-vorbeizog.
+Haumea ist ein [Zwergplanet](thema:zwergplaneten) hinter [Neptun](objekt:neptune)
+und sieht aus wie ein Ei: Sie dreht sich so schnell, in nur vier Stunden, dass sie
+in die Länge gezogen wird. Ihre Oberfläche ist mit Eis bedeckt. Haumea hat zwei
+kleine Monde und sogar einen dünnen Ring, den man erst 2017 entdeckt hat, als sie
+vor einem Stern vorbeizog.
 ```
 
 `en/grundschule/objekt-haumea.md`:
 ```markdown
 # Haumea
 
-Haumea is a dwarf planet beyond [Neptune](objekt:neptune) and looks like an egg: it
-spins so fast, in just four hours, that it is stretched out lengthways. Its surface
-is covered with ice. Haumea has two small moons and even a thin ring, which was only
-discovered in 2017 when it passed in front of a star.
+Haumea is a [dwarf planet](thema:zwergplaneten) beyond [Neptune](objekt:neptune)
+and looks like an egg: it spins so fast, in just four hours, that it is stretched
+out lengthways. Its surface is covered with ice. Haumea has two small moons and even
+a thin ring, which was only discovered in 2017 when it passed in front of a star.
 ```
 
 `de/grundschule/objekt-makemake.md`:
 ```markdown
 # Makemake
 
-Makemake ist ein Zwergplanet weit draußen hinter [Neptun](objekt:neptune), etwa zwei
-Drittel so groß wie [Pluto](objekt:pluto). Er schimmert rötlich, weil auf seinem Eis
-Stoffe liegen, die das Sonnenlicht dunkel gefärbt hat. Für einen Umlauf um die Sonne
-braucht er gut 300 Jahre. Makemake hat einen kleinen, dunklen Mond, der erst 2016
-gefunden wurde.
+Makemake ist ein [Zwergplanet](thema:zwergplaneten) weit draußen hinter
+[Neptun](objekt:neptune), gut halb so groß wie [Pluto](objekt:pluto). Er schimmert
+rötlich, weil auf seinem Eis Stoffe liegen, die das Sonnenlicht dunkel gefärbt hat.
+Für einen Umlauf um die Sonne braucht er gut 300 Jahre. Makemake hat einen kleinen,
+dunklen Mond, der erst 2016 gefunden wurde.
 ```
 
 `en/grundschule/objekt-makemake.md`:
 ```markdown
 # Makemake
 
-Makemake is a dwarf planet far out beyond [Neptune](objekt:neptune), about two
-thirds the size of [Pluto](objekt:pluto). It shimmers reddish, because substances
-lie on its ice that sunlight has coloured dark. It needs a good 300 years for one
-trip around the Sun. Makemake has a small, dark moon that was only found in 2016.
+Makemake is a [dwarf planet](thema:zwergplaneten) far out beyond
+[Neptune](objekt:neptune), a good half the size of [Pluto](objekt:pluto). It
+shimmers reddish, because substances lie on its ice that sunlight has coloured dark.
+It needs a good 300 years for one trip around the Sun. Makemake has a small, dark
+moon that was only found in 2016.
 ```
 
 - [ ] **Schritt 2: Prüfen**
@@ -994,11 +1010,11 @@ it passes above or below the shadow.
 
 Ringe sind keine festen Scheiben, sondern Milliarden einzelner Brocken, die alle
 für sich um den Planeten kreisen. Die Ringe des [Saturn](objekt:saturn) bestehen
-fast nur aus Eis und sind deshalb so hell. Sie sind über 200 000 Kilometer breit,
-aber oft nur wenige Meter dick. Auch [Jupiter](objekt:jupiter),
-[Uranus](objekt:uranus) und [Neptun](objekt:neptune) haben Ringe, nur dünn und
-dunkel. In der Szene [Durchflug durch Saturns Ringe](szene:ringdurchflug) fliegst du
-mitten hindurch.
+fast nur aus Eis und sind deshalb so hell. Von einem Rand zum anderen messen sie
+über 250 000 Kilometer, sind aber oft nur wenige Meter dick. Auch
+[Jupiter](objekt:jupiter), [Uranus](objekt:uranus) und [Neptun](objekt:neptune)
+haben Ringe, nur dünn und dunkel. In der Szene
+[Durchflug durch Saturns Ringe](szene:ringdurchflug) fliegst du mitten hindurch.
 ```
 
 `en/grundschule/thema-ringe.md`:
@@ -1007,9 +1023,10 @@ mitten hindurch.
 
 Rings are not solid discs but billions of separate chunks, each circling the planet
 on its own. The rings of [Saturn](objekt:saturn) are made almost entirely of ice,
-which is why they are so bright. They are more than 200,000 kilometres wide but
-often only a few metres thick. [Jupiter](objekt:jupiter), [Uranus](objekt:uranus)
-and [Neptune](objekt:neptune) have rings too, only thin and dark. In the scene
+which is why they are so bright. From one edge to the other they measure more than
+250,000 kilometres, yet often only a few metres thick.
+[Jupiter](objekt:jupiter), [Uranus](objekt:uranus) and [Neptune](objekt:neptune)
+have rings too, only thin and dark. In the scene
 [Flying through Saturn's rings](szene:ringdurchflug) you fly right through them.
 ```
 
@@ -1217,7 +1234,7 @@ Dann die acht Themen in beiden Sprachen mit derselben Abfrage, nur mit `window.s
 
 - [ ] **Schritt 4: Verweise stichprobenartig** — bei Phobos (Grundschule) auf „Tiefflug" klicken → `cinema.running` true, `cinema.nummer` = Index von `phobos-tiefflug` (8); Kino beenden (Escape). Bei Enceladus auf „Cassini" klicken → Karte `nasa-cassini` hervorgehoben (Klasse `border-sky-300`), Tabs unverändert 1. Bei Jupiter auf „Europa" klicken → `camera.targetId` = `europa`, Kopf „Europa".
 
-- [ ] **Schritt 5: Keine Sackgasse auf dem Grundschul-Tab** — Tab „Grundschule", Ziel Mond: im Text auf „dieselbe Seite" klicken → `ui.info.thema` = `gebundene-rotation`, Kopf „Gebundene Rotation", kein Hinweis „kein Text"; Ziel Ceres, auf „Kirkwood-Lücken" klicken → Kopf „Kirkwood-Lücken", kein Hinweis. Knopf „Grenzen des Modells" im Datenblock: Uhr außerhalb des Genauigkeitsfensters setzen (`setTime({ jd: 2341973 })`, das ist Anfang 1700, also 100 Jahre vor dem Fenster; Warnung „außerhalb" erscheint), Ziel Mars, Knopf klicken → Kopf „Grenzen des Modells", kein Hinweis; danach Uhr zurück (`setTime({ jd: 2451545 })`). Zum Schluss alle Verweisknöpfe des Grundschul-Tabs maschinell: per `browser_run_code_unsafe` über alle 35 Körper und 8 Themen (beide Sprachen) jeden Knopf im `[role=tabpanel]`, der kein `objekt:`- oder externer Verweis ist, anklicken und prüfen, dass danach kein Absatz `info.keinText` sichtbar ist; Zähler (geprüfte Knöpfe, Sackgassen) ins Protokoll, Erwartung 0 Sackgassen.
+- [ ] **Schritt 5: Keine Sackgasse auf dem Grundschul-Tab** — Tab „Grundschule", Ziel Mond: im Text auf „dieselbe Seite" klicken → `ui.info.thema` = `gebundene-rotation`, Kopf „Gebundene Rotation", kein Hinweis „kein Text"; Ziel Ceres, auf „Kirkwood-Lücken" klicken → Kopf „Kirkwood-Lücken", kein Hinweis. Knopf „Grenzen des Modells" im Datenblock: Uhr außerhalb des Genauigkeitsfensters setzen (`setTime({ jd: 2341973 })`, das ist Anfang 1700, also 100 Jahre vor dem Fenster; Warnung „außerhalb" erscheint), Ziel Mars, Knopf klicken → Kopf „Grenzen des Modells", kein Hinweis; danach Uhr zurück (`setTime({ jd: 2451545 })`). Zum Schluss alle Verweisknöpfe des Grundschul-Tabs maschinell: per `browser_run_code_unsafe` über alle 35 Körper und 8 Themen (beide Sprachen) jeden Knopf im `[role=tabpanel]`, der kein externer Verweis ist, anklicken und **erst dann** prüfen, wenn der Panelkopf oder der Text gewechselt hat (auf die Änderung pollen, keine feste Wartezeit: der Hinweis `info.keinText` erscheint erst, wenn der faule Import aufgelöst ist und `frisch` gilt). Getrennt zählen: (a) `objekt:`- und `thema:`-Knöpfe, Erwartung 0 Sackgassen; (b) `szene:`-Knöpfe, Erwartung: jeder Klick auf eine Szene ohne Grundschultext (alle außer `mondfinsternis`) zeigt `info.keinText` — das ist bis 4c-4 so vorgesehen und wird als Zahl ausgewiesen, nicht als Sackgasse des Kriteriums (Entwurf §7 Nachtrag, Scoping-Satz). Beide Zähler mit Kennungen ins Protokoll; nach jedem Szenenklick das Kino beenden (Escape) und das Ziel neu setzen.
 
 - [ ] **Schritt 6: Gymnasium-Tab bei Körpern ohne Text** — Tab „Gymnasium", Ziel Mars: Hinweis „Zu diesem Eintrag gibt es noch keinen Text." und Datenblock sichtbar (Text folgt in 4c-3). Ziel Erde: Text vorhanden, kein Hinweis.
 
@@ -1225,7 +1242,7 @@ Dann die acht Themen in beiden Sprachen mit derselben Abfrage, nur mit `window.s
 
 - [ ] **Schritt 8: Lint, Test, Build** — `npm run lint`, `npm test`, `npm run build`; Schlusszeilen und Testzahl ins Protokoll (Erwartung: 1126 + 410 = 1536 Tests, da 82 neue Dateien × 5 Fälle).
 
-- [ ] **Schritt 9: Protokoll `docs/phase4c-etappe2-abnahme.md`** — Aufbau wie `docs/phase4c-etappe1-abnahme.md`: Kopf (Datum, Branch, Commit, Prüfumgebung), je Schritt die wörtlichen Werte, Konsole, Lint/Test/Build, „Bekannte Unschärfen": (1) Gymnasium- und Hochschul-Tab zeigen bei 33 Körpern und 7 Themen noch den Hinweis „kein Text" (4c-3, 4c-4); insbesondere führt der Verweis „Bahnelemente" im Gymnasiumtext `thema-modell` bis 4c-4 auf „kein Text"; (2) Szenen haben auf dem Grundschul-Tab außer `mondfinsternis` noch keinen Text (4c-4); (3) Zahlen in den Texten sind gerundete Richtwerte, die Kennzahlen stehen im Datenblock; (4) der Dateitest prüft Themenziele nur auf Existenz im Katalog, nicht auf einen Text im selben Niveau (Ruling 7, Test folgt in 4c-4). Das Kriterium „Infopanel mit abgeleiteten Live-Werten" ist seit 4c-1 erfüllt; hier wird das Kriterium aus Entwurf §7 Punkt 2 in der Fassung des Nachtrags („Grundschule komplett: 35 Körper und 8 Themen, Deutsch und Englisch, keine Sackgasse auf dem Grundschul-Tab") bewertet.
+- [ ] **Schritt 9: Protokoll `docs/phase4c-etappe2-abnahme.md`** — Aufbau wie `docs/phase4c-etappe1-abnahme.md`: Kopf (Datum, Branch, Commit, Prüfumgebung), je Schritt die wörtlichen Werte, Konsole, Lint/Test/Build, „Bekannte Unschärfen": (1) Gymnasium- und Hochschul-Tab zeigen bei 33 Körpern und 7 Themen noch den Hinweis „kein Text" (4c-3, 4c-4); insbesondere führt der Verweis „Bahnelemente" im Gymnasiumtext `thema-modell` bis 4c-4 auf „kein Text"; (2) Szenen haben auf dem Grundschul-Tab außer `mondfinsternis` noch keinen Text (4c-4); (3) Zahlen in den Texten sind gerundete Richtwerte, die Kennzahlen stehen im Datenblock; (4) der Dateitest prüft Themenziele nur auf Existenz im Katalog, nicht auf einen Text im selben Niveau (Ruling 7, Test folgt in 4c-4). Das Kriterium „Infopanel mit abgeleiteten Live-Werten" ist seit 4c-1 erfüllt; hier wird das Kriterium aus Entwurf §7 Punkt 2 in der Fassung des Nachtrags bewertet („Grundschule komplett: 35 Körper und 8 Themen, Deutsch und Englisch; kein `objekt:`- oder `thema:`-Verweis auf dem Grundschul-Tab führt auf „kein Text", `szene:`-Verweise bis 4c-4 ausgenommen").
 
 - [ ] **Schritt 10: README** — im Absatz „Stand": 4c Etappe 2 (Grundschulstufe komplett: 35 Körper und 8 Themen in Deutsch und Englisch) abgeschlossen; Gymnasium folgt in 4c-3, die Szenen beider Niveaus in 4c-4.
 
@@ -1247,7 +1264,7 @@ git commit -m "Abnahme 4c Etappe 2: Grundschule komplett"
 
 Entscheidungen während der Planung, die vom Entwurf abweichen oder ihn präzisieren; Jens bestätigt oder kippt sie:
 
-1. **`thema:`-Verweise in Grundschultexten sind erlaubt, weil Task 7 allen acht Themen einen Grundschultext gibt** (Entscheidung Jens vom 14.09.2026: Etappen nach Niveau statt nach Art; ersetzt das frühere Ruling „keine `thema:`-Verweise", das aus dem Sackgassen-Befund der Abschlussprüfung 4c-1 stammte). Gesetzt werden genau die zehn Verweise aus der Dateistruktur; weitere passende Stellen (etwa Charon → gebundene Rotation) bleiben 4c-3 vorbehalten, damit der Umfang dieser Etappe fest bleibt.
+1. **`thema:`-Verweise in Grundschultexten sind erlaubt, weil Task 7 allen acht Themen einen Grundschultext gibt** (Entscheidung Jens vom 14.09.2026: Etappen nach Niveau statt nach Art; ersetzt das frühere Ruling „keine `thema:`-Verweise", das aus dem Sackgassen-Befund der Abschlussprüfung 4c-1 stammte). Gesetzt werden die Verweise aus der Dateistruktur (zehn laut Entscheidung, plus Haumea und Makemake → `zwergplaneten` nach der Abschlussprüfung, Ruling 13); weitere passende Stellen (etwa Charon → gebundene Rotation) bleiben 4c-3 vorbehalten, damit der Umfang dieser Etappe fest bleibt.
 2. **Verweise auf Szenen und Quellen sind erlaubt und erwünscht,** wo sie zum Körper passen (Entwurf §4.3 nennt sie als Schemata; §6 verlangt keine bestimmte Dichte). Die Szene `galileisches-schattenspiel` wird nicht verlinkt (laut lokaler Projektanleitung nicht weiterverfolgt).
 3. **Texte wörtlich aus dem Plan.** Der Entwurf verlangt Texte, aber keinen Autor; damit die Prüfung je Task etwas Festes hat, stehen die Texte im Plan und der Umsetzer überträgt sie. Kürzungen nur, wenn der Dateitest die Wortgrenze reißt, und dann im Report benannt.
 4. **Sechs Teilcommits je Körpergruppe** (Sonne und innere Planeten; Erd- und Marsmonde; Jupiter-System; Saturnmonde; Uranus- und Neptun-System; Zwergplaneten) statt „je Planetensystem" (Entwurf §7), damit kein Task mehr als 16 Dateien trägt.
@@ -1257,3 +1274,6 @@ Entscheidungen während der Planung, die vom Entwurf abweichen oder ihn präzisi
 8. **Saturn-Nachtrag als Änderung des Etappe-1-Textes** (nur erster Satz, `[Ringen](thema:ringe)`), in Task 4 gebündelt, statt Etappe-1-Dateien unangetastet zu lassen; Erde bleibt unverändert, weil keiner der zehn Verweise sie betrifft.
 9. **Thema `modell` in Grundschule gehört zu dieser Etappe** (Entscheidung Jens, Liste der 16 Dateien), obwohl Entwurf §7 Punkt 4 es ursprünglich 4c-4 zuordnete; der Nachtrag in §7 zieht das nach. Damit hat der Knopf „Grenzen des Modells" im Datenblock auf dem Grundschul-Tab ein Ziel.
 10. **Eris: „im Mittel fast doppelt so weit" statt „dreimal so weit"** (Review Task 6): Die großen Halbachsen verhalten sich 67,8 zu 39,5 AE, also 1,7; „dreimal" galt nur für die Entfernungen 2005. Zeitlose Aussage korrigiert, damit der Text dem Datenblock nicht widerspricht (Ruling 5).
+11. **Phobos: „umrundet ihn dreimal am Tag und geht dabei im Westen auf" statt „erscheint dreimal am Tag am Himmel"** (Abschlussprüfung): Phobos umläuft den Mars 3,2-mal je Marstag, geht aber wegen der Marsrotation nur rund 2,2-mal je Sol auf; der alte Satz vermischte Umlauf und Aufgang. Kein Rundungsfall nach Ruling 5, sondern ein Kategorienfehler.
+12. **Kriterium des Nachtrags auf `objekt:` und `thema:` eingeschränkt** (Abschlussprüfung): „Kein Verweis führt auf „kein Text"" ist in 4c-2 wörtlich unerfüllbar, weil 13 verlinkte Szenen laut Nachtrag erst in 4c-4 Text bekommen (Ruling 2 verlangt die Szenenverweise). Der Entwurf bekommt den Scoping-Satz, das Protokoll weist `szene:`-Klicks getrennt und offen aus; die „0 Sackgassen" des ersten Protokollstands waren eine Nichtmessung (Hinweis erst nach `frisch`).
+13. **Politur aus der Abschlussprüfung in derselben Fix-Welle:** Dione „Seite, die beim Umlauf hinten liegt" / „trailing side" statt „Rückseite" / „far side"; Makemake „gut halb so groß" statt „zwei Drittel" (0,60); Ringbreite als Durchmesser („von einem Rand zum anderen über 250 000 Kilometer"); Mimas „films" statt „movies"; Saturn neu umbrochen; Haumea und Makemake → `thema:zwergplaneten`, Rhea → `objekt:iapetus` (Konsistenz im Panel, zwölf statt zehn Themenverweise). Zurückgestellt für 4c-3: Venus „Venustag" meint die siderische Rotation (Datenblock), Oberon-Berghöhe am unteren Rand der Schätzungen.
