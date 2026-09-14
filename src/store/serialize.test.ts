@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { DEFAULT_STATE, useStore } from './index';
-import { toShareable, fromShareable, encodeState, decodeState, encodePatch } from './serialize';
+import { toShareable, fromShareable, encodeState, decodeState, encodePatch, decodePatch } from './serialize';
 import type { AppState } from './types';
 
 const abgewandelt = (): AppState => {
@@ -65,6 +65,9 @@ describe('Round-Trip', () => {
   // beschädigt oder der Aufruf hätte eine Deprecation-Warnung ausgelöst.
   it('behält ein Nicht-ASCII-Zeichen beim Kodieren und Dekodieren exakt bei', () => {
     const original = structuredClone(DEFAULT_STATE);
+    // camera.targetId wird inzwischen gegen bodyIndex geprüft (pruefer.ts) und
+    // ließe ein frei erfundenes Nicht-ASCII-Ziel gar nicht mehr durch; visible
+    // erlaubt dagegen freie Schlüssel und trägt das Zeichen hier stellvertretend.
     original.visible['körper-über'] = true;
     expect(decodeState(encodeState(original))).toEqual(original);
   });
@@ -127,6 +130,17 @@ describe('toggleVisible', () => {
 
     useStore.getState().toggleVisible('mercury');
     expect(useStore.getState().visible).toEqual({});
+  });
+});
+
+describe('decodePatch', () => {
+  it('null bei beschädigtem Fragment, leeres Objekt bei leerem Fragment', () => {
+    // F4: die beiden Fälle müssen unterscheidbar bleiben, damit startZustand
+    // bei einem defekten Link auf die Sitzung zurückfallen kann (Ruling 5)
+    // statt ihn wie ein gültig-leeres Fragment zu behandeln.
+    expect(decodePatch('!!!')).toBeNull();
+    expect(decodePatch('')).toEqual({});
+    expect(decodePatch(encodePatch({ time: { paused: true } }))).toEqual({ time: { paused: true } });
   });
 });
 

@@ -91,10 +91,20 @@ export function sitzungLesen(ablage: Ablage | null): Plain | null {
   }
 }
 
+/**
+ * `ui.language` steht immer im geschriebenen Patch, auch wenn sie dem
+ * Standard `'de'` entspricht. Grund: `patchFuer` bildet nur Abweichungen vom
+ * Standard ab; ohne diesen Zusatz enthielte die Sitzung eines Nutzers, der
+ * bewusst Deutsch gewählt hat, gar kein `ui.language` — und ein
+ * englischsprachiger Browser läse beim nächsten Start wieder Englisch aus
+ * `navigator.language`, weil `spracheAus(patch)` dann null ergibt.
+ */
 export function sitzungSchreiben(ablage: Ablage | null, state: AppState): boolean {
   try {
     if (ablage === null) return false;
-    ablage.setItem(SCHLUESSEL_SITZUNG, JSON.stringify(patchFuer(state, 'sitzung')));
+    const patch = patchFuer(state, 'sitzung');
+    patch.ui = { ...(istPlain(patch.ui) ? patch.ui : {}), language: state.ui.language };
+    ablage.setItem(SCHLUESSEL_SITZUNG, JSON.stringify(patch));
     return true;
   } catch {
     // Voll (QuotaExceededError) oder gesperrt: still, die Anwendung läuft weiter.

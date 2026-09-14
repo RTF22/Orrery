@@ -98,19 +98,23 @@ export function encodeState(state: AppState): string {
 }
 
 /**
- * Geprüfter Patch aus dem Fragment; leer bei fehlendem oder beschädigtem
- * Fragment. Der Prüfer verwirft feldweise, siehe pruefer.ts — ein Fragment
- * mit `ui.language: 'fr'` liefert daher den Rest, die Sprache fällt weg.
+ * Geprüfter Patch aus dem Fragment. Leeres Fragment ergibt `{}` (gültig,
+ * nichts weicht vom Standard ab); ein beschädigtes Fragment (Base64 oder
+ * JSON scheitert) ergibt `null` — die beiden Fälle bleiben unterscheidbar,
+ * damit `startZustand` bei einem defekten Link auf die Sitzung zurückfallen
+ * kann, statt sie mit dem Standardzustand zu überschreiben (Ruling 5). Der
+ * Prüfer verwirft feldweise, siehe pruefer.ts — ein Fragment mit
+ * `ui.language: 'fr'` liefert daher den Rest, die Sprache fällt weg.
  */
-export function decodePatch(fragment: string): Plain {
+export function decodePatch(fragment: string): Plain | null {
   if (!fragment) return {};
   try {
     return pruefeZustand(JSON.parse(fromBase64Url(fragment)));
   } catch {
-    return {};
+    return null;
   }
 }
 
 export function decodeState(fragment: string): AppState {
-  return fromShareable(decodePatch(fragment));
+  return fromShareable(decodePatch(fragment) ?? {});
 }

@@ -32,17 +32,21 @@ function spracheAus(patch: Plain): Sprache | null {
  * Startzustand: Fragment vor Sitzung vor Standard (Entwurf §4.1). Ein
  * Fragment wird sofort aus der Adresse entfernt, damit ein späteres Neuladen
  * die gesicherte Sitzung nimmt und nicht immer wieder den alten Link. Die
- * Sitzung zählt nur, wenn „Sitzung merken" an ist.
+ * Sitzung ist auch der Rückfall für ein **beschädigtes** Fragment: Ohne
+ * dieses Rulings (5) würde `startZustand` einen defekten Link wie einen
+ * leeren behandeln, und eine Sekunde später überschriebe die automatische
+ * Sicherung die eigentlich noch vorhandene Sitzung mit dem Standard. Die
+ * Sitzung zählt dabei wie immer nur, wenn „Sitzung merken" an ist; ein
+ * gültiges (auch ein gültig-leeres) Fragment ersetzt sie in jedem Fall.
  */
 export function startZustand(u: StartUmgebung): AppState {
   const fragment = fragmentLesen(u.hash);
-  let patch: Plain = {};
+  let dekodiert: Plain | null = null;
   if (fragment !== null) {
-    patch = decodePatch(fragment);
+    dekodiert = decodePatch(fragment);
     u.fragmentEntfernen();
-  } else if (sitzungMerkenLesen(u.ablage)) {
-    patch = sitzungLesen(u.ablage) ?? {};
   }
+  const patch = dekodiert ?? (sitzungMerkenLesen(u.ablage) ? sitzungLesen(u.ablage) ?? {} : {});
   const state = fromShareable(patch);
   state.ui.language = startSprache(u.navigatorLanguage, spracheAus(patch));
   return state;

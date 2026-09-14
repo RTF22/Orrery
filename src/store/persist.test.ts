@@ -120,6 +120,17 @@ describe('Sitzung in der Ablage', () => {
     expect(sitzungLesen(a)).toEqual(toShareable(abgewandelt()));
   });
 
+  it('schreibt die Sprache auch dann, wenn sie dem Standard entspricht', () => {
+    // F1: patchFuer bildet nur Abweichungen ab, DEFAULT_STATE.ui.language ist
+    // 'de' — ohne den Zusatz in sitzungSchreiben stünde hier gar kein
+    // ui.language, und ein englischsprachiger Browser läse beim nächsten
+    // Start wieder Englisch.
+    const a = ablageFake();
+    sitzungSchreiben(a, structuredClone(DEFAULT_STATE));
+    const gespeichert = JSON.parse(a.daten.get(SCHLUESSEL_SITZUNG) ?? '{}') as { ui?: { language?: string } };
+    expect(gespeichert.ui?.language).toBe('de');
+  });
+
   it('liefert null ohne Eintrag und ohne Ablage', () => {
     expect(sitzungLesen(ablageFake())).toBeNull();
     expect(sitzungLesen(null)).toBeNull();

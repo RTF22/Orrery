@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useStore, DEFAULT_STATE } from '../store';
 import { encodePatch } from '../store/serialize';
-import { SCHLUESSEL_SITZUNG, SCHLUESSEL_MERKEN } from '../store/persist';
+import { SCHLUESSEL_SITZUNG, SCHLUESSEL_MERKEN, sitzungSchreiben } from '../store/persist';
 import { fragmentLesen, startZustand, sicherungStarten } from './persistenz';
 import type { StartUmgebung, EreignisZiel } from './persistenz';
 import { ablageFake } from '../test/ablageFake';
@@ -64,9 +64,29 @@ describe('startZustand', () => {
     expect(startZustand(umgebung({ ablage, navigatorLanguage: 'de-DE' })).ui.language).toBe('en');
   });
 
-  it('ungültiges Fragment: Standard, Fragment trotzdem entfernt', () => {
-    const u = umgebung({ hash: '#p=!!!nicht-base64!!!' });
+  it('englischer Browser, Nutzer wählt Deutsch: Neuladen bleibt Deutsch', () => {
+    // F1: sitzungSchreiben trägt ui.language auch für den Standardwert 'de'
+    // ein; ohne das würde der englischsprachige Browser hier wieder Englisch
+    // liefern, weil die Sitzung dann keine Sprache enthielte.
+    const ablage = ablageFake();
+    sitzungSchreiben(ablage, DEFAULT_STATE);
+    expect(startZustand(umgebung({ ablage, navigatorLanguage: 'en-US' })).ui.language).toBe('de');
+  });
+
+  it('ungültiges Fragment ohne Sitzung: Standard, Fragment trotzdem entfernt', () => {
+    const u = umgebung({ ablage: ablageFake(), hash: '#p=!!!nicht-base64!!!' });
     expect(startZustand(u)).toEqual(DEFAULT_STATE);
+    expect(u.fragmentEntfernen).toHaveBeenCalledTimes(1);
+  });
+
+  it('ungültiges Fragment mit Sitzung: die Sitzung, Fragment trotzdem entfernt', () => {
+    // F4: decodePatch liefert null bei beschädigtem Fragment, startZustand
+    // fällt dann auf die Sitzung zurück statt auf den Standard (Ruling 5) —
+    // sonst überschriebe die Sicherung eine Sekunde später die Sitzung.
+    const ablage = ablageFake();
+    ablage.daten.set(SCHLUESSEL_SITZUNG, JSON.stringify({ scale: { sizeScale: 7 } }));
+    const u = umgebung({ ablage, hash: '#p=!!!nicht-base64!!!' });
+    expect(startZustand(u).scale.sizeScale).toBe(7);
     expect(u.fragmentEntfernen).toHaveBeenCalledTimes(1);
   });
 });
@@ -100,26 +120,28 @@ describe('sicherungStarten', () => {
   });
 
   it('schreibt höchstens einmal je Intervall, und zwar den letzten Stand', () => {
+    // F1: sitzungSchreiben trägt ui.language immer ein, auch beim Standard
+    // 'de' — die erwarteten Patches hier tragen es deshalb mit.
     stop = sicherungStarten(useStore, { ablage, ziel, intervallMs: 1000 });
     useStore.getState().setScale({ sizeScale: 2 });
     vi.advanceTimersByTime(500);
     useStore.getState().setScale({ sizeScale: 3 });
     expect(gespeichert()).toBeUndefined();
     vi.advanceTimersByTime(500);
-    expect(gespeichert()).toEqual({ scale: { sizeScale: 3 } });
+    expect(gespeichert()).toEqual({ scale: { sizeScale: 3 }, ui: { language: 'de' } });
     // Nächste Änderung: neuer Timer, wieder ein volles Intervall.
     useStore.getState().setScale({ sizeScale: 4 });
     vi.advanceTimersByTime(999);
-    expect(gespeichert()).toEqual({ scale: { sizeScale: 3 } });
+    expect(gespeichert()).toEqual({ scale: { sizeScale: 3 }, ui: { language: 'de' } });
     vi.advanceTimersByTime(1);
-    expect(gespeichert()).toEqual({ scale: { sizeScale: 4 } });
+    expect(gespeichert()).toEqual({ scale: { sizeScale: 4 }, ui: { language: 'de' } });
   });
 
   it('pagehide schreibt sofort', () => {
     stop = sicherungStarten(useStore, { ablage, ziel });
     useStore.getState().setScale({ sizeScale: 5 });
     handler.pagehide?.();
-    expect(gespeichert()).toEqual({ scale: { sizeScale: 5 } });
+    expect(gespeichert()).toEqual({ scale: { sizeScale: 5 }, ui: { language: 'de' } });
   });
 
   it('schreibt nicht, wenn „merken" aus ist', () => {

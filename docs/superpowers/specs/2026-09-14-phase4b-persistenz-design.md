@@ -149,6 +149,13 @@ bei Änderung und ruft beim Ausschalten `sitzungLoeschen`. Damit die Sicherung d
 Präferenz kennt, ohne den Store zu bemühen, liest `sicherungStarten` sie bei jedem
 Schreibversuch erneut aus `storage` (ein Zugriff pro Sekunde ist vernachlässigbar).
 
+Nachtrag 14.09.2026: `sitzungSchreiben` trägt `ui.language` immer in den
+gesicherten Patch ein, auch wenn sie dem Standard `'de'` entspricht. Grund:
+Der Patch enthält laut §3.1 nur Abweichungen vom Standard; ein Nutzer mit
+englischsprachigem Browser, der bewusst Deutsch wählt, hätte sonst eine
+Sitzung ohne `ui.language`, und `startSprache` griffe beim nächsten Start
+wieder auf `navigator.language` zurück — die gewählte Sprache ginge verloren.
+
 ### 4.3 Link kopieren
 
 `linkErzeugen(state, location): string` liefert Ursprung, Pfad und das Fragment
