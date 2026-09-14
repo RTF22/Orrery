@@ -109,4 +109,11 @@ describe('handleShortcut', () => {
     handleShortcut('l');
     expect(useStore.getState().ui.language).toBe('de');
   });
+
+  it('schaltet das Infopanel mit I um', () => {
+    expect(handleShortcut('i')).toBe(true);
+    expect(useStore.getState().ui.panels.info).toBe(false);
+    handleShortcut('i');
+    expect(useStore.getState().ui.panels.info).toBe(true);
+  });
 });

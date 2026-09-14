@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useStore, DEFAULT_STATE } from '../../store';
 import { toggleCinema, nextScene, stopCinema, cinemaAktiv } from '../cinemaControl';
+import { INFO_PANEL } from '../info/InfoPanel';
 
 /** Panel-Schlüssel der Kürzel-Übersicht. */
 export const SHORTCUTS_PANEL = 'shortcuts';
@@ -60,6 +61,11 @@ export function handleShortcut(taste: string): boolean {
       return true;
     case 'l':
       s.setUi({ language: s.ui.language === 'de' ? 'en' : 'de' });
+      return true;
+    case 'i':
+      // Ohne Eintrag gilt das Panel als offen (auf schmalen Bildschirmen als
+      // zu, siehe useSchmal); die Taste kippt den gespeicherten Wert.
+      s.setUi({ panels: { ...s.ui.panels, [INFO_PANEL]: !(s.ui.panels[INFO_PANEL] ?? true) } });
       return true;
     case 'Home':
       s.setCamera({ ...DEFAULT_STATE.camera });

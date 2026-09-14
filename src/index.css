@@ -38,3 +38,24 @@ html, body, #root { height: 100%; margin: 0; background: #05070d; }
 /* Im Dauerlauf stört schon der Mauszeiger. Er kommt bei der nächsten
    Bewegung von selbst zurück (siehe ui/idle.ts). */
 .zeiger-aus, .zeiger-aus * { cursor: none !important; }
+
+/* Infopanel: rechte Spalte; unter 900 px ein Bogen von unten mit voller
+   Breite (Entwurf 4c §3.4). Die Breite kommt sonst aus dem Store. */
+.info-reiter { writing-mode: vertical-rl; }
+@media (max-width: 899px) {
+  .info-panel {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: auto !important;
+    height: 45vh;
+    border-radius: 0.5rem 0.5rem 0 0;
+  }
+  .info-reiter {
+    position: fixed;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    writing-mode: horizontal-tb;
+  }
+}

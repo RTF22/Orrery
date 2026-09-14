@@ -10,7 +10,7 @@ import { bodies } from '../../data/index';
  * 'time.pause' als echtes Lehnwort (Terminologietabelle: Pause → Pause).
  */
 const GLEICH_ERLAUBT = new Set<string>([
-  'app.title', 'language.de', 'language.en', 'key.arrows', 'time.pause',
+  'app.title', 'panel.info', 'language.de', 'language.en', 'key.arrows', 'time.pause',
   'body.venus.name', 'body.mars.name', 'body.jupiter.name', 'body.saturn.name',
   'body.uranus.name', 'body.phobos.name', 'body.deimos.name', 'body.io.name',
   'body.europa.name', 'body.mimas.name', 'body.enceladus.name', 'body.tethys.name',

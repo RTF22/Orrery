@@ -10,6 +10,7 @@ import { CameraPanel } from './panels/CameraPanel';
 import { DisplayPanel } from './panels/DisplayPanel';
 import { AnsichtenPanel } from './panels/AnsichtenPanel';
 import { BodyTree } from './panels/BodyTree';
+import { InfoPanel } from './info/InfoPanel';
 import { useShortcuts, SHORTCUTS_PANEL } from './shortcuts/useShortcuts';
 import { useIdleHide } from './idle';
 import { useWakeLock } from './wakeLock';
@@ -29,6 +30,7 @@ const KUERZEL: readonly (readonly [string | { key: string }, string])[] = [
   ['C', 'shortcuts.cinema'],
   ['N', 'shortcuts.nextScene'],
   ['L', 'shortcuts.language'],
+  ['I', 'shortcuts.info'],
   ['?', 'shortcuts.toggleHelp'],
 ];
 
@@ -75,8 +77,8 @@ export function App(): React.JSX.Element | null {
   if (versteckt || (laeuftKino && untaetig)) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-0 flex flex-col gap-2 p-3 text-slate-100">
-      <div className="flex w-72 max-w-full flex-col gap-2 overflow-y-auto">
+    <div className="pointer-events-none fixed inset-0 flex items-start justify-between gap-2 p-3 text-slate-100">
+      <div className="flex max-h-full w-72 max-w-full flex-col gap-2 overflow-y-auto">
         <Kopfzeile />
         <TimePanel />
         <ScalePanel />
@@ -87,6 +89,7 @@ export function App(): React.JSX.Element | null {
         <BodyTree />
         {zeigeKuerzel ? <Kuerzeluebersicht /> : null}
       </div>
+      <InfoPanel />
     </div>
   );
 }
