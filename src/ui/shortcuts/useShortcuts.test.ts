@@ -1,10 +1,50 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
-import { handleShortcut, SHORTCUTS_PANEL } from './useShortcuts';
+import { renderHook } from '@testing-library/react';
+import { handleShortcut, useShortcuts, SHORTCUTS_PANEL } from './useShortcuts';
 import { useStore, DEFAULT_STATE } from '../../store';
+import { noteUserInput, stopCinema } from '../cinemaControl';
 
 describe('handleShortcut', () => {
-  beforeEach(() => { useStore.getState().replaceAll(structuredClone(DEFAULT_STATE)); });
+  // stopCinema zuerst: löscht den gemerkten Zustand von vor dem Kinostart.
+  beforeEach(() => {
+    stopCinema();
+    useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
+  });
+
+  it('beendet mit Escape das Kino und stellt die Kamera von vorher wieder her', () => {
+    useStore.getState().setCamera({ targetId: 'mars', distance: 7e4 });
+    const kamera = useStore.getState().camera;
+    handleShortcut('c');
+    expect(useStore.getState().camera.mode).toBe('cinema');
+    expect(handleShortcut('Escape')).toBe(true);
+    expect(useStore.getState().cinema.running).toBe(false);
+    expect(useStore.getState().camera).toEqual(kamera);
+  });
+
+  it('beendet mit Escape auch ein durch Eingabe angehaltenes Kino', () => {
+    const kamera = useStore.getState().camera;
+    handleShortcut('c');
+    noteUserInput();
+    expect(useStore.getState().cinema.running).toBe(false);
+    expect(handleShortcut('Escape')).toBe(true);
+    expect(useStore.getState().camera).toEqual(kamera);
+  });
+
+  it('Escape ohne Kino bleibt unbelegt', () => {
+    expect(handleShortcut('Escape')).toBe(false);
+  });
+
+  it('das Verlassen des Vollbilds beendet ein laufendes Kino', () => {
+    const kamera = useStore.getState().camera;
+    const hook = renderHook(() => { useShortcuts(); });
+    handleShortcut('c');
+    // jsdom hat kein Vollbild: fullscreenElement ist null, wie nach ESC im Browser.
+    document.dispatchEvent(new Event('fullscreenchange'));
+    expect(useStore.getState().cinema.running).toBe(false);
+    expect(useStore.getState().camera).toEqual(kamera);
+    hook.unmount();
+  });
 
   it('blendet die Oberfläche aus und wieder ein', () => {
     handleShortcut('h');

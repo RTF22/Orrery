@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useStore, DEFAULT_STATE } from '../../store';
-import { toggleCinema, nextScene } from '../cinemaControl';
+import { toggleCinema, nextScene, stopCinema, cinemaAktiv } from '../cinemaControl';
 
 /** Panel-Schlüssel der Kürzel-Übersicht. */
 export const SHORTCUTS_PANEL = 'shortcuts';
@@ -52,6 +52,12 @@ export function handleShortcut(taste: string): boolean {
     case 'n':
       nextScene();
       return true;
+    case 'Escape':
+      // Beendet den Film (auch einen nur angehaltenen) und fällt auf den
+      // Zustand von vor dem Start zurück; ohne Kino bleibt die Taste frei.
+      if (!cinemaAktiv()) return false;
+      stopCinema();
+      return true;
     case 'l':
       s.setUi({ language: s.ui.language === 'de' ? 'en' : 'de' });
       return true;
@@ -81,7 +87,17 @@ export function useShortcuts(): void {
       if (istEingabefeld(e.target)) return;
       if (handleShortcut(e.key)) e.preventDefault();
     };
+    // Wer im Kino das Vollbild verlässt (Escape schluckt der Browser dort
+    // unter Umständen selbst), verlässt auch das Kino.
+    const onFullscreenChange = (): void => {
+      // Kein strenger Vergleich mit null: jsdom kennt das Feld nicht (undefined).
+      if (!document.fullscreenElement && cinemaAktiv()) stopCinema();
+    };
     window.addEventListener('keydown', onKeyDown);
-    return () => { window.removeEventListener('keydown', onKeyDown); };
+    document.addEventListener('fullscreenchange', onFullscreenChange);
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('fullscreenchange', onFullscreenChange);
+    };
   }, []);
 }

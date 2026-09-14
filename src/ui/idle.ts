@@ -67,7 +67,7 @@ export function useIdleHide(): boolean {
       // Die Bedienung des Kino-Modus zählt nicht als Störung — sonst hielte
       // der Start ihn sofort wieder an und „Nächste Szene" bliebe stehen.
       const istSteuertaste = e instanceof KeyboardEvent
-        && (e.key === 'c' || e.key === 'n');
+        && (e.key === 'c' || e.key === 'n' || e.key === 'Escape');
       const ausKinoBedienung = e.target instanceof Element
         && e.target.closest('[data-cinema-control]') !== null;
       waechter.handleInput(Date.now());

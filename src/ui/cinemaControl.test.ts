@@ -1,10 +1,89 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
   startCinema, stopCinema, toggleCinema, nextScene, noteUserInput, resumeIfIdle,
 } from './cinemaControl';
 import { useStore, DEFAULT_STATE } from '../store';
 
-beforeEach(() => { useStore.getState().replaceAll(structuredClone(DEFAULT_STATE)); });
+// stopCinema zuerst: Es löscht den gemerkten Zustand von vor dem Start und
+// die Pausenmarke, die als Modulvariablen sonst in den nächsten Test lecken.
+beforeEach(() => {
+  stopCinema();
+  useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
+});
+
+describe('Kino-Steuerung: Rückkehr zum Zustand vor dem Start', () => {
+  it('stellt Kamera, Zeitrate und Pause wieder her, lässt das Datum stehen', () => {
+    const s = useStore.getState();
+    s.setCamera({ mode: 'attached', targetId: 'saturn', distance: 5e5, azimuth: 1.2, elevation: -0.3, freezeJd: null });
+    s.setTime({ rateDaysPerSec: 3, paused: true, jd: 2460000 });
+    const kamera = useStore.getState().camera;
+    startCinema();
+    useStore.getState().setCinema({ nummer: 4, elapsedSec: 9 });
+    useStore.getState().setTime({ jd: 2460100, rateDaysPerSec: 500, paused: false });
+    stopCinema();
+    const nach = useStore.getState();
+    expect(nach.camera).toEqual(kamera);
+    expect(nach.time).toEqual({ jd: 2460100, rateDaysPerSec: 3, paused: true });
+    expect(nach.cinema.running).toBe(false);
+  });
+
+  it('stellt auch nach einer Pause durch Eingabe wieder her', () => {
+    useStore.getState().setCamera({ targetId: 'mars', distance: 7e4, freezeJd: 2451000 });
+    const kamera = useStore.getState().camera;
+    startCinema();
+    noteUserInput();
+    expect(useStore.getState().cinema.running).toBe(false);
+    expect(useStore.getState().camera.mode).toBe('cinema');
+    stopCinema();
+    expect(useStore.getState().camera).toEqual(kamera);
+  });
+
+  it('merkt sich beim Wiederanlauf nach Ruhe nichts Neues', () => {
+    useStore.getState().setCamera({ targetId: 'venus', distance: 3e4 });
+    const kamera = useStore.getState().camera;
+    startCinema();
+    noteUserInput();
+    resumeIfIdle(Date.now() + 3600_000);
+    expect(useStore.getState().cinema.running).toBe(true);
+    stopCinema();
+    expect(useStore.getState().camera).toEqual(kamera);
+  });
+
+  it('lässt die Kamera in Ruhe, wenn sie während der Pause von Hand umgestellt wurde', () => {
+    startCinema();
+    noteUserInput();
+    useStore.getState().setCamera({ mode: 'follow', targetId: 'moon' });
+    stopCinema();
+    expect(useStore.getState().camera.mode).toBe('follow');
+    expect(useStore.getState().camera.targetId).toBe('moon');
+  });
+
+  it('ohne gemerkten Zustand (Seite mit laufendem Kino geladen) bleibt der freie Modus mit dem Kinoziel', () => {
+    useStore.getState().setCinema({ running: true });
+    useStore.getState().setCamera({ mode: 'cinema', targetId: 'jupiter' });
+    stopCinema();
+    const s = useStore.getState();
+    expect(s.camera.mode).toBe('free');
+    expect(s.camera.targetId).toBe('jupiter');
+    expect(s.camera.freezeJd).toBe(s.time.jd);
+  });
+
+  it('die Ruhefrist zählt ab der letzten Eingabe, nicht ab der ersten', () => {
+    vi.useFakeTimers({ now: 1_000_000 });
+    try {
+      startCinema();
+      noteUserInput();
+      vi.setSystemTime(1_020_000);
+      noteUserInput();
+      resumeIfIdle(1_031_000);
+      expect(useStore.getState().cinema.running).toBe(false);
+      resumeIfIdle(1_051_000);
+      expect(useStore.getState().cinema.running).toBe(true);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});
 
 describe('Kino-Steuerung', () => {
   it('startet im Kameramodus Kinofahrt bei Szene null', () => {
