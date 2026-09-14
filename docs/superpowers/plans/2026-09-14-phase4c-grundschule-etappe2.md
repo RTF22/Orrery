@@ -1,14 +1,14 @@
-# Phase 4c Infopanel, Etappe 2 „Grundschule Körper" — Umsetzungsplan
+# Phase 4c Infopanel, Etappe 2 „Grundschule" — Umsetzungsplan
 
 > **Für agentische Umsetzer:** ERFORDERLICHE SUB-SKILL: superpowers:subagent-driven-development (empfohlen) oder superpowers:executing-plans, Task für Task. Die Schritte verwenden Kästchen (`- [ ]`) zum Abhaken.
 
-**Ziel:** Jeder der 35 Körper hat einen Grundschultext in Deutsch und Englisch; Erde und Saturn liegen seit Etappe 1 vor, es fehlen 33 Körper, also 66 Markdown-Dateien. Kein Code ändert sich.
+**Ziel:** Die Grundschulstufe ist komplett: Jeder der 35 Körper und jedes der 8 Themen hat einen Grundschultext in Deutsch und Englisch. Erde und Saturn liegen seit Etappe 1 vor, es fehlen 33 Körper und 8 Themen, also 82 neue Markdown-Dateien; der Saturn-Text aus Etappe 1 bekommt einen Themenverweis. Kein Code ändert sich. (Entscheidung Jens, 14.09.2026: Etappen werden nach Niveau geschnitten, nicht nach Art; Nachtrag in Entwurf §7.)
 
-**Architektur:** Reine Dateiergänzung unter `src/data/texte/<sprache>/grundschule/objekt-<id>.md` (Entwurf §4.1). Der Lader findet neue Dateien über `import.meta.glob` ohne Codeänderung; `src/data/texte/dateien.test.ts` prüft jede Datei (Namensmuster, Überschrift, auflösbare Verweise, kein HTML, Wortgrenze 110, Sprachpaar). Die Texte in diesem Plan sind **wörtlich** zu übernehmen; ein Umsetzer schreibt keine eigenen Sätze.
+**Architektur:** Reine Dateiergänzung unter `src/data/texte/<sprache>/grundschule/objekt-<id>.md` und `…/thema-<id>.md` (Entwurf §4.1, §4.5). Der Lader findet neue Dateien über `import.meta.glob` ohne Codeänderung; `src/data/texte/dateien.test.ts` prüft jede Datei (Namensmuster, Überschrift, auflösbare Verweise, kein HTML, Wortgrenze 110, Sprachpaar). Die Texte in diesem Plan sind **wörtlich** zu übernehmen; ein Umsetzer schreibt keine eigenen Sätze.
 
 **Tech-Stack:** Markdown-Teilmenge des Renderers (Überschrift `#`, Absätze, fett, kursiv, Links `[Text](objekt:id|szene:id|quelle:id)`), Vitest, Playwright-MCP für die Abnahme.
 
-**Entwurf:** `docs/superpowers/specs/2026-09-14-phase4c-infopanel-design.md`, maßgeblich §2 Punkt 4 (40 bis 80 Wörter), §4.1 (Ablage), §4.2 (Markdown), §4.3 (Verweise), §7 Punkt 2 (Umfang: 35 Texte Deutsch und Englisch), §8 (Dateitest). Abweichungen unter „Rulings" am Ende.
+**Entwurf:** `docs/superpowers/specs/2026-09-14-phase4c-infopanel-design.md`, maßgeblich §2 Punkt 4 (40 bis 80 Wörter), §4.1 (Ablage), §4.2 (Markdown), §4.3 (Verweise), §7 Punkt 2 in der Fassung des Nachtrags vom 14.09.2026 (Umfang: 35 Körper und 8 Themen, Deutsch und Englisch), §8 (Dateitest). Abweichungen unter „Rulings" am Ende.
 
 ## Globale Randbedingungen
 
@@ -16,7 +16,7 @@
 - Keine Fremdzurechnung im Commit-Text: keine Co-Autor-Zeile, keine Sitzungs-URL, keine Werkzeugnamen. Nach jedem Commit prüfen: `git log --format=%B -1 | grep -ci 'co-authored\|session'` muss 0 ergeben. Der Dateiname der lokalen Projektanleitung erscheint in keiner versionierten Datei („die lokale Projektanleitung" schreiben).
 - Branch `grundschule` (von `master`), **kein Worktree**: der Vite-Server auf Port 5173 (Basis `/Orrery/`) liefert dieses Verzeichnis aus. Erst `curl -s -o /dev/null -w '%{http_code}' http://localhost:5173/Orrery/` prüfen, keinen zweiten starten.
 - Textregeln (Entwurf §2 Punkt 4, §4.2): 40 bis 80 Wörter je Datei, weiche Prüfgrenze 110 (gezählt inklusive Überschrift und Linktext, ohne Link-Ziele); erste Zeile `# Titel`; Zeilenumbrüche innerhalb eines Absatzes sind erlaubt (der Parser verbindet sie); kein HTML, keine Bilder, keine Tabellen.
-- Verweise nur auf existierende Ziele: `objekt:<id>` (35 Körper), `szene:<id>` (19 Szenen in `src/data/scenes.ts`), `quelle:<id>` (24 Quellen in `src/data/quellen.ts`). **Keine `thema:`-Verweise in Grundschultexten** (Ruling 1: Themen haben bis 4c-4 keinen Text, ein Verweis wäre eine Sackgasse).
+- Verweise nur auf existierende Ziele: `objekt:<id>` (35 Körper), `szene:<id>` (19 Szenen in `src/data/scenes.ts`), `quelle:<id>` (24 Quellen in `src/data/quellen.ts`), `thema:<id>` (8 Themen in `src/data/themen.ts`). Ein `thema:`-Verweis in einer Grundschuldatei ist nur erlaubt, weil Task 7 allen acht Themen einen Grundschultext gibt (Ruling 1); auf dem Grundschul-Tab darf kein Verweis auf „kein Text" führen (Task 7 Schritt 3, Task 8 Schritt 5).
 - Deutsche und englische Fassung sind inhaltlich parallel (gleiche Aussagen, gleiche Verweise).
 - Vor jedem Commit: `npx vitest run src/data/texte` grün. Vor „fertig": `npm test`, `npm run lint`, `npx tsc -b`, `npm run build`.
 - Playwright schreibt nur nach `.playwright-mcp/` (git-ignoriert). Direkt nach jedem `browser_navigate`: `window.store.setState({ quality: { tier: 'high' } })`.
@@ -28,14 +28,17 @@
 | 1 | sun, mercury, venus, mars | 8 |
 | 2 | moon, phobos, deimos | 6 |
 | 3 | jupiter, io, europa, ganymede, callisto | 10 |
-| 4 | mimas, enceladus, tethys, dione, rhea, titan, iapetus | 14 |
+| 4 | saturn (Nachtrag), mimas, enceladus, tethys, dione, rhea, titan, iapetus | 2 geändert, 14 neu |
 | 5 | uranus, miranda, ariel, umbriel, titania, oberon, neptune, triton | 16 |
 | 6 | pluto, charon, ceres, eris, haumea, makemake | 12 |
-| 7 | Abnahme `docs/phase4c-etappe2-abnahme.md`, `README.md` | 2 |
+| 7 | Themen finsternis, ringe, gebundene-rotation, kirkwood-luecken, achsneigung, zwergplaneten, bahnelemente, modell | 16 |
+| 8 | Abnahme `docs/phase4c-etappe2-abnahme.md`, `README.md` | 2 |
 
-Jede Datei liegt unter `src/data/texte/de/grundschule/objekt-<id>.md` beziehungsweise `src/data/texte/en/grundschule/objekt-<id>.md`. Nach Etappe 2 gibt es 80 Textdateien; `dateien.test.ts` erzeugt je Datei fünf Fälle.
+Jede Datei liegt unter `src/data/texte/de/grundschule/<art>-<id>.md` beziehungsweise `src/data/texte/en/grundschule/<art>-<id>.md` mit `<art>` = `objekt` oder `thema`. Nach Etappe 2 gibt es 96 Textdateien (14 aus Etappe 1, 66 Körper, 16 Themen); `dateien.test.ts` erzeugt je Datei fünf Fälle.
 
-**Vorgehen je Text-Task (gilt für Task 1 bis 6):** Dateien wörtlich aus dem Plan anlegen → `npx vitest run src/data/texte` → alle Fälle grün (die Zahl der Dateien im Fall „gibt es" wächst mit) → Commit nur mit `git add src/data/texte`. Fällt der Wortgrenzen-Fall, den Text behutsam kürzen und die Kürzung im Report nennen; fällt der Verweis-Fall, ist die Kennung gegen die Kataloge zu prüfen, nie der Test zu ändern.
+**Themenverweise (Entscheidung Jens, 14.09.2026):** Mond → `gebundene-rotation` und `finsternis`; Saturn und Uranus → `ringe`; Uranus und Venus → `achsneigung`; Pluto, Ceres und Eris → `zwergplaneten`; Ceres → `kirkwood-luecken`. Sie stehen bereits in den Texten der Tasks 1, 2, 4, 5 und 6; Task 7 liefert die Ziele. Bis Task 7 fertig ist, führen diese Verweise auf dem Branch zum Hinweis „kein Text", was für Zwischencommits hingenommen wird.
+
+**Vorgehen je Text-Task (gilt für Task 1 bis 7):** Dateien wörtlich aus dem Plan anlegen → `npx vitest run src/data/texte` → alle Fälle grün (die Zahl der Dateien im Fall „gibt es" wächst mit) → Commit nur mit `git add src/data/texte`. Fällt der Wortgrenzen-Fall, den Text behutsam kürzen und die Kürzung im Report nennen; fällt der Verweis-Fall, ist die Kennung gegen die Kataloge zu prüfen, nie der Test zu ändern.
 
 ---
 
@@ -45,7 +48,7 @@ Jede Datei liegt unter `src/data/texte/de/grundschule/objekt-<id>.md` beziehungs
 - Erstellen: `src/data/texte/{de,en}/grundschule/objekt-{sun,mercury,venus,mars}.md`
 
 **Schnittstellen:**
-- Konsumiert: Verweise `objekt:earth`, `objekt:moon`, `objekt:phobos`, `objekt:deimos`, `szene:systemblick`, `szene:merkurjagd`.
+- Konsumiert: Verweise `objekt:earth`, `objekt:moon`, `objekt:phobos`, `objekt:deimos`, `szene:systemblick`, `szene:merkurjagd`, `thema:achsneigung` (Ziel aus Task 7).
 - Produziert: nichts für spätere Tasks.
 
 - [ ] **Schritt 1: Branch anlegen**
@@ -106,7 +109,8 @@ you can watch it do so.
 
 Venus ist fast so groß wie die [Erde](objekt:earth), aber ganz anders. Dicke Wolken
 hüllen sie ein, und darunter ist es heißer als in einem Backofen, heißer als auf
-jedem anderen Planeten. Venus dreht sich sehr langsam und sogar rückwärts: Ein
+jedem anderen Planeten. Venus dreht sich sehr langsam und sogar
+[rückwärts](thema:achsneigung): Ein
 Venustag dauert länger als ein Venusjahr. Am Abend- oder Morgenhimmel leuchtet sie
 so hell, dass man sie oft für einen Stern hält.
 ```
@@ -117,7 +121,8 @@ so hell, dass man sie oft für einen Stern hält.
 
 Venus is almost as big as the [Earth](objekt:earth), but completely different. Thick
 clouds wrap around it, and underneath it is hotter than an oven, hotter than on any
-other planet. Venus spins very slowly and even backwards: a day on Venus lasts
+other planet. Venus spins very slowly and even [backwards](thema:achsneigung): a
+day on Venus lasts
 longer than a year on Venus. In the evening or morning sky it shines so brightly
 that people often mistake it for a star.
 ```
@@ -164,7 +169,7 @@ git commit -m "Grundschultexte: Sonne, Merkur, Venus, Mars"
 - Erstellen: `src/data/texte/{de,en}/grundschule/objekt-{moon,phobos,deimos}.md`
 
 **Schnittstellen:**
-- Konsumiert: `objekt:earth`, `objekt:mars`, `objekt:phobos`, `szene:mondfinsternis`, `szene:phobos-tiefflug`, `quelle:nssdc-moon`.
+- Konsumiert: `objekt:earth`, `objekt:mars`, `objekt:phobos`, `szene:mondfinsternis`, `szene:phobos-tiefflug`, `quelle:nssdc-moon`, `thema:gebundene-rotation`, `thema:finsternis` (Ziele aus Task 7).
 
 - [ ] **Schritt 1: Dateien anlegen**
 
@@ -174,9 +179,11 @@ git commit -m "Grundschultexte: Sonne, Merkur, Venus, Mars"
 
 Der Mond ist der Begleiter der [Erde](objekt:earth). Er ist etwa ein Viertel so breit
 wie sie und braucht rund vier Wochen für eine Runde um sie. Dabei zeigt er uns immer
-dieselbe Seite. Er hat keine Luft, und seine Oberfläche ist voller Krater. Menschen
-sind schon auf ihm gelandet. Wandert er durch den Schatten der Erde, gibt es eine
-[Mondfinsternis](szene:mondfinsternis). Mehr Zahlen: [Mondsteckbrief](quelle:nssdc-moon).
+[dieselbe Seite](thema:gebundene-rotation). Er hat keine Luft, und seine Oberfläche
+ist voller Krater. Menschen sind schon auf ihm gelandet. Wandert er durch den
+Schatten der Erde, gibt es eine [Mondfinsternis](szene:mondfinsternis), mehr dazu
+unter [Finsternisse](thema:finsternis). Mehr Zahlen:
+[Mondsteckbrief](quelle:nssdc-moon).
 ```
 
 `en/grundschule/objekt-moon.md`:
@@ -185,9 +192,10 @@ sind schon auf ihm gelandet. Wandert er durch den Schatten der Erde, gibt es ein
 
 The Moon is the companion of the [Earth](objekt:earth). It is about a quarter as wide
 as the Earth and needs around four weeks for one lap around it. While doing so it
-always shows us the same side. It has no air, and its surface is full of craters.
-People have already landed on it. When it moves through the Earth's shadow there is
-a [lunar eclipse](szene:mondfinsternis). More numbers: [Moon fact sheet](quelle:nssdc-moon).
+always shows us [the same side](thema:gebundene-rotation). It has no air, and its
+surface is full of craters. People have already landed on it. When it moves through
+the Earth's shadow there is a [lunar eclipse](szene:mondfinsternis), more under
+[Eclipses](thema:finsternis). More numbers: [Moon fact sheet](quelle:nssdc-moon).
 ```
 
 `de/grundschule/objekt-phobos.md`:
@@ -385,15 +393,28 @@ git commit -m "Grundschultexte: Jupiter, Io, Europa, Ganymed, Kallisto"
 
 ---
 
-### Task 4: Saturnmonde
+### Task 4: Saturn-Nachtrag und Saturnmonde
 
 **Dateien:**
+- Ändern: `src/data/texte/{de,en}/grundschule/objekt-saturn.md` (aus Etappe 1, erster Satz)
 - Erstellen: `src/data/texte/{de,en}/grundschule/objekt-{mimas,enceladus,tethys,dione,rhea,titan,iapetus}.md`
 
 **Schnittstellen:**
-- Konsumiert: `objekt:saturn`, `objekt:enceladus`, `objekt:titan`, `objekt:mercury`, `objekt:moon`, `szene:enceladus-hell`, `szene:titan-dunst`, `szene:iapetus-schief`, `quelle:nasa-cassini`, `quelle:esa-cassini-huygens`.
+- Konsumiert: `objekt:saturn`, `objekt:enceladus`, `objekt:titan`, `objekt:mercury`, `objekt:moon`, `szene:enceladus-hell`, `szene:titan-dunst`, `szene:iapetus-schief`, `quelle:nasa-cassini`, `quelle:esa-cassini-huygens`, `thema:ringe` (Ziel aus Task 7).
 
-- [ ] **Schritt 1: Dateien anlegen**
+- [ ] **Schritt 1: Saturn-Text nachtragen**
+
+In `de/grundschule/objekt-saturn.md` den ersten Satz ändern, sonst nichts:
+```markdown
+Saturn ist der Planet mit den großen [Ringen](thema:ringe). Sie bestehen aus unzähligen Brocken aus
+```
+
+In `en/grundschule/objekt-saturn.md` den ersten Satz ändern, sonst nichts:
+```markdown
+Saturn is the planet with the big [rings](thema:ringe). They are made of countless chunks of ice,
+```
+
+- [ ] **Schritt 2: Dateien anlegen**
 
 `de/grundschule/objekt-mimas.md`:
 ```markdown
@@ -550,16 +571,16 @@ walnut. Its orbit is tilted, which the scene [Tilted Iapetus](szene:iapetus-schi
 shows.
 ```
 
-- [ ] **Schritt 2: Prüfen**
+- [ ] **Schritt 3: Prüfen**
 
 Run: `npx vitest run src/data/texte`
 Expected: PASS, 52 Dateien.
 
-- [ ] **Schritt 3: Commit**
+- [ ] **Schritt 4: Commit**
 
 ```bash
 git add src/data/texte
-git commit -m "Grundschultexte: Mimas, Enceladus, Tethys, Dione, Rhea, Titan, Iapetus"
+git commit -m "Grundschultexte: Saturn-Nachtrag, Mimas, Enceladus, Tethys, Dione, Rhea, Titan, Iapetus"
 ```
 
 ---
@@ -570,7 +591,7 @@ git commit -m "Grundschultexte: Mimas, Enceladus, Tethys, Dione, Rhea, Titan, Ia
 - Erstellen: `src/data/texte/{de,en}/grundschule/objekt-{uranus,miranda,ariel,umbriel,titania,oberon,neptune,triton}.md`
 
 **Schnittstellen:**
-- Konsumiert: `objekt:earth`, `objekt:uranus`, `objekt:neptune`, `objekt:saturn`, `objekt:moon`, `szene:uranus-gekippt`, `szene:ferne-sonne`, `szene:triton-rueckwaerts`.
+- Konsumiert: `objekt:earth`, `objekt:uranus`, `objekt:neptune`, `objekt:saturn`, `objekt:moon`, `szene:uranus-gekippt`, `szene:ferne-sonne`, `szene:triton-rueckwaerts`, `thema:achsneigung`, `thema:ringe` (Ziele aus Task 7).
 
 - [ ] **Schritt 1: Dateien anlegen**
 
@@ -580,8 +601,9 @@ git commit -m "Grundschultexte: Mimas, Enceladus, Tethys, Dione, Rhea, Titan, Ia
 
 Uranus ist ein Eisriese, viermal so breit wie die [Erde](objekt:earth), und
 schimmert blaugrün, weil ein Gas namens Methan in seinen Wolken das rote Licht
-schluckt. Das Besondere: Uranus liegt auf der Seite und rollt gewissermaßen um die
-Sonne, seine Pole zeigen abwechselnd zur Sonne. Er hat dünne, dunkle Ringe und über
+schluckt. Das Besondere: Seine [Achse](thema:achsneigung) ist so stark gekippt,
+dass Uranus auf der Seite liegt und gewissermaßen um die Sonne rollt; seine Pole
+zeigen abwechselnd zur Sonne. Er hat dünne, dunkle [Ringe](thema:ringe) und über
 zwei Dutzend Monde, die nach Figuren aus Theaterstücken heißen. Szene:
 [Uranus gekippt](szene:uranus-gekippt).
 ```
@@ -592,9 +614,10 @@ zwei Dutzend Monde, die nach Figuren aus Theaterstücken heißen. Szene:
 
 Uranus is an ice giant, four times as wide as the [Earth](objekt:earth), and it
 shimmers blue-green because a gas called methane in its clouds swallows the red
-light. The special thing: Uranus lies on its side and more or less rolls around the
-Sun; its poles take turns pointing at the Sun. It has thin, dark rings and more than
-two dozen moons named after characters from plays. Scene:
+light. The special thing: its [axis](thema:achsneigung) is tilted so far that Uranus
+lies on its side and more or less rolls around the Sun; its poles take turns
+pointing at the Sun. It has thin, dark [rings](thema:ringe) and more than two dozen
+moons named after characters from plays. Scene:
 [Tilted Uranus](szene:uranus-gekippt).
 ```
 
@@ -772,7 +795,7 @@ git commit -m "Grundschultexte: Uranus, Miranda, Ariel, Umbriel, Titania, Oberon
 - Erstellen: `src/data/texte/{de,en}/grundschule/objekt-{pluto,charon,ceres,eris,haumea,makemake}.md`
 
 **Schnittstellen:**
-- Konsumiert: `objekt:pluto`, `objekt:charon`, `objekt:moon`, `objekt:mars`, `objekt:jupiter`, `objekt:neptune`, `szene:pluto-charon`, `szene:ceres-guertel`.
+- Konsumiert: `objekt:pluto`, `objekt:charon`, `objekt:moon`, `objekt:mars`, `objekt:jupiter`, `objekt:neptune`, `szene:pluto-charon`, `szene:ceres-guertel`, `thema:zwergplaneten`, `thema:kirkwood-luecken` (Ziele aus Task 7).
 
 - [ ] **Schritt 1: Dateien anlegen**
 
@@ -780,7 +803,8 @@ git commit -m "Grundschultexte: Uranus, Miranda, Ariel, Umbriel, Titania, Oberon
 ```markdown
 # Der Pluto
 
-Pluto ist ein Zwergplanet weit draußen hinter [Neptun](objekt:neptune). Er ist
+Pluto ist ein [Zwergplanet](thema:zwergplaneten) weit draußen hinter
+[Neptun](objekt:neptune). Er ist
 kleiner als unser [Mond](objekt:moon) und braucht 248 Jahre für eine Runde um die
 Sonne. Auf seiner Oberfläche aus Eis liegt eine riesige helle Fläche in Form eines
 Herzens. Sein Mond [Charon](objekt:charon) ist halb so groß wie er, die beiden
@@ -792,7 +816,8 @@ umkreisen einander wie ein Paar. Die Szene
 ```markdown
 # Pluto
 
-Pluto is a dwarf planet far out beyond [Neptune](objekt:neptune). It is smaller than
+Pluto is a [dwarf planet](thema:zwergplaneten) far out beyond
+[Neptune](objekt:neptune). It is smaller than
 our [Moon](objekt:moon) and needs 248 years for one lap around the Sun. On its icy
 surface lies a huge bright area in the shape of a heart. Its moon
 [Charon](objekt:charon) is half its size; the two circle each other like a pair.
@@ -826,10 +851,12 @@ from Pluto.
 # Ceres
 
 Ceres ist der größte Brocken im Asteroidengürtel zwischen [Mars](objekt:mars) und
-[Jupiter](objekt:jupiter) und der einzige Zwergplanet dort. Sie ist rund 940
-Kilometer groß, also etwa ein Viertel so breit wie unser [Mond](objekt:moon). In
-einem Krater leuchten helle Flecken aus Salz, das aus salzigem Wasser im Inneren
-stammt. Die Szene [Ceres im Gürtel](szene:ceres-guertel) zeigt ihre Nachbarschaft.
+[Jupiter](objekt:jupiter) und der einzige [Zwergplanet](thema:zwergplaneten) dort.
+Sie ist rund 940 Kilometer groß, also etwa ein Viertel so breit wie unser
+[Mond](objekt:moon). In einem Krater leuchten helle Flecken aus Salz, das aus
+salzigem Wasser im Inneren stammt. Die Szene [Ceres im Gürtel](szene:ceres-guertel)
+zeigt ihre Nachbarschaft. Im Gürtel gibt es fast leere Lücken, die
+[Kirkwood-Lücken](thema:kirkwood-luecken).
 ```
 
 `en/grundschule/objekt-ceres.md`:
@@ -837,17 +864,20 @@ stammt. Die Szene [Ceres im Gürtel](szene:ceres-guertel) zeigt ihre Nachbarscha
 # Ceres
 
 Ceres is the biggest chunk in the asteroid belt between [Mars](objekt:mars) and
-[Jupiter](objekt:jupiter) and the only dwarf planet there. It is about 940
-kilometres across, roughly a quarter as wide as our [Moon](objekt:moon). In one
-crater bright spots of salt shine, left behind by salty water from the inside. The
-scene [Ceres in the belt](szene:ceres-guertel) shows its neighbourhood.
+[Jupiter](objekt:jupiter) and the only [dwarf planet](thema:zwergplaneten) there.
+It is about 940 kilometres across, roughly a quarter as wide as our
+[Moon](objekt:moon). In one crater bright spots of salt shine, left behind by salty
+water from the inside. The scene [Ceres in the belt](szene:ceres-guertel) shows its
+neighbourhood. The belt has almost empty gaps, the
+[Kirkwood gaps](thema:kirkwood-luecken).
 ```
 
 `de/grundschule/objekt-eris.md`:
 ```markdown
 # Eris
 
-Eris ist ein Zwergplanet, fast so groß wie [Pluto](objekt:pluto), aber schwerer und
+Eris ist ein [Zwergplanet](thema:zwergplaneten), fast so groß wie
+[Pluto](objekt:pluto), aber schwerer und
 dreimal so weit von der Sonne entfernt. Für eine Runde braucht sie über 550 Jahre.
 Als Eris 2005 entdeckt wurde, mussten sich die Astronomen entscheiden, was ein
 Planet ist, und seitdem heißen Pluto und Eris Zwergplaneten. Eris hat einen kleinen
@@ -858,7 +888,8 @@ Mond namens Dysnomia.
 ```markdown
 # Eris
 
-Eris is a dwarf planet, almost as big as [Pluto](objekt:pluto), but heavier and
+Eris is a [dwarf planet](thema:zwergplaneten), almost as big as
+[Pluto](objekt:pluto), but heavier and
 three times as far from the Sun. It needs over 550 years for one lap. When Eris was
 discovered in 2005, astronomers had to decide what a planet is, and since then Pluto
 and Eris have been called dwarf planets. Eris has a small moon called Dysnomia.
@@ -920,15 +951,249 @@ git commit -m "Grundschultexte: Pluto, Charon, Ceres, Eris, Haumea, Makemake"
 
 ---
 
-### Task 7: Abnahme, README, Abschluss
+### Task 7: Themen Grundschule
+
+**Dateien:**
+- Erstellen: `src/data/texte/{de,en}/grundschule/thema-{finsternis,ringe,gebundene-rotation,kirkwood-luecken,achsneigung,zwergplaneten,bahnelemente,modell}.md`
+
+**Schnittstellen:**
+- Konsumiert: `objekt:earth`, `objekt:moon`, `objekt:venus`, `objekt:mars`, `objekt:jupiter`, `objekt:io`, `objekt:saturn`, `objekt:titan`, `objekt:uranus`, `objekt:neptune`, `objekt:pluto`, `objekt:charon`, `objekt:ceres`, `objekt:eris`, `objekt:haumea`, `objekt:makemake`, `szene:mondfinsternis`, `szene:ringdurchflug`, `szene:ceres-guertel`, `szene:uranus-gekippt`, `quelle:jpl-approx-pos`, `quelle:nssdc-factsheets`, `thema:bahnelemente` (aus `modell`, wie im Gymnasiumtext).
+- Produziert: die Ziele der `thema:`-Verweise aus Task 1, 2, 4, 5 und 6 sowie des Knopfs „Grenzen des Modells" im Datenblock (`ui/info/Datenblock.tsx`; erscheint auf dem Grundschul-Tab nur außerhalb des Genauigkeitsfensters 1800–2050).
+
+Themen haben keinen Datenblock und keinen Szenenkopf; der Text steht allein. Die Überschrift ist die deutsche beziehungsweise englische Fassung des Titels aus `ui/i18n` (`thema.<id>.title`), damit Panelkopf und Ausweichtitel übereinstimmen.
+
+- [ ] **Schritt 1: Dateien anlegen**
+
+`de/grundschule/thema-finsternis.md`:
+```markdown
+# Finsternisse
+
+Eine Finsternis entsteht, wenn ein Himmelskörper einem anderen das Licht wegnimmt.
+Schiebt sich der [Mond](objekt:moon) zwischen Sonne und [Erde](objekt:earth), wird
+es mitten am Tag dunkel: eine Sonnenfinsternis. Wandert der Mond durch den Schatten
+der Erde, färbt er sich rötlich: eine [Mondfinsternis](szene:mondfinsternis). Das
+passiert nicht jeden Monat, weil die Bahn des Mondes ein wenig schief liegt. Meist
+läuft er oberhalb oder unterhalb des Schattens vorbei.
+```
+
+`en/grundschule/thema-finsternis.md`:
+```markdown
+# Eclipses
+
+An eclipse happens when one body in the sky takes away the light from another. When
+the [Moon](objekt:moon) slides between the Sun and the [Earth](objekt:earth), it
+turns dark in the middle of the day: a solar eclipse. When the Moon moves through
+the Earth's shadow, it turns reddish: a [lunar eclipse](szene:mondfinsternis). This
+does not happen every month, because the Moon's orbit is tilted a little. Usually
+it passes above or below the shadow.
+```
+
+`de/grundschule/thema-ringe.md`:
+```markdown
+# Ringsysteme
+
+Ringe sind keine festen Scheiben, sondern Milliarden einzelner Brocken, die alle
+für sich um den Planeten kreisen. Die Ringe des [Saturn](objekt:saturn) bestehen
+fast nur aus Eis und sind deshalb so hell. Sie sind über 200 000 Kilometer breit,
+aber oft nur wenige Meter dick. Auch [Jupiter](objekt:jupiter),
+[Uranus](objekt:uranus) und [Neptun](objekt:neptune) haben Ringe, nur dünn und
+dunkel. In der Szene [Durchflug durch Saturns Ringe](szene:ringdurchflug) fliegst du
+mitten hindurch.
+```
+
+`en/grundschule/thema-ringe.md`:
+```markdown
+# Ring systems
+
+Rings are not solid discs but billions of separate chunks, each circling the planet
+on its own. The rings of [Saturn](objekt:saturn) are made almost entirely of ice,
+which is why they are so bright. They are more than 200,000 kilometres wide but
+often only a few metres thick. [Jupiter](objekt:jupiter), [Uranus](objekt:uranus)
+and [Neptune](objekt:neptune) have rings too, only thin and dark. In the scene
+[Flying through Saturn's rings](szene:ringdurchflug) you fly right through them.
+```
+
+`de/grundschule/thema-gebundene-rotation.md`:
+```markdown
+# Gebundene Rotation
+
+Unser [Mond](objekt:moon) zeigt der [Erde](objekt:earth) immer dieselbe Seite. Er
+dreht sich zwar um sich selbst, aber genau einmal je Umlauf, so dass er der Erde nie
+den Rücken zukehrt. Das nennt man gebundene Rotation. Die Schwerkraft der Erde hat
+den Mond über Millionen Jahre langsam in diesen Takt gebremst. Fast alle großen
+Monde im Sonnensystem laufen so um ihren Planeten, auch [Io](objekt:io),
+[Titan](objekt:titan) und [Charon](objekt:charon).
+```
+
+`en/grundschule/thema-gebundene-rotation.md`:
+```markdown
+# Tidal locking
+
+Our [Moon](objekt:moon) always shows the [Earth](objekt:earth) the same side. It
+does spin, but exactly once per lap, so it never turns its back on the Earth. This
+is called tidal locking. Over millions of years the Earth's gravity slowly braked
+the Moon into this rhythm. Almost all big moons in the solar system circle their
+planet this way, including [Io](objekt:io), [Titan](objekt:titan) and
+[Charon](objekt:charon).
+```
+
+`de/grundschule/thema-kirkwood-luecken.md`:
+```markdown
+# Kirkwood-Lücken
+
+Zwischen [Mars](objekt:mars) und [Jupiter](objekt:jupiter) kreisen viele tausend
+Asteroiden im Asteroidengürtel. Sie verteilen sich aber nicht gleichmäßig: In
+manchen Abständen von der Sonne ist der Gürtel fast leer. Dort käme ein Asteroid
+immer wieder im selben Takt an Jupiter vorbei, etwa genau dreimal, während Jupiter
+einmal um die Sonne läuft. Jupiter zieht ihn dann jedes Mal ein Stück weiter, bis
+er aus der Lücke heraus ist. Szene: [Ceres im Gürtel](szene:ceres-guertel).
+```
+
+`en/grundschule/thema-kirkwood-luecken.md`:
+```markdown
+# Kirkwood gaps
+
+Between [Mars](objekt:mars) and [Jupiter](objekt:jupiter) many thousands of
+asteroids circle in the asteroid belt. But they are not spread out evenly: at some
+distances from the Sun the belt is almost empty. There an asteroid would keep
+passing Jupiter in the same rhythm, say exactly three times while Jupiter goes
+around the Sun once. Each time Jupiter tugs it a little further, until it has left
+the gap. Scene: [Ceres in the belt](szene:ceres-guertel).
+```
+
+`de/grundschule/thema-achsneigung.md`:
+```markdown
+# Achsneigung
+
+Jeder Planet dreht sich um eine Achse, wie ein Kreisel. Bei der [Erde](objekt:earth)
+steht sie nicht gerade, sondern ist um gut 23 Grad gekippt. Deshalb gibt es
+Jahreszeiten: Ein halbes Jahr lang ist die Nordhälfte der Sonne zugeneigt, dann die
+Südhälfte. Bei [Uranus](objekt:uranus) liegt die Achse fast flach, er rollt
+gewissermaßen um die Sonne, siehe [Uranus gekippt](szene:uranus-gekippt). Die
+[Venus](objekt:venus) steht beinahe auf dem Kopf und dreht sich deshalb rückwärts.
+```
+
+`en/grundschule/thema-achsneigung.md`:
+```markdown
+# Axial tilt
+
+Every planet spins around an axis, like a top. On the [Earth](objekt:earth) it is
+not upright but tilted by a good 23 degrees. That is why there are seasons: for
+half a year the northern half leans towards the Sun, then the southern half. On
+[Uranus](objekt:uranus) the axis lies almost flat, so it more or less rolls around
+the Sun, see [Tilted Uranus](szene:uranus-gekippt). [Venus](objekt:venus) is nearly
+upside down, which is why it spins backwards.
+```
+
+`de/grundschule/thema-zwergplaneten.md`:
+```markdown
+# Zwergplaneten
+
+Ein Zwergplanet ist rund wie ein Planet, weil seine Schwerkraft ihn zur Kugel
+geformt hat. Aber er hat seine Bahn nicht für sich allein: In seiner Nähe kreisen
+noch viele andere Brocken. Das gilt für [Ceres](objekt:ceres) im Asteroidengürtel
+und für [Pluto](objekt:pluto), [Eris](objekt:eris), [Haumea](objekt:haumea) und
+[Makemake](objekt:makemake) weit draußen hinter Neptun. Seit 2006 zählen die
+Astronomen Pluto nicht mehr zu den Planeten, sondern zu den Zwergplaneten.
+```
+
+`en/grundschule/thema-zwergplaneten.md`:
+```markdown
+# Dwarf planets
+
+A dwarf planet is round like a planet, because its gravity has shaped it into a
+ball. But it does not have its orbit to itself: many other chunks circle nearby.
+This is true of [Ceres](objekt:ceres) in the asteroid belt and of
+[Pluto](objekt:pluto), [Eris](objekt:eris), [Haumea](objekt:haumea) and
+[Makemake](objekt:makemake) far out beyond Neptune. Since 2006 astronomers no
+longer count Pluto as a planet but as a dwarf planet.
+```
+
+`de/grundschule/thema-bahnelemente.md`:
+```markdown
+# Bahnelemente
+
+Kein Planet läuft auf einem genauen Kreis um die Sonne, sondern auf einer Ellipse,
+einem leicht gestreckten Kreis. Um so eine Bahn zu beschreiben, braucht man sechs
+Zahlen, die Bahnelemente: wie groß die Bahn ist, wie stark sie gestreckt ist, wie
+schief sie liegt, wie sie im Raum gedreht ist (zwei Winkel) und wo der Planet gerade
+steht. Aus diesen Zahlen rechnet die Simulation für jeden Zeitpunkt aus, wo
+[Erde](objekt:earth), [Mars](objekt:mars) und alle anderen sind.
+```
+
+`en/grundschule/thema-bahnelemente.md`:
+```markdown
+# Orbital elements
+
+No planet runs around the Sun on an exact circle but on an ellipse, a slightly
+stretched circle. To describe such an orbit you need six numbers, the orbital
+elements: how big the orbit is, how stretched it is, how tilted it lies, how it is
+turned in space (two angles) and where the planet is right now. From these numbers
+the simulation works out for any moment where the [Earth](objekt:earth),
+[Mars](objekt:mars) and all the others are.
+```
+
+`de/grundschule/thema-modell.md`:
+```markdown
+# Grenzen des Modells
+
+Diese Simulation ist ein Modell, kein Abbild von allem. Die Bahnen folgen
+einfachen Regeln, den [Bahnelementen](thema:bahnelemente), die zwischen den Jahren
+1800 und 2050 gut stimmen. Weiter in der Vergangenheit oder Zukunft werden die
+Fehler größer; der Datenblock warnt dann. Die Planeten ziehen hier nicht
+aneinander, nur die Sonne zieht. Größen und Abstände darfst du mit den Reglern
+übertreiben; die Rechnung dahinter bleibt echt. Die Zahlen stammen vom
+[JPL](quelle:jpl-approx-pos) und von der [NASA](quelle:nssdc-factsheets).
+```
+
+`en/grundschule/thema-modell.md`:
+```markdown
+# Limits of the model
+
+This simulation is a model, not a copy of everything. The orbits follow simple
+rules, the [orbital elements](thema:bahnelemente), which work well between the
+years 1800 and 2050. Outside that range the errors grow, and the data block warns
+you. Here the planets do not pull on each other, only the Sun pulls. You may
+exaggerate sizes and distances with the sliders; the maths behind it stays real.
+The numbers come from [JPL](quelle:jpl-approx-pos) and
+[NASA](quelle:nssdc-factsheets).
+```
+
+- [ ] **Schritt 2: Prüfen**
+
+Run: `npx vitest run src/data/texte`
+Expected: PASS, 96 Dateien (Fall „gibt es"), 482 Fälle in dieser Datei.
+
+- [ ] **Schritt 3: Verweisziele der Grundschule prüfen**
+
+Jeder `thema:`-Verweis aus einer Grundschuldatei muss auf eine Grundschuldatei derselben Sprache zeigen (sonst Sackgasse „kein Text"):
+
+```bash
+for sp in de en; do
+  grep -oh 'thema:[a-z-]*' src/data/texte/$sp/grundschule/*.md | sort -u | sed 's/thema://' \
+    | while read id; do test -f src/data/texte/$sp/grundschule/thema-$id.md || echo "FEHLT $sp $id"; done
+done
+```
+Expected: keine Ausgabe.
+
+- [ ] **Schritt 4: Commit**
+
+```bash
+git add src/data/texte
+git commit -m "Grundschultexte: acht Themen"
+```
+
+---
+
+### Task 8: Abnahme, README, Abschluss
 
 **Dateien:**
 - Erstellen: `docs/phase4c-etappe2-abnahme.md`
 - Ändern: `README.md` (Absatz „Stand")
 
-- [ ] **Schritt 1: Server und Stand** — `curl -s -o /dev/null -w '%{http_code}' http://localhost:5173/Orrery/` → `200`; `git status --short` leer; `git log --oneline -1` notieren; `ls src/data/texte/*/grundschule | grep -c objekt-` → 70 (35 je Sprache).
+- [ ] **Schritt 1: Server und Stand** — `curl -s -o /dev/null -w '%{http_code}' http://localhost:5173/Orrery/` → `200`; `git status --short` leer; `git log --oneline -1` notieren; `ls src/data/texte/*/grundschule | grep -c objekt-` → 70 (35 je Sprache); `ls src/data/texte/*/grundschule | grep -c thema-` → 16 (8 je Sprache).
 
-- [ ] **Schritt 2: Dateitest gezielt** — `npx vitest run src/data/texte/dateien.test.ts` und die Schlusszeile (Fälle) ins Protokoll; Erwartung 402 Fälle (80 Dateien × 5 + 2).
+- [ ] **Schritt 2: Dateitest gezielt** — `npx vitest run src/data/texte/dateien.test.ts` und die Schlusszeile (Fälle) ins Protokoll; Erwartung 482 Fälle (96 Dateien × 5 + 2). Dazu das Skript aus Task 7 Schritt 3 (Themenziele je Sprache): keine Ausgabe.
 
 - [ ] **Schritt 3: Rundgang im Browser** — `browser_navigate` auf `http://localhost:5173/Orrery/`, `window.store.setState({ quality: { tier: 'high' } })`, Tab „Grundschule" wählen (`setInfo({ niveau: 'grundschule' })`). Dann per `browser_run_code_unsafe` alle 35 Körper durchgehen:
 ```js
@@ -948,29 +1213,33 @@ async () => {
 ```
 Erwartet: für jeden Körper `hinweis: false`, `kopf` gleich der Überschrift der Datei (etwa „Der Merkur"), `knoepfe` ≥ 1 (mindestens ein Objektverweis). Tabelle ins Protokoll. Danach Sprache auf Englisch (`setUi({ language: 'en' })`) und denselben Lauf wiederholen; erwartet `kopf` gleich der englischen Überschrift und keine Zeile „Not translated yet".
 
+Dann die acht Themen in beiden Sprachen mit derselben Abfrage, nur mit `window.store.getState().setInfo({ thema: id })` statt `setCamera` und der Liste `['finsternis','ringe','gebundene-rotation','kirkwood-luecken','achsneigung','zwergplaneten','bahnelemente','modell']`; erwartet `hinweis: false` und `kopf` gleich dem Titel aus `ui/i18n` (etwa „Gebundene Rotation" / „Tidal locking"). Vor dem Lauf `setInfo({ niveau: 'grundschule' })`, da das Thema bei jedem Zielwechsel verfällt (§3.3), also für jede Kennung frisch setzen.
+
 - [ ] **Schritt 4: Verweise stichprobenartig** — bei Phobos (Grundschule) auf „Tiefflug" klicken → `cinema.running` true, `cinema.nummer` = Index von `phobos-tiefflug` (8); Kino beenden (Escape). Bei Enceladus auf „Cassini" klicken → Karte `nasa-cassini` hervorgehoben (Klasse `border-sky-300`), Tabs unverändert 1. Bei Jupiter auf „Europa" klicken → `camera.targetId` = `europa`, Kopf „Europa".
 
-- [ ] **Schritt 5: Gymnasium-Tab bei Körpern ohne Text** — Tab „Gymnasium", Ziel Mars: Hinweis „Zu diesem Eintrag gibt es noch keinen Text." und Datenblock sichtbar (Text folgt in 4c-3). Ziel Erde: Text vorhanden, kein Hinweis.
+- [ ] **Schritt 5: Keine Sackgasse auf dem Grundschul-Tab** — Tab „Grundschule", Ziel Mond: im Text auf „dieselbe Seite" klicken → `ui.info.thema` = `gebundene-rotation`, Kopf „Gebundene Rotation", kein Hinweis „kein Text"; Ziel Ceres, auf „Kirkwood-Lücken" klicken → Kopf „Kirkwood-Lücken", kein Hinweis. Knopf „Grenzen des Modells" im Datenblock: Uhr außerhalb des Genauigkeitsfensters setzen (`setTime({ jd: 2341973 })`, das ist Anfang 1700, also 100 Jahre vor dem Fenster; Warnung „außerhalb" erscheint), Ziel Mars, Knopf klicken → Kopf „Grenzen des Modells", kein Hinweis; danach Uhr zurück (`setTime({ jd: 2451545 })`). Zum Schluss alle Verweisknöpfe des Grundschul-Tabs maschinell: per `browser_run_code_unsafe` über alle 35 Körper und 8 Themen (beide Sprachen) jeden Knopf im `[role=tabpanel]`, der kein `objekt:`- oder externer Verweis ist, anklicken und prüfen, dass danach kein Absatz `info.keinText` sichtbar ist; Zähler (geprüfte Knöpfe, Sackgassen) ins Protokoll, Erwartung 0 Sackgassen.
 
-- [ ] **Schritt 6: Konsole** — `browser_console_messages`: 0 Fehler, 0 Warnungen (sonst wörtlich ins Protokoll).
+- [ ] **Schritt 6: Gymnasium-Tab bei Körpern ohne Text** — Tab „Gymnasium", Ziel Mars: Hinweis „Zu diesem Eintrag gibt es noch keinen Text." und Datenblock sichtbar (Text folgt in 4c-3). Ziel Erde: Text vorhanden, kein Hinweis.
 
-- [ ] **Schritt 7: Lint, Test, Build** — `npm run lint`, `npm test`, `npm run build`; Schlusszeilen und Testzahl ins Protokoll (Erwartung: 1126 + 330 = 1456 Tests).
+- [ ] **Schritt 7: Konsole** — `browser_console_messages`: 0 Fehler, 0 Warnungen (sonst wörtlich ins Protokoll).
 
-- [ ] **Schritt 8: Protokoll `docs/phase4c-etappe2-abnahme.md`** — Aufbau wie `docs/phase4c-etappe1-abnahme.md`: Kopf (Datum, Branch, Commit, Prüfumgebung), je Schritt die wörtlichen Werte, Konsole, Lint/Test/Build, „Bekannte Unschärfen": (1) Gymnasium- und Hochschul-Tab zeigen bei 33 Körpern noch den Hinweis „kein Text" (4c-3); (2) Grundschultexte verlinken keine Themen (Ruling 1, bis 4c-4); (3) Zahlen in den Texten sind gerundete Richtwerte, die Kennzahlen stehen im Datenblock. Das Kriterium „Infopanel mit abgeleiteten Live-Werten" ist seit 4c-1 erfüllt; hier wird das Kriterium aus Entwurf §7 Punkt 2 („35 Texte Deutsch und Englisch") bewertet.
+- [ ] **Schritt 8: Lint, Test, Build** — `npm run lint`, `npm test`, `npm run build`; Schlusszeilen und Testzahl ins Protokoll (Erwartung: 1126 + 410 = 1536 Tests, da 82 neue Dateien × 5 Fälle).
 
-- [ ] **Schritt 9: README** — im Absatz „Stand": 4c Etappe 2 (Grundschultexte für alle 35 Körper in Deutsch und Englisch) abgeschlossen; Gymnasialtexte folgen in 4c-3, Szenen und Themen in 4c-4.
+- [ ] **Schritt 9: Protokoll `docs/phase4c-etappe2-abnahme.md`** — Aufbau wie `docs/phase4c-etappe1-abnahme.md`: Kopf (Datum, Branch, Commit, Prüfumgebung), je Schritt die wörtlichen Werte, Konsole, Lint/Test/Build, „Bekannte Unschärfen": (1) Gymnasium- und Hochschul-Tab zeigen bei 33 Körpern und 7 Themen noch den Hinweis „kein Text" (4c-3, 4c-4); insbesondere führt der Verweis „Bahnelemente" im Gymnasiumtext `thema-modell` bis 4c-4 auf „kein Text"; (2) Szenen haben auf dem Grundschul-Tab außer `mondfinsternis` noch keinen Text (4c-4); (3) Zahlen in den Texten sind gerundete Richtwerte, die Kennzahlen stehen im Datenblock; (4) der Dateitest prüft Themenziele nur auf Existenz im Katalog, nicht auf einen Text im selben Niveau (Ruling 7, Test folgt in 4c-4). Das Kriterium „Infopanel mit abgeleiteten Live-Werten" ist seit 4c-1 erfüllt; hier wird das Kriterium aus Entwurf §7 Punkt 2 in der Fassung des Nachtrags („Grundschule komplett: 35 Körper und 8 Themen, Deutsch und Englisch, keine Sackgasse auf dem Grundschul-Tab") bewertet.
 
-- [ ] **Schritt 10: Commit**
+- [ ] **Schritt 10: README** — im Absatz „Stand": 4c Etappe 2 (Grundschulstufe komplett: 35 Körper und 8 Themen in Deutsch und Englisch) abgeschlossen; Gymnasium folgt in 4c-3, die Szenen beider Niveaus in 4c-4.
+
+- [ ] **Schritt 11: Commit**
 
 ```bash
 git add docs/phase4c-etappe2-abnahme.md README.md
-git commit -m "Abnahme 4c Etappe 2: Grundschultexte für alle Körper"
+git commit -m "Abnahme 4c Etappe 2: Grundschule komplett"
 ```
 
 ## Abschluss
 
 - [ ] `npm run lint`, `npm test`, `npm run build` auf dem Branch, Ausgabe zeigen.
-- [ ] Die lokale Projektanleitung im Abschnitt „Stand" nachziehen (4c-2 auf master, Testzahl, nächster Schritt 4c-3 Gymnasium-Texte mit Katalog auf rund 60 Quellen; Rulings unten).
+- [ ] Die lokale Projektanleitung im Abschnitt „Stand" nachziehen (4c-2 auf master, Testzahl, nächster Schritt 4c-3 Gymnasium komplett: 33 Körper, 7 Themen, Katalog auf rund 60 Quellen; Rulings unten).
 - [ ] Fast-Forward nach `master`, Branch `grundschule` löschen, `.playwright-mcp/` leeren. Tag: keiner (Phase 4 wird erst nach 4c-4 getaggt).
 - [ ] Rulings gesammelt an Jens melden.
 
@@ -978,8 +1247,12 @@ git commit -m "Abnahme 4c Etappe 2: Grundschultexte für alle Körper"
 
 Entscheidungen während der Planung, die vom Entwurf abweichen oder ihn präzisieren; Jens bestätigt oder kippt sie:
 
-1. **Keine `thema:`-Verweise in Grundschultexten.** Themen bekommen erst in 4c-4 Texte; ein Verweis führte bis dahin in eine Sackgasse (Befund der Abschlussprüfung 4c-1). Die Grundschultexte verweisen auf Körper, Szenen und Quellen.
+1. **`thema:`-Verweise in Grundschultexten sind erlaubt, weil Task 7 allen acht Themen einen Grundschultext gibt** (Entscheidung Jens vom 14.09.2026: Etappen nach Niveau statt nach Art; ersetzt das frühere Ruling „keine `thema:`-Verweise", das aus dem Sackgassen-Befund der Abschlussprüfung 4c-1 stammte). Gesetzt werden genau die zehn Verweise aus der Dateistruktur; weitere passende Stellen (etwa Charon → gebundene Rotation) bleiben 4c-3 vorbehalten, damit der Umfang dieser Etappe fest bleibt.
 2. **Verweise auf Szenen und Quellen sind erlaubt und erwünscht,** wo sie zum Körper passen (Entwurf §4.3 nennt sie als Schemata; §6 verlangt keine bestimmte Dichte). Die Szene `galileisches-schattenspiel` wird nicht verlinkt (laut lokaler Projektanleitung nicht weiterverfolgt).
 3. **Texte wörtlich aus dem Plan.** Der Entwurf verlangt Texte, aber keinen Autor; damit die Prüfung je Task etwas Festes hat, stehen die Texte im Plan und der Umsetzer überträgt sie. Kürzungen nur, wenn der Dateitest die Wortgrenze reißt, und dann im Report benannt.
 4. **Sechs Teilcommits je Körpergruppe** (Sonne und innere Planeten; Erd- und Marsmonde; Jupiter-System; Saturnmonde; Uranus- und Neptun-System; Zwergplaneten) statt „je Planetensystem" (Entwurf §7), damit kein Task mehr als 16 Dateien trägt.
 5. **Zahlen in Grundschultexten sind gerundete Richtwerte** („gut 20 Kilometer", „248 Jahre"); die genauen Kennzahlen liefert der Datenblock aus dem Datensatz, deshalb stehen im Text keine Werte, die dem Datensatz widersprechen könnten (Radien, Umlaufzeiten nur grob).
+6. **Themenüberschriften gleich den Titeln aus `ui/i18n`** (`thema.<id>.title`), damit Panelkopf und Ausweichtitel bis zum Laden übereinstimmen; das Gymnasium-Thema `modell` aus 4c-1 hält das schon so.
+7. **Kein neuer Testfall „Themenziel hat Text im selben Niveau".** Ein solcher Fall fiele heute für den Gymnasiumtext `thema-modell` (Verweis auf `bahnelemente`, Gymnasium-Text erst in 4c-4) durch. Bis dahin prüft ein Shell-Skript in Task 7 Schritt 3 und Task 8 Schritt 2 nur die Grundschule; der Testfall kommt in 4c-4, sobald alle Niveaus gefüllt sind.
+8. **Saturn-Nachtrag als Änderung des Etappe-1-Textes** (nur erster Satz, `[Ringen](thema:ringe)`), in Task 4 gebündelt, statt Etappe-1-Dateien unangetastet zu lassen; Erde bleibt unverändert, weil keiner der zehn Verweise sie betrifft.
+9. **Thema `modell` in Grundschule gehört zu dieser Etappe** (Entscheidung Jens, Liste der 16 Dateien), obwohl Entwurf §7 Punkt 4 es ursprünglich 4c-4 zuordnete; der Nachtrag in §7 zieht das nach. Damit hat der Knopf „Grenzen des Modells" im Datenblock auf dem Grundschul-Tab ein Ziel.

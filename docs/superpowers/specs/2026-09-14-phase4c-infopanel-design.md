@@ -320,6 +320,20 @@ ein eigenes Abnahmeprotokoll.
 Text-Etappen dürfen in Teilcommits laufen (etwa je Planetensystem), jeder Commit
 mit grünem Verweis-Test.
 
+**Nachtrag (14.09.2026, Jens):** Die Text-Etappen werden nach Niveau geschnitten,
+nicht nach Art, damit jeder Tab ohne Sackgasse fertig wird (Befund der
+Abschlussprüfung 4c-1: ein Verweis auf ein Thema ohne Text endet im Hinweis „kein
+Text"). Punkt 2 bis 4 lauten seitdem:
+
+2. **4c-2 Grundschule komplett:** 33 fehlende Körper und alle 8 Themen (auch
+   `modell`) in Deutsch und Englisch, 82 Dateien; dazu `thema:`-Verweise in rund
+   zehn Körpertexten (Mond, Saturn, Uranus, Venus, Pluto, Ceres, Eris). Abnahme:
+   Auf dem Grundschul-Tab führt kein Verweis auf „kein Text".
+3. **4c-3 Gymnasium komplett:** 33 Körper und 7 Themen in Deutsch und Englisch,
+   Quellenkatalog auf rund 60 Quellen.
+4. **4c-4 Szenen:** 19 Szenen in beiden Niveaus und Sprachen (`mondfinsternis`
+   liegt seit 4c-1 vor), dazu der Dateitest „Themenziel hat Text im selben Niveau".
+
 ## 8. Tests
 
 - `ui/info/markdown.test.ts`: Baumvergleich für jedes Element, Randfälle
