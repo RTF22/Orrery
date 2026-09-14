@@ -33,6 +33,19 @@ describe('sceneIndexFor', () => {
       expect(naechste, `Keim ${seed}`).not.toBe(letzte);
     }
   });
+
+  it('bleibt bei negativer Nummer im Bereich', () => {
+    // F2: Ein handgebautes Fragment oder eine Ablage kann jede endliche Zahl
+    // enthalten; ohne Normalisierung wäre nummer % anzahl hier negativ.
+    expect(sceneIndexFor(-1, 12, 1, false)).toBe(0);
+    const index = sceneIndexFor(-1, 12, 1, true);
+    expect(index).toBeGreaterThanOrEqual(0);
+    expect(index).toBeLessThan(12);
+  });
+
+  it('rundet eine nicht-ganzzahlige Nummer ab', () => {
+    expect(sceneIndexFor(2.7, 12, 1, false)).toBe(2);
+  });
 });
 
 describe('plannedSceneAt', () => {
@@ -78,5 +91,12 @@ describe('plannedSceneAt', () => {
     const geplant = plannedSceneAt(100_000, SCENES, 5, true);
     expect(Number.isFinite(geplant.azimuthDeg)).toBe(true);
     expect(geplant.nummer).toBe(100_000);
+  });
+
+  it('wirft bei negativer oder gebrochener Nummer nicht', () => {
+    // F2: Ein handgebautes Fragment lässt sceneIndexFor sonst außerhalb des
+    // Bereichs von szenen zeigen — plannedSceneAt liest dann undefined.
+    expect(plannedSceneAt(-1, SCENES, 5, false).scene).toBeDefined();
+    expect(plannedSceneAt(0.5, SCENES, 5, false).scene).toBeDefined();
   });
 });

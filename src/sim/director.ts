@@ -59,9 +59,13 @@ export function sceneIndexFor(
   nummer: number, anzahl: number, seed: number, shuffle: boolean,
 ): number {
   if (anzahl <= 0) return 0;
-  if (!shuffle) return nummer % anzahl;
-  const runde = Math.floor(nummer / anzahl);
-  const platz = nummer % anzahl;
+  // Von außen (URL-Fragment, Ablage) kann jede endliche Zahl kommen; der
+  // Film ist nur für nicht-negative Ganzzahlen definiert. Negative Nummern
+  // klemmen auf 0, Brüche werden abgerundet.
+  const n = Math.max(0, Math.floor(nummer));
+  if (!shuffle) return n % anzahl;
+  const runde = Math.floor(n / anzahl);
+  const platz = n % anzahl;
   return rundenreihenfolge(anzahl, seed, runde)[platz] ?? 0;
 }
 
@@ -73,15 +77,18 @@ export function sceneIndexFor(
 export function plannedSceneAt(
   nummer: number, szenen: readonly Scene[], seed: number, shuffle: boolean,
 ): PlannedScene {
-  const index = sceneIndexFor(nummer, szenen.length, seed, shuffle);
-  const scene = szenen[index]!;
-  const rng = createRng(hashSeed(seed, nummer));
+  // Einmal normalisieren und überall dieselbe Zahl verwenden (Szene und
+  // Variation), damit beide zueinander passen — siehe sceneIndexFor.
+  const n = Math.max(0, Math.floor(nummer));
+  const index = sceneIndexFor(n, szenen.length, seed, shuffle);
+  const scene = szenen[index] ?? szenen[0]!;
+  const rng = createRng(hashSeed(seed, n));
 
   const elevation = scene.params.elevationDeg + pickInRange(rng, scene.variation.elevationDeg);
 
   return {
     scene,
-    nummer,
+    nummer: n,
     azimuthDeg: scene.params.azimuthDeg + pickInRange(rng, scene.variation.azimuthDeg),
     elevationDeg: Math.min(Math.max(elevation, -MAX_ELEVATION_DEG), MAX_ELEVATION_DEG),
     distanceFactor: pickInRange(rng, scene.variation.distanceFactor),
