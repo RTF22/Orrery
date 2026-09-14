@@ -13,13 +13,13 @@ beforeEach(() => {
 });
 afterEach(() => { setSprache('de'); });
 
-const titel = (): Promise<HTMLElement> => screen.findByRole('heading', { level: 2 });
+const titel = (name: string): Promise<HTMLElement> => screen.findByRole('heading', { level: 2, name });
 
 describe('InfoPanel', () => {
   it('lädt den Text zum Kameraziel, zeigt Titel, Datenblock, Tabs und Quellen', async () => {
     useStore.getState().setCamera({ targetId: 'earth' });
     render(<InfoPanel />);
-    expect((await titel()).textContent).toBe('Erde');
+    expect(await titel('Erde')).toBeTruthy();
     expect(screen.getByTestId('datenblock')).toBeTruthy();
     expect(screen.getByRole('tab', { name: 'Gymnasium', selected: true })).toBeTruthy();
     expect(await screen.findByText(/Astronomischen Einheit/)).toBeTruthy();
@@ -31,10 +31,10 @@ describe('InfoPanel', () => {
   it('Tabs schalten das Niveau, Pfeiltasten wandern', async () => {
     useStore.getState().setCamera({ targetId: 'earth' });
     render(<InfoPanel />);
-    await titel();
+    await titel('Erde');
     fireEvent.click(screen.getByRole('tab', { name: 'Grundschule' }));
     expect(useStore.getState().ui.info.niveau).toBe('grundschule');
-    expect((await titel()).textContent).toBe('Die Erde');
+    expect(await titel('Die Erde')).toBeTruthy();
     fireEvent.keyDown(screen.getByRole('tab', { name: 'Grundschule' }), { key: 'ArrowRight' });
     expect(useStore.getState().ui.info.niveau).toBe('gymnasium');
     fireEvent.keyDown(screen.getByRole('tab', { name: 'Gymnasium' }), { key: 'ArrowLeft' });
@@ -53,7 +53,7 @@ describe('InfoPanel', () => {
   it('ohne Text: Datenblock, Ausweichtitel und Hinweis', async () => {
     useStore.getState().setCamera({ targetId: 'pluto' });
     render(<InfoPanel />);
-    expect((await titel()).textContent).toBe('Pluto');
+    expect(await titel('Pluto')).toBeTruthy();
     expect(await screen.findByText('Zu diesem Eintrag gibt es noch keinen Text.')).toBeTruthy();
     expect(screen.getByText('Keine Quellen zu diesem Text.')).toBeTruthy();
   });
@@ -63,10 +63,10 @@ describe('InfoPanel', () => {
     render(<InfoPanel />);
     fireEvent.click(await screen.findByRole('button', { name: 'Mondfinsternis' }));
     expect(useStore.getState().ui.info.thema).toBe('finsternis');
-    expect((await titel()).textContent).toBe('Finsternisse');
+    expect(await titel('Finsternisse')).toBeTruthy();
     act(() => { useStore.getState().setCamera({ targetId: 'mars' }); });
     expect(useStore.getState().ui.info.thema).toBeNull();
-    expect((await titel()).textContent).toBe('Mars');
+    expect(await titel('Mars')).toBeTruthy();
   });
 
   it('Objektverweis fährt die Kamera und wechselt den Text', async () => {
@@ -74,7 +74,7 @@ describe('InfoPanel', () => {
     render(<InfoPanel />);
     fireEvent.click(await screen.findByRole('button', { name: 'Mond' }));
     expect(useStore.getState().camera.targetId).toBe('moon');
-    expect((await titel()).textContent).toBe('Mond');
+    expect(await titel('Mond')).toBeTruthy();
     fahrtAbbrechen();
   });
 
@@ -88,14 +88,14 @@ describe('InfoPanel', () => {
   it('im laufenden Kino zeigt es die Szene mit Standort und Blickziel', async () => {
     useStore.getState().setCinema({ running: true, shuffle: false, nummer: 18 });
     render(<InfoPanel />);
-    expect((await titel()).textContent).toBe('Szene: Mondfinsternis');
+    expect(await titel('Szene: Mondfinsternis')).toBeTruthy();
     expect(screen.getByText('Standort')).toBeTruthy();
     expect(screen.queryByTestId('datenblock')).toBeNull();
   });
 
   it('Griffe schreiben Breite und Teilung in den Store', async () => {
     render(<InfoPanel />);
-    await titel();
+    await titel('Sonne');
     fireEvent.keyDown(screen.getByRole('separator', { name: 'Breite des Infopanels' }), { key: 'ArrowLeft' });
     expect(useStore.getState().ui.info.breiteRem).toBe(25);
     fireEvent.keyDown(screen.getByRole('separator', { name: 'Teilung zwischen Text und Quellen' }), { key: 'ArrowUp' });
@@ -104,13 +104,13 @@ describe('InfoPanel', () => {
 
   it('klappt zu und auf', async () => {
     render(<InfoPanel />);
-    await titel();
+    await titel('Sonne');
     fireEvent.click(screen.getByRole('button', { name: 'Infopanel ausblenden' }));
     expect(useStore.getState().ui.panels[INFO_PANEL]).toBe(false);
     expect(screen.queryByRole('heading', { level: 2 })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Infopanel einblenden' }));
     expect(useStore.getState().ui.panels[INFO_PANEL]).toBe(true);
-    expect(await titel()).toBeTruthy();
+    expect(await titel('Sonne')).toBeTruthy();
   });
 
   it('zeigt englische Texte', async () => {

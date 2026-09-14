@@ -133,20 +133,20 @@ export function InfoPanel(): React.JSX.Element {
 
   const geladen = anzeige?.geladen ?? null;
   const text = geladen?.text ?? null;
-  const titel = useMemo(
-    () => (text === null ? null : titelVon(parseMarkdown(text))) ?? ausweichTitel(kennung),
-    [text, kennung, language],
-  );
   /**
    * Ist der zuletzt fertig geladene Anzeigestand tatsächlich der aktuell
-   * gewünschte? Solange nicht, bleibt die Überschrift verborgen: Eine role-
-   * basierte Abfrage (`getByRole('heading', …)`) kennt keinen Inhalt und
-   * fände sonst sofort synchron die alte Überschrift, bevor der neue Text
-   * geladen ist — der Text darunter bleibt bis dahin trotzdem stehen (kein
-   * Flackern), nur der Titel wartet auf den frischen Stand.
+   * gewünschte (Kennung, Niveau und Sprache)? Solange nicht, zeigt der Kopf
+   * den Ausweichtitel der NEUEN Kennung statt der (noch) geladenen
+   * Überschrift der ALTEN — deterministisch und sofort, statt kurz die
+   * überholte Überschrift stehen zu lassen. Der Text darunter bleibt bis
+   * zum frischen Stand trotzdem unverändert (kein Flackern im Textkörper).
    */
   const frisch = anzeige !== null && anzeige.schluessel === schluessel
     && anzeige.niveau === info.niveau && anzeige.sprache === language;
+  const titel = useMemo(
+    () => (frisch && text !== null ? titelVon(parseMarkdown(text)) : null) ?? ausweichTitel(kennung),
+    [frisch, text, kennung, language],
+  );
   const body = kennung.art === 'objekt' ? bodyIndex[kennung.kennung] : undefined;
   const hinweise: string[] = [];
   if (anzeige !== null && geladen === null) hinweise.push('info.keinText');
@@ -201,7 +201,7 @@ export function InfoPanel(): React.JSX.Element {
         />
       )}
       <header className="flex items-center justify-between gap-2 border-b border-white/10 px-3 py-2">
-        {frisch ? <h2 className="m-0 truncate text-sm font-semibold">{titel}</h2> : null}
+        <h2 className="m-0 truncate text-sm font-semibold">{titel}</h2>
         <button
           type="button"
           aria-expanded
