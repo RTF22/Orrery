@@ -8,6 +8,7 @@ import { ScalePanel } from './panels/ScalePanel';
 import { CinemaPanel } from './panels/CinemaPanel';
 import { CameraPanel } from './panels/CameraPanel';
 import { DisplayPanel } from './panels/DisplayPanel';
+import { AnsichtenPanel } from './panels/AnsichtenPanel';
 import { BodyTree } from './panels/BodyTree';
 import { useShortcuts, SHORTCUTS_PANEL } from './shortcuts/useShortcuts';
 import { useIdleHide } from './idle';
@@ -82,6 +83,7 @@ export function App(): React.JSX.Element | null {
         <CinemaPanel />
         <CameraPanel />
         <DisplayPanel />
+        <AnsichtenPanel />
         <BodyTree />
         {zeigeKuerzel ? <Kuerzeluebersicht /> : null}
       </div>
