@@ -6,5 +6,3 @@ coverage/
 .superpowers/
 *.tsbuildinfo
 .playwright-mcp/
-.claude/
-CLAUDE.md

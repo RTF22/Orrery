@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - **Sprache:** Alle sichtbaren Texte ausschließlich über `ui/i18n/de.ts`, niemals als Literal im Code. Deutsch ist Standardsprache.
-- **Commits:** Ausschließlich Jens Fricke als Autor. **Keine** `Co-Authored-By:`-Zeile, keine `Claude-Session:`-Zeile, keine Erwähnung von Claude oder Anthropic in Commit-Messages oder Dateien.
+- Keine Fremdzurechnung im Commit-Text: keine Co-Autor-Zeile, keine Sitzungs-URL, keine Werkzeugnamen. Vor jedem Commit prüfen: `git log --format=%B -1 | grep -ci 'co-authored\|session'` muss 0 ergeben.
 - **Veröffentlichung:** Das Repository bleibt privat. Die CI baut und testet nur; der Pages-Job wird als `workflow_dispatch` vorbereitet und **nicht** an einen Push-Trigger gehängt.
 - **Schichtengrenze:** `src/sim/**` und `src/data/**` dürfen **nichts** aus `three`, `react` oder dem DOM importieren. Diese Regel wird in Task 1 per ESLint erzwungen.
 - **Einheiten:** `sim/` rechnet ausnahmslos in Kilometern, Sekunden und Radiant (Winkel in Datensätzen in Grad, Umrechnung beim Einlesen). Render-Einheit: 1 Three.js-Einheit = 1000 km.
@@ -80,7 +80,7 @@ Das Grundgerüst ist kein Selbstzweck — es wird sofort durch eine echte, getes
 - [ ] **Step 1: Projekt anlegen**
 
 ```bash
-cd "E:/Claude/RTF/Test/Solarsystem"
+cd "<Projektverzeichnis>"
 npm create vite@latest . -- --template react-ts
 npm install
 npm install three zustand

@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - **Sprache:** Alle sichtbaren Texte ausschließlich über `ui/i18n/de.ts`, niemals als Literal im Code. Deutsch ist Standardsprache.
-- **Commits:** Ausschließlich Jens Fricke als Autor. **Keine** `Co-Authored-By:`-Zeile, keine `Claude-Session:`-Zeile, keine Erwähnung von Claude oder Anthropic in Commit-Messages oder Dateien.
+- Keine Fremdzurechnung im Commit-Text: keine Co-Autor-Zeile, keine Sitzungs-URL, keine Werkzeugnamen. Vor jedem Commit prüfen: `git log --format=%B -1 | grep -ci 'co-authored\|session'` muss 0 ergeben.
 - **Veröffentlichung:** Das Repository bleibt privat. Der Pages-Job bleibt `workflow_dispatch` und wird **nicht** an einen Push-Trigger gehängt.
 - **Schichtengrenze:** `src/sim/**` und `src/data/**` dürfen **nichts** aus `three`, `react` oder dem DOM importieren. Die Regel wird von `eslint.config.js` erzwungen und gilt auch für den Director.
 - **Zielbild:** Stabile 60 fps; der Kino-Modus darf die Bildrate nicht schlechter machen als die freie Navigation.

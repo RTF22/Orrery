@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - **Sprache:** Alle sichtbaren Texte ausschließlich über `ui/i18n/de.ts`, niemals als Literal im Code. Deutsch ist Standardsprache. Dieser Plan fügt keine sichtbaren Texte hinzu.
-- **Commits:** Ausschließlich Jens Fricke als Autor. **Keine** `Co-Authored-By:`-Zeile, keine `Claude-Session:`-Zeile, keine Erwähnung von Claude oder Anthropic in Commit-Messages oder Dateien.
+- Keine Fremdzurechnung im Commit-Text: keine Co-Autor-Zeile, keine Sitzungs-URL, keine Werkzeugnamen. Vor jedem Commit prüfen: `git log --format=%B -1 | grep -ci 'co-authored\|session'` muss 0 ergeben.
 - **Schrittgröße:** Jeder Task endet in einem eigenen Commit mit grünen Tests und ist für sich abgeschlossen. Sessionlimits sind eine reale Schranke.
 - **Veröffentlichung:** Das Repository bleibt privat. Der Pages-Job bleibt `workflow_dispatch`.
 - **Schichtengrenze:** `src/sim/**` und `src/data/**` dürfen **nichts** aus `three`, `react` oder dem DOM importieren (von `eslint.config.js` erzwungen). `render/albedo.ts` und `render/exposure.ts` importieren ebenfalls nichts aus `three`, damit sie in der `node`-Testumgebung laufen.
