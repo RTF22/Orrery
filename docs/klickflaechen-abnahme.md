@@ -105,10 +105,30 @@ behoben bestätigt, keine neuen Schäden.
 
 ## 5. Rulings
 
-Alle Zeilen mit der Kennzeichnung „Ruling:" aus dem Ledger, in der Reihenfolge des
-Ledgers. **Jens hat diese Entscheidungen noch nicht bestätigt.**
+Alle Rulings aus dem Ledger, einschließlich der drei vor dem Start getroffenen
+Rulings aus dem Vorab-Abgleich, in der Reihenfolge des Ledgers: zuerst der
+Vorab-Abgleich (vor Task 1), danach die während der Umsetzung getroffenen Rulings
+(im Ledger mit „Ruling:" gekennzeichnet). **Jens hat diese Entscheidungen noch
+nicht bestätigt.**
 
-1. **Task 2, Prüfungsbefund:** Der Critical-Befund „Rot-Beleg im Bericht kann nicht
+1. **Vorab-Abgleich, vor Task 1:** Messwerte und Rulings sammeln sich während der
+   Umsetzung im Ledger und den Berichtsdateien; Task 7 überträgt sie in die
+   Ledger-Tabelle am Planende und committet den Plan zusammen mit dem
+   Abnahmeprotokoll, Einzeltask-Commits fügen nur ihre eigenen Dateien hinzu. —
+   Begründung: Frühere Pläne tragen ihre Rulings ebenso erst am Ende ein; „Ergebnis
+   ins Ledger" am Ende jedes Tasks würde mit dem gezielten `git add` der
+   Einzeltask-Commits kollidieren. — Kosten, falls falsch: Das Planfile bleibt bis
+   Task 7 ohne Werte, das Abnahmeprotokoll enthält sie trotzdem.
+2. **Vorab-Abgleich, vor Task 1:** Task 1 zieht zusätzlich den Kommentar in
+   `src/render/camera/controller.ts` Z. 50–55 nach (Frei friert beim Umschalten im
+   Kamera-Panel ein, nicht bei der Auswahl). — Begründung: Entwurf §6 verlangt den
+   Kommentar, der Plan vergisst ihn. — Kosten, falls falsch: eine Kommentarzeile zu
+   viel im Diff.
+3. **Vorab-Abgleich, vor Task 1:** Task 4 ergänzt zwei Prüfungen aus Entwurf §8:
+   Der Versatz wird bei Glyphenwechsel neu gemessen; ein nicht gezeigter Name
+   liefert kein Rechteck. — Begründung: Der Entwurf ist bindend, die Plan-Tests
+   decken beides nicht ab. — Kosten, falls falsch: etwas mehr Testcode.
+4. **Task 2, Prüfungsbefund:** Der Critical-Befund „Rot-Beleg im Bericht kann nicht
    so entstanden sein" gilt als erledigt, die falsche Ursachenerklärung im
    unversionierten Umsetzerbericht nur als Minor, keine zweite Fixrunde. —
    Begründung: Der Nachprüfer hat den Rot-Beleg selbst identisch reproduziert; Code,
@@ -118,17 +138,17 @@ Ledgers. **Jens hat diese Entscheidungen noch nicht bestätigt.**
    kein Artefakt im Repository. — Kosten, falls falsch: Der Umsetzerbericht zu
    Task 2 bleibt mit falscher Erklärung liegen; er wird mit dem Arbeitsbereich
    gelöscht und hat keinen Einfluss auf Code.
-2. **Task 5, Prüfungsbefund:** Ein Test mit versetztem Rechteck (links ≠ oben) für
+5. **Task 5, Prüfungsbefund:** Ein Test mit versetztem Rechteck (links ≠ oben) für
    Hover und Tippen wird ergänzt, mit Rot-Nachweis gegen eine Umrechnung ohne
    Versatz. — Begründung: Entwurf §4.1 verlangt die Umrechnung `clientX − rect.left`
    ausdrücklich, der Plan-Testcode ließ sie ungeprüft (jsdom liefert sonst immer ein
    Rechteck bei 0). — Kosten, falls falsch: ein Test mehr.
-3. **Task 6, Prüfungsbefund:** Ein Szene-Test mit echten `THREE.Line`-Objekten
+6. **Task 6, Prüfungsbefund:** Ein Szene-Test mit echten `THREE.Line`-Objekten
    (sichtbar/unsichtbar) und projizierter Zielposition wird ergänzt, mit
    Rot-Nachweis ohne den `visible`-Filter. — Begründung: Entwurf §4.4 ist bindend,
    der Plan-Mock ließ die Verdrahtung der Bahnschleife ungeprüft. — Kosten, falls
    falsch: ein Test und ein erweiterter Mock mehr.
-4. **Schlussprüfung:** Important 1, Important 2, Minor 1, Minor 5 und der
+7. **Schlussprüfung:** Important 1, Important 2, Minor 1, Minor 5 und der
    T5-Kommentar laufen in einem gemeinsamen Fixauftrag (ein Umsetzer zur Zeit):
    Die Hervorhebung bleibt bei Maus/Stift während des Drucks bis zur Tippschwelle
    stehen, `null` erst bei Ziehen, zweitem Zeiger, `pointercancel`/`pointerleave`
@@ -139,7 +159,7 @@ Ledgers. **Jens hat diese Entscheidungen noch nicht bestätigt.**
    der Fehler ist für Nutzer sichtbar. — Kosten, falls falsch: Falls ein Löschen der
    Hervorhebung schon beim Drücken gewollt war, trifft ein Klick auf einen
    Hover-Namen weiterhin ins Leere.
-5. **Schlussprüfung:** Die Fehlzuordnung Mars → Deimos kommt in denselben
+8. **Schlussprüfung:** Die Fehlzuordnung Mars → Deimos kommt in denselben
    Fixauftrag: Rang 1 wird zweistufig (echte Scheiben nach Tiefe, nur
    glyphenvergrößerte Scheiben nach nächster Mitte mit Planet vor Mond bei
    Gleichstand), neues Feld `glyphe` an `Scheibe`. — Begründung: Entwurf §4.2 „Ein
@@ -149,7 +169,7 @@ Ledgers. **Jens hat diese Entscheidungen noch nicht bestätigt.**
    falsch: Ein Glyphenklick verliert gegen echte Scheiben die Tiefe als Kriterium;
    ein Glyphen-Mond auf einer echten Planetenscheibe wäre nur über den Objektbaum
    oder näheres Heranzoomen erreichbar.
-6. **Task 7 (dieser Auftrag):** Dieser Auftrag formuliert Plan-Zeile 23 und
+9. **Task 7 (dieser Auftrag):** Dieser Auftrag formuliert Plan-Zeile 23 und
    Plan-Zeile 1263 neutral um (Verweis auf die Trailer- bzw. Wortprüfung nach der
    lokalen Projektanleitung, ohne Suchmuster) im selben Commit wie Protokoll und
    Ledger-Tabelle. — Begründung: Der Fehler steht seit `b1b8132` auch auf `master`
@@ -157,22 +177,23 @@ Ledgers. **Jens hat diese Entscheidungen noch nicht bestätigt.**
    umformuliert, ohne die Historie umzuschreiben. — Kosten, falls falsch: Jens will
    die Historie bereinigen (Rebase vor dem Push, destruktiv, nur mit ausdrücklicher
    Freigabe).
-7. **Task 7:** Entwurf §9.6 „ein Druck mit 6 px Bewegung ändert den Azimut nicht
-   und fährt nicht" widerspricht §5 (unter der Tippschwelle von 10 px gilt der Druck
-   als Tippen und fährt zum getroffenen Körper). §5 ist die Verhaltensdefinition;
-   §9.6 wird bewertet als: Azimut bleibt bei 6 px unverändert, sowohl auf einem
-   Körper als auch auf leerer Fläche; „fährt nicht" gilt nur für die leere Fläche.
-   — Begründung: Der Plantext setzt einen Tipp voraus, der nach §5 auf einem Körper
-   gar nicht ausbleiben darf. — Kosten, falls falsch: Falls 6 px auf einem Körper
-   als Ziehen gelten sollten, wäre die Fingerschwelle zu senken (Entwurfsänderung).
-8. **Task 7:** Task 7 läuft in drei Aufträgen nacheinander — 7a (Messungen §9.2,
-   §9.3, §9.5, §9.7), 7b (Messungen §9.4, §9.6, §9.8), 7c (dieses Protokoll, die
-   Ledger-Tabelle im Plan und dieser Commit). Fast-Forward nach `master`, Löschen
-   des Branches und die Nachträge in der lokalen Projektanleitung erfolgen erst nach
-   der Schlussprüfung des ganzen Branches. — Begründung: Browser-Rundgänge
-   verbrauchen viel Kontext, ein einzelner Auftrag riskiert den Abbruch mitten in
-   der Messreihe. — Kosten, falls falsch: zwei zusätzliche Übergaben, der Merge
-   folgt ein paar Minuten später.
+10. **Task 7:** Entwurf §9.6 „ein Druck mit 6 px Bewegung ändert den Azimut nicht
+    und fährt nicht" widerspricht §5 (unter der Tippschwelle von 10 px gilt der
+    Druck als Tippen und fährt zum getroffenen Körper). §5 ist die
+    Verhaltensdefinition; §9.6 wird bewertet als: Azimut bleibt bei 6 px
+    unverändert, sowohl auf einem Körper als auch auf leerer Fläche; „fährt nicht"
+    gilt nur für die leere Fläche. — Begründung: Der Plantext setzt einen Tipp
+    voraus, der nach §5 auf einem Körper gar nicht ausbleiben darf. — Kosten, falls
+    falsch: Falls 6 px auf einem Körper als Ziehen gelten sollten, wäre die
+    Fingerschwelle zu senken (Entwurfsänderung).
+11. **Task 7:** Task 7 läuft in drei Aufträgen nacheinander — 7a (Messungen §9.2,
+    §9.3, §9.5, §9.7), 7b (Messungen §9.4, §9.6, §9.8), 7c (dieses Protokoll, die
+    Ledger-Tabelle im Plan und dieser Commit). Fast-Forward nach `master`, Löschen
+    des Branches und die Nachträge in der lokalen Projektanleitung erfolgen erst
+    nach der Schlussprüfung des ganzen Branches. — Begründung: Browser-Rundgänge
+    verbrauchen viel Kontext, ein einzelner Auftrag riskiert den Abbruch mitten in
+    der Messreihe. — Kosten, falls falsch: zwei zusätzliche Übergaben, der Merge
+    folgt ein paar Minuten später.
 
 ## 6. Offene Frage an Jens
 
