@@ -301,6 +301,13 @@ describe('createLabelOverlay — Rang vor Tiefe (Flackern bei Mondüberlappung)'
     expect(scheiben.map((s) => s.id)).toEqual(['io']);
     expect(scheiben[0]!.radiusPx).toBe(MARKER_MIN_PIXEL);
     expect(scheiben[0]!.istMond).toBe(true);
+    expect(scheiben[0]!.glyphe).toBe(true);
+
+    // Ohne Marker wird der Radius nicht angehoben: keine Glyphenscheibe.
+    overlay.update([io], testKamera(), true, false, 'de');
+    const ohneMarker = overlay.trefferScheiben();
+    expect(ohneMarker[0]!.radiusPx).toBeCloseTo(1, 6);
+    expect(ohneMarker[0]!.glyphe).toBe(false);
   });
 
   it('misst den Namensversatz erneut, wenn ein sichtbarer Körper zwischen echter Kugel und Ersatzglyphe wechselt', () => {
@@ -337,6 +344,7 @@ describe('createLabelOverlay — Rang vor Tiefe (Flackern bei Mondüberlappung)'
     const { overlay } = baueOverlay();
     overlay.update([europa], testKamera(), true, true, 'de');
     expect(overlay.trefferScheiben().map((s) => s.id)).toEqual(['europa']);
+    expect(overlay.trefferScheiben()[0]!.glyphe).toBe(false);
     expect(overlay.namensRechtecke()).toEqual([]);
   });
 });

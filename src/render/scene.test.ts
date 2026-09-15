@@ -160,7 +160,7 @@ describe('buildScene — Blickmatrix', () => {
 });
 
 describe('buildScene — Zeiger und Treffer', () => {
-  const mars = { id: 'mars', x: 10, y: 10, radiusPx: 5, tiefe: 0.5, istMond: false };
+  const mars = { id: 'mars', x: 10, y: 10, radiusPx: 5, tiefe: 0.5, istMond: false, glyphe: false };
 
   it('reicht den Körper unter dem Zeiger ab dem nächsten Bild an Overlay und Bahnen', () => {
     testScheiben = [mars];

@@ -17,8 +17,14 @@ export const TIPP_SCHWELLE_PX: Record<Zeigerart, number> = { maus: 4, finger: 10
 export const zeigerartVon = (pointerType: string): Zeigerart => (pointerType === 'touch' ? 'finger' : 'maus');
 
 export interface Punkt { x: number; y: number }
-/** Projizierte Körperscheibe; `tiefe` ist NDC-z, kleiner heißt weiter vorn. */
-export interface Scheibe { id: string; x: number; y: number; radiusPx: number; tiefe: number; istMond: boolean }
+/**
+ * Projizierte Körperscheibe; `tiefe` ist NDC-z, kleiner heißt weiter vorn.
+ * `glyphe`: Der Radius wurde nur wegen der Ersatzglyphe auf MARKER_MIN_PIXEL
+ * angehoben, der Körper selbst ist kleiner (Entwurf Klickflächen §4.3).
+ */
+export interface Scheibe {
+  id: string; x: number; y: number; radiusPx: number; tiefe: number; istMond: boolean; glyphe: boolean;
+}
 export interface Rechteck { id: string; links: number; oben: number; rechts: number; unten: number }
 /** Bahn als Punktfolge x0, y0, x1, y1, …; NaN markiert einen Punkt hinter der Kamera. */
 export interface Bahnzug { id: string; punkte: Float64Array }
@@ -40,33 +46,50 @@ const hatVorrang = (a: Scheibe, b: Scheibe): boolean =>
   (a.istMond !== b.istMond ? !a.istMond : a.tiefe < b.tiefe);
 
 /**
- * Rangfolge (Entwurf §4.2): Zeiger auf einer Scheibe → vorderste; in einem
- * Namen → dieser; Scheibenmitte im Fangradius → nächste; Bahn im Fangradius →
- * nächste. Der erste zutreffende Rang entscheidet.
+ * Nächste Mitte unter den Scheiben, die `zaehlt` bei ihrem Abstand zulässt;
+ * Abstände auf GLEICHSTAND_PX gelten als gleich, dann entscheidet hatVorrang.
+ */
+function naechsteMitte(
+  zeiger: Punkt, scheiben: readonly Scheibe[], zaehlt: (s: Scheibe, abstand: number) => boolean,
+): Scheibe | null {
+  let beste: Scheibe | null = null;
+  let besterAbstand = Infinity;
+  for (const s of scheiben) {
+    const d = Math.hypot(zeiger.x - s.x, zeiger.y - s.y);
+    if (!zaehlt(s, d)) continue;
+    const gleich = Math.abs(d - besterAbstand) <= GLEICHSTAND_PX;
+    if (beste === null || (!gleich && d < besterAbstand) || (gleich && hatVorrang(s, beste))) {
+      beste = s;
+      besterAbstand = d;
+    }
+  }
+  return beste;
+}
+
+/**
+ * Rangfolge (Entwurf §4.2): Zeiger auf einer echten Scheibe → vorderste; sonst
+ * auf einer Glyphenscheibe → nächste Mitte; in einem Namen → dieser;
+ * Scheibenmitte im Fangradius → nächste; Bahn im Fangradius → nächste. Der
+ * erste zutreffende Rang entscheidet. Die Tiefe trennt nur echte Scheiben: Zwei
+ * Glyphen, deren Mitten unter einem Pixel auseinanderliegen (Mars und Deimos in
+ * der Systemansicht), wechselten sonst mit jedem Umlauf den Treffer.
  */
 export function findeTreffer(zeiger: Punkt, k: Kandidaten, fangPx: number): string | null {
   let vorne: Scheibe | null = null;
   for (const s of k.scheiben) {
-    if (Math.hypot(zeiger.x - s.x, zeiger.y - s.y) > s.radiusPx) continue;
+    if (s.glyphe || Math.hypot(zeiger.x - s.x, zeiger.y - s.y) > s.radiusPx) continue;
     if (vorne === null || s.tiefe < vorne.tiefe) vorne = s;
   }
   if (vorne !== null) return vorne.id;
+
+  const glyphe = naechsteMitte(zeiger, k.scheiben, (s, d) => s.glyphe && d <= s.radiusPx);
+  if (glyphe !== null) return glyphe.id;
 
   for (const r of k.namen) {
     if (zeiger.x >= r.links && zeiger.x <= r.rechts && zeiger.y >= r.oben && zeiger.y <= r.unten) return r.id;
   }
 
-  let mitte: Scheibe | null = null;
-  let mitteAbstand = Infinity;
-  for (const s of k.scheiben) {
-    const d = Math.hypot(zeiger.x - s.x, zeiger.y - s.y);
-    if (d > fangPx) continue;
-    const gleich = Math.abs(d - mitteAbstand) <= GLEICHSTAND_PX;
-    if (mitte === null || (!gleich && d < mitteAbstand) || (gleich && hatVorrang(s, mitte))) {
-      mitte = s;
-      mitteAbstand = d;
-    }
-  }
+  const mitte = naechsteMitte(zeiger, k.scheiben, (_, d) => d <= fangPx);
   if (mitte !== null) return mitte.id;
 
   let bahn: string | null = null;

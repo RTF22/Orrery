@@ -5,8 +5,9 @@ import {
 } from './treffer';
 import type { Kandidaten, Scheibe } from './treffer';
 
-const scheibe = (id: string, x: number, y: number, radiusPx: number, tiefe = 0.5, istMond = false): Scheibe =>
-  ({ id, x, y, radiusPx, tiefe, istMond });
+const scheibe = (
+  id: string, x: number, y: number, radiusPx: number, tiefe = 0.5, istMond = false, glyphe = false,
+): Scheibe => ({ id, x, y, radiusPx, tiefe, istMond, glyphe });
 const zug = (id: string, ...xy: number[]) => ({ id, punkte: Float64Array.from(xy) });
 const leer: Kandidaten = { scheiben: [], namen: [], bahnen: [] };
 
@@ -19,6 +20,41 @@ describe('findeTreffer', () => {
     const k = { ...leer, scheiben: [scheibe('jupiter', 100, 100, 50, 0.9), scheibe('io', 110, 100, 5, 0.8, true)] };
     expect(findeTreffer({ x: 110, y: 100 }, k, 8)).toBe('io');
     expect(findeTreffer({ x: 80, y: 100 }, k, 8)).toBe('jupiter');
+  });
+
+  it('entscheidet zwischen Glyphenscheiben nach der nächsten Mitte, nicht nach der Tiefe (Mars und Deimos)', () => {
+    const k = {
+      ...leer,
+      scheiben: [
+        scheibe('mars', 100, 100, 3, 0.9, false, true),
+        scheibe('deimos', 100.6, 100, 3, 0.8, true, true),
+      ],
+    };
+    expect(findeTreffer({ x: 100, y: 100 }, k, 8)).toBe('mars');
+    expect(findeTreffer({ x: 100.6, y: 100 }, k, 8)).toBe('deimos');
+  });
+
+  it('nimmt bei Glyphenscheiben mit gleichem Abstand den Planeten vor dem vorderen Mond', () => {
+    const k = {
+      ...leer,
+      scheiben: [
+        scheibe('deimos', 100.3, 100, 3, 0.1, true, true),
+        scheibe('mars', 100, 100, 3, 0.9, false, true),
+      ],
+    };
+    expect(findeTreffer({ x: 100.15, y: 100 }, k, 8)).toBe('mars');
+  });
+
+  it('lässt eine echte Planetenscheibe eine Glyphe davor schlagen', () => {
+    const k = {
+      ...leer,
+      scheiben: [
+        scheibe('jupiter', 100, 100, 10, 0.9),
+        scheibe('io', 104, 100, 3, 0.5, true, true),
+      ],
+    };
+    expect(findeTreffer({ x: 104, y: 100 }, k, 8)).toBe('jupiter');
+    expect(findeTreffer({ x: 111.5, y: 100 }, k, 8)).toBe('io');
   });
 
   it('zieht die Scheibe dem Namen und den Namen der Bahn vor', () => {

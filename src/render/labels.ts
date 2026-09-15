@@ -213,10 +213,14 @@ export function createLabelOverlay(
         return a.p.tiefe - b.p.tiefe;
       });
 
-      scheiben = kandidaten.map(({ eintrag, p, radiusPixel }) => ({
-        id: eintrag.id, x: p.x, y: p.y, tiefe: p.tiefe, istMond: eintrag.istMond,
-        radiusPx: zeigeMarker && needsMarker(radiusPixel) ? Math.max(radiusPixel, MARKER_MIN_PIXEL) : radiusPixel,
-      }));
+      scheiben = kandidaten.map(({ eintrag, p, radiusPixel }) => {
+        // Genau dann Glyphenscheibe, wenn die Ersatzglyphe den Radius anhebt.
+        const glyphe = zeigeMarker && needsMarker(radiusPixel);
+        return {
+          id: eintrag.id, x: p.x, y: p.y, tiefe: p.tiefe, istMond: eintrag.istMond, glyphe,
+          radiusPx: glyphe ? Math.max(radiusPixel, MARKER_MIN_PIXEL) : radiusPixel,
+        };
+      });
       rechtecke = [];
 
       // Jeder belegte Platz merkt sich zusätzlich, ob er eine Beschriftung
