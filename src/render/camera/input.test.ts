@@ -133,3 +133,24 @@ describe('attachCameraInput — Hover', () => {
     stop();
   });
 });
+
+describe('attachCameraInput — Koordinaten', () => {
+  it('rechnet clientX/Y in Canvas-Koordinaten mit versetztem Rechteck um', () => {
+    const el = flaeche();
+    el.getBoundingClientRect = () => ({
+      left: 30, top: 50, right: 130, bottom: 150,
+      width: 100, height: 100, x: 30, y: 50,
+      toJSON: () => ({ left: 30, top: 50, right: 130, bottom: 150, width: 100, height: 100, x: 30, y: 50 }),
+    } as DOMRect);
+    const onZeiger = vi.fn();
+    const onTipp = vi.fn();
+    const stop = attachCameraInput(el, { onZeiger, onTipp });
+    zeiger(el, 'pointermove', 130, 250);
+    expect(onZeiger).toHaveBeenLastCalledWith({ x: 100, y: 200, art: 'maus' });
+    onZeiger.mockClear();
+    zeiger(el, 'pointerdown', 130, 250);
+    zeiger(el, 'pointerup', 130, 250);
+    expect(onTipp).toHaveBeenCalledWith(100, 200, 'maus');
+    stop();
+  });
+});
