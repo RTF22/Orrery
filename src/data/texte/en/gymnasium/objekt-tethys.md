@@ -1,6 +1,6 @@
 # Tethys
 
-Tethys is 1,062 km in diameter and orbits [Saturn](objekt:saturn) at 295,000 km in
+Tethys is 1,061 km in diameter and orbits [Saturn](objekt:saturn) at 295,000 km in
 1.89 days. With a density of just under 1 g/cm³ it consists almost entirely of water
 ice. Two features dominate the surface: the impact crater Odysseus, about 450 km across
 and thus more than two fifths of the moon's diameter, and Ithaca Chasma, a system of

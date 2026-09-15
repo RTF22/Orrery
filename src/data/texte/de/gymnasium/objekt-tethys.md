@@ -1,6 +1,6 @@
 # Tethys
 
-Tethys hat 1 062 km Durchmesser und umläuft [Saturn](objekt:saturn) in 295 000 km
+Tethys hat 1 061 km Durchmesser und umläuft [Saturn](objekt:saturn) in 295 000 km
 Abstand in 1,89 Tagen. Mit einer Dichte von knapp 1 g/cm³ besteht er fast
 ausschließlich aus Wassereis. Zwei Strukturen beherrschen die Oberfläche: der
 Einschlagkrater Odysseus mit rund 450 km Durchmesser, gut zwei Fünftel des Mondes, und
