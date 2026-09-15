@@ -19,8 +19,8 @@ verdrahtet Treffer mit `fahreZu`.
 ## Globale Vorgaben
 
 - Alles auf Deutsch (Kommentare, Commits, Doku), Umlaute korrekt; Bezeichner bleiben.
-- Commits allein von Jens Fricke (`rtf22@jensfricke.com`), keine Trailer. Nach jedem
-  Commit: `git log --format=%B -1 | grep -ci 'claude\|anthropic\|co-authored'` → `0`.
+- Commits allein von Jens Fricke (`rtf22@jensfricke.com`), keine Trailer.
+  Trailer-Prüfung nach der lokalen Projektanleitung nach jedem Commit.
 - Schichten: `ui/` → `store/` → `render/` → `sim/`; `render/` importiert nie `ui/`
   oder `store/` zur Laufzeit (Typimporte aus `store/types` wie bisher erlaubt);
   `app/` verbindet.
@@ -1260,8 +1260,9 @@ Run: `npm run lint && npm test && npm run build`, Ausgabe zeigen.
 git add docs/klickflaechen-abnahme.md
 git commit -m "Abnahme Klickflächen: Protokoll"
 git switch master && git merge --ff-only klickflaechen && git branch -d klickflaechen
-git ls-files -z | xargs -0 grep -liE 'claude|anthropic'   # muss leer sein
 ```
+Wortprüfung über alle versionierten Dateien nach der lokalen Projektanleitung muss
+leer sein.
 Stand in der lokalen Projektanleitung nachtragen (nicht versioniert).
 
 ---
@@ -1270,3 +1271,10 @@ Stand in der lokalen Projektanleitung nachtragen (nicht versioniert).
 
 | Task | Eintrag |
 |---|---|
+| 1 | Commit `0236803`, 1962 Tests grün, Lint/Build grün. Vorher-Belege §9.1 gemessen (a: 2259,09 px bei 1,5 s, danach `null`, Modus `free`; b: Modus `cinema`, `laeuft: true`). Vorab-Ruling 2 umgesetzt: Controller-Kommentar (`controller.ts` Z. 50–55) um das Einfrieren beim Kamera-Panel-Umschalten nachgezogen. Review clean, 1 Minor zurückgestellt (Skriptabweichungen im Vorher-Beleg nur über den Bericht belegt). Details: `docs/klickflaechen-abnahme.md` Abschnitt 2. |
+| 2 | Commits `803a12d`, `6c28e41` (Fixrunde 1), 1963 Tests grün vor der Fixrunde (die Fixrunde ändert nur einen Testkommentar). Ruling: Der Critical-Befund der Prüfung gilt als erledigt, die falsche Ursachenerklärung im Umsetzerbericht als Minor; die tatsächliche Ursache der veralteten Blickmatrix (`camera.lookAt` setzt die Quaternion vor `updateWorldMatrix`) steht im Ledger. 1 weiterer Minor zurückgestellt. Details: `docs/klickflaechen-abnahme.md` Abschnitt 5 (Ruling 1) und 7. |
+| 3 | Commit `a900a66`, 1975 Tests grün (`treffer.test.ts` 12). Node-Messwert §4.5 (34 Bahnen × 513 Punkte + Projektion): 0,432 / 0,414 / 0,419 ms je Bild, Kriterium < 1 ms erfüllt. Review clean, 1 Minor zurückgestellt (Gleichstand in Rang 3 bei ≥ 3 Scheiben theoretisch reihenfolgeabhängig). |
+| 4 | Commit `9bf24d4`, 1982 Tests grün, mit Vorab-Ruling 3 (zwei zusätzliche Prüfungen aus Entwurf §8: Versatz bei Glyphenwechsel, kein Rechteck für nicht gezeigte Namen). Review clean, 1 Minor zurückgestellt (`namensRechtecke()`/`trefferScheiben()` geben interne Arrays zurück). |
+| 5 | Commits `f07d3a4`, `91e6b74` (Fixrunde 1), 1990 Tests grün (`input.test.ts` 8, nach der Fixrunde 9). Ruling: Test mit versetztem Rechteck (`clientX − rect.left`) gegen Rot-Nachweis ohne die Umrechnung ergänzt. 2 Minor zurückgestellt (redundanter Wächter in der Tippbedingung; ein entfallener Kommentar, in der Fixwelle nach 7b wieder eingesetzt). Details: `docs/klickflaechen-abnahme.md` Abschnitt 5 (Ruling 2) und 7. |
+| 6 | Commits `06b0498`, `084a958` (Fixrunde 1), 1993 Tests grün, nach der Fixrunde 1994 (`scene.test.ts` 8). Ruling: Szene-Test mit echten `THREE.Line`-Objekten und projizierter Zielposition ergänzt, Rot-Nachweis ohne `visible`-Filter (`pluto` statt `neptune`). 2 Minor zurückgestellt (zwei DEV-Blöcke mit unterschiedlichem Typisierungsstil; `bahnPuffer` schrumpft nie); Rauchprobe nur über den Bericht belegt, durch Task 7 im Browser abgedeckt. Details: `docs/klickflaechen-abnahme.md` Abschnitt 5 (Ruling 3) und 7. |
+| 7 | Messaufträge 7a/7b (kein eigener Commit): §9.2–§9.8 gemessen, alle Kriterien erfüllt; §9.4 mit dem Befund Mars → Deimos in der Systemansicht. Schlussprüfung „With fixes" (2 Important, 6 Minor). Fixwelle (Commits `bda469d`, `6b43f0c`, `8bab2f3`): alle Befunde behoben, 2003 Tests grün, Lint/Build grün, Nachprüfung bestätigt alle sieben Befunde ohne neue Schäden. 8 Rulings, 4 zurückgestellte Minor-Befunde der Schlussprüfung, 1 Restbefund der Nachprüfung. Vollständiges Protokoll: `docs/klickflaechen-abnahme.md`. |
