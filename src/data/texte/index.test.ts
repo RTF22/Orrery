@@ -38,6 +38,6 @@ describe('Textlader', () => {
     const hochschule = await ladeMitAusweich('en', 'hochschule', erde);
     expect(hochschule?.niveau).toBe('gymnasium');
     expect(hochschule?.sprache).toBe('en');
-    expect(await ladeMitAusweich('de', 'gymnasium', { art: 'objekt', kennung: 'pluto' })).toBeNull();
+    expect(await ladeMitAusweich('de', 'gymnasium', { art: 'objekt', kennung: 'vulcan' })).toBeNull();
   });
 });
