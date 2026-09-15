@@ -104,10 +104,19 @@ describe('achsneigungDeg (gegen die eigene Bahn, Epoche J2000)', () => {
     // die Ekliptik wären es 1,54°.
     expect(Math.abs(achsneigungDeg(getBody('moon'), bodyIndex) - 6.68)).toBeLessThan(0.1);
     // Gebunden rotierende Monde in der Äquatorebene ihres Planeten liegen nahe
-    // 0°, nicht bei der Neigung des Planeten (Saturn 26,7°).
-    for (const id of ['io', 'titan', 'enceladus', 'charon']) {
+    // 0°, nicht bei der Neigung des Planeten (Saturn 26,7°). Ariel und Oberon
+    // laufen gegen den IAU-Nordpol rückläufig (i ≈ 180°) und haben eine
+    // negative Periode: Beide Vorzeichen müssen sich aufheben.
+    for (const id of ['io', 'titan', 'enceladus', 'charon', 'ariel', 'oberon']) {
       expect(achsneigungDeg(getBody(id), bodyIndex), id).toBeLessThan(1);
     }
+  });
+
+  it('misst Pluto bei positiver Periode über 90°', () => {
+    // Plutos IAU-Pol folgt der Rechte-Hand-Regel (positive Periode) und liegt
+    // auf der Südseite seiner Bahnebene; die Neigung übersteigt 90° also ohne
+    // Vorzeichenwechsel über die Periode.
+    expect(Math.abs(achsneigungDeg(getBody('pluto'), bodyIndex) - 119.6)).toBeLessThan(0.2);
   });
 
   it('nimmt für die Sonne den Winkel zur Ekliptiknormale', () => {
