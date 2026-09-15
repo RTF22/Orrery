@@ -1,7 +1,6 @@
 import type { Body, BodyIndex, Vec3 } from '../../sim/types';
 import type { Niveau } from '../../data/themen';
-import { elementsAt, positionAt, umlaufzeitTage, velocityAt } from '../../sim/orbit';
-import { axialTiltDeg, poleVector } from '../../sim/frames';
+import { achsneigungDeg, elementsAt, positionAt, umlaufzeitTage, velocityAt } from '../../sim/orbit';
 import { t } from '../i18n';
 import { formatAbstand, formatMasse, formatZahl } from '../format';
 
@@ -47,8 +46,7 @@ export function datenzeilen(body: Body, niveau: Niveau, jd: number, index: BodyI
   };
   if (body.physical.rotationPeriodH < 0) rotation.hinweis = t('info.daten.retrograd');
   zeilen.push(rotation);
-  const pol = poleVector(body.physical.pole.raDeg, body.physical.pole.decDeg);
-  zeilen.push({ schluessel: 'info.daten.achsneigung', wert: `${formatZahl(axialTiltDeg(pol), 1)}°` });
+  zeilen.push({ schluessel: 'info.daten.achsneigung', wert: `${formatZahl(achsneigungDeg(body, index), 1)}°` });
 
   if (body.orbit !== null) {
     zeilen.push({ schluessel: 'info.daten.exzentrizitaet', wert: formatZahl(elementsAt(body.orbit, jd).e, 3) });

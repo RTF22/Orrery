@@ -251,6 +251,13 @@ mit der Masse des Mutterkörpers (`sim/orbit.ts`, neue Funktion `umlaufzeitTage`
 nicht aus einer Tabelle. Szenen- und Thementexte tragen keinen Datenblock; Szenen
 zeigen stattdessen Ziel und Blickpunkt als Objektverweise.
 
+**Nachtrag (4c-3):** Die Achsneigung ist die Schiefe gegen die eigene Bahn zur
+Epoche J2000, gemessen an der Drehachse (bei rückläufiger Rotation über 90°, etwa
+Venus 177,4°, Uranus 97,8°); nur die Sonne ohne Bahn bezieht sich auf die
+Ekliptik. Umgesetzt als `achsneigungDeg` in `sim/orbit.ts`. Die erste Fassung
+maß gegen die Ekliptik und zeigte etwa Merkur mit 7,0° und die Saturnmonde mit
+rund 28°.
+
 Außerhalb des Genauigkeitsfensters (`isOutOfRange`) steht am Ende des Datenblocks
 der Warnsatz `info.ausserhalbFenster` mit Verweis `thema:modell`; der
 Hochschul-Datenblock trägt diesen Verweis immer.

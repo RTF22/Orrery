@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { positionAt, AU_KM, umlaufzeitTage } from './orbit';
+import { positionAt, AU_KM, umlaufzeitTage, achsneigungDeg } from './orbit';
 import { bodyIndex, getBody } from '../data/index';
 import { J2000 } from './time';
 
@@ -83,5 +83,34 @@ describe('umlaufzeitTage (Kepler III)', () => {
 
   it('ist für die Sonne null', () => {
     expect(umlaufzeitTage(bodyIndex.sun!, bodyIndex)).toBeNull();
+  });
+});
+
+describe('achsneigungDeg (gegen die eigene Bahn, Epoche J2000)', () => {
+  /** Schiefe gegen die eigene Bahn laut NSSDC-Faktenblättern, Zeile „Obliquity to orbit". */
+  const SCHIEFE: Record<string, number> = {
+    mercury: 0.03, venus: 177.36, earth: 23.44, mars: 25.19,
+    jupiter: 3.13, saturn: 26.73, uranus: 97.77, neptune: 28.32,
+  };
+
+  it('trifft die bekannten Werte der Planeten, rückläufige Drehung über 90°', () => {
+    for (const [id, soll] of Object.entries(SCHIEFE)) {
+      expect(Math.abs(achsneigungDeg(getBody(id), bodyIndex) - soll), id).toBeLessThan(0.1);
+    }
+  });
+
+  it('misst Monde gegen ihre eigene Bahn, nicht gegen die Ekliptik', () => {
+    // 6,68° gegen die eigene Bahn (Cassinis Gesetze, siehe moon.ts); gegen
+    // die Ekliptik wären es 1,54°.
+    expect(Math.abs(achsneigungDeg(getBody('moon'), bodyIndex) - 6.68)).toBeLessThan(0.1);
+    // Gebunden rotierende Monde in der Äquatorebene ihres Planeten liegen nahe
+    // 0°, nicht bei der Neigung des Planeten (Saturn 26,7°).
+    for (const id of ['io', 'titan', 'enceladus', 'charon']) {
+      expect(achsneigungDeg(getBody(id), bodyIndex), id).toBeLessThan(1);
+    }
+  });
+
+  it('nimmt für die Sonne den Winkel zur Ekliptiknormale', () => {
+    expect(Math.abs(achsneigungDeg(getBody('sun'), bodyIndex) - 7.25)).toBeLessThan(0.01);
   });
 });

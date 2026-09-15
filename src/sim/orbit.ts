@@ -1,7 +1,7 @@
 import type { Body, BodyIndex, OrbitElements, Vec3 } from './types';
 import { J2000, centuriesSinceJ2000 } from './time';
 import { solveKepler, normalizeAngle } from './kepler';
-import { equatorToEcliptic, poleVector, icrfKnotenVersatzDeg } from './frames';
+import { equatorToEcliptic, poleVector, icrfKnotenVersatzDeg, axialTiltDeg } from './frames';
 
 export const AU_KM = 149_597_870.7;
 
@@ -168,4 +168,33 @@ export function umlaufzeitTage(body: Body, index: BodyIndex): number | null {
   const aKm = body.orbit.a * AU_KM;
   const mu = G_KM3 * (mutter.physical.massKg + body.physical.massKg);
   return (2 * Math.PI * Math.sqrt(aKm ** 3 / mu)) / 86400;
+}
+
+const differenz = (a: Vec3, b: Vec3): Vec3 => ({ x: a.x - b.x, y: a.y - b.y, z: a.z - b.z });
+
+/**
+ * Achsneigung gegen die eigene Bahn (Schiefe) in Grad, zur Epoche J2000.
+ *
+ * Gemessen wird die Drehachse, nicht der Nordpol des Datensatzes: Bei
+ * negativer Rotationsperiode zeigt der Drehimpuls dem Pol entgegen
+ * (IAU-Nordpol-Konvention, siehe venus.ts und uranus.ts), und die Neigung
+ * liegt über 90° — Venus 177,4°, Uranus 97,8°, wie in den NSSDC-
+ * Faktenblättern. Die Bahnnormale kommt aus relativer Position und
+ * Geschwindigkeit der Simulation, damit Bezugsebene und Knotenversatz der
+ * Monde (positionAt) nicht ein zweites Mal nachgebaut werden. Epoche statt
+ * Uhrzeit, weil die Pole im Datensatz auf J2000 festliegen, während die
+ * Bahnknoten wandern (beim Mond in 18,6 Jahren); zum laufenden Datum
+ * gerechnet zeigte der Mond sonst Werte zwischen 3° und 7°. Ohne Bahn (Sonne)
+ * gilt der Winkel zur Ekliptiknormale.
+ */
+export function achsneigungDeg(body: Body, index: BodyIndex): number {
+  const pol = poleVector(body.physical.pole.raDeg, body.physical.pole.decDeg);
+  if (body.orbit === null || body.parent === null) return axialTiltDeg(pol);
+  const r = differenz(positionAt(body.id, index, J2000), positionAt(body.parent, index, J2000));
+  const v = differenz(velocityAt(body.id, index, J2000), velocityAt(body.parent, index, J2000));
+  const normale = { x: r.y * v.z - r.z * v.y, y: r.z * v.x - r.x * v.z, z: r.x * v.y - r.y * v.x };
+  const drehsinn = body.physical.rotationPeriodH < 0 ? -1 : 1;
+  const skalar = pol.x * normale.x + pol.y * normale.y + pol.z * normale.z;
+  const cos = (drehsinn * skalar) / (Math.hypot(pol.x, pol.y, pol.z) * Math.hypot(normale.x, normale.y, normale.z));
+  return Math.acos(Math.min(Math.max(cos, -1), 1)) / GRAD;
 }

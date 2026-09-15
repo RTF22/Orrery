@@ -63,6 +63,19 @@ describe('datenzeilen', () => {
     expect(v).toBeLessThan(1.1);
   });
 
+  it('Achsneigung gegen die eigene Bahn zur Epoche, rückläufige Drehung über 90°', () => {
+    const neigung = (id: string, jd = J2000) =>
+      zeile(datenzeilen(bodyIndex[id]!, 'gymnasium', jd, bodyIndex), 'info.daten.achsneigung')?.wert;
+    expect(neigung('mercury')).toBe('0°');
+    expect(neigung('mars')).toBe('25,2°');
+    expect(neigung('saturn')).toBe('26,7°');
+    expect(neigung('venus')).toBe('177,4°');
+    expect(neigung('uranus')).toBe('97,8°');
+    expect(neigung('titan')).toBe('0,3°');
+    // Die Pole liegen auf J2000 fest; die Zeile hängt deshalb nicht von der Uhr ab.
+    expect(neigung('moon', J2000 + 3652.5)).toBe('6,7°');
+  });
+
   it('Hochschule: Bahnelemente, Bezugsebene, Pol und Albedo; retrograde Rotation als Hinweis', () => {
     const liste = datenzeilen(bodyIndex.venus!, 'hochschule', J2000, bodyIndex);
     const schluessel = liste.map((z) => z.schluessel);
