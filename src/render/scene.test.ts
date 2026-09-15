@@ -138,7 +138,7 @@ describe('buildScene — Blickmatrix', () => {
     const seitlich = { ...DEFAULT_STATE, camera: { ...DEFAULT_STATE.camera, azimuth: 0, elevation: 0 } };
     szene.update(2451545.0, 5, seitlich);
     szene.update(2451545.0, 5, seitlich);
-    // Blick zur Seite: Die Drehung ist deutlich, eine veraltete Einheitsmatrix fiele auf.
+    // Blick zur Seite: Die Drehung ist deutlich, eine veraltete Blickmatrix fiele auf.
     expect(Math.abs(ctx.camera.quaternion.w)).toBeLessThan(0.99);
     const erwartet = new THREE.Matrix4().makeRotationFromQuaternion(ctx.camera.quaternion).invert();
     erwartet.elements.forEach((wert, i) => {
