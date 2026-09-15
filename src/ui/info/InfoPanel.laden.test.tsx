@@ -29,5 +29,7 @@ describe('InfoPanel bei fehlschlagendem Laden', () => {
     useStore.getState().setCamera({ targetId: 'earth' });
     render(<InfoPanel />);
     expect(await screen.findByText('Zu diesem Eintrag gibt es noch keinen Text.')).toBeTruthy();
+    expect(await screen.findByRole('heading', { level: 2, name: 'Erde' })).toBeTruthy();
+    expect(screen.getByTestId('datenblock')).toBeTruthy();
   });
 });

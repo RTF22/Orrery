@@ -50,14 +50,6 @@ describe('InfoPanel', () => {
     expect(screen.getByText('Große Halbachse')).toBeTruthy();
   });
 
-  it('ohne Text: Datenblock, Ausweichtitel und Hinweis', async () => {
-    useStore.getState().setCamera({ targetId: 'pluto' });
-    render(<InfoPanel />);
-    expect(await titel('Pluto')).toBeTruthy();
-    expect(await screen.findByText('Zu diesem Eintrag gibt es noch keinen Text.')).toBeTruthy();
-    expect(screen.getByText('Keine Quellen zu diesem Text.')).toBeTruthy();
-  });
-
   it('Themenverweis wechselt den Text; ein Zielwechsel löscht das Thema', async () => {
     useStore.getState().setCamera({ targetId: 'earth' });
     render(<InfoPanel />);

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { QUELLEN, quellenFuer, quelleFinden, QUELLEN_ART_REIHENFOLGE } from './quellen';
 import { bodyIndex } from './index';
 import { SCENES } from './scenes';
-import { istThema } from './themen';
+import { istThema, THEMEN } from './themen';
 
 describe('Quellenkatalog', () => {
   it('hat eindeutige Kennungen und nur https-Adressen', () => {
@@ -29,6 +29,14 @@ describe('Quellenkatalog', () => {
         expect(bekannt, `${q.id}: ${ziel}`).toBe(true);
       }
     }
+  });
+
+  it('bietet jedem Körper und jedem Thema mindestens eine Quelle', () => {
+    const kennungen = [
+      ...Object.keys(bodyIndex).map((id) => `objekt:${id}`),
+      ...THEMEN.map((thema) => `thema:${thema.id}`),
+    ];
+    expect(kennungen.filter((kennung) => quellenFuer(kennung).length === 0)).toEqual([]);
   });
 
   it('liefert zu einer Kennung die passenden Quellen, nach Art und dann Sprache sortiert', () => {
