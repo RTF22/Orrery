@@ -29,16 +29,20 @@ vi.mock('./belts', () => ({
 // Mock nimmt den Namensauflöser (zweiter Parameter von createLabelOverlay)
 // und die Sprache (fünfter Parameter von update) entgegen, wertet sie aber
 // nicht aus.
+const labelsUpdateSpion = vi.fn();
+let testScheiben: import('./treffer').Scheibe[] = [];
 vi.mock('./labels', () => ({
   createLabelOverlay: () => ({
-    update: vi.fn(),
+    update: labelsUpdateSpion,
     dispose: vi.fn(),
+    namensRechtecke: () => [],
+    trefferScheiben: () => testScheiben,
   }),
 }));
 
 const updateSpion = vi.fn();
 vi.mock('./orbits', () => ({
-  createOrbitLines: () => ({ update: updateSpion }),
+  createOrbitLines: () => ({ update: updateSpion, lines: new Map() }),
 }));
 
 const { buildScene } = await import('./scene');
@@ -77,7 +81,7 @@ describe('buildScene — Bahnlinien', () => {
     expect(updateSpion).toHaveBeenCalledTimes(50);
     expect(updateSpion).toHaveBeenLastCalledWith(
       expect.any(THREE.Vector3), DEFAULT_STATE.visible, DEFAULT_STATE.display.orbits,
-      2451545.0 + 49, DEFAULT_STATE.scale,
+      2451545.0 + 49, DEFAULT_STATE.scale, null,
     );
   });
 });
@@ -144,5 +148,35 @@ describe('buildScene — Blickmatrix', () => {
     erwartet.elements.forEach((wert, i) => {
       expect(ctx.camera.matrixWorldInverse.elements[i]).toBeCloseTo(wert, 9);
     });
+  });
+});
+
+describe('buildScene — Zeiger und Treffer', () => {
+  const mars = { id: 'mars', x: 10, y: 10, radiusPx: 5, tiefe: 0.5, istMond: false };
+
+  it('reicht den Körper unter dem Zeiger ab dem nächsten Bild an Overlay und Bahnen', () => {
+    testScheiben = [mars];
+    const szene = buildScene(fakeContext(), fakeOverlay, (k) => k);
+    szene.setZeiger({ x: 11, y: 10, art: 'maus' });
+    szene.update(2451545.0, 0.016, DEFAULT_STATE);
+    expect(szene.hervorgehoben()).toBe('mars');
+    szene.update(2451545.0, 0.016, DEFAULT_STATE);
+    expect(updateSpion.mock.lastCall?.[5]).toBe('mars');
+    expect(labelsUpdateSpion.mock.lastCall?.[5]).toBe('mars');
+    szene.setZeiger(null);
+    expect(szene.hervorgehoben()).toBeNull();
+    szene.update(2451545.0, 0.016, DEFAULT_STATE);
+    expect(labelsUpdateSpion.mock.lastCall?.[5]).toBeNull();
+    testScheiben = [];
+  });
+
+  it('prüft trefferBei gegen die Kandidaten des letzten Bildes', () => {
+    testScheiben = [mars];
+    const szene = buildScene(fakeContext(), fakeOverlay, (k) => k);
+    szene.update(2451545.0, 0.016, DEFAULT_STATE);
+    expect(szene.trefferBei(11, 10, 'maus')).toBe('mars');
+    expect(szene.trefferBei(40, 10, 'maus')).toBeNull();
+    expect(szene.trefferBei(30, 10, 'finger')).toBe('mars');
+    testScheiben = [];
   });
 });

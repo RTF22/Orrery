@@ -14,6 +14,7 @@ import type { QualityTier } from '../store/types';
 import { QUALITY_SETTINGS } from './quality';
 import { ablageHolen } from '../store/persist';
 import { sicherungStarten, startZustand } from './persistenz';
+import { fahreZu } from '../ui/kamerafahrt';
 
 /**
  * Einstiegspunkt der Anwendung.
@@ -49,10 +50,20 @@ function App(): React.JSX.Element {
       w.store = useStore;
     }
     const szene = buildScene(ctx, overlay, (key) => t(key));
+    if (import.meta.env.DEV) {
+      // Für die Abnahme der Klickflächen: Kamera und Szene ohne Klickweg abfragen.
+      Object.assign(window as unknown as Record<string, unknown>, { kamera: ctx.camera, szene });
+    }
     const postfx = createPostFx(ctx);
-    // Ziehen dreht, Rad und Zwei-Finger-Geste zoomen — geschrieben wird
-    // ausschließlich in den Store, gelesen im nächsten Bild vom Controller.
-    const stopInput = attachCameraInput(canvas);
+    // Ziehen dreht, Rad und Zwei-Finger-Geste zoomen; Tippen fährt zum
+    // getroffenen Körper, Hover hebt ihn hervor (Entwurf Klickflächen §3.3).
+    const stopInput = attachCameraInput(canvas, {
+      onTipp: (x, y, art) => {
+        const id = szene.trefferBei(x, y, art);
+        if (id !== null) fahreZu(id);
+      },
+      onZeiger: (zeiger) => { szene.setZeiger(zeiger); },
+    });
 
     // Der Renderer meldet jede Größen- und Pixeldichteänderung; die
     // Composer-Ziele hängen sich hier an, damit sie nie hinterherhinken.
@@ -67,6 +78,9 @@ function App(): React.JSX.Element {
       tickCinema(dt);
       const state = useStore.getState();
       szene.update(jd, dt, state);
+
+      const zeigerForm = szene.hervorgehoben() === null ? '' : 'pointer';
+      if (canvas.style.cursor !== zeigerForm) canvas.style.cursor = zeigerForm;
 
       if (state.display.bloom !== bloomAn || state.quality.tier !== stufe) {
         bloomAn = state.display.bloom;

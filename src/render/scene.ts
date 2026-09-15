@@ -15,6 +15,8 @@ import { scaledPositionAt } from '../sim/scale';
 import { bodies, bodyIndex } from '../data/index';
 import { AU_KM } from '../sim/orbit';
 import { kmToUnits, worldToRender } from './units';
+import { findeTreffer, projiziereZug, FANG_PX } from './treffer';
+import type { Bahnzug, Kandidaten, Zeigerart } from './treffer';
 
 /**
  * Abstand der Erde von der Sonne in Render-Einheiten — der Fixpunkt der
@@ -31,6 +33,12 @@ const AU_EINHEITEN = kmToUnits(AU_KM);
 export interface SceneHandle {
   update: (jd: number, dt: number, state: AppState) => void;
   dispose: () => void;
+  /** Zeigerposition für die Hover-Hervorhebung; flüchtig, nicht im Store (Entwurf Klickflächen §3.3). */
+  setZeiger: (zeiger: { x: number; y: number; art: Zeigerart } | null) => void;
+  /** Körper unter dem Zeiger aus dem zuletzt berechneten Bild, oder null. */
+  hervorgehoben: () => string | null;
+  /** Trefferprüfung gegen die Kandidaten des zuletzt berechneten Bildes, für Tippen/Klick. */
+  trefferBei: (x: number, y: number, art: Zeigerart) => string | null;
 }
 
 /**
@@ -70,6 +78,30 @@ export function buildScene(
   // brightness und bleiben deshalb unverändert.
   const belichtung = createExposureMeter();
 
+  // Hover (Entwurf Klickflächen §3.3): flüchtig, nicht im Store.
+  let zeiger: { x: number; y: number; art: Zeigerart } | null = null;
+  let hover: string | null = null;
+  const blick = new THREE.Matrix4();
+  const bahnPuffer = new Map<string, Float64Array>();
+
+  /** Kandidaten des zuletzt berechneten Bildes; Bahnen aus den gezeichneten Puffern. */
+  const kandidaten = (): Kandidaten => {
+    blick.multiplyMatrices(ctx.camera.projectionMatrix, ctx.camera.matrixWorldInverse);
+    const zuege: Bahnzug[] = [];
+    for (const [id, linie] of bahnen.lines) {
+      if (!linie.visible) continue;
+      const attr = linie.geometry.getAttribute('position');
+      let ziel = bahnPuffer.get(id);
+      if (ziel === undefined) {
+        ziel = new Float64Array(attr.count * 2);
+        bahnPuffer.set(id, ziel);
+      }
+      projiziereZug(attr.array, attr.count, blick, overlay.clientWidth, overlay.clientHeight, ziel);
+      zuege.push({ id, punkte: ziel });
+    }
+    return { scheiben: labels.trefferScheiben(), namen: labels.namensRechtecke(), bahnen: zuege };
+  };
+
   return {
     update(jd, dt, state) {
       // Die Kamera selbst bleibt konstruktionsbedingt im Ursprung (siehe
@@ -88,7 +120,7 @@ export function buildScene(
       };
 
       // Die momentane Bahnellipse je Bild — ohne Kepler-Löser, siehe orbits.ts.
-      bahnen.update(cameraKm, state.visible, state.display.orbits, jd, state.scale);
+      bahnen.update(cameraKm, state.visible, state.display.orbits, jd, state.scale, hover);
 
       koerper.update(jd, state.scale, cameraKm, state.visible, belichtet, state.display.shadows);
 
@@ -148,13 +180,23 @@ export function buildScene(
       // vor dem nächsten Animationsframe, sodass Kennung und Tabelle hier
       // nie auseinanderlaufen.
       labels.update(
-        eintraege, ctx.camera, state.display.labels, state.display.markers, state.ui.language,
+        eintraege, ctx.camera, state.display.labels, state.display.markers, state.ui.language, hover,
       );
+
+      // Treffer erst nach dem Projizieren; die Hervorhebung folgt im nächsten
+      // Bild — ein Bild Versatz ist nicht zu sehen.
+      hover = zeiger === null ? null : findeTreffer(zeiger, kandidaten(), FANG_PX[zeiger.art]);
     },
     dispose() {
       labels.dispose();
       ringe.dispose();
       guertel.dispose();
     },
+    setZeiger(neu) {
+      zeiger = neu;
+      if (neu === null) hover = null;
+    },
+    hervorgehoben: () => hover,
+    trefferBei: (x, y, art) => findeTreffer({ x, y }, kandidaten(), FANG_PX[art]),
   };
 }
