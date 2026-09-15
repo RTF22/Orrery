@@ -1,133 +1,118 @@
 import { describe, it, expect } from 'vitest';
 import * as THREE from 'three';
-import { createOrbitLines, orbitPointsKm, ORBIT_SEGMENTS } from './orbits';
-import { bodyIndex } from '../data/index';
-import { SCALE_PRESETS } from '../sim/scale';
-import { scaledPositionAt } from '../sim/scale';
+import { createOrbitLines, ORBIT_SEGMENTS } from './orbits';
+import { bodies, bodyIndex } from '../data/index';
+import { SCALE_PRESETS, scaledPositionAt, isSatellite } from '../sim/scale';
+import type { ScaleSettings } from '../sim/scale';
 import { J2000 } from '../sim/time';
+import type { Vec3 } from '../sim/types';
 import { kmToUnits } from './units';
 
-const betrag = (v: { x: number; y: number; z: number }) =>
-  Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+const betrag = (v: Vec3): number => Math.hypot(v.x, v.y, v.z);
 
-describe('orbitPointsKm', () => {
-  const s = SCALE_PRESETS.schaubild;
+/**
+ * Stützpunkte einer Linie nach genau einem update-Aufruf. Alle anderen Linien
+ * sind ausgeblendet, damit der Test nur die eine rechnet. Die Kamera steht an
+ * der übergebenen Stelle — in der Nähe des Körpers bleiben die Float32-Werte
+ * klein und genau.
+ */
+function linieNachUpdate(id: string, jd: number, s: ScaleSettings, kameraKm: Vec3): Vec3[] {
+  const linien = createOrbitLines(new THREE.Scene());
+  const nurDiese = Object.fromEntries(bodies.map((b) => [b.id, b.id === id]));
+  linien.update(new THREE.Vector3(kameraKm.x, kameraKm.y, kameraKm.z), nurDiese, true, jd, s);
+  const linie = linien.lines.get(id);
+  if (linie === undefined) throw new Error(`Linie fehlt: ${id}`);
+  const attr = linie.geometry.getAttribute('position');
+  const punkte: Vec3[] = [];
+  for (let i = 0; i < attr.count; i++) {
+    punkte.push({ x: attr.getX(i), y: attr.getY(i), z: attr.getZ(i) });
+  }
+  return punkte;
+}
 
-  it('liefert einen geschlossenen Linienzug', () => {
-    const p = orbitPointsKm('mars', bodyIndex, J2000, s);
-    expect(p).toHaveLength(ORBIT_SEGMENTS + 1);
-    const ersteZuLetzt = betrag({
-      x: p[0]!.x - p[ORBIT_SEGMENTS]!.x,
-      y: p[0]!.y - p[ORBIT_SEGMENTS]!.y,
-      z: p[0]!.z - p[ORBIT_SEGMENTS]!.z,
-    });
-    expect(ersteZuLetzt / betrag(p[0]!)).toBeLessThan(0.001);
+/** Kleinster Abstand des Punkts zum Linienzug — zu den Segmenten, nicht nur zu den Stützpunkten. */
+function abstandZumLinienzug(p: Vec3, zug: Vec3[]): number {
+  let min = Infinity;
+  for (let i = 0; i + 1 < zug.length; i++) {
+    const a = zug[i]!;
+    const b = zug[i + 1]!;
+    const ab = { x: b.x - a.x, y: b.y - a.y, z: b.z - a.z };
+    const ap = { x: p.x - a.x, y: p.y - a.y, z: p.z - a.z };
+    const laenge2 = ab.x ** 2 + ab.y ** 2 + ab.z ** 2;
+    const t = laenge2 === 0
+      ? 0
+      : Math.min(Math.max((ap.x * ab.x + ap.y * ab.y + ap.z * ab.z) / laenge2, 0), 1);
+    min = Math.min(min, betrag({ x: ap.x - t * ab.x, y: ap.y - t * ab.y, z: ap.z - t * ab.z }));
+  }
+  return min;
+}
+
+/** Dargestellter Bahnradius: zum Mutterkörper bei Satelliten, sonst zur Sonne. */
+function bahnradiusKm(id: string, jd: number, s: ScaleSettings): number {
+  const body = bodyIndex[id]!;
+  const p = scaledPositionAt(id, bodyIndex, jd, s);
+  if (!isSatellite(body)) return betrag(p);
+  const m = scaledPositionAt(body.parent!, bodyIndex, jd, s);
+  return betrag({ x: p.x - m.x, y: p.y - m.y, z: p.z - m.z });
+}
+
+const MIT_BAHN = bodies.filter((b) => b.orbit !== null).map((b) => b.id);
+const VERSAETZE_TAGE = [0, 30, 365, 3650, -3650];
+
+describe('createOrbitLines', () => {
+  it('legt für die Sonne keine Linie an', () => {
+    const linien = createOrbitLines(new THREE.Scene());
+    expect(linien.lines.has('sun')).toBe(false);
+    expect(linien.lines.size).toBe(MIT_BAHN.length);
   });
 
-  it('läuft durch die aktuelle Position des Körpers', () => {
-    const jetzt = scaledPositionAt('earth', bodyIndex, J2000, s);
-    const p = orbitPointsKm('earth', bodyIndex, J2000, s);
-    const naechster = Math.min(...p.map((q) => betrag({
-      x: q.x - jetzt.x, y: q.y - jetzt.y, z: q.z - jetzt.z,
-    })));
-    expect(naechster / betrag(jetzt)).toBeLessThan(0.01);
-  });
-
-  it('gibt für die Sonne keine Bahn zurück', () => {
-    expect(orbitPointsKm('sun', bodyIndex, J2000, s)).toHaveLength(0);
-  });
-
-  // Die Mondbahn ist der Härtefall: Über eine Mondumlaufzeit zieht die Erde
-  // selbst rund 0,46 AE weiter. Würde die Bahn im Inertialsystem abgetastet,
-  // ergäbe sich eine Zykloide quer durchs Sonnensystem statt einer Ellipse.
-  it('zeichnet die Mondbahn als geschlossene Schleife um die Erde', () => {
-    const mond = orbitPointsKm('moon', bodyIndex, J2000, s);
-    const erde = scaledPositionAt('earth', bodyIndex, J2000, s);
-    const abstaende = mond.map((q) => betrag({
-      x: q.x - erde.x, y: q.y - erde.y, z: q.z - erde.z,
-    }));
-
-    // Mondabstände skalieren laut Maßstabsmodell mit sizeScale.
-    expect(Math.min(...abstaende)).toBeGreaterThan(300_000 * s.sizeScale);
-    expect(Math.max(...abstaende)).toBeLessThan(460_000 * s.sizeScale);
-
-    const zu = betrag({
-      x: mond[0]!.x - mond[ORBIT_SEGMENTS]!.x,
-      y: mond[0]!.y - mond[ORBIT_SEGMENTS]!.y,
-      z: mond[0]!.z - mond[ORBIT_SEGMENTS]!.z,
-    });
-    expect(zu).toBeLessThan(20_000 * s.sizeScale);
-  });
-});
-
-describe('createOrbitLines — Mondbahn über die Zeit', () => {
-  const s = SCALE_PRESETS.schaubild;
-
-  /** Abstände aller Stützpunkte der Linie zur aktuellen Position der Erde. */
-  function abstaendeZurErde(jd: number): number[] {
-    const szene = new THREE.Scene();
-    const linien = createOrbitLines(szene);
-    // Aufbau zur Epoche — danach läuft nur noch die Zeit weiter, der
-    // Maßstab bleibt gleich, es gibt also keinen weiteren rebuild.
-    linien.rebuild(J2000, s);
-    linien.update(new THREE.Vector3(0, 0, 0), {}, true, jd, s);
-
-    const linie = linien.lines.get('moon');
-    if (linie === undefined) throw new Error('Mondlinie fehlt');
-    const attr = linie.geometry.getAttribute('position');
-    const erde = scaledPositionAt('earth', bodyIndex, jd, s);
-
-    const werte: number[] = [];
-    for (let i = 0; i < attr.count; i++) {
-      werte.push(betrag({
-        x: attr.getX(i) - kmToUnits(erde.x),
-        y: attr.getY(i) - kmToUnits(erde.y),
-        z: attr.getZ(i) - kmToUnits(erde.z),
-      }));
+  it('schließt jede Linie', () => {
+    const s = SCALE_PRESETS.schaubild;
+    for (const id of ['mars', 'moon', 'eris']) {
+      const zug = linieNachUpdate(id, J2000, s, scaledPositionAt(id, bodyIndex, J2000, s));
+      expect(zug).toHaveLength(ORBIT_SEGMENTS + 1);
+      // Eine Linie aus lauter Nullpunkten hätte ebenfalls keine Lücke.
+      expect(Math.max(...zug.map(betrag)), id).toBeGreaterThan(kmToUnits(bahnradiusKm(id, J2000, s)));
+      const erster = zug[0]!;
+      const letzter = zug[ORBIT_SEGMENTS]!;
+      const luecke = betrag({ x: erster.x - letzter.x, y: erster.y - letzter.y, z: erster.z - letzter.z });
+      expect(luecke / kmToUnits(bahnradiusKm(id, J2000, s)), id).toBeLessThan(1e-4);
     }
-    return werte;
+  });
+
+  // Der Fehler, den diese Tests festhalten: Die Linie wurde nur bei einer
+  // Maßstabsänderung neu abgetastet. Monde mit schnell wandernden Elementen
+  // (Knoten, Perizentrum) lösten sich dann mit der Zeit von ihrer Linie — der
+  // Erdmond nach zehn Jahren um 14 % des Bahnradius.
+  for (const preset of ['schaubild', 'realistisch'] as const) {
+    it(`trägt jeden Körper zu jeder Zeit auf seiner eigenen Linie (${preset})`, () => {
+      const s = SCALE_PRESETS[preset];
+      for (const id of MIT_BAHN) {
+        for (const tage of VERSAETZE_TAGE) {
+          const jd = J2000 + tage;
+          const koerper = scaledPositionAt(id, bodyIndex, jd, s);
+          const zug = linieNachUpdate(id, jd, s, koerper);
+          const radius = kmToUnits(bahnradiusKm(id, jd, s));
+          const kennung = `${id}, ${tage} Tage`;
+
+          // Eine Linie aus lauter Nullpunkten läge ebenfalls „auf" dem Körper
+          // in der Bildmitte — sie muss sich deshalb wirklich um ihn spannen.
+          expect(Math.max(...zug.map(betrag)), kennung).toBeGreaterThan(radius);
+          expect(abstandZumLinienzug({ x: 0, y: 0, z: 0 }, zug) / radius, kennung)
+            .toBeLessThan(1e-3);
+        }
+      }
+    });
   }
 
-  it('bleibt zehn Tage nach dem Aufbau um die Erde herum', () => {
-    // Ohne Nachführung bliebe die Schleife an der Erdposition des Aufbaus
-    // kleben — nach zehn Tagen liegt die Erde rund 25 Mio. km weiter, also
-    // deutlich außerhalb der (mit sizeScale skalierten) Mondbahn.
-    const abstaende = abstaendeZurErde(J2000 + 10);
-    expect(Math.min(...abstaende)).toBeGreaterThan(kmToUnits(300_000 * s.sizeScale));
-    expect(Math.max(...abstaende)).toBeLessThan(kmToUnits(460_000 * s.sizeScale));
-  });
-
-  it('liegt direkt nach dem Aufbau um die Erde herum', () => {
-    const abstaende = abstaendeZurErde(J2000);
-    expect(Math.min(...abstaende)).toBeGreaterThan(kmToUnits(300_000 * s.sizeScale));
-    expect(Math.max(...abstaende)).toBeLessThan(kmToUnits(460_000 * s.sizeScale));
-  });
-
-  // Die Probe aufs Exempel: Kugel und Linie stammen aus getrennten Pfaden
-  // (bodies.ts beziehungsweise orbits.ts). Laufen sie auseinander, stimmt
-  // eine der beiden Verankerungen nicht.
-  it('trägt den Mond auf seiner eigenen Bahnlinie', () => {
-    for (const versatzTage of [0, 1, 10, 27]) {
-      const jd = J2000 + versatzTage;
-      const szene = new THREE.Scene();
-      const linien = createOrbitLines(szene);
-      linien.rebuild(J2000, s);
-      linien.update(new THREE.Vector3(0, 0, 0), {}, true, jd, s);
-
-      const attr = linien.lines.get('moon')!.geometry.getAttribute('position');
-      const mond = scaledPositionAt('moon', bodyIndex, jd, s);
-      let naechster = Infinity;
-      for (let i = 0; i < attr.count; i++) {
-        naechster = Math.min(naechster, betrag({
-          x: attr.getX(i) - kmToUnits(mond.x),
-          y: attr.getY(i) - kmToUnits(mond.y),
-          z: attr.getZ(i) - kmToUnits(mond.z),
-        }));
-      }
-      // Zwei Prozent des Bahnradius — mehr als der Abstand zweier der 512
-      // Stützpunkte, aber weit unter jeder sichtbaren Ablösung.
-      expect(naechster, `${versatzTage} Tage nach dem Aufbau`)
-        .toBeLessThan(kmToUnits(0.02 * 384_400 * s.sizeScale));
+  it('legt die Mondbahn auch nach Jahren um die Erde', () => {
+    const s = SCALE_PRESETS.schaubild;
+    for (const tage of [10, 3650]) {
+      const jd = J2000 + tage;
+      const erde = scaledPositionAt('earth', bodyIndex, jd, s);
+      const abstaende = linieNachUpdate('moon', jd, s, erde).map(betrag);
+      expect(Math.min(...abstaende)).toBeGreaterThan(kmToUnits(300_000 * s.sizeScale));
+      expect(Math.max(...abstaende)).toBeLessThan(kmToUnits(460_000 * s.sizeScale));
     }
   });
 });

@@ -1,53 +1,16 @@
 import * as THREE from 'three';
-import type { BodyIndex, Vec3 } from '../sim/types';
 import type { ScaleSettings } from '../sim/scale';
-import { scaledPositionAt, isSatellite } from '../sim/scale';
+import { scaledPositionAt, isSatellite, compressDistance } from '../sim/scale';
+import { ellipsenStuetzen, bahnellipseRelativKm } from '../sim/orbit';
 import { bodies, bodyIndex } from '../data/index';
-import { worldToRender } from './units';
+import { kmToUnits } from './units';
 
 export const ORBIT_SEGMENTS = 512;
 
-/**
- * Stützpunkte einer Bahn, bereits maßstabsskaliert.
- *
- * Abgetastet wird über eine volle Umlaufzeit, die aus LDot folgt. Dadurch
- * gilt derselbe Code für Planeten und Monde — der Mond umrundet automatisch
- * seine Erde, weil scaledPositionAt hierarchisch arbeitet.
- */
-export function orbitPointsKm(
-  id: string, index: BodyIndex, jd: number, s: ScaleSettings,
-): Vec3[] {
-  const body = index[id];
-  if (!body?.orbit) return [];
-
-  // Umlaufzeit aus der Rate der mittleren Länge: LDot ist Grad pro Jahrhundert.
-  const periodeTage = 36525 / (body.orbit.LDot / 360);
-
-  // Bei Satelliten (siehe isSatellite in sim/scale.ts) wird der Mutterkörper
-  // auf jd festgehalten und nur der Relativvektor variiert. Ohne das
-  // verschmierte die Mondbahn über die Eigenbewegung der Erde — in 27,3
-  // Tagen zieht die Erde rund 0,46 AE weiter — zu einer Zykloide quer durchs
-  // Sonnensystem, statt die Ellipse um die Erde zu zeigen.
-  const umMutter = isSatellite(body);
-  const ankerJetzt = umMutter ? scaledPositionAt(body.parent!, index, jd, s) : null;
-
-  const punkte: Vec3[] = [];
-  for (let i = 0; i <= ORBIT_SEGMENTS; i++) {
-    const t = jd + (i / ORBIT_SEGMENTS) * periodeTage;
-    const p = scaledPositionAt(id, index, t, s);
-    if (ankerJetzt === null) { punkte.push(p); continue; }
-    const ankerDann = scaledPositionAt(body.parent!, index, t, s);
-    punkte.push({
-      x: ankerJetzt.x + (p.x - ankerDann.x),
-      y: ankerJetzt.y + (p.y - ankerDann.y),
-      z: ankerJetzt.z + (p.z - ankerDann.z),
-    });
-  }
-  return punkte;
-}
+/** Stützwinkel der Ellipse — einmal für alle Linien und Bilder. */
+const STUETZEN = ellipsenStuetzen(ORBIT_SEGMENTS);
 
 export interface OrbitLines {
-  rebuild(jd: number, s: ScaleSettings): void;
   update(
     cameraKm: THREE.Vector3,
     sichtbar: Record<string, boolean>,
@@ -59,22 +22,11 @@ export interface OrbitLines {
   lines: Map<string, THREE.Line>;
 }
 
-const URSPRUNG: Vec3 = { x: 0, y: 0, z: 0 };
-
-/**
- * Bahnen von Satelliten hängen an ihrem Mutterkörper; alle anderen an der
- * Sonne im Ursprung. Nur der Satellitenanker bewegt sich zwischen zwei
- * rebuild-Aufrufen — deshalb wird er pro Bild neu bestimmt.
- */
-function ankerKm(id: string, jd: number, s: ScaleSettings): Vec3 {
-  const body = bodyIndex[id];
-  if (!body || !isSatellite(body) || body.parent === null) return URSPRUNG;
-  return scaledPositionAt(body.parent, bodyIndex, jd, s);
-}
-
 export function createOrbitLines(scene: THREE.Scene): OrbitLines {
   const linien = new Map<string, THREE.Line>();
-  const punkteKm = new Map<string, Vec3[]>();
+  // Ein Rechenpuffer für alle Linien: Die Punkte gehen sofort in das
+  // Float32-Attribut der jeweiligen Linie, je Bild entstehen keine Objekte.
+  const relativKm = new Float64Array((ORBIT_SEGMENTS + 1) * 3);
 
   for (const body of bodies) {
     if (!body.orbit) continue;
@@ -94,36 +46,42 @@ export function createOrbitLines(scene: THREE.Scene): OrbitLines {
 
   return {
     lines: linien,
-    // Teuer (512 Kepler-Löser pro Körper) — nur bei Maßstabsänderung
-    // aufrufen, niemals aus dem Pro-Frame-Pfad.
-    rebuild(jd, s) {
-      for (const [id] of linien) {
-        const anker = ankerKm(id, jd, s);
-        // Satellitenbahnen werden relativ zum Mutterkörper abgelegt, damit
-        // update() sie an dessen aktuelle Position hängen kann. Absolut
-        // gespeichert bliebe die Mondbahn an der Erdposition des Aufbaus
-        // kleben, während die Erde weiterzieht.
-        punkteKm.set(id, orbitPointsKm(id, bodyIndex, jd, s).map((p) => ({
-          x: p.x - anker.x, y: p.y - anker.y, z: p.z - anker.z,
-        })));
-      }
-    },
-    // Billig — reprojiziert nur die bereits berechneten Stützpunkte relativ
-    // zur aktuellen Kameraposition. Läuft jeden Frame.
+    // Läuft jeden Frame: Die Linie ist die momentane Bahnellipse zum
+    // Zeitpunkt jd (bahnellipseRelativKm in sim/orbit.ts). Eine einmal über
+    // einen Umlauf abgetastete Form blieb bei laufender Uhr und nach
+    // Zeitsprüngen auf der Bahnlage ihres Aufbauzeitpunkts stehen — der
+    // Erdmond löste sich nach zehn Jahren um 14 % des Bahnradius von ihr.
     update(cameraKm, sichtbar, an, jd, s) {
       for (const [id, linie] of linien) {
         linie.visible = an && sichtbar[id] !== false;
         if (!linie.visible) continue;
-        const punkte = punkteKm.get(id) ?? [];
-        // Ein Kepler-Aufruf je Satellit und Bild — die 512 Stützpunkte
-        // selbst bleiben unangetastet.
-        const anker = ankerKm(id, jd, s);
+        if (!bahnellipseRelativKm(id, bodyIndex, jd, STUETZEN, relativKm)) continue;
+
+        // Dieselbe Regel wie scaledPositionAt, nur für die ganze Ellipse:
+        // Satelliten hängen mit sizeScale-skaliertem Relativvektor an ihrem
+        // Mutterkörper, alles andere wird um die Sonne im Ursprung komprimiert.
+        const body = bodyIndex[id]!;
+        const anker = isSatellite(body) && body.parent !== null
+          ? scaledPositionAt(body.parent, bodyIndex, jd, s)
+          : null;
+
         const attr = linie.geometry.getAttribute('position') as THREE.BufferAttribute;
-        for (let i = 0; i < punkte.length; i++) {
-          const p = punkte[i]!;
-          const r = worldToRender(
-            { x: p.x + anker.x, y: p.y + anker.y, z: p.z + anker.z }, cameraKm);
-          attr.setXYZ(i, r.x, r.y, r.z);
+        for (let i = 0; i <= ORBIT_SEGMENTS; i++) {
+          let x = relativKm[i * 3]!;
+          let y = relativKm[i * 3 + 1]!;
+          let z = relativKm[i * 3 + 2]!;
+          if (anker !== null) {
+            x = anker.x + x * s.sizeScale;
+            y = anker.y + y * s.sizeScale;
+            z = anker.z + z * s.sizeScale;
+          } else {
+            const r = Math.sqrt(x * x + y * y + z * z);
+            const faktor = r === 0 ? 0 : compressDistance(r, s.distanceExponent) / r;
+            x *= faktor;
+            y *= faktor;
+            z *= faktor;
+          }
+          attr.setXYZ(i, kmToUnits(x - cameraKm.x), kmToUnits(y - cameraKm.y), kmToUnits(z - cameraKm.z));
         }
         attr.needsUpdate = true;
       }

@@ -36,10 +36,9 @@ vi.mock('./labels', () => ({
   }),
 }));
 
-const rebuildSpion = vi.fn();
 const updateSpion = vi.fn();
 vi.mock('./orbits', () => ({
-  createOrbitLines: () => ({ rebuild: rebuildSpion, update: updateSpion }),
+  createOrbitLines: () => ({ update: updateSpion }),
 }));
 
 const { buildScene } = await import('./scene');
@@ -66,34 +65,20 @@ function fakeContext(): import('./renderer').RenderContext {
   };
 }
 
-describe('buildScene — Bahnlinien-Rebuild-Disziplin', () => {
-  it('baut die Bahnform beim ersten Frame auf', () => {
-    rebuildSpion.mockClear();
-    const szene = buildScene(fakeContext(), fakeOverlay, (k) => k);
-    szene.update(2451545.0, 0.016, DEFAULT_STATE);
-    expect(rebuildSpion).toHaveBeenCalledTimes(1);
-  });
-
-  it('ruft rebuild NICHT erneut auf, solange sich die Maßstabsreferenz nicht ändert', () => {
-    rebuildSpion.mockClear();
+describe('buildScene — Bahnlinien', () => {
+  it('reicht jedem Frame Zeit, Maßstab, Sichtbarkeit und Schalter an die Linien', () => {
+    updateSpion.mockClear();
     const szene = buildScene(fakeContext(), fakeOverlay, (k) => k);
     for (let i = 0; i < 50; i++) {
       szene.update(2451545.0 + i, 0.016, DEFAULT_STATE);
     }
-    // 50 Frames mit identischem state.scale-Objekt — genau ein rebuild (beim
-    // ersten Frame), keines danach. Das ist die Performance-Zusicherung
-    // dieser Aufgabe: die teure Bahnform wird nicht pro Frame neu berechnet.
-    expect(rebuildSpion).toHaveBeenCalledTimes(1);
+    // Die Linien rechnen die momentane Bahnellipse je Bild selbst (orbits.ts);
+    // einen gesonderten Neuaufbau bei Maßstabsänderung gibt es nicht mehr.
     expect(updateSpion).toHaveBeenCalledTimes(50);
-  });
-
-  it('ruft rebuild erneut auf, sobald sich die Maßstabseinstellungen ändern', () => {
-    rebuildSpion.mockClear();
-    const szene = buildScene(fakeContext(), fakeOverlay, (k) => k);
-    szene.update(2451545.0, 0.016, DEFAULT_STATE);
-    const geaendert = { ...DEFAULT_STATE, scale: { ...DEFAULT_STATE.scale, sizeScale: 99 } };
-    szene.update(2451546.0, 0.016, geaendert);
-    expect(rebuildSpion).toHaveBeenCalledTimes(2);
+    expect(updateSpion).toHaveBeenLastCalledWith(
+      expect.any(THREE.Vector3), DEFAULT_STATE.visible, DEFAULT_STATE.display.orbits,
+      2451545.0 + 49, DEFAULT_STATE.scale,
+    );
   });
 });
 

@@ -60,13 +60,6 @@ export function buildScene(
   const licht = new THREE.PointLight(0xffffff, 1, 0, 2);
   ctx.scene.add(licht);
 
-  // Die Bahnform (512 Kepler-Lösungen pro Körper) wird nur neu berechnet,
-  // wenn sich die Maßstabseinstellungen tatsächlich ändern. setScale im
-  // Store liefert bei jeder Änderung ein frisches Objekt (Spread), daher
-  // genügt ein Referenzvergleich — ohne diese Schranke liefe rebuild bei
-  // jedem Frame mit, was den teuersten Teil dieser Aufgabe wäre.
-  let letzterScale: AppState['scale'] | null = null;
-
   // Kameramodi, Dämpfung und Blickrichtung liegen vollständig im Controller;
   // die Szene braucht davon nur die Position (siehe camera/controller.ts).
   const kamera = createCameraController(ctx.camera);
@@ -90,12 +83,7 @@ export function buildScene(
         ...state.display, brightness: state.display.brightness * exposure,
       };
 
-      if (state.scale !== letzterScale) {
-        bahnen.rebuild(jd, state.scale);
-        letzterScale = state.scale;
-      }
-      // Reprojektion der bereits berechneten Stützpunkte — billig, läuft
-      // jeden Frame.
+      // Die momentane Bahnellipse je Bild — ohne Kepler-Löser, siehe orbits.ts.
       bahnen.update(cameraKm, state.visible, state.display.orbits, jd, state.scale);
 
       koerper.update(jd, state.scale, cameraKm, state.visible, belichtet, state.display.shadows);

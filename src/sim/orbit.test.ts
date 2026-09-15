@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { positionAt, AU_KM, umlaufzeitTage, achsneigungDeg } from './orbit';
-import { bodyIndex, getBody } from '../data/index';
+import {
+  positionAt, AU_KM, umlaufzeitTage, achsneigungDeg, ellipsenStuetzen, bahnellipseRelativKm,
+} from './orbit';
+import { bodies, bodyIndex, getBody } from '../data/index';
 import { J2000 } from './time';
 
 const betrag = (v: { x: number; y: number; z: number }) =>
@@ -121,5 +123,62 @@ describe('achsneigungDeg (gegen die eigene Bahn, Epoche J2000)', () => {
 
   it('nimmt für die Sonne den Winkel zur Ekliptiknormale', () => {
     expect(Math.abs(achsneigungDeg(getBody('sun'), bodyIndex) - 7.25)).toBeLessThan(0.01);
+  });
+});
+
+describe('bahnellipseRelativKm (momentane Bahnellipse)', () => {
+  const N = 512;
+  const stuetzen = ellipsenStuetzen(N);
+
+  function ellipse(id: string, jd: number): Float64Array {
+    const ziel = new Float64Array((N + 1) * 3);
+    expect(bahnellipseRelativKm(id, bodyIndex, jd, stuetzen, ziel), id).toBe(true);
+    return ziel;
+  }
+
+  /** Kleinster Abstand des Punkts zu den Segmenten des Linienzugs. */
+  function abstandZumZug(p: { x: number; y: number; z: number }, zug: Float64Array): number {
+    let min = Infinity;
+    for (let i = 0; i + 1 <= N; i++) {
+      const ax = zug[i * 3]!, ay = zug[i * 3 + 1]!, az = zug[i * 3 + 2]!;
+      const abx = zug[(i + 1) * 3]! - ax, aby = zug[(i + 1) * 3 + 1]! - ay, abz = zug[(i + 1) * 3 + 2]! - az;
+      const apx = p.x - ax, apy = p.y - ay, apz = p.z - az;
+      const laenge2 = abx * abx + aby * aby + abz * abz;
+      const t = laenge2 === 0
+        ? 0
+        : Math.min(Math.max((apx * abx + apy * aby + apz * abz) / laenge2, 0), 1);
+      min = Math.min(min, Math.hypot(apx - t * abx, apy - t * aby, apz - t * abz));
+    }
+    return min;
+  }
+
+  it('läuft zu jeder Zeit durch die Position des Körpers relativ zum Mutterkörper', () => {
+    // Die Elemente vieler Monde wandern schnell (Erdmond: Knoten −19°, Perigäum
+    // +41° pro Jahr). Die Ellipse zum Zeitpunkt jd muss den Körper dennoch
+    // tragen — ohne Abtastung über die Zeit.
+    for (const body of bodies) {
+      if (body.orbit === null || body.parent === null) continue;
+      for (const tage of [0, 30, 365, 3650, -3650]) {
+        const jd = J2000 + tage;
+        const selbst = positionAt(body.id, bodyIndex, jd);
+        const mutter = positionAt(body.parent, bodyIndex, jd);
+        const rel = { x: selbst.x - mutter.x, y: selbst.y - mutter.y, z: selbst.z - mutter.z };
+        expect(abstandZumZug(rel, ellipse(body.id, jd)) / betrag(rel), `${body.id}, ${tage} Tage`)
+          .toBeLessThan(1e-4);
+      }
+    }
+  });
+
+  it('schließt die Ellipse', () => {
+    for (const id of ['mars', 'moon', 'eris']) {
+      const z = ellipse(id, J2000);
+      const luecke = Math.hypot(z[0]! - z[N * 3]!, z[1]! - z[N * 3 + 1]!, z[2]! - z[N * 3 + 2]!);
+      expect(luecke / Math.hypot(z[0]!, z[1]!, z[2]!), id).toBeLessThan(1e-12);
+    }
+  });
+
+  it('liefert für die Sonne keine Ellipse', () => {
+    const ziel = new Float64Array((N + 1) * 3);
+    expect(bahnellipseRelativKm('sun', bodyIndex, J2000, stuetzen, ziel)).toBe(false);
   });
 });

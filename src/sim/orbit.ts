@@ -36,8 +36,7 @@ export function elementsAt(orbit: OrbitElements, jd: number): ResolvedElements {
 export function positionInParentFrame(orbit: OrbitElements, jd: number): Vec3 {
   const el = elementsAt(orbit, jd);
 
-  // Perihelargument und mittlere Anomalie
-  const omega = el.lpRad - el.nodeRad;
+  // Mittlere Anomalie
   const M = normalizeAngle(el.LRad - el.lpRad);
   const E = solveKepler(M, el.e);
 
@@ -46,18 +45,37 @@ export function positionInParentFrame(orbit: OrbitElements, jd: number): Vec3 {
   const xBahn = aKm * (Math.cos(E) - el.e);
   const yBahn = aKm * Math.sqrt(1 - el.e * el.e) * Math.sin(E);
 
+  const { p, q } = bahnBasis(el);
+  return {
+    x: xBahn * p.x + yBahn * q.x,
+    y: xBahn * p.y + yBahn * q.y,
+    z: xBahn * p.z + yBahn * q.z,
+  };
+}
+
+/**
+ * Richtung zum Perizentrum (p) und die Richtung 90° weiter in
+ * Bewegungsrichtung (q), in der Bezugsebene des Elementsatzes. Jeder
+ * Bahnpunkt ist xBahn·p + yBahn·q — für einen Zeitpunkt
+ * (positionInParentFrame) wie für die ganze Ellipse (bahnellipseRelativKm).
+ */
+function bahnBasis(el: ResolvedElements): { p: Vec3; q: Vec3 } {
   // Drehung: Perihelargument, dann Inklination, dann Knotenlänge
+  const omega = el.lpRad - el.nodeRad;
   const cosO = Math.cos(omega), sinO = Math.sin(omega);
   const cosI = Math.cos(el.iRad), sinI = Math.sin(el.iRad);
   const cosN = Math.cos(el.nodeRad), sinN = Math.sin(el.nodeRad);
-
-  const xEbene = cosO * xBahn - sinO * yBahn;
-  const yEbene = sinO * xBahn + cosO * yBahn;
-
   return {
-    x: cosN * xEbene - sinN * yEbene * cosI,
-    y: sinN * xEbene + cosN * yEbene * cosI,
-    z: yEbene * sinI,
+    p: {
+      x: cosN * cosO - sinN * cosI * sinO,
+      y: sinN * cosO + cosN * cosI * sinO,
+      z: sinI * sinO,
+    },
+    q: {
+      x: -cosN * sinO - sinN * cosI * cosO,
+      y: -sinN * sinO + cosN * cosI * cosO,
+      z: sinI * cosO,
+    },
   };
 }
 
@@ -67,55 +85,10 @@ export function positionAt(id: string, index: BodyIndex, jd: number): Vec3 {
   if (!body) throw new Error(`Unbekannter Körper: ${id}`);
   if (body.orbit === null) return { x: 0, y: 0, z: 0 };
 
-  if (body.parent === null) {
-    if (body.orbit.frame === 'parentEquator') {
-      throw new Error(
-        `Bezugsebene 'parentEquator' ohne Mutterkörper (Körper: ${id}). ` +
-        `Die Ebene ist ohne den Pol eines Mutterkörpers nicht definiert.`,
-      );
-    }
-    return positionInParentFrame(body.orbit, jd);
-  }
-
-  // 'parentEquator': Die Elemente sind auf die Äquator- bzw. Laplace-Ebene des
-  // Mutterkörpers bezogen — so gibt JPL die mittleren Elemente der Monde an.
-  // Erst die Drehung in die Ekliptik macht sie mit allem anderen vergleichbar.
-  // Der Mutterkörper-Lookup steht deshalb nur in diesem Zweig: Für 'ecliptic'
-  // wird der Pol des Mutterkörpers nicht gebraucht, nur seine Position (die
-  // gleich über den rekursiven positionAt-Aufruf angefragt wird). Ein fehlender
-  // Elternkörper fällt bei 'ecliptic' also durch dessen allgemeinen
-  // "Unbekannter Körper"-Check auf statt durch eine eigene, hier ungenutzte
-  // Mutterkörper-Prüfung — das hält beide Fehlermeldungen zueinander konsistent
-  // (jede Fehlermeldung kommt von der Stelle, die die fehlenden Daten wirklich braucht).
-  let orbitFuerBerechnung = body.orbit;
-  let pol: Vec3 | null = null;
-  if (body.orbit.frame === 'parentEquator') {
-    const mutter = index[body.parent];
-    if (!mutter) throw new Error(`Unbekannter Mutterkörper: ${body.parent}`);
-    pol = poleVector(mutter.physical.pole.raDeg, mutter.physical.pole.decDeg);
-
-    // JPLs Satellitenelemente messen node — und darauf aufbauend lp und L
-    // (lp = node + w, L = node + w + M, siehe Quellenblock in
-    // mars-monde.ts) — vom Knoten auf dem ICRF-Äquator, nicht vom Knoten
-    // auf der Ekliptik, den equatorToEcliptic() unten als Nullpunkt
-    // verwendet (Herleitung: icrfKnotenVersatzDeg in frames.ts). Alle drei
-    // Winkel bekommen deshalb denselben Versatz, bevor die allgemeine,
-    // ekliptikal rechnende Kepler-Formel läuft — numerisch wirkt sich am
-    // Ende nur der Versatz auf node aus (er kürzt sich in
-    // omega = lp − node und in M = L − lp exakt wieder heraus), aber alle
-    // drei mitzuverschieben hält den Zwischenzustand als vollständigen,
-    // in sich konsistenten Elementsatz lesbar.
-    const versatz = icrfKnotenVersatzDeg(pol);
-    orbitFuerBerechnung = {
-      ...body.orbit,
-      node: body.orbit.node + versatz,
-      lp: body.orbit.lp + versatz,
-      L: body.orbit.L + versatz,
-    };
-  }
-
-  const relativ = positionInParentFrame(orbitFuerBerechnung, jd);
+  const { orbit, pol } = bezugsrahmen(body, body.orbit, index);
+  const relativ = positionInParentFrame(orbit, jd);
   const inEkliptik = pol ? equatorToEcliptic(relativ, pol) : relativ;
+  if (body.parent === null) return inEkliptik;
 
   const eltern = positionAt(body.parent, index, jd);
   return {
@@ -123,6 +96,115 @@ export function positionAt(id: string, index: BodyIndex, jd: number): Vec3 {
     y: eltern.y + inEkliptik.y,
     z: eltern.z + inEkliptik.z,
   };
+}
+
+/**
+ * Elementsatz und Pol, mit denen die Kepler-Formel eines Körpers rechnet;
+ * pol = null heißt: Die Elemente beziehen sich bereits auf die Ekliptik.
+ */
+function bezugsrahmen(
+  body: Body, orbit: OrbitElements, index: BodyIndex,
+): { orbit: OrbitElements; pol: Vec3 | null } {
+  // 'parentEquator': Die Elemente sind auf die Äquator- bzw. Laplace-Ebene des
+  // Mutterkörpers bezogen — so gibt JPL die mittleren Elemente der Monde an.
+  // Erst die Drehung in die Ekliptik macht sie mit allem anderen vergleichbar.
+  // Der Mutterkörper-Lookup steht deshalb nur in diesem Zweig: Für 'ecliptic'
+  // wird der Pol des Mutterkörpers nicht gebraucht, nur seine Position (die
+  // über den rekursiven positionAt-Aufruf angefragt wird). Ein fehlender
+  // Elternkörper fällt bei 'ecliptic' also durch dessen allgemeinen
+  // "Unbekannter Körper"-Check auf statt durch eine eigene, hier ungenutzte
+  // Mutterkörper-Prüfung — das hält beide Fehlermeldungen zueinander konsistent
+  // (jede Fehlermeldung kommt von der Stelle, die die fehlenden Daten wirklich braucht).
+  if (orbit.frame !== 'parentEquator') return { orbit, pol: null };
+
+  if (body.parent === null) {
+    throw new Error(
+      `Bezugsebene 'parentEquator' ohne Mutterkörper (Körper: ${body.id}). ` +
+      `Die Ebene ist ohne den Pol eines Mutterkörpers nicht definiert.`,
+    );
+  }
+  const mutter = index[body.parent];
+  if (!mutter) throw new Error(`Unbekannter Mutterkörper: ${body.parent}`);
+  const pol = poleVector(mutter.physical.pole.raDeg, mutter.physical.pole.decDeg);
+
+  // JPLs Satellitenelemente messen node — und darauf aufbauend lp und L
+  // (lp = node + w, L = node + w + M, siehe Quellenblock in
+  // mars-monde.ts) — vom Knoten auf dem ICRF-Äquator, nicht vom Knoten
+  // auf der Ekliptik, den equatorToEcliptic() als Nullpunkt
+  // verwendet (Herleitung: icrfKnotenVersatzDeg in frames.ts). Alle drei
+  // Winkel bekommen deshalb denselben Versatz, bevor die allgemeine,
+  // ekliptikal rechnende Kepler-Formel läuft — numerisch wirkt sich am
+  // Ende nur der Versatz auf node aus (er kürzt sich in
+  // omega = lp − node und in M = L − lp exakt wieder heraus), aber alle
+  // drei mitzuverschieben hält den Zwischenzustand als vollständigen,
+  // in sich konsistenten Elementsatz lesbar.
+  const versatz = icrfKnotenVersatzDeg(pol);
+  return {
+    orbit: { ...orbit, node: orbit.node + versatz, lp: orbit.lp + versatz, L: orbit.L + versatz },
+    pol,
+  };
+}
+
+/** Kosinus und Sinus der Stützwinkel einer Ellipse, siehe ellipsenStuetzen. */
+export interface EllipsenStuetzen {
+  cos: Float64Array;
+  sin: Float64Array;
+}
+
+/**
+ * n + 1 Stützwinkel der exzentrischen Anomalie von 0 bis 2π in gleichen
+ * Schritten; der letzte ist exakt der erste, damit die Ellipse schließt.
+ * Einmal berechnen und für jedes Bild wiederverwenden.
+ */
+export function ellipsenStuetzen(n: number): EllipsenStuetzen {
+  const cos = new Float64Array(n + 1);
+  const sin = new Float64Array(n + 1);
+  for (let i = 0; i <= n; i++) {
+    const winkel = ((i % n) / n) * 2 * Math.PI;
+    cos[i] = Math.cos(winkel);
+    sin[i] = Math.sin(winkel);
+  }
+  return { cos, sin };
+}
+
+/**
+ * Schreibt die momentane Bahnellipse zum Zeitpunkt jd als x,y,z-Folge in
+ * ziel: relativ zum Mutterkörper, Ekliptik J2000, Kilometer. Liefert false
+ * für Körper ohne Bahn.
+ *
+ * Abgetastet wird die exzentrische Anomalie, nicht die Zeit. Die Ellipse
+ * gehört damit zu genau einem Elementsatz und trägt den Körper auch dann,
+ * wenn Knoten und Perizentrum schnell wandern (Erdmond, Phobos, Mimas) —
+ * eine Abtastung über einen Umlauf hielte dagegen die Bahnlage eines anderen
+ * Zeitpunkts fest. Ohne Kepler-Löser und ohne Objekte je Punkt, also für
+ * jedes Bild gedacht.
+ */
+export function bahnellipseRelativKm(
+  id: string, index: BodyIndex, jd: number, stuetzen: EllipsenStuetzen, ziel: Float64Array,
+): boolean {
+  const body = index[id];
+  if (!body) throw new Error(`Unbekannter Körper: ${id}`);
+  if (body.orbit === null) return false;
+
+  const { orbit, pol } = bezugsrahmen(body, body.orbit, index);
+  const el = elementsAt(orbit, jd);
+  const basis = bahnBasis(el);
+  // Die Drehung in die Ekliptik ist linear: Es genügt, die beiden
+  // Basisrichtungen zu drehen statt jeden Punkt.
+  const p = pol ? equatorToEcliptic(basis.p, pol) : basis.p;
+  const q = pol ? equatorToEcliptic(basis.q, pol) : basis.q;
+
+  const aKm = el.a * AU_KM;
+  const bKm = aKm * Math.sqrt(1 - el.e * el.e);
+  const n = stuetzen.cos.length;
+  for (let i = 0; i < n; i++) {
+    const xBahn = aKm * (stuetzen.cos[i]! - el.e);
+    const yBahn = bKm * stuetzen.sin[i]!;
+    ziel[i * 3] = xBahn * p.x + yBahn * q.x;
+    ziel[i * 3 + 1] = xBahn * p.y + yBahn * q.y;
+    ziel[i * 3 + 2] = xBahn * p.z + yBahn * q.z;
+  }
+  return true;
 }
 
 /**
