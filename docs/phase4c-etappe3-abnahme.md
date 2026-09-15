@@ -16,9 +16,11 @@ gegen `window.store`, das DOM und (Schritt 6) über echte Playwright-Klicks.
 
 1. **Testzahl 1940 statt 1941:** In Task 2 entfiel der InfoPanel-Fall „ohne Text:
    Datenblock, Ausweichtitel und Hinweis", weil Pluto ohne Text und ohne Quellen
-   nach der neuen Abdeckungsregel unmöglich geworden ist; seine Prüfungen stehen
-   jetzt im bestehenden Fall von `src/ui/info/InfoPanel.laden.test.tsx` (Commit
-   `8daa99e`).
+   nach der neuen Abdeckungsregel unmöglich geworden ist. Ausweichtitel und
+   Datenblock (samt Hinweis „kein Text") prüft jetzt der bestehende Fall in
+   `src/ui/info/InfoPanel.laden.test.tsx` (Commit `8daa99e`); der Hinweis „Keine
+   Quellen zu diesem Text." wird weiterhin in `src/ui/info/Quellenkarten.test.tsx`
+   (Kennung `objekt:vulcan`) geprüft.
 2. **Task 6 Fixrunde:** Tethys-Durchmesser in Deutsch und Englisch auf „1 061 km"
    gesetzt, passend zum Datenblock (2 × 530,6 km) statt des Planwerts 1 062 km
    (Commits `76aff6b`, `498a16f`).
@@ -126,11 +128,15 @@ Mimas 1.6°, Enceladus 0°, Tethys 1.1°, Dione 0°, Rhea 0.3°, Titan 0.3°,
 Iapetus 0°, Uranus 97.8°, Miranda 4.3°, Ariel 0.1°, Umbriel 0.2°, Titania 0.1°,
 Oberon 0.1°, Neptune 28.3°, Triton 21.4°, Pluto 119.6°, Charon 0.1°, Ceres 4°,
 Eris 0°, Haumea 90.2°, Makemake 0°. `karten`/`knoepfe` je Körper identisch zur
-deutschen Tabelle. Erfüllt (der erste Versuch mit einem vorangestellten,
-briefwidrigen Zusatzschritt hatte fälschlich für alle 35 Körper den Hinweis „Not
-translated yet" gezeigt — Artefakt einer eigenmächtigen Zusatzhandlung, nicht des
-Programms; die briefgetreue Wiederholung ohne diesen Schritt lieferte das
-Ergebnis oben ohne jeden Hinweis).
+deutschen Tabelle. Erfüllt. Der erste Versuch mit einem vorangestellten
+Zusatzschritt hatte für alle 35 Körper den Hinweis „Not translated yet" gezeigt.
+Der Hinweis entstand durch einen Programmfehler: `InfoPanel.tsx` setzte die Hinweise
+`info.hochschuleFolgt` und `info.nichtUebersetzt` seit 4c-1 ohne `frisch`, so dass
+während eines Wechsels der alte Anzeigestand den neuen beschrieb. Das Messskript
+nahm diesen Zwischenzustand mit seiner Sofort-Rückkehr bei stehendem Hinweis über
+alle Ziele mit. Behoben in Commit `8014588` (siehe „Nacharbeit nach der
+Schlussprüfung"); die Wiederholung ohne den Zusatzschritt lieferte das Ergebnis oben
+ohne jeden Hinweis.
 
 ## Schritt 4: Rundgang Themen, beide Sprachen
 
@@ -187,14 +193,16 @@ gilt:
   Themen-Seite blieb dieses gelöschte Thema stehen, wodurch die nächste
   Knopfabfrage versehentlich die Knopfliste eines *anderen* Themas traf. Abhilfe:
   beim Rücksetzen für ein Themen-Ziel `ui.info.thema` unabhängig vom
-  Kameraziel-Vergleich erzwingen. Nach beiden Korrekturen lieferten mehrere
-  vollständige Durchläufe je Sprache übereinstimmend 0 Nichtmessungen und 0
-  Sackgassen; fünf Szenenverweise aus vier Themen-Texten (`ringe` doppelt,
-  `gebundene-rotation`, `kirkwood-luecken`, `achsneigung`) wurden zusätzlich
-  einzeln nachgemessen, weil sie im automatisierten Gesamtlauf trotz der
-  Korrekturen vereinzelt der falschen Kategorie zugeordnet blieben (Ursache nicht
-  abschließend geklärt, siehe Bekannte Unschärfen Punkt 8); die Einzelmessung ist
-  eindeutig und geht in die Zählung ein.
+  Kameraziel-Vergleich erzwingen. Auch nach beiden Korrekturen ordneten die
+  automatisierten Gesamtläufe je Sprache fünf Szenenverweise aus vier Themen-Texten
+  (`ringe` doppelt, `gebundene-rotation`, `kirkwood-luecken`, `achsneigung`) nicht
+  als Szenen-, sondern als Objekt- oder Themenklick ein; diese fünf Klicks zeigten
+  „kein Text" und zählten in den Gesamtläufen deshalb als vermeintliche Sackgassen.
+  Kein Gesamtlauf lieferte also 0 Sackgassen. Die fünf Klicks wurden einzeln
+  nachgemessen; dort setzte jeder zuverlässig `cinema.running` auf `true`, es sind
+  also Szenenklicks. Die Zählung (a) und (b) unten beruht für diese fünf Klicks auf
+  den Einzelmessungen, für alle übrigen auf den Gesamtläufen. Die Ursache der
+  Fehleinordnung ist nicht untersucht (siehe Bekannte Unschärfen Punkt 8).
 
 Als zusätzliche, von der Browsermessung unabhängige Bestätigung: Der Dateitest aus
 Schritt 2 prüft für **jeden** `objekt:`- und `thema:`-Verweis in den
@@ -306,15 +314,18 @@ Dateien dieses Tasks).
 
 1. Triton zeigt im Datenblock 21,4° Achsneigung und Miranda 4,3°, weil ihre Pole
    ohne die periodischen IAU-Glieder hinterlegt sind; Eris und Makemake zeigen 0°
-   als Behelf (in Texten und `thema-modell` benannt). Eine Datenkorrektur gehört
-   nicht zu dieser Etappe.
+   als Behelf; der Pol von Haumea ist aus Lichtkurven angenommen und mehrdeutig.
+   Eris, Makemake, Triton, Miranda und Haumea sind in `thema-modell` benannt
+   (Nacharbeit nach der Schlussprüfung). Eine Datenkorrektur gehört nicht zu dieser
+   Etappe.
 2. Szenen haben auf dem Gymnasium-Tab außer `mondfinsternis` noch keinen Text
    (4c-4); die Zahl aus Schritt 5 (b): 40 von 46 Szenenklicks (20 je Sprache).
 3. Der Hochschul-Tab zeigt weiterhin Gymnasialtexte mit Hinweis (Phase 4d).
 4. Zahlen in den Texten sind gerundet; Aussagen zum Forschungsstand und zu
    Missionen (Juice 2034, Europa Clipper, Mimas-Ozean 2024, Makemake-Masse 2025)
    geben den Stand September 2026 wieder.
-5. Quellenadressen sind am 14.09.2026 geprüft; externe Seiten können sich ändern.
+5. Quellenadressen sind am 15.09.2026 geprüft (Task 2); externe Seiten können sich
+   ändern.
 6. Der Dateitest prüft Themen- und Objektziele nur auf Existenz im Katalog, die
    Prüfung „Ziel hat Text im selben Niveau" läuft als Shell-Skript (Task 9
    Schritt 4); der Testfall kommt laut Entwurf §7 Nachtrag in 4c-4.
@@ -325,16 +336,15 @@ Dateien dieses Tasks).
    untersucht.
 8. Im automatisierten Gesamtrundgang von Schritt 5 wurden fünf Szenenverweise aus
    vier Themen-Texten (`ringe` doppelt, `gebundene-rotation`, `kirkwood-luecken`,
-   `achsneigung`) trotz der beiden dort beschriebenen Korrekturen wiederholt nicht
-   als Szenen-, sondern als Objekt-/Thema-Klick gezählt, obwohl derselbe Klick in
-   jeder isolierten Einzelmessung zuverlässig `cinema.running` auf `true` setzte.
-   Die genaue Ursache dieser Diskrepanz zwischen Einzel- und Gesamtlauf wurde
-   nicht abschließend geklärt (vermutet: eine zeitliche Wechselwirkung mit dem
-   Kino-Zustand nach vielen vorangegangenen Szenenstarts im selben langen
-   Skriptlauf); die fünf Fälle sind einzeln nachgemessen und in Schritt 5 mit
-   eindeutigem Befund („kein Text") eingerechnet. Ein Befund am Programm ist
-   daraus nicht abgeleitet, da die Einzelmessung durchweg das laut Dateilage
-   erwartete Ergebnis lieferte.
+   `achsneigung`) trotz der beiden dort beschriebenen Korrekturen in den
+   Gesamtläufen je Sprache nicht als Szenen-, sondern als Objekt- oder Themenklick
+   eingeordnet; sie zeigten „kein Text" und zählten dort als vermeintliche
+   Sackgassen. Derselbe Klick setzte in jeder isolierten Einzelmessung zuverlässig
+   `cinema.running` auf `true`. Die Zählung (a)/(b) in Schritt 5 beruht für diese
+   fünf Klicks auf den Einzelmessungen. Die Ursache der Diskrepanz zwischen Einzel-
+   und Gesamtlauf wurde nicht untersucht (vermutet: eine zeitliche Wechselwirkung
+   mit dem Kino-Zustand nach vielen vorangegangenen Szenenstarts im selben langen
+   Skriptlauf); die Einzelmessungen zeigen korrektes Verhalten.
 
 ## Kriterium — bewertet
 
@@ -356,3 +366,56 @@ Kriteriumsverstoß —, 6 zeigen den vorhandenen Text zu `mondfinsternis`). Lint
 Testsuite (1940 Tests) und Build laufen grün. Die noch offene Reichweite bis
 4c-4 (Szenentexte) und bis 4d (Hochschule) steht ausgewiesen im Protokoll statt
 verschwiegen zu werden.
+
+## Nacharbeit nach der Schlussprüfung
+
+**Datum:** 15.09.2026, Zweig `gymnasium`, Ausgangsstand `c8bb17b`.
+
+- `8014588` „Infopanel: Hinweise nur für den frisch geladenen Stand, kein kurzes
+  ‚Noch nicht übersetzt' beim Sprachwechsel": `info.hochschuleFolgt` und
+  `info.nichtUebersetzt` erscheinen wie `info.keinText` nur noch für den frisch
+  geladenen Anzeigestand; der neue Test `src/ui/info/InfoPanel.sprachwechsel.test.tsx`
+  war vor der Änderung rot („Not translated yet; German text shown." im
+  Zwischenzustand) und ist danach grün.
+- `406f8e6` „Achsneigung: Tests für rückläufige Monde und Pluto": Ariel und Oberon
+  (rückläufige Bahn gegen den IAU-Pol, negative Periode) ergänzen den Mondfall, ein
+  neuer Fall prüft Pluto mit 119,6° ± 0,2° (gemessen 119,614°; Ariel 0,140°,
+  Oberon 0,069°).
+- `c482437` „Gymnasialtexte nach Schlussprüfung: Mimas-Resonanz, Sonne im Ursprung,
+  Laplace-Ebene, nicht gemessene Achsen, Venusphasen, Dione-Abstand": Deutsch und
+  Englisch parallel in `thema-ringe`, `thema-modell`, `objekt-venus` und
+  `objekt-dione`; Verweisskript aus Schritt 2 danach ohne Ausgabe,
+  `npx vitest run src/data/texte` mit 886 bestandenen Tests.
+- Dieser Commit: Entwurf §4.4 und §8 mit Nachträgen (4c-3), dieses Protokoll
+  korrigiert (Entscheidung 1, Schritt 3, Schritt 5, Bekannte Unschärfen 1, 5 und 8).
+
+**Browserprobe zu `8014588`:** Seite neu geladen, Qualitätsstufe `high`, Infopanel
+offen, Niveau `gymnasium`, Ziel `earth`, deutsche Prosa abgewartet. Danach
+`setUi({ language: 'en' })` und 2 s lang im Abstand von 16 ms (Zeitbasis
+`performance.now()`) nach `aside.info-panel [role=tabpanel] p.text-amber-300`
+gesucht: 114 Abtastungen, 0 Treffer; Kopf „Earth" und englische Prosa nach 24 ms.
+Zurück mit `setUi({ language: 'de' })`: 114 Abtastungen, 0 Treffer; Kopf „Erde" und
+deutsche Prosa nach 21 ms.
+
+**Testzahl:** 1942 (1940 + Sprachwechsel-Test + Pluto-Fall; Ariel und Oberon
+laufen im bestehenden Mondfall mit).
+
+```
+$ npm run lint
+npm notice run orrery@0.0.0 lint
+npm notice run eslint .
+(Exit-Code 0, keine Ausgabe von eslint)
+
+$ npm test
+ Test Files  78 passed (78)
+      Tests  1942 passed (1942)
+   Start at  09:57:50
+   Duration  10.13s
+
+$ npm run build
+dist/assets/index-DLcuJMwF.js                     1,195.59 kB │ gzip: 317.66 kB
+✓ built in 489ms
+(!) Some chunks are larger than 500 kB after minification …
+```
+
+Der Chunkgrößen-Hinweis ist derselbe allgemeine Vite-Hinweis wie oben.

@@ -203,6 +203,10 @@ dort `info.keineQuellen`. Die Quelle `thema:modell` verweist zusätzlich auf die
 Datenquellen des Projekts (JPL Approximate Positions, NSSDC Fact Sheets,
 IAU-Rotationselemente), wie sie in den Datensätzen kommentiert sind.
 
+**Nachtrag (4c-3):** Für Körper und Themen schließt der Abdeckungstest in
+`data/quellen.test.ts` den Zustand `info.keineQuellen` aus; für Szenen bleibt er
+möglich.
+
 ### 4.5 Themenkatalog
 
 `src/data/themen.ts`: `{ id: string; titleKey: string }[]`. Anfangsbestand acht
@@ -355,10 +359,14 @@ Text"). Punkt 2 bis 4 lauten seitdem:
   bleibt Text).
 - `data/texte/verweise.test.ts`: alle Dateien, alle Verweise gegen die Kataloge;
   zusätzlich: erste Zeile ist eine `#`-Überschrift, Dateiname passt zum Muster,
-  Wortzahl Grundschule ≤ 100 und Gymnasium ≤ 220 (weich, mit Toleranz zu den
-  Richtwerten).
+  Wortzahl Grundschule ≤ 110 (weiche Obergrenze zum Richtwert 40 bis 80 Wörter),
+  Gymnasium ohne Obergrenze. **Nachtrag (4c-3):** Die ursprünglichen Grenzen
+  (Grundschule ≤ 100, Gymnasium ≤ 220) gelten nicht mehr; die Gymnasialgrenze
+  entfällt mit dem Nachtrag zu §2 Punkt 4. Die Prüfung steht in
+  `data/texte/dateien.test.ts`.
 - `data/quellen.test.ts`: Kennungen eindeutig, URLs `https`, jedes `fuer`-Ziel
-  existiert.
+  existiert. **Nachtrag (4c-3):** Jeder Körper und jedes Thema hat mindestens eine
+  Quelle (Abdeckungstest).
 - `ui/info/datenblock.test.ts`: Erde bei J2000 rund 0,983 bis 1,017 AE zur Sonne,
   Bahngeschwindigkeit 29,3 bis 30,3 km/s, Umlaufzeit 365,2 ± 0,3 Tage; Mond
   Umlauf um die Erde 27,3 ± 0,2 Tage; Sonne ohne Bahnzeilen.
