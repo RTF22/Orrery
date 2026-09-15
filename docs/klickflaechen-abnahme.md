@@ -108,8 +108,8 @@ behoben bestätigt, keine neuen Schäden.
 Alle Rulings aus dem Ledger, einschließlich der drei vor dem Start getroffenen
 Rulings aus dem Vorab-Abgleich, in der Reihenfolge des Ledgers: zuerst der
 Vorab-Abgleich (vor Task 1), danach die während der Umsetzung getroffenen Rulings
-(im Ledger mit „Ruling:" gekennzeichnet). **Jens hat diese Entscheidungen noch
-nicht bestätigt.**
+(im Ledger mit „Ruling:" gekennzeichnet). **Jens hat diese Entscheidungen am
+15.09.2026 bestätigt.**
 
 1. **Vorab-Abgleich, vor Task 1:** Messwerte und Rulings sammeln sich während der
    Umsetzung im Ledger und den Berichtsdateien; Task 7 überträgt sie in die
@@ -195,14 +195,15 @@ nicht bestätigt.**
     der Messreihe. — Kosten, falls falsch: zwei zusätzliche Übergaben, der Merge
     folgt ein paar Minuten später.
 
-## 6. Offene Frage an Jens
+## 6. Frage an Jens (geklärt)
 
 Aus der Schlussprüfung, kein Code betroffen: Ein Klick auf das aktuelle Kameraziel
 fährt erneut an und setzt den Abstand zurück (Entwurf §6) — nah an einem
 bildfüllenden Planeten wirkt dadurch jeder Klick ohne Ziehen wie ein Zoom-Reset. In
 der Systemansicht trifft ein Klick „ins Leere" wegen der vielen dicht liegenden
 Bahnen (34 Bahnen, je 8 px Fangradius) oft eine Bahn statt ins Leere zu gehen. Beides
-ist gewolltes Verhalten nach dem aktuellen Entwurf — soll es dabei bleiben?
+ist gewolltes Verhalten nach dem aktuellen Entwurf. Jens hat am 15.09.2026 entschieden:
+Es bleibt dabei.
 
 ## 7. Bekannte Unschärfen
 
