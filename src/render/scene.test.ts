@@ -130,3 +130,19 @@ describe('buildScene — die Kamera belichtet auf das Ziel', () => {
     expect(dazwischen).toBeGreaterThan(neptun.display.brightness * Math.PI);
   });
 });
+
+describe('buildScene — Blickmatrix', () => {
+  it('erneuert die Blickmatrix im selben update, damit Overlay und Treffer das aktuelle Bild sehen', () => {
+    const ctx = fakeContext();
+    const szene = buildScene(ctx, fakeOverlay, (k) => k);
+    const seitlich = { ...DEFAULT_STATE, camera: { ...DEFAULT_STATE.camera, azimuth: 0, elevation: 0 } };
+    szene.update(2451545.0, 5, seitlich);
+    szene.update(2451545.0, 5, seitlich);
+    // Blick zur Seite: Die Drehung ist deutlich, eine veraltete Einheitsmatrix fiele auf.
+    expect(Math.abs(ctx.camera.quaternion.w)).toBeLessThan(0.99);
+    const erwartet = new THREE.Matrix4().makeRotationFromQuaternion(ctx.camera.quaternion).invert();
+    erwartet.elements.forEach((wert, i) => {
+      expect(ctx.camera.matrixWorldInverse.elements[i]).toBeCloseTo(wert, 9);
+    });
+  });
+});

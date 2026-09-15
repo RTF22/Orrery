@@ -78,6 +78,10 @@ export function buildScene(
       const { x, y, z } = kamera.update(state, jd, dt, state.scale);
       const cameraKm = new THREE.Vector3(x, y, z);
 
+      // lookAt setzt nur die Quaternion; die Blickmatrix erneuert sonst erst der
+      // Renderer. Overlay und Trefferprüfung projizieren aber schon hier.
+      ctx.camera.updateMatrixWorld();
+
       const exposure = belichtung.update(state, jd, dt);
       const belichtet: LightingSettings = {
         ...state.display, brightness: state.display.brightness * exposure,
