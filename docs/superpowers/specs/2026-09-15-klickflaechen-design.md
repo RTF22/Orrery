@@ -110,9 +110,18 @@ in den Link noch in Sitzung oder Ansichten.
 
 **Hover** (nur Maus und Stift, keine Taste gedrückt):
 
-1. `pointermove` auf der Canvas → Rückruf `onZeiger(x, y, art)`; `pointerdown` und
-   `pointerleave` → `onZeiger(null)`.
-2. `app/main.tsx` reicht das an `szene.setZeiger` weiter.
+1. `pointermove` auf der Canvas ohne gedrückte Taste → Rückruf `onZeiger(x, y, art)`.
+   `onZeiger(null)` melden bei Maus und Stift erst ein Druck, der zum Ziehen wird, ein
+   zweiter Zeiger, `pointercancel` und `pointerleave`; ein Druck allein lässt die
+   Hervorhebung stehen, damit ein nur durch Hover gezeigter Name bis zum `pointerup`
+   treffbar bleibt. Bei Berührung meldet schon `pointerdown` null.
+2. `app/main.tsx` reicht das an `szene.setZeiger` weiter. Solange der Mauszeiger
+   wegen Untätigkeit ausgeblendet ist (§7), setzt es den Zeiger je Bild auf `null`.
+
+   *Nachtrag nach der Schlussprüfung (15.09.2026):* Ursprünglich meldete jedes
+   `pointerdown` null; ein Klick auf einen nur durch Hover sichtbaren Namen traf dann
+   nichts oder den Planeten, dessen Name zurückkehrte. Ohne den Ruhezustand hoben im
+   Kino Bahnen und Monde unter dem unsichtbaren Zeiger sich hervor.
 3. Die Szene prüft in jedem `update` nach dem Projizieren den Treffer (die Körper
    ziehen bei laufender Uhr unter einem ruhenden Zeiger weg), gibt den Treffer an
    Overlay und Bahnen und stellt ihn über `szene.hervorgehoben()` bereit.
@@ -153,14 +162,19 @@ zu dem Bild, das gerade zu sehen ist.
 
 `findeTreffer(zeiger, kandidaten, fangPx): string | null` bekommt drei Listen:
 
-- **Scheiben:** Kennung, Mittelpunkt, Pixelradius, Tiefe (NDC-z), Mond ja/nein.
+- **Scheiben:** Kennung, Mittelpunkt, Pixelradius, Tiefe (NDC-z), Mond ja/nein,
+  Glyphe ja/nein (§4.3).
 - **Namen:** Kennung und Rechteck jeder gerade gezeigten Beschriftung.
 - **Bahnen:** Kennung und Polylinie in Bildschirmkoordinaten, Segmente hinter der
   Kamera schon entfernt (§4.4).
 
 Der erste zutreffende Rang entscheidet:
 
-1. Der Zeiger liegt auf einer Scheibe → die vorderste (kleinste Tiefe).
+1. Der Zeiger liegt auf einer Scheibe, zweistufig:
+   1. auf einer echten Scheibe → die vorderste echte (kleinste Tiefe);
+   2. sonst auf einer oder mehreren Glyphenscheiben → die mit der nächsten Mitte; bei
+      gleichem Abstand (auf 0,5 px) Sonne, Planet und Zwergplanet vor Mond, dann die
+      vordere (dieselbe Regel wie Rang 3).
 2. Der Zeiger liegt in einem Namensrechteck → dieser Körper. Gezeigte Namen
    überlappen sich nie (Kollisionsauflösung im Overlay), das Rechteck ist eindeutig.
 3. Eine Scheibenmitte liegt im Fangradius um den Zeiger → die nächste; bei gleichem
@@ -170,15 +184,24 @@ Der erste zutreffende Rang entscheidet:
 5. Sonst `null`.
 
 Ein Planet schlägt so seine Monde, solange der Zeiger auf ihm liegt, und winzige
-Mondbahnen um einen Planeten stören den Klick auf den Planeten nicht. Ringe und
-Gürtel sind keine Kandidaten.
+Mondbahnen um einen Planeten stören den Klick auf den Planeten nicht. Die Tiefe
+entscheidet nur zwischen echten Scheiben: Io vor der sichtbaren Jupiterscheibe bleibt
+Io, eine Mondglyphe über einer echten Planetenscheibe verliert gegen den Planeten.
+Ringe und Gürtel sind keine Kandidaten.
+
+*Nachtrag nach der Schlussprüfung (15.09.2026):* Rang 1 nahm ursprünglich die
+vorderste aller Scheiben. In der Systemansicht sind Mars und Deimos beide Glyphen mit
+3 px Radius und Mitten unter 1 px auseinander; stand Deimos vorn, traf der Klick auf
+die Marsmitte Deimos (Abnahme §9.4). Mit der zweistufigen Regel trifft die Marsmitte
+Mars und die Deimosmitte Deimos, sobald sie mehr als 0,5 px auseinanderliegen.
 
 ### 4.3 Scheiben und Namen
 
 - **Scheibe:** Mittelpunkt und Radius stammen aus den `LabelEintrag`-Daten, die die
   Szene je Bild baut und projiziert. Zeigt der Körper eine Ersatzglyphe, gilt als
-  Radius mindestens `MARKER_MIN_PIXEL`. Unsichtbare Körper (`sichtbar: false`) und
-  Punkte hinter der Kamera fallen weg.
+  Radius mindestens `MARKER_MIN_PIXEL`, und die Scheibe trägt `glyphe: true` (genau
+  dann, wenn der Radius angehoben wurde; sonst `false`). Unsichtbare Körper
+  (`sichtbar: false`) und Punkte hinter der Kamera fallen weg.
 - **Name:** Das Overlay kennt die Bildposition jeder gezeigten Beschriftung. Lage und
   Größe des Namensfelds relativ zum Ankerpunkt misst es mit
   `getBoundingClientRect()` genau dann, wenn sich Text, Glyphenzustand oder
@@ -232,10 +255,18 @@ sich die Eingabe wie heute, bis auf die Totzone.
   Eine Zeitgrenze gibt es nicht. `pointercancel` meldet nichts. Ausgewertet wird
   `pointerup`, nicht `click`; der zusätzliche Klick des Browsers nach einer Berührung
   zählt daher nicht doppelt.
-- **Hover:** `pointermove` ohne gedrückten Zeiger und nicht bei Berührung meldet
-  `onZeiger(x, y, art)`. `pointerdown` und `pointerleave` melden `onZeiger(null)`;
-  während des Ziehens gibt es keine Hervorhebung. Wechselt der Zeiger auf ein Panel
-  oder die Kopfzeile, verlässt er die Canvas und die Hervorhebung erlischt.
+- **Hover:** `pointermove` ohne gedrückten Zeiger auf der Canvas, ohne gedrückte
+  Taste (`buttons === 0`, auch nicht außerhalb gedrückt, etwa an einem Regler) und
+  nicht bei Berührung meldet `onZeiger(x, y, art)`. Bei Maus und Stift bleibt die
+  Hervorhebung während eines Drucks stehen; `onZeiger(null)` melden das Überschreiten
+  der Tippschwelle, ein zweiter Zeiger, `pointercancel` und `pointerleave`. Bei
+  Berührung meldet `pointerdown` null. Während des Ziehens gibt es keine
+  Hervorhebung. Wechselt der Zeiger auf ein Panel oder die Kopfzeile, verlässt er die
+  Canvas und die Hervorhebung erlischt.
+
+  *Nachtrag nach der Schlussprüfung (15.09.2026):* Vorher meldeten jedes
+  `pointerdown` null und jedes `pointermove` ohne eigenen Druck Hover, auch mit einer
+  außerhalb gedrückten Taste.
 - Das Rad und die Zwei-Finger-Geste bleiben unverändert.
 
 ## 6. Kamerafahrt heftet an, Kino
@@ -276,7 +307,15 @@ sich die Eingabe wie heute, bis auf die Totzone.
   Deckkraft 0,9 statt 0,45. Die Farbe bleibt.
 - **Mauszeiger:** `app/main.tsx` setzt nach jedem Bild `canvas.style.cursor` auf
   `pointer`, solange `szene.hervorgehoben()` eine Kennung liefert, sonst auf den
-  Standard. `.zeiger-aus` (Ruhezustand im Kino) bleibt mit `!important` vorrangig.
+  Standard. `.zeiger-aus` (Ruhezustand nach `IDLE_HIDE_SEC` ohne Eingabe, in jedem
+  Modus) bleibt mit `!important` vorrangig.
+- **Ruhezustand:** Solange der Mauszeiger ausgeblendet ist (`.zeiger-aus`), ruht die
+  Hervorhebung: `app/main.tsx` fragt je Bild `zeigerAusgeblendet()` aus `ui/idle.ts`
+  ab und setzt den Zeiger der Szene auf `null`. Die Abfrage folgt dem Ruhewächter
+  synchron, nicht der Klasse, die Reacts Effekt erst später entfernt; so löscht das
+  Bild direkt nach der Weckbewegung den neu gemeldeten Zeiger nicht wieder.
+  *Nachtrag nach der Schlussprüfung (15.09.2026):* Vorher hoben im Kino mit geparkter
+  Maus vorbeiziehende Bahnen und Monde sich unter dem unsichtbaren Zeiger hervor.
 - Auf Touch-Geräten gibt es keinen Hover und damit keine Hervorhebung.
 - Neue Texte für die Oberfläche entstehen nicht; `ui/i18n` bleibt unverändert.
 
@@ -286,10 +325,11 @@ sich die Eingabe wie heute, bis auf die Totzone.
 |---|---|
 | `ui/kamerafahrt.test.ts` | Fahrt setzt `attached` und `freezeJd: null` aus Frei, Verfolgung und Kino, auch `fahreZuSystem`; angehaltenes Kino (`running: false`, Modus `cinema`) wird beendet. Die bisherigen Erwartungen `freezeJd = time.jd` und `mode: 'free'` werden umgestellt. Der Kinofall wird zuerst rot geschrieben. |
 | `ui/panels/BodyTree.test.tsx` | Klick auf eine Körperzeile heftet an; die Erwartung zum Einfrieren im freien Modus entfällt. |
-| `render/treffer.test.ts` (neu) | Rangfolge Scheibe → Name → Mitte im Fangradius → Bahn; vorderste Scheibe; Gleichstand Planet vor Mond; Fangradius Maus und Finger an der Grenze; Segmentabstand mit Lotfußpunkt innerhalb und außerhalb; Segmente mit w ≤ 0 übersprungen; leere Kandidaten ergeben `null`; Bahnprojektion als Zwilling von `Vector3.project`. |
-| `render/labels.test.ts` | Hervorgehobener Mond unter der Schwelle zeigt seinen Namen, auch bei `labels: false`, und gewinnt die Kollision; `namensRechtecke` nur für gezeigte Namen; Messung verfällt bei Sprachwechsel und Glyphenwechsel. |
+| `render/treffer.test.ts` (neu) | Rangfolge Scheibe → Name → Mitte im Fangradius → Bahn; vorderste echte Scheibe; Glyphenscheiben nach nächster Mitte (Mars/Deimos), Glyphe über echter Planetenscheibe trifft den Planeten; Gleichstand Planet vor Mond; Fangradius Maus und Finger an der Grenze; Segmentabstand mit Lotfußpunkt innerhalb und außerhalb; Segmente mit w ≤ 0 übersprungen; leere Kandidaten ergeben `null`; Bahnprojektion als Zwilling von `Vector3.project`. |
+| `render/labels.test.ts` | Hervorgehobener Mond unter der Schwelle zeigt seinen Namen, auch bei `labels: false`, und gewinnt die Kollision; `namensRechtecke` nur für gezeigte Namen; Messung verfällt bei Sprachwechsel und Glyphenwechsel; `glyphe` genau bei angehobenem Radius. |
 | `render/orbits.test.ts` | Deckkraft 0,9 für die hervorgehobene Bahn, 0,45 für alle anderen. |
-| `render/camera/input.test.ts` (neu) | Tippen unter der Schwelle: genau ein `onTipp`, keine Drehung; über der Schwelle: Drehung mit nachgeholter Strecke, kein `onTipp`; zweiter Zeiger verhindert das Tippen; rechte Maustaste tippt nicht; `pointercancel` tippt nicht; Hover nur ohne Druck und nicht bei Berührung; `pointerdown` und `pointerleave` melden `null`; ohne Rückrufe keine Fehler. |
+| `render/camera/input.test.ts` (neu) | Tippen unter der Schwelle: genau ein `onTipp`, keine Drehung; über der Schwelle: Drehung mit nachgeholter Strecke, kein `onTipp`; zweiter Zeiger verhindert das Tippen; rechte Maustaste tippt nicht; `pointercancel` tippt nicht; Hover nur ohne Druck, ohne gedrückte Taste und nicht bei Berührung; Maus- und Stiftdruck ohne Bewegung melden kein `null`, Ziehen über die Schwelle, zweiter Zeiger, `pointercancel` und `pointerleave` melden `null`, Berührung schon beim Druck; ohne Rückrufe keine Fehler. |
+| `ui/idle.test.ts` | `zeigerAusgeblendet()` gilt ab der Ruhezeit und endet mit der Weckeingabe, bevor die Klasse `zeiger-aus` fällt. |
 | `render/scene.test.ts` | `updateMatrixWorld` nach der Kamera (Blickmatrix passt im selben `update`); `setZeiger` reicht die Treffer-Kennung an Overlay und Bahnen; ohne Zeiger wird `null` gereicht; `trefferBei` liefert die Kennung aus den Kandidaten des letzten Bildes. |
 
 Die Schichtentests (`render/schichten.test.ts`, `store/schichten.test.ts`) laufen
@@ -320,7 +360,11 @@ Ladung mit `setUi({ hidden: true })`.
 5. **Bahnklick:** Ein Punkt auf der Neptunbahn weit vom Planeten entfernt führt zu
    `neptune`, derselbe Punkt 30 px senkrecht daneben zu keinem Ziel.
 6. **Tippen:** Mit Touch-Emulation (`hasTouch`, `touchscreen.tap`) wirkt ein Tipp wie
-   der Klick; ein Druck mit 6 px Bewegung ändert den Azimut nicht und fährt nicht.
+   der Klick. Ein Druck mit 6 px Bewegung bleibt unter der Fingerschwelle und ändert
+   den Azimut nicht; auf einem Körper ist er ein Tipp und fährt hin, auf leerer Fläche
+   geschieht nichts. *Nachtrag nach der Schlussprüfung (15.09.2026):* Früher hieß es
+   hier „fährt nicht"; das widersprach §5, wonach ein Druck unter der Schwelle ein
+   Tipp ist.
 7. **Kino:** Wie 1b und zusätzlich per Klick im Bild; der Film endet, die Kamera fährt
    hin und ist geheftet, nach `idleResumeSec` + 1 s läuft kein Film.
 8. **Kosten:** §4.5 im Browser bei 365 d/s, dazu die Node-Messung.
