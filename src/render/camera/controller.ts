@@ -49,10 +49,12 @@ export function targetFor(state: AppState, jd: number, s: ScaleSettings): Camera
 
   // 'free' und 'attached' teilen sich die Kugelkoordinaten; der Unterschied
   // liegt allein im Anker. Geheftet führt den Körper mit, frei friert seine
-  // Position zum Zeitpunkt der Auswahl ein: Gedreht und gezoomt wird um
-  // diesen Punkt, der Körper zieht mit der Zeit daran vorbei. Ohne
-  // eingefrorenen Zeitpunkt bleibt es beim Ursprung, solange die Sonne das
-  // Ziel ist — der Standardfall „Systemübersicht".
+  // Position ein: Gedreht und gezoomt wird um den Punkt, an dem der Körper
+  // beim Umschalten auf Frei im Kamera-Panel gerade stand, er zieht mit der
+  // Zeit daran vorbei. Eine Kamerafahrt (fahreZu/fahreZuSystem) endet immer
+  // geheftet und setzt keinen eingefrorenen Zeitpunkt (Entwurf Klickflächen
+  // §6). Ohne eingefrorenen Zeitpunkt bleibt es beim Ursprung, solange die
+  // Sonne das Ziel ist — der Standardfall „Systemübersicht".
   const basis = mode === 'attached'
     ? anker
     : scaledPositionAt(targetId, bodyIndex, freezeJd ?? jd, s);

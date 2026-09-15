@@ -8,6 +8,7 @@ import { useStore, DEFAULT_STATE } from '../store';
 import { bodyIndex } from '../data';
 import { systemRadiusKm } from '../render/camera/cinema';
 import { KAMERA_FOV_GRAD } from '../render/renderer';
+import { noteUserInput, resumeIfIdle } from './cinemaControl';
 
 /** Handgesteuerte Uhr und Bildplanung, damit die Fahrt ohne Timer prüfbar ist. */
 function planer(): { optionen: Parameters<typeof fahreZu>[1]; vor(ms: number): void } {
@@ -40,7 +41,8 @@ describe('fahreZu', () => {
     fahreZu('saturn', p.optionen);
     const s = useStore.getState();
     expect(s.camera.targetId).toBe('saturn');
-    expect(s.camera.freezeJd).toBe(s.time.jd);
+    expect(s.camera.mode).toBe('attached');
+    expect(s.camera.freezeJd).toBeNull();
     expect(fahrtLaeuft()).toBe(true);
     const ziel = fokusAbstand(bodyIndex.saturn!, s.scale);
     const werte: number[] = [];
@@ -71,7 +73,7 @@ describe('fahreZu', () => {
     useStore.getState().setCamera({ mode: 'cinema' });
     fahreZu('earth', p.optionen);
     expect(useStore.getState().cinema.running).toBe(false);
-    expect(useStore.getState().camera.mode).toBe('free');
+    expect(useStore.getState().camera.mode).toBe('attached');
     fahreZu('moon', p.optionen);
     expect(useStore.getState().camera.targetId).toBe('moon');
     p.vor(FAHRT_MS + 1);
@@ -93,6 +95,26 @@ describe('fahreZu', () => {
     p.vor(FAHRT_MS);
     expect(useStore.getState().camera.azimuth).toBe(1.1);
     expect(useStore.getState().camera.elevation).toBe(0.3);
+  });
+
+  it('heftet auch aus der Verfolgung an', () => {
+    useStore.getState().setCamera({ mode: 'follow', freezeJd: 2451000 });
+    fahreZu('mars', planer().optionen);
+    const { camera } = useStore.getState();
+    expect(camera.mode).toBe('attached');
+    expect(camera.freezeJd).toBeNull();
+  });
+
+  it('beendet ein durch Eingabe angehaltenes Kino, das danach nicht wieder anläuft', () => {
+    useStore.getState().setCinema({ running: true, pauseOnInput: true });
+    useStore.getState().setCamera({ mode: 'cinema' });
+    noteUserInput();
+    expect(useStore.getState().cinema.running).toBe(false);
+    fahreZu('mars', planer().optionen);
+    expect(useStore.getState().camera.mode).toBe('attached');
+    expect(useStore.getState().camera.targetId).toBe('mars');
+    resumeIfIdle(Date.now() + 1e9);
+    expect(useStore.getState().cinema.running).toBe(false);
   });
 });
 
@@ -124,7 +146,8 @@ describe('fahreZuSystem', () => {
     fahreZuSystem(p.optionen);
     const s = useStore.getState();
     expect(s.camera.targetId).toBe('sun');
-    expect(s.camera.freezeJd).toBe(s.time.jd);
+    expect(s.camera.mode).toBe('attached');
+    expect(s.camera.freezeJd).toBeNull();
 
     p.vor(FAHRT_MS / 2);
     const mitte = useStore.getState().camera.elevation;

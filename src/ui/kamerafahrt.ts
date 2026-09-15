@@ -6,7 +6,7 @@ import type { ScaleSettings } from '../sim/scale';
 import { systemRadiusKm } from '../render/camera/cinema';
 import { KAMERA_FOV_GRAD } from '../render/renderer';
 import { easeInOutCubic } from './tween';
-import { stopCinema } from './cinemaControl';
+import { cinemaAktiv, stopCinema } from './cinemaControl';
 
 /** Dauer der Fahrt (Entwurf 4c §5.3). */
 export const FAHRT_MS = 1500;
@@ -61,7 +61,8 @@ export function fahrtAbbrechen(): void {
  * mit easeInOutCubic, Azimut und Elevation bleiben. Eine Nutzereingabe
  * bricht ab, ein weiterer Aufruf ersetzt die laufende Fahrt, ein laufendes
  * Kino wird zuerst beendet. Der Objektbaum und die Verweise in den Texten
- * nutzen dieselbe Funktion (Entwurf 4c §5.3).
+ * nutzen dieselbe Funktion (Entwurf 4c §5.3). Die Kamera wechselt in den
+ * Modus Geheftet.
  */
 export function fahreZu(id: string, optionen: FahrtOptionen = {}): void {
   const body = bodyIndex[id];
@@ -98,17 +99,17 @@ function fahre(
   const abbrechen = optionen.abbrechen
     ?? ((kennung) => { if (hatRaf) cancelAnimationFrame(kennung); else clearTimeout(kennung); });
 
-  if (useStore.getState().cinema.running) stopCinema();
+  // Auch ein nur angehaltenes Kino: Der Klick hat es mit seinem pointerdown
+  // schon angehalten, bevor er hier ankommt.
+  if (cinemaAktiv()) stopCinema();
   const { camera, scale, time, setCamera } = useStore.getState();
   const von = camera.distance;
   const nach = zielAbstand(time.jd, scale);
   const elevationVon = camera.elevation;
-  setCamera({
-    targetId: id,
-    // Im freien Modus wird die Position des Körpers als Bezugspunkt
-    // eingefroren (siehe Objektbaum); Geheftet und Verfolgung führen ihn mit.
-    freezeJd: camera.mode === 'free' ? time.jd : null,
-  });
+  // Jede Fahrt endet geheftet: Im freien Modus zielte sie auf die eingefrorene
+  // Stelle, von der der Körper bei laufender Uhr schon wegzog (Entwurf
+  // Klickflächen §6, Entscheidung Jens 15.09.2026).
+  setCamera({ targetId: id, mode: 'attached', freezeJd: null });
 
   const start = jetzt();
   let kennung = 0;

@@ -95,15 +95,14 @@ describe('BodyTree', () => {
     expect(useStore.getState().camera.targetId).toBe('saturn');
   });
 
-  it('friert im freien Modus den Bezugspunkt auf die aktuelle Zeit ein', () => {
-    useStore.getState().setTime({ jd: 2460000 });
+  it('heftet beim Klick aus dem freien Modus an', () => {
     render(<BodyTree />);
     fireEvent.click(screen.getByText('Saturn'));
     const { camera } = useStore.getState();
-    // Der freie Modus bleibt frei — gedreht und gezoomt wird ab jetzt um die
-    // Position, die Saturn in diesem Augenblick hat.
-    expect(camera.mode).toBe('free');
-    expect(camera.freezeJd).toBe(2460000);
+    // Jede Kamerafahrt endet geheftet (Entwurf Klickflächen §6): Der Körper
+    // bleibt dort, wo die Kamera ankommt.
+    expect(camera.mode).toBe('attached');
+    expect(camera.freezeJd).toBeNull();
   });
 
   it('lässt den gehefteten Modus den Körper weiter mitführen', () => {
