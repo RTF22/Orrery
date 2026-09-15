@@ -7,6 +7,10 @@ import { kmToUnits } from './units';
 
 export const ORBIT_SEGMENTS = 512;
 
+/** Deckkraft der Bahnlinien; die Bahn unter dem Zeiger wird kräftiger (Entwurf Klickflächen §7). */
+export const BAHN_DECKKRAFT = 0.45;
+export const BAHN_DECKKRAFT_HERVOR = 0.9;
+
 /** Stützwinkel der Ellipse — einmal für alle Linien und Bilder. */
 const STUETZEN = ellipsenStuetzen(ORBIT_SEGMENTS);
 
@@ -17,6 +21,7 @@ export interface OrbitLines {
     an: boolean,
     jd: number,
     s: ScaleSettings,
+    hervorgehoben?: string | null,
   ): void;
   /** Die Linien je Körper-Id — für Tests und spätere Auswertung. */
   lines: Map<string, THREE.Line>;
@@ -34,7 +39,7 @@ export function createOrbitLines(scene: THREE.Scene): OrbitLines {
     geometrie.setAttribute('position',
       new THREE.BufferAttribute(new Float32Array((ORBIT_SEGMENTS + 1) * 3), 3));
     const linie = new THREE.Line(geometrie, new THREE.LineBasicMaterial({
-      color: new THREE.Color(body.appearance.color), transparent: true, opacity: 0.45,
+      color: new THREE.Color(body.appearance.color), transparent: true, opacity: BAHN_DECKKRAFT,
     }));
     // Die Positionen sind kamerarelativ und ändern sich unabhängig vom
     // Objektursprung — Three.js' eigene Bounding-Sphere-Kullung träfe hier
@@ -51,9 +56,11 @@ export function createOrbitLines(scene: THREE.Scene): OrbitLines {
     // einen Umlauf abgetastete Form blieb bei laufender Uhr und nach
     // Zeitsprüngen auf der Bahnlage ihres Aufbauzeitpunkts stehen — der
     // Erdmond löste sich nach zehn Jahren um 14 % des Bahnradius von ihr.
-    update(cameraKm, sichtbar, an, jd, s) {
+    update(cameraKm, sichtbar, an, jd, s, hervorgehoben = null) {
       for (const [id, linie] of linien) {
         linie.visible = an && sichtbar[id] !== false;
+        (linie.material as THREE.LineBasicMaterial).opacity =
+          id === hervorgehoben ? BAHN_DECKKRAFT_HERVOR : BAHN_DECKKRAFT;
         if (!linie.visible) continue;
         if (!bahnellipseRelativKm(id, bodyIndex, jd, STUETZEN, relativKm)) continue;
 

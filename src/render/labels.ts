@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import type { Vec3 } from '../sim/types';
+import type { Rechteck, Scheibe } from './treffer';
 
 /** Unterhalb dieser projizierten Größe braucht ein Körper eine Ersatzglyphe. */
 export const MARKER_MIN_PIXEL = 3;
@@ -100,7 +101,13 @@ export interface LabelOverlay {
      * werden alle vorhandenen Einträge über den Auflöser neu beschriftet.
      */
     sprache: string,
+    /** Körper unter dem Zeiger: wird zuerst gesetzt und zeigt seinen Namen immer. */
+    hervorgehoben?: string | null,
   ): void;
+  /** Namensrechtecke des letzten update, CSS-Pixel relativ zum Overlay. */
+  namensRechtecke(): readonly Rechteck[];
+  /** Scheiben aller sichtbaren Körper vor der Kamera aus dem letzten update. */
+  trefferScheiben(): readonly Scheibe[];
   dispose(): void;
 }
 
@@ -130,10 +137,16 @@ export function createLabelOverlay(
 
   const knoten = new Map<
     string,
-    { wrapper: HTMLElement; glyphe: HTMLElement; text: HTMLElement; nameKey: string }
+    {
+      wrapper: HTMLElement; glyphe: HTMLElement; text: HTMLElement; nameKey: string;
+      versatz: { dx: number; dy: number; breite: number; hoehe: number } | null;
+      messSchluessel: string;
+    }
   >();
   /** Zuletzt beschriftete Sprache; null vor dem ersten update(). */
   let beschriftetIn: string | null = null;
+  let rechtecke: Rechteck[] = [];
+  let scheiben: Scheibe[] = [];
 
   const hole = (eintrag: LabelEintrag) => {
     const vorhanden = knoten.get(eintrag.id);
@@ -150,13 +163,15 @@ export function createLabelOverlay(
     wrapper.append(glyphe, text);
     wurzel.appendChild(wrapper);
 
-    const neu = { wrapper, glyphe, text, nameKey: eintrag.nameKey };
+    const neu = {
+      wrapper, glyphe, text, nameKey: eintrag.nameKey, versatz: null, messSchluessel: '',
+    };
     knoten.set(eintrag.id, neu);
     return neu;
   };
 
   return {
-    update(eintraege, camera, zeigeLabels, zeigeMarker, sprache) {
+    update(eintraege, camera, zeigeLabels, zeigeMarker, sprache, hervorgehoben = null) {
       // Sprachwechsel: Neu angelegte Einträge werden ohnehin über name()
       // beschriftet (siehe hole oben); hier geht es nur um bereits
       // vorhandene Knoten, deren textContent sonst in der alten Sprache
@@ -190,10 +205,19 @@ export function createLabelOverlay(
       });
       const rang = (istMond: boolean): 0 | 1 => (istMond ? 1 : 0);
       kandidaten.sort((a, b) => {
+        // Der Körper unter dem Zeiger wird zuerst gesetzt (Entwurf Klickflächen §7).
+        if (a.eintrag.id === hervorgehoben) return -1;
+        if (b.eintrag.id === hervorgehoben) return 1;
         const rangUnterschied = rang(a.eintrag.istMond) - rang(b.eintrag.istMond);
         if (rangUnterschied !== 0) return rangUnterschied;
         return a.p.tiefe - b.p.tiefe;
       });
+
+      scheiben = kandidaten.map(({ eintrag, p, radiusPixel }) => ({
+        id: eintrag.id, x: p.x, y: p.y, tiefe: p.tiefe, istMond: eintrag.istMond,
+        radiusPx: zeigeMarker && needsMarker(radiusPixel) ? Math.max(radiusPixel, MARKER_MIN_PIXEL) : radiusPixel,
+      }));
+      rechtecke = [];
 
       // Jeder belegte Platz merkt sich zusätzlich, ob er eine Beschriftung
       // trägt oder nur eine Ersatzglyphe (Marker-Punkt für einen zu kleinen
@@ -214,8 +238,10 @@ export function createLabelOverlay(
         const brauchtGlyphe = zeigeMarker && needsMarker(radiusPixel);
         // Die Mondschwelle greift VOR der Kollisionsauflösung: Ein zu kleiner
         // Mond belegt gar keinen Platz und tritt keinem anderen Label seinen
-        // Platz ab.
-        const zeigtText = zeigeLabels && zeigeLabel(radiusPixel, eintrag.istMond);
+        // Platz ab. Der Körper unter dem Zeiger zeigt seinen Namen immer,
+        // auch unterhalb der Schwelle und ohne eingeschaltete Beschriftungen.
+        const istHervorgehoben = eintrag.id === hervorgehoben;
+        const zeigtText = istHervorgehoben || (zeigeLabels && zeigeLabel(radiusPixel, eintrag.istMond));
         if (!zeigtText && !brauchtGlyphe) continue;
 
         const belegt = zeigtText ? platziert.filter((q) => q.hatText) : platziert;
@@ -226,6 +252,23 @@ export function createLabelOverlay(
         el.wrapper.hidden = false;
         el.glyphe.hidden = !brauchtGlyphe;
         el.text.hidden = !zeigtText;
+        el.wrapper.classList.toggle('hervorgehoben', istHervorgehoben);
+        if (zeigtText) {
+          // Gemessen wird nur bei geändertem Text, Glyphen- oder Hervorhebungszustand;
+          // je Bild entsteht das Rechteck aus Ankerpunkt und abgelegtem Versatz.
+          const schluessel = `${el.text.textContent ?? ''}|${String(brauchtGlyphe)}|${String(istHervorgehoben)}`;
+          if (el.messSchluessel !== schluessel || el.versatz === null) {
+            const basis = wurzel.getBoundingClientRect();
+            const r = el.text.getBoundingClientRect();
+            el.versatz = { dx: r.left - basis.left - p.x, dy: r.top - basis.top - p.y, breite: r.width, hoehe: r.height };
+            el.messSchluessel = schluessel;
+          }
+          const v = el.versatz;
+          rechtecke.push({
+            id: eintrag.id, links: p.x + v.dx, oben: p.y + v.dy,
+            rechts: p.x + v.dx + v.breite, unten: p.y + v.dy + v.hoehe,
+          });
+        }
         platziert.push({ x: p.x, y: p.y, hatText: zeigtText });
         gezeigt.add(eintrag.id);
       }
@@ -234,6 +277,8 @@ export function createLabelOverlay(
         if (!gezeigt.has(id)) el.wrapper.hidden = true;
       }
     },
+    namensRechtecke: () => rechtecke,
+    trefferScheiben: () => scheiben,
     dispose() {
       wurzel.remove();
       knoten.clear();

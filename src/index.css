@@ -35,6 +35,12 @@ html, body, #root { height: 100%; margin: 0; background: #05070d; }
   box-shadow: 0 0 4px currentColor;
 }
 
+/* Körper unter dem Zeiger (Entwurf Klickflächen §7). */
+.koerper-label.hervorgehoben .koerper-name {
+  font-weight: 700;
+  color: #ffffff;
+}
+
 /* Im Dauerlauf stört schon der Mauszeiger. Er kommt bei der nächsten
    Bewegung von selbst zurück (siehe ui/idle.ts). */
 .zeiger-aus, .zeiger-aus * { cursor: none !important; }

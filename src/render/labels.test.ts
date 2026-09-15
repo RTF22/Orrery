@@ -1,11 +1,11 @@
 // @vitest-environment jsdom
 import {
-  describe, it, expect, beforeEach,
+  describe, it, expect, beforeEach, vi,
 } from 'vitest';
 import * as THREE from 'three';
 import {
   apparentRadiusPixels, needsMarker, MARKER_MIN_PIXEL, zeigeLabel, LABEL_MIN_PIXEL_MOND,
-  createLabelOverlay,
+  createLabelOverlay, projectToScreen,
 } from './labels';
 import type { LabelEintrag } from './labels';
 
@@ -238,5 +238,105 @@ describe('createLabelOverlay — Rang vor Tiefe (Flackern bei Mondüberlappung)'
     overlay.update(eintraege, kamera, true, true, 'en');
     expect(wrapperVon(container, 'Moon')).toBeDefined();
     expect(wrapperVon(container, 'Mond')).toBeUndefined();
+  });
+
+  it('zeigt den Namen eines hervorgehobenen Mondes unter der Schwelle, auch ohne Beschriftungen', () => {
+    const io = koerper('io', 'body.io.name', true, 1000, 2);
+    const { overlay, container } = baueOverlay();
+    overlay.update([io], testKamera(), false, false, 'de', 'io');
+    const w = wrapperVon(container, 'Io');
+    expect(w?.hidden).toBe(false);
+    expect(w?.querySelector<HTMLElement>('.koerper-name')?.hidden).toBe(false);
+    expect(w?.classList.contains('hervorgehoben')).toBe(true);
+    overlay.update([io], testKamera(), false, false, 'de', null);
+    expect(wrapperVon(container, 'Io')?.hidden).toBe(true);
+  });
+
+  it('setzt den hervorgehobenen Mond vor den überlappenden Planeten', () => {
+    const jupiter = koerper('jupiter', 'body.jupiter.name', false, 1000, 100);
+    const io = koerper('io', 'body.io.name', true, 500, 50);
+    const { overlay, container } = baueOverlay();
+    overlay.update([jupiter, io], testKamera(), true, true, 'de', 'io');
+    expect(wrapperVon(container, 'Io')?.querySelector<HTMLElement>('.koerper-name')?.hidden).toBe(false);
+    expect(wrapperVon(container, 'Jupiter')?.hidden ?? true).toBe(true);
+  });
+
+  it('liefert Namensrechtecke aus Ankerpunkt und einmal gemessenem Versatz', () => {
+    const rechteck = (left: number, top: number, width: number, height: number) =>
+      ({ left, top, width, height, right: left + width, bottom: top + height, x: left, y: top, toJSON: () => ({}) }) as DOMRect;
+    const kamera = testKamera();
+    const jupiter = koerper('jupiter', 'body.jupiter.name', false, 1000, 100);
+    const p0 = projectToScreen(jupiter.renderPos, kamera, BREITE, HOEHE)!;
+    const spion = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (this: HTMLElement) {
+      return this.classList.contains('koerper-name') ? rechteck(p0.x + 12, p0.y - 8, 40, 14) : rechteck(0, 0, BREITE, HOEHE);
+    });
+    const { overlay } = baueOverlay();
+    overlay.update([jupiter], kamera, true, true, 'de');
+    const [r] = overlay.namensRechtecke();
+    expect(r!.id).toBe('jupiter');
+    expect(r!.links).toBeCloseTo(p0.x + 12, 9);
+    expect(r!.oben).toBeCloseTo(p0.y - 8, 9);
+    expect(r!.rechts).toBeCloseTo(p0.x + 52, 9);
+    expect(r!.unten).toBeCloseTo(p0.y + 6, 9);
+
+    const messungen = spion.mock.calls.length;
+    const verschoben = { ...jupiter, renderPos: { x: 100, y: 0, z: -1000 } };
+    overlay.update([verschoben], kamera, true, true, 'de');
+    const p1 = projectToScreen(verschoben.renderPos, kamera, BREITE, HOEHE)!;
+    expect(overlay.namensRechtecke()[0]!.links).toBeCloseTo(p1.x + 12, 9);
+    expect(spion.mock.calls.length).toBe(messungen);
+
+    namen['body.jupiter.name'] = 'Jupiter (EN)';
+    overlay.update([verschoben], kamera, true, true, 'en');
+    expect(spion.mock.calls.length).toBeGreaterThan(messungen);
+    spion.mockRestore();
+  });
+
+  it('liefert Trefferscheiben sichtbarer Körper, mit Glyphe mindestens MARKER_MIN_PIXEL', () => {
+    const io = koerper('io', 'body.io.name', true, 1000, 1);
+    const jupiter = { ...koerper('jupiter', 'body.jupiter.name', false, 2000, 60), sichtbar: false };
+    const { overlay } = baueOverlay();
+    overlay.update([io, jupiter], testKamera(), true, true, 'de');
+    const scheiben = overlay.trefferScheiben();
+    expect(scheiben.map((s) => s.id)).toEqual(['io']);
+    expect(scheiben[0]!.radiusPx).toBe(MARKER_MIN_PIXEL);
+    expect(scheiben[0]!.istMond).toBe(true);
+  });
+
+  it('misst den Namensversatz erneut, wenn ein sichtbarer Körper zwischen echter Kugel und Ersatzglyphe wechselt', () => {
+    // Ein Planet zeigt seinen Namen unabhängig von seiner Größe (zeigeLabel).
+    // Bei 1 Pixel liegt er unter MARKER_MIN_PIXEL (3) — ob er trotzdem eine
+    // Ersatzglyphe neben dem Namen bekommt, hängt hier allein vom Schalter
+    // zeigeMarker ab; Text und Sprache bleiben in beiden Aufrufen gleich.
+    const klein = koerper('jupiter', 'body.jupiter.name', false, 1000, 1);
+    const { overlay } = baueOverlay();
+    const kamera = testKamera();
+    const spion = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect');
+
+    overlay.update([klein], kamera, true, false, 'de');
+    const nachErstem = spion.mock.calls.length;
+    expect(nachErstem).toBeGreaterThan(0);
+
+    // Gleicher Zustand erneut: keine neue Messung.
+    overlay.update([klein], kamera, true, false, 'de');
+    expect(spion.mock.calls.length).toBe(nachErstem);
+
+    // Jetzt mit Ersatzglyphe — der Glyphenzustand wechselt, obwohl Text und
+    // Sprache unverändert bleiben: Der abgelegte Versatz gilt nicht mehr.
+    overlay.update([klein], kamera, true, true, 'de');
+    expect(spion.mock.calls.length).toBeGreaterThan(nachErstem);
+    spion.mockRestore();
+  });
+
+  it('liefert namensRechtecke nur für Körper mit gezeigtem Namen', () => {
+    // Europa bleibt unter der Mondschwelle (8 px) und zeigt deshalb keinen
+    // Namen, ist aber sichtbar und groß genug für eine echte Trefferscheibe
+    // (über MARKER_MIN_PIXEL) — sie gehört in trefferScheiben(), aber nicht
+    // in namensRechtecke().
+    const europa = koerper('europa', 'body.europa.name', true, 1000, 5);
+    const { overlay } = baueOverlay();
+    overlay.update([europa], testKamera(), true, true, 'de');
+    expect(overlay.trefferScheiben().map((s) => s.id)).toEqual(['europa']);
+    expect(overlay.namensRechtecke()).toEqual([]);
   });
 });

@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import * as THREE from 'three';
-import { createOrbitLines, ORBIT_SEGMENTS } from './orbits';
+import {
+  createOrbitLines, ORBIT_SEGMENTS, BAHN_DECKKRAFT, BAHN_DECKKRAFT_HERVOR,
+} from './orbits';
 import { bodies, bodyIndex } from '../data/index';
 import { SCALE_PRESETS, scaledPositionAt, isSatellite } from '../sim/scale';
 import type { ScaleSettings } from '../sim/scale';
@@ -114,5 +116,17 @@ describe('createOrbitLines', () => {
       expect(Math.min(...abstaende)).toBeGreaterThan(kmToUnits(300_000 * s.sizeScale));
       expect(Math.max(...abstaende)).toBeLessThan(kmToUnits(460_000 * s.sizeScale));
     }
+  });
+});
+
+describe('createOrbitLines — Hervorhebung', () => {
+  it('hebt nur die Bahn des Körpers unter dem Zeiger hervor', () => {
+    const linien = createOrbitLines(new THREE.Scene());
+    const deckkraft = (id: string): number => (linien.lines.get(id)!.material as THREE.LineBasicMaterial).opacity;
+    linien.update(new THREE.Vector3(), {}, true, J2000, SCALE_PRESETS.realistisch, 'mars');
+    expect(deckkraft('mars')).toBe(BAHN_DECKKRAFT_HERVOR);
+    expect(deckkraft('venus')).toBe(BAHN_DECKKRAFT);
+    linien.update(new THREE.Vector3(), {}, true, J2000, SCALE_PRESETS.realistisch, null);
+    expect(deckkraft('mars')).toBe(BAHN_DECKKRAFT);
   });
 });
