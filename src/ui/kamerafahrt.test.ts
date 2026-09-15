@@ -1,8 +1,13 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
-import { fahreZu, fahrtAbbrechen, fahrtLaeuft, fokusAbstand, FAHRT_MS } from './kamerafahrt';
+import {
+  fahreZu, fahreZuSystem, fahrtAbbrechen, fahrtLaeuft, fokusAbstand, systemAbstand, FAHRT_MS,
+  SYSTEM_RAND, DRAUFSICHT_ELEVATION,
+} from './kamerafahrt';
 import { useStore, DEFAULT_STATE } from '../store';
 import { bodyIndex } from '../data';
+import { systemRadiusKm } from '../render/camera/cinema';
+import { KAMERA_FOV_GRAD } from '../render/renderer';
 
 /** Handgesteuerte Uhr und Bildplanung, damit die Fahrt ohne Timer prüfbar ist. */
 function planer(): { optionen: Parameters<typeof fahreZu>[1]; vor(ms: number): void } {
@@ -78,5 +83,68 @@ describe('fahreZu', () => {
     fahreZu('vulcan', planer().optionen);
     expect(useStore.getState().camera).toEqual(vorher);
     expect(fahrtLaeuft()).toBe(false);
+  });
+
+  it('lässt Azimut und Elevation stehen', () => {
+    const p = planer();
+    useStore.getState().setCamera({ azimuth: 1.1, elevation: 0.3 });
+    fahreZu('mars', p.optionen);
+    p.vor(FAHRT_MS / 2);
+    p.vor(FAHRT_MS);
+    expect(useStore.getState().camera.azimuth).toBe(1.1);
+    expect(useStore.getState().camera.elevation).toBe(0.3);
+  });
+});
+
+describe('systemAbstand', () => {
+  const halbesSichtfeld = Math.tan((KAMERA_FOV_GRAD * Math.PI) / 360);
+
+  it('passt im Querformat die Bahn des äußersten Planeten mit Rand in die halbe Bildhöhe', () => {
+    const { time, scale } = useStore.getState();
+    const halbeHoehe = systemAbstand(time.jd, scale, 16 / 9) * halbesSichtfeld;
+    expect(halbeHoehe / systemRadiusKm(time.jd, scale)).toBeCloseTo(SYSTEM_RAND, 9);
+  });
+
+  it('rückt im Hochformat weiter weg, damit die Breite reicht', () => {
+    const { time, scale } = useStore.getState();
+    expect(systemAbstand(time.jd, scale, 0.5) / systemAbstand(time.jd, scale, 1)).toBeCloseTo(2, 9);
+  });
+
+  it('behandelt ein unbrauchbares Seitenverhältnis wie Querformat', () => {
+    const { time, scale } = useStore.getState();
+    expect(systemAbstand(time.jd, scale, 0)).toBe(systemAbstand(time.jd, scale, 1));
+    expect(systemAbstand(time.jd, scale, Number.NaN)).toBe(systemAbstand(time.jd, scale, 1));
+  });
+});
+
+describe('fahreZuSystem', () => {
+  it('fährt zur Sonne und gleitet in die Draufsicht mit dem Abstand der Systemschau', () => {
+    const p = planer();
+    useStore.getState().setCamera({ targetId: 'saturn', distance: 1e6, azimuth: 1.1, elevation: 0.3 });
+    fahreZuSystem(p.optionen);
+    const s = useStore.getState();
+    expect(s.camera.targetId).toBe('sun');
+    expect(s.camera.freezeJd).toBe(s.time.jd);
+
+    p.vor(FAHRT_MS / 2);
+    const mitte = useStore.getState().camera.elevation;
+    expect(mitte).toBeGreaterThan(0.3);
+    expect(mitte).toBeLessThan(DRAUFSICHT_ELEVATION);
+
+    p.vor(FAHRT_MS);
+    const { camera, scale, time } = useStore.getState();
+    expect(camera.elevation).toBeCloseTo(DRAUFSICHT_ELEVATION, 9);
+    expect(camera.azimuth).toBe(1.1);
+    const seiten = window.innerWidth / window.innerHeight;
+    expect(camera.distance / systemAbstand(time.jd, scale, seiten)).toBeCloseTo(1, 9);
+    expect(fahrtLaeuft()).toBe(false);
+  });
+
+  it('beendet ein laufendes Kino', () => {
+    useStore.getState().setCinema({ running: true });
+    useStore.getState().setCamera({ mode: 'cinema' });
+    fahreZuSystem(planer().optionen);
+    expect(useStore.getState().cinema.running).toBe(false);
+    expect(useStore.getState().camera.targetId).toBe('sun');
   });
 });

@@ -80,13 +80,14 @@ export function App(): React.JSX.Element | null {
     <div className="pointer-events-none fixed inset-0 flex items-start justify-between gap-2 p-3 text-slate-100">
       <div className="flex max-h-full w-72 max-w-full flex-col gap-2 overflow-y-auto">
         <Kopfzeile />
+        {/* Die Himmelskörper stehen bewusst gleich unter dem Sprachschalter. */}
+        <BodyTree />
         <TimePanel />
         <ScalePanel />
         <CinemaPanel />
         <CameraPanel />
         <DisplayPanel />
         <AnsichtenPanel />
-        <BodyTree />
         {zeigeKuerzel ? <Kuerzeluebersicht /> : null}
       </div>
       <InfoPanel />

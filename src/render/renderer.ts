@@ -18,6 +18,9 @@ export interface RenderContext {
 /** Obergrenze, solange keine Qualitätsstufe etwas anderes sagt. */
 const STANDARD_DECKEL = 2;
 
+/** Vertikales Sichtfeld der Kamera in Grad (auch für die Draufsicht in ui/kamerafahrt.ts). */
+export const KAMERA_FOV_GRAD = 50;
+
 /**
  * Die tatsächlich genutzte Pixeldichte. Sie folgt dem Gerät, bleibt aber
  * unter dem Deckel der Qualitätsstufe: Die Füllrate wächst quadratisch mit
@@ -68,7 +71,7 @@ export function createRenderer(canvas: HTMLCanvasElement): RenderContext {
 
   // Die Kamera sitzt konstruktionsbedingt immer im Ursprung; bewegt wird
   // die Welt um sie herum (siehe worldToRender).
-  const camera = new THREE.PerspectiveCamera(50, 1, 0.001, 1e12);
+  const camera = new THREE.PerspectiveCamera(KAMERA_FOV_GRAD, 1, 0.001, 1e12);
   camera.position.set(0, 0, 0);
   camera.up.set(0, 0, 1); // Ekliptik-Normale zeigt nach oben
 

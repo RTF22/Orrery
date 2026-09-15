@@ -3,6 +3,8 @@ import { bodyIndex } from '../data';
 import type { Body } from '../sim/types';
 import { scaledRadius } from '../sim/scale';
 import type { ScaleSettings } from '../sim/scale';
+import { systemRadiusKm } from '../render/camera/cinema';
+import { KAMERA_FOV_GRAD } from '../render/renderer';
 import { easeInOutCubic } from './tween';
 import { stopCinema } from './cinemaControl';
 
@@ -11,9 +13,25 @@ export const FAHRT_MS = 1500;
 /** Abstand, aus dem ein Körper formatfüllend, aber vollständig zu sehen ist. */
 export const FOKUS_FAKTOR = 8;
 export const FOKUS_MIN_KM = 1e4;
+/** Rand um die Bahn des äußersten Planeten in der Draufsicht aufs ganze System. */
+export const SYSTEM_RAND = 1.15;
+/** Blick senkrecht von oben, wie „Draufsicht" im Kamera-Panel. */
+export const DRAUFSICHT_ELEVATION = Math.PI / 2;
 
 export function fokusAbstand(body: Body, scale: ScaleSettings): number {
   return Math.max(scaledRadius(body, scale) * FOKUS_FAKTOR, FOKUS_MIN_KM);
+}
+
+/**
+ * Abstand, aus dem die Bahn des äußersten Planeten samt Rand ganz ins Bild
+ * passt. Das Sichtfeld ist vertikal; im Hochformat begrenzt die Breite. Der
+ * Abstand der Kinoszene `systemblick` (1,6 Systemradien) schnitt Uranus- und
+ * Neptunbahn am Bildrand ab.
+ */
+export function systemAbstand(jd: number, scale: ScaleSettings, seitenverhaeltnis: number): number {
+  const halbesSichtfeld = Math.tan((KAMERA_FOV_GRAD * Math.PI) / 360);
+  const seiten = Number.isFinite(seitenverhaeltnis) && seitenverhaeltnis > 0 ? seitenverhaeltnis : 1;
+  return (systemRadiusKm(jd, scale) * SYSTEM_RAND) / (halbesSichtfeld * Math.min(1, seiten));
 }
 
 /** Zeitquelle und Bildplanung sind austauschbar, damit die Fahrt ohne Timer prüfbar ist. */
@@ -48,6 +66,26 @@ export function fahrtAbbrechen(): void {
 export function fahreZu(id: string, optionen: FahrtOptionen = {}): void {
   const body = bodyIndex[id];
   if (body === undefined) return;
+  fahre(id, (_jd, scale) => fokusAbstand(body, scale), null, optionen);
+}
+
+/**
+ * Draufsicht auf das ganze Sonnensystem für die Wurzelzeile des Objektbaums:
+ * Ziel Sonne, Abstand nach `systemAbstand`, die Elevation gleitet mit dem
+ * Abstand in den Blick von oben. Sonst wie `fahreZu`.
+ */
+export function fahreZuSystem(optionen: FahrtOptionen = {}): void {
+  // Die Canvas füllt das Fenster, ihr Seitenverhältnis ist das des Fensters.
+  const seiten = typeof window === 'undefined' ? 1 : window.innerWidth / Math.max(window.innerHeight, 1);
+  fahre('sun', (jd, scale) => systemAbstand(jd, scale, seiten), DRAUFSICHT_ELEVATION, optionen);
+}
+
+function fahre(
+  id: string,
+  zielAbstand: (jd: number, scale: ScaleSettings) => number,
+  zielElevation: number | null,
+  optionen: FahrtOptionen,
+): void {
   fahrtAbbrechen();
 
   const dauer = optionen.dauerMs ?? FAHRT_MS;
@@ -63,7 +101,8 @@ export function fahreZu(id: string, optionen: FahrtOptionen = {}): void {
   if (useStore.getState().cinema.running) stopCinema();
   const { camera, scale, time, setCamera } = useStore.getState();
   const von = camera.distance;
-  const nach = fokusAbstand(body, scale);
+  const nach = zielAbstand(time.jd, scale);
+  const elevationVon = camera.elevation;
   setCamera({
     targetId: id,
     // Im freien Modus wird die Position des Körpers als Bezugspunkt
@@ -87,7 +126,11 @@ export function fahreZu(id: string, optionen: FahrtOptionen = {}): void {
   const schritt = (): void => {
     if (!aktiv) return;
     const t = Math.min((jetzt() - start) / dauer, 1);
-    useStore.getState().setCamera({ distance: von * Math.pow(nach / von, easeInOutCubic(t)) });
+    const k = easeInOutCubic(t);
+    useStore.getState().setCamera({
+      distance: von * Math.pow(nach / von, k),
+      ...(zielElevation === null ? {} : { elevation: elevationVon + (zielElevation - elevationVon) * k }),
+    });
     if (t < 1) kennung = anfordern(schritt);
     else beenden();
   };
