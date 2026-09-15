@@ -8,8 +8,13 @@ const dateien = import.meta.glob('./*/*/*.md', {
 
 const MUSTER = /^\.\/(de|en)\/(grundschule|gymnasium|hochschule)\/(objekt|szene|thema)-([a-z0-9-]+)\.md$/;
 
-/** Weiche Obergrenzen zu den Richtwerten 40–80 und 120–180 Wörter (Entwurf §2 Punkt 4, §8). */
-const WORTGRENZE: Record<Niveau, number> = { grundschule: 110, gymnasium: 240, hochschule: Infinity };
+/**
+ * Weiche Obergrenze zum Richtwert 40–80 Wörter der Grundschule (Entwurf §2
+ * Punkt 4, §8). Beim Gymnasium ist die Wortzahl kein Dogma (Entscheidung
+ * Jens, 14.09.2026): Maßgeblich ist die korrekte, dem Niveau angepasste
+ * Darstellung; 120–180 Wörter bleiben Richtwert ohne Prüfgrenze.
+ */
+const WORTGRENZE: Record<Niveau, number> = { grundschule: 110, gymnasium: Infinity, hochschule: Infinity };
 
 /** Zählt Wörter ohne die Link-Ziele in Klammern. */
 function woerter(text: string): number {

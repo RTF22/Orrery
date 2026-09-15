@@ -52,6 +52,11 @@ Quellenbereich mit öffentlichen Angeboten von NASA, JPL, ESA und anderen.
 5. **Ablage als Markdown-Dateien** mit eigenem Renderer für eine kleine Teilmenge,
    Nachladen bei Bedarf, keine neue Abhängigkeit.
 
+**Nachtrag zu Punkt 4 (14.09.2026, Jens):** Beim Gymnasium ist die Wortzahl kein
+Dogma. Maßgeblich ist die korrekte und dem Niveau angepasste Darstellung des
+Sachverhalts; 120 bis 180 Wörter bleiben Richtwert. Der Dateitest (§8) prüft für
+Gymnasium deshalb keine Obergrenze mehr, nur noch für die Grundschule.
+
 ## 3. Aufbau und Bedienung
 
 ### 3.1 Rechte Spalte
