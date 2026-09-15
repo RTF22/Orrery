@@ -1,4 +1,6 @@
 import { useStore } from '../../store';
+import { TIPP_SCHWELLE_PX, zeigerartVon } from '../treffer';
+import type { Zeigerart } from '../treffer';
 
 /** Knapp unter dem Pol, damit die Ansicht nicht umklappt. */
 const ELEVATION_GRENZE = Math.PI / 2 - 0.01;
@@ -32,14 +34,24 @@ function drehe(dx: number, dy: number): void {
   });
 }
 
+export interface EingabeRueckrufe {
+  /** Druck ohne Ziehen und ohne zweiten Zeiger, bei der Maus nur Haupttaste. */
+  onTipp?: (x: number, y: number, art: Zeigerart) => void;
+  /** Hover ohne Druck (nicht bei Berührung); null bei Druck und beim Verlassen. */
+  onZeiger?: (zeiger: { x: number; y: number; art: Zeigerart } | null) => void;
+}
+
+interface Druck { startX: number; startY: number; x: number; y: number; art: Zeigerart; zieht: boolean; tippbar: boolean }
+
 /**
  * Verbindet Maus- und Berührungseingaben mit dem Store. Der Controller liest
  * die Werte im nächsten Bild — die Eingabe kennt weder Three.js noch die
- * Kamera selbst.
+ * Kamera selbst. Tippen und Hover gehen über Rückrufe hinaus (Entwurf
+ * Klickflächen §5): Gedreht wird erst jenseits der Tippschwelle, dann mit der
+ * ganzen Strecke seit dem Druck, damit ein Tipp die Kamera nicht bewegt.
  */
-export function attachCameraInput(element: HTMLElement): () => void {
-  // Pointer-Ereignisse decken Maus, Stift und Berührung gemeinsam ab.
-  const aktive = new Map<number, { x: number; y: number }>();
+export function attachCameraInput(element: HTMLElement, rueckrufe: EingabeRueckrufe = {}): () => void {
+  const aktive = new Map<number, Druck>();
   let letzterPinchAbstand: number | null = null;
 
   const pinchAbstand = (): number | null => {
@@ -49,16 +61,38 @@ export function attachCameraInput(element: HTMLElement): () => void {
     return Math.hypot(a.x - b.x, a.y - b.y);
   };
 
+  const lokal = (e: PointerEvent): { x: number; y: number } => {
+    const r = element.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  };
+
   const onPointerDown = (e: PointerEvent): void => {
-    aktive.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    aktive.set(e.pointerId, {
+      startX: e.clientX, startY: e.clientY, x: e.clientX, y: e.clientY,
+      art: zeigerartVon(e.pointerType), zieht: false, tippbar: e.button === 0,
+    });
+    // Ein zweiter Zeiger macht aus dem Druck eine Geste: kein Tippen mehr, und
+    // der verbleibende Finger dreht danach ohne Totzone weiter.
+    if (aktive.size >= 2) {
+      for (const d of aktive.values()) { d.tippbar = false; d.zieht = true; }
+    }
     element.setPointerCapture(e.pointerId);
     letzterPinchAbstand = pinchAbstand();
+    rueckrufe.onZeiger?.(null);
   };
 
   const onPointerMove = (e: PointerEvent): void => {
-    const vorher = aktive.get(e.pointerId);
-    if (vorher === undefined) return;
-    aktive.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    const d = aktive.get(e.pointerId);
+    if (d === undefined) {
+      if (aktive.size === 0 && e.pointerType !== 'touch') {
+        rueckrufe.onZeiger?.({ ...lokal(e), art: zeigerartVon(e.pointerType) });
+      }
+      return;
+    }
+    const vorherX = d.x;
+    const vorherY = d.y;
+    d.x = e.clientX;
+    d.y = e.clientY;
 
     if (aktive.size >= 2) {
       const jetzt = pinchAbstand();
@@ -68,14 +102,29 @@ export function attachCameraInput(element: HTMLElement): () => void {
       letzterPinchAbstand = jetzt;
       return;
     }
-    drehe(e.clientX - vorher.x, e.clientY - vorher.y);
+    if (!d.zieht) {
+      if (Math.hypot(d.x - d.startX, d.y - d.startY) <= TIPP_SCHWELLE_PX[d.art]) return;
+      d.zieht = true;
+      d.tippbar = false;
+      drehe(d.x - d.startX, d.y - d.startY);
+      return;
+    }
+    drehe(d.x - vorherX, d.y - vorherY);
   };
 
-  const onPointerUp = (e: PointerEvent): void => {
+  const beende = (e: PointerEvent, tippenErlaubt: boolean): void => {
+    const d = aktive.get(e.pointerId);
     aktive.delete(e.pointerId);
     if (element.hasPointerCapture(e.pointerId)) element.releasePointerCapture(e.pointerId);
     letzterPinchAbstand = pinchAbstand();
+    if (tippenErlaubt && d !== undefined && d.tippbar && !d.zieht && aktive.size === 0) {
+      const p = lokal(e);
+      rueckrufe.onTipp?.(p.x, p.y, d.art);
+    }
   };
+  const onPointerUp = (e: PointerEvent): void => { beende(e, true); };
+  const onPointerCancel = (e: PointerEvent): void => { beende(e, false); };
+  const onPointerLeave = (): void => { rueckrufe.onZeiger?.(null); };
 
   const onWheel = (e: WheelEvent): void => {
     e.preventDefault();
@@ -87,7 +136,8 @@ export function attachCameraInput(element: HTMLElement): () => void {
   element.addEventListener('pointerdown', onPointerDown);
   element.addEventListener('pointermove', onPointerMove);
   element.addEventListener('pointerup', onPointerUp);
-  element.addEventListener('pointercancel', onPointerUp);
+  element.addEventListener('pointercancel', onPointerCancel);
+  element.addEventListener('pointerleave', onPointerLeave);
   element.addEventListener('wheel', onWheel, { passive: false });
   // Sonst bricht die Browser-Geste (Scrollen, Zoomen) das Ziehen ab.
   element.style.touchAction = 'none';
@@ -96,7 +146,8 @@ export function attachCameraInput(element: HTMLElement): () => void {
     element.removeEventListener('pointerdown', onPointerDown);
     element.removeEventListener('pointermove', onPointerMove);
     element.removeEventListener('pointerup', onPointerUp);
-    element.removeEventListener('pointercancel', onPointerUp);
+    element.removeEventListener('pointercancel', onPointerCancel);
+    element.removeEventListener('pointerleave', onPointerLeave);
     element.removeEventListener('wheel', onWheel);
   };
 }
