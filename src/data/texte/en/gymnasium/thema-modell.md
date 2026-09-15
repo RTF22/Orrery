@@ -11,6 +11,11 @@ that change slowly with time. This approximation is deliberate and has known lim
   reliable. Outside it the error grows and the data block shows a warning.
 - **No precession, no nutation:** The rotation axes are fixed in space. In reality
   the Earth's axis circles the ecliptic pole once in about 26,000 years.
+- **Unmeasured axes:** For [Eris](objekt:eris) and [Makemake](objekt:makemake) the
+  direction of the rotation axis is unknown; the simulation sets it perpendicular to the
+  orbit, and the data block then shows an axial tilt of 0°. The pole of
+  [Triton](objekt:triton) is stored without its periodic variations, so its axial tilt
+  in the data block is not reliable.
 - **Moons on a simplified plane:** Many lunar orbits refer to the equatorial plane of
   their planet (Laplace plane), not to the exact motion of their orbital poles.
 - **Earth as barycentre:** The table gives the Earth-Moon barycentre; the deviation
