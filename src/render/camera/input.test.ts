@@ -5,8 +5,10 @@ import { useStore, DEFAULT_STATE } from '../../store';
 
 const DREH = Math.PI / 600;
 
-function zeiger(el: HTMLElement, typ: string, x: number, y: number, id = 1, art = 'mouse', button = 0): void {
-  const e = new MouseEvent(typ, { clientX: x, clientY: y, button, bubbles: true });
+function zeiger(
+  el: HTMLElement, typ: string, x: number, y: number, id = 1, art = 'mouse', button = 0, buttons = 0,
+): void {
+  const e = new MouseEvent(typ, { clientX: x, clientY: y, button, buttons, bubbles: true });
   Object.defineProperties(e, { pointerId: { value: id }, pointerType: { value: art } });
   el.dispatchEvent(e);
 }
@@ -116,10 +118,78 @@ describe('attachCameraInput — Hover', () => {
     onZeiger.mockClear();
     zeiger(el, 'pointermove', 50, 60, 2, 'touch');
     expect(onZeiger).not.toHaveBeenCalled();
+    // Maus: Die Hervorhebung bleibt während des Drucks stehen, erst das Ziehen löscht sie.
     zeiger(el, 'pointerdown', 50, 60);
-    expect(onZeiger).toHaveBeenLastCalledWith(null);
+    expect(onZeiger).not.toHaveBeenCalled();
     zeiger(el, 'pointermove', 70, 60);
     expect(onZeiger).toHaveBeenLastCalledWith(null);
+    zeiger(el, 'pointerup', 70, 60);
+    // Berührung: kein Hover, der Druck meldet null wie bisher.
+    onZeiger.mockClear();
+    zeiger(el, 'pointerdown', 50, 60, 3, 'touch');
+    expect(onZeiger).toHaveBeenLastCalledWith(null);
+    stop();
+  });
+
+  it('lässt die Hervorhebung bei einem Maus- oder Stiftdruck ohne Bewegung stehen', () => {
+    const el = flaeche();
+    const onZeiger = vi.fn();
+    const stop = attachCameraInput(el, { onZeiger });
+    zeiger(el, 'pointermove', 50, 60);
+    onZeiger.mockClear();
+    zeiger(el, 'pointerdown', 50, 60);
+    zeiger(el, 'pointermove', 53, 60);
+    zeiger(el, 'pointerup', 53, 60);
+    zeiger(el, 'pointerdown', 50, 60, 4, 'pen');
+    zeiger(el, 'pointerup', 50, 60, 4, 'pen');
+    expect(onZeiger).not.toHaveBeenCalledWith(null);
+    stop();
+  });
+
+  it('meldet null, sobald der Druck die Tippschwelle überschreitet', () => {
+    const el = flaeche();
+    const onZeiger = vi.fn();
+    const stop = attachCameraInput(el, { onZeiger });
+    zeiger(el, 'pointerdown', 50, 60);
+    zeiger(el, 'pointermove', 54, 60);
+    expect(onZeiger).not.toHaveBeenCalled();
+    zeiger(el, 'pointermove', 55, 60);
+    expect(onZeiger).toHaveBeenCalledTimes(1);
+    expect(onZeiger).toHaveBeenLastCalledWith(null);
+    stop();
+  });
+
+  it('meldet null, wenn ein zweiter Zeiger dazukommt', () => {
+    const el = flaeche();
+    const onZeiger = vi.fn();
+    const stop = attachCameraInput(el, { onZeiger });
+    zeiger(el, 'pointerdown', 50, 60);
+    expect(onZeiger).not.toHaveBeenCalled();
+    zeiger(el, 'pointerdown', 150, 60, 2, 'pen');
+    expect(onZeiger).toHaveBeenLastCalledWith(null);
+    stop();
+  });
+
+  it('meldet bei pointercancel null', () => {
+    const el = flaeche();
+    const onZeiger = vi.fn();
+    const stop = attachCameraInput(el, { onZeiger });
+    zeiger(el, 'pointerdown', 50, 60);
+    onZeiger.mockClear();
+    zeiger(el, 'pointercancel', 50, 60);
+    expect(onZeiger).toHaveBeenCalledTimes(1);
+    expect(onZeiger).toHaveBeenLastCalledWith(null);
+    stop();
+  });
+
+  it('meldet keinen Hover bei gedrückter Taste, die außerhalb der Fläche gedrückt wurde', () => {
+    const el = flaeche();
+    const onZeiger = vi.fn();
+    const stop = attachCameraInput(el, { onZeiger });
+    zeiger(el, 'pointermove', 50, 60, 1, 'mouse', 0, 1);
+    expect(onZeiger).not.toHaveBeenCalled();
+    zeiger(el, 'pointermove', 52, 60, 1, 'mouse', 0, 0);
+    expect(onZeiger).toHaveBeenLastCalledWith({ x: 52, y: 60, art: 'maus' });
     stop();
   });
 

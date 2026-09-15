@@ -37,7 +37,11 @@ function drehe(dx: number, dy: number): void {
 export interface EingabeRueckrufe {
   /** Druck ohne Ziehen und ohne zweiten Zeiger, bei der Maus nur Haupttaste. */
   onTipp?: (x: number, y: number, art: Zeigerart) => void;
-  /** Hover ohne Druck (nicht bei Berührung); null bei Druck und beim Verlassen. */
+  /**
+   * Hover ohne gedrückte Taste (nicht bei Berührung). null, sobald ein Druck zum
+   * Ziehen wird, ein zweiter Zeiger dazukommt, bei pointercancel, beim Verlassen
+   * und beim Druck eines Fingers; ein Maus- oder Stiftdruck allein lässt ihn stehen.
+   */
   onZeiger?: (zeiger: { x: number; y: number; art: Zeigerart } | null) => void;
 }
 
@@ -51,6 +55,7 @@ interface Druck { startX: number; startY: number; x: number; y: number; art: Zei
  * ganzen Strecke seit dem Druck, damit ein Tipp die Kamera nicht bewegt.
  */
 export function attachCameraInput(element: HTMLElement, rueckrufe: EingabeRueckrufe = {}): () => void {
+  // Pointer-Ereignisse decken Maus, Stift und Berührung gemeinsam ab.
   const aktive = new Map<number, Druck>();
   let letzterPinchAbstand: number | null = null;
 
@@ -78,13 +83,18 @@ export function attachCameraInput(element: HTMLElement, rueckrufe: EingabeRueckr
     }
     element.setPointerCapture(e.pointerId);
     letzterPinchAbstand = pinchAbstand();
-    rueckrufe.onZeiger?.(null);
+    // Maus und Stift behalten die Hervorhebung während des Drucks: Ein nur durch
+    // Hover gezeigter Name bleibt so bis zum pointerup sichtbar und treffbar.
+    // Erst das Ziehen (onPointerMove), eine Geste, ein Abbruch oder das Verlassen
+    // löschen sie. Berührung kennt keinen Hover.
+    if (aktive.size >= 2 || e.pointerType === 'touch') rueckrufe.onZeiger?.(null);
   };
 
   const onPointerMove = (e: PointerEvent): void => {
     const d = aktive.get(e.pointerId);
     if (d === undefined) {
-      if (aktive.size === 0 && e.pointerType !== 'touch') {
+      // buttons: Eine außerhalb gedrückte Taste (Regler, Textauswahl) zählt als Druck.
+      if (aktive.size === 0 && e.pointerType !== 'touch' && e.buttons === 0) {
         rueckrufe.onZeiger?.({ ...lokal(e), art: zeigerartVon(e.pointerType) });
       }
       return;
@@ -106,6 +116,8 @@ export function attachCameraInput(element: HTMLElement, rueckrufe: EingabeRueckr
       if (Math.hypot(d.x - d.startX, d.y - d.startY) <= TIPP_SCHWELLE_PX[d.art]) return;
       d.zieht = true;
       d.tippbar = false;
+      // Während des Ziehens gibt es keine Hervorhebung (Entwurf Klickflächen §5).
+      rueckrufe.onZeiger?.(null);
       drehe(d.x - d.startX, d.y - d.startY);
       return;
     }
@@ -123,7 +135,10 @@ export function attachCameraInput(element: HTMLElement, rueckrufe: EingabeRueckr
     }
   };
   const onPointerUp = (e: PointerEvent): void => { beende(e, true); };
-  const onPointerCancel = (e: PointerEvent): void => { beende(e, false); };
+  const onPointerCancel = (e: PointerEvent): void => {
+    beende(e, false);
+    rueckrufe.onZeiger?.(null);
+  };
   const onPointerLeave = (): void => { rueckrufe.onZeiger?.(null); };
 
   const onWheel = (e: WheelEvent): void => {

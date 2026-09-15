@@ -15,6 +15,7 @@ import { QUALITY_SETTINGS } from './quality';
 import { ablageHolen } from '../store/persist';
 import { sicherungStarten, startZustand } from './persistenz';
 import { fahreZu } from '../ui/kamerafahrt';
+import { zeigerAusgeblendet } from '../ui/idle';
 
 /**
  * Einstiegspunkt der Anwendung.
@@ -77,6 +78,10 @@ function App(): React.JSX.Element {
       // denselben Stand sehen.
       tickCinema(dt);
       const state = useStore.getState();
+      // Unter dem ausgeblendeten Mauszeiger ruht der Hover (Entwurf Klickflächen
+      // §7): Sonst höben im Kino vorbeiziehende Bahnen und Monde sich hervor. Die
+      // nächste Mausbewegung meldet den Zeiger über onZeiger neu.
+      if (zeigerAusgeblendet()) szene.setZeiger(null);
       szene.update(jd, dt, state);
 
       const zeigerForm = szene.hervorgehoben() === null ? '' : 'pointer';

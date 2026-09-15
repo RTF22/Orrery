@@ -48,6 +48,17 @@ export function createIdleWatcher(optionen: IdleOptionen): {
 const EINGABE_EREIGNISSE = ['pointerdown', 'pointermove', 'wheel', 'keydown', 'touchstart'];
 
 /**
+ * Ruhezustand des Mauszeigers, synchron mit dem Wächter gesetzt. Die Klasse
+ * `zeiger-aus` folgt erst in Reacts Effekt; die Szene fragt aber je Bild ab,
+ * und Chrome liefert pointermove direkt vor dem nächsten Animationsframe. Mit
+ * der Klasse als Quelle löschte dieses Bild den eben gemeldeten Zeiger wieder.
+ */
+let zeigerAus = false;
+
+/** Ist der Mauszeiger gerade wegen Untätigkeit ausgeblendet? */
+export const zeigerAusgeblendet = (): boolean => zeigerAus;
+
+/**
  * Verbindet den Wächter mit den Ereignissen des Fensters und liefert, ob
  * gerade Ruhe herrscht. Der Mauszeiger wird über eine Klasse am
  * Wurzelelement ausgeblendet, damit CSS und nicht JavaScript die
@@ -58,8 +69,8 @@ export function useIdleHide(): boolean {
 
   useEffect(() => {
     const waechter = createIdleWatcher({
-      onIdle: () => { setUntaetig(true); },
-      onActive: () => { setUntaetig(false); },
+      onIdle: () => { zeigerAus = true; setUntaetig(true); },
+      onActive: () => { zeigerAus = false; setUntaetig(false); },
       onTick: (jetztMs) => { resumeIfIdle(jetztMs); },
     });
 
@@ -85,6 +96,7 @@ export function useIdleHide(): boolean {
         window.removeEventListener(name, beiEingabe);
       }
       waechter.dispose();
+      zeigerAus = false;
     };
   }, []);
 

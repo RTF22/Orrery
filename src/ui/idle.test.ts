@@ -1,5 +1,11 @@
-import { describe, it, expect, vi } from 'vitest';
-import { createIdleWatcher, IDLE_HIDE_SEC } from './idle';
+// @vitest-environment jsdom
+import {
+  describe, it, expect, vi, afterEach,
+} from 'vitest';
+import { act, renderHook } from '@testing-library/react';
+import {
+  createIdleWatcher, IDLE_HIDE_SEC, useIdleHide, zeigerAusgeblendet,
+} from './idle';
 
 describe('createIdleWatcher', () => {
   it('meldet Untätigkeit erst nach der Wartezeit', () => {
@@ -39,5 +45,34 @@ describe('createIdleWatcher', () => {
     w.tick(2000);
     expect(onTick).toHaveBeenNthCalledWith(1, 1000);
     expect(onTick).toHaveBeenNthCalledWith(2, 2000);
+  });
+});
+
+describe('zeigerAusgeblendet', () => {
+  afterEach(() => { vi.useRealTimers(); });
+
+  it('gilt ab der Ruhezeit und endet schon mit der Weckeingabe, bevor die Klasse fällt', () => {
+    vi.useFakeTimers();
+    const hook = renderHook(() => useIdleHide());
+    expect(zeigerAusgeblendet()).toBe(false);
+
+    act(() => { vi.advanceTimersByTime((IDLE_HIDE_SEC + 1) * 1000); });
+    expect(zeigerAusgeblendet()).toBe(true);
+    expect(document.documentElement.classList.contains('zeiger-aus')).toBe(true);
+
+    // Die Szene fragt je Bild ab; das Bild direkt nach der Weckbewegung darf den
+    // frisch gemeldeten Zeiger nicht wieder löschen, auch wenn Reacts Effekt die
+    // Klasse erst später entfernt.
+    act(() => {
+      window.dispatchEvent(new Event('pointermove'));
+      expect(zeigerAusgeblendet()).toBe(false);
+      expect(document.documentElement.classList.contains('zeiger-aus')).toBe(true);
+    });
+    expect(document.documentElement.classList.contains('zeiger-aus')).toBe(false);
+
+    act(() => { vi.advanceTimersByTime((IDLE_HIDE_SEC + 1) * 1000); });
+    expect(zeigerAusgeblendet()).toBe(true);
+    hook.unmount();
+    expect(zeigerAusgeblendet()).toBe(false);
   });
 });
