@@ -1,6 +1,6 @@
 # Dione
 
-Dione measures 1,123 km and orbits [Saturn](objekt:saturn) at 377,000 km in 2.74 days.
+Dione measures 1,123 km and orbits [Saturn](objekt:saturn) at 378,000 km in 2.74 days.
 At 1.48 g/cm³ it is denser than [Tethys](objekt:tethys) and contains a significant
 share of rock besides ice. It is in a 2:1 resonance with [Enceladus](objekt:enceladus)
 and keeps that moon's orbit slightly elliptical, so that the tidal heating there does

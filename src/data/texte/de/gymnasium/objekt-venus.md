@@ -16,6 +16,6 @@ steht fast aufrecht, aber auf dem Kopf. Die Wolkenschicht dagegen umrundet den P
 in nur vier Tagen.
 
 Ihre Bahn ist mit e ≈ 0,007 die kreisähnlichste aller Planeten. Von der Erde aus zeigt
-Venus Phasen wie der Mond; Galilei sah darin 1610 einen Beleg für das heliozentrische
-Weltbild. Kennzahlen: [NSSDC Venus Fact Sheet](quelle:nssdc-venus); Überblick:
-[Venus bei NASA](quelle:nasa-venus).
+Venus Phasen wie der Mond; Galilei sah darin 1610 einen Beleg gegen das geozentrische
+Weltbild des Ptolemäus. Kennzahlen: [NSSDC Venus Fact Sheet](quelle:nssdc-venus);
+Überblick: [Venus bei NASA](quelle:nasa-venus).

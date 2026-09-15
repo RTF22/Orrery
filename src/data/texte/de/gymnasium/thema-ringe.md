@@ -9,12 +9,12 @@ Durchmesser meist nur etwa zehn Meter dick.
 
 Ringe liegen meist innerhalb der Roche-Grenze. Dort sind die Gezeitenkräfte des
 Planeten stärker als die Schwerkraft, mit der sich lose Brocken zu einem Mond
-zusammenballen könnten. Monde formen die Ringe: [Mimas](objekt:mimas) räumt über eine
-2:1-Resonanz die Cassini-Teilung, die kleinen Schäfermonde Prometheus und Pandora
-halten den schmalen F-Ring zusammen, und der Mond Pan hält die Encke-Lücke offen. Wie
-alt Saturns Ringe sind, ist umstritten: Cassini-Messungen ihrer Masse und des
-einfallenden Staubs sprechen für höchstens einige hundert Millionen Jahre, andere
-Modelle halten sie für so alt wie das Sonnensystem.
+zusammenballen könnten. Monde formen die Ringe: Die 2:1-Resonanz mit [Mimas](objekt:mimas)
+begrenzt den Außenrand des B-Rings und damit den Innenrand der Cassini-Teilung, die
+kleinen Schäfermonde Prometheus und Pandora halten den schmalen F-Ring zusammen, und
+der Mond Pan hält die Encke-Lücke offen. Wie alt Saturns Ringe sind, ist umstritten:
+Cassini-Messungen ihrer Masse und des einfallenden Staubs sprechen für höchstens einige
+hundert Millionen Jahre, andere Modelle halten sie für so alt wie das Sonnensystem.
 
 Die Ringe des [Uranus](objekt:uranus) wurden 1977 entdeckt, als der Planet vor einem
 Stern vorbeizog und das Sternlicht vorher und nachher mehrfach kurz erlosch. Sie sind

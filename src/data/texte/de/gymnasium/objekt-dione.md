@@ -1,6 +1,6 @@
 # Dione
 
-Dione misst 1 123 km und umläuft [Saturn](objekt:saturn) in 377 000 km Abstand in
+Dione misst 1 123 km und umläuft [Saturn](objekt:saturn) in 378 000 km Abstand in
 2,74 Tagen. Mit 1,48 g/cm³ ist sie dichter als [Tethys](objekt:tethys) und enthält neben
 Eis einen deutlichen Anteil Gestein. Sie steht mit [Enceladus](objekt:enceladus) in
 einer 2:1-Resonanz und hält dessen Bahn leicht elliptisch, so dass die Gezeitenheizung

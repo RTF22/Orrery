@@ -8,18 +8,24 @@ Näherung ist bewusst gewählt und hat bekannte Grenzen.
 - **Keine Bahnstörungen:** In Wirklichkeit ziehen die Planeten aneinander; hier zieht
   nur die Sonne. Die Elemente enthalten die mittlere Wirkung der Störungen als
   lineare Raten, nicht die kurzperiodischen Schwankungen.
+- **Sonne im Ursprung:** Die Simulation setzt die Sonne fest in den Ursprung. In
+  Wirklichkeit umlaufen Sonne und Planeten den gemeinsamen Schwerpunkt, den vor allem
+  Jupiter bis knapp außerhalb der Sonnenoberfläche verschiebt. Die Planetenbahnen sind
+  heliozentrisch gerechnet.
 - **Genauigkeitsfenster 1800 bis 2050:** Nur in diesem Zeitraum sind die verwendeten
   Elemente belastbar. Außerhalb wächst der Fehler, der Datenblock warnt dann.
 - **Keine Präzession, keine Nutation:** Die Rotationsachsen stehen fest im Raum. Die
   Erdachse wandert in Wirklichkeit in rund 26 000 Jahren einmal um den Ekliptikpol.
 - **Nicht gemessene Achsen:** Für [Eris](objekt:eris) und [Makemake](objekt:makemake)
   ist die Richtung der Drehachse unbekannt; die Simulation stellt sie senkrecht auf die
-  Bahn, der Datenblock zeigt dann 0° Achsneigung. Der Pol von [Triton](objekt:triton)
-  ist ohne seine periodischen Schwankungen hinterlegt, seine Achsneigung im Datenblock
-  ist deshalb nicht belastbar.
+  Bahn, der Datenblock zeigt dann 0° Achsneigung. Die Pole von [Triton](objekt:triton)
+  und [Miranda](objekt:miranda) sind ohne ihre periodischen Schwankungen hinterlegt,
+  ihre Achsneigungen im Datenblock sind deshalb nicht belastbar. Der Pol von
+  [Haumea](objekt:haumea) ist nur aus Lichtkurven erschlossen und mehrdeutig; die
+  Simulation übernimmt eine von zwei Lösungen.
 - **Monde auf vereinfachter Ebene:** Viele Mondbahnen beziehen sich auf die
-  Äquatorebene ihres Planeten (Laplace-Ebene), nicht auf die genaue Bewegung ihrer
-  Bahnpole.
+  Äquatorebene ihres Planeten (bei nahen Monden praktisch die Laplace-Ebene), nicht auf
+  die genaue Bewegung ihrer Bahnpole.
 - **Erde als Schwerpunkt:** Die Tabelle liefert den Erde-Mond-Schwerpunkt; die
   Abweichung zum Erdmittelpunkt liegt unter 4 700 km.
 

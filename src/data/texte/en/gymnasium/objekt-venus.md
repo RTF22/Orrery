@@ -16,6 +16,7 @@ shorter: 117 days. The retrograde spin is contained in the
 The cloud layer, by contrast, circles the planet in only four days.
 
 Its orbit, with e ≈ 0.007, is the most nearly circular of all the planets. Seen from
-Earth, Venus shows phases like the Moon; in 1610 Galileo took them as evidence for the
-heliocentric system. Key figures: [NSSDC Venus Fact Sheet](quelle:nssdc-venus);
-overview: [Venus at NASA](quelle:nasa-venus).
+Earth, Venus shows phases like the Moon; in 1610 Galileo took them as evidence against
+the geocentric system of Ptolemy. Key figures:
+[NSSDC Venus Fact Sheet](quelle:nssdc-venus); overview:
+[Venus at NASA](quelle:nasa-venus).

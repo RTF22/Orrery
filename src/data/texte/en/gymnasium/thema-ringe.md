@@ -9,11 +9,12 @@ across, are mostly only about ten metres thick.
 
 Rings usually lie inside the Roche limit. There the planet's tidal forces are stronger
 than the gravity with which loose chunks could clump together into a moon. Moons shape
-the rings: [Mimas](objekt:mimas) clears the Cassini Division through a 2:1 resonance,
-the small shepherd moons Prometheus and Pandora hold the narrow F ring together, and
-the moon Pan keeps the Encke Gap open. How old Saturn's rings are is disputed: Cassini
-measurements of their mass and of infalling dust suggest a few hundred million years
-at most, while other models consider them as old as the Solar System.
+the rings: the 2:1 resonance with [Mimas](objekt:mimas) limits the outer edge of the
+B ring and thus the inner edge of the Cassini Division, the small shepherd moons
+Prometheus and Pandora hold the narrow F ring together, and the moon Pan keeps the Encke
+Gap open. How old Saturn's rings are is disputed: Cassini measurements of their mass
+and of infalling dust suggest a few hundred million years at most, while other models
+consider them as old as the Solar System.
 
 The rings of [Uranus](objekt:uranus) were discovered in 1977, when the planet passed in
 front of a star and the starlight briefly dimmed several times before and after. They
