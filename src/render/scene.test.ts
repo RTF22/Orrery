@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import type { LightingSettings } from './lighting';
 import { exposureFor } from './exposure';
 import { SCALE_PRESETS } from '../sim/scale';
+import { projiziereZug } from './treffer';
 
 // createBodyViews lädt beim Aufbau Texturen über THREE.TextureLoader, was in
 // der Node-Testumgebung (kein document) fehlschlagen würde — hier interessiert
@@ -41,8 +42,15 @@ vi.mock('./labels', () => ({
 }));
 
 const updateSpion = vi.fn();
+/**
+ * Bahnlinien, wie sie die reale orbits.ts in `lines` hielte (Entwurf
+ * Klickflächen §4.4: kandidaten() liest Sichtbarkeit und Puffer daraus).
+ * Je Test befüllt, sonst leer — der Mock liest testLinien bei jedem
+ * buildScene()-Aufruf frisch.
+ */
+let testLinien = new Map<string, THREE.Line>();
 vi.mock('./orbits', () => ({
-  createOrbitLines: () => ({ update: updateSpion, lines: new Map() }),
+  createOrbitLines: () => ({ update: updateSpion, lines: testLinien }),
 }));
 
 const { buildScene } = await import('./scene');
@@ -178,5 +186,74 @@ describe('buildScene — Zeiger und Treffer', () => {
     expect(szene.trefferBei(40, 10, 'maus')).toBeNull();
     expect(szene.trefferBei(30, 10, 'finger')).toBe('mars');
     testScheiben = [];
+  });
+
+  it('behandelt Bahnlinien als Kandidaten: nur sichtbare treffen (Entwurf §4.4)', () => {
+    const ctx = fakeContext();
+    const echoOverlay = { clientWidth: 800, clientHeight: 600 } as HTMLElement;
+
+    const geoNeptun = new THREE.BufferGeometry();
+    geoNeptun.setAttribute('position', new THREE.BufferAttribute(new Float32Array(6), 3));
+    const neptunLinie = new THREE.Line(geoNeptun);
+    const geoPluto = new THREE.BufferGeometry();
+    geoPluto.setAttribute('position', new THREE.BufferAttribute(new Float32Array(6), 3));
+    const plutoLinie = new THREE.Line(geoPluto);
+    neptunLinie.visible = true;
+    plutoLinie.visible = false;
+    testLinien = new Map([['neptune', neptunLinie], ['pluto', plutoLinie]]);
+
+    const szene = buildScene(ctx, echoOverlay, (k) => k);
+    // Große Zeitschritte wie im Blickmatrix-Test oben: Die Kamera schwingt
+    // auf ihr Ziel ein, damit die folgenden kleinen Schritte sie kaum noch
+    // bewegen — die Bildstelle unten bleibt über alle update()-Aufrufe gültig.
+    szene.update(2451545.0, 5, DEFAULT_STATE);
+    szene.update(2451545.0, 5, DEFAULT_STATE);
+
+    // Zwei Punkte entlang der tatsächlichen Blickrichtung: Sie landen für
+    // jede Kameraausrichtung in der Bildmitte — die Kameraausrichtung des
+    // Tests spielt damit keine Rolle.
+    const richtung = new THREE.Vector3();
+    ctx.camera.getWorldDirection(richtung);
+    const a = richtung.clone().multiplyScalar(100);
+    const b = richtung.clone().multiplyScalar(150);
+    for (const geo of [geoNeptun, geoPluto]) {
+      const attr = geo.getAttribute('position') as THREE.BufferAttribute;
+      attr.setXYZ(0, a.x, a.y, a.z);
+      attr.setXYZ(1, b.x, b.y, b.z);
+      attr.needsUpdate = true;
+    }
+
+    // Bildstelle mit denselben Matrizen und derselben Projektion wie
+    // kandidaten() in scene.ts berechnen (Segmentmittelpunkt).
+    const blick = new THREE.Matrix4()
+      .multiplyMatrices(ctx.camera.projectionMatrix, ctx.camera.matrixWorldInverse);
+    const punkte = new Float64Array(4);
+    projiziereZug(
+      new Float64Array([a.x, a.y, a.z, b.x, b.y, b.z]), 2, blick,
+      echoOverlay.clientWidth, echoOverlay.clientHeight, punkte,
+    );
+    // Kein NaN heißt: vor der Kamera (siehe projiziereZug, w > 0).
+    expect(Number.isNaN(punkte[0])).toBe(false);
+    expect(Number.isNaN(punkte[1])).toBe(false);
+    const x = (punkte[0]! + punkte[2]!) / 2;
+    const y = (punkte[1]! + punkte[3]!) / 2;
+    expect(x).toBeGreaterThanOrEqual(0);
+    expect(x).toBeLessThanOrEqual(echoOverlay.clientWidth);
+    expect(y).toBeGreaterThanOrEqual(0);
+    expect(y).toBeLessThanOrEqual(echoOverlay.clientHeight);
+
+    expect(szene.trefferBei(x, y, 'maus')).toBe('neptune');
+
+    neptunLinie.visible = false;
+    plutoLinie.visible = true;
+    szene.update(2451545.0, 0.016, DEFAULT_STATE);
+    expect(szene.trefferBei(x, y, 'maus')).toBe('pluto');
+
+    neptunLinie.visible = false;
+    plutoLinie.visible = false;
+    szene.update(2451545.0, 0.016, DEFAULT_STATE);
+    expect(szene.trefferBei(x, y, 'maus')).toBeNull();
+
+    testLinien = new Map();
   });
 });
