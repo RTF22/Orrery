@@ -177,13 +177,13 @@ export function InfoPanel(): React.JSX.Element {
   );
   const body = kennung.art === 'objekt' ? bodyIndex[kennung.kennung] : undefined;
   const hinweise: string[] = [];
-  // frisch statt anzeige !== null: Während eines Wechsels (neue Kennung,
-  // neues Niveau oder neue Sprache) beschreibt der alte Anzeigestand sonst
-  // fälschlich den neuen — der Hinweis würde kurz den Stand des VORIGEN
-  // Ziels zeigen.
+  // Alle drei Hinweise nur für den frischen Stand: Während eines Wechsels
+  // (neue Kennung, neues Niveau oder neue Sprache) beschreibt der alte
+  // Anzeigestand sonst fälschlich den neuen — etwa kurz „nicht übersetzt"
+  // direkt nach einem Sprachwechsel.
   if (frisch && geladen === null) hinweise.push('info.keinText');
-  if (geladen !== null && info.niveau === 'hochschule' && geladen.niveau !== 'hochschule') hinweise.push('info.hochschuleFolgt');
-  if (geladen !== null && geladen.sprache !== language) hinweise.push('info.nichtUebersetzt');
+  if (frisch && geladen !== null && info.niveau === 'hochschule' && geladen.niveau !== 'hochschule') hinweise.push('info.hochschuleFolgt');
+  if (frisch && geladen !== null && geladen.sprache !== language) hinweise.push('info.nichtUebersetzt');
 
   const tabTasten = (e: KeyboardEvent<HTMLDivElement>): void => {
     const i = NIVEAUS.indexOf(info.niveau);
