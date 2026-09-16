@@ -26,6 +26,12 @@ Näherung ist bewusst gewählt und hat bekannte Grenzen.
 - **Monde auf vereinfachter Ebene:** Viele Mondbahnen beziehen sich auf die
   Äquatorebene ihres Planeten (bei nahen Monden praktisch die Laplace-Ebene), nicht auf
   die genaue Bewegung ihrer Bahnpole.
+- **Ruhende Mutterkörper:** Monde umlaufen hier den Mittelpunkt ihres Planeten oder
+  Zwergplaneten, der selbst nicht um den gemeinsamen Schwerpunkt pendelt. Meist liegt
+  dieser Punkt im Inneren des größeren Körpers. Bei [Pluto](objekt:pluto) und
+  [Charon](objekt:charon) liegt er rund 900 km über Plutos Oberfläche; Pluto müsste
+  deshalb alle 6,4 Tage einen Kreis von rund 2 100 km Radius ziehen, den die Simulation
+  weglässt.
 - **Erde als Schwerpunkt:** Die Tabelle liefert den Erde-Mond-Schwerpunkt; die
   Abweichung zum Erdmittelpunkt liegt unter 4 700 km.
 

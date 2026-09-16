@@ -17,16 +17,6 @@ const MUSTER = /^\.\/(de|en)\/(grundschule|gymnasium|hochschule)\/(objekt|szene|
  */
 const WORTGRENZE: Record<Niveau, number> = { grundschule: 110, gymnasium: Infinity, hochschule: Infinity };
 
-/**
- * Szenen, deren Texte Etappe 4c-4 erst schreibt. Verweise auf sie dürfen bis
- * dahin ohne Text bleiben; jede Text-Task streicht ihre Einträge, die letzte
- * entfernt die Liste samt ihrer Prüfung.
- */
-const AUSSTEHEND: ReadonlySet<string> = new Set<string>([
-  // Task 8
-  'szene:uranus-gekippt', 'szene:triton-rueckwaerts', 'szene:ceres-guertel',
-]);
-
 /** Zählt Wörter ohne die Link-Ziele in Klammern. */
 function woerter(text: string): number {
   return text.replace(/\]\([^)]*\)/g, ']').split(/\s+/).filter((w) => w.length > 0).length;
@@ -82,7 +72,7 @@ describe('Textdateien', () => {
         const [, sprache, niveau] = treffer ?? [];
         for (const ziel of verweisZiele(text)) {
           const textziel = textZiel(ziel);
-          if (textziel === null || AUSSTEHEND.has(ziel)) continue;
+          if (textziel === null) continue;
           const pfadZiel = `./${sprache}/${niveau}/${textziel.art}-${textziel.kennung}.md`;
           expect(Object.hasOwn(dateien, pfadZiel), `Verweis ${ziel}: ${pfadZiel} fehlt`).toBe(true);
         }
@@ -104,13 +94,6 @@ describe('Textdateien', () => {
     for (const pfad of pfade) {
       const partner = pfad.startsWith('./de/') ? pfad.replace('./de/', './en/') : pfad.replace('./en/', './de/');
       expect(pfade.has(partner), `Gegenstück fehlt: ${partner}`).toBe(true);
-    }
-  });
-
-  it('führt als ausstehend nur Szenen, zu denen es noch keinen Text gibt', () => {
-    for (const ziel of AUSSTEHEND) {
-      const endung = `/${ziel.replace(':', '-')}.md`;
-      expect(Object.keys(dateien).filter((pfad) => pfad.endsWith(endung)), ziel).toEqual([]);
     }
   });
 });

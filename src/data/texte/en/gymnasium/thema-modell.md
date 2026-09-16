@@ -24,6 +24,11 @@ that change slowly with time. This approximation is deliberate and has known lim
 - **Moons on a simplified plane:** Many lunar orbits refer to the equatorial plane of
   their planet (for close moons practically the Laplace plane), not to the exact motion
   of their orbital poles.
+- **Parent bodies at rest:** Here moons orbit the centre of their planet or dwarf planet,
+  which does not itself swing around the common centre of mass. Usually this point lies
+  inside the larger body. For [Pluto](objekt:pluto) and [Charon](objekt:charon) it lies
+  about 900 km above Pluto's surface; Pluto should therefore trace a circle with a radius
+  of about 2,100 km every 6.4 days, which the simulation leaves out.
 - **Earth as barycentre:** The table gives the Earth-Moon barycentre; the deviation
   from the Earth's centre is below 4,700 km.
 
