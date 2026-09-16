@@ -43,6 +43,19 @@ describe('Markdown', () => {
     expect(onVerweis).toHaveBeenCalledTimes(1);
   });
 
+  it('trägt das Ziel jedes aufgelösten Verweises als data-verweis, unbekannte Ziele nicht', () => {
+    render(
+      <Markdown
+        text="[Erde](objekt:earth), [Karte](quelle:nssdc-earth), [Seite](https://example.org), [Nichts](objekt:vulcan)."
+        onVerweis={() => {}}
+      />,
+    );
+    expect(screen.getByRole('button', { name: 'Erde' }).getAttribute('data-verweis')).toBe('objekt:earth');
+    expect(screen.getByRole('link', { name: 'Karte' }).getAttribute('data-verweis')).toBe('quelle:nssdc-earth');
+    expect(screen.getByRole('link', { name: 'Seite' }).getAttribute('data-verweis')).toBe('https://example.org');
+    expect(screen.getByText('Nichts').hasAttribute('data-verweis')).toBe(false);
+  });
+
   it('externe https-Ziele sind Anker im neuen Tab; Unbekanntes bleibt Text', () => {
     render(<Markdown text="[ESA](https://www.esa.int/) und [tot](objekt:vulcan) und [böse](javascript:alert(1))" onVerweis={() => {}} />);
     const esa = screen.getByRole('link', { name: 'ESA' }) as HTMLAnchorElement;

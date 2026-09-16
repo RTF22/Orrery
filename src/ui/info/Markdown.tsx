@@ -16,11 +16,16 @@ interface Props {
 /** Mittelklick, Strg-, Cmd- oder Umschalt-Klick: der Browser öffnet den Tab, wir greifen nicht ein. */
 const willNeuenTab = (e: MouseEvent): boolean => e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey;
 
+/**
+ * Ein Verweis im Text. `data-verweis` trägt das Ziel aus der Datei, damit
+ * Rundgänge im Browser die Art eines Verweises ablesen können, statt sie aus
+ * Store-Änderungen zu erschließen (Abnahme 4c-3, Bekannte Unschärfen 8).
+ */
 function Verweisknoten({ ziel, onVerweis, children }: { ziel: string; onVerweis: (v: Verweis) => void; children: ReactNode }): React.JSX.Element {
   const v = verweisAufloesen(ziel);
   if (v === null) return <span>{children}</span>;
   if (v.art === 'extern') {
-    return <a href={v.url} target="_blank" rel="noopener noreferrer" className={VERWEIS_KNOPF}>{children}</a>;
+    return <a href={v.url} target="_blank" rel="noopener noreferrer" className={VERWEIS_KNOPF} data-verweis={ziel}>{children}</a>;
   }
   if (v.art === 'quelle') {
     // Anker mit echter Adresse: Mittelklick öffnet den Tab, Linksklick hebt
@@ -31,6 +36,7 @@ function Verweisknoten({ ziel, onVerweis, children }: { ziel: string; onVerweis:
         target="_blank"
         rel="noopener noreferrer"
         className={VERWEIS_KNOPF}
+        data-verweis={ziel}
         onClick={(e) => {
           if (willNeuenTab(e)) return;
           e.preventDefault();
@@ -42,7 +48,7 @@ function Verweisknoten({ ziel, onVerweis, children }: { ziel: string; onVerweis:
     );
   }
   return (
-    <button type="button" className={VERWEIS_KNOPF} onClick={() => { onVerweis(v); }}>
+    <button type="button" className={VERWEIS_KNOPF} data-verweis={ziel} onClick={() => { onVerweis(v); }}>
       {children}
     </button>
   );
