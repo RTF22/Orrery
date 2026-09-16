@@ -1577,3 +1577,436 @@ git commit -m "Szenentexte Grundschule und Gymnasium: Phobos-Tiefflug, Jupiter-V
 ```
 
 ---
+
+### Task 7: Szenen um Saturn
+
+**Sachstand (Planung, 16.09.2026):**
+- `saturn-streiflicht`: Umlaufkamera 5 Saturnradien (4 bis 7), Elevation 4° (1 bis 16), Azimut zufällig und 0,8°/s, 35 s bei 0,1 d/s. Ringschatten auf dem Planeten und Planetenschatten auf den Ringen berechnet der Schatten-Shader (Phase 3b); die Vorwärtsstreuung ist laut `render/rings.ts` ein Gestaltungswert. Sonnen-Ringebenendurchgang 06.05.2025, Abstände 13,75 und 15,75 Jahre. Cassini-Aufnahme „In Saturn's Shadow" 2006.
+- `saturn-ringkante`: feste Kamera 8 Saturnradien (6,4 bis 12) auf dem Ringebenen-Knoten 169,53°, Elevation 0° (±1,5°). Hauptringe Außenkante 136 780 km (Durchmesser 273 560 km), Innenkante C-Ring 74 658 km, Band 62 000 km ≈ 4,9 Erddurchmesser. Erde durch die Ringebene 23.03.2025, nächster Durchgang 2038. Janus entdeckt am 15.12.1966 während eines Ringebenendurchgangs.
+- `ringdurchflug`: gerader Vorbeiflug 2 Saturnradien (1,6 bis 3), Elevation 4° (1 bis 19) am selben Knoten; die Bahn liegt ekliptikal und entfernt sich von der um 28° geneigten Ringebene (Befund in `scenes.ts`). Bahngeschwindigkeit √(GM/r) mit GM = 37 931 187 km³/s²: 22,5 km/s bei 74 658 km, 16,7 km/s bei 136 780 km. Cassini Grand Finale: 22 Durchgänge durch die rund 2 000 km breite Lücke, Ende 15.09.2017 (NASA).
+- `titan-dunst`: Umlaufkamera 7 Titanradien, Azimut 11°/s (32,7 s je Umlauf), Saturn laut Befund nicht garantiert im Bild. Titantextur ist ein Nahinfrarot-Mosaik, das den Dunst durchdringt (`ASSETS.md`); eine Atmosphäre wird nicht gezeichnet. Saturn von Titan aus: 120 536 km / 1 221 870 km = 5,65°.
+- `enceladus-hell`: Umlaufkamera 5 Enceladusradien auf der Sonnenseite (Azimut aus der Richtung Saturn→Sonne). Fontänen werden nicht gezeichnet; Enceladustextur aus Cassini-Aufnahmen. Rückstrahlung rund 80 % wie im Gymnasialtext `objekt-enceladus.md`; Oberflächentemperatur im Mittel rund 75 K.
+- `iapetus-schief`: Umlaufkamera um Saturn, 40 Saturnradien, Elevation 45° (30 bis 60), 30 s bei 3 d/s = 90 d = 1,13 Umläufe (79,33 d). Bahn 3 562 568 km = 61,2 Saturnradien, Titan 1 221 870 km (Faktor 2,9); Neigung 15,47° gegen Saturns Äquator. Cassini entdeckte Iapetus 1671 und sah ihn nur westlich von Saturn.
+
+**Dateien:**
+- Erstellen: `src/data/texte/{de,en}/{grundschule,gymnasium}/szene-{saturn-streiflicht,saturn-ringkante,ringdurchflug,titan-dunst,enceladus-hell,iapetus-schief}.md`
+- Ändern: `src/data/texte/dateien.test.ts` (sechs Einträge aus `AUSSTEHEND` streichen)
+
+**Schnittstellen:**
+- Konsumiert: Quellenkarten aus Task 2 (`nasa-cassini`, `jpl-photojournal-saturn`, `pds-rings`, `esa-cassini-huygens`, `nssdc-saturnmonde`); Verweise `objekt:saturn`, `objekt:sun`, `objekt:titan`, `objekt:enceladus`, `objekt:iapetus`, `thema:ringe`, `thema:gebundene-rotation`.
+- Produziert: nichts für spätere Tasks.
+
+- [ ] **Schritt 1: Dateien anlegen**
+
+`de/grundschule/szene-saturn-streiflicht.md`:
+```markdown
+# Saturn im Streiflicht
+
+Die Kamera kreist nah um den [Saturn](objekt:saturn) und schaut fast von der Seite auf
+seine [Ringe](thema:ringe). Die Ringe sind riesig breit, aber hauchdünn. Das Licht der
+[Sonne](objekt:sun) fällt schräg auf sie. Oft siehst du deshalb lange Schatten: Der Planet
+wirft einen Schatten auf die Ringe, und die Ringe werfen einen Schatten auf den Planeten.
+Wie groß die Schatten sind, hängt davon ab, wo Saturn gerade auf seiner Bahn steht.
+```
+
+`en/grundschule/szene-saturn-streiflicht.md`:
+```markdown
+# Saturn in grazing light
+
+The camera circles close to [Saturn](objekt:saturn) and looks at its
+[rings](thema:ringe) almost from the side. The rings are hugely wide but wafer-thin.
+Light from the [Sun](objekt:sun) falls on them at a slant. That is why you often see long
+shadows: the planet casts a shadow on the rings, and the rings cast a shadow on the
+planet. How big the shadows are depends on where Saturn is on its orbit at the moment.
+```
+
+`de/gymnasium/szene-saturn-streiflicht.md`:
+```markdown
+# Szene: Saturn im Streiflicht
+
+Die Kamera umkreist [Saturn](objekt:saturn) in rund fünf Saturnradien Abstand, flach über
+der Ekliptik. Saturns Äquator und damit die [Ringe](thema:ringe) sind um 26,7° gegen seine
+Bahn geneigt. Im Lauf eines Saturnjahres von 29,5 Jahren steht die [Sonne](objekt:sun)
+deshalb bis zu 26,7° nördlich oder südlich der Ringebene. Zweimal je Umlauf, im Wechsel
+nach knapp 14 und knapp 16 Jahren, steht sie genau in der Ebene; dann streift das Licht
+die Ringe nur, und sie werden sehr dunkel. So war es zuletzt am 6. Mai 2025.
+
+Flach einfallendes Licht macht lange Schatten: Die Ringe zeichnen ein dunkles Band auf die
+Wolken, und der Planet legt seinen Schatten über die Ringe. Beides berechnet die Simulation
+aus der Stellung der Sonne. Im Gegenlicht leuchten feine Staubteilchen der Ringe auf, weil
+sie Licht bevorzugt nach vorn streuen; die Simulation deutet diese Vorwärtsstreuung an.
+2006 fotografierte die Raumsonde Cassini Saturn aus seinem Schatten heraus mit der Sonne
+dahinter, dabei traten sonst kaum sichtbare Staubringe hervor. Welche Ansicht die Szene
+zeigt, hängt von Datum und Blickrichtung ab. Mission: [Cassini](quelle:nasa-cassini);
+Bilder: [Photojournal Saturn](quelle:jpl-photojournal-saturn).
+```
+
+`en/gymnasium/szene-saturn-streiflicht.md`:
+```markdown
+# Scene: Saturn in grazing light
+
+The camera circles [Saturn](objekt:saturn) at about five Saturn radii, low above the
+ecliptic. Saturn's equator, and with it the [rings](thema:ringe), is tilted by 26.7° to its
+orbit. Over a Saturnian year of 29.5 years, the [Sun](objekt:sun) therefore stands up to
+26.7° north or south of the ring plane. Twice per orbit, alternately after almost 14 and
+almost 16 years, it lies exactly in that plane; then the light only grazes the rings and
+they become very dark. This last happened on 6 May 2025.
+
+Light at a low angle makes long shadows: the rings draw a dark band on the clouds, and the
+planet casts its shadow across the rings. The simulation calculates both from the position
+of the Sun. In backlight, fine dust particles in the rings light up because they scatter
+light mainly forwards; the simulation hints at this forward scattering. In 2006 the
+Cassini probe photographed Saturn from within its shadow with the Sun behind it, and faint
+dusty rings that are otherwise hard to see stood out. Which view the scene shows depends
+on the date and the viewing direction. Mission: [Cassini](quelle:nasa-cassini); pictures:
+[Photojournal Saturn](quelle:jpl-photojournal-saturn).
+```
+
+`de/grundschule/szene-saturn-ringkante.md`:
+```markdown
+# Saturns Ringe von der Kante
+
+Die Kamera steht genau in der Ebene der [Ringe](thema:ringe) des [Saturn](objekt:saturn).
+Von der Seite sind die riesigen Ringe fast nicht mehr zu sehen, nur noch ein feiner Strich.
+Sie sind so breit wie fast fünf Erden nebeneinander, aber meist nur so dick, wie ein Haus
+hoch ist. Von der Erde aus sieht man die Ringe etwa alle 15 Jahre so von der Kante, zuletzt
+im Jahr 2025.
+```
+
+`en/grundschule/szene-saturn-ringkante.md`:
+```markdown
+# Saturn's rings edge-on
+
+The camera stands exactly in the plane of the [rings](thema:ringe) of
+[Saturn](objekt:saturn). From the side the huge rings almost disappear; only a thin line
+is left. They are as wide as almost five Earths side by side, but mostly only as thick as
+a house is tall. From the Earth we see the rings edge-on like this about every 15 years,
+most recently in 2025.
+```
+
+`de/gymnasium/szene-saturn-ringkante.md`:
+```markdown
+# Szene: Saturns Ringe von der Kante
+
+Die Kamera steht in Saturns Äquatorebene, in der auch die [Ringe](thema:ringe) liegen, und
+blickt aus rund acht Saturnradien Abstand auf [Saturn](objekt:saturn). Die Hauptringe
+messen über 270 000 km im Durchmesser, sind aber meist nur etwa zehn Meter dick. Von der
+Kante gesehen schrumpfen sie deshalb zu einer feinen Linie. Die Kamera sitzt dazu in einer
+der beiden Richtungen, in denen die Ringebene die Ekliptik schneidet; schon ein Grad
+Abweichung öffnet die Ringe zu einer schmalen Ellipse.
+
+Von der Erde aus sieht man die Ringe zweimal in jedem Saturnjahr genau von der Kante, im
+Wechsel nach knapp 14 und knapp 16 Jahren; zuletzt geschah das am 23. März 2025, das
+nächste Mal 2038. In kleinen Fernrohren verschwinden sie dann fast ganz. Solche
+Gelegenheiten nutzten Astronomen, um lichtschwache Monde zu finden, die sonst im Glanz der
+Ringe untergehen; 1966 wurde so Janus entdeckt. Monde, deren Bahnen in der Ringebene
+liegen, scheinen auf der Linie der Ringe hin- und herzupendeln. Daten:
+[PDS Ring-Moon Systems Node](quelle:pds-rings).
+```
+
+`en/gymnasium/szene-saturn-ringkante.md`:
+```markdown
+# Scene: Saturn's rings edge-on
+
+The camera stands in Saturn's equatorial plane, which also contains the
+[rings](thema:ringe), and looks at [Saturn](objekt:saturn) from about eight Saturn radii.
+The main rings are more than 270,000 km across but mostly only about ten metres thick.
+Seen edge-on, they therefore shrink to a thin line. To achieve this, the camera sits in
+one of the two directions in which the ring plane crosses the ecliptic; a deviation of
+just one degree opens the rings into a narrow ellipse.
+
+From the Earth the rings are seen exactly edge-on twice in every Saturnian year,
+alternately after almost 14 and almost 16 years; this last happened on 23 March 2025, and
+the next time will be in 2038. In small telescopes they then almost vanish. Astronomers
+used such occasions to find faint moons that are otherwise lost in the glare of the
+rings; Janus was discovered this way in 1966. Moons whose orbits lie in the ring plane
+seem to swing back and forth along the line of the rings. Data:
+[PDS Ring-Moon Systems Node](quelle:pds-rings).
+```
+
+`de/grundschule/szene-ringdurchflug.md`:
+```markdown
+# Durchflug durch Saturns Ringe
+
+Die Kamera fliegt dicht an den [Ringen](thema:ringe) des [Saturn](objekt:saturn) vorbei
+und kreuzt dabei ihre Ebene. Die Ringe sind keine feste Scheibe, sondern unzählige
+Eisbrocken, vom Staubkorn bis zu mehreren Metern Größe. Jeder Brocken kreist wie ein
+winziger Mond um den Saturn. Eine echte Raumsonde würde bei einem Flug mitten durch die
+Ringe zerstört. Die Sonde Cassini flog deshalb 2017 durch die Lücke zwischen den Ringen
+und dem Planeten.
+```
+
+`en/grundschule/szene-ringdurchflug.md`:
+```markdown
+# Flying through Saturn's rings
+
+The camera flies close past the [rings](thema:ringe) of [Saturn](objekt:saturn) and
+crosses their plane. The rings are not a solid disc but countless chunks of ice, from
+grains of dust to several metres across. Each chunk circles Saturn like a tiny moon. A
+real space probe flying right through the rings would be destroyed. That is why the
+Cassini probe flew through the gap between the rings and the planet in 2017.
+```
+
+`de/gymnasium/szene-ringdurchflug.md`:
+```markdown
+# Szene: Durchflug durch Saturns Ringe
+
+Die Kamera zieht auf gerader Linie an [Saturn](objekt:saturn) vorbei, flach über der
+Ringebene und rund zwei Saturnradien vom Mittelpunkt entfernt, im Bereich der Hauptringe.
+Weil die Fahrt geradeaus führt, die Ringebene aber um 28° gegen die Ekliptik geneigt ist,
+kommt sie den [Ringen](thema:ringe) vor allem in der Mitte der Szene nahe.
+
+Jedes Ringteilchen umläuft Saturn auf seiner eigenen Keplerbahn, am Innenrand des C-Rings
+mit gut 22 km/s, am Außenrand des A-Rings mit knapp 17 km/s. Benachbarte Teilchen sind
+fast gleich schnell und stoßen nur mit Millimetern bis Zentimetern je Sekunde aneinander.
+Eine Raumsonde dagegen, die die Ebene mit vielen Kilometern je Sekunde kreuzt, würde schon
+von kleinen Brocken zerstört. Echte Sonden querten die Ringebene deshalb außerhalb der
+Hauptringe oder in Lücken. Cassini tauchte 2017 in ihrem Großen Finale 22-mal durch den
+rund 2 000 km breiten Spalt zwischen dem innersten Ring und dem Planeten, bevor sie am
+15. September in Saturns Atmosphäre verglühte.
+
+Im Gegenlicht, wenn Sonne, Ringe und Kamera fast auf einer Linie liegen, hellen feine
+Teilchen die Ringe auf; die Simulation deutet diese Vorwärtsstreuung an. Mission:
+[Cassini](quelle:nasa-cassini); Daten: [PDS Ring-Moon Systems Node](quelle:pds-rings).
+```
+
+`en/gymnasium/szene-ringdurchflug.md`:
+```markdown
+# Scene: Flying through Saturn's rings
+
+The camera moves past [Saturn](objekt:saturn) in a straight line, low above the ring plane
+and about two Saturn radii from the centre, in the region of the main rings. Because the
+path is straight while the ring plane is tilted by 28° to the ecliptic, it comes close to
+the [rings](thema:ringe) mainly in the middle of the scene.
+
+Every ring particle orbits Saturn on its own Kepler orbit, at just over 22 km/s at the
+inner edge of the C ring and at almost 17 km/s at the outer edge of the A ring.
+Neighbouring particles move at almost the same speed and bump into each other at only
+millimetres to centimetres per second. A space probe crossing the plane at many
+kilometres per second, however, would be destroyed even by small chunks. Real probes
+therefore crossed the ring plane outside the main rings or through gaps. In its Grand
+Finale in 2017, Cassini dived 22 times through the gap of about 2,000 km between the
+innermost ring and the planet, before burning up in Saturn's atmosphere on 15 September.
+
+In backlight, when the Sun, the rings and the camera almost line up, fine particles make
+the rings brighter; the simulation hints at this forward scattering. Mission:
+[Cassini](quelle:nasa-cassini); data: [PDS Ring-Moon Systems Node](quelle:pds-rings).
+```
+
+`de/grundschule/szene-titan-dunst.md`:
+```markdown
+# Titan im Dunst vor Saturn
+
+[Titan](objekt:titan) ist der größte Mond des [Saturn](objekt:saturn) und der einzige Mond
+mit einer dicken Lufthülle. Oranger Dunst hüllt ihn ein wie Nebel, von außen sieht man den
+Boden nicht. Die Karte in dieser Szene stammt von der Raumsonde Cassini: Mit einer
+besonderen Kamera konnte sie durch den Dunst hindurchschauen. Die Kamera kreist um Titan,
+und oft zieht dabei Saturn durchs Bild.
+```
+
+`en/grundschule/szene-titan-dunst.md`:
+```markdown
+# Hazy Titan in front of Saturn
+
+[Titan](objekt:titan) is the largest moon of [Saturn](objekt:saturn) and the only moon
+with a thick atmosphere. Orange haze wraps it like fog, so from outside you cannot see the
+ground. The map in this scene comes from the Cassini space probe: with a special camera it
+could look through the haze. The camera circles Titan, and Saturn often passes through the
+picture.
+```
+
+`de/gymnasium/szene-titan-dunst.md`:
+```markdown
+# Szene: Titan im Dunst vor Saturn
+
+Die Kamera umkreist [Titan](objekt:titan) in rund sieben Titanradien Abstand und läuft in
+gut einer halben Minute einmal ganz um ihn herum, so dass [Saturn](objekt:saturn) mit
+etwas Glück durchs Bild zieht. Von Titan aus erscheint Saturn rund 5,7° groß, elfmal so
+breit wie der Vollmond an unserem Himmel. Weil Titan [gebunden](thema:gebundene-rotation)
+rotiert, steht Saturn von seiner Oberfläche aus fast unbeweglich am Himmel, verborgen
+allerdings hinter dem Dunst.
+
+Titans Atmosphäre besteht vor allem aus Stickstoff; am Boden herrscht ein Druck von etwa
+1,5 bar. Sonnenlicht zerlegt Methan in der Hochatmosphäre, daraus entstehen organische
+Verbindungen, die als orangefarbener Dunst den Mond einhüllen. Im sichtbaren Licht ist
+Titan deshalb eine gleichförmige orange Kugel. Die Oberflächenkarte der Simulation stammt
+aus Aufnahmen der Raumsonde Cassini im nahen Infrarot, in einem Wellenlängenbereich, in dem
+der Dunst durchlässig ist; die Dunsthülle selbst zeichnet die Simulation nicht. Zu den
+dunklen Flächen gehören Dünenfelder am Äquator. Am 14. Januar 2005 landete die Sonde
+Huygens auf Titan ([Huygens](quelle:esa-cassini-huygens)); Kennzahlen:
+[Faktenblatt der Saturnmonde](quelle:nssdc-saturnmonde).
+```
+
+`en/gymnasium/szene-titan-dunst.md`:
+```markdown
+# Scene: Hazy Titan in front of Saturn
+
+The camera circles [Titan](objekt:titan) at about seven Titan radii and goes all the way
+around it in just over half a minute, so that with a little luck [Saturn](objekt:saturn)
+passes through the picture. Seen from Titan, Saturn appears about 5.7° across, eleven
+times as wide as the full Moon in our sky. Because Titan is
+[tidally locked](thema:gebundene-rotation), Saturn stands almost motionless in the sky
+seen from its surface, though hidden behind the haze.
+
+Titan's atmosphere consists mainly of nitrogen; the pressure at the ground is about
+1.5 bar. Sunlight breaks up methane in the upper atmosphere, producing organic compounds
+that wrap the moon in an orange haze. In visible light Titan is therefore a uniform orange
+ball. The surface map in the simulation comes from images taken by the Cassini probe in
+the near infrared, in a wavelength range in which the haze is transparent; the simulation
+does not draw the haze itself. The dark areas include dune fields near the equator. On
+14 January 2005 the Huygens probe landed on Titan ([Huygens](quelle:esa-cassini-huygens));
+key figures: [Saturnian Satellite Fact Sheet](quelle:nssdc-saturnmonde).
+```
+
+`de/grundschule/szene-enceladus-hell.md`:
+```markdown
+# Enceladus im hellen Glanz
+
+[Enceladus](objekt:enceladus) ist ein kleiner Mond des [Saturn](objekt:saturn). Er ist mit
+frischem Eis bedeckt, fast wie mit frisch gefallenem Schnee. Deshalb wirft er mehr
+Sonnenlicht zurück als fast jeder andere Körper im Sonnensystem. Unter dem Eis liegt ein
+Ozean aus salzigem Wasser. Am Südpol spritzen Fontänen aus Wasserdampf und Eis ins All.
+Diese Fontänen zeigt die Simulation nicht.
+```
+
+`en/grundschule/szene-enceladus-hell.md`:
+```markdown
+# Enceladus in brilliant light
+
+[Enceladus](objekt:enceladus) is a small moon of [Saturn](objekt:saturn). It is covered
+in fresh ice, almost like freshly fallen snow. That is why it reflects more sunlight than
+almost any other body in the Solar System. Beneath the ice lies an ocean of salty water.
+At the south pole, fountains of water vapour and ice shoot out into space. The simulation
+does not show these fountains.
+```
+
+`de/gymnasium/szene-enceladus-hell.md`:
+```markdown
+# Szene: Enceladus im hellen Glanz
+
+Die Kamera umkreist [Enceladus](objekt:enceladus) in rund fünf Enceladusradien Abstand auf
+der Seite, die der [Sonne](objekt:sun) zugewandt ist. Der nur 504 km große Mond wirft rund
+80 % des einfallenden Sonnenlichts zurück, mehr als jeder andere große Körper im
+Sonnensystem; frischer Schnee auf der Erde erreicht ähnliche Werte. Weil er so wenig Licht
+aufnimmt, bleibt seine Oberfläche mit rund −200 °C besonders kalt.
+
+Das Eis bleibt frisch, weil Enceladus aktiv ist. Aus Bruchzonen am Südpol, den
+Tigerstreifen, schießen Fontänen aus Wasserdampf und Eiskörnern ins All. Ein Teil fällt
+als Schnee zurück und überzieht die Oberfläche, der Rest speist Saturns weit ausgedehnten
+E-Ring. Die Raumsonde Cassini flog durch die Fontänen und fand darin Salze und organische
+Verbindungen, Hinweise auf einen salzigen Ozean unter der Eiskruste. Die Fontänen zeigt die
+Simulation nicht; die Oberflächenkarte stammt aus Cassini-Aufnahmen. Mission:
+[Cassini](quelle:nasa-cassini); Kennzahlen:
+[Faktenblatt der Saturnmonde](quelle:nssdc-saturnmonde).
+```
+
+`en/gymnasium/szene-enceladus-hell.md`:
+```markdown
+# Scene: Enceladus in brilliant light
+
+The camera circles [Enceladus](objekt:enceladus) at about five Enceladus radii on the side
+facing the [Sun](objekt:sun). The moon, only 504 km across, reflects about 80 % of the
+incoming sunlight, more than any other large body in the Solar System; fresh snow on the
+Earth reaches similar values. Because it absorbs so little light, its surface stays
+especially cold at about −200 °C.
+
+The ice stays fresh because Enceladus is active. Fountains of water vapour and ice grains
+shoot into space from fractures near the south pole, the tiger stripes. Some of the
+material falls back as snow and coats the surface; the rest feeds Saturn's widely spread
+E ring. The Cassini probe flew through the fountains and found salts and organic compounds
+in them, signs of a salty ocean beneath the ice crust. The simulation does not show the
+fountains; the surface map comes from Cassini images. Mission:
+[Cassini](quelle:nasa-cassini); key figures:
+[Saturnian Satellite Fact Sheet](quelle:nssdc-saturnmonde).
+```
+
+`de/grundschule/szene-iapetus-schief.md`:
+```markdown
+# Die geneigte Bahn des Iapetus
+
+Hier siehst du den [Saturn](objekt:saturn) mit seinen [Ringen](thema:ringe) und die weite
+Bahn des Mondes [Iapetus](objekt:iapetus). Die meisten großen Saturnmonde kreisen fast
+genau in der Ebene der Ringe. Die Bahn von Iapetus ist dagegen schräg gekippt. Iapetus hat
+noch eine Besonderheit: Eine Hälfte ist fast schwarz, die andere viel heller.
+```
+
+`en/grundschule/szene-iapetus-schief.md`:
+```markdown
+# The tilted orbit of Iapetus
+
+Here you see [Saturn](objekt:saturn) with its [rings](thema:ringe) and the wide orbit of
+the moon [Iapetus](objekt:iapetus). Most of Saturn's large moons circle almost exactly in
+the plane of the rings. The orbit of Iapetus, however, is tilted. Iapetus has another
+special feature: one half is almost black, the other much brighter.
+```
+
+`de/gymnasium/szene-iapetus-schief.md`:
+```markdown
+# Szene: Die geneigte Bahn des Iapetus
+
+Die Kamera blickt schräg auf [Saturn](objekt:saturn) samt [Ringen](thema:ringe) und auf die
+Bahn von [Iapetus](objekt:iapetus). Mit 3,56 Millionen km Radius, gut 61 Saturnradien, ist
+sie knapp dreimal so groß wie die Bahn von [Titan](objekt:titan). Bei drei Tagen je Sekunde
+durchläuft Iapetus seinen Umlauf von 79 Tagen in der Szene gut einmal. Die inneren großen
+Monde kreisen fast genau in Saturns Äquatorebene, in der auch die Ringe liegen; die Bahn
+des Iapetus ist um gut 15° dagegen geneigt.
+
+Die Ursache ist sein großer Abstand. Nahe Monde hält Saturns abgeplatteter Äquatorwulst in
+der Äquatorebene. Weit draußen zieht die Sonne merklich an der Bahn, und die Ebene, um die
+die Bahn langsam kreiselt, die Laplace-Ebene, liegt zwischen Saturns Äquator und seiner
+Bahnebene. Giovanni Domenico Cassini entdeckte Iapetus 1671 und bemerkte, dass er nur auf
+einer Seite Saturns gut zu sehen war. Heute ist der Grund bekannt: Die in Umlaufrichtung
+vordere Hälfte ist fast schwarz, die hintere hell, und weil Iapetus
+[gebunden](thema:gebundene-rotation) rotiert, wendet er uns je nach Bahnstellung die eine
+oder die andere zu. Kennzahlen: [Faktenblatt der Saturnmonde](quelle:nssdc-saturnmonde).
+```
+
+`en/gymnasium/szene-iapetus-schief.md`:
+```markdown
+# Scene: The tilted orbit of Iapetus
+
+The camera looks obliquely at [Saturn](objekt:saturn) with its [rings](thema:ringe) and at
+the orbit of [Iapetus](objekt:iapetus). With a radius of 3.56 million km, just over
+61 Saturn radii, it is almost three times as large as the orbit of [Titan](objekt:titan).
+At three days per second, Iapetus completes its 79-day orbit just over once during the
+scene. The large inner moons circle almost exactly in Saturn's equatorial plane, which
+also contains the rings; the orbit of Iapetus is tilted by just over 15° against it.
+
+The reason is its great distance. Near moons are held in the equatorial plane by Saturn's
+flattened equatorial bulge. Far out, the Sun pulls noticeably on the orbit, and the plane
+around which the orbit slowly precesses, the Laplace plane, lies between Saturn's equator
+and its orbital plane. Giovanni Domenico Cassini discovered Iapetus in 1671 and noticed
+that it could only be seen well on one side of Saturn. Today the reason is known: the
+leading hemisphere is almost black and the trailing one bright, and because Iapetus is
+[tidally locked](thema:gebundene-rotation), it turns one or the other towards us depending
+on its position in its orbit. Key figures:
+[Saturnian Satellite Fact Sheet](quelle:nssdc-saturnmonde).
+```
+
+- [ ] **Schritt 2: Ausstehende Szenen streichen**
+
+In `src/data/texte/dateien.test.ts` die Zeilen
+
+```ts
+  // Task 7
+  'szene:saturn-streiflicht', 'szene:saturn-ringkante', 'szene:ringdurchflug',
+  'szene:titan-dunst', 'szene:enceladus-hell', 'szene:iapetus-schief',
+```
+
+löschen.
+
+- [ ] **Schritt 3: Tests laufen lassen**
+
+Run: `npx vitest run src/data/texte`
+Expected: PASS.
+
+- [ ] **Schritt 4: Commit**
+
+Erwartete Gesamtzahl: 2809 (2641 + 24 Dateien × 7).
+
+```bash
+git add src/data/texte
+git commit -m "Szenentexte Grundschule und Gymnasium: Saturn im Streiflicht, Ringkante, Ringdurchflug, Titan, Enceladus, Iapetus"
+```
+
+---
