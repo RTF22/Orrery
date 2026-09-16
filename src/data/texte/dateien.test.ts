@@ -23,8 +23,6 @@ const WORTGRENZE: Record<Niveau, number> = { grundschule: 110, gymnasium: Infini
  * entfernt die Liste samt ihrer Prüfung.
  */
 const AUSSTEHEND: ReadonlySet<string> = new Set<string>([
-  // Task 6
-  'szene:phobos-tiefflug', 'szene:jupiter-vorbeiflug', 'szene:galileisches-schattenspiel', 'szene:pluto-charon',
   // Task 7
   'szene:saturn-streiflicht', 'szene:saturn-ringkante', 'szene:ringdurchflug',
   'szene:titan-dunst', 'szene:enceladus-hell', 'szene:iapetus-schief',
