@@ -114,47 +114,97 @@ Ausgangslage Ziel Mars (Kopf „Mars"), echte Klicks, je 2 s Wartezeit danach:
 Für alle 19 Szenen aus `SCENES`, je Sprache (`de`, `en`) und Niveau
 (`grundschule`, `gymnasium`): `setCinema({ running: true, shuffle: false,
 nummer: i, pauseOnInput: false })`, `setCamera({ mode: 'cinema' })`, Warten mit
-`pointermove` je Takt, bis der Kopf zur Szene passt (Frist 4 s je Szene).
-**Ergebnis: alle 76 Messungen (19 Szenen × 2 Niveaus × 2 Sprachen) sofort
-erfolgreich, 0 Nichtmessungen.** Für jede Szene war `hinweise` durchweg `[]`,
-`karten ≥ 1` (Minimum 2 bei `titan-dunst`) und der Szenenkopf mit „Standort"
-(Deutsch) beziehungsweise „Location" (Englisch) vorhanden.
+`pointermove` je Takt, bis der Kopf zur Szene passt (Frist 4 s je Szene), dann
+Kopf, Hinweiszeilen, Kartenzahl und Szenenkopf-Vorhandensein im selben
+Skriptdurchlauf ausgelesen. Die Tabelle unten stammt aus dem ersten Lauf
+dieser Abnahme (16.09.2026, während der Erarbeitung von Commit `f53c89e`, vor
+dem eigentlichen Commit; Stand des Codes unverändert `a5bb057`) — keine
+Wiederholung nötig, da die Rohwerte aus diesem Lauf vollständig vorlagen.
+**Ergebnis: alle 76 Messungen (19 Szenen × 2 Sprachen × 2 Niveaus) sofort
+erfolgreich, 0 Nichtmessungen**, `hinweise` durchweg `[]`, `karten ≥ 1`
+(Minimum 2 bei `titan-dunst`) und der Szenenkopf mit „Standort" (Deutsch)
+beziehungsweise „Location" (Englisch) in jeder Zeile vorhanden.
 
-Ergebnis Deutsch, Grundschule (Kopf = Szenentitel) und Gymnasium (Kopf =
-„Szene: " + Titel, gleiche Kartenzahl):
+| Szene | Sprache | Niveau | gemessen | Kopf (wörtlich) | Hinweise | Karten | Szenenkopf |
+|---|---|---|---|---|---|---|---|
+| erdaufgang | de | grundschule | ja | Sonnenaufgang über dem Erdrand | [] | 4 | ja |
+| erdaufgang | de | gymnasium | ja | Szene: Sonnenaufgang über dem Erdrand | [] | 4 | ja |
+| erdaufgang | en | grundschule | ja | Sunrise over the limb of the Earth | [] | 4 | ja |
+| erdaufgang | en | gymnasium | ja | Scene: Sunrise over the limb of the Earth | [] | 4 | ja |
+| saturn-streiflicht | de | grundschule | ja | Saturn im Streiflicht | [] | 3 | ja |
+| saturn-streiflicht | de | gymnasium | ja | Szene: Saturn im Streiflicht | [] | 3 | ja |
+| saturn-streiflicht | en | grundschule | ja | Saturn in grazing light | [] | 3 | ja |
+| saturn-streiflicht | en | gymnasium | ja | Scene: Saturn in grazing light | [] | 3 | ja |
+| mondtanz | de | grundschule | ja | Der Tanz des Mondes | [] | 3 | ja |
+| mondtanz | de | gymnasium | ja | Szene: Der Tanz des Mondes | [] | 3 | ja |
+| mondtanz | en | grundschule | ja | The dance of the Moon | [] | 3 | ja |
+| mondtanz | en | gymnasium | ja | Scene: The dance of the Moon | [] | 3 | ja |
+| ferne-sonne | de | grundschule | ja | Von Neptun zur fernen Sonne | [] | 3 | ja |
+| ferne-sonne | de | gymnasium | ja | Szene: Von Neptun zur fernen Sonne | [] | 3 | ja |
+| ferne-sonne | en | grundschule | ja | From Neptune to the distant Sun | [] | 3 | ja |
+| ferne-sonne | en | gymnasium | ja | Scene: From Neptune to the distant Sun | [] | 3 | ja |
+| systemblick | de | grundschule | ja | Das System von oben | [] | 4 | ja |
+| systemblick | de | gymnasium | ja | Szene: Das System von oben | [] | 4 | ja |
+| systemblick | en | grundschule | ja | The Solar System from above | [] | 4 | ja |
+| systemblick | en | gymnasium | ja | Scene: The Solar System from above | [] | 4 | ja |
+| merkurjagd | de | grundschule | ja | Merkur auf der Innenbahn | [] | 3 | ja |
+| merkurjagd | de | gymnasium | ja | Szene: Merkur auf der Innenbahn | [] | 3 | ja |
+| merkurjagd | en | grundschule | ja | Mercury on the inner orbit | [] | 3 | ja |
+| merkurjagd | en | gymnasium | ja | Scene: Mercury on the inner orbit | [] | 3 | ja |
+| jupiter-vorbeiflug | de | grundschule | ja | Vorbeiflug an Jupiter | [] | 5 | ja |
+| jupiter-vorbeiflug | de | gymnasium | ja | Szene: Vorbeiflug an Jupiter | [] | 5 | ja |
+| jupiter-vorbeiflug | en | grundschule | ja | Flyby of Jupiter | [] | 5 | ja |
+| jupiter-vorbeiflug | en | gymnasium | ja | Scene: Flyby of Jupiter | [] | 5 | ja |
+| galileisches-schattenspiel | de | grundschule | ja | Das galileische Schattenspiel | [] | 3 | ja |
+| galileisches-schattenspiel | de | gymnasium | ja | Szene: Das galileische Schattenspiel | [] | 3 | ja |
+| galileisches-schattenspiel | en | grundschule | ja | The Galilean shadow play | [] | 3 | ja |
+| galileisches-schattenspiel | en | gymnasium | ja | Scene: The Galilean shadow play | [] | 3 | ja |
+| phobos-tiefflug | de | grundschule | ja | Tiefflug über Phobos | [] | 3 | ja |
+| phobos-tiefflug | de | gymnasium | ja | Szene: Tiefflug über Phobos | [] | 3 | ja |
+| phobos-tiefflug | en | grundschule | ja | Low pass over Phobos | [] | 3 | ja |
+| phobos-tiefflug | en | gymnasium | ja | Scene: Low pass over Phobos | [] | 3 | ja |
+| pluto-charon | de | grundschule | ja | Pluto und Charon im Doppel | [] | 3 | ja |
+| pluto-charon | de | gymnasium | ja | Szene: Pluto und Charon im Doppel | [] | 3 | ja |
+| pluto-charon | en | grundschule | ja | Pluto and Charon, a double world | [] | 3 | ja |
+| pluto-charon | en | gymnasium | ja | Scene: Pluto and Charon, a double world | [] | 3 | ja |
+| saturn-ringkante | de | grundschule | ja | Saturns Ringe von der Kante | [] | 3 | ja |
+| saturn-ringkante | de | gymnasium | ja | Szene: Saturns Ringe von der Kante | [] | 3 | ja |
+| saturn-ringkante | en | grundschule | ja | Saturn's rings edge-on | [] | 3 | ja |
+| saturn-ringkante | en | gymnasium | ja | Scene: Saturn's rings edge-on | [] | 3 | ja |
+| ringdurchflug | de | grundschule | ja | Durchflug durch Saturns Ringe | [] | 3 | ja |
+| ringdurchflug | de | gymnasium | ja | Szene: Durchflug durch Saturns Ringe | [] | 3 | ja |
+| ringdurchflug | en | grundschule | ja | Flying through Saturn's rings | [] | 3 | ja |
+| ringdurchflug | en | gymnasium | ja | Scene: Flying through Saturn's rings | [] | 3 | ja |
+| titan-dunst | de | grundschule | ja | Titan im Dunst vor Saturn | [] | 2 | ja |
+| titan-dunst | de | gymnasium | ja | Szene: Titan im Dunst vor Saturn | [] | 2 | ja |
+| titan-dunst | en | grundschule | ja | Hazy Titan in front of Saturn | [] | 2 | ja |
+| titan-dunst | en | gymnasium | ja | Scene: Hazy Titan in front of Saturn | [] | 2 | ja |
+| enceladus-hell | de | grundschule | ja | Enceladus im hellen Glanz | [] | 3 | ja |
+| enceladus-hell | de | gymnasium | ja | Szene: Enceladus im hellen Glanz | [] | 3 | ja |
+| enceladus-hell | en | grundschule | ja | Enceladus in brilliant light | [] | 3 | ja |
+| enceladus-hell | en | gymnasium | ja | Scene: Enceladus in brilliant light | [] | 3 | ja |
+| triton-rueckwaerts | de | grundschule | ja | Tritons rückläufige Bahn | [] | 4 | ja |
+| triton-rueckwaerts | de | gymnasium | ja | Szene: Tritons rückläufige Bahn | [] | 4 | ja |
+| triton-rueckwaerts | en | grundschule | ja | Triton's retrograde orbit | [] | 4 | ja |
+| triton-rueckwaerts | en | gymnasium | ja | Scene: Triton's retrograde orbit | [] | 4 | ja |
+| iapetus-schief | de | grundschule | ja | Die geneigte Bahn des Iapetus | [] | 3 | ja |
+| iapetus-schief | de | gymnasium | ja | Szene: Die geneigte Bahn des Iapetus | [] | 3 | ja |
+| iapetus-schief | en | grundschule | ja | The tilted orbit of Iapetus | [] | 3 | ja |
+| iapetus-schief | en | gymnasium | ja | Scene: The tilted orbit of Iapetus | [] | 3 | ja |
+| uranus-gekippt | de | grundschule | ja | Der liegende Uranus | [] | 4 | ja |
+| uranus-gekippt | de | gymnasium | ja | Szene: Der liegende Uranus | [] | 4 | ja |
+| uranus-gekippt | en | grundschule | ja | Uranus lying on its side | [] | 4 | ja |
+| uranus-gekippt | en | gymnasium | ja | Scene: Uranus lying on its side | [] | 4 | ja |
+| ceres-guertel | de | grundschule | ja | Ceres im Asteroidengürtel | [] | 3 | ja |
+| ceres-guertel | de | gymnasium | ja | Szene: Ceres im Asteroidengürtel | [] | 3 | ja |
+| ceres-guertel | en | grundschule | ja | Ceres in the asteroid belt | [] | 3 | ja |
+| ceres-guertel | en | gymnasium | ja | Scene: Ceres in the asteroid belt | [] | 3 | ja |
+| mondfinsternis | de | grundschule | ja | Mondfinsternis | [] | 5 | ja |
+| mondfinsternis | de | gymnasium | ja | Szene: Mondfinsternis | [] | 5 | ja |
+| mondfinsternis | en | grundschule | ja | Lunar eclipse | [] | 5 | ja |
+| mondfinsternis | en | gymnasium | ja | Scene: Lunar eclipse | [] | 5 | ja |
 
-| id | Titel (Grundschule) | Karten |
-|---|---|---|
-| erdaufgang | Sonnenaufgang über dem Erdrand | 4 |
-| saturn-streiflicht | Saturn im Streiflicht | 3 |
-| mondtanz | Der Tanz des Mondes | 3 |
-| ferne-sonne | Von Neptun zur fernen Sonne | 3 |
-| systemblick | Das System von oben | 4 |
-| merkurjagd | Merkur auf der Innenbahn | 3 |
-| jupiter-vorbeiflug | Vorbeiflug an Jupiter | 5 |
-| galileisches-schattenspiel | Das galileische Schattenspiel | 3 |
-| phobos-tiefflug | Tiefflug über Phobos | 3 |
-| pluto-charon | Pluto und Charon im Doppel | 3 |
-| saturn-ringkante | Saturns Ringe von der Kante | 3 |
-| ringdurchflug | Durchflug durch Saturns Ringe | 3 |
-| titan-dunst | Titan im Dunst vor Saturn | 2 |
-| enceladus-hell | Enceladus im hellen Glanz | 3 |
-| triton-rueckwaerts | Tritons rückläufige Bahn | 4 |
-| iapetus-schief | Die geneigte Bahn des Iapetus | 3 |
-| uranus-gekippt | Der liegende Uranus | 4 |
-| ceres-guertel | Ceres im Asteroidengürtel | 3 |
-| mondfinsternis | Mondfinsternis | 5 |
-
-Ergebnis Englisch, Grundschule (Kopf = Szenentitel) und Gymnasium (Kopf =
-„Scene: " + Titel): Sunrise over the limb of the Earth, Saturn in grazing
-light, The dance of the Moon, From Neptune to the distant Sun, The Solar
-System from above, Mercury on the inner orbit, Flyby of Jupiter, The Galilean
-shadow play, Low pass over Phobos, Pluto and Charon, a double world, Saturn's
-rings edge-on, Flying through Saturn's rings, Hazy Titan in front of Saturn,
-Enceladus in brilliant light, Triton's retrograde orbit, The tilted orbit of
-Iapetus, Uranus lying on its side, Ceres in the asteroid belt, Lunar eclipse —
-je Szene dieselbe Kartenzahl wie in der deutschen Tabelle, `hinweise` durchweg
-`[]`. 76 von 76 Zeilen erfüllt, keine Wiederholung nötig.
+76 von 76 Zeilen erfüllt, 0 Nichtmessungen, keine Wiederholung nötig.
 
 ## Schritt 7: Keine Sackgasse
 
