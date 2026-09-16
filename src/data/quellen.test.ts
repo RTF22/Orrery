@@ -31,10 +31,11 @@ describe('Quellenkatalog', () => {
     }
   });
 
-  it('bietet jedem Körper und jedem Thema mindestens eine Quelle', () => {
+  it('bietet jedem Körper, jedem Thema und jeder Szene mindestens eine Quelle', () => {
     const kennungen = [
       ...Object.keys(bodyIndex).map((id) => `objekt:${id}`),
       ...THEMEN.map((thema) => `thema:${thema.id}`),
+      ...SCENES.map((szene) => `szene:${szene.id}`),
     ];
     expect(kennungen.filter((kennung) => quellenFuer(kennung).length === 0)).toEqual([]);
   });

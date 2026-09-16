@@ -207,6 +207,10 @@ IAU-Rotationselemente), wie sie in den Datensätzen kommentiert sind.
 `data/quellen.test.ts` den Zustand `info.keineQuellen` aus; für Szenen bleibt er
 möglich.
 
+**Nachtrag (4c-4):** Mit den Szenentexten bekommt jede Szene Quellenkarten aus dem
+vorhandenen Katalog (nur `szene:`-Einträge in `fuer`, keine neuen Adressen); der
+Abdeckungstest schließt `info.keineQuellen` jetzt auch für Szenen aus.
+
 ### 4.5 Themenkatalog
 
 `src/data/themen.ts`: `{ id: string; titleKey: string }[]`. Anfangsbestand acht
