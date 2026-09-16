@@ -111,6 +111,20 @@ Ziel gesetzt wird, bleibt stehen; `fahreZu` verwirft ein Thema auch dann, wenn d
 gleich bleibt (der Klick auf „Sonne" nach der Systemansicht zeigt den Sonnentext). Der
 Standardzustand und Links bleiben ohne Thema.
 
+**Nachtrag (4c-4, Schlussprüfung):** Der Verfall eines Themas ist ein Store-Abonnement
+(`ui/info/themaVerfall.ts`), das je Store-Übergang prüft und unabhängig davon wirkt, ob
+die Oberfläche eingehängt ist; `app/main.tsx` startet es nach dem Startzustand. Regel:
+Ist das Thema nach dem Übergang gesetzt und gegenüber vorher unverändert, und hat die
+Grundlage (Szene beziehungsweise Kameraziel) gewechselt, wird es auf `null` gesetzt.
+„Im selben Zug" heißt damit „im selben `setState`". „Zurücksetzen" beendet ein laufendes
+oder angehaltenes Kino zuerst und ersetzt erst dann den Zustand; sonst verfiele ein
+schon gewähltes Sonnensystem, weil die Grundlage wechselt und der Themenwert gleich
+bleibt. Der Szenentext gilt im laufenden **und** im angehaltenen Kino (Bedingung wie
+`cinemaAktiv()`: `cinema.running` oder `camera.mode === 'cinema'`); das weicht vom
+Wortlaut „Im laufenden Kino (`cinema.running`)" im ersten Punkt oben ab (Ruling der
+Schlussprüfung): Eine Eingabe hält den Film an, die Oberfläche erscheint erst danach, und
+das Panel soll dann weiter die Szene zeigen statt des Kameraziels von vor dem Kino.
+
 ### 3.4 Kino, Ausblenden, schmale Bildschirme
 
 - Die Spalte gehört zur Oberfläche und folgt deren Regeln: Taste `H` blendet sie

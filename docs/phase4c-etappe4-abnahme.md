@@ -44,6 +44,11 @@ beziehungsweise `browser_click`).
    `setInfo({ thema: null })` vor jedem direkten Szenenstart im Messskript.
    Kein Befund am Produktcode: Der reale Klickweg setzt Ziel/Szene und Thema
    laut Ruling 6 in einem einzigen `setState` und ist davon nicht betroffen.
+   **Richtigstellung (17.09.2026):** Doch ein Befund am Produktcode — der
+   Verfall hing an einem Effekt im eingehängten InfoPanel und blieb aus, wenn
+   die Oberfläche beim Wechsel ausgehängt war (etwa im Kino nach Ruhe); er ist
+   jetzt ein Store-Abonnement, siehe „Nacharbeit nach der Schlussprüfung",
+   Befund A.
 
 ## Schritt 1: Server und Stand
 
@@ -347,3 +352,131 @@ wie vorgesehen den Gymnasialtext mit Hinweis (Schritt 8, Phase 4d offen).
 Konsole, Lint, Testsuite (2892 Tests) und Build laufen fehlerfrei (Schritt 9,
 10). Phase 4c ist damit inhaltlich komplett; die noch offene Hochschulstufe
 (4d) steht ausgewiesen im Protokoll statt verschwiegen zu werden.
+
+## Nacharbeit nach der Schlussprüfung
+
+**Datum:** 17.09.2026
+**Ausgangsstand:** Zweig `szenen`, HEAD `8cfee63`; Code und Tests der Nacharbeit
+in `118fe74`.
+
+### Befunde
+
+- **A (Themenverfall hing am eingehängten Panel):** Der Effekt in
+  `ui/info/InfoPanel.tsx` verwarf ein Thema nur, solange das Panel eingehängt
+  war. `ui/App.tsx` hängt die Oberfläche bei `ui.hidden` und im Kino nach Ruhe
+  aus. Nach 4 s ohne Eingabe startete Taste C das Kino, bevor `useIdleHide` die
+  Untätigkeit zurücksetzte; das Panel hängte sich mit schon neuer Grundlage
+  wieder ein, das Thema `sonnensystem` blieb stehen. Ein späterer Klick auf die
+  Wurzel oder „Zurücksetzen" verwarf es dann fälschlich (Kopf „Sonne").
+- **B (Zurücksetzen aus dem Kino):** Mit schon gewähltem `sonnensystem` (etwa
+  über den Verweis in `systemblick`) wechselt „Zurücksetzen" die Grundlage bei
+  gleichem Themenwert; das neue Abonnement hätte das Thema verworfen.
+- **C (Szenentext im angehaltenen Kino):** `laufendeSzene` wertete nur
+  `cinema.running` aus. Mit `pauseOnInput: true` hält die erste Eingabe den Film
+  an, die Oberfläche erscheint erst danach, und das Panel zeigte das Kameraziel
+  von vor dem Kino (gemessen: Kopf „Sonne").
+- **D (Testlücken):** Kein Test deckte den Verfall ohne eingehängtes Panel,
+  Wurzel und Zurücksetzen aus dem Kino oder das angehaltene Kino ab.
+- **E (Kleinigkeiten):** veraltete Kommentare über `zurueckgesetzt`
+  (`store/persist.ts`) und `grundlage` (`ui/info/aktuellerText.ts`), drei
+  überzählige Leerzeilen am Ende von `data/quellen.ts`, Standort und Blickziel
+  im Szenenkopf ohne `data-verweis`.
+
+### Rulings
+
+1. **Ruling: Verfall als Store-Abonnement statt React-Effekt.**
+   `ui/info/themaVerfall.ts` (`themaVerfallStarten`) prüft jeden Store-Übergang:
+   Thema gesetzt, gegenüber vorher unverändert, Grundlage gewechselt → `null`.
+   „Im selben Zug" heißt „im selben `setState`". `app/main.tsx` startet das
+   Abonnement nach `replaceAll(startZustand(…))`. Keine Regel über die Identität
+   von `ui.info`, weil `ansichtAnwenden` `ui` ebenfalls neu schreibt.
+2. **Ruling: Der Szenentext gilt im laufenden und im angehaltenen Kino**
+   (`cinema.running || camera.mode === 'cinema'`, wie `cinemaAktiv()`). Die
+   Bedingung ist in `aktuellerText.ts` gespiegelt und als Zwilling kommentiert,
+   statt `cinemaAktiv()` zu importieren: Jene liest den globalen Store,
+   `laufendeSzene` arbeitet auf dem übergebenen Zustand.
+3. **Ruling: „Zurücksetzen" beendet ein aktives Kino zuerst**
+   (`if (cinemaAktiv()) stopCinema();` vor `replaceAll` in `ui/Kopfzeile.tsx`).
+4. **Ruling: Kommentar in `ui/kamerafahrt.ts`** über dem gemeinsamen `setState`
+   von Ziel und Thema nachgezogen; er verwies auf den entfernten Effekt in
+   `InfoPanel.tsx`.
+
+Entwurf §3.3 trägt den zweiten Nachtrag „Nachtrag (4c-4, Schlussprüfung)".
+Neue Tests: `ui/info/themaVerfall.test.ts` (10 Fälle, darunter Kinostart ohne
+Panel, Wurzel aus laufendem und angehaltenem Kino, die vier Übergangsregeln und
+das Abbestellen), `ui/Kopfzeile.test.tsx` (Zurücksetzen aus laufendem Kino),
+`ui/info/aktuellerText.test.ts` (angehaltenes und beendetes Kino),
+`ui/info/InfoPanel.test.tsx` (`data-verweis` im Szenenkopf; das Abonnement läuft
+dort je Test). Testzahl 2892 → 2905.
+
+### Nachmessung mit Standardeinstellungen
+
+Bedingungen: `localStorage.removeItem('orrery.sitzung.v1')`, dann
+`browser_navigate` auf `http://localhost:5173/Orrery/` ohne Fragment,
+Qualitätsstufe `high`. `cinema.pauseOnInput` → `true` (Standard, nicht
+verändert), kein synthetisches `pointermove`, Infopanel nicht per Store
+geöffnet. Tasten echt per `browser_press_key`, Mausbewegungen per
+`browser_hover` auf die Canvas, Klicks per `browser_click`, Wartezeiten per
+`performance.now()`-Schleife im 50-ms-Takt. Fenster 1024 × 623 px (Chromium
+über Playwright), Niveau Gymnasium, Sprache Deutsch. Alle Werte wörtlich.
+
+- **Ausgangslage:** Kopf „Das Sonnensystem", `ui.info.thema` → `'sonnensystem'`,
+  `camera.targetId` → `'sun'`, `cinema.running` → `false`.
+- **a) Taste C nach Ruhe:** 4014 ms ohne Eingabe gewartet (Kopf danach weiter
+  „Das Sonnensystem"). Echte Taste `c`, unmittelbar danach: `cinema.running` →
+  `true`, `camera.mode` → `'cinema'`, `ui.info.thema` → `null`,
+  `aside.info-panel` vorhanden → `false` (Oberfläche ausgehängt, der Weg aus
+  Befund A ist damit getroffen). Nach `browser_hover` auf die Canvas: Kopf
+  „Szene: Tritons rückläufige Bahn" (Wartezeit 0 ms), `ui.info.thema` → `null`,
+  `cinema.nummer` → `0`, Szene `triton-rueckwaerts`. Erfüllt.
+- **b) Angehaltenes Kino:** im selben Zustand `cinema.running` → `false`,
+  `camera.mode` → `'cinema'`, Kopf „Szene: Tritons rückläufige Bahn". Erfüllt.
+- **c) Wurzel „Sonnensystem":** echter Klick, danach `cinema.running` →
+  `false`, `camera.mode` → `'attached'`, `camera.targetId` → `'sun'`,
+  `ui.info.thema` → `'sonnensystem'`, Kopf „Das Sonnensystem" (Wartezeit
+  0 ms). Erfüllt.
+- **d) Zurücksetzen aus dem angehaltenen Kino,** in zwei Fassungen, weil die
+  Szene nach Taste C (`triton-rueckwaerts`, Gymnasium) keinen `thema:`-Verweis
+  trägt. Zum Wechsel der Szene diente die echte Taste `n`.
+  - **d1:** Taste `c` (`running` → `true`, `thema` → `null`, `nummer` → `0`),
+    Taste `n`, `browser_hover` auf die Canvas: Kopf „Szene: Durchflug durch
+    Saturns Ringe", `running` → `false`, `camera.mode` → `'cinema'`,
+    `nummer` → `1`. Klick auf „Ringen" (`thema:ringe`): Kopf „Ringsysteme",
+    `thema` → `'ringe'`, `camera.mode` → `'cinema'`. Klick auf „Zurücksetzen":
+    `running` → `false`, `camera.mode` → `'free'`, `camera.targetId` → `'sun'`,
+    `thema` → `'sonnensystem'`, Kopf „Das Sonnensystem" (Wartezeit 0 ms).
+    Erfüllt.
+  - **d2 (Restfall B, Thema schon `sonnensystem`):** Taste `c`, `browser_hover`
+    auf die Canvas (`running` → `false`, `camera.mode` → `'cinema'`, `nummer`
+    → `0`, `thema` → `null`), achtmal Taste `n` in einem
+    `browser_run_code_unsafe`-Durchlauf (`page.keyboard.press('n')`, derselbe
+    Aufruf wie `browser_press_key`): Kopf „Szene: Das System von oben",
+    `nummer` → `8`, `running` → `false`, `thema:`-Verweise „Das Sonnensystem"
+    und „Bahnelemente". Klick auf „Das Sonnensystem" (`thema:sonnensystem`):
+    Kopf „Das Sonnensystem", `thema` → `'sonnensystem'`, `camera.mode` →
+    `'cinema'`. Klick auf „Zurücksetzen", danach bewusst 2008 ms gewartet:
+    `running` → `false`, `camera.mode` → `'free'`, `camera.targetId` → `'sun'`,
+    `thema` → `'sonnensystem'`, `cinema.nummer` → `0`, Kopf „Das Sonnensystem".
+    Erfüllt.
+- **e) Konsole:** `browser_console_messages` (Stufe `warning`, seit der
+  Navigation): `Total messages: 3 (Errors: 0, Warnings: 0)`. Erfüllt.
+
+Keine Nichtmessungen. Nebenbeobachtung ohne Änderung: Nach Taste C stand die
+Seite im Vollbild (`document.fullscreenElement` gesetzt) und blieb es auch nach
+„Zurücksetzen"; das Beenden des Kinos verlässt das Vollbild wie bisher nicht.
+
+### Lint, Test, Build
+
+```
+$ npx vitest run
+ Test Files  82 passed (82)
+      Tests  2905 passed (2905)
+
+$ npm run lint
+npm notice run eslint .
+(Exit-Code 0, keine Ausgabe von eslint)
+
+$ npm run build
+✓ built in 589ms
+(!) Some chunks are larger than 500 kB after minification …
+```
