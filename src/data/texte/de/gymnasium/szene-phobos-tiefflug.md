@@ -3,7 +3,7 @@
 Die Kamera fliegt wenige Dutzend Kilometer hinter [Phobos](objekt:phobos) auf dessen Bahn
 mit und blickt auf den [Mars](objekt:mars). Phobos kreist nur rund 6 000 km über der
 Marsoberfläche, näher an seinem Planeten als jeder andere bekannte Mond. Der Mars erscheint
-von hier aus rund 40° groß, achtzigmal so breit wie der Vollmond an unserem Himmel, und
+von hier aus rund 42° groß, achtzigmal so breit wie der Vollmond an unserem Himmel, und
 füllt einen großen Teil des Bildes. Phobos selbst liegt außerhalb des Bildes, weil die
 Kamera quer zur Flugrichtung auf den Planeten schaut.
 

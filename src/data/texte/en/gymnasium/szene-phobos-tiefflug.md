@@ -2,7 +2,7 @@
 
 The camera flies a few dozen kilometres behind [Phobos](objekt:phobos) along its orbit and
 looks at [Mars](objekt:mars). Phobos circles only about 6,000 km above the Martian
-surface, closer to its planet than any other known moon. From here Mars appears about 40°
+surface, closer to its planet than any other known moon. From here Mars appears about 42°
 across, eighty times as wide as the full Moon in our sky, and fills a large part of the
 picture. Phobos itself is outside the picture, because the camera looks at the planet at
 right angles to the direction of flight.

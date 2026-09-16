@@ -1315,7 +1315,7 @@ sideways at Mars.
 Die Kamera fliegt wenige Dutzend Kilometer hinter [Phobos](objekt:phobos) auf dessen Bahn
 mit und blickt auf den [Mars](objekt:mars). Phobos kreist nur rund 6 000 km über der
 Marsoberfläche, näher an seinem Planeten als jeder andere bekannte Mond. Der Mars erscheint
-von hier aus rund 40° groß, achtzigmal so breit wie der Vollmond an unserem Himmel, und
+von hier aus rund 42° groß, achtzigmal so breit wie der Vollmond an unserem Himmel, und
 füllt einen großen Teil des Bildes. Phobos selbst liegt außerhalb des Bildes, weil die
 Kamera quer zur Flugrichtung auf den Planeten schaut.
 
@@ -1335,7 +1335,7 @@ ihn die Gezeiten; seine Bahn sinkt um knapp zwei Meter je Jahrhundert, in 30 bis
 
 The camera flies a few dozen kilometres behind [Phobos](objekt:phobos) along its orbit and
 looks at [Mars](objekt:mars). Phobos circles only about 6,000 km above the Martian
-surface, closer to its planet than any other known moon. From here Mars appears about 40°
+surface, closer to its planet than any other known moon. From here Mars appears about 42°
 across, eighty times as wide as the full Moon in our sky, and fills a large part of the
 picture. Phobos itself is outside the picture, because the camera looks at the planet at
 right angles to the direction of flight.
