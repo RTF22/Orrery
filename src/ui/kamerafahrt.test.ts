@@ -116,6 +116,13 @@ describe('fahreZu', () => {
     resumeIfIdle(Date.now() + 1e9);
     expect(useStore.getState().cinema.running).toBe(false);
   });
+
+  it('verwirft ein gewähltes Thema, auch wenn das Ziel gleich bleibt', () => {
+    useStore.getState().setInfo({ thema: 'sonnensystem' });
+    fahreZu('sun', planer().optionen);
+    expect(useStore.getState().camera.targetId).toBe('sun');
+    expect(useStore.getState().ui.info.thema).toBeNull();
+  });
 });
 
 describe('systemAbstand', () => {
@@ -169,5 +176,17 @@ describe('fahreZuSystem', () => {
     fahreZuSystem(planer().optionen);
     expect(useStore.getState().cinema.running).toBe(false);
     expect(useStore.getState().camera.targetId).toBe('sun');
+  });
+
+  it('setzt das Thema Sonnensystem im selben Zug wie das Ziel', () => {
+    useStore.getState().setCamera({ targetId: 'saturn' });
+    useStore.getState().setInfo({ thema: 'ringe' });
+    const zuege: Array<[string, string | null]> = [];
+    const abbestellen = useStore.subscribe((s) => { zuege.push([s.camera.targetId, s.ui.info.thema]); });
+    fahreZuSystem(planer().optionen);
+    abbestellen();
+    expect(useStore.getState().ui.info.thema).toBe('sonnensystem');
+    // Kein Zwischenstand, in dem das Ziel schon Sonne ist, das Thema aber noch fehlt.
+    expect(zuege.filter(([ziel, thema]) => ziel === 'sun' && thema !== 'sonnensystem')).toEqual([]);
   });
 });

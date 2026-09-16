@@ -23,8 +23,18 @@ describe('fragmentLesen', () => {
 });
 
 describe('startZustand', () => {
-  it('liefert den Standard ohne Fragment und ohne Sitzung', () => {
-    expect(startZustand(umgebung())).toEqual(DEFAULT_STATE);
+  it('liefert ohne Fragment und ohne Sitzung den Standard mit dem Thema Sonnensystem', () => {
+    const erwartet = structuredClone(DEFAULT_STATE);
+    erwartet.ui.info.thema = 'sonnensystem';
+    expect(startZustand(umgebung())).toEqual(erwartet);
+  });
+
+  it('zeigt das Sonnensystem nicht, wenn ein Link oder eine Sitzung den Start bestimmt', () => {
+    const ablage = ablageFake();
+    ablage.daten.set(SCHLUESSEL_SITZUNG, JSON.stringify({ camera: { targetId: 'mars' } }));
+    expect(startZustand(umgebung({ ablage })).ui.info.thema).toBeNull();
+    const link = umgebung({ hash: '#p=' + encodePatch({ camera: { targetId: 'mars' } }) });
+    expect(startZustand(link).ui.info.thema).toBeNull();
   });
 
   it('nimmt das Fragment vor der Sitzung und entfernt es', () => {
@@ -75,7 +85,9 @@ describe('startZustand', () => {
 
   it('ungültiges Fragment ohne Sitzung: Standard, Fragment trotzdem entfernt', () => {
     const u = umgebung({ ablage: ablageFake(), hash: '#p=!!!nicht-base64!!!' });
-    expect(startZustand(u)).toEqual(DEFAULT_STATE);
+    const erwartet = structuredClone(DEFAULT_STATE);
+    erwartet.ui.info.thema = 'sonnensystem';
+    expect(startZustand(u)).toEqual(erwartet);
     expect(u.fragmentEntfernen).toHaveBeenCalledTimes(1);
   });
 

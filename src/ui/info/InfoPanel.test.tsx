@@ -4,7 +4,8 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import { InfoPanel, INFO_PANEL } from './InfoPanel';
 import { useStore, DEFAULT_STATE } from '../../store';
 import { setSprache } from '../i18n';
-import { fahrtAbbrechen } from '../kamerafahrt';
+import { fahrtAbbrechen, fahreZuSystem } from '../kamerafahrt';
+import { zurueckgesetzt } from '../../store/persist';
 
 beforeEach(() => {
   fahrtAbbrechen();
@@ -59,6 +60,22 @@ describe('InfoPanel', () => {
     act(() => { useStore.getState().setCamera({ targetId: 'mars' }); });
     expect(useStore.getState().ui.info.thema).toBeNull();
     expect(await titel('Mars')).toBeTruthy();
+  });
+
+  it('Wurzel des Objektbaums und Zurücksetzen zeigen das Sonnensystem, obwohl das Ziel wechselt', async () => {
+    useStore.getState().setCamera({ targetId: 'mars' });
+    render(<InfoPanel />);
+    expect(await titel('Mars')).toBeTruthy();
+    act(() => { fahreZuSystem(); });
+    fahrtAbbrechen();
+    expect(useStore.getState().ui.info.thema).toBe('sonnensystem');
+    expect(await titel('Das Sonnensystem')).toBeTruthy();
+    act(() => { useStore.getState().setCamera({ targetId: 'mars' }); });
+    expect(useStore.getState().ui.info.thema).toBeNull();
+    expect(await titel('Mars')).toBeTruthy();
+    act(() => { useStore.getState().replaceAll(zurueckgesetzt(useStore.getState())); });
+    expect(useStore.getState().ui.info.thema).toBe('sonnensystem');
+    expect(await titel('Das Sonnensystem')).toBeTruthy();
   });
 
   it('Objektverweis fährt die Kamera und wechselt den Text', async () => {

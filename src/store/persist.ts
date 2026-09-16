@@ -3,6 +3,7 @@ import { DEFAULT_STATE } from './index';
 import { istPlain, pruefeZustand } from './pruefer';
 import type { Plain } from './pruefer';
 import { encodePatch, fromShareable, mergePatch, toShareable } from './serialize';
+import { SYSTEM_THEMA } from '../data/themen';
 
 /**
  * Drei Verwendungen desselben Diffs (Entwurf §3.1): Der Link lässt
@@ -61,7 +62,9 @@ export function zurueckgesetzt(aktuell: AppState): AppState {
   const s = structuredClone(DEFAULT_STATE);
   s.ui.language = aktuell.ui.language;
   s.quality.tier = aktuell.quality.tier;
-  s.ui.info = { ...aktuell.ui.info, thema: null };
+  // Zurücksetzen führt in die Startansicht und zeigt deshalb wie ein frischer
+  // Start das Sonnensystem (Plan 4c-4, Ruling 4).
+  s.ui.info = { ...aktuell.ui.info, thema: SYSTEM_THEMA };
   return s;
 }
 

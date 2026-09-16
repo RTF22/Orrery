@@ -120,13 +120,18 @@ export function InfoPanel(): React.JSX.Element {
     return { art: art as TextKennung['art'], kennung: rest ?? '' };
   }, [schluessel]);
 
-  // Ein gewähltes Thema verfällt, sobald Ziel oder Szene wechseln (§3.3).
+  // Ein gewähltes Thema verfällt, sobald Ziel oder Szene wechseln (§3.3) —
+  // außer es wurde im selben Zug gesetzt: Wurzel des Objektbaums und
+  // „Zurücksetzen" wechseln das Ziel und zeigen zugleich das Sonnensystem.
   const vorigeBasis = useRef(basis);
+  const vorigesThema = useRef(info.thema);
   useEffect(() => {
-    if (vorigeBasis.current === basis) return;
+    const basisGewechselt = vorigeBasis.current !== basis;
+    const themaGewechselt = vorigesThema.current !== info.thema;
     vorigeBasis.current = basis;
-    if (useStore.getState().ui.info.thema !== null) setInfo({ thema: null });
-  }, [basis, setInfo]);
+    vorigesThema.current = info.thema;
+    if (basisGewechselt && !themaGewechselt && info.thema !== null) setInfo({ thema: null });
+  }, [basis, info.thema, setInfo]);
 
   const [anzeige, setAnzeige] = useState<Anzeige | null>(null);
   useEffect(() => {

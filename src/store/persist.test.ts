@@ -355,12 +355,12 @@ describe('ui.info in den Profilen', () => {
     expect(filtereProfil({ ui: { info: { breiteRem: 30 } } }, 'link')).toEqual({});
   });
 
-  it('zurueckgesetzt behält Niveau, Breite und Teilung, löscht das Thema', () => {
+  it('zurueckgesetzt behält Niveau, Breite und Teilung und zeigt das Thema Sonnensystem', () => {
     const aktuell = structuredClone(DEFAULT_STATE);
     aktuell.ui.info = { niveau: 'hochschule', breiteRem: 40, teilung: 0.3, thema: 'modell' };
     aktuell.scale.sizeScale = 3;
     const s = zurueckgesetzt(aktuell);
-    expect(s.ui.info).toEqual({ niveau: 'hochschule', breiteRem: 40, teilung: 0.3, thema: null });
+    expect(s.ui.info).toEqual({ niveau: 'hochschule', breiteRem: 40, teilung: 0.3, thema: 'sonnensystem' });
     expect(s.scale.sizeScale).toBe(DEFAULT_STATE.scale.sizeScale);
   });
 });

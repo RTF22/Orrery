@@ -7,6 +7,7 @@ import { FRAGMENT_PRAEFIX, sitzungLesen, sitzungMerkenLesen, sitzungSchreiben, s
 import type { Ablage } from '../store/persist';
 import { startSprache } from '../ui/i18n';
 import type { Sprache } from '../ui/i18n';
+import { SYSTEM_THEMA } from '../data/themen';
 
 export interface StartUmgebung {
   /** location.hash, mit führendem „#". */
@@ -37,7 +38,8 @@ function spracheAus(patch: Plain): Sprache | null {
  * leeren behandeln, und eine Sekunde später überschriebe die automatische
  * Sicherung die eigentlich noch vorhandene Sitzung mit dem Standard. Die
  * Sitzung zählt dabei wie immer nur, wenn „Sitzung merken" an ist; ein
- * gültiges (auch ein gültig-leeres) Fragment ersetzt sie in jedem Fall.
+ * gültiges (auch ein gültig-leeres) Fragment ersetzt sie in jedem Fall. Nur
+ * der Start aus dem Standard setzt das Thema Sonnensystem.
  */
 export function startZustand(u: StartUmgebung): AppState {
   const fragment = fragmentLesen(u.hash);
@@ -46,9 +48,14 @@ export function startZustand(u: StartUmgebung): AppState {
     dekodiert = decodePatch(fragment);
     u.fragmentEntfernen();
   }
-  const patch = dekodiert ?? (sitzungMerkenLesen(u.ablage) ? sitzungLesen(u.ablage) ?? {} : {});
+  const sitzung = dekodiert === null && sitzungMerkenLesen(u.ablage) ? sitzungLesen(u.ablage) : null;
+  const patch = dekodiert ?? sitzung ?? {};
   const state = fromShareable(patch);
   state.ui.language = startSprache(u.navigatorLanguage, spracheAus(patch));
+  // Ohne Link und ohne gemerkte Sitzung beginnt die Anwendung mit der
+  // Übersicht: Das Infopanel erklärt das Sonnensystem (Jens, 16.09.2026).
+  // Ein Link führt kein Thema (Entwurf §4.6) und zeigt deshalb sein Ziel.
+  if (dekodiert === null && sitzung === null) state.ui.info.thema = SYSTEM_THEMA;
   return state;
 }
 

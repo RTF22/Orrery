@@ -103,6 +103,14 @@ auf und zu (die Taste ist frei, `ui/shortcuts/useShortcuts.ts`).
   wird `thema` auf `null` gesetzt.
 - Bei jedem Textwechsel scrollt das obere Segment nach oben. Der Niveau-Tab bleibt.
 
+**Nachtrag (4c-4, Jens 16.09.2026):** Beim Start ohne Link und ohne gemerkte Sitzung,
+nach „Zurücksetzen" und nach einem Klick auf die Wurzel „Sonnensystem" im Objektbaum
+zeigt das Panel das Thema `sonnensystem`. `startZustand`, `zurueckgesetzt` und
+`fahreZuSystem` setzen dazu `ui.info.thema`. Ein Thema, das im selben Zug wie ein neues
+Ziel gesetzt wird, bleibt stehen; `fahreZu` verwirft ein Thema auch dann, wenn das Ziel
+gleich bleibt (der Klick auf „Sonne" nach der Systemansicht zeigt den Sonnentext). Der
+Standardzustand und Links bleiben ohne Thema.
+
 ### 3.4 Kino, Ausblenden, schmale Bildschirme
 
 - Die Spalte gehört zur Oberfläche und folgt deren Regeln: Taste `H` blendet sie
@@ -359,6 +367,11 @@ Text"). Punkt 2 bis 4 lauten seitdem:
    Quellenkatalog auf rund 60 Quellen.
 4. **4c-4 Szenen:** 19 Szenen in beiden Niveaus und Sprachen (`mondfinsternis`
    liegt seit 4c-1 vor), dazu der Dateitest „Themenziel hat Text im selben Niveau".
+
+**Nachtrag (16.09.2026, Jens):** 4c-4 umfasst zusätzlich das Thema `sonnensystem` in
+beiden Niveaus und Sprachen samt Anzeige beim Start und an der Wurzel des Objektbaums
+(§3.3, §4.5), Quellenkarten für alle Szenen (§4.4) und den Dateitest „Quellenverweis hat
+eine Karte".
 
 ## 8. Tests
 

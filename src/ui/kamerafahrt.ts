@@ -7,6 +7,7 @@ import { systemRadiusKm } from '../render/camera/cinema';
 import { KAMERA_FOV_GRAD } from '../render/renderer';
 import { easeInOutCubic } from './tween';
 import { cinemaAktiv, stopCinema } from './cinemaControl';
+import { SYSTEM_THEMA } from '../data/themen';
 
 /** Dauer der Fahrt (Entwurf 4c §5.3). */
 export const FAHRT_MS = 1500;
@@ -62,29 +63,33 @@ export function fahrtAbbrechen(): void {
  * bricht ab, ein weiterer Aufruf ersetzt die laufende Fahrt, ein laufendes
  * Kino wird zuerst beendet. Der Objektbaum und die Verweise in den Texten
  * nutzen dieselbe Funktion (Entwurf 4c §5.3). Die Kamera wechselt in den
- * Modus Geheftet.
+ * Modus Geheftet. Ein gewähltes Thema verfällt, auch wenn das Ziel gleich
+ * bleibt: Der Klick auf die Sonne nach der Systemansicht zeigt den
+ * Sonnentext.
  */
 export function fahreZu(id: string, optionen: FahrtOptionen = {}): void {
   const body = bodyIndex[id];
   if (body === undefined) return;
-  fahre(id, (_jd, scale) => fokusAbstand(body, scale), null, optionen);
+  fahre(id, (_jd, scale) => fokusAbstand(body, scale), null, null, optionen);
 }
 
 /**
  * Draufsicht auf das ganze Sonnensystem für die Wurzelzeile des Objektbaums:
  * Ziel Sonne, Abstand nach `systemAbstand`, die Elevation gleitet mit dem
- * Abstand in den Blick von oben. Sonst wie `fahreZu`.
+ * Abstand in den Blick von oben. Sonst wie `fahreZu`. Das Infopanel zeigt
+ * danach das Thema Sonnensystem (Entwurf 4c §3.3, Nachtrag 4c-4).
  */
 export function fahreZuSystem(optionen: FahrtOptionen = {}): void {
   // Die Canvas füllt das Fenster, ihr Seitenverhältnis ist das des Fensters.
   const seiten = typeof window === 'undefined' ? 1 : window.innerWidth / Math.max(window.innerHeight, 1);
-  fahre('sun', (jd, scale) => systemAbstand(jd, scale, seiten), DRAUFSICHT_ELEVATION, optionen);
+  fahre('sun', (jd, scale) => systemAbstand(jd, scale, seiten), DRAUFSICHT_ELEVATION, SYSTEM_THEMA, optionen);
 }
 
 function fahre(
   id: string,
   zielAbstand: (jd: number, scale: ScaleSettings) => number,
   zielElevation: number | null,
+  thema: string | null,
   optionen: FahrtOptionen,
 ): void {
   fahrtAbbrechen();
@@ -102,14 +107,19 @@ function fahre(
   // Auch ein nur angehaltenes Kino: Der Klick hat es mit seinem pointerdown
   // schon angehalten, bevor er hier ankommt.
   if (cinemaAktiv()) stopCinema();
-  const { camera, scale, time, setCamera } = useStore.getState();
+  const { camera, scale, time } = useStore.getState();
   const von = camera.distance;
   const nach = zielAbstand(time.jd, scale);
   const elevationVon = camera.elevation;
   // Jede Fahrt endet geheftet: Im freien Modus zielte sie auf die eingefrorene
   // Stelle, von der der Körper bei laufender Uhr schon wegzog (Entwurf
   // Klickflächen §6, Entscheidung Jens 15.09.2026).
-  setCamera({ targetId: id, mode: 'attached', freezeJd: null });
+  // Ziel und Thema in einem Zug: Das Infopanel verwirft ein Thema nur, wenn
+  // die Grundlage wechselt und das Thema dabei gleich bleibt (InfoPanel.tsx).
+  useStore.setState((s) => ({
+    camera: { ...s.camera, targetId: id, mode: 'attached', freezeJd: null },
+    ui: { ...s.ui, info: { ...s.ui.info, thema } },
+  }));
 
   const start = jetzt();
   let kennung = 0;

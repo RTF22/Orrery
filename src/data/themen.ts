@@ -21,6 +21,13 @@ export const THEMEN: readonly Thema[] = [
   { id: 'sonnensystem', titleKey: 'thema.sonnensystem.title' },
 ];
 
+/**
+ * Thema der Übersicht: Das Infopanel zeigt es beim Start ohne Link und ohne
+ * Sitzung, nach „Zurücksetzen" und nach einem Klick auf die Wurzel des
+ * Objektbaums (Entwurf 4c §3.3, Nachtrag 4c-4).
+ */
+export const SYSTEM_THEMA = 'sonnensystem';
+
 export function istThema(id: string): boolean {
   return THEMEN.some((thema) => thema.id === id);
 }
