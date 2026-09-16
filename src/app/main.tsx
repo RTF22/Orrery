@@ -16,6 +16,7 @@ import { ablageHolen } from '../store/persist';
 import { sicherungStarten, startZustand } from './persistenz';
 import { fahreZu } from '../ui/kamerafahrt';
 import { zeigerAusgeblendet } from '../ui/idle';
+import { themaVerfallStarten } from '../ui/info/themaVerfall';
 
 /**
  * Einstiegspunkt der Anwendung.
@@ -130,7 +131,8 @@ if (wurzelElement === null) {
 
 // Startzustand: Fragment vor gesicherter Sitzung vor Standard, Sprache aus
 // dem Zustand oder vom Browser (app/persistenz.ts). Danach läuft die
-// gedrosselte Sicherung bis zum Schließen der Seite.
+// gedrosselte Sicherung bis zum Schließen der Seite. Der Themenverfall startet
+// erst nach dem Startzustand, damit dessen Thema Sonnensystem stehen bleibt.
 const ablage = ablageHolen();
 useStore.getState().replaceAll(startZustand({
   hash: window.location.hash,
@@ -141,6 +143,7 @@ useStore.getState().replaceAll(startZustand({
   navigatorLanguage: navigator.language,
 }));
 sicherungStarten(useStore, { ablage, ziel: window });
+themaVerfallStarten();
 
 createRoot(wurzelElement).render(
   <StrictMode>

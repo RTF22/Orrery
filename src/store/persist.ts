@@ -56,7 +56,10 @@ export function linkErzeugen(state: AppState, ort: { origin: string; pathname: s
 /**
  * Standardzustand, aber Sprache, Qualitätsstufe und die Vorlieben des
  * Infopanels (Niveau, Breite, Teilung) des aktuellen Zustands bleiben; ein
- * gewähltes Thema fällt weg wie jede andere Ansichtseinstellung.
+ * gewähltes Thema wird durch das Thema Sonnensystem ersetzt wie beim Start
+ * ohne Link und Sitzung. Ein aktives Kino beendet der Aufrufer vorher
+ * (ui/Kopfzeile.tsx), sonst verwürfe der Themenverfall ein schon gewähltes
+ * Sonnensystem.
  */
 export function zurueckgesetzt(aktuell: AppState): AppState {
   const s = structuredClone(DEFAULT_STATE);

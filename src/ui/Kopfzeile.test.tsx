@@ -5,6 +5,8 @@ import { Kopfzeile } from './Kopfzeile';
 import { setSprache } from './i18n';
 import { useStore, DEFAULT_STATE } from '../store';
 import { decodeState } from '../store/serialize';
+import { themaVerfallStarten } from './info/themaVerfall';
+import { cinemaAktiv, startCinema, stopCinema } from './cinemaControl';
 
 describe('Kopfzeile', () => {
   beforeEach(() => { useStore.getState().replaceAll(structuredClone(DEFAULT_STATE)); });
@@ -97,5 +99,33 @@ describe('Kopfzeile: Link kopieren und Zurücksetzen', () => {
     expect(s.visible).toEqual({});
     expect(s.ui.language).toBe('en');
     expect(s.quality.tier).toBe('high');
+  });
+});
+
+describe('Kopfzeile: Zurücksetzen aus dem Kino', () => {
+  let abbestellen: (() => void) | null = null;
+
+  beforeEach(() => {
+    stopCinema();
+    useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
+    abbestellen = themaVerfallStarten();
+  });
+  afterEach(() => {
+    abbestellen?.();
+    abbestellen = null;
+    stopCinema();
+    setSprache('de');
+  });
+
+  it('beendet ein laufendes Kino und zeigt das Sonnensystem, auch wenn es schon gewählt war', () => {
+    startCinema();
+    // Etwa über den Verweis im Text der Szene systemblick.
+    useStore.getState().setInfo({ thema: 'sonnensystem' });
+    render(<Kopfzeile />);
+    fireEvent.click(screen.getByRole('button', { name: 'Zurücksetzen' }));
+    const s = useStore.getState();
+    expect(s.cinema.running).toBe(false);
+    expect(cinemaAktiv()).toBe(false);
+    expect(s.ui.info.thema).toBe('sonnensystem');
   });
 });

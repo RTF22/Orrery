@@ -12,7 +12,7 @@ import { ladeMitAusweich } from '../../data/texte';
 import type { GeladenerText, TextKennung } from '../../data/texte';
 import type { Verweis } from '../../data/verweise';
 import { t } from '../i18n';
-import { aktuellerText, ausweichTitel, grundlage, textSchluessel } from './aktuellerText';
+import { aktuellerText, ausweichTitel, textSchluessel } from './aktuellerText';
 import { parseMarkdown, titelVon } from './markdownParser';
 import { Markdown } from './Markdown';
 import { Datenblock, VERWEIS_KNOPF } from './Datenblock';
@@ -76,7 +76,7 @@ function Szenenkopf({ kennung, onVerweis }: { kennung: string; onVerweis: (v: Ve
     const body = bodyIndex[id];
     if (body === undefined) return null;
     return (
-      <button type="button" className={VERWEIS_KNOPF} onClick={() => { onVerweis({ art: 'objekt', kennung: id }); }}>
+      <button type="button" className={VERWEIS_KNOPF} data-verweis={`objekt:${id}`} onClick={() => { onVerweis({ art: 'objekt', kennung: id }); }}>
         {t(body.info.nameKey)}
       </button>
     );
@@ -114,24 +114,14 @@ export function InfoPanel(): React.JSX.Element {
   const schmal = useSchmal();
   const offen = infoOffen(panels, schmal);
   const schluessel = useStore((s) => textSchluessel(aktuellerText(s)));
-  const basis = useStore(grundlage);
   const kennung = useMemo<TextKennung>(() => {
     const [art, rest] = schluessel.split(/:(.*)/s);
     return { art: art as TextKennung['art'], kennung: rest ?? '' };
   }, [schluessel]);
 
-  // Ein gewähltes Thema verfällt, sobald Ziel oder Szene wechseln (§3.3) —
-  // außer es wurde im selben Zug gesetzt: Wurzel des Objektbaums und
-  // „Zurücksetzen" wechseln das Ziel und zeigen zugleich das Sonnensystem.
-  const vorigeBasis = useRef(basis);
-  const vorigesThema = useRef(info.thema);
-  useEffect(() => {
-    const basisGewechselt = vorigeBasis.current !== basis;
-    const themaGewechselt = vorigesThema.current !== info.thema;
-    vorigeBasis.current = basis;
-    vorigesThema.current = info.thema;
-    if (basisGewechselt && !themaGewechselt && info.thema !== null) setInfo({ thema: null });
-  }, [basis, info.thema, setInfo]);
+  // Ein gewähltes Thema verfällt nicht hier, sondern im Store-Abonnement
+  // aus ./themaVerfall: Das Panel hängt mit der Oberfläche aus und sähe
+  // Wechsel von Ziel oder Szene dann nicht.
 
   const [anzeige, setAnzeige] = useState<Anzeige | null>(null);
   useEffect(() => {

@@ -6,13 +6,23 @@ import { useStore, DEFAULT_STATE } from '../../store';
 import { setSprache } from '../i18n';
 import { fahrtAbbrechen, fahreZuSystem } from '../kamerafahrt';
 import { zurueckgesetzt } from '../../store/persist';
+import { themaVerfallStarten } from './themaVerfall';
+
+// Der Themenverfall ist ein Store-Abonnement (themaVerfall.ts), das
+// app/main.tsx einmal startet; ohne es verfiele hier kein Thema.
+let abbestellen: (() => void) | null = null;
 
 beforeEach(() => {
   fahrtAbbrechen();
   useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
+  abbestellen = themaVerfallStarten();
   setSprache('de');
 });
-afterEach(() => { setSprache('de'); });
+afterEach(() => {
+  abbestellen?.();
+  abbestellen = null;
+  setSprache('de');
+});
 
 const titel = (name: string): Promise<HTMLElement> => screen.findByRole('heading', { level: 2, name });
 
@@ -100,6 +110,16 @@ describe('InfoPanel', () => {
     expect(await titel('Szene: Mondfinsternis')).toBeTruthy();
     expect(screen.getByText('Standort')).toBeTruthy();
     expect(screen.queryByTestId('datenblock')).toBeNull();
+  });
+
+  it('Standort und Blickziel der Szene tragen data-verweis wie die Verweise im Text', async () => {
+    // Mondfinsternis: Standort Mond, Blickziel Erde.
+    useStore.getState().setCinema({ running: true, shuffle: false, nummer: 18 });
+    render(<InfoPanel />);
+    await titel('Szene: Mondfinsternis');
+    const kopf = screen.getByText('Standort').closest('dl') as HTMLElement;
+    const knoepfe = [...kopf.querySelectorAll('button')].map((b) => [b.textContent, b.getAttribute('data-verweis')]);
+    expect(knoepfe).toEqual([['Mond', 'objekt:moon'], ['Erde', 'objekt:earth']]);
   });
 
   it('Griffe schreiben Breite und Teilung in den Store', async () => {

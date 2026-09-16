@@ -114,8 +114,8 @@ function fahre(
   // Jede Fahrt endet geheftet: Im freien Modus zielte sie auf die eingefrorene
   // Stelle, von der der Körper bei laufender Uhr schon wegzog (Entwurf
   // Klickflächen §6, Entscheidung Jens 15.09.2026).
-  // Ziel und Thema in einem Zug: Das Infopanel verwirft ein Thema nur, wenn
-  // die Grundlage wechselt und das Thema dabei gleich bleibt (InfoPanel.tsx).
+  // Ziel und Thema in einem Zug: Der Themenverfall verwirft ein Thema nur, wenn
+  // die Grundlage wechselt und das Thema dabei gleich bleibt (ui/info/themaVerfall.ts).
   useStore.setState((s) => ({
     camera: { ...s.camera, targetId: id, mode: 'attached', freezeJd: null },
     ui: { ...s.ui, info: { ...s.ui.info, thema } },

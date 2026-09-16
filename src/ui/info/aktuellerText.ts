@@ -9,15 +9,24 @@ import { t } from '../i18n';
 
 export type Auswahlzustand = Pick<AppState, 'camera' | 'cinema' | 'ui'>;
 
+/**
+ * Szene des laufenden oder nur angehaltenen Kinos, sonst `null`. Die
+ * Bedingung spiegelt `cinemaAktiv()` aus ui/cinemaControl.ts (Zwilling):
+ * Jene liest den globalen Store, hier geht es um den übergebenen Zustand,
+ * damit die Funktion als Selektor und in Tests mit eigenem Zustand taugt.
+ * Eine Eingabe hält den Film an (`pauseOnInput`), die Oberfläche erscheint
+ * erst danach — das Panel soll dann weiter die Szene zeigen.
+ */
 function laufendeSzene(s: Auswahlzustand): string | null {
-  if (!s.cinema.running) return null;
+  if (!s.cinema.running && s.camera.mode !== 'cinema') return null;
   const index = sceneIndexFor(s.cinema.nummer, SCENES.length, s.cinema.seed, s.cinema.shuffle);
   return SCENES[index]?.id ?? SCENES[0]?.id ?? null;
 }
 
 /**
  * Welche Kennung das Panel gerade zeigt (Entwurf 4c §3.3): ein per Verweis
- * gewähltes Thema, sonst die laufende Kinoszene, sonst das Kameraziel.
+ * gewähltes Thema, sonst die Szene des laufenden oder angehaltenen Kinos,
+ * sonst das Kameraziel.
  */
 export function aktuellerText(s: Auswahlzustand): TextKennung {
   if (s.ui.info.thema !== null) return { art: 'thema', kennung: s.ui.info.thema };
@@ -28,8 +37,9 @@ export function aktuellerText(s: Auswahlzustand): TextKennung {
 
 /**
  * Dieselbe Auswahl ohne das Thema: Wechselt sie, verfällt ein gewähltes
- * Thema. Als Zeichenkette, damit ein Store-Selektor sie ohne neues Objekt
- * je Aufruf zurückgeben kann.
+ * Thema, außer es wurde im selben `setState` neu gesetzt (ui/info/
+ * themaVerfall.ts). Als Zeichenkette, damit ein Vergleich zweier Zustände
+ * ohne neues Objekt je Aufruf auskommt.
  */
 export function grundlage(s: Auswahlzustand): string {
   const szene = laufendeSzene(s);

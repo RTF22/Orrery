@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useStore } from '../store';
 import { linkErzeugen, zurueckgesetzt } from '../store/persist';
 import { t } from './i18n';
+import { cinemaAktiv, stopCinema } from './cinemaControl';
 import type { Sprache } from './i18n';
 
 /**
@@ -59,6 +60,11 @@ export function Kopfzeile(): React.JSX.Element {
   };
 
   const zuruecksetzen = (): void => {
+    // Ein laufendes oder angehaltenes Kino zuerst beenden: Sonst wechselte
+    // die Grundlage des Infopanels (Szene → Sonne) im selben Zug, in dem ein
+    // schon gewähltes Sonnensystem gleich bliebe, und der Themenverfall
+    // (ui/info/themaVerfall.ts) verwürfe es.
+    if (cinemaAktiv()) stopCinema();
     replaceAll(zurueckgesetzt(useStore.getState()));
   };
 

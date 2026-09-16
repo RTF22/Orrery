@@ -533,6 +533,3 @@ export function quellenFuer(kennung: string, bevorzugt: Sprache | null = null): 
       return Number(b.sprache === bevorzugt) - Number(a.sprache === bevorzugt);
     });
 }
-
-
-

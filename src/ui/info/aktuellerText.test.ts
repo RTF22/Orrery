@@ -27,6 +27,23 @@ describe('aktuellerText', () => {
     expect(grundlage(s)).toBe(`szene:${erwartet}`);
   });
 
+  it('nimmt die Szene auch im angehaltenen Kino, nach dem Ende wieder das Kameraziel', () => {
+    const angehalten = zustand((z) => {
+      z.cinema.running = false; z.cinema.nummer = 3; z.cinema.shuffle = false;
+      z.camera.mode = 'cinema'; z.camera.targetId = 'jupiter';
+    });
+    const szene = SCENES[3]!.id;
+    expect(aktuellerText(angehalten)).toEqual({ art: 'szene', kennung: szene });
+    expect(grundlage(angehalten)).toBe(`szene:${szene}`);
+
+    const beendet = zustand((z) => {
+      z.cinema.running = false; z.cinema.nummer = 3; z.cinema.shuffle = false;
+      z.camera.mode = 'free'; z.camera.targetId = 'jupiter';
+    });
+    expect(aktuellerText(beendet)).toEqual({ art: 'objekt', kennung: 'jupiter' });
+    expect(grundlage(beendet)).toBe('objekt:jupiter');
+  });
+
   it('ein gewähltes Thema geht vor, ändert aber die Grundlage nicht', () => {
     const s = zustand((z) => { z.ui.info.thema = 'modell'; z.camera.targetId = 'mars'; });
     expect(aktuellerText(s)).toEqual({ art: 'thema', kennung: 'modell' });
