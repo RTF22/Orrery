@@ -18,6 +18,7 @@ export const THEMEN: readonly Thema[] = [
   { id: 'zwergplaneten', titleKey: 'thema.zwergplaneten.title' },
   { id: 'bahnelemente', titleKey: 'thema.bahnelemente.title' },
   { id: 'modell', titleKey: 'thema.modell.title' },
+  { id: 'sonnensystem', titleKey: 'thema.sonnensystem.title' },
 ];
 
 export function istThema(id: string): boolean {

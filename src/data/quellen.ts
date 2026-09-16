@@ -240,6 +240,20 @@ export const QUELLEN: readonly Quelle[] = [
     fuer: ['szene:mondfinsternis', 'thema:finsternis'],
   },
   {
+    id: 'wikipedia-de-orrery',
+    titel: { de: 'Orrery (Wikipedia)', en: 'Orrery (German Wikipedia)' },
+    herausgeber: 'Wikipedia', sprache: 'de', art: 'uebersicht',
+    url: 'https://de.wikipedia.org/wiki/Orrery',
+    fuer: ['thema:sonnensystem'],
+  },
+  {
+    id: 'wikipedia-en-orrery',
+    titel: { de: 'Orrery (englische Wikipedia)', en: 'Orrery (Wikipedia)' },
+    herausgeber: 'Wikipedia', sprache: 'en', art: 'uebersicht',
+    url: 'https://en.wikipedia.org/wiki/Orrery',
+    fuer: ['thema:sonnensystem'],
+  },
+  {
     id: 'nasa-sun',
     titel: { de: 'Sonne bei NASA Science', en: 'Sun at NASA Science' },
     herausgeber: 'NASA', sprache: 'en', art: 'uebersicht',
@@ -404,6 +418,13 @@ export const QUELLEN: readonly Quelle[] = [
     url: 'https://science.nasa.gov/mission/dawn/',
     fuer: ['objekt:ceres', 'szene:ceres-guertel'],
   },
+  {
+    id: 'nasa-sonnensystem',
+    titel: { de: 'Sonnensystem bei NASA Science', en: 'Solar System at NASA Science' },
+    herausgeber: 'NASA', sprache: 'en', art: 'uebersicht',
+    url: 'https://science.nasa.gov/solar-system/',
+    fuer: ['thema:sonnensystem', 'szene:systemblick'],
+  },
   // --- Bildarchive ---
   {
     id: 'jpl-photojournal-earth',
@@ -418,6 +439,18 @@ export const QUELLEN: readonly Quelle[] = [
     herausgeber: 'JPL', sprache: 'en', art: 'bildarchiv',
     url: 'https://science.nasa.gov/photojournal/galleries/pj-saturn/',
     fuer: ['objekt:saturn', 'thema:ringe', 'szene:saturn-streiflicht', 'szene:saturn-ringkante', 'szene:ringdurchflug'],
+  },
+  {
+    // Sammlungsobjekt 1952-73; die Seite weist Skripte ohne Browserkennung
+    // mit 403 ab, im Browser öffnet sie normal (geprüft 16.09.2026).
+    id: 'sciencemuseum-orrery',
+    titel: {
+      de: 'Orrery von John Rowley für den Earl of Orrery (Science Museum Group)',
+      en: 'Orrery made by John Rowley for the Earl of Orrery (Science Museum Group)',
+    },
+    herausgeber: 'sonstige', sprache: 'en', art: 'bildarchiv',
+    url: 'https://collection.sciencemuseumgroup.org.uk/objects/co56970/orrery-made-by-john-rowley-for-the-earl-of-orrery',
+    fuer: ['thema:sonnensystem'],
   },
   // --- Werkzeuge ---
   {

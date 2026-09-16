@@ -179,6 +179,7 @@ export const de = {
   'thema.zwergplaneten.title': 'Zwergplaneten',
   'thema.bahnelemente.title': 'Bahnelemente',
   'thema.modell.title': 'Grenzen des Modells',
+  'thema.sonnensystem.title': 'Das Sonnensystem',
   'quelle.art.faktenblatt': 'Faktenblatt',
   'quelle.art.uebersicht': 'Übersicht',
   'quelle.art.bildarchiv': 'Bildarchiv',

@@ -18,6 +18,7 @@ describe('Themenkatalog', () => {
   it('kennt drei Niveaus und erkennt Themen', () => {
     expect(NIVEAUS).toEqual(['grundschule', 'gymnasium', 'hochschule']);
     expect(istThema('modell')).toBe(true);
+    expect(istThema('sonnensystem')).toBe(true);
     expect(istThema('gibt-es-nicht')).toBe(false);
   });
 });

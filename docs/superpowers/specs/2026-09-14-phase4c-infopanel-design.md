@@ -219,6 +219,10 @@ Themen: `finsternis`, `ringe`, `gebundene-rotation`, `kirkwood-luecken`,
 dokumentiert die Grenzen aus Gesamtentwurf §4.4 (keine Bahnstörungen, keine
 Präzession, Laplace-Ebene der Monde, Genauigkeitsfenster 1800–2050).
 
+**Nachtrag (4c-4, Jens 16.09.2026):** Neuntes Thema `sonnensystem` („Das Sonnensystem"):
+Überblick über das System und Erklärung des Namens „Orrery" mit Quellen (Science Museum
+Group, Wikipedia). Es erscheint beim Start und an der Wurzel des Objektbaums (§3.3).
+
 ### 4.6 Zustand und Persistenz
 
 Neu in `AppState.ui`:
