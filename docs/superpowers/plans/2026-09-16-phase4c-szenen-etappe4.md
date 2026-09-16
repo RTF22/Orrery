@@ -896,3 +896,374 @@ git commit -m "Infopanel: Sonnensystem beim Start, nach Zurücksetzen und an der
 ```
 
 ---
+
+### Task 5: Szenen um Erde, Mond, Merkur und das ganze System
+
+**Sachstand (Planung, 16.09.2026, aus `src/data/scenes.ts` und den Datensätzen):**
+- `erdaufgang`: Umlaufkamera um die Erde, 2,4 Erdradien (Streuung 0,9 bis 1,3), Elevation 6° (−4 bis +10), Azimut zufällig und 1,2°/s, 40 s bei 0,02 d/s (28,8 min je Sekunde, gut 19 Stunden). Erdtextur ohne Wolken, keine Atmosphäre (`ASSETS.md`). Terminator am Äquator 40 075 km / 24 h ≈ 1 670 km/h.
+- `mondtanz`: Umlaufkamera um die Erde, 150 Erdradien, Elevation 55° (30 bis 85), 45 s bei 0,9 d/s = 40,5 Tage. Mond e = 0,0549, a = 384 400 km → 363 300 / 405 500 km; Bahnradius 60,3 Erdradien. Mondabstände skalieren mit `sizeScale` (`src/sim/scale.ts`). Schwerpunkt 4 670 km vom Erdmittelpunkt; die Erde steht im Modell auf dem Erde-Mond-Schwerpunkt der Tabelle.
+- `merkurjagd`: Verfolgerkamera, 9 Merkurradien, 30 s bei 2 d/s = 60 Tage = 0,68 Umläufe. Perihel 46,0 Mio. km bei 58,98 km/s, Aphel 69,8 Mio. km bei 38,86 km/s (NSSDC), Mittel 47,4 km/s. Sonne 1/0,3075 = 3,25-fach, 1/0,4667 = 2,14-fach. Winkelgeschwindigkeit im Perihel 6,35°/d gegen Drehung 6,14°/d.
+- `systemblick`: Systemkamera, Elevation 78° (53 bis 88, positiv = ekliptikal Nord laut `aufKugel`), Azimut 0,9°/s, 60 s bei 30 d/s = 1 800 Tage = 4,93 Jahre: Merkur 20,5, Erde 4,93, Jupiter 0,42, Neptun 0,030 Umläufe. 30,07 / 0,387 = 77,7. Beide Gürtel sind standardmäßig sichtbar.
+- `ferne-sonne`: feste Kamera 12 Neptunradien neben Neptun, Blick zur Sonne. 30,07 AE → 1/904 der Bestrahlungsstärke, Sonnendurchmesser 1 919″ / 30,07 = 64″, Helligkeit −26,74 + 5 lg 30,07 = −19,35 mag, gegen den Vollmond (−12,74 mag) Faktor 10^(0,4 · 6,61) ≈ 440. Im „Schaubild" ist der Sonnenradius 50 · 0,35 = 17,5-fach, der Abstand auf 7,7 AE gestaucht (Scheibe rund 1,2°). Ob Neptun selbst im Bild ist, hängt vom Datum ab; die Texte behaupten es nicht.
+
+**Dateien:**
+- Erstellen: `src/data/texte/{de,en}/{grundschule,gymnasium}/szene-{erdaufgang,mondtanz,merkurjagd,systemblick,ferne-sonne}.md`
+- Ändern: `src/data/texte/dateien.test.ts` (fünf Einträge aus `AUSSTEHEND` streichen)
+
+**Schnittstellen:**
+- Konsumiert: Quellenkarten aus Task 2 (`jpl-photojournal-earth` für `erdaufgang`, `nasa-messenger` für `merkurjagd`, `nasa-eyes` für `systemblick`, `nasa-voyager-2` und `nssdc-neptune` für `ferne-sonne`); Thema `sonnensystem` aus Task 3; Verweise `objekt:earth`, `objekt:sun`, `objekt:moon`, `objekt:mercury`, `objekt:jupiter`, `objekt:neptune`, `thema:achsneigung`, `thema:gebundene-rotation`, `thema:modell`, `thema:bahnelemente`, `szene:mondfinsternis`.
+- Produziert: nichts für spätere Tasks.
+
+- [ ] **Schritt 1: Dateien anlegen**
+
+`de/grundschule/szene-erdaufgang.md`:
+```markdown
+# Sonnenaufgang über dem Erdrand
+
+Die Kamera schwebt hoch über der [Erde](objekt:earth). Die [Sonne](objekt:sun) scheint
+immer nur auf eine Hälfte der Erde, dort ist Tag. Auf der anderen Hälfte ist Nacht. Weil
+sich die Erde dreht, wandert die Grenze zwischen Tag und Nacht über Länder und Meere. Wo
+sie gerade ankommt, geht die Sonne auf. In dieser Szene vergeht in jeder Sekunde fast eine
+halbe Stunde, so siehst du die Erde sich drehen.
+```
+
+`en/grundschule/szene-erdaufgang.md`:
+```markdown
+# Sunrise over the limb of the Earth
+
+The camera floats high above the [Earth](objekt:earth). The [Sun](objekt:sun) only ever
+shines on one half of the Earth, where it is day. On the other half it is night. Because
+the Earth turns, the line between day and night moves across countries and seas. Wherever
+it arrives, the Sun is just rising. In this scene almost half an hour passes every second,
+so you can watch the Earth turn.
+```
+
+`de/gymnasium/szene-erdaufgang.md`:
+```markdown
+# Szene: Sonnenaufgang über dem Erdrand
+
+Die Kamera umkreist die [Erde](objekt:earth) in zwei bis drei Erdradien Abstand vom
+Mittelpunkt, einige tausend Kilometer über der Oberfläche. Die [Sonne](objekt:sun)
+beleuchtet stets eine Hälfte der Erde. Die Grenze zwischen Tag- und Nachtseite heißt
+Terminator; wer an ihr steht, erlebt gerade Sonnenaufgang oder Sonnenuntergang. Weil sich
+die Erde in 24 Stunden einmal dreht, wandert der Terminator am Äquator mit rund 1 670 km/h
+nach Westen. Wegen der [Achsneigung](thema:achsneigung) von 23,4° verläuft er nur zu den
+Tagundnachtgleichen durch die Pole; zur Sommersonnenwende im Juni liegt das ganze Gebiet
+nördlich des Polarkreises auf der Tagseite. Je nach Blickrichtung zeigt die Szene die
+Tagseite, die Nachtseite oder den Übergang.
+
+Die Uhr läuft knapp 30 Minuten je Sekunde, die Drehung der Erde wird dadurch sichtbar. Eine
+Raumstation in rund 400 km Höhe umrundet die Erde in etwa 90 Minuten und erlebt so rund
+16 Sonnenaufgänge am Tag. In Wirklichkeit färbt die Atmosphäre den Übergang und leuchtet
+als dünner Saum am Erdrand; die Simulation zeigt die Erde ohne Atmosphäre und ohne Wolken.
+Aufnahmen aus dem All: [Photojournal Erde](quelle:jpl-photojournal-earth).
+```
+
+`en/gymnasium/szene-erdaufgang.md`:
+```markdown
+# Scene: Sunrise over the limb of the Earth
+
+The camera circles the [Earth](objekt:earth) at two to three Earth radii from its centre,
+several thousand kilometres above the surface. The [Sun](objekt:sun) always lights one
+half of the Earth. The boundary between the day side and the night side is called the
+terminator; anyone standing on it is experiencing sunrise or sunset. Because the Earth
+turns once in 24 hours, the terminator moves westwards at about 1,670 km/h at the equator.
+Because of the [axial tilt](thema:achsneigung) of 23.4°, it runs through the poles only at
+the equinoxes; at the June solstice the whole region north of the Arctic Circle lies on
+the day side. Depending on the viewing direction, the scene shows the day side, the night
+side or the transition.
+
+The clock runs at almost 30 minutes per second, which makes the Earth's rotation visible.
+A space station about 400 km up circles the Earth in roughly 90 minutes and so sees about
+16 sunrises a day. In reality the atmosphere colours the transition and glows as a thin
+rim along the limb; the simulation shows the Earth without atmosphere and without clouds.
+Pictures from space: [Photojournal Earth](quelle:jpl-photojournal-earth).
+```
+
+`de/grundschule/szene-mondtanz.md`:
+```markdown
+# Der Tanz des Mondes
+
+Hier schaust du von weit oben auf die [Erde](objekt:earth) und den [Mond](objekt:moon).
+Die Zeit läuft sehr schnell: In jeder Sekunde vergeht fast ein ganzer Tag. So siehst du,
+wie der Mond in knapp einem Monat einmal um die Erde kreist. Dabei zeigt er der Erde immer
+dieselbe Seite, das heißt [gebundene Rotation](thema:gebundene-rotation). Die Erde dreht
+sich in dieser Zeit etwa 27-mal um sich selbst.
+```
+
+`en/grundschule/szene-mondtanz.md`:
+```markdown
+# The dance of the Moon
+
+Here you look down from high above on the [Earth](objekt:earth) and the
+[Moon](objekt:moon). Time runs very fast: almost a whole day passes every second. So you
+can see how the Moon circles the Earth once in just under a month. It always shows the
+Earth the same side, which is called [tidal locking](thema:gebundene-rotation). In that
+time the Earth turns about 27 times.
+```
+
+`de/gymnasium/szene-mondtanz.md`:
+```markdown
+# Szene: Der Tanz des Mondes
+
+Die Szene zeigt [Erde](objekt:earth) und [Mond](objekt:moon) schräg von oben aus rund
+150 Erdradien Entfernung. Bei 0,9 Tagen je Sekunde umläuft der Mond die Erde in gut
+30 Sekunden einmal. Seine Bahn ist leicht elliptisch (e ≈ 0,055): Der Abstand schwankt
+zwischen rund 363 000 km im erdnächsten Punkt, dem Perigäum, und 405 000 km im Apogäum,
+und nach dem zweiten Keplerschen Gesetz ist der Mond erdnah schneller als erdfern. Der
+Bahnradius beträgt rund 60 Erdradien. Dieses Verhältnis bleibt bei jeder Einstellung der
+Maßstabsregler erhalten, weil die Simulation Mondabstände mit demselben Faktor vergrößert
+wie die Körper.
+
+Der Mond rotiert [gebunden](thema:gebundene-rotation) und wendet der Erde stets dieselbe
+Seite zu. Ein Umlauf gegenüber den Sternen dauert 27,3 Tage, von Vollmond zu Vollmond
+vergehen 29,5 Tage. Genau genommen umkreisen beide Körper ihren gemeinsamen Schwerpunkt,
+der rund 4 700 km vom Erdmittelpunkt entfernt noch im Erdinneren liegt; die Erde schlingert
+also im Monatstakt ein wenig. Die Simulation führt den Mond um die Erde selbst und lässt
+diese nicht mitschwingen ([Grenzen des Modells](thema:modell)). Weitere Szene:
+[Mondfinsternis](szene:mondfinsternis).
+```
+
+`en/gymnasium/szene-mondtanz.md`:
+```markdown
+# Scene: The dance of the Moon
+
+The scene shows the [Earth](objekt:earth) and the [Moon](objekt:moon) obliquely from above
+at a distance of about 150 Earth radii. At 0.9 days per second the Moon orbits the Earth
+once in just over 30 seconds. Its orbit is slightly elliptical (e ≈ 0.055): the distance
+varies between about 363,000 km at the closest point, perigee, and 405,000 km at apogee,
+and by Kepler's second law the Moon moves faster near the Earth than far from it. The
+radius of the orbit is about 60 Earth radii. This ratio is kept at every setting of the
+scale sliders, because the simulation enlarges the distances of moons by the same factor
+as the bodies.
+
+The Moon is [tidally locked](thema:gebundene-rotation) and always turns the same side
+towards the Earth. One orbit relative to the stars takes 27.3 days; from full moon to full
+moon 29.5 days pass. Strictly speaking, both bodies orbit their common centre of mass,
+which lies about 4,700 km from the Earth's centre, still inside the Earth; the Earth
+therefore wobbles slightly every month. The simulation moves the Moon around the Earth
+itself and does not let the Earth wobble ([Limits of the model](thema:modell)). Another
+scene: [Lunar eclipse](szene:mondfinsternis).
+```
+
+`de/grundschule/szene-merkurjagd.md`:
+```markdown
+# Merkur auf der Innenbahn
+
+Die Kamera fliegt hinter [Merkur](objekt:mercury) her. Er ist der Planet, der der
+[Sonne](objekt:sun) am nächsten ist, und der schnellste von allen: Für eine Runde um die
+Sonne braucht er nur 88 Tage, die [Erde](objekt:earth) braucht ein ganzes Jahr. Seine Bahn
+ist nicht ganz rund. Nahe an der Sonne wird er schneller, weiter weg wieder langsamer. In
+dieser Szene vergehen in jeder Sekunde zwei Tage.
+```
+
+`en/grundschule/szene-merkurjagd.md`:
+```markdown
+# Mercury on the inner orbit
+
+The camera flies behind [Mercury](objekt:mercury). It is the planet closest to the
+[Sun](objekt:sun) and the fastest of all: it needs only 88 days for one lap around the
+Sun, while the [Earth](objekt:earth) needs a whole year. Its orbit is not quite round.
+Close to the Sun it speeds up, further away it slows down again. In this scene two days
+pass every second.
+```
+
+`de/gymnasium/szene-merkurjagd.md`:
+```markdown
+# Szene: Merkur auf der Innenbahn
+
+Die Kamera folgt [Merkur](objekt:mercury) dicht hinter ihm auf seiner Bahn. Bei zwei Tagen
+je Sekunde legt er in der Szene gut zwei Drittel eines Umlaufs zurück. Mit durchschnittlich
+47 km/s ist Merkur der schnellste Planet. Seine Bahn ist die exzentrischste aller Planeten
+(e ≈ 0,21): Im Perihel ist er der [Sonne](objekt:sun) 46 Millionen km nahe und 59 km/s
+schnell, im Aphel 70 Millionen km entfernt und nur 39 km/s schnell. Das beschreibt das
+zweite Keplersche Gesetz: Die Verbindungslinie zur Sonne überstreicht in gleichen Zeiten
+gleiche Flächen.
+
+Von Merkur aus erscheint die Sonne im Perihel gut dreimal, im Aphel gut doppelt so groß wie
+von der [Erde](objekt:earth). Merkur dreht sich in 58,6 Tagen einmal, in genau zwei
+Dritteln eines Umlaufs. Nahe dem Perihel läuft er einige Tage lang schneller um die Sonne,
+als er sich dreht; an manchen Orten bleibt die Sonne deshalb am Himmel stehen, läuft ein
+Stück zurück und zieht dann weiter. Mehr zur Bahnform: [Bahnelemente](thema:bahnelemente);
+Mission: [MESSENGER](quelle:nasa-messenger).
+```
+
+`en/gymnasium/szene-merkurjagd.md`:
+```markdown
+# Scene: Mercury on the inner orbit
+
+The camera follows [Mercury](objekt:mercury) closely along its orbit. At two days per
+second it covers just over two thirds of an orbit during the scene. With an average of
+47 km/s, Mercury is the fastest planet. Its orbit is the most eccentric of all the planets
+(e ≈ 0.21): at perihelion it comes within 46 million km of the [Sun](objekt:sun) and moves
+at 59 km/s, at aphelion it is 70 million km away and moves at only 39 km/s. This is
+described by Kepler's second law: the line joining the planet to the Sun sweeps out equal
+areas in equal times.
+
+Seen from Mercury, the Sun appears just over three times as large at perihelion and just
+over twice as large at aphelion as seen from the [Earth](objekt:earth). Mercury turns once
+in 58.6 days, exactly two thirds of an orbit. Near perihelion it moves around the Sun
+faster than it turns for a few days; at some places the Sun therefore stops in the sky,
+moves back a little and then carries on. More on the shape of orbits:
+[orbital elements](thema:bahnelemente); mission: [MESSENGER](quelle:nasa-messenger).
+```
+
+`de/grundschule/szene-systemblick.md`:
+```markdown
+# Das System von oben
+
+Von hoch oben siehst du die Bahnen der Planeten um die [Sonne](objekt:sun). In jeder
+Sekunde vergeht ein ganzer Monat. Die inneren Planeten wie [Merkur](objekt:mercury) und
+die [Erde](objekt:earth) flitzen herum, die äußeren kriechen: Während die Erde in dieser
+Szene fast fünfmal um die Sonne läuft, schafft [Neptun](objekt:neptune) nur ein kleines
+Stück seiner Bahn. Alle Planeten kreisen in dieselbe Richtung. Mehr dazu:
+[Das Sonnensystem](thema:sonnensystem).
+```
+
+`en/grundschule/szene-systemblick.md`:
+```markdown
+# The Solar System from above
+
+From high above you see the orbits of the planets around the [Sun](objekt:sun). A whole
+month passes every second. The inner planets such as [Mercury](objekt:mercury) and the
+[Earth](objekt:earth) race around, the outer ones crawl: while the Earth goes around the
+Sun almost five times in this scene, [Neptune](objekt:neptune) manages only a small part
+of its orbit. All the planets travel in the same direction. More:
+[The Solar System](thema:sonnensystem).
+```
+
+`de/gymnasium/szene-systemblick.md`:
+```markdown
+# Szene: Das System von oben
+
+Die Kamera blickt steil von Norden auf die Ebene der Planetenbahnen und dreht sich langsam
+um die [Sonne](objekt:sun). Bei 30 Tagen je Sekunde vergehen in der Szene knapp fünf
+Jahre. [Merkur](objekt:mercury) umrundet die Sonne in dieser Zeit rund zwanzigmal, die
+[Erde](objekt:earth) knapp fünfmal, [Jupiter](objekt:jupiter) schafft zwei Fünftel eines
+Umlaufs und [Neptun](objekt:neptune) nur 3 %. Das dritte Keplersche Gesetz fasst das
+zusammen: Das Quadrat der Umlaufzeit wächst mit der dritten Potenz der großen Halbachse, in
+Jahren und AE gilt T² = a³. Außen sind die Planeten zudem langsamer: Die Erde läuft mit
+knapp 30 km/s, Neptun mit gut 5 km/s.
+
+Von Norden gesehen umlaufen alle Planeten die Sonne gegen den Uhrzeigersinn, ein Erbe der
+rotierenden Scheibe, aus der sie entstanden. Zwischen Mars und Jupiter liegt der
+Asteroidengürtel, jenseits von Neptun der Kuipergürtel; beide zeigt die Simulation als
+Punktwolken. Neptun steht knapp 78-mal so weit von der Sonne wie Merkur. Maßstabsgetreu
+wären die inneren Bahnen neben seiner kaum zu erkennen; die Voreinstellung „Schaubild"
+staucht die Abstände deshalb. Mehr: [Das Sonnensystem](thema:sonnensystem),
+[Bahnelemente](thema:bahnelemente); selbst erkunden:
+[NASA Eyes on the Solar System](quelle:nasa-eyes).
+```
+
+`en/gymnasium/szene-systemblick.md`:
+```markdown
+# Scene: The Solar System from above
+
+The camera looks steeply down from the north onto the plane of the planetary orbits and
+slowly circles the [Sun](objekt:sun). At 30 days per second, almost five years pass
+during the scene. In that time [Mercury](objekt:mercury) goes around the Sun about twenty
+times, the [Earth](objekt:earth) almost five times, [Jupiter](objekt:jupiter) manages two
+fifths of an orbit and [Neptune](objekt:neptune) only 3 %. Kepler's third law sums this
+up: the square of the orbital period grows with the cube of the semi-major axis; in years
+and AU, T² = a³. The outer planets are also slower: the Earth moves at almost 30 km/s,
+Neptune at just over 5 km/s.
+
+Seen from the north, all the planets orbit the Sun anticlockwise, a legacy of the rotating
+disc from which they formed. The asteroid belt lies between Mars and Jupiter, the Kuiper
+belt beyond Neptune; the simulation shows both as clouds of points. Neptune is almost
+78 times as far from the Sun as Mercury. To scale, the inner orbits would hardly be
+visible next to Neptune's; the default setting "Diagram" therefore compresses the
+distances. More: [The Solar System](thema:sonnensystem),
+[orbital elements](thema:bahnelemente); explore yourself:
+[NASA Eyes on the Solar System](quelle:nasa-eyes).
+```
+
+`de/grundschule/szene-ferne-sonne.md`:
+```markdown
+# Von Neptun zur fernen Sonne
+
+Die Kamera steht beim [Neptun](objekt:neptune), dem äußersten Planeten, und schaut zurück
+zur [Sonne](objekt:sun). Von hier ist die Sonne dreißigmal weiter weg als von der
+[Erde](objekt:earth). In Wirklichkeit sähe sie von hier winzig aus, wie ein sehr heller
+Stern, und es ist bitterkalt. Ihr Licht ist gut vier Stunden unterwegs, bis es hier
+ankommt. Die Simulation zeichnet die Sonne normalerweise größer, damit du sie gut findest.
+```
+
+`en/grundschule/szene-ferne-sonne.md`:
+```markdown
+# From Neptune to the distant Sun
+
+The camera stands next to [Neptune](objekt:neptune), the outermost planet, and looks back
+at the [Sun](objekt:sun). From here the Sun is thirty times further away than from the
+[Earth](objekt:earth). In reality it would look tiny from here, like a very bright star,
+and it is bitterly cold. Its light travels for just over four hours to get here. The
+simulation normally draws the Sun larger so that you can find it easily.
+```
+
+`de/gymnasium/szene-ferne-sonne.md`:
+```markdown
+# Szene: Von Neptun zur fernen Sonne
+
+Die Kamera steht nahe [Neptun](objekt:neptune) und blickt zur [Sonne](objekt:sun). Neptun
+umläuft sie in 30,1 AE Abstand; ihr Licht braucht gut vier Stunden bis hierher. Weil die
+Bestrahlungsstärke mit dem Quadrat des Abstands abnimmt, kommt nur etwa ein Neunhundertstel
+dessen an, was die [Erde](objekt:earth) erreicht. Die Sonnenscheibe ist von hier aus gut
+eine Bogenminute groß, ein Dreißigstel ihres Anblicks von der Erde, und für das bloße Auge
+praktisch ein Punkt. Mit einer scheinbaren Helligkeit von etwa −19 mag wäre sie trotzdem
+gut 400-mal so hell wie der Vollmond an unserem Himmel.
+
+Die Voreinstellung „Schaubild" vergrößert die Körper und staucht die Abstände; die Sonne
+erscheint deshalb als deutliche Scheibe. Mit „Realistisch" im Panel Maßstab schrumpft sie
+zu einem Lichtpunkt, und die Bahnen der inneren Planeten rücken eng an sie heran. Die
+Belichtung der Simulation richtet sich nach dem Kameraziel, damit auch ferne Körper
+erkennbar bleiben. Bisher hat nur Voyager 2 Neptun besucht, 1989
+([Voyager 2](quelle:nasa-voyager-2)); Kennzahlen:
+[NSSDC Neptune Fact Sheet](quelle:nssdc-neptune).
+```
+
+`en/gymnasium/szene-ferne-sonne.md`:
+```markdown
+# Scene: From Neptune to the distant Sun
+
+The camera stands near [Neptune](objekt:neptune) and looks towards the [Sun](objekt:sun).
+Neptune orbits it at a distance of 30.1 AU; its light takes just over four hours to get
+here. Because irradiance falls with the square of the distance, only about 1/900 of what
+reaches the [Earth](objekt:earth) arrives here. From here the solar disc is just over one
+arcminute across, a thirtieth of its size as seen from the Earth, and practically a point
+to the naked eye. With an apparent magnitude of about −19, however, it would still be more
+than 400 times as bright as the full Moon in our sky.
+
+The default setting "Diagram" enlarges the bodies and compresses the distances, so the Sun
+appears as a clear disc. With "Realistic" in the Scale panel it shrinks to a point of
+light, and the orbits of the inner planets move close to it. The simulation sets its
+exposure by the camera target so that distant bodies remain visible. So far only
+Voyager 2 has visited Neptune, in 1989 ([Voyager 2](quelle:nasa-voyager-2)); key figures:
+[NSSDC Neptune Fact Sheet](quelle:nssdc-neptune).
+```
+
+- [ ] **Schritt 2: Ausstehende Szenen streichen**
+
+In `src/data/texte/dateien.test.ts` die Zeilen
+
+```ts
+  // Task 5
+  'szene:erdaufgang', 'szene:mondtanz', 'szene:merkurjagd', 'szene:systemblick', 'szene:ferne-sonne',
+```
+
+löschen.
+
+- [ ] **Schritt 3: Tests laufen lassen**
+
+Run: `npx vitest run src/data/texte`
+Expected: PASS. Fällt „hält die Wortgrenze des Niveaus", die Datei nicht kürzen, sondern den Befund melden (die Wortzahlen der Grundschultexte sind in der Planung gezählt, alle unter 110).
+
+- [ ] **Schritt 4: Commit**
+
+Erwartete Gesamtzahl: 2529 (2389 + 20 Dateien × 7).
+
+```bash
+git add src/data/texte
+git commit -m "Szenentexte Grundschule und Gymnasium: Erdaufgang, Mondtanz, Merkurjagd, Systemblick, ferne Sonne"
+```
+
+---
