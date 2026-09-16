@@ -202,28 +202,28 @@ export const QUELLEN: readonly Quelle[] = [
     titel: { de: 'Erde (Wikipedia)', en: 'Earth (German Wikipedia)' },
     herausgeber: 'Wikipedia', sprache: 'de', art: 'uebersicht',
     url: 'https://de.wikipedia.org/wiki/Erde',
-    fuer: ['objekt:earth', 'szene:erdaufgang'],
+    fuer: ['objekt:earth'],
   },
   {
     id: 'wikipedia-en-earth',
     titel: { de: 'Earth (englische Wikipedia)', en: 'Earth (Wikipedia)' },
     herausgeber: 'Wikipedia', sprache: 'en', art: 'uebersicht',
     url: 'https://en.wikipedia.org/wiki/Earth',
-    fuer: ['objekt:earth', 'szene:erdaufgang'],
+    fuer: ['objekt:earth'],
   },
   {
     id: 'wikipedia-de-saturn',
     titel: { de: 'Saturn (Wikipedia)', en: 'Saturn (German Wikipedia)' },
     herausgeber: 'Wikipedia', sprache: 'de', art: 'uebersicht',
     url: 'https://de.wikipedia.org/wiki/Saturn_(Planet)',
-    fuer: ['objekt:saturn', 'szene:saturn-ringkante'],
+    fuer: ['objekt:saturn'],
   },
   {
     id: 'wikipedia-en-saturn',
     titel: { de: 'Saturn (englische Wikipedia)', en: 'Saturn (Wikipedia)' },
     herausgeber: 'Wikipedia', sprache: 'en', art: 'uebersicht',
     url: 'https://en.wikipedia.org/wiki/Saturn',
-    fuer: ['objekt:saturn', 'szene:saturn-ringkante'],
+    fuer: ['objekt:saturn'],
   },
   {
     id: 'wikipedia-de-mondfinsternis',
@@ -244,7 +244,7 @@ export const QUELLEN: readonly Quelle[] = [
     titel: { de: 'Sonne bei NASA Science', en: 'Sun at NASA Science' },
     herausgeber: 'NASA', sprache: 'en', art: 'uebersicht',
     url: 'https://science.nasa.gov/sun/',
-    fuer: ['objekt:sun', 'szene:ferne-sonne'],
+    fuer: ['objekt:sun'],
   },
   {
     id: 'nasa-mercury',
@@ -265,7 +265,7 @@ export const QUELLEN: readonly Quelle[] = [
     titel: { de: 'Mars bei NASA Science', en: 'Mars at NASA Science' },
     herausgeber: 'NASA', sprache: 'en', art: 'uebersicht',
     url: 'https://science.nasa.gov/mars/',
-    fuer: ['objekt:mars', 'szene:phobos-tiefflug'],
+    fuer: ['objekt:mars'],
   },
   {
     id: 'nasa-jupiter',
@@ -286,7 +286,7 @@ export const QUELLEN: readonly Quelle[] = [
     titel: { de: 'Neptun bei NASA Science', en: 'Neptune at NASA Science' },
     herausgeber: 'NASA', sprache: 'en', art: 'uebersicht',
     url: 'https://science.nasa.gov/neptune/',
-    fuer: ['objekt:neptune', 'szene:ferne-sonne', 'szene:triton-rueckwaerts'],
+    fuer: ['objekt:neptune'],
   },
   {
     id: 'nasa-pluto',
@@ -328,7 +328,7 @@ export const QUELLEN: readonly Quelle[] = [
     titel: { de: 'Saturnmonde bei NASA Science', en: 'Saturn moons at NASA Science' },
     herausgeber: 'NASA', sprache: 'en', art: 'uebersicht',
     url: 'https://science.nasa.gov/saturn/moons/',
-    fuer: ['objekt:mimas', 'objekt:enceladus', 'objekt:tethys', 'objekt:dione', 'objekt:rhea', 'objekt:titan', 'objekt:iapetus', 'szene:titan-dunst', 'szene:enceladus-hell', 'szene:iapetus-schief'],
+    fuer: ['objekt:mimas', 'objekt:enceladus', 'objekt:tethys', 'objekt:dione', 'objekt:rhea', 'objekt:titan', 'objekt:iapetus', 'szene:enceladus-hell', 'szene:iapetus-schief'],
   },
   {
     id: 'nasa-uranusmonde',
@@ -377,7 +377,7 @@ export const QUELLEN: readonly Quelle[] = [
     titel: { de: 'Juice (ESA)', en: 'Juice (ESA)' },
     herausgeber: 'ESA', sprache: 'en', art: 'uebersicht',
     url: 'https://www.esa.int/Science_Exploration/Space_Science/Juice',
-    fuer: ['objekt:jupiter', 'objekt:europa', 'objekt:ganymede', 'objekt:callisto'],
+    fuer: ['objekt:jupiter', 'objekt:europa', 'objekt:ganymede', 'objekt:callisto', 'szene:galileisches-schattenspiel'],
   },
   {
     id: 'nasa-voyager-2',
