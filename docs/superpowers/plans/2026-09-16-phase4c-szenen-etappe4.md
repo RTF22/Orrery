@@ -2295,3 +2295,125 @@ git commit -m "Szenentexte Uranus, Triton, Ceres; Modellgrenze ruhende Mutterkö
 ```
 
 ---
+
+### Task 9: Abnahme, README
+
+**Dateien:**
+- Erstellen: `docs/phase4c-etappe4-abnahme.md`
+- Ändern: `README.md` (Abschnitt „Stand")
+
+**Schnittstellen:**
+- Konsumiert: alles aus Task 1 bis 8; `data-verweis` (Task 1); `SYSTEM_THEMA` (Task 4); `textVorhanden(sprache, niveau, { art, kennung })` aus `src/data/texte/index.ts`; `linkErzeugen(state, { origin, pathname })` aus `src/store/persist.ts`.
+- Produziert: Abnahmeprotokoll, auf das die lokale Projektanleitung und die Rulings-Meldung verweisen.
+
+DOM-Anker (Stand `src/ui/info/InfoPanel.tsx`, `Markdown.tsx`, `Quellenkarten.tsx`): Panel `aside.info-panel`, Kopf `aside.info-panel h2`, oberes Segment `aside.info-panel [role=tabpanel]`, Hinweiszeilen `p.text-amber-300` darin, Verweise `[data-verweis]`, Quellenkarten `aside.info-panel a[data-quelle]` (hervorgehoben mit Klasse `border-sky-300/80`), Szenenkopf mit den Beschriftungen „Standort"/„Blickziel" („Location"/„Looking at"). Wurzel des Objektbaums: Knopf mit dem Text „Sonnensystem" („Solar System"), Kopfzeile: „Zurücksetzen" („Reset"). Sitzungsschlüssel im `localStorage`: `orrery.sitzung.v1`.
+
+**Messregeln aus Etappe 2 und 3:** Der Hinweis „kein Text" erscheint erst nach dem faulen Import (`frisch`), der Kopf zeigt bis dahin den Ausweichtitel. Jede Abfrage wartet per `performance.now()`-Schleife (50-ms-Takt, Frist 4 s), bis Kopf und Prosa zur neuen Kennung passen oder ein Hinweis steht; läuft die Frist ab, zählt das als **Nichtmessung**, nicht als bestanden. Im Kino blendet `useIdleHide` die Oberfläche nach 3 s aus: In jeder Wartephase ein `pointermove` an `window` senden und vorher `setCinema({ pauseOnInput: false })` setzen.
+
+- [ ] **Schritt 1: Server und Stand**
+
+`curl -s -o /dev/null -w '%{http_code}' http://localhost:5173/Orrery/` → `200`; `git status --short` leer; `git log --oneline -1` notieren; `ls src/data/texte/*/*/szene-*.md | wc -l` → `76`; `ls src/data/texte/*/*/thema-sonnensystem.md | wc -l` → `4`; `ls src/data/texte/*/*/*.md | wc -l` → `252`; `grep -c "^    id: '" src/data/quellen.ts` → `66`.
+
+- [ ] **Schritt 2: Dateitest**
+
+`npx vitest run src/data/texte/dateien.test.ts` → Schlusszeile ins Protokoll, Erwartung 1766 Fälle.
+
+- [ ] **Schritt 3: Start ohne Link und ohne Sitzung**
+
+Per `browser_evaluate` auf einer beliebigen Seite des Servers `localStorage.removeItem('orrery.sitzung.v1')`, dann `browser_navigate` auf `http://localhost:5173/Orrery/` (ohne Fragment), direkt danach `window.store.setState({ quality: { tier: 'high' } })`. Erst jetzt die Sprache auf Deutsch stellen, falls der Browser Englisch meldet (`setUi({ language: 'de' })`), und Infopanel offen halten. Messen und protokollieren:
+- `window.store.getState().ui.info.thema` → `'sonnensystem'`, `camera.targetId` → `'sun'`
+- Kopf „Das Sonnensystem", keine Hinweiszeile
+- Kartenkennungen `[...document.querySelectorAll('aside.info-panel a[data-quelle]')].map((a) => a.dataset.quelle)` enthalten `nasa-sonnensystem`, `wikipedia-de-orrery`, `wikipedia-en-orrery`, `sciencemuseum-orrery`
+- Klick (`browser_click`) auf den Verweis „Sammlungsobjekt" → Karte `sciencemuseum-orrery` trägt `border-sky-300/80`
+- Tab „Grundschule": Kopf „Das Sonnensystem", Prosa enthält „Dieses Programm heißt Orrery"
+- Sprache Englisch: Kopf „The Solar System", keine Hinweiszeile; zurück auf Deutsch, Tab „Gymnasium"
+
+- [ ] **Schritt 4: Start über einen Link**
+
+Per `browser_evaluate`: `const { linkErzeugen } = await import('/Orrery/src/store/persist.ts'); window.store.getState().setCamera({ targetId: 'mars' }); return linkErzeugen(window.store.getState(), location);` → Adresse. `browser_navigate` auf diese Adresse, Qualitätsstufe setzen, warten. Erwartet: `ui.info.thema` → `null`, Kopf „Mars".
+
+- [ ] **Schritt 5: Wurzel, Sonne, Zurücksetzen**
+
+Ausgangslage Ziel Mars (Kopf „Mars"). Mit echten Klicks (`browser_click`), nach jedem Klick 2 s per `performance.now()` warten:
+1. Wurzel „Sonnensystem" im Panel Himmelskörper → `thema` `'sonnensystem'`, `targetId` `'sun'`, Kopf „Das Sonnensystem", `camera.elevation` nahe `Math.PI / 2`.
+2. Zeile „Sonne" im Objektbaum → `thema` `null`, Kopf „Sonne".
+3. Zeile „Jupiter" → Kopf „Jupiter"; danach „Zurücksetzen" in der Kopfzeile → `thema` `'sonnensystem'`, `targetId` `'sun'`, Kopf „Das Sonnensystem".
+4. Themenverweis im Sonnensystem-Text „Bahnelementen" → Kopf „Bahnelemente"; danach Wurzel „Sonnensystem" → Kopf „Das Sonnensystem".
+
+Store-Werte und Köpfe ins Protokoll.
+
+- [ ] **Schritt 6: Rundgang Szenen, beide Niveaus und Sprachen**
+
+Per `browser_run_code_unsafe` für alle 19 Szenen (`SCENES` per `await import('/Orrery/src/data/scenes.ts')`), je Sprache (`de`, `en`) und Niveau (`grundschule`, `gymnasium`): `setCinema({ running: true, shuffle: false, nummer: i, pauseOnInput: false })`, `setCamera({ mode: 'cinema' })`, dann mit der Warteschleife (inklusive `pointermove`) warten, bis der Kopf zur Szene passt. Erwartete Köpfe: Grundschule = Szenentitel aus `ui/i18n` (`t(scene.titleKey)`), Gymnasium = „Szene: " beziehungsweise „Scene: " plus Titel. Je Szene erfassen: `gemessen`, `kopf`, `hinweise` (Erwartung `[]`), `karten` (Erwartung ≥ 1), Szenenkopf vorhanden (Text „Standort" beziehungsweise „Location" im Panel). Zum Schluss `setCinema({ running: false })`, `setCamera({ mode: 'free' })`. Tabelle (76 Zeilen) ins Protokoll; Nichtmessungen einzeln mit längerer Frist wiederholen und getrennt ausweisen.
+
+- [ ] **Schritt 7: Keine Sackgasse**
+
+Teil A, vollständig: Per `browser_run_code_unsafe` jeden Text anzeigen, der Verweise tragen kann: 35 Körper (`setCamera({ targetId })`, Kino aus), 9 Themen (`setInfo({ thema })`) und 19 Szenen (wie Schritt 6), je Sprache und Niveau Grundschule/Gymnasium. Nach dem Warten alle `aside.info-panel [role=tabpanel] [data-verweis]` einsammeln, deren Wert mit `objekt:`, `szene:` oder `thema:` beginnt, und für jeden Wert `textVorhanden(sprache, niveau, { art, kennung })` aus `/Orrery/src/data/texte/index.ts` prüfen. Erwartung: 0 Verweise ohne Text; Zahl der geprüften Verweise je Art ins Protokoll. Die Art ergibt sich aus `data-verweis`, nicht aus Store-Änderungen (Befund 8 aus Etappe 3).
+
+Teil B, Stichprobe mit echten Klicks (`browser_click`), Deutsch: Gymnasium Merkur → „Merkur auf der Innenbahn" (Kino läuft, Kopf „Szene: Merkur auf der Innenbahn"); Grundschule Saturn → Verweis auf `thema:ringe` (Kopf „Ringsysteme"); Gymnasium Szene `pluto-charon` → „Grenzen des Modells" (Kopf „Grenzen des Modells", Listenpunkt „Ruhende Mutterkörper" vorhanden); Englisch Gymnasium Szene `systemblick` → „The Solar System" (Kopf „The Solar System"); Englisch Grundschule Szene `jupiter-vorbeiflug` → „Earths" (Kino endet, Kopf „The Earth"). Jeweils ohne Hinweiszeile.
+
+- [ ] **Schritt 8: Hochschul-Tab**
+
+Szene `titan-dunst` im Kino, Tab „Hochschule": Hinweis `info.hochschuleFolgt`, darunter der Gymnasialtext (Prosa beginnt mit „Die Kamera umkreist Titan"). Thema `sonnensystem`, Tab „Hochschule": ebenso, Prosa beginnt mit „Das Sonnensystem entstand".
+
+- [ ] **Schritt 9: Konsole**
+
+`browser_console_messages`: 0 Fehler, 0 Warnungen (sonst wörtlich ins Protokoll).
+
+- [ ] **Schritt 10: Lint, Test, Build**
+
+`npm run lint`, `npm test`, `npm run build`; Schlusszeilen und Testzahl ins Protokoll. Erwartung 2892 Tests.
+
+- [ ] **Schritt 11: Protokoll `docs/phase4c-etappe4-abnahme.md`**
+
+Aufbau wie `docs/phase4c-etappe3-abnahme.md`: Kopf (Datum, Branch, Commit, Prüfumgebung), Entscheidungen während der Umsetzung, je Schritt die wörtlichen Werte, Konsole, Lint/Test/Build. „Bekannte Unschärfen":
+1. Szenen streuen Blickrichtung und Abstand je Abspielen; die Texte beschreiben den Kameraweg deshalb mit Spannen („zwei bis drei Erdradien") oder bedingt („mit etwas Glück zieht Saturn durchs Bild").
+2. `galileisches-schattenspiel` zeigt die Mondschatten auf Jupiter höchstens einen Bildpunkt groß; die Szene bleibt laut Entscheidung von Jens unverändert, der Text sagt es offen.
+3. Die Helligkeit von Enceladus in `enceladus-hell` ist gegenüber der Rückstrahlung gedämpft (Befund aus Phase 3a); der Text behauptet keine Bildhelligkeit.
+4. Ob in `ceres-guertel` Gürtelpunkte im Hintergrund zu sehen sind, ist nicht gemessen; der Text spricht nur über die Wirklichkeit und die Punktwolke als Darstellung.
+5. Aussagen zu Missionen und Ereignissen (Juno 2016, Ringebenendurchgang 2025 und 2038, Uranus-Sonnenwende 2028) geben den Stand September 2026 wieder.
+6. Die Seite des Science Museum weist Skripte ohne Browserkennung mit 403 ab; im Browser öffnet sie (Schritt 3, Mittelklick-Probe optional).
+7. Der Hochschul-Tab zeigt weiterhin Gymnasialtexte mit Hinweis (Phase 4d).
+8. Die Zahl „35 Körper, 21 Monde" steht im Sonnensystem-Text fest und muss bei einer Katalogänderung nachgezogen werden.
+
+Bewertet wird das Kriterium aus Entwurf §7 Punkt 4 mit den Nachträgen vom 14.09. und 16.09.2026: „19 Szenen in beiden Niveaus und Sprachen, Dateitest ‚Ziel hat Text im selben Niveau', Thema Sonnensystem beim Start und an der Wurzel, Quellenkarten für alle Szenen", zusätzlich: kein `objekt:`-, `szene:`- oder `thema:`-Verweis führt auf „kein Text".
+
+- [ ] **Schritt 12: README**
+
+Im Abschnitt „Stand": 4c Etappe 4 abgeschlossen (alle 19 Kinoszenen mit Texten in Grundschule und Gymnasium, Deutsch und Englisch; Thema „Das Sonnensystem" mit Erklärung des Namens Orrery beim Start und an der Wurzel des Objektbaums; Quellenkarten für alle Szenen). Phase 4c ist damit inhaltlich komplett; Tag `v0.4.0` nach Freigabe, die Hochschulstufe folgt als Phase 4d.
+
+- [ ] **Schritt 13: Commit**
+
+```bash
+git add docs/phase4c-etappe4-abnahme.md README.md
+git commit -m "Abnahme 4c Etappe 4: Szenentexte und Sonnensystem"
+```
+
+## Abschluss
+
+- [ ] `npm run lint`, `npm test`, `npm run build` auf dem Branch, Ausgabe zeigen.
+- [ ] Die Kontrollen der lokalen Projektanleitung für versionierte Dateien und Commit-Texte ausführen (Ergebnis leer beziehungsweise 0), auch über alle Commits des Branches.
+- [ ] Die lokale Projektanleitung im Abschnitt „Stand" nachziehen (4c-4 auf master, Testzahl, Thema Sonnensystem beim Start und an der Wurzel, Quellenkarten für Szenen, `data-verweis`; Rulings unten).
+- [ ] Fast-Forward nach `master`, Branch `szenen` löschen, `.playwright-mcp/` leeren. Tag `v0.4.0` erst nach Freigabe durch Jens.
+- [ ] Rulings gesammelt an Jens melden.
+
+## Rulings
+
+Entscheidungen während der Planung, die vom Entwurf abweichen oder ihn präzisieren; Jens bestätigt oder kippt sie.
+
+1. **Ruling: Szenentexte beschreiben das tatsächliche Bild samt seinen Grenzen.** Sie nennen Kameraweg und Zeitraffer aus `src/data/scenes.ts` und sagen offen, was fehlt oder anders ist: keine Erdatmosphäre und keine Wolken, Phobos außerhalb des Bildes, Titans Karte aus dem Nahinfrarot ohne Dunsthülle, keine Enceladus-Fontänen, künstlerische Ceres-Textur, Charon um Plutos Mittelpunkt, vergrößerte Sonne im „Schaubild".
+2. **Ruling: `galileisches-schattenspiel` bekommt Texte,** obwohl die Szene laut Jens nicht weiterverfolgt wird: Sie läuft im Kino und zeigte sonst „kein Text". Schwerpunkt sind Laplace-Resonanz und Rømers Lichtgeschwindigkeit; dass die Schatten aus dieser Entfernung höchstens einen Bildpunkt groß sind, steht im Text. Die Szene selbst bleibt unverändert, Körpertexte verlinken sie weiterhin nicht.
+3. **Ruling: Das Sonnensystem erscheint beim Start nur ohne Link und ohne gelesene Sitzung.** `DEFAULT_STATE` behält `thema: null`; `startZustand` setzt das Thema, wenn weder ein gültiges Fragment noch eine gemerkte Sitzung den Start bestimmt. Ein Link zeigt wie bisher sein Ziel (Links führen kein Thema), eine Sitzung stellt ihr eigenes Thema wieder her. Ein Standardzustand mit Thema hätte alle Tests und Links verändert, die vom Standard ausgehen.
+4. **Ruling: „Zurücksetzen" zeigt ebenfalls das Sonnensystem,** weil es in die Startansicht führt; bisher löschte es das Thema. Nicht ausdrücklich verlangt.
+5. **Ruling: `fahreZu` verwirft ein gewähltes Thema auch bei gleichem Ziel.** Sonst bliebe nach der Systemansicht beim Klick auf „Sonne" der Sonnensystem-Text stehen. Nebenwirkung: Wer zu einem Thema das schon gewählte Ziel im Objektbaum anklickt, sieht wieder den Körpertext.
+6. **Ruling: Das Infopanel verwirft ein Thema nicht, wenn es im selben Zug wie Ziel oder Szene gesetzt wurde** (Entwurf §3.3 präzisiert). `fahreZu`/`fahreZuSystem` setzen Ziel und Thema deshalb in einem einzigen `useStore.setState`.
+7. **Ruling: Wikipedia-Verweis im Gymnasialtext zum Sonnensystem sprachspezifisch:** der deutsche Text belegt die deutschen Bezeichnungen (Planetarium, Planetenmaschine, Tellurium) mit der deutschen Wikipedia, der englische den Begriff „tellurium" mit der englischen; sonst sind beide Fassungen parallel. Beide Wikipedia-Karten erscheinen in beiden Sprachen.
+8. **Ruling: Quellenkarten für alle Szenen, Abdeckungstest schließt Szenen ein** (Entwurf §4.4 Nachtrag 4c-3 ließ `info.keineQuellen` für Szenen zu). Nur `szene:`-Einträge in vorhandenen `fuer`-Listen, neue Adressen nur für das Thema Sonnensystem (NASA Science, zwei Wikipedia-Artikel, Science Museum Group); Katalog 62 → 66.
+9. **Ruling: Zusätzlicher Dateitest „Quellenverweis hat eine Karte unter dem Text"** über Entwurf §8 hinaus; ohne Karte bliebe ein Klick auf einen `quelle:`-Verweis wirkungslos. Heute gibt es keinen Verstoß.
+10. **Ruling: `data-verweis` an allen aufgelösten Verweisen** (kleine Codeänderung in `Markdown.tsx`), damit Browser-Rundgänge die Art eines Verweises ablesen; behebt die Ursache der Fehlzuordnung aus Etappe 3 (Bekannte Unschärfen 8) für künftige Messungen.
+11. **Ruling: Der Dateitest „Ziel hat Text" läuft von Task 1 an mit einer schrumpfenden Liste `AUSSTEHEND`,** die Task 8 entfernt; so bleibt jeder Zwischencommit grün und jede Text-Task beweist, dass ihre Szenen danach auflösbar sind.
+12. **Ruling: Überschriften wie in Etappe 1:** Grundschule trägt den Szenentitel, Gymnasium „Szene: " davor (`szene-mondfinsternis.md`). Die Niveaus bleiben damit uneinheitlich; eine Vereinheitlichung wäre eine Änderung an bestehenden Texten.
+13. **Ruling: `thema-modell` (Gymnasium, beide Sprachen) um „Ruhende Mutterkörper" ergänzt,** weil `mondtanz` und `pluto-charon` dorthin verweisen; der Grundschul-Modelltext bleibt unverändert.
+14. **Ruling: Längen.** Die Gymnasialtexte der Szenen liegen bei 146 bis 219 Wörtern, der Gymnasialtext zum Sonnensystem bei rund 275 (Deutsch) und 303 (Englisch), weil er Überblick und Begriffserklärung trägt; die Grundschultexte liegen zwischen 55 und 104 Wörtern (Grenze 110).
+15. **Ruling: Der Browser-Nachweis „keine Sackgasse" prüft alle gerenderten Verweise per `textVorhanden`** und klickt nur eine Stichprobe, statt jeden Knopf anzuklicken; die Einzelklicks von Etappe 3 dauerten lange und ordneten Szenenklicks falsch zu. Der Dateitest deckt dieselbe Aussage vollständig ab.
+16. **Ruling: Science Museum Group als Herausgeber `sonstige`, Art `bildarchiv`** (Sammlungsobjekt mit Aufnahmen).
