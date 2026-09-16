@@ -2010,3 +2010,288 @@ git commit -m "Szenentexte Grundschule und Gymnasium: Saturn im Streiflicht, Rin
 ```
 
 ---
+
+### Task 8: Szenen Uranus, Triton, Ceres; Modellgrenze „Ruhende Mutterkörper"; Übergangsliste entfernen
+
+**Sachstand (Planung, 16.09.2026):**
+- `uranus-gekippt`: Umlaufkamera 7 Uranusradien, Elevation 10° (0 bis 20), Azimut 167,65° (einer der beiden Knoten der Ringebene mit der Ekliptik, aus dem festen Pol berechnet und deshalb datumsunabhängig) und 1,2°/s, 35 s bei 0,3 d/s = 252 h, Rotation 17,24 h → 14,6 Drehungen. Schiefe 97,8°. Voyager 2 1986 nahe der Südsommer-Sonnenwende, Tagundnachtgleiche 2007, Nordsommer-Sonnenwende 2028 (NASA/ESA Hubble). Ringe 1977 bei einer Sternbedeckung entdeckt.
+- `triton-rueckwaerts`: Umlaufkamera um Neptun, 45 Neptunradien, Elevation 45° (30 bis 60, also nördlich der Ekliptik), 35 s bei 0,4 d/s = 14 d = 2,38 Umläufe (5,877 d). a = 354 766 km = 14,4 Neptunradien, i = 156,8° gegen Neptuns Äquator. Neptuns Pol liegt 28° vom ekliptikalen Nordpol entfernt; der Bahndrehimpuls Tritons steht deshalb mindestens 128° vom ekliptikalen Nordpol entfernt, von Norden gesehen läuft Triton im Uhrzeigersinn, unabhängig vom Knoten.
+- `ceres-guertel`: Umlaufkamera 6 Ceresradien, 30 s bei 0,02 d/s = 14,4 h, Rotation 9,074 h → 1,59 Drehungen. a = 2,7655 AE; Hauptgürtel im Modell 2,1 bis 3,3 AE mit Kirkwood-Lücken (drei von fünf sichtbar, `src/sim/belts.ts`). Ceres-Textur ist laut `ASSETS.md` eine künstlerische Darstellung („_fictional"). Ob Gürtelpunkte im Hintergrund zu sehen sind, ist nicht gemessen; die Texte behaupten dazu nichts.
+- `thema-modell` (Gymnasium): Der Datensatz führt Charon um Plutos Mittelpunkt, Pluto selbst bleibt auf seiner heliozentrischen Bahn und taumelt nicht um das Baryzentrum 2 126 km von seinem Mittelpunkt (Kommentar „BARYZENTRUM AUSSERHALB PLUTOS" in `src/data/bodies/pluto-system.ts`). Die Szenentexte `mondtanz` und `pluto-charon` verweisen dafür auf `thema:modell`; dort fehlt der Punkt bisher.
+
+**Dateien:**
+- Erstellen: `src/data/texte/{de,en}/{grundschule,gymnasium}/szene-{uranus-gekippt,triton-rueckwaerts,ceres-guertel}.md`
+- Ändern: `src/data/texte/de/gymnasium/thema-modell.md`, `src/data/texte/en/gymnasium/thema-modell.md`
+- Ändern: `src/data/texte/dateien.test.ts` (Liste `AUSSTEHEND` und ihre Prüfung entfernen)
+
+**Schnittstellen:**
+- Konsumiert: Quellenkarten aus Task 2 (`nasa-voyager-2`, `pds-rings`, `jpl-satelliten-bahnen`, `nasa-dawn`); Verweise `objekt:uranus`, `objekt:neptune`, `objekt:triton`, `objekt:jupiter`, `objekt:saturn`, `objekt:pluto`, `objekt:charon`, `objekt:ceres`, `objekt:mars`, `objekt:sun`, `thema:ringe`, `thema:achsneigung`, `thema:zwergplaneten`, `thema:kirkwood-luecken`.
+- Produziert: `dateien.test.ts` ohne Übergangsliste; ab jetzt muss jeder `objekt:`-, `szene:`- und `thema:`-Verweis einen Text im selben Niveau haben. Task 9 misst darauf.
+
+- [ ] **Schritt 1: Dateien anlegen**
+
+`de/grundschule/szene-uranus-gekippt.md`:
+```markdown
+# Der liegende Uranus
+
+[Uranus](objekt:uranus) ist ein ganz besonderer Planet. Die meisten Planeten drehen sich
+wie ein Kreisel, der fast aufrecht steht. Uranus dagegen liegt auf der Seite. Auch seine
+dünnen, dunklen [Ringe](thema:ringe) und seine Monde kreisen um den gekippten Äquator.
+Deshalb dauern die Jahreszeiten dort sehr lange: Am Nordpol scheint jahrzehntelang die
+Sonne, danach ist dort jahrzehntelang Nacht.
+```
+
+`en/grundschule/szene-uranus-gekippt.md`:
+```markdown
+# Uranus lying on its side
+
+[Uranus](objekt:uranus) is a very special planet. Most planets spin like a top that stands
+almost upright. Uranus, however, lies on its side. Its thin, dark [rings](thema:ringe) and
+its moons also circle around its tilted equator. That is why the seasons there last a
+very long time: at the north pole the Sun shines for decades, and afterwards it is night
+there for decades.
+```
+
+`de/gymnasium/szene-uranus-gekippt.md`:
+```markdown
+# Szene: Der liegende Uranus
+
+Die Kamera umkreist [Uranus](objekt:uranus) in rund sieben Uranusradien Abstand, flach
+über der Ekliptik. Seine Drehachse ist um 98° gegen die Bahn geneigt; der Planet liegt also
+auf der Seite und dreht sich, formal gezählt, rückläufig. Die [Ringe](thema:ringe) und die
+großen Monde liegen in seiner Äquatorebene und stehen deshalb fast senkrecht zur Bahn. Die
+Szene beginnt nahe der Richtung, aus der die Ringe von der Kante erscheinen; während die
+Kamera weiterzieht, öffnen sie sich. Bei 0,3 Tagen je Sekunde dreht sich der Planet dabei
+rund 15-mal.
+
+Die Folge der [Achsneigung](thema:achsneigung) sind extreme Jahreszeiten. In einem Umlauf
+von 84 Jahren zeigt jeder Pol rund 42 Jahre lang mehr oder weniger zur Sonne. Als
+Voyager 2 im Jahr 1986 vorbeiflog, wies der Südpol fast genau zur Sonne; zur
+Tagundnachtgleiche 2007 stand sie über dem Äquator, 2028 zeigt der Nordpol zu ihr. Wie
+Uranus so gekippt wurde, ist ungeklärt; diskutiert werden ein oder mehrere große
+Zusammenstöße in seiner Frühzeit. Die schmalen, dunklen Ringe wurden 1977 entdeckt, als
+Uranus vor einem Stern vorbeizog und dessen Licht mehrmals kurz erlosch. Mission:
+[Voyager 2](quelle:nasa-voyager-2); Daten: [PDS Ring-Moon Systems Node](quelle:pds-rings).
+```
+
+`en/gymnasium/szene-uranus-gekippt.md`:
+```markdown
+# Scene: Uranus lying on its side
+
+The camera circles [Uranus](objekt:uranus) at about seven Uranus radii, low above the
+ecliptic. Its rotation axis is tilted by 98° to its orbit; the planet therefore lies on its
+side and, formally counted, rotates retrograde. The [rings](thema:ringe) and the large
+moons lie in its equatorial plane and therefore stand almost perpendicular to the orbit.
+The scene starts close to the direction from which the rings appear edge-on; as the camera
+moves on, they open up. At 0.3 days per second the planet turns about 15 times.
+
+The consequence of the [axial tilt](thema:achsneigung) is extreme seasons. During an orbit
+of 84 years, each pole points more or less towards the Sun for about 42 years. When
+Voyager 2 flew past in 1986, the south pole pointed almost directly at the Sun; at the
+equinox of 2007 the Sun stood above the equator, and in 2028 the north pole will point at
+it. How Uranus came to be tilted like this is unresolved; one or more large collisions in
+its early history are being discussed. The narrow, dark rings were discovered in 1977 when
+Uranus passed in front of a star and its light briefly went out several times. Mission:
+[Voyager 2](quelle:nasa-voyager-2); data: [PDS Ring-Moon Systems Node](quelle:pds-rings).
+```
+
+`de/grundschule/szene-triton-rueckwaerts.md`:
+```markdown
+# Tritons rückläufige Bahn
+
+Hier siehst du den [Neptun](objekt:neptune) von schräg oben und die Bahn seines größten
+Mondes [Triton](objekt:triton). Fast alle großen Monde kreisen in die Richtung, in die sich
+ihr Planet dreht. Triton kreist andersherum. Das ist ein Hinweis darauf, dass er früher
+woanders war: Vermutlich hat Neptun ihn vor langer Zeit mit seiner Schwerkraft
+eingefangen.
+```
+
+`en/grundschule/szene-triton-rueckwaerts.md`:
+```markdown
+# Triton's retrograde orbit
+
+Here you see [Neptune](objekt:neptune) from above at an angle and the orbit of its largest
+moon, [Triton](objekt:triton). Almost all large moons circle in the direction in which
+their planet turns. Triton circles the other way round. That is a clue that it used to be
+somewhere else: Neptune probably captured it with its gravity long ago.
+```
+
+`de/gymnasium/szene-triton-rueckwaerts.md`:
+```markdown
+# Szene: Tritons rückläufige Bahn
+
+Die Kamera blickt schräg von Norden auf [Neptun](objekt:neptune) und die Bahn seines
+größten Mondes [Triton](objekt:triton). Ein Umlauf dauert 5,9 Tage, der Bahnradius beträgt
+355 000 km, gut 14 Neptunradien; bei 0,4 Tagen je Sekunde durchläuft Triton seine Bahn in
+der Szene mehr als zweimal. Anders als die großen Monde von [Jupiter](objekt:jupiter),
+[Saturn](objekt:saturn) und [Uranus](objekt:uranus) läuft Triton rückläufig, entgegen dem
+Drehsinn seines Planeten. Seine Bahn ist um rund 157° gegen Neptuns Äquator geneigt. Von
+der Nordseite der Ekliptik aus, von der die Kamera blickt, läuft er deshalb im
+Uhrzeigersinn, die Planeten dagegen umlaufen die Sonne gegen den Uhrzeigersinn.
+
+Ein Mond, der mit seinem Planeten aus derselben Scheibe aus Gas und Staub entsteht,
+übernimmt deren Drehsinn. Triton wurde deshalb vermutlich aus dem Kuipergürtel
+eingefangen; in Größe und Dichte ähnelt er [Pluto](objekt:pluto). Die rückläufige Bahn hat
+Folgen: Die Gezeiten, die Triton auf Neptun hebt, bremsen ihn ab. Er nähert sich dem
+Planeten langsam und wird in einigen Milliarden Jahren von dessen Gezeitenkräften
+zerrissen werden. Kennzahlen:
+[Mittlere Bahnelemente der Monde](quelle:jpl-satelliten-bahnen); Mission:
+[Voyager 2](quelle:nasa-voyager-2).
+```
+
+`en/gymnasium/szene-triton-rueckwaerts.md`:
+```markdown
+# Scene: Triton's retrograde orbit
+
+The camera looks down at an angle from the north on [Neptune](objekt:neptune) and the
+orbit of its largest moon, [Triton](objekt:triton). One orbit takes 5.9 days and the orbital
+radius is 355,000 km, just over 14 Neptune radii; at 0.4 days per second Triton goes around
+its orbit more than twice during the scene. Unlike the large moons of
+[Jupiter](objekt:jupiter), [Saturn](objekt:saturn) and [Uranus](objekt:uranus), Triton
+moves retrograde, against the direction in which its planet rotates. Its orbit is tilted by
+about 157° to Neptune's equator. Seen from the north side of the ecliptic, where the
+camera is, it therefore moves clockwise, whereas the planets orbit the Sun anticlockwise.
+
+A moon that forms together with its planet from the same disc of gas and dust takes on its
+direction of rotation. Triton was therefore probably captured from the Kuiper belt; in
+size and density it resembles [Pluto](objekt:pluto). The retrograde orbit has
+consequences: the tides that Triton raises on Neptune slow it down. It is slowly
+approaching the planet and in a few billion years will be torn apart by Neptune's tidal
+forces. Key figures: [Planetary Satellite Mean Elements](quelle:jpl-satelliten-bahnen);
+mission: [Voyager 2](quelle:nasa-voyager-2).
+```
+
+`de/grundschule/szene-ceres-guertel.md`:
+```markdown
+# Ceres im Asteroidengürtel
+
+[Ceres](objekt:ceres) ist der größte Brocken im Asteroidengürtel zwischen
+[Mars](objekt:mars) und [Jupiter](objekt:jupiter) und ein
+[Zwergplanet](thema:zwergplaneten). Die Kamera fliegt nah um Ceres herum. Im Gürtel
+fliegen die Brocken nicht dicht an dicht wie in manchen Filmen: Sie sind so weit
+voneinander entfernt, dass Raumsonden einfach hindurchfliegen können. Auf Ceres gibt es
+helle Flecken aus Salz, das aus dem Inneren nach oben gekommen ist.
+```
+
+`en/grundschule/szene-ceres-guertel.md`:
+```markdown
+# Ceres in the asteroid belt
+
+[Ceres](objekt:ceres) is the largest chunk in the asteroid belt between
+[Mars](objekt:mars) and [Jupiter](objekt:jupiter), and a
+[dwarf planet](thema:zwergplaneten). The camera flies closely around Ceres. The chunks in
+the belt are not packed tightly together as in some films: they are so far apart that
+space probes can simply fly through. Ceres has bright spots made of salt that came up
+from inside.
+```
+
+`de/gymnasium/szene-ceres-guertel.md`:
+```markdown
+# Szene: Ceres im Asteroidengürtel
+
+Die Kamera umkreist [Ceres](objekt:ceres) in rund sechs Ceresradien Abstand. Bei
+0,02 Tagen je Sekunde dreht sich der Zwergplanet in der Szene gut anderthalbmal um sich
+selbst, denn ein Ceres-Tag dauert nur gut neun Stunden. Ceres umläuft die
+[Sonne](objekt:sun) in 2,77 AE Abstand, mitten im Asteroidengürtel, der sich zwischen
+[Mars](objekt:mars) und [Jupiter](objekt:jupiter) von etwa 2,1 bis 3,3 AE erstreckt.
+
+Wer hier einen dichten Schwarm aus Felsbrocken erwartet wie in manchen Filmen, liegt
+falsch. Mehr als eine Million Asteroiden sind bekannt, die meisten im Hauptgürtel, doch
+sie verteilen sich auf ein riesiges Volumen. Zusammen haben sie nur wenige Prozent der
+Masse des Erdmondes, und rund ein Drittel davon entfällt allein auf Ceres. Seit Pioneer 10
+im Jahr 1972 haben Raumsonden den Gürtel viele Male ohne Zusammenstoß durchquert. Die
+Punktwolke, mit der die Simulation den Gürtel zeigt, ist eine statistische Darstellung,
+keine Karte echter Asteroiden; sie bildet aber die [Kirkwood-Lücken](thema:kirkwood-luecken)
+nach, in denen Resonanzen mit Jupiter die Bahnen leer geräumt haben. Die Oberfläche von
+Ceres ist in der Simulation eine künstlerische Textur; die Raumsonde Dawn hat den
+Zwergplaneten von 2015 bis 2018 aus der Umlaufbahn kartiert. Mission:
+[Dawn](quelle:nasa-dawn).
+```
+
+`en/gymnasium/szene-ceres-guertel.md`:
+```markdown
+# Scene: Ceres in the asteroid belt
+
+The camera circles [Ceres](objekt:ceres) at about six Ceres radii. At 0.02 days per second
+the dwarf planet turns just over one and a half times during the scene, because a day on
+Ceres lasts only just over nine hours. Ceres orbits the [Sun](objekt:sun) at 2.77 AU, in
+the middle of the asteroid belt, which stretches between [Mars](objekt:mars) and
+[Jupiter](objekt:jupiter) from about 2.1 to 3.3 AU.
+
+Anyone expecting a dense swarm of rocks as in some films will be disappointed. More than
+a million asteroids are known, most of them in the main belt, but they are spread over a
+huge volume. Together they have only a few per cent of the mass of the Earth's Moon, and
+about a third of that belongs to Ceres alone. Since Pioneer 10 in 1972, space probes have
+crossed the belt many times without a collision. The cloud of points with which the
+simulation shows the belt is a statistical representation, not a map of real asteroids;
+it does, however, reproduce the [Kirkwood gaps](thema:kirkwood-luecken), where resonances
+with Jupiter have cleared the orbits. In the simulation the surface of Ceres is an
+artistic texture; the Dawn probe mapped the dwarf planet from orbit between 2015 and 2018.
+Mission: [Dawn](quelle:nasa-dawn).
+```
+
+- [ ] **Schritt 2: Modellgrenze „Ruhende Mutterkörper" ergänzen**
+
+In `src/data/texte/de/gymnasium/thema-modell.md` hinter dem Listenpunkt
+
+```markdown
+- **Monde auf vereinfachter Ebene:** Viele Mondbahnen beziehen sich auf die
+  Äquatorebene ihres Planeten (bei nahen Monden praktisch die Laplace-Ebene), nicht auf
+  die genaue Bewegung ihrer Bahnpole.
+```
+
+einfügen:
+
+```markdown
+- **Ruhende Mutterkörper:** Monde umlaufen hier den Mittelpunkt ihres Planeten oder
+  Zwergplaneten, der selbst nicht um den gemeinsamen Schwerpunkt pendelt. Meist liegt
+  dieser Punkt im Inneren des größeren Körpers. Bei [Pluto](objekt:pluto) und
+  [Charon](objekt:charon) liegt er rund 900 km über Plutos Oberfläche; Pluto müsste
+  deshalb alle 6,4 Tage einen Kreis von rund 2 100 km Radius ziehen, den die Simulation
+  weglässt.
+```
+
+In `src/data/texte/en/gymnasium/thema-modell.md` hinter dem Listenpunkt
+
+```markdown
+- **Moons on a simplified plane:** Many lunar orbits refer to the equatorial plane of
+  their planet (for close moons practically the Laplace plane), not to the exact motion
+  of their orbital poles.
+```
+
+einfügen:
+
+```markdown
+- **Parent bodies at rest:** Here moons orbit the centre of their planet or dwarf planet,
+  which does not itself swing around the common centre of mass. Usually this point lies
+  inside the larger body. For [Pluto](objekt:pluto) and [Charon](objekt:charon) it lies
+  about 900 km above Pluto's surface; Pluto should therefore trace a circle with a radius
+  of about 2,100 km every 6.4 days, which the simulation leaves out.
+```
+
+- [ ] **Schritt 3: Übergangsliste aus `dateien.test.ts` entfernen**
+
+In `src/data/texte/dateien.test.ts`:
+1. Den JSDoc-Block „Szenen, deren Texte Etappe 4c-4 erst schreibt …" und die Konstante `AUSSTEHEND` (samt der verbliebenen Zeilen `// Task 8` und `'szene:uranus-gekippt', 'szene:triton-rueckwaerts', 'szene:ceres-guertel',`) löschen.
+2. Im Fall „führt Objekt-, Szenen- und Themenverweise auf einen Text im selben Niveau" die Zeile `if (textziel === null || AUSSTEHEND.has(ziel)) continue;` ersetzen durch `if (textziel === null) continue;`.
+3. Den Sammelfall `it('führt als ausstehend nur Szenen, zu denen es noch keinen Text gibt', …)` vollständig löschen.
+
+Kontrolle: `grep -n AUSSTEHEND src/data/texte/dateien.test.ts` liefert nichts.
+
+- [ ] **Schritt 4: Tests laufen lassen**
+
+Run: `npx vitest run src/data`
+Expected: PASS; `dateien.test.ts` mit 1766 Fällen (252 × 7 + 2).
+
+Zusätzlich: `ls src/data/texte/*/*/szene-*.md | wc -l` → `76` (19 Szenen × 2 Niveaus × 2 Sprachen).
+
+- [ ] **Schritt 5: Commit**
+
+`npm run lint` → ohne Befund. Erwartete Gesamtzahl: 2892 (2809 + 12 Dateien × 7 − 1 Sammelfall).
+
+```bash
+git add src/data/texte
+git commit -m "Szenentexte Uranus, Triton, Ceres; Modellgrenze ruhende Mutterkörper; jeder Verweis hat einen Text im selben Niveau"
+```
+
+---
