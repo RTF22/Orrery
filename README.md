@@ -47,11 +47,15 @@ Sitzungswiederherstellung und Zurücksetzen in Etappe 1; benannte Ansichten
 speichern, laden, exportieren und importieren in Etappe 2) sind abgeschlossen.
 Phase 4c Etappe 1 (Infopanel-Gerüst: Niveaustufen, Datenblock mit Live-Werten,
 Quellenkarten, Kamerafahrt), Etappe 2 (Grundschulstufe komplett: 35 Körper und
-8 Themen in Deutsch und Englisch) und Etappe 3 (Gymnasialstufe komplett: 35
+8 Themen in Deutsch und Englisch), Etappe 3 (Gymnasialstufe komplett: 35
 Körper und 8 Themen in Deutsch und Englisch, 62 Quellen, Achsneigung im
-Datenblock gegen die eigene Bahn) sind abgeschlossen. Die Szenen beider
-Niveaus folgen in 4c-4. Offen sind der Rest von 4c und Phase 5 (Ambient-Sound,
-Qualitätsstufen, Texturkompression, Veröffentlichung).
+Datenblock gegen die eigene Bahn) und Etappe 4 (alle 19 Kinoszenen mit Texten
+in Grundschule und Gymnasium, Deutsch und Englisch; Thema „Das Sonnensystem"
+mit Erklärung des Namens Orrery beim Start und an der Wurzel des Objektbaums;
+Quellenkarten für alle Szenen) sind abgeschlossen. Phase 4c ist damit inhaltlich
+komplett; Tag `v0.4.0` folgt nach Freigabe. Offen sind die Hochschulstufe (Phase
+4d) und Phase 5 (Ambient-Sound, Qualitätsstufen, Texturkompression,
+Veröffentlichung).
 
 ## Entwicklung
 
