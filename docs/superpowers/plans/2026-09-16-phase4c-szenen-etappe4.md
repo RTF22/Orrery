@@ -1267,3 +1267,313 @@ git commit -m "Szenentexte Grundschule und Gymnasium: Erdaufgang, Mondtanz, Merk
 ```
 
 ---
+
+### Task 6: Szenen um Mars, Jupiter und Pluto
+
+**Sachstand (Planung, 16.09.2026):**
+- `phobos-tiefflug`: Verfolgerkamera 4 Phobosradien (44 km, Streuung 0,8 bis 1,5) hinter Phobos, Blick auf Mars; laut Befund in `scenes.ts` liegt Phobos selbst praktisch immer außerhalb des Bildwinkels. Mars erscheint aus 9 376 km Bahnradius unter 2 · asin(3 389,5 / 9 376) ≈ 42° (Vollmond 0,52°). 25 s bei 0,05 d/s = 30 h = 3,9 Umläufe (7 h 39 min). Die Geometrie hängt nur von Radienverhältnissen ab und gilt in jedem Maßstab.
+- `jupiter-vorbeiflug`: gerader Vorbeiflug, nächster Abstand 4 Jupiterradien (3,2 bis 6), Io bei 5,9 Radien. 35 s bei 0,3 d/s = 10,5 d = 252 h, Rotation 9,925 h → 25,4 Drehungen. Jupiter 13,07 km/s. New Horizons 28.02.2007, rund 14 000 km/h (9 000 mph), drei Jahre früher bei Pluto (NASA). Juno seit 04.07.2016 auf polarer Bahn; zum heutigen Stand der Mission sagt der Text nichts.
+- `galileisches-schattenspiel`: 55 Jupiterradien, Elevation 55° (45 bis 65), 45 s bei 0,5 d/s = 22,5 d: Io 12,7, Europa 6,3, Ganymed 3,1 Umläufe. Io-Schatten auf Jupiter aus diesem Abstand rund 0,55 px (Abnahme 3b-2); die Szene wird laut Entscheidung Jens nicht weiter verändert. Laplace-Beziehung λ_Io − 3 λ_Europa + 2 λ_Ganymed = 180° schließt eine dreifache Konjunktion aus. Rømer 1676.
+- `pluto-charon`: 55 Plutoradien, Azimut auf die Sonnenrichtung zur Epoche J2000 (±20°), 45 s bei 0,3 d/s = 13,5 d = 2,1 Umläufe (6,387 d). Charon 1 212 km, Pluto 2 377 km, Massenverhältnis 0,122; Schwerpunkt 2 126 km vom Plutomittelpunkt, 938 km über der Oberfläche. Das Modell führt Charon um Plutos Mittelpunkt (Befund in `scenes.ts`); Task 8 benennt das in `thema-modell`.
+
+**Dateien:**
+- Erstellen: `src/data/texte/{de,en}/{grundschule,gymnasium}/szene-{phobos-tiefflug,jupiter-vorbeiflug,galileisches-schattenspiel,pluto-charon}.md`
+- Ändern: `src/data/texte/dateien.test.ts` (vier Einträge aus `AUSSTEHEND` streichen)
+
+**Schnittstellen:**
+- Konsumiert: Quellenkarten aus Task 2 (`esa-mars-express`, `nasa-juno`, `nasa-new-horizons`, `nssdc-jupitermonde`, `esa-juice`); Verweise `objekt:phobos`, `objekt:mars`, `objekt:deimos`, `objekt:jupiter`, `objekt:io`, `objekt:europa`, `objekt:ganymede`, `objekt:callisto`, `objekt:earth`, `objekt:pluto`, `objekt:charon`, `thema:zwergplaneten`, `thema:gebundene-rotation`, `thema:modell`.
+- Produziert: nichts für spätere Tasks.
+
+- [ ] **Schritt 1: Dateien anlegen**
+
+`de/grundschule/szene-phobos-tiefflug.md`:
+```markdown
+# Tiefflug über Phobos
+
+Die Kamera fliegt mit dem kleinen Mond [Phobos](objekt:phobos) mit und schaut auf den
+[Mars](objekt:mars). Kein anderer Mond kreist so dicht über seinem Planeten. Phobos ist so
+schnell, dass er dreimal am Tag um den Mars saust. Deshalb zieht die Marsoberfläche unter
+der Kamera vorbei. Phobos selbst siehst du nicht: Die Kamera fliegt dicht hinter ihm und
+blickt zur Seite auf den Mars.
+```
+
+`en/grundschule/szene-phobos-tiefflug.md`:
+```markdown
+# Low pass over Phobos
+
+The camera flies along with the small moon [Phobos](objekt:phobos) and looks at
+[Mars](objekt:mars). No other moon circles so close above its planet. Phobos is so fast
+that it races around Mars three times a day. That is why the surface of Mars moves past
+below the camera. You do not see Phobos itself: the camera flies just behind it and looks
+sideways at Mars.
+```
+
+`de/gymnasium/szene-phobos-tiefflug.md`:
+```markdown
+# Szene: Tiefflug über Phobos
+
+Die Kamera fliegt wenige Dutzend Kilometer hinter [Phobos](objekt:phobos) auf dessen Bahn
+mit und blickt auf den [Mars](objekt:mars). Phobos kreist nur rund 6 000 km über der
+Marsoberfläche, näher an seinem Planeten als jeder andere bekannte Mond. Der Mars erscheint
+von hier aus rund 40° groß, achtzigmal so breit wie der Vollmond an unserem Himmel, und
+füllt einen großen Teil des Bildes. Phobos selbst liegt außerhalb des Bildes, weil die
+Kamera quer zur Flugrichtung auf den Planeten schaut.
+
+Ein Umlauf dauert 7 h 39 min, ein Marstag dagegen 24 h 37 min. Phobos überholt also die
+Drehung des Mars: Die Oberfläche zieht unter der Kamera entgegen der Flugrichtung weg, und
+vom Mars aus gesehen geht Phobos im Westen auf. Bei 1,2 Stunden je Sekunde umrundet er den
+Mars in der Szene rund viermal. Weil er innerhalb der synchronen Umlaufbahn kreist, bremsen
+ihn die Gezeiten; seine Bahn sinkt um knapp zwei Meter je Jahrhundert, in 30 bis
+50 Millionen Jahren wird er zerbrechen oder aufschlagen. Der äußere Mond
+[Deimos](objekt:deimos) kreist jenseits dieser Grenze und entfernt sich langsam. Mission:
+[Mars Express](quelle:esa-mars-express).
+```
+
+`en/gymnasium/szene-phobos-tiefflug.md`:
+```markdown
+# Scene: Low pass over Phobos
+
+The camera flies a few dozen kilometres behind [Phobos](objekt:phobos) along its orbit and
+looks at [Mars](objekt:mars). Phobos circles only about 6,000 km above the Martian
+surface, closer to its planet than any other known moon. From here Mars appears about 40°
+across, eighty times as wide as the full Moon in our sky, and fills a large part of the
+picture. Phobos itself is outside the picture, because the camera looks at the planet at
+right angles to the direction of flight.
+
+One orbit takes 7 h 39 min, whereas a Martian day lasts 24 h 37 min. Phobos therefore
+overtakes the rotation of Mars: the surface slips away beneath the camera against the
+direction of flight, and seen from Mars, Phobos rises in the west. At 1.2 hours per second
+it circles Mars about four times during the scene. Because it orbits inside the
+synchronous orbit, tides slow it down; its orbit sinks by almost two metres per century,
+and in 30 to 50 million years it will break apart or crash. The outer moon
+[Deimos](objekt:deimos) orbits beyond this limit and is slowly moving away. Mission:
+[Mars Express](quelle:esa-mars-express).
+```
+
+`de/grundschule/szene-jupiter-vorbeiflug.md`:
+```markdown
+# Vorbeiflug an Jupiter
+
+Die Kamera fliegt wie eine Raumsonde an [Jupiter](objekt:jupiter) vorbei. Erst ist der
+Riesenplanet klein, dann füllt er einen großen Teil des Bildes, dann wird er wieder
+kleiner. Jupiter ist so groß, dass mehr als tausend [Erden](objekt:earth) hineinpassen
+würden. Er dreht sich in nur zehn Stunden einmal um sich selbst. Echte Raumsonden fliegen
+gern an Jupiter vorbei: Seine Schwerkraft gibt ihnen Schwung für die weite Reise nach
+draußen.
+```
+
+`en/grundschule/szene-jupiter-vorbeiflug.md`:
+```markdown
+# Flyby of Jupiter
+
+The camera flies past [Jupiter](objekt:jupiter) like a space probe. At first the giant
+planet is small, then it fills a large part of the picture, then it gets smaller again.
+Jupiter is so big that more than a thousand [Earths](objekt:earth) would fit inside it.
+It turns once in only ten hours. Real space probes like to fly past Jupiter: its gravity
+gives them a boost for the long journey further out.
+```
+
+`de/gymnasium/szene-jupiter-vorbeiflug.md`:
+```markdown
+# Szene: Vorbeiflug an Jupiter
+
+Die Kamera zieht auf gerader Linie an [Jupiter](objekt:jupiter) vorbei und kommt ihm dabei
+bis auf wenige Jupiterradien nahe, etwa so nah wie der innerste Galileische Mond
+[Io](objekt:io). Bei 0,3 Tagen je Sekunde dreht sich der Planet in der Szene rund 25-mal;
+seine Rotationsdauer von knapp zehn Stunden ist die kürzeste aller Planeten.
+
+Echte Raumsonden fliegen nicht geradeaus, Jupiters Schwerkraft krümmt ihre Bahn. Bei einem
+solchen Vorbeiflug (Swing-by) ist die Geschwindigkeit gegenüber Jupiter danach so groß wie
+davor, nur ihre Richtung ändert sich. Weil sich Jupiter selbst mit rund 13 km/s um die
+Sonne bewegt, kann die Sonde gegenüber der Sonne dabei Geschwindigkeit gewinnen oder
+verlieren. Pioneer 10 und 11, Voyager 1 und 2 und New Horizons nutzten das; New Horizons
+wurde 2007 um rund 14 000 km/h schneller und erreichte [Pluto](objekt:pluto) drei Jahre
+früher. Allzu nah ist gefährlich: Jupiters Magnetfeld hält Gürtel aus energiereichen
+Teilchen fest, deren Strahlung die Elektronik von Sonden schädigt. Die Sonde Juno schwenkte
+2016 auf eine Bahn über die Pole ein, die die stärksten Strahlungszonen weitgehend meidet.
+Mission: [Juno](quelle:nasa-juno); weitere Sonde: [New Horizons](quelle:nasa-new-horizons).
+```
+
+`en/gymnasium/szene-jupiter-vorbeiflug.md`:
+```markdown
+# Scene: Flyby of Jupiter
+
+The camera moves past [Jupiter](objekt:jupiter) in a straight line and comes within a few
+Jupiter radii of it, about as close as the innermost Galilean moon [Io](objekt:io). At
+0.3 days per second the planet turns about 25 times during the scene; its rotation period
+of just under ten hours is the shortest of all the planets.
+
+Real space probes do not fly straight; Jupiter's gravity bends their path. In such a flyby
+(gravity assist) the speed relative to Jupiter is the same afterwards as before, only its
+direction changes. Because Jupiter itself moves around the Sun at about 13 km/s, the probe
+can gain or lose speed relative to the Sun. Pioneer 10 and 11, Voyager 1 and 2 and New
+Horizons made use of this; in 2007 New Horizons became about 14,000 km/h faster and
+reached [Pluto](objekt:pluto) three years earlier. Getting too close is dangerous:
+Jupiter's magnetic field holds belts of energetic particles whose radiation damages the
+electronics of probes. In 2016 the Juno probe entered an orbit over the poles that largely
+avoids the strongest radiation zones. Mission: [Juno](quelle:nasa-juno); another probe:
+[New Horizons](quelle:nasa-new-horizons).
+```
+
+`de/grundschule/szene-galileisches-schattenspiel.md`:
+```markdown
+# Das galileische Schattenspiel
+
+Hier siehst du [Jupiter](objekt:jupiter) von schräg oben mit seinen vier großen Monden
+[Io](objekt:io), [Europa](objekt:europa), [Ganymed](objekt:ganymede) und
+[Kallisto](objekt:callisto). Galileo Galilei hat sie vor über 400 Jahren mit einem Fernrohr
+entdeckt. Drei der Monde laufen im Takt: Während Ganymed einmal herumläuft, schafft Europa
+zwei Runden und Io vier. Zieht ein Mond vor Jupiter vorbei, fällt sein Schatten als dunkler
+Punkt auf die Wolken. Von hier aus ist dieser Punkt aber zu klein, um ihn zu sehen.
+```
+
+`en/grundschule/szene-galileisches-schattenspiel.md`:
+```markdown
+# The Galilean shadow play
+
+Here you see [Jupiter](objekt:jupiter) from above at an angle, with its four large moons
+[Io](objekt:io), [Europa](objekt:europa), [Ganymede](objekt:ganymede) and
+[Callisto](objekt:callisto). Galileo Galilei discovered them with a telescope more than
+400 years ago. Three of the moons keep in step: while Ganymede goes around once, Europa
+manages two laps and Io four. When a moon passes in front of Jupiter, its shadow falls on
+the clouds as a dark dot. From here, though, that dot is too small to see.
+```
+
+`de/gymnasium/szene-galileisches-schattenspiel.md`:
+```markdown
+# Szene: Das galileische Schattenspiel
+
+Die Kamera blickt schräg von oben auf [Jupiter](objekt:jupiter) und die Bahnen der vier
+Monde, die Galileo Galilei im Januar 1610 entdeckte: [Io](objekt:io),
+[Europa](objekt:europa), [Ganymed](objekt:ganymede) und [Kallisto](objekt:callisto). Bei
+0,5 Tagen je Sekunde umläuft Io Jupiter in der Szene gut zwölfmal, Europa sechsmal und
+Ganymed dreimal. Die Umlaufzeiten von 1,77, 3,55 und 7,15 Tagen stehen fast genau im
+Verhältnis 1:2:4. Diese Laplace-Resonanz ist stabil; sie verhindert, dass alle drei Monde
+zugleich auf derselben Seite Jupiters in einer Reihe stehen. Die regelmäßigen Anstöße
+halten Ios Bahn leicht elliptisch und heizen ihn durch Gezeitenreibung auf.
+
+Das Schattenspiel zeigt schon ein kleines Fernrohr: Zieht ein Mond vor Jupiter vorbei,
+wandert sein Schatten als schwarzer Punkt über die Wolken; tritt ein Mond in Jupiters
+Schatten, verschwindet er. Ole Rømer bemerkte 1676, dass die Verfinsterungen von Io je nach
+Abstand zwischen Erde und Jupiter früher oder später eintraten, und schloss daraus, dass
+sich Licht mit endlicher Geschwindigkeit ausbreitet. Die Simulation berechnet diese
+Schatten; aus der Entfernung dieser Szene sind sie aber höchstens einen Bildpunkt groß.
+Wer Jupiter anwählt und heranzoomt, kann sie bei einem Durchgang sehen. Kennzahlen:
+[Faktenblatt der Jupitermonde](quelle:nssdc-jupitermonde); Mission:
+[Juice](quelle:esa-juice).
+```
+
+`en/gymnasium/szene-galileisches-schattenspiel.md`:
+```markdown
+# Scene: The Galilean shadow play
+
+The camera looks down at an angle on [Jupiter](objekt:jupiter) and the orbits of the four
+moons that Galileo Galilei discovered in January 1610: [Io](objekt:io),
+[Europa](objekt:europa), [Ganymede](objekt:ganymede) and [Callisto](objekt:callisto). At
+0.5 days per second, Io orbits Jupiter just over twelve times during the scene, Europa six
+times and Ganymede three times. Their orbital periods of 1.77, 3.55 and 7.15 days are
+almost exactly in the ratio 1:2:4. This Laplace resonance is stable; it prevents all three
+moons from lining up on the same side of Jupiter at the same time. The regular tugs keep
+Io's orbit slightly elliptical and heat it through tidal friction.
+
+A small telescope is enough to see the shadow play: when a moon passes in front of
+Jupiter, its shadow moves across the clouds as a black dot; when a moon enters Jupiter's
+shadow, it disappears. In 1676 Ole Rømer noticed that the eclipses of Io came earlier or
+later depending on the distance between the Earth and Jupiter, and concluded that light
+travels at a finite speed. The simulation calculates these shadows, but from the distance
+of this scene they are at most one pixel in size. If you select Jupiter and zoom in, you
+can see them during a transit. Key figures:
+[Jovian Satellite Fact Sheet](quelle:nssdc-jupitermonde); mission: [Juice](quelle:esa-juice).
+```
+
+`de/grundschule/szene-pluto-charon.md`:
+```markdown
+# Pluto und Charon im Doppel
+
+[Pluto](objekt:pluto) und sein Mond [Charon](objekt:charon) sind ein ungewöhnliches Paar:
+Kein anderer Mond ist im Vergleich zu seinem Himmelskörper so groß, Charon ist halb so
+groß wie Pluto. Beide drehen sich im selben Takt, in dem Charon um Pluto kreist. Deshalb
+zeigen sie einander immer dieselbe Seite, als hielten sie sich an den Händen. Eigentlich
+kreisen beide um einen Punkt zwischen ihnen. Die Simulation vereinfacht das: Hier kreist
+Charon um Plutos Mitte.
+```
+
+`en/grundschule/szene-pluto-charon.md`:
+```markdown
+# Pluto and Charon, a double world
+
+[Pluto](objekt:pluto) and its moon [Charon](objekt:charon) are an unusual pair: no other
+moon is so large compared with the body it orbits; Charon is half the size of Pluto. Both
+turn at the same pace at which Charon circles Pluto. That is why they always show each
+other the same side, as if they were holding hands. Actually, both circle a point between
+them. The simulation keeps it simple: here Charon circles the middle of Pluto.
+```
+
+`de/gymnasium/szene-pluto-charon.md`:
+```markdown
+# Szene: Pluto und Charon im Doppel
+
+Die Kamera umkreist den [Zwergplaneten](thema:zwergplaneten) [Pluto](objekt:pluto) in so
+großem Abstand, dass die ganze Bahn seines Mondes [Charon](objekt:charon) ins Bild passt.
+Charon umläuft Pluto in 19 600 km Abstand in 6,4 Tagen; bei 0,3 Tagen je Sekunde sind das
+in der Szene gut zwei Umläufe. Beide Körper drehen sich in genau dieser Zeit einmal um sich
+selbst und zeigen einander stets dieselbe Seite, eine doppelt
+[gebundene Rotation](thema:gebundene-rotation). Die Kamera blickt ungefähr aus Richtung der
+Sonne, damit beide beleuchtet sind.
+
+Mit gut der halben Größe und einem Achtel der Masse Plutos ist Charon im Verhältnis zu
+seinem Mutterkörper der größte Mond im Sonnensystem. Der gemeinsame Schwerpunkt liegt
+deshalb rund 2 100 km vom Mittelpunkt Plutos entfernt, rund 900 km über seiner
+Oberfläche. In Wirklichkeit umkreisen beide Körper diesen Punkt; auch Pluto zieht einen
+kleinen Kreis. Die Simulation lässt Charon vereinfacht um Plutos Mittelpunkt laufen, wie
+alle Monde um ihren Mutterkörper ([Grenzen des Modells](thema:modell)). Die Sonde
+New Horizons flog im Juli 2015 an beiden vorbei ([New Horizons](quelle:nasa-new-horizons)).
+```
+
+`en/gymnasium/szene-pluto-charon.md`:
+```markdown
+# Scene: Pluto and Charon, a double world
+
+The camera circles the [dwarf planet](thema:zwergplaneten) [Pluto](objekt:pluto) at such a
+distance that the whole orbit of its moon [Charon](objekt:charon) fits into the picture.
+Charon orbits Pluto at a distance of 19,600 km in 6.4 days; at 0.3 days per second that
+makes just over two orbits during the scene. Both bodies turn once on their axes in exactly
+this time and always show each other the same side, a double
+[tidal locking](thema:gebundene-rotation). The camera looks roughly from the direction of
+the Sun so that both are lit.
+
+At just over half the size and one eighth of the mass of Pluto, Charon is the largest moon
+in the Solar System relative to the body it orbits. Their common centre of mass therefore
+lies about 2,100 km from Pluto's centre, about 900 km above its surface. In reality both
+bodies orbit this point; Pluto, too, moves in a small circle. The simulation simplifies
+this and moves Charon around Pluto's centre, as it does with all moons and their parent
+bodies ([Limits of the model](thema:modell)). The New Horizons probe flew past both in
+July 2015 ([New Horizons](quelle:nasa-new-horizons)).
+```
+
+- [ ] **Schritt 2: Ausstehende Szenen streichen**
+
+In `src/data/texte/dateien.test.ts` die Zeilen
+
+```ts
+  // Task 6
+  'szene:phobos-tiefflug', 'szene:jupiter-vorbeiflug', 'szene:galileisches-schattenspiel', 'szene:pluto-charon',
+```
+
+löschen.
+
+- [ ] **Schritt 3: Tests laufen lassen**
+
+Run: `npx vitest run src/data/texte`
+Expected: PASS.
+
+- [ ] **Schritt 4: Commit**
+
+Erwartete Gesamtzahl: 2641 (2529 + 16 Dateien × 7).
+
+```bash
+git add src/data/texte
+git commit -m "Szenentexte Grundschule und Gymnasium: Phobos-Tiefflug, Jupiter-Vorbeiflug, galileisches Schattenspiel, Pluto und Charon"
+```
+
+---
