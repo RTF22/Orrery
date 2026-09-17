@@ -110,6 +110,12 @@ describe('Formeln (Entwurf 4d §3.1)', () => {
     expect(parseInline('Preis \\$5 und \\$6')).toEqual([text('Preis $5 und $6')]);
   });
 
+  it('schließt nach einer geraden Zahl von Backslashes, nicht nach einer ungeraden', () => {
+    expect(parseInline('$a\\\\$')).toEqual([formel('a\\\\')]);
+    expect(parseInline('$a\\$b$')).toEqual([formel('a\\$b')]);
+    expect(parseInline('$a\\\\\\$b$')).toEqual([formel('a\\\\\\$b')]);
+  });
+
   it('wertet in Formeln kein Markdown aus, außerhalb schon', () => {
     expect(parseInline('$a*b$ und *k*')).toEqual([
       formel('a*b'), text(' und '), { typ: 'kursiv', kinder: [text('k')] },

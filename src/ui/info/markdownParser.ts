@@ -67,18 +67,37 @@ const LEERRAUM = /\s/;
 const ZIFFER = /[0-9]/;
 
 /**
+ * Zahl der Backslashes unmittelbar vor `pos`, rückwärts gezählt, aber nicht
+ * über `grenze` hinaus (das öffnende `$` einer Formel gehört nicht mehr zur
+ * Zählung).
+ */
+function backslashesDavor(text: string, pos: number, grenze: number): number {
+  let n = 0;
+  let k = pos - 1;
+  while (k >= grenze && text[k] === '\\') {
+    n += 1;
+    k -= 1;
+  }
+  return n;
+}
+
+/**
  * Liest ab `start` (ein `$`) eine Formel im Satz nach der Regel von Pandoc:
  * Nach dem öffnenden `$` steht kein Leerraum und kein weiteres `$`, vor dem
- * schließenden kein Leerraum und kein Backslash, danach keine Ziffer. Ohne
- * passendes Ende bleibt das Zeichen Text („kostet 5 $").
+ * schließenden kein Leerraum, danach keine Ziffer. Maskiert ist ein `$`,
+ * wenn unmittelbar davor eine ungerade Zahl von Backslashes steht (die
+ * Zählung reicht nicht vor das öffnende `$` zurück); bei gerader Zahl,
+ * auch null, darf es schließen. Ohne passendes Ende bleibt das Zeichen
+ * Text („kostet 5 $").
  */
 function liesFormel(text: string, start: number): { tex: string; ende: number } | null {
   const erstes = text[start + 1];
   if (erstes === undefined || erstes === '$' || LEERRAUM.test(erstes)) return null;
   for (let j = start + 2; j < text.length; j += 1) {
     if (text[j] !== '$') continue;
+    if (backslashesDavor(text, j, start + 1) % 2 === 1) continue;
     const davor = text[j - 1] ?? '';
-    if (LEERRAUM.test(davor) || davor === '\\') continue;
+    if (LEERRAUM.test(davor)) continue;
     if (ZIFFER.test(text[j + 1] ?? '')) continue;
     return { tex: text.slice(start + 1, j), ende: j + 1 };
   }
