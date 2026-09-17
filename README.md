@@ -52,10 +52,13 @@ Körper und 8 Themen in Deutsch und Englisch, 62 Quellen, Achsneigung im
 Datenblock gegen die eigene Bahn) und Etappe 4 (alle 19 Kinoszenen mit Texten
 in Grundschule und Gymnasium, Deutsch und Englisch; Thema „Das Sonnensystem"
 mit Erklärung des Namens Orrery beim Start und an der Wurzel des Objektbaums;
-Quellenkarten für alle Szenen) sind abgeschlossen. Phase 4c ist damit inhaltlich
-komplett; Tag `v0.4.0` folgt nach Freigabe. Offen sind die Hochschulstufe (Phase
-4d) und Phase 5 (Ambient-Sound, Qualitätsstufen, Texturkompression,
-Veröffentlichung).
+Quellenkarten für alle Szenen) sind abgeschlossen. Phase 4c ist damit komplett
+(Tag `v0.4.0`). Phase 4d (Hochschulstufe) läuft: Etappe 1 bringt Formeln
+(TeX-Teilmenge als MathML), Tabellen, Zitate mit Literaturkarten, ein
+Prüfskript für den Literaturkatalog (`npm run literatur:pruefen`) und drei
+Pilottexte (Bahnelemente, Erde, Mondfinsternis). Offen sind die übrigen
+Hochschultexte (Etappen 4d-2 bis 4d-11) und Phase 5 (Ambient-Sound,
+Qualitätsstufen, Texturkompression, Veröffentlichung).
 
 ## Entwicklung
 

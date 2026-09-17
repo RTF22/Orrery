@@ -136,6 +136,10 @@ Matrizen und Makros gehören nicht zur Teilmenge.
   `th scope="col"`, Ausrichtung je Spalte, Ziffern gleicher Breite (`tabular-nums`), schmale
   Rahmenlinien in der Farbe der Panel-Trennlinien.
 
+**Nachtrag (4d-1):** Tabellenzellen brechen nicht um (`whitespace-nowrap`); breite Tabellen
+scrollen im Rahmen. Messwerttabellen bleiben so lesbar, und erst diese Regel macht die Abnahme
+„Tabelle scrollt bei 18 rem" verlässlich messbar.
+
 ### 3.5 Fehlerfall
 
 Liefert der Übersetzer einen Fehler, zeigt `Formel.tsx` den TeX-Quelltext als `<code>` mit
@@ -250,6 +254,10 @@ scripts/pruefe-literatur.ts`), nur von Hand, braucht Netz, nicht Teil von `npm t
 - Die reinen Vergleichsfunktionen (Normalisierung, Wortanteil, Jahresregel) liegen in
   `scripts/literaturVergleich.ts` und haben Tests in `npm test`.
 
+**Nachtrag (4d-1):** Ein abweichender arXiv-Titel ist bei Einträgen mit DOI nur eine Warnung
+(veröffentlichte Fassungen tragen oft andere Titel; die DOI-Prüfung sichert den Titel), ohne
+DOI ein Fehler. Das Jahr wird gegen arXiv nicht geprüft.
+
 ## 5. Gestalt der Texte
 
 ### 5.1 Gliederung
@@ -309,6 +317,10 @@ Der Abdeckungstest in `data/quellen.test.ts` gilt auch für sie: Jedes bekommt i
 eine Quellenkarte aus dem bestehenden Schema (etwa IERS für `bezugssysteme`). Magnetosphären und
 Atmosphären bleiben ohne eigenes Thema, bis sich in den Körpertexten zu viel wiederholt.
 
+**Nachtrag (4d-1):** Die Quellenkarten der Fachthemen kommen aus Wikipedia (deutsch und
+englisch) und den JPL-Ephemeriden; die IERS-Seiten, die oben als Beispiel dienen, antworteten
+am 17.09.2026 unter allen geprüften Adressen mit 404.
+
 ### 5.4 Hinweis „nur Hochschule"
 
 Gibt es zu einer Kennung auf dem gewählten Tab keinen Text (auch nicht in Deutsch als Ersatz),
@@ -336,6 +348,12 @@ Zeile, Verweise, Quellenverweis hat Karte) und zu §4.4:
 6. **Ziel hat Text im selben Niveau:** Für Hochschultexte genügt bis einschließlich 4d-10 ein
    Gymnasialtext als Ersatz (Konstante `HOCHSCHULE_GYMNASIUM_ERSATZ` im Test, die Anzeige
    hat dafür den Hinweis `info.hochschuleFolgt`). 4d-11 entfernt den Ersatz.
+
+**Nachtrag (4d-1):** Die Formel-, Tabellen- und Zitatprüfung (Punkte 3, 4 sowie die
+Zitatprüfung aus §4.4) gelten für alle Textdateien, nicht nur für Hochschultexte — das
+verhindert `$`, `|` und `literatur:` schon in Grundschul- und Gymnasialtexten. Der
+Zwillingsvergleich (Punkt 5) normiert in Formeln zusätzlich den Leerraum (`T^2 = a^3` gilt als
+gleich `T^2=a^3`).
 
 ## 6. Arbeitsweise und inhaltliche Prüfung
 
@@ -448,6 +466,10 @@ laufen. Braucht ein Text einen neuen TeX-Befehl, ist das ein eigener Task vor de
 - **Rundgang** über die sechs Pilotdateien: kein `data-formelfehler`, jeder Verweis führt zum
   Ziel seiner Art (`data-verweis`), Konsole ohne Fehler und Warnungen.
 - Lint, Test, Build mit Schlusszeilen; `npm run literatur:pruefen` ohne Fehler.
+
+**Nachtrag (4d-1):** Der Hinweis „nur Hochschule" ist in dieser Etappe nur per Komponententest
+geprüft; die Sichtprüfung im Browser folgt in der Abnahme von 4d-2, sobald die Fachthemen
+eigene Texte haben.
 
 ### 8.2 Text-Etappen 4d-2 bis 4d-11
 
