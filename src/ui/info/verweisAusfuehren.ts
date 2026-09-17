@@ -5,8 +5,8 @@ import { fahreZu } from '../kamerafahrt';
 import { startCinema } from '../cinemaControl';
 
 export interface VerweisWirkung {
-  /** Scrollt das untere Segment zur Karte und hebt sie kurz hervor. */
-  hebeHervor: (quelleId: string) => void;
+  /** Scrollt das untere Segment zur Karte und hebt sie kurz hervor; Schlüssel `quelle:<id>` oder `literatur:<id>`. */
+  hebeHervor: (schluessel: string) => void;
 }
 
 /**
@@ -34,7 +34,10 @@ export function verweisAusfuehren(v: Verweis, wirkung: VerweisWirkung): void {
       s.setInfo({ thema: v.kennung });
       return;
     case 'quelle':
-      wirkung.hebeHervor(v.quelle.id);
+      wirkung.hebeHervor(`quelle:${v.quelle.id}`);
+      return;
+    case 'literatur':
+      wirkung.hebeHervor(`literatur:${v.publikation.id}`);
       return;
     case 'extern':
       return;

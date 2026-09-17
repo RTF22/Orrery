@@ -7,6 +7,7 @@ import { verweisAufloesen } from '../../data/verweise';
 import type { Verweis } from '../../data/verweise';
 import { VERWEIS_KNOPF } from './Datenblock';
 import { Formel } from './Formel';
+import { hauptadresse } from '../../data/literatur';
 
 interface Props {
   text: string;
@@ -29,12 +30,13 @@ function Verweisknoten({ ziel, onVerweis, children }: { ziel: string; onVerweis:
   if (v.art === 'extern') {
     return <a href={v.url} target="_blank" rel="noopener noreferrer" className={VERWEIS_KNOPF} data-verweis={ziel}>{children}</a>;
   }
-  if (v.art === 'quelle') {
+  if (v.art === 'quelle' || v.art === 'literatur') {
     // Anker mit echter Adresse: Mittelklick öffnet den Tab, Linksklick hebt
-    // die Karte hervor (Entwurf 4c §4.3).
+    // die Karte hervor (Entwurf 4c §4.3, 4d §4.2).
+    const href = v.art === 'quelle' ? v.quelle.url : hauptadresse(v.publikation);
     return (
       <a
-        href={v.quelle.url}
+        href={href}
         target="_blank"
         rel="noopener noreferrer"
         className={VERWEIS_KNOPF}

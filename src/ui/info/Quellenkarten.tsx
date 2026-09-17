@@ -7,7 +7,7 @@ import { t } from '../i18n';
 interface Props {
   /** Text-Kennung wie 'objekt:earth'. */
   kennung: string;
-  /** Kennung einer Quelle, die gerade hervorgehoben ist (Verweis im Text). */
+  /** Schlüssel der hervorgehobenen Karte ('quelle:<id>' oder 'literatur:<id>'). */
   hervorgehoben: string | null;
 }
 
@@ -25,9 +25,9 @@ export function Quellenkarten({ kennung, hervorgehoben }: Props): React.JSX.Elem
   const karten = useRef(new Map<string, HTMLAnchorElement>());
 
   useEffect(() => {
-    if (hervorgehoben === null) return;
+    if (hervorgehoben === null || !hervorgehoben.startsWith('quelle:')) return;
     // jsdom kennt scrollIntoView nicht; im Browser ist es immer da.
-    karten.current.get(hervorgehoben)?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' });
+    karten.current.get(hervorgehoben.slice('quelle:'.length))?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' });
   }, [hervorgehoben]);
 
   if (liste.length === 0) {
@@ -52,7 +52,7 @@ export function Quellenkarten({ kennung, hervorgehoben }: Props): React.JSX.Elem
                   rel="noopener noreferrer"
                   data-quelle={q.id}
                   className={`block rounded border px-2 py-1 text-xs transition-colors hover:bg-white/10 ${
-                    hervorgehoben === q.id ? 'border-sky-300/80 bg-sky-400/20' : 'border-white/15'
+                    hervorgehoben === `quelle:${q.id}` ? 'border-sky-300/80 bg-sky-400/20' : 'border-white/15'
                   }`}
                 >
                   <span className="font-medium">{q.titel[language]}</span>

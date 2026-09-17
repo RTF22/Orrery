@@ -23,6 +23,7 @@ describe('verweisAufloesen', () => {
     expect(verweisAufloesen('szene:nope')).toBeNull();
     expect(verweisAufloesen('thema:nope')).toBeNull();
     expect(verweisAufloesen('quelle:nope')).toBeNull();
+    expect(verweisAufloesen('literatur:nope-2000')).toBeNull();
     expect(verweisAufloesen('planet:earth')).toBeNull();
     expect(verweisAufloesen('objekt:')).toBeNull();
     expect(verweisAufloesen('')).toBeNull();

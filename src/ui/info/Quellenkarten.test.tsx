@@ -27,12 +27,15 @@ describe('Quellenkarten', () => {
     expect(screen.getByText('Keine Quellen zu diesem Text.')).toBeTruthy();
   });
 
-  it('hebt die gewählte Karte hervor', () => {
-    render(<Quellenkarten kennung="objekt:earth" hervorgehoben="nasa-earth" />);
+  it('hebt die gewählte Karte über ihren Schlüssel hervor', () => {
+    const { unmount } = render(<Quellenkarten kennung="objekt:earth" hervorgehoben="quelle:nasa-earth" />);
     const karte = screen.getByRole('link', { name: /Erde bei NASA Science/ });
     expect(karte.className).toContain('border-sky-300');
     const andere = screen.getByRole('link', { name: /Erde: Faktenblatt/ });
     expect(andere.className).not.toContain('border-sky-300');
+    unmount();
+    render(<Quellenkarten kennung="objekt:earth" hervorgehoben="literatur:nasa-earth" />);
+    expect(screen.getByRole('link', { name: /Erde bei NASA Science/ }).className).not.toContain('border-sky-300');
   });
 
   it('zeigt englische Titel und stellt englische Seiten in der Gruppe nach vorn', () => {

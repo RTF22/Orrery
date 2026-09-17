@@ -38,13 +38,19 @@ describe('verweisAusfuehren', () => {
     expect(useStore.getState().camera).toEqual(kamera);
   });
 
-  it('quelle: meldet die Kennung zur Hervorhebung; extern tut nichts', () => {
+  it('quelle und literatur: melden den Schlüssel zur Hervorhebung; extern tut nichts', () => {
     const hebeHervor = vi.fn();
     verweisAusfuehren({ art: 'quelle', quelle: quelleFinden('nssdc-earth')! }, { hebeHervor });
-    expect(hebeHervor).toHaveBeenCalledWith('nssdc-earth');
+    expect(hebeHervor).toHaveBeenCalledWith('quelle:nssdc-earth');
+    const arbeit = {
+      id: 'muster-2020', autoren: ['Muster, A.'], etAl: false, jahr: 2020,
+      titel: 'Erfundene Arbeit für Tests', erschienen: 'Testzeitschrift 1, 1', doi: '10.0000/test.1',
+    };
+    verweisAusfuehren({ art: 'literatur', publikation: arbeit }, { hebeHervor });
+    expect(hebeHervor).toHaveBeenLastCalledWith('literatur:muster-2020');
     const vorher = useStore.getState();
     verweisAusfuehren({ art: 'extern', url: 'https://example.org' }, { hebeHervor });
     expect(useStore.getState()).toBe(vorher);
-    expect(hebeHervor).toHaveBeenCalledTimes(1);
+    expect(hebeHervor).toHaveBeenCalledTimes(2);
   });
 });

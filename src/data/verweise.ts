@@ -3,6 +3,8 @@ import { SCENES } from './scenes';
 import { istThema } from './themen';
 import { quelleFinden } from './quellen';
 import type { Quelle } from './quellen';
+import { publikationFinden } from './literatur';
+import type { Publikation } from './literatur';
 
 /**
  * Ein aufgelöster Verweis aus einem Erläuterungstext (Entwurf 4c §4.3).
@@ -14,6 +16,7 @@ import type { Quelle } from './quellen';
 export type Verweis =
   | { art: 'objekt' | 'szene' | 'thema'; kennung: string }
   | { art: 'quelle'; quelle: Quelle }
+  | { art: 'literatur'; publikation: Publikation }
   | { art: 'extern'; url: string };
 
 export function textKennungGueltig(art: string, kennung: string): boolean {
@@ -35,6 +38,10 @@ export function verweisAufloesen(ziel: string): Verweis | null {
   if (art === 'quelle') {
     const quelle = quelleFinden(kennung);
     return quelle === undefined ? null : { art: 'quelle', quelle };
+  }
+  if (art === 'literatur') {
+    const publikation = publikationFinden(kennung);
+    return publikation === undefined ? null : { art: 'literatur', publikation };
   }
   if (art !== 'objekt' && art !== 'szene' && art !== 'thema') return null;
   return textKennungGueltig(art, kennung) ? { art, kennung } : null;
