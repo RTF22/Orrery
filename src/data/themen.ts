@@ -19,6 +19,14 @@ export const THEMEN: readonly Thema[] = [
   { id: 'bahnelemente', titleKey: 'thema.bahnelemente.title' },
   { id: 'modell', titleKey: 'thema.modell.title' },
   { id: 'sonnensystem', titleKey: 'thema.sonnensystem.title' },
+  // Fachthemen nur auf Hochschulniveau (Entwurf 4d §5.3): Körpertexte
+  // verweisen auf sie, statt gemeinsame Physik zu wiederholen.
+  { id: 'gezeiten', titleKey: 'thema.gezeiten.title' },
+  { id: 'resonanzen', titleKey: 'thema.resonanzen.title' },
+  { id: 'bezugssysteme', titleKey: 'thema.bezugssysteme.title' },
+  { id: 'innerer-aufbau', titleKey: 'thema.innerer-aufbau.title' },
+  { id: 'photometrie', titleKey: 'thema.photometrie.title' },
+  { id: 'entstehung', titleKey: 'thema.entstehung.title' },
 ];
 
 /**

@@ -15,10 +15,14 @@ describe('Themenkatalog', () => {
     }
   });
 
-  it('kennt drei Niveaus und erkennt Themen', () => {
+  it('kennt drei Niveaus und erkennt Themen, auch die Fachthemen der Hochschule', () => {
     expect(NIVEAUS).toEqual(['grundschule', 'gymnasium', 'hochschule']);
     expect(istThema('modell')).toBe(true);
     expect(istThema('sonnensystem')).toBe(true);
+    for (const id of ['gezeiten', 'resonanzen', 'bezugssysteme', 'innerer-aufbau', 'photometrie', 'entstehung']) {
+      expect(istThema(id), id).toBe(true);
+    }
+    expect(THEMEN).toHaveLength(15);
     expect(istThema('gibt-es-nicht')).toBe(false);
   });
 });
