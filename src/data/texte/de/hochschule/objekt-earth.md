@@ -1,9 +1,9 @@
 # Erde
 
-Für die Erde sind Größen gemessen, die bei anderen Planeten Modellannahmen bleiben: das
-Schwerefeld aus Satellitenbahnen, der Aufbau aus Eigenschwingungen und seismischen Laufzeiten,
-die Gezeitenentwicklung aus Laserentfernungen zum Mond. Der Text nennt die Kennwerte mit
-Unsicherheiten, die Streitfragen mit beiden Seiten und das, was Orrery davon abbildet.
+Dieser Text behandelt die Erde als Planeten: Figur und Schwerefeld aus Satellitenbahnen, Aufbau
+aus Eigenschwingungen und seismischen Laufzeiten, Rotation und Gezeiten aus historischen
+Finsternissen und Laserentfernungen zum Mond, dazu die Streitfragen mit beiden Seiten und das,
+was Orrery davon abbildet.
 
 ## Kenngrößen und Messung
 
@@ -14,7 +14,7 @@ Gezeitenpotential ist nicht herausgerechnet.
 
 | Größe | Wert | Unsicherheit | Bestimmung | Beleg |
 |---|---|---|---|---|
-| $GM_\oplus$ (TCG) | $3{,}986004418 \cdot 10^{14}\,\mathrm{m}^3\,\mathrm{s}^{-2}$ | $8 \cdot 10^{5}\,\mathrm{m}^3\,\mathrm{s}^{-2}$ | Satellitenbahnen, vor allem LAGEOS; mit Atmosphäre | [Petit und Luzum 2010](literatur:petit-2010); [Ries et al. 1992](literatur:ries-1992) |
+| $GM_\oplus$ (TCG) | $3{,}986004418 \cdot 10^{14}\,\mathrm{m}^3\,\mathrm{s}^{-2}$ | $8 \cdot 10^{5}\,\mathrm{m}^3\,\mathrm{s}^{-2}$, nach neueren Studien $4 \cdot 10^{5}$ | Satellitenbahnen, vor allem LAGEOS; mit Atmosphäre | [Petit und Luzum 2010](literatur:petit-2010); [Ries et al. 1992](literatur:ries-1992) |
 | $a_\mathrm{E}$ | $6378136{,}6\,\mathrm{m}$ | $0{,}1\,\mathrm{m}$ | Zero Tide | [Petit und Luzum 2010](literatur:petit-2010) |
 | $1/f$ | $298{,}25642$ | $0{,}00001$ | Zero Tide | [Petit und Luzum 2010](literatur:petit-2010) |
 | $J_2$ | $1{,}0826359 \cdot 10^{-3}$ | $1 \cdot 10^{-10}$ | Schwerefeld, Zero Tide | [Petit und Luzum 2010](literatur:petit-2010) |
@@ -27,8 +27,9 @@ In den meisten Bestimmungen von $GM_\oplus$ bis 1992 hatten Laserentfernungen zu
 LAGEOS den größten Einfluss; nach Korrektur eines Fehlers im Schwerpunktversatz ergaben sie
 398 600,4415 km³ s⁻² mit 0,0008 km³ s⁻² (1σ), einschließlich der Atmosphäre
 ([Ries et al. 1992](literatur:ries-1992)). Das ist der TT-kompatible Wert, den die IERS
-Conventions aus dem Tabellenwert mit $x_\mathrm{TT} = x_\mathrm{TCG}\,(1 - L_\mathrm{G})$ ableiten. Der
-Polradius $b = a_\mathrm{E}\,(1 - f) = 6356751{,}9\,\mathrm{m}$ ist 21,4 km kleiner.
+Conventions aus dem Tabellenwert mit $x_\mathrm{TT} = x_\mathrm{TCG}\,(1 - L_\mathrm{G})$
+ableiten. Der Polradius $b = a_\mathrm{E}\,(1 - f) = 6356751{,}9\,\mathrm{m}$ ist 21,4 km
+kleiner.
 
 $J_2$ und die dynamische Abplattung $H$ enthalten dieselbe Differenz der Hauptträgheitsmomente:
 
@@ -36,10 +37,9 @@ $$J_2 = \frac{C - (A + B)/2}{M a_\mathrm{E}^2}, \quad H = \frac{C - (A + B)/2}{C
 
 Ihr Quotient $C/(M a_\mathrm{E}^2) = J_2/H = 0{,}330698$ hängt nicht von $G$ ab; die
 Tabellenwerte ergeben formal $1 \cdot 10^{-7}$ Unsicherheit. Das absolute $C$ braucht dagegen
-die Masse und damit $G$; Chen et al. geben $A$, $B$ und $C$ je auf
-$9{,}6 \cdot 10^{33}\,\mathrm{kg}\,\mathrm{m}^2$ an, begrenzt durch $G$ und die dynamische
-Elliptizität ([Chen et al. 2015](literatur:chen-2015)). Für das mittlere Trägheitsmoment
-$I = (A + B + C)/3$ gilt
+die Masse und damit $G$, deshalb begrenzen $G$ und $H$ seine Unsicherheit
+([Chen et al. 2015](literatur:chen-2015)). Für das mittlere Trägheitsmoment $I = (A + B + C)/3$
+gilt
 
 $$\frac{I}{M a_\mathrm{E}^2} = \frac{C}{M a_\mathrm{E}^2} - \frac{2}{3}\,J_2 = 0{,}329976$$
 
@@ -63,8 +63,9 @@ Das Referenzmodell PREM entstand aus rund 1000 Perioden von Eigenschwingungen,
 mussten transversal isotrop angesetzt werden
 ([Dziewonski und Anderson 1981](literatur:dziewonski-1981)). Randbedingungen waren
 $R = 6371\,\mathrm{km}$, $M = 5{,}974 \cdot 10^{24}\,\mathrm{kg}$ und $I/(M R^2) = 0{,}3308$.
-Der innere Kern reicht bis 1221,5 km Radius, die Kern-Mantel-Grenze liegt bei 3480,0 km, also
-2891 km tief; die Übergangszone des Mantels liegt zwischen 400 und 670 km Tiefe. Aus den
+In PREM reicht der innere Kern bis 1221,5 km Radius, die Kern-Mantel-Grenze liegt bei 3480,0 km,
+also 2891 km tief, und die Übergangszone des Mantels zwischen den Diskontinuitäten in 400 und
+670 km Tiefe. Aus den
 Dichtepolynomen folgen 13,09 g/cm³ im Mittelpunkt, ein Sprung von 12,17 auf 12,76 g/cm³ am
 inneren Kern und von 5,57 auf 9,90 g/cm³ an der Kern-Mantel-Grenze.
 
@@ -77,13 +78,13 @@ den äußeren Kern in Massenanteilen Fe mit 5 % Ni, 1,7 % S, 0 bis 4,0 % Si, 0,8
 
 Wann der innere Kern zu wachsen begann, hängt an der Wärmeleitfähigkeit, und die Messungen
 widersprechen sich. Ohta et al. maßen den elektrischen Widerstand von Eisen bis 4500 K in der
-Diamantstempelzelle; der niedrige Wert spricht für hohe Wärmeleitfähigkeit, rasche Abkühlung
-und einen inneren Kern jünger als 0,7 Milliarden Jahre ([Ohta et al. 2016](literatur:ohta-2016)).
-Konôpková et al. schätzen aus Wärmepulsen in festem Eisen 18 bis 44 W m⁻¹ K⁻¹ für den Kern;
-dann kann thermische Konvektion den Dynamo über Milliarden Jahre tragen, und der innere Kern
-kann so alt sein wie der Dynamo ([Konôpková et al. 2016](literatur:konopkova-2016)).
-Paläomagnetisch deuten Biggin et al. eine Zunahme von mittlerer Feldstärke und Streuung vor 1,0 bis 1,5 Milliarden
-Jahren als Beginn der Kernkristallisation bei mäßiger Leitfähigkeit
+Diamantstempelzelle; der niedrige Wert spricht für hohe Wärmeleitfähigkeit, rasche Abkühlung und
+einen inneren Kern jünger als 0,7 Milliarden Jahre ([Ohta et al. 2016](literatur:ohta-2016)).
+Konôpková et al. schätzen aus Wärmepulsen in festem Eisen 18 bis 44 W m⁻¹ K⁻¹ für den Kern; dann
+kann thermische Konvektion den Dynamo über Milliarden Jahre tragen, und der innere Kern kann so
+alt sein wie der Dynamo ([Konôpková et al. 2016](literatur:konopkova-2016)). Paläomagnetisch
+deuten Biggin et al. eine Zunahme von mittlerer Feldstärke und Streuung vor 1,0 bis 1,5
+Milliarden Jahren als Beginn der Kernkristallisation bei mäßiger Leitfähigkeit
 ([Biggin et al. 2015](literatur:biggin-2015)). Bono et al. fanden in rund 565 Millionen Jahre
 alten Gesteinen ein mittleres Dipolmoment von nur etwa
 $0{,}7 \cdot 10^{22}\,\mathrm{A}\,\mathrm{m}^2$, verträglich mit hoher Leitfähigkeit und einem
@@ -99,23 +100,24 @@ Plattentektonik einsetzte, ist offen; die Vorschläge reichen vom Hadaikum bis i
 Neoproterozoikum. Palin et al. sehen in metamorphen Gesteinen und geodynamischen Modellen einen
 globalen Beginn spätestens vor rund 3 Milliarden Jahren und deuten ältere Subduktionsspuren als
 örtlich von Mantelplumes ausgelöste Subduktion ([Palin et al. 2020](literatur:palin-2020)).
-Stern schließt aus dem ersten Auftreten von Ophiolithen, Blauschiefern und
-Ultrahochdruckgesteinen, dass Subduktion im heutigen Stil erst im Neoproterozoikum begann
+Stern leitet aus dem Gesteinsbefund dagegen ab, dass die heutige Episode der Plattentektonik
+erst im Neoproterozoikum begann ([Stern 2018](literatur:stern-2018)); früher stützte er das auf
+das erste Auftreten von Ophiolithen, Blauschiefern und Ultrahochdruckgesteinen
 ([Stern 2005](literatur:stern-2005)).
 
 ## Atmosphäre und Magnetosphäre
 
 Trockene Luft besteht nach Volumen aus 78,08 % N₂, 20,95 % O₂, 9340 ppm Ar und 420 ppm CO₂;
-Wasserdampf liegt typisch bei 1 %. Bei 1014 hPa Bodendruck, 288 K und einer mittleren
-Molekülmasse von 28,97 beträgt die Skalenhöhe 8,5 km, die Bond-Albedo 0,294 und die
-geometrische Albedo 0,434 ([NSSDC Earth Fact Sheet](quelle:nssdc-earth)); die isotherme
-Näherung $h_\mathrm{s} = k_\mathrm{B} T/(\bar{m}\,g)$ ergibt 8,4 km. Nord- und Südhalbkugel
-reflektieren bis auf etwa 0,2 W m⁻² gleich viel Sonnenlicht, weil Wolken im Süden die hellere
-Landfläche im Norden ausgleichen, und das reflektierte Mittel schwankt jährlich nur um rund
-0,2 % ([Stephens et al. 2015](literatur:stephens-2015)). 2023 erreichte die planetare Albedo
-dennoch einen Tiefstwert, vor allem durch weniger tiefe Wolken in nördlichen mittleren Breiten
-und Tropen. Die Autoren sehen darin den Hauptfaktor für die rund 0,2 K, um die bisherige
-Schätzungen der bekannten Antriebe den Temperaturanstieg unterschritten
+Wasserdampf liegt typisch bei 1 %. Das Faktenblatt nennt 1014 hPa Bodendruck, 288 K mittlere
+Temperatur, eine mittlere molare Masse von 28,97 g/mol und 8,5 km Skalenhöhe; die isotherme
+Näherung $h_\mathrm{s} = k_\mathrm{B} T/(\bar{m}\,g)$ ergibt 8,4 km. Die Bond-Albedo beträgt
+0,294, die geometrische Albedo 0,434 ([NSSDC Earth Fact Sheet](quelle:nssdc-earth)). Nord- und
+Südhalbkugel reflektieren bis auf etwa 0,2 W m⁻² gleich viel Sonnenlicht, weil Wolken im Süden
+die hellere Landfläche im Norden ausgleichen, und das reflektierte Mittel schwankt von Jahr zu
+Jahr nur um rund 0,2 % ([Stephens et al. 2015](literatur:stephens-2015)). 2023 erreichte die
+planetare Albedo dennoch einen Tiefstwert, vor allem durch weniger tiefe Wolken in nördlichen
+mittleren Breiten und Tropen. Die Autoren sehen darin den Hauptfaktor für die rund 0,2 K, um die
+bisherige Schätzungen der bekannten Antriebe den Temperaturanstieg unterschritten
 ([Goessling et al. 2025](literatur:goessling-2025)).
 
 Das Hauptfeld beschreibt das IGRF in Kugelfunktionen mit dem Bezugsradius
@@ -125,14 +127,15 @@ $a = 6371{,}2\,\mathrm{km}$; die 14. Generation von November 2024 enthält Model
 
 $$B_0 = \sqrt{\left( g_1^0 \right)^2 + \left( g_1^1 \right)^2 + \left( h_1^1 \right)^2}, \quad m = \frac{4\pi a^3 B_0}{\mu_0}$$
 
-Für 2025,0 sind das $B_0 = 29733\,\mathrm{nT}$ und $m = 7{,}69 \cdot 10^{22}\,\mathrm{A}\,\mathrm{m}^2$;
-die Dipolachse ist 9,2° gegen die Drehachse geneigt, der geomagnetische Nordpol liegt bei
-80,8° N und 72,8° W. 1900 betrug das Moment $8{,}32 \cdot 10^{22}\,\mathrm{A}\,\mathrm{m}^2$, es
-sank also in 125 Jahren um 7,6 %, und die vorhergesagte Änderung von $g_1^0$ um +12,6 nT je
-Jahr setzt die Abnahme fort. In den Feldänderungen an der Kern-Mantel-Grenze über weniger als
-ein Jahrzehnt findet das Modell CHAOS-8 westwärts wandernde Strukturen und vorläufig auch
-kleinräumige ostwärts laufende in niedrigen Breiten, mit etwa 200 km je Jahr, gedeutet als
-Hinweis auf hydromagnetische Wellen ([Kloss et al. 2026](literatur:kloss-2026)).
+Für 2025,0 sind das $B_0 = 29733\,\mathrm{nT}$ und
+$m = 7{,}69 \cdot 10^{22}\,\mathrm{A}\,\mathrm{m}^2$; die Dipolachse ist rund 9,2° gegen die
+Drehachse geneigt, und den geomagnetischen Nordpol führt das Modell bei 80,85° N und 72,76° W.
+1900 betrug das Moment $8{,}32 \cdot 10^{22}\,\mathrm{A}\,\mathrm{m}^2$, es sank also in 125
+Jahren um 7,6 %, und die vorhergesagte Änderung von $g_1^0$ um +12,6 nT je Jahr setzt die
+Abnahme fort. In den Feldänderungen an der Kern-Mantel-Grenze über weniger als ein Jahrzehnt
+findet das Modell CHAOS-8 westwärts wandernde Strukturen und vorläufig auch kleinräumige
+ostwärts laufende in niedrigen Breiten, mit etwa 200 km je Jahr, gedeutet als Hinweis auf
+hydromagnetische Wellen ([Kloss et al. 2026](literatur:kloss-2026)).
 
 ## Bahn, Rotation und Dynamik
 
@@ -169,57 +172,63 @@ Gezeitenrechnung ([Morrison et al. 2021](literatur:morrison-2021)). Mit
 
 $$\dot{\mathrm{LOD}} = -\frac{\mathrm{LOD}^2}{2\pi}\,\dot{\omega}$$
 
-entspricht der Gezeitenwert 2,40 ms je Jahrhundert, im Einklang mit dem Mondwert. Seit 1972
-wirkt zusätzlich der Kern: Ohne den Anteil der Eisschmelze in Grönland und der Antarktis nimmt
-seine Winkelgeschwindigkeit gleichmäßig ab und erhöht die des übrigen Erdkörpers. Die
-Extrapolation ergab 2024, dass UTC bis 2029 eine negative Schaltsekunde bräuchte, ohne die
-beschleunigte Eisschmelze drei Jahre früher ([Agnew 2024](literatur:agnew-2024)).
+entspricht der Gezeitenwert 2,40 ms je Jahrhundert, im Einklang mit den 2,395 ms des
+geophysikalischen Modells. Für die Zeit seit 1972 fand Agnew: Nach Abzug der über
+Satellitengravimetrie gemessenen Eisschmelze in Grönland und der Antarktis nimmt die
+Winkelgeschwindigkeit des flüssigen Kerns gleichmäßig ab und erhöht die des übrigen Erdkörpers;
+UTC bräuchte danach bis 2029 eine negative Schaltsekunde, ohne die beschleunigte Eisschmelze
+drei Jahre früher ([Agnew 2024](literatur:agnew-2024)).
 
 ## Entstehung und Entwicklung
 
-Kalzium-Aluminium-reiche Einschlüsse in Meteoriten entstanden vor
-$4567{,}30 \pm 0{,}16$ Millionen Jahren ([Connelly et al. 2012](literatur:connelly-2012)). Der
-[Mond](objekt:moon) gilt als Ergebnis eines Rieseneinschlags. Canup und Asphaug fanden Stöße mit
-einem kleineren Körper als zuvor für möglich gehalten, die gegen Ende des Erdwachstums einen
-eisenarmen Mond und den heutigen Drehimpuls ergeben
-([Canup und Asphaug 2001](literatur:canup-2001)). In solchen Rechnungen stammt der Großteil des
-Mondmaterials vom Einschlagkörper, Erde und Mond sind isotopisch aber nahezu gleich. Zwei
-Varianten beginnen mit mehr Drehimpuls, der später über eine Resonanz mit der Sonne abgebaut
-wird: ein Einschlag auf eine schnell rotierende Proto-Erde, dessen Scheibe überwiegend aus
-Erdmantel besteht ([Ćuk und Stewart 2012](literatur:cuk-2012)), oder ein deutlich größerer
-Einschlagkörper, dessen Scheibe dieselbe Zusammensetzung wie der Mantel erhält
+Kalzium-Aluminium-reiche Einschlüsse in Meteoriten, die ersten Festkörper des Sonnensystems,
+entstanden vor $4567{,}30 \pm 0{,}16$ Millionen Jahren
+([Connelly et al. 2012](literatur:connelly-2012)); ihr Alter dient als Nullpunkt für Zeitangaben
+nach Entstehung des Sonnensystems. Der [Mond](objekt:moon) gilt als Ergebnis eines
+Rieseneinschlags. Canup und Asphaug fanden Stöße mit einem kleineren Körper als zuvor für
+möglich gehalten, die gegen Ende des Erdwachstums einen eisenarmen Mond und den heutigen
+Drehimpuls ergeben ([Canup und Asphaug 2001](literatur:canup-2001)). In solchen Rechnungen
+stammt der Großteil des Mondmaterials vom Einschlagkörper, Erde und Mond sind isotopisch aber
+nahezu gleich. Zwei Varianten beginnen mit mehr Drehimpuls, der später über eine Resonanz mit
+der Sonne abgebaut wird: ein Einschlag auf eine schnell rotierende Proto-Erde, dessen Scheibe
+überwiegend aus Erdmantel besteht ([Ćuk und Stewart 2012](literatur:cuk-2012)), oder ein
+deutlich größerer Einschlagkörper, dessen Scheibe dieselbe Zusammensetzung wie der Mantel erhält
 ([Canup 2012](literatur:canup-2012)).
 
 Wie gleich die Sauerstoffisotope sind, ist umstritten. Herwartz et al. maßen einen Unterschied
-in $\Delta^{17}\mathrm{O}$ von 12 ± 3 ppm als Spur des Einschlagkörpers Theia, alternativ einer
-späten Zufuhr kohliger Chondrite ([Herwartz et al. 2014](literatur:herwartz-2014)). Young et al. fanden −1 ± 5 ppm
-(2 Standardfehler) und folgern kräftige Durchmischung bei einem energiereichen Stoß
-([Young et al. 2016](literatur:young-2016)). Nach Cano et al. korrelieren die Werte mit der
-Gesteinsart, und Proben aus dem tiefen Mondmantel sind schwerer als die Erde
-([Cano et al. 2020](literatur:cano-2020)). Fischer et al. finden keinen Unterschied auf dem
-Niveau unter einem ppm ([Fischer et al. 2024](literatur:fischer-2024)).
+in Δ¹⁷O von 12 ± 3 ppm als Spur des Einschlagkörpers Theia, alternativ einer späten Zufuhr
+kohliger Chondrite ([Herwartz et al. 2014](literatur:herwartz-2014)). Young et al. fanden in der
+logarithmisch definierten Größe Δ′¹⁷O −1 ± 5 ppm (2 Standardfehler) und folgern kräftige
+Durchmischung bei einem energiereichen Stoß ([Young et al. 2016](literatur:young-2016)). Nach
+Cano et al. korrelieren die Werte mit der Gesteinsart, und Proben aus dem tiefen Mondmantel sind
+schwerer als die Erde ([Cano et al. 2020](literatur:cano-2020)). Fischer et al. finden keinen
+Unterschied auf dem Niveau unter einem ppm ([Fischer et al. 2024](literatur:fischer-2024)).
 
-Auch das Alter des Mondes ist strittig. Zirkone aus Apollo-14-Proben belegen eine differenzierte
-Mondkruste vor 4,51 Milliarden Jahren, also Mondbildung in den ersten rund 60 Millionen Jahren
-([Barboni et al. 2017](literatur:barboni-2017)). Ein Magmaozean, der 150 bis 200 Millionen
-Jahre zum Erstarren braucht, führt mit den Probenaltern dagegen auf
-$4{,}425 \pm 0{,}025$ Milliarden Jahre, gleich dem Uran-Blei-Alter der Erde, das demnach die
-letzte Kernbildung datiert ([Maurice et al. 2020](literatur:maurice-2020)). Ein Zirkon, dessen
-Alter von 4,4 Milliarden Jahren die Atomsondentomographie bestätigt, verlangt, dass jede
-Durchmischung der silikatischen Erde früher lag ([Valley et al. 2014](literatur:valley-2014)).
+Auch das Alter des Mondes ist strittig. Zirkone aus Apollo-14-Proben zeigen eine spätestens vor
+4,51 Milliarden Jahren differenzierte Mondkruste, also Mondbildung in den ersten rund 60
+Millionen Jahren nach Entstehung des Sonnensystems
+([Barboni et al. 2017](literatur:barboni-2017)). Ein Magmaozean, der 150 bis 200 Millionen Jahre
+zum Erstarren braucht, führt mit den Probenaltern dagegen auf $4{,}425 \pm 0{,}025$ Milliarden
+Jahre, gleich dem Uran-Blei-Alter der Erde, das demnach die letzte Kernbildung datiert
+([Maurice et al. 2020](literatur:maurice-2020)). Ein Zirkon, dessen Alter von 4,4 Milliarden
+Jahren die Atomsondentomographie bestätigt, verlangt, dass jede Durchmischung der silikatischen
+Erde früher lag ([Valley et al. 2014](literatur:valley-2014)).
 
 ## Offene Fragen
 
-- **Alter des inneren Kerns:** Die Schätzungen reichen von rund 0,5 bis über 2,5 Milliarden
-  Jahre, je nach Wärmeleitfähigkeit und Deutung des Paläofelds
-  ([Bono et al. 2019](literatur:bono-2019)).
-- **Leichte Elemente:** Engere Grenzen verlangen die Kerntemperatur und die Verknüpfung von
-  festem und flüssigem Kern ([Hirose et al. 2021](literatur:hirose-2021)).
-- **Rotation des inneren Kerns:** Wiederholte Erdbebenwellen zeigen eine Pause der
-  differentiellen Rotation im letzten Jahrzehnt, vielleicht Teil einer Schwingung von rund
-  sieben Jahrzehnten ([Yang und Song 2023](literatur:yang-2023)). Eine andere Auswertung sieht
-  Vorauseilen von 2003 bis 2008, danach zwei- bis dreimal langsameres Zurückbleiben bis 2023,
-  und hält neue Kopplungsmodelle für nötig ([Wang et al. 2024](literatur:wang-2024)).
+- **Alter des inneren Kerns:** Je nach Wärmeleitfähigkeit reichen die Schätzungen von rund 0,5
+  bis über 2,5 Milliarden Jahre ([Bono et al. 2019](literatur:bono-2019)), und das Paläofeld
+  wird verschieden gedeutet ([Biggin et al. 2015](literatur:biggin-2015);
+  [Bono et al. 2019](literatur:bono-2019)).
+- **Leichte Elemente:** Die Bereiche würden enger mit genaueren Grenzen für die Kerntemperatur
+  und einer besseren Verknüpfung der Zusammensetzungen von festem und flüssigem Kern
+  ([Hirose et al. 2021](literatur:hirose-2021)).
+- **Rotation des inneren Kerns:** Nach wiederholten Erdbebenwellen pausierte die differentielle
+  Rotation im letzten Jahrzehnt, als allmähliche Umkehr in einer Schwingung von rund sieben
+  Jahrzehnten gedeutet ([Yang und Song 2023](literatur:yang-2023)). Wang et al. zeichnen die
+  Umkehr genauer nach: Vorauseilen 2003 bis 2008, danach zwei- bis dreimal langsameres
+  Zurückdrehen bis 2023; neue Kopplungsmodelle seien nötig
+  ([Wang et al. 2024](literatur:wang-2024)).
 - **Beginn der Plattentektonik:** spätestens vor 3 Milliarden Jahren oder im heutigen Stil
   erst im Neoproterozoikum (siehe Oberfläche).
 - **Mondbildung:** ob die Sauerstoffisotope gleich sind und ob der Mond vor 4,51 oder vor
@@ -234,16 +243,19 @@ Durchmischung der silikatischen Erde früher lag ([Valley et al. 2014](literatur
   Breite und 6000 km im Abstand ([JPL Approximate Positions](quelle:jpl-approx-pos)). Orrery
   setzt den Erdmittelpunkt auf diesen Schwerpunkt und den Mond mit festen $a$, $e$, $I$ und
   linear fortgeschriebenen Winkeln relativ dazu. Der wahre Erdmittelpunkt liegt um
-  $\mu/(1 + \mu)$ des Mondabstands daneben, mit dem Massenverhältnis oben rund 4670 km, von der
-  Sonne aus 6,4″; der Vektor von der Erde zum Mond ist davon nicht betroffen.
+  $\mu/(1 + \mu)$ des Mondabstands daneben, mit den Mondelementen des Modells 4415 bis 4928 km,
+  von der Sonne aus bis zu 6,9″; der Vektor von der Erde zum Mond ist davon nicht betroffen.
 - **Zeit:** Die Uhr zählt julianische Tage in UTC und setzt sie ohne Umrechnung als TDB ein.
-  Seit 2017 gilt $\mathrm{TT} - \mathrm{UTC} = 32{,}184\,\mathrm{s} + 37\,\mathrm{s} = 69{,}184\,\mathrm{s}$,
+  Seit 2017 gilt
+  $\mathrm{TT} - \mathrm{UTC} = 32{,}184\,\mathrm{s} + 37\,\mathrm{s} = 69{,}184\,\mathrm{s}$,
   und TDB weicht von TT nur um Millisekunden ab; die Erde bleibt dadurch 2,8″ in Länge zurück.
 - **Datenblock:** Der Durchmesser 12 742 km ist der doppelte mittlere Radius, nicht der
   Äquatordurchmesser; die Kugel ist nicht abgeplattet. Die Umlaufzeit 365,2 Tage rechnet der
   Datenblock nach Kepler aus $a$ zur Epoche und $G\,(M_\odot + M_\oplus)$: 365,2495 Tage, rund
-  zehn Minuten weniger als die $360^\circ/\dot{L} = 365{,}2564$ Tage, mit denen die Erde bewegt
-  wird. Die Exzentrizität 0,017 ist der Tafelwert zur Uhrzeit.
+  zehn Minuten weniger als die $360^\circ/\dot{L} = 365{,}2564$ Tage der Bewegung. Das liegt vor
+  allem an CODATA-$G$ mal Sonnenmasse des Datensatzes, 45 ppm über der heliozentrischen
+  Gravitationskonstante ([Petit und Luzum 2010](literatur:petit-2010)); mit dieser wären es
+  365,2578 Tage. Die Exzentrizität 0,017 ist der Tafelwert zur Uhrzeit.
 - **Rotation:** Für die Erde gibt es kein IAU-Rotationsmodell mehr; die früheren Näherungen
   waren ungenau, versagten nahe J2000,0 und wurden zugunsten der IERS-Modelle gestrichen
   ([Archinal et al. 2018](literatur:archinal-2018)). Orrery dreht die Erde gleichförmig mit der
@@ -254,14 +266,16 @@ Durchmischung der silikatischen Erde früher lag ([Valley et al. 2014](literatur
 - **Pol und Achsneigung:** Der Pol steht fest bei Rektaszension 0° und Deklination 90°, ohne
   Präzession, Nutation und Polbewegung; nach $\delta_0 = 90{,}00^\circ - 0{,}557^\circ\,T$
   ([NSSDC Earth Fact Sheet](quelle:nssdc-earth)) wäre er bis 2026 um rund 0,15° gewandert. Die
-  Umrechnung von Polrichtungen in die Ekliptik nutzt die Schiefe 84 381,448″ von IAU 2000
-  statt 84 381,406″ ([Petit und Luzum 2010](literatur:petit-2010)). Die Achsneigung 23,4° im Datenblock ist der
-  Winkel zur Bahnnormale zur Epoche, 23,43928°; am 17. September 2026 beträgt die mittlere
-  Schiefe 23,4358°.
-- **Albedo:** Die wolkenlose Tageskarte hat eine mittlere lineare Reflexion von rund 0,13; ein
-  Faktor von rund 3,2 hebt sie auf die geometrische Albedo 0,434, die Helligkeit der Wolken
-  verteilt sich so auf Land und Meer. Wolken und Atmosphäre fehlen, nur der Kernschatten ist
-  für Mondfinsternisse gefärbt.
+  Umrechnung von Polrichtungen in die Ekliptik nutzt die Schiefe 84 381,448″ von IAU 2000 statt
+  84 381,406″ ([Petit und Luzum 2010](literatur:petit-2010)). Die Achsneigung 23,4° im
+  Datenblock ist der Winkel zur Bahnnormale zur Epoche, 23,43928°; am 17. September 2026 beträgt
+  die mittlere Schiefe 23,4358°.
+- **Albedo:** Ein Faktor von rund 3,2 hebt die mittlere lineare Reflexion der wolkenlosen
+  Tageskarte, rund 0,13, auf die geometrische Albedo 0,434; die Helligkeit der Wolken liegt so
+  auf Land und Meer. Das Material streut im Wesentlichen lambertsch, und eine solche Kugel hat
+  $p = 2A/3 = 0{,}29$ und die Bond-Albedo $A = 0{,}434$, trifft also keinen der Messwerte 0,434
+  und 0,294. Wolken und Atmosphäre fehlen, nur der Kernschatten ist für Mondfinsternisse
+  gefärbt.
 - Die Tag-Nacht-Grenze aus der Nähe zeigt [Sonnenaufgang über dem Erdrand](szene:erdaufgang);
   weitere Vereinfachungen: [Grenzen des Modells](thema:modell).
 

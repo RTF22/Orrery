@@ -70,12 +70,12 @@ export const LITERATUR: readonly Publikation[] = [
   },
   {
     id: 'beggan-2026',
-    autoren: ['Beggan, C. D.', 'Kloss, C.', 'Grayver, A.'],
+    autoren: ['Beggan, C. D.', 'Kloss, C.', 'Amblard, P.'],
     etAl: true,
     jahr: 2026,
-    titel: 'Evaluation of candidate models for the 14th generation International Geomagnetic Reference Field',
-    erschienen: 'Earth, Planets and Space 78, 126',
-    doi: '10.1186/s40623-026-02382-2',
+    titel: 'International geomagnetic reference field: the fourteenth generation',
+    erschienen: 'Earth, Planets and Space 78, 127',
+    doi: '10.1186/s40623-025-02360-0',
   },
   {
     id: 'biggin-2015',
@@ -430,6 +430,15 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'Evidence from ophiolites, blueschists, and ultrahigh-pressure metamorphic terranes that the modern episode of subduction tectonics began in Neoproterozoic time',
     erschienen: 'Geology 33, 557–560',
     doi: '10.1130/G21365.1',
+  },
+  {
+    id: 'stern-2018',
+    autoren: ['Stern, R. J.'],
+    etAl: false,
+    jahr: 2018,
+    titel: 'The evolution of plate tectonics',
+    erschienen: 'Philosophical Transactions of the Royal Society A 376, 20170406',
+    doi: '10.1098/rsta.2017.0406',
   },
   {
     id: 'tremaine-2009',
