@@ -46,6 +46,7 @@ export const nachnameVon = (autor: string): string => (autor.split(',')[0] ?? ''
 /** Ausschnitt eines Crossref-Datensatzes (message von /works/<doi>). */
 export interface CrossrefWerk {
   title?: string[];
+  subtitle?: string[];
   author?: { family?: string; name?: string }[];
   'published-print'?: { 'date-parts'?: number[][] };
   'published-online'?: { 'date-parts'?: number[][] };
@@ -72,9 +73,18 @@ export function pruefeCrossref(p: Publikation, w: CrossrefWerk): Befund[] {
   const jahre = crossrefJahre(w);
   const jahr = jahrUrteil(p.jahr, jahre);
   if (jahr !== 'ok') melde(jahr, `Jahr bei Crossref ${jahre.length > 0 ? jahre.join('/') : 'fehlt'}, im Katalog ${p.jahr}`);
-  const titel = w.title?.[0] ?? '';
-  const anteil = wortanteil(p.titel, titel);
-  if (anteil < MINDESTANTEIL) melde('fehler', `Titel stimmt zu ${Math.round(anteil * 100)} % überein: „${titel}"`);
+  // Crossref führt Untertitel mancher Zeitschriften getrennt (subtitle); verglichen wird
+  // sowohl mit dem Haupttitel allein als auch mit „Haupttitel: Untertitel", der größere
+  // Wortanteil zählt.
+  const haupttitel = w.title?.[0] ?? '';
+  const untertitel = w.subtitle?.[0];
+  const titelMitUntertitel = untertitel !== undefined && untertitel !== '' ? `${haupttitel}: ${untertitel}` : undefined;
+  const anteilHaupt = wortanteil(p.titel, haupttitel);
+  const anteil = titelMitUntertitel === undefined ? anteilHaupt : Math.max(anteilHaupt, wortanteil(p.titel, titelMitUntertitel));
+  if (anteil < MINDESTANTEIL) {
+    const titel = titelMitUntertitel ?? haupttitel;
+    melde('fehler', `Titel stimmt zu ${Math.round(anteil * 100)} % überein: „${titel}"`);
+  }
   if (befunde.length === 0) melde('ok', 'Erstautor, Jahr und Titel stimmen');
   return befunde;
 }

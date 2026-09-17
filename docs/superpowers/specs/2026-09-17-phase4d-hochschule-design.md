@@ -270,7 +270,9 @@ scripts/pruefe-literatur.ts`), nur von Hand, braucht Netz, nicht Teil von `npm t
 
 **Nachtrag (4d-2):** Das Skript wiederholt Abrufe bei HTTP 502, 503, 504 und bei
 Zeitüberschreitung bis zu zweimal (nach 2 s und 5 s); andere Antworten gelten sofort. Anlass war
-die ADS-Adresse eines Eintrags, die gelegentlich 504 meldete.
+die ADS-Adresse eines Eintrags, die gelegentlich 504 meldete. Crossref führt Untertitel mancher
+Zeitschriften getrennt (`subtitle`); der Titel wird deshalb mit dem Haupttitel allein und mit
+„Haupttitel: Untertitel" verglichen, der größere Anteil zählt.
 
 **Nachtrag (4d-1):** Ein abweichender arXiv-Titel ist bei Einträgen mit DOI nur eine Warnung
 (veröffentlichte Fassungen tragen oft andere Titel; die DOI-Prüfung sichert den Titel), ohne

@@ -57,6 +57,29 @@ describe('pruefeCrossref', () => {
     expect(befunde.map((b) => b.urteil)).toEqual(['fehler', 'warnung', 'fehler']);
     expect(befunde[0]?.text).toContain('Mayer');
   });
+
+  it('vergleicht den Titel auch mit angehängtem Untertitel', () => {
+    const werkMitUntertitel = {
+      ...WERK,
+      title: ['Gaia Early Data Release 3'],
+      subtitle: ['The celestial reference frame (Gaia-CRF3)'],
+    };
+    expect(pruefeCrossref(
+      { ...P, titel: 'Gaia Early Data Release 3: The celestial reference frame (Gaia-CRF3)' },
+      werkMitUntertitel,
+    )).toEqual([
+      { id: 'mueller-2019', pruefung: 'crossref', urteil: 'ok', text: 'Erstautor, Jahr und Titel stimmen' },
+    ]);
+    expect(pruefeCrossref(
+      { ...P, titel: 'Gaia Early Data Release 3' },
+      werkMitUntertitel,
+    )).toEqual([
+      { id: 'mueller-2019', pruefung: 'crossref', urteil: 'ok', text: 'Erstautor, Jahr und Titel stimmen' },
+    ]);
+    const fehler = pruefeCrossref({ ...P, titel: 'Something else entirely' }, werkMitUntertitel);
+    expect(fehler.map((b) => b.urteil)).toEqual(['fehler']);
+    expect(fehler[0]?.text).toContain('The celestial reference frame');
+  });
 });
 
 describe('arXiv', () => {
