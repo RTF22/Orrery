@@ -1,4 +1,4 @@
-import { createElement, useMemo } from 'react';
+import { createElement, memo, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { texNachMathml } from './texUebersetzer';
 import type { MathKnoten } from './texUebersetzer';
@@ -18,8 +18,14 @@ function ausgabe(k: MathKnoten, schluessel: number): ReactNode {
  * scrollen waagerecht, damit breite Formeln die schmale Spalte nicht
  * sprengen. Übersetzt die Formel nicht, erscheint der TeX-Quelltext; der
  * Dateitest verhindert das in ausgelieferten Texten.
+ *
+ * Mit `memo` umschlossen (Schlussprüfung 4d-1, Befund M8): `tex` und
+ * `block` sind beide Primitive, ein flacher Props-Vergleich genügt also.
+ * Ohne `memo` baut `ausgabe` bei jedem Render des Panels (etwa beim Ziehen
+ * am Breiten- oder Teilungsgriff) die MathML-Elementbäume aller Formeln neu
+ * auf, obwohl `useMemo` nur die Übersetzung selbst zwischenspeichert.
  */
-export function Formel({ tex, block }: { tex: string; block: boolean }): React.JSX.Element {
+function FormelBasis({ tex, block }: { tex: string; block: boolean }): React.JSX.Element {
   const ergebnis = useMemo(() => texNachMathml(tex, block), [tex, block]);
   if ('fehler' in ergebnis) {
     return (
@@ -31,3 +37,5 @@ export function Formel({ tex, block }: { tex: string; block: boolean }): React.J
   const math = ausgabe(ergebnis.baum, 0);
   return block ? <div data-blockformel className="overflow-x-auto py-1">{math}</div> : <>{math}</>;
 }
+
+export const Formel = memo(FormelBasis);

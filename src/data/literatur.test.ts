@@ -8,6 +8,16 @@ const DOI = /^10\.\d{4,9}\/\S+$/;
 const ARXIV = /^(\d{4}\.\d{4,5}(v\d+)?|[a-z-]+(\.[A-Z]{2})?\/\d{7})$/;
 const KENNUNG = /^[a-z][a-z0-9-]*-(\d{4})[a-z]?$/;
 
+/**
+ * Rohtext von literatur.ts, ohne Node-Dateisystem gelesen (wie in
+ * store/schichten.test.ts, render/schichten.test.ts): Die Datei muss
+ * importfrei bleiben, weil scripts/pruefe-literatur.ts sie mit Node direkt
+ * lädt und Node nur Importe mit Dateiendung auflöst (Globale Randbedingung).
+ */
+const literaturQuelle = import.meta.glob('./literatur.ts', {
+  query: '?raw', import: 'default', eager: true,
+}) as Record<string, string>;
+
 /** Erfundene Testdaten, nicht im Katalog. */
 const VOLL: Publikation = {
   id: 'muster-2020a', autoren: ['Muster, A.', 'de Beispiel, B.'], etAl: true, jahr: 2020,
@@ -53,6 +63,17 @@ describe('Literaturkatalog (Entwurf 4d §4.4)', () => {
       }
       if (p.url !== undefined) expect(p.url, p.id).toMatch(/^https:\/\//);
     }
+  });
+
+  it('importiert nichts (Schlussprüfung 4d-1, Befund M5)', () => {
+    const [quelle] = Object.values(literaturQuelle);
+    expect(quelle, 'literatur.ts').toBeDefined();
+    expect(quelle ?? '').not.toMatch(/^\s*import\s/m);
+  });
+
+  it('ist alphabetisch nach Kennung sortiert (Ruling 13, Schlussprüfung 4d-1, Befund M5)', () => {
+    const ids = LITERATUR.map((p) => p.id);
+    expect(ids).toEqual([...ids].sort());
   });
 });
 

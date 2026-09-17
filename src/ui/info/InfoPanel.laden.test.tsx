@@ -5,6 +5,7 @@ import { InfoPanel } from './InfoPanel';
 import { useStore, DEFAULT_STATE } from '../../store';
 import { setSprache } from '../i18n';
 import { fahrtAbbrechen } from '../kamerafahrt';
+import { textVorhanden } from '../../data/texte';
 
 /**
  * `ladeMitAusweich` lädt faul (dynamischer `import.meta.glob`-Zugriff) und
@@ -21,6 +22,7 @@ beforeEach(() => {
   fahrtAbbrechen();
   useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
   setSprache('de');
+  vi.mocked(textVorhanden).mockImplementation(() => false);
 });
 afterEach(() => { setSprache('de'); });
 
@@ -31,5 +33,17 @@ describe('InfoPanel bei fehlschlagendem Laden', () => {
     expect(await screen.findByText('Zu diesem Eintrag gibt es noch keinen Text.')).toBeTruthy();
     expect(await screen.findByRole('heading', { level: 2, name: 'Erde' })).toBeTruthy();
     expect(screen.getByTestId('datenblock')).toBeTruthy();
+  });
+
+  it('meldet auf dem Hochschul-Tab nicht „nur Hochschule" (Schlussprüfung 4d-1, Befund M3)', async () => {
+    // Ein Hochschultext existiert laut textVorhanden, aber der faule Import
+    // für genau diesen Tab lehnt ab: Auf dem Hochschul-Tab selbst wäre der
+    // Hinweis „nur Hochschule" widersinnig, dort gilt weiterhin „kein Text".
+    vi.mocked(textVorhanden).mockImplementation(() => true);
+    useStore.getState().setCamera({ targetId: 'earth' });
+    useStore.getState().setInfo({ niveau: 'hochschule' });
+    render(<InfoPanel />);
+    expect(await screen.findByText('Zu diesem Eintrag gibt es noch keinen Text.')).toBeTruthy();
+    expect(screen.queryByText('Diesen Text gibt es nur auf Hochschulniveau.')).toBeNull();
   });
 });

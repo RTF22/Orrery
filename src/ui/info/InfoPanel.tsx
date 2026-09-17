@@ -187,8 +187,12 @@ export function InfoPanel(): React.JSX.Element {
   // direkt nach einem Sprachwechsel.
   if (frisch && geladen === null) {
     // Gibt es den Text nur auf Hochschulniveau (Fachthemen, Entwurf 4d §5.4),
-    // wäre „kein Text" irreführend.
-    const nurHochschule = textVorhanden(language, 'hochschule', kennung) || textVorhanden('de', 'hochschule', kennung);
+    // wäre „kein Text" irreführend — außer man ist selbst schon auf dem
+    // Hochschul-Tab: Dort meldet ein fehlgeschlagener fauler Import sonst
+    // fälschlich „nur Hochschule" (Schlussprüfung 4d-1, Befund M3). Der
+    // zweite Aufruf für „de" entfällt, wenn die Sprache schon Deutsch ist.
+    const nurHochschule = info.niveau !== 'hochschule'
+      && (textVorhanden(language, 'hochschule', kennung) || (language !== 'de' && textVorhanden('de', 'hochschule', kennung)));
     hinweise.push(nurHochschule ? 'info.nurHochschule' : 'info.keinText');
   }
   if (frisch && geladen !== null && info.niveau === 'hochschule' && geladen.niveau !== 'hochschule') hinweise.push('info.hochschuleFolgt');

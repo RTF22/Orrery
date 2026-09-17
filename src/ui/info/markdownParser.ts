@@ -88,7 +88,10 @@ function backslashesDavor(text: string, pos: number, grenze: number): number {
  * wenn unmittelbar davor eine ungerade Zahl von Backslashes steht (die
  * Zählung reicht nicht vor das öffnende `$` zurück); bei gerader Zahl,
  * auch null, darf es schließen. Ohne passendes Ende bleibt das Zeichen
- * Text („kostet 5 $").
+ * Text („kostet 5 $"). Diese Paritätsregel gilt nur für das schließende
+ * `$`: Das öffnende `$` selbst wird nicht auf eine vorangehende gerade
+ * oder ungerade Zahl von Backslashes geprüft, siehe die Maskierung in
+ * `parseInline` (dort zählt nur, ob unmittelbar ein `\` vorangeht).
  */
 function liesFormel(text: string, start: number): { tex: string; ende: number } | null {
   const erstes = text[start + 1];
@@ -135,6 +138,11 @@ export function parseInline(text: string): Inline[] {
   let i = 0;
   while (i < text.length) {
     const c = text[i]!;
+    // Maskierung beim Öffnen, asymmetrisch zur Paritätsregel von
+    // liesFormel() beim Schließen: Hier zählt nur, ob unmittelbar ein
+    // einzelner `\` vorangeht, nicht die Parität mehrerer Backslashes.
+    // `\\$x$` ergibt deshalb den Text „\$x$" statt Backslash plus Formel;
+    // in Fachtexten kommen doppelte Backslashes vor `$` nicht vor.
     if (c === '\\' && text[i + 1] === '$') {
       puffer += '$';
       i += 2;

@@ -111,6 +111,17 @@ function zitate(bloecke: readonly Block[]): { id: string; linktext: string }[] {
   ));
 }
 
+/**
+ * Formelquelle für den Zwillingsvergleich normiert (Nachtrag Entwurf §5.5,
+ * Plan-Ruling 3): Dezimalkomma-Trick `{,}` zu `.`, danach jeglicher
+ * Leerraum entfernt statt nur zusammengefasst — `T^2 = a^3` und `T^2=a^3`
+ * gelten damit als gleich. Wirkt nur auf Formeltext, nie auf Fließtext —
+ * der Zwillingsvergleich prüft nur Zitate und Formeln, keinen Absatztext.
+ */
+function normiertesTex(tex: string): string {
+  return tex.replaceAll('{,}', '.').replace(/\s+/g, '');
+}
+
 describe('Textdateien', () => {
   const eintraege = Object.entries(dateien);
 
@@ -177,6 +188,13 @@ describe('Textdateien', () => {
         expect(fehler).toEqual([]);
         const kaputt = bloecke.flatMap((b) => (b.typ === 'absatz' && inlineText(b.kinder).startsWith('|') ? [inlineText(b.kinder)] : []));
         expect(kaputt, 'Strichzeilen ohne gültige Tabellenform').toEqual([]);
+        // Schreibfehler wie ein fehlendes schließendes $ oder eine fehlende
+        // Leerzeile vor $$ ergeben beim Parser gar keine Formel, sondern Text
+        // mit rohem TeX (Schlussprüfung 4d-1, Befund I1). Kein Textknoten darf
+        // deshalb ein $ enthalten.
+        const textKnoten = inlineListen(bloecke).flatMap((liste) => flach(liste))
+          .flatMap((k) => (k.typ === 'text' ? [k.text] : []));
+        expect(textKnoten.filter((t) => t.includes('$')), 'nicht geschlossene Formel').toEqual([]);
       });
 
       it('zitiert nur Katalogeinträge, nur auf Hochschulniveau, mit Erstautor und Jahr im Linktext', () => {
@@ -227,7 +245,6 @@ describe('Textdateien', () => {
   });
 
   it('führt in deutscher und englischer Hochschulfassung dieselben Zitate und Formeln', () => {
-    const normiert = (tex: string): string => tex.replaceAll('{,}', '.').replace(/\s+/g, ' ').trim();
     for (const [pfad, text] of eintraege) {
       if (!pfad.startsWith('./de/hochschule/')) continue;
       const englisch = dateien[pfad.replace('./de/', './en/')];
@@ -235,7 +252,16 @@ describe('Textdateien', () => {
       const de = parseMarkdown(text);
       const en = parseMarkdown(englisch);
       expect(zitate(en).map((z) => z.id).sort(), `${pfad}: Zitate`).toEqual(zitate(de).map((z) => z.id).sort());
-      expect(formeln(en).map((f) => normiert(f.tex)).sort(), `${pfad}: Formeln`).toEqual(formeln(de).map((f) => normiert(f.tex)).sort());
+      expect(formeln(en).map((f) => normiertesTex(f.tex)).sort(), `${pfad}: Formeln`).toEqual(formeln(de).map((f) => normiertesTex(f.tex)).sort());
     }
+  });
+
+  it('normiertesTex behandelt nur den Leerraum innerhalb einer Formel als gleichwertig (Schlussprüfung 4d-1, Befund M1)', () => {
+    // T^2 = a^3 und T^2=a^3 sind dieselbe Formel mit anderem Leerraum um die
+    // Operatoren — Entwurf §5.5 und Plan-Ruling 3 fordern, dass der
+    // Zwillingsvergleich das als gleich behandelt.
+    expect(normiertesTex('T^2 = a^3')).toBe(normiertesTex('T^2=a^3'));
+    // Weiterhin verschieden, wenn sich mehr als nur Leerraum unterscheidet.
+    expect(normiertesTex('a^3')).not.toBe(normiertesTex('a^4'));
   });
 });
