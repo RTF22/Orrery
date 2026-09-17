@@ -268,6 +268,10 @@ scripts/pruefe-literatur.ts`), nur von Hand, braucht Netz, nicht Teil von `npm t
 - Die reinen Vergleichsfunktionen (Normalisierung, Wortanteil, Jahresregel) liegen in
   `scripts/literaturVergleich.ts` und haben Tests in `npm test`.
 
+**Nachtrag (4d-2):** Das Skript wiederholt Abrufe bei HTTP 502, 503, 504 und bei
+Zeitüberschreitung bis zu zweimal (nach 2 s und 5 s); andere Antworten gelten sofort. Anlass war
+die ADS-Adresse eines Eintrags, die gelegentlich 504 meldete.
+
 **Nachtrag (4d-1):** Ein abweichender arXiv-Titel ist bei Einträgen mit DOI nur eine Warnung
 (veröffentlichte Fassungen tragen oft andere Titel; die DOI-Prüfung sichert den Titel), ohne
 DOI ein Fehler. Das Jahr wird gegen arXiv nicht geprüft.

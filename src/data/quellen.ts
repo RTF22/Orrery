@@ -462,9 +462,9 @@ export const QUELLEN: readonly Quelle[] = [
   },
   {
     id: 'jpl-horizons',
-    titel: { de: 'JPL Horizons (Ephemeriden)', en: 'JPL Horizons (ephemerides)' },
+    titel: { de: 'JPL Horizons: Handbuch', en: 'JPL Horizons manual' },
     herausgeber: 'JPL', sprache: 'en', art: 'werkzeug',
-    url: 'https://ssd.jpl.nasa.gov/horizons/',
+    url: 'https://ssd.jpl.nasa.gov/horizons/manual.html',
     fuer: ['thema:modell', 'thema:bahnelemente'],
   },
   {
