@@ -224,10 +224,11 @@ $I = 5.16^\circ$, node period 18.6 years
   2050, 0.15° in 1900 and 1.4° in 1800. The main cause is the mean motion of the snapshot: it is
   0.44 % below the barycentric one, because $a$ is 0.10 au larger and only the Sun's mass counts
   as central mass; by 1800 this adds up to 1.39°.
-- **Earth's Moon:** mean elements relative to the ecliptic, with $a$, $e$ and $I = 5.145^\circ$
-  from the NSSDC fact sheet and $L$, $\varpi$ and $\Omega$ with linear rates after Meeus
-  (Astronomical Algorithms), without periodic terms; hence $I$ differs from the 5.16° in JPL's
-  table.
+- **Earth's Moon:** mean elements relative to the ecliptic: $a$, $e$ and $I = 5.145^\circ$ from
+  the NSSDC fact sheet, $\dot{L}$ from the sidereal period (27.3217 days there, computed with
+  27.32166 days in the data set); $L$ at epoch as well as $\varpi$ and $\Omega$ with their rates
+  after Meeus (Astronomical Algorithms); without periodic terms. Hence $I$ differs from the
+  5.16° in JPL's table.
 - **Other satellites:** elements relative to the parent body's equator, using its IAU pole at
   epoch J2000; as at JPL, the longitude of the node is counted from the node of this plane on
   the ICRF equator, and the data block shows it that way. The moons of Mars and Jupiter use
@@ -248,8 +249,8 @@ $I = 5.16^\circ$, node period 18.6 years
   $G\,(M + m)$ with $G$ from CODATA 2018. For the Sun this product exceeds the nominal mass
   parameter by $4.5 \cdot 10^{-5}$, so the planets' periods come out 0.002 % too short. The
   bodies, however, move with $\dot{L}$. For Uranus and Neptune the Keplerian period is 0.05 %
-  and 0.06 % longer than $360^\circ/\dot{L}$; counting the masses of the inner planets, above
-  all Jupiter and Saturn, as central mass, which approximately holds for orbits this far out,
+  and 0.06 % longer than $360^\circ/\dot{L}$; counting the masses of the planets orbiting
+  further in, above all Jupiter and Saturn, as central mass, which approximately holds for orbits this far out,
   leaves −0.016 % and −0.006 %. For the Earth's Moon it is 0.11 % shorter.
 - **Time:** the clock counts Julian days in UTC and uses them as TDB without conversion.
   According to Horizons, the offset TDB − UT is 18.6 s for 1800, −1.9 s for 1900 and 69.2 s

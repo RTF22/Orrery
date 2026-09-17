@@ -223,9 +223,11 @@ $I = 5{,}16^\circ$, Knotenperiode 18,6 Jahre
   und 1800 um 1,4° ab. Hauptursache ist die mittlere Bewegung der Momentaufnahme: Sie liegt
   0,44 % unter der baryzentrischen, weil $a$ um 0,10 AE größer ist und nur die Sonnenmasse als
   Zentralmasse zählt; bis 1800 summiert sich das auf 1,39°.
-- **Erdmond:** mittlere Elemente gegen die Ekliptik, $a$, $e$ und $I = 5{,}145^\circ$ aus dem
-  NSSDC-Faktenblatt, $L$, $\varpi$ und $\Omega$ mit linearen Raten nach Meeus (Astronomical
-  Algorithms), ohne periodische Glieder; daher weicht $I$ von den 5,16° der JPL-Tabelle ab.
+- **Erdmond:** mittlere Elemente gegen die Ekliptik: $a$, $e$ und $I = 5{,}145^\circ$ aus dem
+  NSSDC-Faktenblatt, $\dot{L}$ aus der siderischen Umlaufzeit (dort 27,3217 Tage, im Datensatz
+  mit 27,32166 Tagen gerechnet); $L$ zur Epoche sowie $\varpi$ und $\Omega$ samt ihren Raten
+  nach Meeus (Astronomical Algorithms); ohne periodische Glieder. Daher weicht $I$ von den
+  5,16° der JPL-Tabelle ab.
 - **Übrige Monde:** Elemente gegen den Äquator des Mutterkörpers mit dessen IAU-Pol zur Epoche
   J2000; die Knotenlänge zählt wie bei JPL vom Knoten dieser Ebene auf dem ICRF-Äquator, so
   zeigt sie auch der Datenblock. Mars- und Jupitermonde nutzen die mittleren JPL-Elemente und
@@ -248,7 +250,7 @@ $I = 5{,}16^\circ$, Knotenperiode 18,6 Jahre
   $4{,}5 \cdot 10^{-5}$ über dem nominellen Massenparameter, die Umlaufzeiten der Planeten
   rechnerisch um 0,002 % zu kurz. Bewegt werden die Körper dagegen mit $\dot{L}$. Für Uranus und
   Neptun ist die Kepler-Umlaufzeit um 0,05 % beziehungsweise 0,06 % länger als
-  $360^\circ/\dot{L}$; zählt man die Massen der inneren Planeten, vor allem Jupiter und Saturn,
+  $360^\circ/\dot{L}$; zählt man die Massen der weiter innen laufenden Planeten, vor allem Jupiter und Saturn,
   zur Zentralmasse, wie es für weit außen laufende Bahnen näherungsweise gilt, bleiben −0,016 %
   und −0,006 %. Für den Erdmond ist sie um 0,11 % kürzer.
 - **Zeit:** Die Uhr zählt julianische Tage in UTC und setzt sie ohne Umrechnung als TDB ein. Der
