@@ -105,6 +105,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1038/nature15523',
   },
   {
+    id: 'bipm-2026',
+    autoren: ['BIPM, Bureau international des poids et mesures'],
+    etAl: false,
+    jahr: 2026,
+    titel: 'Draft Resolution C: On the technical actions needed to ensure the continuity of UTC (28th meeting of the CGPM, 2026)',
+    erschienen: 'BIPM, version 5 of 13 July 2026',
+    url: 'https://www.bipm.org/documents/d/guest/cgpm-2026-draft-resolution-c-en',
+  },
+  {
     id: 'bizouard-2026',
     autoren: ['Bizouard, C.'],
     etAl: false,

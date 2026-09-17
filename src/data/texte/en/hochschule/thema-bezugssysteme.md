@@ -77,10 +77,12 @@ x-axis, which points to the vernal equinox:
 $$\vec{r}_\lambda = R_x(\varepsilon_0)\,\vec{r}_\alpha$$
 
 Exactly in this way, with 84,381.448″ and without frame bias, JPL Horizons produces its fixed
-ecliptic of J2000, to which the approximate planetary tables also refer
-([Orbital elements](thema:bahnelemente)). Compared with the ecliptic of J2000 according to
-IAU 2006, this plane is inclined by 0.04″, and its intersection with the ICRF equator is shifted by
-0.05″ ([Petit and Luzum 2010](literatur:petit-2010), eq. 5.40 at the epoch).
+ecliptic of J2000 ([Orbital elements](thema:bahnelemente)). The approximate planetary tables refer
+to the mean ecliptic and equinox of J2000 and, according to JPL, use the obliquity 23.43928°, that
+is 84,381.408″ — the same plane within their accuracy, since their nominal errors in heliocentric
+longitude range from 15″ for Mercury to 600″ for Saturn. Compared with the ecliptic of J2000
+according to IAU 2006, the Horizons plane is inclined by 0.04″, and its intersection with the ICRF
+equator is shifted by 0.05″ ([Petit and Luzum 2010](literatur:petit-2010), eq. 5.40 at the epoch).
 
 ## Precession, nutation and the equinox of date
 
@@ -201,12 +203,12 @@ to the ICRS: the orbits of the inner planets are aligned with ICRF3 through VLBI
 Mars-orbiting spacecraft with an average accuracy of about 0.2 mas, and Jupiter and Saturn through
 measurements of Juno and Cassini. DE441 omits the damping between the liquid lunar core and the
 mantle, and is therefore less accurate than DE440 for the current century, but covers the years
-−13,200 to +17,191 instead of 1550 to 2650 ([Park et al. 2021](literatur:park-2021)). Asteroid
-orbits in the dynamical model of DE440, determined without Gaia data, show an orientation offset of
-about 10 mas and rotation rates below 0.5 mas per year against the Gaia observations of 1001
-asteroids, far more than the reported differences between DE440 and ICRF3. The authors attribute
-this to systematic errors in older asteroid astrometry; with Gaia data in the orbit determination
-the offset drops to about 0.2 mas ([Yao et al. 2025](literatur:yao-2025)). Notes on
+−13,200 to +17,191 instead of 1550 to 2650 ([Park et al. 2021](literatur:park-2021)). Against the
+Gaia observations of 1001 asteroids, asteroid orbits in the dynamical model of DE440 determined
+without Gaia data show an orientation offset of about 10 mas, far more than the reported
+differences between DE440 and ICRF3, with rotation rates below 0.5 mas per year. The authors
+consider systematic errors in older asteroid astrometry the likely cause; with Gaia data in the
+orbit determination the offset drops to about 0.2 mas ([Yao et al. 2025](literatur:yao-2025)). Notes on
 using the files are given at [JPL planetary ephemerides](quelle:jpl-ephemeriden).
 
 Mean elements, or elements fitted to a time window, are by contrast approximations of limited
@@ -228,15 +230,20 @@ validity; how they differ from osculating elements is explained in
 - **Future of the leap second:** It has been decided that the permitted magnitude of UT1 − UTC will
   be increased in or before 2035; a new maximum value that keeps UTC continuous for at least a
   century, and a plan for implementing it, are to be put to the General Conference in 2026
-  ([CGPM 2022](literatur:cgpm-2022)). The procedure is disputed. Levine proposes an algorithmic
-  rate adjustment without time steps ([Levine 2024](literatur:levine-2024)). Petit and Tagliaferro
-  consider his description ambiguous and his numerical examples misleading: instead of the
-  tolerance of one minute he states, excursions of UT1 − UTC of several minutes would have to be
-  tolerated ([Petit and Tagliaferro 2025](literatur:petit-2025)). In his reply, Levine concludes
-  that the advantages of the method outweigh its drawbacks
-  ([Levine 2025](literatur:levine-2025)). According to Agnew, UTC as currently defined would need
-  its first negative leap second by 2029, which could force changes earlier than planned
-  ([Agnew 2024](literatur:agnew-2024)).
+  ([CGPM 2022](literatur:cgpm-2022)). Its draft Resolution C goes further: UTC is to become
+  continuous on 20 May 2027 and the maximum value of the magnitude of UT1 − UTC is to be 3600 s, which would keep
+  UTC continuous for several centuries. This has not been decided; the 28th General Conference
+  meets from 13 to 15 October 2026 ([BIPM 2026](literatur:bipm-2026)). The procedure is disputed.
+  Levine proposes an algorithmic rate adjustment without time steps
+  ([Levine 2024](literatur:levine-2024)). Petit and Tagliaferro consider his description ambiguous
+  and his numerical examples misleading: instead of the tolerance of one minute he states,
+  excursions of UT1 − UTC of several minutes would have to be tolerated
+  ([Petit and Tagliaferro 2025](literatur:petit-2025)). In his reply, Levine concludes that the
+  advantages of the method outweigh its drawbacks ([Levine 2025](literatur:levine-2025)). How
+  urgent a change is, is judged differently: according to Agnew, UTC as currently defined would need
+  its first negative leap second by 2029 ([Agnew 2024](literatur:agnew-2024)), while a workshop of
+  the CCTF and the IERS in March 2025 put the probability of a negative leap second by 2035 at 30 %
+  ([BIPM 2026](literatur:bipm-2026)).
 
 ## In the model
 

@@ -77,10 +77,12 @@ zum Frühlingspunkt ineinander über:
 $$\vec{r}_\lambda = R_x(\varepsilon_0)\,\vec{r}_\alpha$$
 
 Genau so, mit 84 381,448″ und ohne Rahmenversatz, entsteht die feste Ekliptik J2000 von JPL
-Horizons, auf die sich auch die Näherungstafeln der Planeten beziehen
-([Bahnelemente](thema:bahnelemente)). Gegen die Ekliptik J2000 nach IAU 2006 ist diese Ebene um
-0,04″ geneigt, und ihr Schnitt mit dem ICRF-Äquator liegt 0,05″ verschoben
-([Petit und Luzum 2010](literatur:petit-2010), Gl. 5.40 zur Epoche).
+Horizons ([Bahnelemente](thema:bahnelemente)). Die Näherungstafeln der Planeten beziehen sich auf
+die mittlere Ekliptik und das Äquinoktium J2000 und rechnen laut JPL mit der Schiefe 23,43928°,
+also 84 381,408″ — im Rahmen ihrer Genauigkeit dieselbe Ebene, denn ihre nominellen Fehler in
+heliozentrischer Länge reichen von 15″ bei Merkur bis 600″ bei Saturn. Gegen die Ekliptik J2000
+nach IAU 2006 ist die Ebene von Horizons um 0,04″ geneigt, und ihr Schnitt mit dem ICRF-Äquator
+liegt 0,05″ verschoben ([Petit und Luzum 2010](literatur:petit-2010), Gl. 5.40 zur Epoche).
 
 ## Präzession, Nutation und das Äquinoktium des Datums
 
@@ -204,10 +206,10 @@ Cassini. DE441 verzichtet auf die Dämpfung zwischen flüssigem Mondkern und Man
 diesem Jahrhundert ungenauer als DE440, deckt aber die Jahre −13 200 bis +17 191 statt 1550 bis
 2650 ab ([Park et al. 2021](literatur:park-2021)). Asteroidenbahnen im dynamischen Modell von
 DE440, bestimmt ohne Gaia-Daten, zeigen gegen die Gaia-Beobachtungen von 1001 Asteroiden einen
-Orientierungsversatz von etwa 10 mas und Drehraten unter 0,5 mas je Jahr, weit mehr als die
-gemeldeten Abweichungen zwischen DE440 und ICRF3. Die Autoren führen das auf systematische Fehler
-älterer Asteroidenastrometrie zurück; mit Gaia-Daten in der Bahnbestimmung sinkt der Versatz auf
-etwa 0,2 mas ([Yao et al. 2025](literatur:yao-2025)). Hinweise zur Nutzung der Dateien gibt
+Orientierungsversatz von etwa 10 mas, weit mehr als die gemeldeten Abweichungen zwischen DE440 und
+ICRF3, bei Drehraten unter 0,5 mas je Jahr. Die Autoren halten systematische Fehler älterer
+Asteroidenastrometrie für die wahrscheinliche Ursache; mit Gaia-Daten in der Bahnbestimmung sinkt
+der Versatz auf etwa 0,2 mas ([Yao et al. 2025](literatur:yao-2025)). Hinweise zur Nutzung der Dateien gibt
 [Planetare Ephemeriden des JPL](quelle:jpl-ephemeriden).
 
 Mittlere oder an ein Zeitfenster angepasste Elemente sind dagegen Näherungen mit begrenzter
@@ -229,15 +231,20 @@ Gültigkeit; wie sie sich von oskulierenden Elementen unterscheiden, erklärt
 - **Zukunft der Schaltsekunde:** Beschlossen ist, dass der zulässige Betrag von UT1 − UTC
   spätestens 2035 größer wird; ein neuer Höchstwert, der UTC für mindestens ein Jahrhundert stetig
   hält, und ein Plan zur Umsetzung sollen der Generalkonferenz 2026 vorgelegt werden
-  ([CGPM 2022](literatur:cgpm-2022)). Umstritten ist das Verfahren. Levine schlägt eine
-  algorithmische Ratenanpassung ohne Zeitsprünge vor ([Levine 2024](literatur:levine-2024)).
+  ([CGPM 2022](literatur:cgpm-2022)). Deren Entwurf der Resolution C geht weiter: UTC soll ab dem
+  20. Mai 2027 stetig laufen und der Höchstwert des Betrags von UT1 − UTC 3600 s betragen, was UTC über mehrere
+  Jahrhunderte stetig hielte. Beschlossen ist das nicht; die 28. Generalkonferenz tagt vom 13. bis
+  15. Oktober 2026 ([BIPM 2026](literatur:bipm-2026)). Umstritten ist das Verfahren. Levine schlägt
+  eine algorithmische Ratenanpassung ohne Zeitsprünge vor ([Levine 2024](literatur:levine-2024)).
   Petit und Tagliaferro halten seine Beschreibung für mehrdeutig und seine Zahlenbeispiele für
   irreführend: Statt der von ihm genannten Toleranz von einer Minute müssten Abweichungen von
   UT1 − UTC über mehrere Minuten zugelassen werden
   ([Petit und Tagliaferro 2025](literatur:petit-2025)). Levine hält in seiner Erwiderung die
-  Vorteile des Verfahrens für überwiegend ([Levine 2025](literatur:levine-2025)). Nach Agnew
-  bräuchte UTC in heutiger Form bis 2029 erstmals eine negative Schaltsekunde, was Änderungen früher
-  als geplant erzwingen könnte ([Agnew 2024](literatur:agnew-2024)).
+  Vorteile des Verfahrens für überwiegend ([Levine 2025](literatur:levine-2025)). Wie dringend eine
+  Änderung ist, wird verschieden eingeschätzt: Nach Agnew bräuchte UTC in heutiger Form bis 2029
+  erstmals eine negative Schaltsekunde ([Agnew 2024](literatur:agnew-2024)), während ein Workshop
+  von CCTF und IERS vom März 2025 die Wahrscheinlichkeit einer negativen Schaltsekunde bis 2035 auf
+  30 % schätzt ([BIPM 2026](literatur:bipm-2026)).
 
 ## Im Modell
 
