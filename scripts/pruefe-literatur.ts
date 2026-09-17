@@ -67,7 +67,7 @@ async function hauptlauf(): Promise<void> {
   const alle: Befund[] = [];
   for (const p of liste) {
     for (const b of await pruefe(p)) {
-      console.log(`${b.urteil.padEnd(8)} ${b.pruefung.padEnd(9)} ${b.id.padEnd(28)} ${b.text}`);
+      console.log(`${b.id.padEnd(28)} ${b.pruefung.padEnd(9)} ${b.urteil.padEnd(8)} ${b.text}`);
       alle.push(b);
     }
   }

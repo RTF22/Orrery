@@ -74,6 +74,19 @@ describe('arXiv', () => {
     expect(arxivEintragLesen('<feed><entry><title>Error</title></entry></feed>')).toBeNull();
   });
 
+  it('löst XML-Entitäten in Titel und Namen auf', () => {
+    const mitEntitaeten = [
+      '<feed><entry><id>http://arxiv.org/abs/2002.00002v1</id><published>2020-02-02T00:00:00Z</published>',
+      '<title>Tides &amp; resonances</title>',
+      '<author><name>Ren&#233; M&#xFC;ller</name></author></entry></feed>',
+    ].join('');
+    expect(arxivEintragLesen(mitEntitaeten)).toEqual({
+      titel: 'Tides & resonances', autoren: ['René Müller'], jahr: 2020,
+    });
+    const verschachtelt = '<feed><entry><title>A &amp;lt; B</title></entry></feed>';
+    expect(arxivEintragLesen(verschachtelt)?.titel).toBe('A &lt; B');
+  });
+
   it('prüft Erstautor und Titel; abweichender Titel ist bei Einträgen mit DOI nur eine Warnung', () => {
     const eintrag = arxivEintragLesen(XML);
     expect(pruefeArxiv({ ...P, arxiv: '2001.00001' }, eintrag).map((b) => b.urteil)).toEqual(['ok']);

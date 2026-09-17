@@ -81,13 +81,30 @@ export function pruefeCrossref(p: Publikation, w: CrossrefWerk): Befund[] {
 
 export interface ArxivEintrag { titel: string; autoren: string[]; jahr: number | null }
 
+/**
+ * Löst die fünf vordefinierten XML-Entitäten und numerische Entitäten
+ * (dezimal und hexadezimal) auf. `&amp;` zuletzt, damit ein verschachteltes
+ * `&amp;lt;` zu `&lt;` wird und nicht zu `<`.
+ */
+function entitaetenAufloesen(s: string): string {
+  return s
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex: string) => String.fromCodePoint(parseInt(hex, 16)))
+    .replace(/&#(\d+);/g, (_, dez: string) => String.fromCodePoint(parseInt(dez, 10)))
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, '\'')
+    .replace(/&amp;/g, '&');
+}
+
 /** Liest den ersten <entry> einer Antwort der arXiv-API (Atom); der Titel des Feeds zählt nicht. */
 export function arxivEintragLesen(xml: string): ArxivEintrag | null {
   const eintrag = /<entry>([\s\S]*?)<\/entry>/.exec(xml)?.[1];
   if (eintrag === undefined) return null;
-  const titel = /<title>([\s\S]*?)<\/title>/.exec(eintrag)?.[1]?.replace(/\s+/g, ' ').trim();
-  if (titel === undefined || titel === 'Error') return null;
-  const autoren = [...eintrag.matchAll(/<name>([\s\S]*?)<\/name>/g)].map((m) => (m[1] ?? '').trim());
+  const titelRoh = /<title>([\s\S]*?)<\/title>/.exec(eintrag)?.[1]?.replace(/\s+/g, ' ').trim();
+  if (titelRoh === undefined || titelRoh === 'Error') return null;
+  const titel = entitaetenAufloesen(titelRoh);
+  const autoren = [...eintrag.matchAll(/<name>([\s\S]*?)<\/name>/g)].map((m) => entitaetenAufloesen((m[1] ?? '').trim()));
   const jahr = /<published>(\d{4})/.exec(eintrag)?.[1];
   return { titel, autoren, jahr: jahr === undefined ? null : Number(jahr) };
 }
