@@ -57,14 +57,23 @@ npm test
       Tests  3532 passed (3532)
 ```
 
-Herleitung: Ausgangsstand 2905 (Tag `v0.4.0`, Stand vor 4d-1) plus die in den zwölf
-Umsetzungs-Tasks neu entstandenen Fälle (Parser, Übersetzer, Ausgabe, Literaturkatalog,
-Prüfskript-Vergleichsfunktionen, Fachthemen-Quellenabdeckung, Dateitests für alle
-Hochschultexte, die drei Pilottexte je zweisprachig) abzüglich der in Task 8 ersetzten
-Fälle „ohne Hochschultext" (vorher auf der Erde, jetzt auf einer katalogfremden Kennung).
-Die einzelnen Tasks nennen keine durchgehend fortgeschriebene Zwischensumme im Ledger; die
-tatsächlich gemessene Endzahl 3532 wird hier als Sollwert übernommen, nicht Zeile für Zeile
-nachgerechnet.
+Herleitung aus den in den Berichten protokollierten `npm test`-Ständen (volle Suite, nicht die
+engeren Vitest-Teilläufe der einzelnen Tasks):
+
+| Stand | Volle Suite | Zuwachs | Quelle |
+|---|---:|---:|---|
+| Ausgangsstand (master vor 4d-1, Tag `v0.4.0`) | 2905 | – | Stand-Notiz der Etappe 4c |
+| Nach Task 6, Commit `bc16f3a` | 2958 | +53 (Tasks 1–6 zusammen, im Ledger nicht Task für Task beziffert) | `task-6-report.md:111` |
+| Nach Task 10, erste Fassung, Commit `31d1aa5` | 3488 | +530 (Tasks 7–9 sowie Task 10 bis zur ersten Fassung zusammen; davon 20 namentlich als Dateitest-Fälle beziffert — `task-10-brief.md`: „2 Dateien × 10"; der übrige Teil, u. a. die zehn neuen Literaturkatalog-Einträge mit ihren eigenen Prüffällen, nicht einzeln aufgeschlüsselt) | `task-10-report.md:153` |
+| Nach Task 11, erste Fassung, Commit `69b8fd4` | 3510 | +22 (= 2 Dateien × 11 Dateitest-Fälle, `task-11-brief.md:19`; Task 10s Nacharbeit Runde 1, Commit `a21082a`, lag dazwischen und fügte keine neuen Fälle hinzu) | `task-11-report.md:189` |
+| Nach Task 12, erste Fassung, Commit `d0b1722` | 3532 | +22 (= 2 Dateien × 11 Dateitest-Fälle, `task-12-brief.md:18`) | `task-12-report.md:135` |
+| Bis HEAD (alle weiteren Nacharbeitsrunden der drei Pilottexte und der Beleglisten, keine neuen Testdateien) | 3532 | ±0 | dieser Prüflauf, Abschnitt 2 |
+
+Offener Rest: Der Zuwachs der Tasks 1–6 (+53) und der Block Tasks 7–9 samt dem nicht per
+Dateitest bezifferten Teil von Task 10 (+530) sind in den Berichten nur als Summe an den
+genannten Prüfpunkten belegt, nicht Task für Task ausgewiesen — hier bewusst offen ausgewiesen
+statt geglättet. Die Rechnung 2905 + 53 + 530 + 22 + 22 = 3532 stimmt mit der gemessenen
+Endzahl exakt überein.
 
 ```
 npm run build
@@ -157,8 +166,8 @@ sofort mit HTTP 200. Der im Task-Auftrag vorgesehene Einzelabruf
 | Text | Wörter de/en | Belege | Zitate | Fehler gefunden | Fehler behoben | Hinweise offen |
 |---|---|---|---|---|---|---|
 | `thema-bahnelemente` | 2407 / 2631 | 85 | 12 (10 verschiedene Werke) | 3 | 3 | 2 |
-| `objekt-earth` | 2742 / 3032 | 115 | 57 (37 verschiedene Werke) | 2 | 2 | 0 (4 Ermessensfragen, siehe §8) |
-| `szene-mondfinsternis` | 695 / 795 | 39 | 7 (3 verschiedene Werke) | 3 lt. Kopfzeile / 2 dokumentiert | 2 (+ Unschärfe) | 1 |
+| `objekt-earth` | 2742 / 3032 | 115 | 57 (37 verschiedene Werke) | 2 | 2 | 0 (siehe §7: eine Randnotiz zur Belegzeile 67) |
+| `szene-mondfinsternis` | 795 → 658 → 695 / 891 → 753 → 795 | 39 | 7 (3 verschiedene Werke) | 3 Belegzeilen (2 Befunde: F1, F2) | 3 Belegzeilen (2 Befunde behoben) | 1 |
 
 Wörter mit `wc -w`, Belegzeilen mit `grep -cE '^\| [0-9]+ \|' docs/belege/hochschule/<datei>.md`,
 Zitate aus dem Browser-Rundgang (Abschnitt 5.4, Feld `verweise`, Art `literatur:`).
@@ -181,29 +190,39 @@ Fehler (Einleitung überzeichnete, was „nur bei der Erde" möglich sei — Sch
 Bahnverfolgung und seismische Laufzeiten gibt es auch bei anderen Körpern; „seit 1972 wirkt
 zusätzlich der Kern" verwechselte den Beginn des ausgewerteten Zeitraums mit dem Beginn des
 Effekts) und dreizehn sachliche Hinweise, alle in `4e5d336` behoben, dazu fehlende
-Belegzeilen. Zwei weitere Nachprüfungsrunden (`task-11-nachpruefung-2.md`, Commits `f85613b`
-und `fabffd6`) fanden vier kleine Ungenauigkeiten (IGRF-Koordinatenform, ein fehlendes „deshalb"
-bei der Erdmasse, sowie beim Nullpunkt der Zeitangaben ein Zitat, das ohne Einschränkung als
-Beleg für „4567,30 Mio. Jahre" gelesen werden konnte, obwohl es „4568,2" stützt) — alle
-behoben, keine offen. Vier Punkte blieben ausdrücklich Jens' Ermessen überlassen (siehe §8):
-Länge/Kürzung, vom Prüfer vermisste Fachthemen (bewusst nicht ergänzt, Text liegt schon über
-dem Richtwert), Präzessionszahl Nr. 55, und die Code-Befunde (Rotationsphase, UTC als TDB,
-Erde im Baryzentrum) — nur beschrieben, nicht behoben.
+Belegzeilen. Eine anschließende Nachprüfung (`task-11-nachpruefung-2.md`, geprüft nach
+`4e5d336`) fand drei weitere Hinweise (IGRF-Koordinatenform: geodätische statt geozentrische
+Breite bei 80,85° N/72,76° W; ein fehlendes „deshalb" bei der Formulierung zu G und H; Beleg
+für den CAI-Nullpunkt bei Bouvier und Wadhwa bestätigt) — alle drei mit Commit `f85613b`
+behoben. Im selben Dokument, Abschnitt „Belegzeilen" (Prüfung der Zeilen Nr. 18, 49, 67 im
+Zustand nach `f85613b`), kam ein vierter, eigenständiger Hinweis hinzu: Das Zitat zu Bouvier
+und Wadhwa stand im Text direkt hinter „4567,30 Mio. Jahre" und ließ sich so als dessen Beleg
+lesen, obwohl die Arbeit „4568,2" stützt — behoben mit Commit `fabffd6` (Runde 3). Die
+anschließende Nachprüfung dieser Runde-3-Änderung fand keinen neuen Befund mehr, nur eine
+Randnotiz (Belegspalte nennt bei `bouvier-2010` weiterhin nur „(Nullpunkt)", obwohl die Quelle
+auch die 4568,2 Mio. Jahre stützt — ohne Folgen für den Text, siehe Abschnitt 7). Im Text und
+in der Belegliste sind damit keine Fehler oder Hinweise mehr offen. Vier Punkte blieben
+ausdrücklich Jens' Ermessen überlassen (siehe §8): Länge/Kürzung, vom Prüfer vermisste
+Fachthemen (bewusst nicht ergänzt, Text liegt schon über dem Richtwert), Präzessionszahl
+Nr. 55, und die Code-Befunde (Rotationsphase, UTC als TDB, Erde im Baryzentrum) — nur
+beschrieben, nicht behoben.
 
 **`szene-mondfinsternis`** (Task 12, Commits `d0b1722`, `7accb28`, `f45ee17`):
 `task-12-fachpruefung.md` nennt in der Kopfzeile der Prüfspalte „43 Zeilen: 29 ok, 3 Fehler, 11
-Hinweis", im Text aber nur zwei benannte Fehler (F1: Der Zeitraffer-Satz „3,78 h / 65 von 137"
-gilt nur ohne die Blende beim Szenenwechsel; F2: „Winkel gelten für jede Stufe" stimmt für die
-Sonne nicht). Beide sind in `7accb28` behoben; die dritte Fehlerzeile der Kopfzeile bleibt ohne
-eigenen Abschnitt — vermutlich in der Kürzung (Streichung des Keen-Satzes) aufgegangen, siehe
-Abschnitt 7. Neun Hinweise (H1–H7, H9, H10) wurden ebenfalls in `7accb28` behoben, dazu die
-Kürzung von 795 auf 695 Wörter (Deutsch). Eine zweite Nachprüfungsrunde (`task-12-nachpruefung.md`,
-Commit `f45ee17`) fand sieben weitere kleine Hinweise (N1–N7, u. a. zwei verschwiegene
-Halbschattenfinsternisse, ein missverständlicher Bezug „die Autoren", ein falscher
-Belegverweis), alle behoben — der deutsche Text wuchs dadurch wieder auf 695 Wörter (Richtigkeit
-vor Wortzahl, Regel aus 4c-3). Offen für Jens: H8 (Primärbeleg mit 46 Finsternissen, Übernahme
-aus Guillet ist kenntlich gemacht) und der Modellgrenzen-Punkt „Zeitraffer", der erst mit einer
-Codekorrektur außerhalb dieser Etappe entfällt.
+Hinweis" — geklärt: Die drei „Fehler" sind Belegzeilen, nicht eigenständige Befunde. F1 betrifft
+zwei Belegzeilen (Nr. 3 und 4: Der Zeitraffer-Satz „3,78 h / 65 von 137" gilt nur ohne die
+Blende beim Szenenwechsel), F2 eine Belegzeile (Nr. 11: „Winkel gelten für jede Stufe" stimmt
+für die Sonne nicht) — macht 3 Belegzeilen zu 2 Befunden, beide in `7accb28` behoben. Neun
+Hinweise (H1–H7, H9, H10) wurden ebenfalls in `7accb28` behoben, dazu eine Kürzung: Die
+Erstfassung (Commit `d0b1722`) hatte 795 Wörter Deutsch / 891 Englisch, Runde 1 (`7accb28`)
+kürzte auf 658 / 753 (`task-12-report.md`, Abschnitt „Nacharbeit nach der Fachprüfung"). Eine
+zweite Nachprüfungsrunde (`task-12-nachpruefung.md`, Commit `f45ee17`) fand sieben weitere
+kleine Hinweise (N1–N7, u. a. zwei verschwiegene Halbschattenfinsternisse, ein
+missverständlicher Bezug „die Autoren", ein falscher Belegverweis), alle behoben — der Text
+wuchs dadurch auf 695 Wörter Deutsch / 795 Englisch (Richtigkeit vor Wortzahl, Regel aus 4c-3;
+`task-12-report.md`, Abschnitt „Nacharbeit Runde 2"). Offen für Jens: H8 (Primärbeleg mit 46
+Finsternissen, Übernahme aus Guillet ist kenntlich gemacht) und der Modellgrenzen-Punkt
+„Zeitraffer", der erst mit einer Codekorrektur außerhalb dieser Etappe entfällt.
 
 ## 5. Sichtprüfung
 
@@ -238,15 +257,37 @@ Screenshot `.playwright-mcp/4d1-formel.png` (vor dem Commit gelöscht). Das ⊙-
 dem Bild als echtes Symbol neben „M" in „G(M⊙+m)" zu erkennen (Kreis mit Punkt), kein
 rechteckiges Ersatzkästchen — dazu passt, dass Punktpixel und Lückenpixel beide im Sollbereich
 liegen (ein Ersatzkästchen hätte keinen isolierten Mittelpunkt und keine saubere Lücke davor,
-sondern gleichmäßig helle oder gleichmäßig dunkle Flächen). Das schärfere Sektorenkriterium
-(≥ 32 von 36) wird bei nur rund 9 × 9 px Zeichenfläche und `dpr = 1` verfehlt: Bei dieser
-Auflösung fallen einzelne der 36 zehn-Grad-Sektoren am Rand des Rings unter die
-Helligkeitsschwelle 128 (Antialiasing-Kante). Das ist als Grenze der Messmethode bei dieser
-Bildschirmauflösung zu verstehen, nicht zwingend als Darstellungsfehler; das gestalterische
-Kriterium aus Entwurf §8.1 („geschlossener Ring mit gesetztem Mittelpunkt, kein
-Ersatzkästchen") ist nach Augenschein erfüllt, das genauere Sektorenkriterium des Task-Auftrags
-nicht. Messweg nicht verbogen — Ergebnis wie gemessen protokolliert, Ursache siehe oben; Frage
-an Jens in Abschnitt 8.
+sondern gleichmäßig helle oder gleichmäßig dunkle Flächen). Das Sektorenkriterium bleibt bei
+Originalgröße wie gemessen **nicht erfüllt**.
+
+**Zusatzmessung bei vierfacher Größe (Ruling des Controllers):** In derselben Seitenladung
+wurde die Schriftgröße des Blockformel-Elements (`style.fontSize`) auf das Vierfache gesetzt
+(14 px → 56 px), erneut auf `document.fonts.ready` gewartet, frische Rechtecke gelesen und ein
+zweiter Screenshot (`.playwright-mcp/4d1-formel-4x.png`, vor dem Commit gelöscht) mit demselben
+Messskript ausgewertet (`dpr = 1`; Zeichen `⊙` jetzt 40,69 × 35,00 px statt 10,17 × 8,00 px):
+
+```
+Bruchstrich (px): 212   Zählerbreite (px): 145.3
+Ring-Sektoren (von 36): 36   Punktpixel: 23   Lückenpixel: 0   Radius (px): 17.8
+```
+
+| Kriterium | Sollwert | Messwert (4×) | Ergebnis |
+|---|---|---|---|
+| Bruchstrich ≥ 0,9 × Zählerbreite | ≥ 130,8 px | 212 px | erfüllt |
+| Ring-Sektoren | ≥ 32 von 36 | 36 | erfüllt |
+| Punktpixel | ≥ 1 | 23 | erfüllt |
+| Lückenpixel | = 0 | 0 | erfüllt |
+
+Bei vierfacher Zeichenfläche (rund 16-mal so viele Pixel) bestehen alle vier Kriterien,
+einschließlich der zuvor knapp verfehlten Ring-Sektoren (28 → 36 von 36). Die Deutung
+„Messauflösung" aus der ersten Messung ist damit durch Zahlen gestützt: Bei rund 9 × 9 px
+Zeichenfläche und `dpr = 1` fallen einzelne der 36 zehn-Grad-Sektoren am Rand des Rings unter
+die Helligkeitsschwelle 128 (Antialiasing-Kante); bei rund 40 × 35 px verschwindet dieser
+Effekt vollständig. Das gestalterische Kriterium aus Entwurf §8.1 („geschlossener Ring mit
+gesetztem Mittelpunkt, kein Ersatzkästchen") ist damit sowohl nach Augenschein als auch durch
+die Zusatzmessung erfüllt; das Sektorenkriterium bei Originalgröße bleibt wie gemessen **nicht
+erfüllt** und wird nicht rückwirkend als „erfüllt" umgedeutet — Messweg nicht verbogen, beide
+Ergebnisse stehen nebeneinander im Protokoll. Frage an Jens in Abschnitt 8.
 
 ### 5.2 Tabelle bei 18 rem
 
@@ -294,7 +335,8 @@ Ausgangszustand wiederhergestellt):
 | en / `objekt:earth` | Earth | 0 | 78 | 1 | – | literatur 57/57, quelle 6/6, thema 2/2, objekt 1/1, szene 1/1 |
 | en / `szene:mondfinsternis` | Scene: Lunar eclipse | 0 | 7 | 0 | – | quelle 2/2, literatur 7/7, objekt 4/4, thema 1/1 |
 
-Alle 236 Einzelverweise (34+67+14 je Sprache) trafen ihr Ziel (100 %). Der Szenenkopf zeigt bei
+Alle 230 Einzelverweise trafen ihr Ziel (100 %): je 115 auf Deutsch und auf Englisch
+(34 + 67 + 14 je Sprache, in beiden Sprachen gleich groß). Der Szenenkopf zeigt bei
 Hochschul- wie bei Gymnasialtexten „Szene: …" (bestätigt für Mondfinsternis). Kein
 `data-formelfehler`, keine Hinweiszeile in keiner der sechs Kombinationen.
 
@@ -325,7 +367,7 @@ Ursache untersucht: Diese Warnung entstand genau einmal, beim ersten Test eines
 `szene:`-Verweises (`szene:erdaufgang` in der Kombination de/`objekt:earth`), ausgelöst über
 `element.click()` innerhalb eines `browser_evaluate`-Skripts statt über einen echten
 Mausklick. `startCinema()` fordert beim Szenenstart den Vollbildmodus an
-(`document.documentElement.requestFullscreen()`); die Fullscreen-API verlangt eine echte
+(`document.documentElement.requestFullscreen()`); die Vollbild-API verlangt eine echte
 Nutzergeste, die ein synthetischer Skript-Klick nicht mitbringt — die Anfrage schlägt fehl und
 Chrome loggt das als Konsolwarnung, unabhängig vom `.catch()` im Anwendungscode. Gegenprobe: Ein
 echter `browser_click` auf denselben `szene:erdaufgang`-Verweis (später, im englischen
@@ -455,19 +497,20 @@ Einzelvorkommen je Ziel (kein Bedarf für eine Stichprobenregel).
 
 **Aus dieser Abnahme:**
 
-- Formelsatz-Kriterium „Ring-Sektoren ≥ 32 von 36" nicht erfüllt (28 gemessen) bei einem nach
-  Augenschein echten ⊙-Zeichen; vermutlich eine Grenze der Pixelmessung bei rund 9 × 9 px
-  Zeichenfläche und `devicePixelRatio 1` (Abschnitt 5.1). Frage an Jens in Abschnitt 8.
+- Formelsatz-Kriterium „Ring-Sektoren ≥ 32 von 36" bei Originalgröße nicht erfüllt (28
+  gemessen); die Zusatzmessung bei vierfacher Zeichenfläche bestand alle vier Kriterien
+  (36 von 36 Sektoren), was die Deutung „Grenze der Pixelmessung bei rund 9 × 9 px und
+  `devicePixelRatio 1`" mit Zahlen stützt, statt sie nur zu vermuten (Abschnitt 5.1). Der
+  Originalbefund bleibt trotzdem wie gemessen im Protokoll stehen. Frage an Jens in Abschnitt 8.
 - Konsole der Sitzung zeigt eine Warnung (`requestFullscreen` ohne Nutzergeste), ursächlich ein
   Artefakt des eigenen Testskripts (`element.click()` statt echtem Mausklick), durch Gegenprobe
   mit echtem Klick widerlegt als Anwendungsfehler (Abschnitt 5.5).
-- `task-12-fachpruefung.md` nennt in der Kopfzeile „3 Fehler", im Fließtext sind nur F1 und F2
-  benannt und behoben; die dritte Zeile ist nicht auffindbar benannt, vermutlich in der
-  gleichzeitig beauftragten Kürzung (Streichung des Keen-Satzes) aufgegangen. Nicht
-  weiterverfolgt, da beide dokumentierten Fehler behoben und die Wortzahl-Vorgabe eingehalten
-  ist.
-- Test-Gesamtzahl (3532) wird als gemessener Sollwert übernommen; eine lückenlose
-  Task-für-Task-Herleitung aus dem Ledger liegt nicht vor (Abschnitt 2).
+- `objekt-earth`, Belegzeile Nr. 67: Die Belegspalte nennt bei `bouvier-2010` nur „(Nullpunkt)",
+  obwohl die Quelle auch die 4568,2 Mio. Jahre stützt (Randnotiz aus der Nachprüfung von
+  Runde 3, `task-11-nachpruefung-2.md`) — ohne Folgen für den Text, nicht geändert.
+- Test-Gesamtzahl (3532) ist über protokollierte Zwischenstände auf 2905 + 53 + 530 + 22 + 22
+  zurückgeführt (Abschnitt 2); die Blöcke „+53" (Tasks 1–6) und „+530" (Tasks 7–9 sowie Rest von
+  Task 10) sind dabei nur als Summe belegt, nicht Task für Task.
 
 **Aufgeschobene Kleinigkeiten (minor deferred, aus dem Ledger):**
 
@@ -552,17 +595,19 @@ genannten Dateien):
     — Jens entscheidet laut Fachprüfung ausdrücklich.
 11. `szene-mondfinsternis` H8: Primärbeleg mit 46 Finsternissen ist als Übernahme aus Guillet
     kenntlich gemacht — reicht das, oder soll ein eigener Nachweis her?
-12. `szene-mondfinsternis`: Die dritte, in der Kopfzeile der Prüfspalte gezählte, aber im
-    Fließtext nicht mehr auffindbare Fehlerzeile (Abschnitt 7) — falls das ein übersehener
-    Punkt ist, bitte benennen.
+
+(Die „3 vs. 2 Fehler"-Frage der Vorfassung ist geklärt und entfällt: `task-12-fachpruefung.md`
+zählt in der Kopfzeile Belegzeilen, nicht Befunde — F1 deckt zwei Zeilen ab (Nr. 3 und 4), F2
+eine (Nr. 11), macht 3 Zeilen zu 2 Befunden, siehe Abschnitt 4.)
 
 Aus dieser Abnahme selbst:
 
-13. **Formelsatz-Kriterium Ring-Sektoren** (Abschnitt 5.1): Reicht die optische Bestätigung
-    (echtes ⊙-Zeichen im Screenshot, Punkt-/Lückenpixel im Sollbereich) als Abnahme, oder soll
-    das Messverfahren für 4d-2 verfeinert werden (größerer Ausschnitt, höhere effektive
-    Auflösung)?
-14. **Prüfskript bei HTTP 504 von `herald-2014`** (Ruling Task 12, Zeile 206 im Ledger): Dieser
+12. **Formelsatz-Kriterium Ring-Sektoren** (Abschnitt 5.1): Die Zusatzmessung bei vierfacher
+    Größe bestand alle vier Kriterien und stützt die Deutung „Grenze der Pixelmessung" mit
+    Zahlen. Reicht das als Abnahme des Originalbefunds, oder soll das Messverfahren für 4d-2
+    dauerhaft mit größerer effektiver Auflösung laufen (z. B. `scale: 'device'` bei höherem
+    `devicePixelRatio`, oder serienmäßig ein vergrößerter Ausschnitt wie in dieser Nacharbeit)?
+13. **Prüfskript bei HTTP 504 von `herald-2014`** (Ruling Task 12, Zeile 206 im Ledger): Dieser
     Lauf war fehlerfrei (HTTP 200), die Frage bleibt für künftige Läufe offen — Wiederholung im
     Skript einbauen, oder die Adresse aus dem ADS-System durch eine andere ersetzen?
 
