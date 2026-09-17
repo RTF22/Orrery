@@ -184,8 +184,10 @@ drei Jahre früher ([Agnew 2024](literatur:agnew-2024)).
 
 Kalzium-Aluminium-reiche Einschlüsse in Meteoriten, die ersten Festkörper des Sonnensystems,
 entstanden vor $4567{,}30 \pm 0{,}16$ Millionen Jahren
-([Connelly et al. 2012](literatur:connelly-2012)); ihr Alter dient als Nullpunkt für Zeitangaben
-nach Entstehung des Sonnensystems ([Bouvier und Wadhwa 2010](literatur:bouvier-2010)). Der
+([Connelly et al. 2012](literatur:connelly-2012)). Ihre Entstehung markiert den Nullpunkt für
+Zeitangaben nach Entstehung des Sonnensystems ([Bouvier und Wadhwa 2010](literatur:bouvier-2010));
+Bouvier und Wadhwa datieren den von ihnen untersuchten Einschluss auf ein Alter von 4568,2
+Millionen Jahren. Der
 [Mond](objekt:moon) gilt als Ergebnis eines
 Rieseneinschlags. Canup und Asphaug fanden Stöße mit einem kleineren Körper als zuvor für
 möglich gehalten, die gegen Ende des Erdwachstums einen eisenarmen Mond und den heutigen

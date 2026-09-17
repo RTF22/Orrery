@@ -181,9 +181,10 @@ need a negative leap second by 2029, three years earlier without the accelerated
 ## Formation and evolution
 
 Calcium–aluminium-rich inclusions in meteorites, the first solids of the Solar System, formed
-$4567.30 \pm 0.16$ million years ago ([Connelly et al. 2012](literatur:connelly-2012)); their
-age serves as the zero point for times after the formation of the Solar System
-([Bouvier and Wadhwa 2010](literatur:bouvier-2010)). The
+$4567.30 \pm 0.16$ million years ago ([Connelly et al. 2012](literatur:connelly-2012)). Their
+formation marks the zero point for times after the formation of the Solar System
+([Bouvier and Wadhwa 2010](literatur:bouvier-2010)); Bouvier and Wadhwa date the inclusion they
+studied to an age of 4568.2 million years. The
 [Moon](objekt:moon) is regarded as the product of a giant impact. Canup and Asphaug found
 impacts by a smaller body than previously thought viable that, near the end of the Earth's
 growth, yield an iron-poor Moon and the present angular momentum
