@@ -149,8 +149,8 @@ export function InfoPanel(): React.JSX.Element {
   const [hervorgehoben, setHervorgehoben] = useState<string | null>(null);
   const hervorhebung = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => () => { if (hervorhebung.current !== null) clearTimeout(hervorhebung.current); }, []);
-  const hebeHervor = (schluessel: string): void => {
-    setHervorgehoben(schluessel);
+  const hebeHervor = (kartenSchluessel: string): void => {
+    setHervorgehoben(kartenSchluessel);
     if (hervorhebung.current !== null) clearTimeout(hervorhebung.current);
     hervorhebung.current = setTimeout(() => { setHervorgehoben(null); hervorhebung.current = null; }, HERVORHEBUNG_MS);
   };
