@@ -33,8 +33,9 @@ auseinander.
 
 Ein nachgiebiger Körper antwortet auf $W_2$ mit einer Verformung, die selbst ein Potential erzeugt.
 Die Love-Zahl $k_2$ beschreibt dieses Zusatzpotential, $h_2$ die radiale und die Shida-Zahl $l_2$
-die waagerechte Verschiebung der Oberfläche ([Love-Zahlen](quelle:wikipedia-de-love-zahlen)).
-Für einen Körper mit Radius $R$ und Schwerebeschleunigung $g$ gilt
+die waagerechte Verschiebung der Oberfläche ([Love-Zahlen](quelle:wikipedia-de-love-zahlen);
+[Petit und Luzum 2010](literatur:petit-2010), Kapitel 6 und Gl. 7.5). Für einen Körper mit Radius
+$R$ und Schwerebeschleunigung $g$ gilt
 
 $$\Phi_\mathrm{ind}(r) = k_2\,W_2(R)\left( \frac{R}{r} \right)^3, \quad u_r = h_2\,\frac{W_2(R)}{g}$$
 
@@ -46,7 +47,7 @@ Laserhöhenmessung, Laserentfernungen zu Reflektoren und auf der Erde über Stat
 
 | Körper | $k_2$ | $h_2$ | Verfahren | Beleg |
 |---|---|---|---|---|
-| Erde | 0,30102 (halbtägig, Imaginärteil −0,00130) | 0,6078 | Zahlenstandard aus Erdmodellen, ohne Unsicherheit; VLBI-Schätzungen für zwölf tägliche Tiden verschieben die Stationen gegenüber den konventionellen Werten zusammen um 1,7 mm | [Petit und Luzum 2010](literatur:petit-2010); [Krásná et al. 2013](literatur:krasna-2013) |
+| Erde | 0,30102 (halbtägig, Imaginärteil −0,00130) | 0,6078 | Zahlenstandard aus Erdmodellen, ohne Unsicherheit; VLBI-Schätzungen für zwölf tägliche Tiden verschieben die Stationen gegenüber den konventionellen Werten radial zusammen um 1,7 mm, quer um 1,2 mm | [Petit und Luzum 2010](literatur:petit-2010); [Krásná et al. 2013](literatur:krasna-2013) |
 | Mond | 0,02416 ± 0,00022 (Periode 1 Monat) | 0,0387 ± 0,0025 | GRAIL, Mittel zweier Analysen; LOLA-Laserhöhenmessung | [Williams et al. 2014](literatur:williams-2014); [Thor et al. 2021](literatur:thor-2021) |
 | Mars | 0,169 ± 0,006 | – | Bahnverfolgung von Mars Odyssey, MRO und MGS | [Konopliv et al. 2020](literatur:konopliv-2020) |
 | Titan | 0,608 ± 0,048 (Realteil, 1σ) | – | Doppler von zehn Cassini-Vorbeiflügen, neu ausgewertet | [Petricca et al. 2025](literatur:petricca-2025) |
@@ -59,7 +60,10 @@ $0{,}589 \pm 0{,}150$ und $0{,}637 \pm 0{,}224$ (2σ), eine Verformung, die mit 
 Ozean verträglich ist ([Iess et al. 2012](literatur:iess-2012)). Eine eigene Auswertung der
 Cassini-Daten fand nur $0{,}375 \pm 0{,}06$ ([Goossens et al. 2024](literatur:goossens-2024));
 vier frühere Analysen lagen bei 0,59 bis 0,64 ([Durante et al. 2026](literatur:durante-2026)),
-und die jüngste bestätigt den hohen Wert ([Petricca et al. 2025](literatur:petricca-2025)).
+worauf Goossens et al. geantwortet haben ([Goossens et al. 2026](literatur:goossens-2026)). Zwei
+neuere Auswertungen stützen den hohen Wert: $0{,}608 \pm 0{,}048$
+([Petricca et al. 2025](literatur:petricca-2025)) und $0{,}596 \pm 0{,}094$
+([Magnanini et al. 2026](literatur:magnanini-2026), Tabelle C.2), beide 1σ.
 
 ## Phasenverzug, Güte Q und k₂/Q
 
@@ -131,49 +135,54 @@ wandert und die drei inneren Galileischen Monde die exakte Laplace-Resonanz verl
 $k_2/Q$ liegt nahe der Obergrenze dessen, was die Langzeitentwicklung als Mittel erwarten lässt
 ([Lainey et al. 2009](literatur:lainey-2009)). Die mittleren Bewegungen ändern sich relativ um
 $+0{,}14 \pm 0{,}01$ (Io), $-0{,}43 \pm 0{,}10$ (Europa) und $-1{,}57 \pm 0{,}27$ (Ganymed) in
-Einheiten von $10^{-10}$ je Jahr. Eine Auswertung mit Juno-Daten bestätigt die Dissipationswerte;
-beide beschreiben Jupiters Gezeiten aber mit einem Parameter für alle Frequenzen
-([Lainey et al. 2025](literatur:lainey-2025)), Lainey et al. mit konstantem $Q$, Park et al. mit
-konstanter Zeitverzögerung ([Park et al. 2025](literatur:park-2025)).
+Einheiten von $10^{-10}$ je Jahr (formale Fehler, 1σ;
+[Lainey et al. 2025](literatur:lainey-2025), Tabelle 1). Eine Auswertung mit Juno-Daten bestätigt
+die Dissipationswerte; beide beschreiben Jupiters Gezeiten aber mit einem Parameter für alle
+Frequenzen, Lainey et al. mit konstantem $Q$, Park et al. mit konstanter Zeitverzögerung
+([Lainey et al. 2025](literatur:lainey-2025); [Park et al. 2025](literatur:park-2025)).
 
 **Saturn und Titan.** Schon 2012 ergab die Astrometrie für Saturn $k_2/Q = (2{,}3 \pm 0{,}7) \cdot 10^{-4}$,
 etwa zehnmal mehr als theoretisch üblich ([Lainey et al. 2025](literatur:lainey-2025)). Für
-[Titan](objekt:titan) fanden zwei unabhängige Messungen mit Cassini eine Auswanderung auf einer
-Zeitskala von rund zehn Milliarden Jahren, also etwa 12 cm je Jahr, entsprechend $Q \simeq 100$,
-mehr als hundertmal kleiner als meist erwartet. Die Autoren deuten das als Resonanzsperre mit
-Trägheitswellen im Planeten ([Lainey et al. 2020](literatur:lainey-2020)): Eine Schwingung des
-Planeten, deren Frequenz sich mit seiner inneren Entwicklung verschiebt, bleibt mit dem Mond in
-Resonanz und treibt ihn auf einer Zeitskala vergleichbar dem Alter des Sonnensystems nach außen,
+[Titan](objekt:titan) fanden zwei unabhängige Messungen mit Cassini eine Auswanderung um
+$11{,}3 \pm 2{,}0\,\mathrm{cm}$ je Jahr, eine Zeitskala von rund zehn Milliarden Jahren,
+entsprechend $Q \simeq 100$, mehr als hundertmal kleiner als meist erwartet. Die Autoren deuten das
+als Resonanzsperre mit Trägheitswellen im Planeten ([Lainey et al. 2020](literatur:lainey-2020)):
+Eine Schwingung des Planeten, deren Frequenz sich mit seiner inneren Entwicklung verschiebt, bleibt
+mit dem Mond in Resonanz und treibt ihn auf einer Zeitskala vergleichbar dem Alter des
+Sonnensystems nach außen,
 nahezu unabhängig vom Abstand ([Fuller et al. 2016](literatur:fuller-2016)).
 
 **Mars und Phobos.** [Phobos](objekt:phobos) läuft innerhalb der synchronen Bahn und wandert nach
 innen. Die Ephemeride MAR099 ergibt für Mars $k_2/Q = (1{,}816 \pm 0{,}084) \cdot 10^{-3}$ und
 für Phobos die halbe Gezeitenbeschleunigung $\dot{n}/2 = (1{,}258 \pm 0{,}058) \cdot 10^{-3}$ Grad
 je Jahr² ([Brozović et al. 2025](literatur:brozovic-2025)); wegen $\dot{a}/a = -2\dot{n}/(3n)$
-sinkt die Bahn um etwa 3,8 cm je Jahr. Bis zum Aufschlag vergehen mit konstanter Zeitverzögerung
-rund 29, mit konstantem $Q$ 38 und mit $Q \propto \chi^{\alpha}$ 40 bis 43 Millionen Jahre
-([Efroimsky und Lainey 2007](literatur:efroimsky-2007)).
+sinkt die Bahn um etwa 3,8 cm je Jahr. Rechnet man nur mit der Gezeit auf Mars und ohne den Zerfall
+an der Roche-Grenze, vergehen bis zum Aufschlag mit konstanter Zeitverzögerung rund 29, mit
+konstantem $Q$ 38 und mit $Q \propto \chi^{\alpha}$ 40 bis 43 Millionen Jahre
+([Efroimsky und Lainey 2007](literatur:efroimsky-2007)); zum Zerfall siehe unten.
 
 ## Gezeitenheizung
 
 Läuft ein gebunden rotierender Mond auf einer exzentrischen Bahn, ändert sich seine Gezeitenbeule
 mit jedem Umlauf, und Reibung setzt Wärme frei. Liegen Äquator und Bahn in einer Ebene, gilt
-([Gezeitenheizung](quelle:wikipedia-en-tidal-heating))
+([Gezeitenheizung (englische Wikipedia)](quelle:wikipedia-en-tidal-heating))
 
 $$\dot{E} = -\mathrm{Im}(k_2)\,\frac{21}{2}\,\frac{G M^2 R^5\, n\, e^2}{a^6} = \frac{21}{2}\,\frac{k_2}{Q}\,\frac{(n R)^5\, e^2}{G}$$
 
 mit $k_2$, $Q$ und Radius $R$ des Mondes und der Planetenmasse $M$; die zweite Form folgt mit
 $n^2 a^3 = G M$. Die Energie stammt aus der Bahn, die dadurch kreisförmig würde; Bahnresonanzen
 halten die Exzentrizität aufrecht, bei Io mit Europa und Ganymed, bei
-[Enceladus](objekt:enceladus) mit Dione ([Gezeitenheizung](quelle:wikipedia-en-tidal-heating)).
+[Enceladus](objekt:enceladus) mit Dione
+([Gezeitenheizung (englische Wikipedia)](quelle:wikipedia-en-tidal-heating)).
 
 Peale, Cassen und Reynolds schlossen 1979, die Gezeitenreibung dürfte einen großen Teil von Io
 geschmolzen haben, und rechneten mit sichtbaren Folgen in den Bildern von Voyager 1
 ([Peale et al. 1979](literatur:peale-1979)). Die gemessene Dissipation passt zum beobachteten
 Wärmefluss; Io ist demnach nahe am thermischen Gleichgewicht
-([Lainey et al. 2009](literatur:lainey-2009)). Mit $k_2/Q = 0{,}015 \pm 0{,}003$ und $e = 0{,}004$
-ergibt die Formel 89 TW, im Fehlerbereich 71 bis 107 TW; beobachtet sind rund $10^{5}$ GW, also
-100 TW ([Fuller et al. 2016](literatur:fuller-2016)). Der kleine Realteil von $k_2$ aus den
+([Lainey et al. 2009](literatur:lainey-2009)). Mit $k_2/Q = 0{,}015 \pm 0{,}003$ und der
+erzwungenen Exzentrizität $e = 0{,}0041$ ([Bagheri et al. 2026](literatur:bagheri-2026)) ergibt die
+Formel 93 TW, im Fehlerbereich 75 bis 112 TW; beobachtet sind rund $10^{5}$ GW, also 100 TW
+([Fuller et al. 2016](literatur:fuller-2016)). Der kleine Realteil von $k_2$ aus den
 Juno-Vorbeiflügen passt zu einem überwiegend festen Mantel. Ein Magmaozean unter einer 50 km dicken
 Schicht hätte ihn auf mindestens 0,8 gehoben; ausgeschlossen ist ein flacher globaler Magmaozean,
 nicht einer tiefer als 318 km ([Park et al. 2025](literatur:park-2025)).
@@ -193,7 +202,10 @@ Drehmoment, folgt als grobe Zeitskala
 $$t \approx \frac{2}{3}\,\frac{Q}{k_2}\,\frac{C\,\omega_0\, a^6}{G M^2 R^5}$$
 
 mit $k_2$, $Q$, Radius $R$ und Trägheitsmoment $C$ des Mondes, anfänglicher Winkelgeschwindigkeit
-$\omega_0$ und Planetenmasse $M$; das Drehmoment ist dabei als konstant angenommen. Wegen der
+$\omega_0$ und Planetenmasse $M$; das Drehmoment ist dabei als konstant angenommen. In der Literatur
+steht dieselbe Abschätzung mit dem Vorfaktor 1/3 ([Gladman et al. 1996](literatur:gladman-1996),
+Gl. 9); der Unterschied ist eine Frage der Konvention für $Q$
+([Efroimsky und Lainey 2007](literatur:efroimsky-2007)). Wegen der
 sechsten Potenz des Abstands wirkt die Bremsung vor allem auf nahe Monde. Die meisten großen Monde
 rotieren synchron, und der Mond braucht ein bleibendes Quadrupolmoment, um es zu bleiben
 ([Murray und Dermott 2000](literatur:murray-2000), Kapitel 5). Die Drehachse endet in einem
@@ -222,18 +234,22 @@ $$d \approx 2{,}42\,R\,\sqrt[3]{\frac{\rho_M}{\rho_m}}$$
 
 Roche selbst gab den Faktor 2,44 an ([Roche-Grenze](quelle:wikipedia-de-roche-grenze)). Reale
 Körper liegen zwischen beiden Fällen, und wer durch Festigkeit zusammenhält, kann auch innerhalb
-der Grenze umlaufen ([Roche limit](quelle:wikipedia-en-roche-limit)). Weil $R\,\rho_M^{1/3}$ nur
-von der Planetenmasse abhängt, zählt neben ihr allein die Dichte des Satelliten.
+der Grenze umlaufen ([Roche-Grenze (englische Wikipedia)](quelle:wikipedia-en-roche-limit)). Weil
+$R\,\rho_M^{1/3}$ nur von der Planetenmasse abhängt, zählt neben ihr allein die Dichte des
+Satelliten.
 
 Fast alle Planetenringe liegen innerhalb ihrer Roche-Grenze; Ausnahmen sind etwa Saturns E-Ring und
 der Ring des transneptunischen Objekts Quaoar bei rund 7,4 Körperradien
-([Roche limit](quelle:wikipedia-en-roche-limit)). Für kompaktes Eis mit
+([Roche-Grenze (englische Wikipedia)](quelle:wikipedia-en-roche-limit)). Für kompaktes Eis mit
 $900\,\mathrm{kg}\,\mathrm{m}^{-3}$ liegt Saturns flüssige Grenze bei rund 129 000 km, innerhalb
-der Außenkante des A-Rings bei 136 780 km. Die kleinen Monde im Ringbereich haben aber nur 0,4 bis
-$0{,}6\,\mathrm{g}\,\mathrm{cm}^{-3}$, etwa die kritische Dichte, bei der ein Körper seinen
-Roche-Bereich ganz ausfüllt, und die Ringteilchen selbst dürften ähnlich wenig dicht sein
-([Porco et al. 2007](literatur:porco-2007)). Für 400 bis $600\,\mathrm{kg}\,\mathrm{m}^{-3}$ rückt
-die Grenze auf 148 000 bis 169 000 km, jenseits der Hauptringe; siehe [Ringe](thema:ringe).
+der Außenkante des A-Rings bei 136 780 km; für poröse Teilchen mit 400 bis
+$600\,\mathrm{kg}\,\mathrm{m}^{-3}$ rückt sie auf 169 000 bis 148 000 km, jenseits der Hauptringe.
+Ein anderes Kriterium führt an den Ringrand zurück: Ein loses Aggregat wächst nur, bis es seinen
+Roche-Bereich ausfüllt, also bis zur kritischen Dichte $\rho = 3 M/(\gamma\,a^3)$ mit
+$\gamma \approx 1{,}59$; für dieselben Dichten liegt diese Grenze bei 139 000 bis 121 000 km, am
+Außenrand der Hauptringe. Die kleinen Monde dort haben gerade solche Dichten, 0,4 bis
+$0{,}6\,\mathrm{g}\,\mathrm{cm}^{-3}$, und die Ringteilchen selbst dürften ähnlich wenig dicht sein
+([Porco et al. 2007](literatur:porco-2007)); siehe [Ringe](thema:ringe).
 
 Phobos hat eine mittlere Dichte von rund $1850\,\mathrm{kg}\,\mathrm{m}^{-3}$; seine Bahn liegt
 bei 89 % der flüssigen und 171 % der starren Grenze. Er besteht vermutlich großenteils aus
@@ -249,9 +265,11 @@ und langsam auf Mars ([Black und Mittal 2015](literatur:black-2015)).
   Eine Auswertung von Cassini-Radiodaten zusammen mit über hundert Jahren Astrometrie bestätigt
   die schnelle Auswanderung Titans mit $Q = 75$ (+176/−31, 3σ)
   ([Magnanini et al. 2026](literatur:magnanini-2026)). Eine umfassende Auswertung von Astrometrie
-  und Radiodaten von Cassini, Voyager und Pioneer 11 ergab dagegen $Q = 1224 \pm 357$ (3σ)
-  ([Jacobson 2022](literatur:jacobson-2022); Wert nach
-  [Magnanini et al. 2026](literatur:magnanini-2026)). Eine Übersicht kurz vor der neuen Auswertung
+  und Radiodaten von Cassini, Voyager und Pioneer 11 ergab dagegen $Q = 1224 \pm 119$ (1σ, also
+  ±357 bei 3σ; [Jacobson 2022](literatur:jacobson-2022), Tabelle 10). Jacobson bezweifelt, dass die
+  Radiodaten der Titan-Vorbeiflüge Saturns Schwerefeld und Love-Zahl festlegen, und hält ihre
+  Zeitspanne für zu kurz, um die Gezeitenbeschleunigung von langperiodischen Störungen zu trennen;
+  genau diese beiden Punkte greifen Magnanini et al. auf. Eine Übersicht kurz vor deren Auswertung
   nannte die Ursache des Unterschieds ungeklärt ([Lainey et al. 2025](literatur:lainey-2025)).
 - **Q von Jupiter:** Die Bestimmungen beschreiben Jupiters Dissipation mit einem Parameter für alle
   Frequenzen, obwohl Modelle mit festem Kern und flüssiger Hülle stark frequenzabhängige
@@ -264,11 +282,17 @@ und langsam auf Mars ([Black und Mittal 2015](literatur:black-2015)).
   Schmelzpunkt ([Petricca et al. 2025](literatur:petricca-2025)). Der große Realteil galt dagegen
   als Hinweis auf einen Ozean ([Iess et al. 2012](literatur:iess-2012)), und mit dem kleineren Wert
   von Goossens et al. wäre ein Ozean geringerer Dichte wahrscheinlicher
-  ([Goossens et al. 2024](literatur:goossens-2024)). Die Mission Dragonfly soll die Frage erneut
+  ([Goossens et al. 2024](literatur:goossens-2024)). Auch der Realteil selbst ist strittig: Sein
+  niedriger Wert wird auf die Auswertung zurückgeführt
+  ([Durante et al. 2026](literatur:durante-2026)), seine Urheber haben darauf geantwortet
+  ([Goossens et al. 2026](literatur:goossens-2026)). Die Mission Dragonfly soll die Frage erneut
   prüfen ([Petricca et al. 2025](literatur:petricca-2025)).
 - **h₂ des Mondes:** Die Laserhöhenmessung ergibt rund 10 % weniger als ein an $k_2$ angepasstes
-  Innenmodell, die Laserentfernungen eher mehr; als mögliche Ursachen gelten Reflektoren nur auf der
-  Vorderseite und deren Wärmeausdehnung ([Thor et al. 2021](literatur:thor-2021)).
+  Innenmodell, die Laserentfernungen meist mehr. Laserentfernungen messen nur auf der Vorderseite und
+  können durch die Wärmeausdehnung von Reflektoren und Regolith verzerrt sein; bei der
+  Laserhöhenmessung kommen thermische oder instrumentelle Effekte bei der Gezeitenperiode von
+  27,2 Tagen in Frage, und auch ein unsicheres $k_2$ aus GRAIL wäre möglich
+  ([Thor et al. 2021](literatur:thor-2021)).
 - **Wärmebilanz von Enceladus:** Ob Wärmeverlust und Gezeitenheizung heute im Gleichgewicht sind,
   hängt an Schätzungen mit über 100 % Unsicherheit ([Miles et al. 2025](literatur:miles-2025)).
 

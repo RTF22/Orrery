@@ -68,6 +68,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1007/s10569-019-9925-1',
   },
   {
+    id: 'bagheri-2026',
+    autoren: ['Bagheri, A.', 'Vance, S. D.', 'Fuller, J.'],
+    etAl: true,
+    jahr: 2026,
+    titel: 'Joint dynamical-geophysical evidence for a limit cycle in the Galilean moons',
+    erschienen: 'arXiv-Vorabdruck',
+    arxiv: '2608.04226',
+  },
+  {
     id: 'barboni-2017',
     autoren: ['Barboni, M.', 'Boehnke, P.', 'Keller, B.'],
     etAl: true,
@@ -407,6 +416,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1038/s41550-024-02253-4',
   },
   {
+    id: 'goossens-2026',
+    autoren: ['Goossens, S.', 'van Noort, B.', 'Mateo, A.'],
+    etAl: true,
+    jahr: 2026,
+    titel: 'Reply to: On the tidal response of Titan inferred from Cassini data',
+    erschienen: 'Nature Astronomy 10, 791–792',
+    doi: '10.1038/s41550-026-02896-5',
+  },
+  {
     id: 'guillet-2023',
     autoren: ['Guillet, S.', 'Corona, C.', 'Oppenheimer, C.'],
     etAl: true,
@@ -523,6 +541,7 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'Resonance locking in giant planets indicated by the rapid orbital expansion of Titan',
     erschienen: 'Nature Astronomy 4, 1053–1058',
     doi: '10.1038/s41550-020-1120-5',
+    arxiv: '2006.06854',
   },
   {
     id: 'lainey-2025',

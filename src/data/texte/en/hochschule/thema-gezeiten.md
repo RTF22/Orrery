@@ -33,7 +33,8 @@ low water would be 0.53 m apart.
 A yielding body responds to $W_2$ with a deformation that itself produces a potential. The Love
 number $k_2$ describes this additional potential, $h_2$ the radial and the Shida number $l_2$ the
 horizontal displacement of the surface
-([Love numbers, German Wikipedia](quelle:wikipedia-de-love-zahlen)). For a body of radius $R$ and
+([Love numbers, German Wikipedia](quelle:wikipedia-de-love-zahlen);
+[Petit and Luzum 2010](literatur:petit-2010), chapter 6 and eq. 7.5). For a body of radius $R$ and
 surface gravity $g$,
 
 $$\Phi_\mathrm{ind}(r) = k_2\,W_2(R)\left( \frac{R}{r} \right)^3, \quad u_r = h_2\,\frac{W_2(R)}{g}$$
@@ -46,7 +47,7 @@ laser altimetry, laser ranging to retroreflectors and, on Earth, through station
 
 | Body | $k_2$ | $h_2$ | Method | Reference |
 |---|---|---|---|---|
-| Earth | 0.30102 (semidiurnal, imaginary part −0.00130) | 0.6078 | conventional value from Earth models, without uncertainty; VLBI estimates for twelve diurnal tides shift the stations by 1.7 mm in total relative to the conventional values | [Petit and Luzum 2010](literatur:petit-2010); [Krásná et al. 2013](literatur:krasna-2013) |
+| Earth | 0.30102 (semidiurnal, imaginary part −0.00130) | 0.6078 | conventional value from Earth models, without uncertainty; VLBI estimates for twelve diurnal tides shift the stations radially by 1.7 mm in total relative to the conventional values, and by 1.2 mm transversely | [Petit and Luzum 2010](literatur:petit-2010); [Krásná et al. 2013](literatur:krasna-2013) |
 | Moon | 0.02416 ± 0.00022 (period 1 month) | 0.0387 ± 0.0025 | GRAIL, mean of two analyses; LOLA laser altimetry | [Williams et al. 2014](literatur:williams-2014); [Thor et al. 2021](literatur:thor-2021) |
 | Mars | 0.169 ± 0.006 | – | tracking of Mars Odyssey, MRO and MGS | [Konopliv et al. 2020](literatur:konopliv-2020) |
 | Titan | 0.608 ± 0.048 (real part, 1σ) | – | Doppler from ten Cassini flybys, reanalysed | [Petricca et al. 2025](literatur:petricca-2025) |
@@ -58,8 +59,10 @@ value of $k_2$ gave 0.0424 ([Thor et al. 2021](literatur:thor-2021)). For Titan,
 measured $0.589 \pm 0.150$ and $0.637 \pm 0.224$ (2σ), a deformation consistent with a global
 ocean ([Iess et al. 2012](literatur:iess-2012)). An independent analysis of the Cassini data found
 only $0.375 \pm 0.06$ ([Goossens et al. 2024](literatur:goossens-2024)); four earlier analyses lay
-between 0.59 and 0.64 ([Durante et al. 2026](literatur:durante-2026)), and the most recent one
-confirms the high value ([Petricca et al. 2025](literatur:petricca-2025)).
+between 0.59 and 0.64 ([Durante et al. 2026](literatur:durante-2026)), to which Goossens et al.
+replied ([Goossens et al. 2026](literatur:goossens-2026)). Two more recent analyses support the high
+value: $0.608 \pm 0.048$ ([Petricca et al. 2025](literatur:petricca-2025)) and
+$0.596 \pm 0.094$ ([Magnanini et al. 2026](literatur:magnanini-2026), Table C.2), both 1σ.
 
 ## Phase lag, quality factor Q and k₂/Q
 
@@ -130,17 +133,18 @@ inwards and that the three inner Galilean moons are evolving out of the exact La
 Jupiter's $k_2/Q$ is close to the upper bound of the average expected from the long-term evolution
 ([Lainey et al. 2009](literatur:lainey-2009)). The mean motions change relatively by
 $+0.14 \pm 0.01$ (Io), $-0.43 \pm 0.10$ (Europa) and $-1.57 \pm 0.27$ (Ganymede) in units of
-$10^{-10}$ per year. An analysis including Juno data confirms the dissipation values; both,
-however, describe Jupiter's tides with a single parameter for all frequencies
-([Lainey et al. 2025](literatur:lainey-2025)), Lainey et al. with a constant $Q$, Park et al. with
-a constant time lag ([Park et al. 2025](literatur:park-2025)).
+$10^{-10}$ per year (formal errors, 1σ; [Lainey et al. 2025](literatur:lainey-2025), Table 1). An
+analysis including Juno data confirms the dissipation values; both, however, describe Jupiter's
+tides with a single parameter for all frequencies, Lainey et al. with a constant $Q$, Park et al.
+with a constant time lag ([Lainey et al. 2025](literatur:lainey-2025);
+[Park et al. 2025](literatur:park-2025)).
 
 **Saturn and Titan.** As early as 2012, astrometry gave $k_2/Q = (2.3 \pm 0.7) \cdot 10^{-4}$
 for Saturn, about ten times more than usual theoretical estimates
 ([Lainey et al. 2025](literatur:lainey-2025)). For [Titan](objekt:titan), two independent
-measurements with Cassini found migration on a timescale of roughly ten billion years, about
-12 cm per year, corresponding to $Q \simeq 100$, more than a hundred times smaller than most
-expectations. The authors interpret this as resonance locking with inertial waves inside the
+measurements with Cassini found migration of $11.3 \pm 2.0\,\mathrm{cm}$ per year, a timescale of
+roughly ten billion years, corresponding to $Q \simeq 100$, more than a hundred times smaller than
+most expectations. The authors interpret this as resonance locking with inertial waves inside the
 planet ([Lainey et al. 2020](literatur:lainey-2020)): an oscillation of the planet whose frequency
 shifts as its interior evolves stays in resonance with the moon and drives it outwards on a
 timescale comparable to the age of the Solar System, nearly independent of distance
@@ -150,9 +154,10 @@ timescale comparable to the age of the Solar System, nearly independent of dista
 inwards. The MAR099 ephemeris gives $k_2/Q = (1.816 \pm 0.084) \cdot 10^{-3}$ for Mars and half
 the tidal acceleration of Phobos $\dot{n}/2 = (1.258 \pm 0.058) \cdot 10^{-3}$ degrees per year²
 ([Brozović et al. 2025](literatur:brozovic-2025)); since $\dot{a}/a = -2\dot{n}/(3n)$, the orbit
-shrinks by about 3.8 cm per year. The time until impact is about 29 million years for a constant
-time lag, 38 for a constant $Q$ and 40 to 43 for $Q \propto \chi^{\alpha}$
-([Efroimsky and Lainey 2007](literatur:efroimsky-2007)).
+shrinks by about 3.8 cm per year. Counting only the tide on Mars and leaving aside break-up at the
+Roche limit, the time until impact is about 29 million years for a constant time lag, 38 for a
+constant $Q$ and 40 to 43 for $Q \propto \chi^{\alpha}$
+([Efroimsky and Lainey 2007](literatur:efroimsky-2007)); on break-up see below.
 
 ## Tidal heating
 
@@ -171,7 +176,8 @@ In 1979 Peale, Cassen and Reynolds concluded that tidal dissipation had probably
 fraction of Io and expected visible consequences in the Voyager 1 images
 ([Peale et al. 1979](literatur:peale-1979)). The measured dissipation agrees with the observed heat
 flow, so Io is close to thermal equilibrium ([Lainey et al. 2009](literatur:lainey-2009)). With
-$k_2/Q = 0.015 \pm 0.003$ and $e = 0.004$ the formula gives 89 TW, 71 to 107 TW within the
+$k_2/Q = 0.015 \pm 0.003$ and the forced eccentricity $e = 0.0041$
+([Bagheri et al. 2026](literatur:bagheri-2026)) the formula gives 93 TW, 75 to 112 TW within the
 uncertainty; about $10^{5}$ GW, that is 100 TW, are observed
 ([Fuller et al. 2016](literatur:fuller-2016)). The small real part of $k_2$ from the Juno flybys
 fits a mostly solid mantle. A magma ocean beneath a 50 km thick layer would have raised it to at
@@ -193,7 +199,10 @@ rough timescale
 $$t \approx \frac{2}{3}\,\frac{Q}{k_2}\,\frac{C\,\omega_0\, a^6}{G M^2 R^5}$$
 
 with $k_2$, $Q$, radius $R$ and moment of inertia $C$ of the moon, initial angular velocity
-$\omega_0$ and planet mass $M$; the torque is assumed constant. Because of the sixth power of the
+$\omega_0$ and planet mass $M$; the torque is assumed constant. The literature gives the same estimate
+with a prefactor of 1/3 ([Gladman et al. 1996](literatur:gladman-1996), eq. 9); the difference is a
+matter of the convention for $Q$ ([Efroimsky and Lainey 2007](literatur:efroimsky-2007)). Because of
+the sixth power of the
 distance, despinning acts above all on close moons. Most major moons rotate synchronously, and the
 Moon needs a permanent quadrupole moment to remain so
 ([Murray and Dermott 2000](literatur:murray-2000), chapter 5). The spin axis ends in a Cassini
@@ -230,11 +239,14 @@ Almost all planetary rings lie within their Roche limit; exceptions include Satu
 ring of the trans-Neptunian object Quaoar at about 7.4 body radii
 ([Roche limit](quelle:wikipedia-en-roche-limit)). For compact ice of
 $900\,\mathrm{kg}\,\mathrm{m}^{-3}$, Saturn's fluid limit lies at about 129,000 km, inside the outer
-edge of the A ring at 136,780 km. The small moons in the ring region, however, have only 0.4 to
-$0.6\,\mathrm{g}\,\mathrm{cm}^{-3}$, about the critical density at which a body completely fills
-its Roche lobe, and the ring particles themselves are likely to have similarly low densities
-([Porco et al. 2007](literatur:porco-2007)). For 400 to $600\,\mathrm{kg}\,\mathrm{m}^{-3}$ the
-limit moves out to 148,000 to 169,000 km, beyond the main rings; see [Rings](thema:ringe).
+edge of the A ring at 136,780 km; for porous particles of 400 to
+$600\,\mathrm{kg}\,\mathrm{m}^{-3}$ it moves out to 169,000 to 148,000 km, beyond the main rings.
+A different criterion leads back to the ring edge: a loose aggregate grows only until it fills its
+Roche lobe, that is up to the critical density $\rho = 3 M/(\gamma\,a^3)$ with
+$\gamma \approx 1.59$; for the same densities this limit lies at 139,000 to 121,000 km, at the outer
+edge of the main rings. The small moons there have exactly such densities, 0.4 to
+$0.6\,\mathrm{g}\,\mathrm{cm}^{-3}$, and the ring particles themselves are likely to have similarly
+low densities ([Porco et al. 2007](literatur:porco-2007)); see [Rings](thema:ringe).
 
 Phobos has a mean density of about $1850\,\mathrm{kg}\,\mathrm{m}^{-3}$; its orbit lies at 89 % of
 the fluid and 171 % of the rigid limit. It probably consists largely of weak, heavily damaged
@@ -250,9 +262,12 @@ $10^{8}$ years; strong fragments will strike Mars obliquely and slowly
   radio data with more than a century of astrometry confirms Titan's fast migration with $Q = 75$
   (+176/−31, 3σ) ([Magnanini et al. 2026](literatur:magnanini-2026)). A comprehensive analysis of
   astrometry and radio data from Cassini, Voyager and Pioneer 11, by contrast, gave
-  $Q = 1224 \pm 357$ (3σ) ([Jacobson 2022](literatur:jacobson-2022); value as given by
-  [Magnanini et al. 2026](literatur:magnanini-2026)). A review shortly before the new analysis
-  called the cause of the discrepancy unresolved ([Lainey et al. 2025](literatur:lainey-2025)).
+  $Q = 1224 \pm 119$ (1σ, that is ±357 at 3σ; [Jacobson 2022](literatur:jacobson-2022), Table 10).
+  Jacobson doubts that the radio data of the Titan flybys determine Saturn's gravity field and Love
+  number, and considers their time span too short to separate the tidal acceleration from
+  long-period perturbations; these are exactly the two points Magnanini et al. address. A review
+  shortly before their analysis called the cause of the discrepancy unresolved
+  ([Lainey et al. 2025](literatur:lainey-2025)).
 - **Jupiter's Q:** The determinations describe Jupiter's dissipation with a single parameter for all
   frequencies, although models with a solid core and a fluid envelope predict strongly
   frequency-dependent dissipation; the error bars on $k_2/Q$ may therefore be too small. Juno's
@@ -264,11 +279,15 @@ $10^{8}$ years; strong fragments will strike Mars obliquely and slowly
   melting point ([Petricca et al. 2025](literatur:petricca-2025)). The large real part, on the other
   hand, was taken as evidence of an ocean ([Iess et al. 2012](literatur:iess-2012)), and with the
   smaller value of Goossens et al. a lower-density ocean would be more likely
-  ([Goossens et al. 2024](literatur:goossens-2024)). The Dragonfly mission is to test the question
-  again ([Petricca et al. 2025](literatur:petricca-2025)).
+  ([Goossens et al. 2024](literatur:goossens-2024)). The real part itself is disputed too: its low
+  value is attributed to the data processing ([Durante et al. 2026](literatur:durante-2026)), and
+  its authors have replied ([Goossens et al. 2026](literatur:goossens-2026)). The Dragonfly mission
+  is to test the question again ([Petricca et al. 2025](literatur:petricca-2025)).
 - **The Moon's h₂:** Laser altimetry gives about 10 % less than an interior model fitted to $k_2$,
-  laser ranging rather more; possible causes include retroreflectors only on the near side and
-  their thermal expansion ([Thor et al. 2021](literatur:thor-2021)).
+  laser ranging mostly more. Laser ranging measures only on the near side and can be biased by the
+  thermal expansion of retroreflectors and regolith; for laser altimetry, thermal or instrumental
+  effects at the 27.2 d tidal period come into question, and an unreliable GRAIL $k_2$ would also be
+  possible ([Thor et al. 2021](literatur:thor-2021)).
 - **Heat budget of Enceladus:** Whether heat loss and tidal heating are in balance today depends on
   estimates with more than 100 % uncertainty ([Miles et al. 2025](literatur:miles-2025)).
 
