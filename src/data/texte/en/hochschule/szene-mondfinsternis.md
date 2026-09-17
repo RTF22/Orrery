@@ -33,17 +33,18 @@ Danjon but cites crater timings from 1972 to 1982 that support about 2%
 ([Espenak and Meeus 2009](literatur:espenak-2009)). A layer of height $h$ enlarges $r_\mathrm{u}$
 by $h\,(1 + d/D) \approx h$. More than 20,000 crater timings at 94 eclipses from 1842 to 2011 give
 a mean layer height of 86.9 km (uncertainty of the mean 0.2 km) with no trend in lunar distance,
-whereas the percentage enlargement (mean 1.88%) depends somewhat on it. The authors recommend
-Danjon's approach; in 2014 the Astronomical Almanac still used 1.02
+whereas the percentage enlargement (mean 1.88%) depends somewhat on it. Herald and Sinnott
+recommend a Danjon-like approach for contact times, with a layer height of 87 km above the oblate
+Earth; in 2014 the Astronomical Almanac still used 1.02
 ([Herald and Sinnott 2014](literatur:herald-2014)).
 
 The atmosphere refracts light into the umbra; lower, denser layers attenuate it more strongly and
 bend it further inwards, so the brightness usually increases towards the edge
 ([Espenak and Meeus 2009](literatur:espenak-2009)). Rayleigh scattering weakens short wavelengths
-more strongly: with a little perturbed stratosphere the eclipsed Moon tends to look copper to deep
-red, with a turbid one darker ([Guillet et al. 2023](literatur:guillet-2023)). The Danjon scale
-for total eclipses runs from L = 0, Moon almost invisible, to L = 4, very bright copper-red or
-orange ([Espenak and Meeus 2009](literatur:espenak-2009)). Among 46 eclipses drawn on by Guillet
+more strongly: when the stratosphere is little perturbed, the eclipsed Moon tends to look copper to
+deep red, and darker when it is turbid ([Guillet et al. 2023](literatur:guillet-2023)). The Danjon
+scale for total eclipses runs from L = 0, Moon almost invisible, to L = 4, very bright copper-red
+or orange ([Espenak and Meeus 2009](literatur:espenak-2009)). Among 46 eclipses drawn on by Guillet
 et al., L = 0 occurred only when the stratospheric aerosol optical depth exceeded about 0.1
 ([Guillet et al. 2023](literatur:guillet-2023)).
 
@@ -51,13 +52,13 @@ et al., L = 0 occurred only when the stratospheric aerosol optical depth exceede
 
 - **Shadow:** each surface point receives direct light according to the visible part of the
   uniformly bright solar disc behind the spherical Earth, without oblateness, atmosphere or
-  enlargement, and only with shadows switched on and the Earth visible. Only the search enlarges
-  the umbra by 2%.
+  enlargement. This shadowing applies only with the "Shadows" switch on and the Earth visible.
+  Only the search enlarges the umbra by 2%.
 - **Colour:** inside the umbra only the night-side fill light remains (by default a quarter of
   the day level), tinted with the fixed colour value #ff9a5c, and in the penumbra in proportion
   to the covered part of the solar disc. The linear luminance at the centre of the disc thus
-  drops by 2.4 to 2.6 magnitudes depending on the angle of incidence, the same for every eclipse.
-  In 1963 the eclipsed Moon reached only +4.1 mag
+  drops by 2.4 to 2.6 magnitudes depending on the angle of incidence, regardless of eclipse depth
+  and lunar distance. On 30 December 1963 the totally eclipsed Moon reached only +4.1 mag
   ([Herald and Sinnott 2014](literatur:herald-2014)), almost 17 magnitudes below the
   [mean full Moon](quelle:nssdc-moon).
 - **Timing:** the lunar orbit is a Kepler ellipse without periodic perturbations; in addition,
@@ -65,7 +66,8 @@ et al., L = 0 occurred only when the stratospheric aerosol optical depth exceede
   mean longitude and the Earth's orbit do not. Against the [NASA catalogue](quelle:nasa-eclipse),
   the model finds 135 of the 143 umbral eclipses from 1951 to 2050, with the maximum off by up to
   3.0 h (root mean square 1.8 h); eight small partial eclipses are missing, and eleven differ in
-  type, only three without the precession in the rates.
+  type, only three without the precession in the rates. The search classifies the penumbral
+  eclipses of 17 September 1959 and 3 March 2045 as partial.
 - **Time-lapse:** after the jump, the rate glides from its previous value to the nominal one;
   coming from 0.9 days per second, about 2 h pass in the first second (60 frames/s), and all or
   part of the eclipse goes by unseen.

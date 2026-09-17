@@ -34,8 +34,9 @@ Danjon, führt aber Kraterzeiten von 1972 bis 1982 an, die etwa 2 % stützen
 $r_\mathrm{u}$ um $h\,(1 + d/D) \approx h$. Über 20 000 Kraterzeiten von 94 Finsternissen der
 Jahre 1842 bis 2011 ergeben im Mittel 86,9 km Schichthöhe (Unsicherheit des Mittelwerts 0,2 km)
 ohne Gang mit dem Mondabstand, die prozentuale Vergrößerung (Mittel 1,88 %) hängt dagegen etwas
-von ihm ab. Die Autoren empfehlen Danjons Ansatz; der Astronomical Almanac rechnete 2014 noch mit
-1,02 ([Herald und Sinnott 2014](literatur:herald-2014)).
+von ihm ab. Herald und Sinnott empfehlen für Kontaktzeiten einen Ansatz nach Danjon mit 87 km
+Schichthöhe über der abgeplatteten Erde; der Astronomical Almanac rechnete 2014 noch mit 1,02
+([Herald und Sinnott 2014](literatur:herald-2014)).
 
 Die Atmosphäre bricht Licht in den Kernschatten; tiefere, dichtere Schichten schwächen es stärker
 und lenken es weiter nach innen, weshalb die Helligkeit meist zum Rand hin zunimmt
@@ -51,20 +52,22 @@ Aerosols über etwa 0,1 auf ([Guillet et al. 2023](literatur:guillet-2023)).
 
 - **Schatten:** Jeder Oberflächenpunkt erhält direktes Licht nach dem sichtbaren Teil der
   gleichmäßig hellen Sonnenscheibe hinter der Erdkugel, ohne Abplattung, Atmosphäre und
-  Vergrößerung, und nur bei eingeschaltetem Schatten und eingeblendeter Erde. Nur die Suche
-  vergrößert den Kernschatten um 2 %.
+  Vergrößerung. Diese Verschattung wirkt nur bei eingeschaltetem Schalter „Schatten" und
+  eingeblendeter Erde. Nur die Suche vergrößert den Kernschatten um 2 %.
 - **Farbe:** Im Kernschatten bleibt nur das Fülllicht der Nachtseite (Standard: ein Viertel des
   Tagniveaus), getönt mit dem festen Farbwert #ff9a5c, im Halbschatten anteilig zum verdeckten
   Teil der Sonnenscheibe. Die lineare Leuchtdichte der Scheibenmitte sinkt so je nach
-  Einfallswinkel um 2,4 bis 2,6 Größenklassen, bei jeder Finsternis gleich. 1963 erreichte der
-  verfinsterte Mond nur +4,1 mag ([Herald und Sinnott 2014](literatur:herald-2014)), knapp 17
-  Größenklassen unter dem [mittleren Vollmond](quelle:nssdc-moon).
+  Einfallswinkel um 2,4 bis 2,6 Größenklassen, unabhängig von Finsternistiefe und Mondabstand.
+  Am 30. Dezember 1963 erreichte der total verfinsterte Mond nur +4,1 mag
+  ([Herald und Sinnott 2014](literatur:herald-2014)), knapp 17 Größenklassen unter dem
+  [mittleren Vollmond](quelle:nssdc-moon).
 - **Zeitpunkt:** Die Mondbahn ist eine Kepler-Ellipse ohne periodische Störungen; zudem enthalten
   Knoten- und Perigäumsrate nach Meeus die Präzession von 1,4° je Jahrhundert, mittlere Länge und
   Erdbahn nicht. Gegen den [NASA-Katalog](quelle:nasa-eclipse) findet das Modell 1951 bis 2050
   135 der 143 Kernschattenfinsternisse, das Maximum bis 3,0 h daneben (quadratisches Mittel
   1,8 h); acht kleine partielle fehlen, bei elf weicht die Art ab, ohne die Präzession in den
-  Raten nur bei drei.
+  Raten nur bei drei. Die Halbschattenfinsternisse vom 17. September 1959 und 3. März 2045 stuft
+  die Suche als partiell ein.
 - **Zeitraffer:** Nach dem Sprung gleitet er vom bisherigen Wert auf den Sollwert; nach 0,9 Tagen
   je Sekunde vergehen so in der ersten Sekunde rund 2 h (60 Bilder/s), und die Finsternis läuft
   ganz oder teilweise ungesehen ab.

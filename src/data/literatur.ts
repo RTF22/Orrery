@@ -238,7 +238,7 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'Analysis of lunar crater timings, 1842–2011',
     erschienen: 'Journal of the British Astronomical Association 124, 247–253',
     bibcode: '2014JBAA..124..247H',
-    url: 'https://adsabs.harvard.edu/pdf/2014JBAA..124..247H',
+    url: 'https://articles.adsabs.harvard.edu/pdf/2014JBAA..124..247H',
   },
   {
     id: 'herwartz-2014',
