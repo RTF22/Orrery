@@ -119,7 +119,7 @@ export const LITERATUR: readonly Publikation[] = [
     etAl: false,
     jahr: 2026,
     titel: 'Draft Resolution C: On the technical actions needed to ensure the continuity of UTC (28th meeting of the CGPM, 2026)',
-    erschienen: 'BIPM, version 5 of 13 July 2026',
+    erschienen: 'BIPM, draft resolutions for the 28th meeting of the CGPM, document version 5 of 13 July 2026',
     url: 'https://www.bipm.org/documents/d/guest/cgpm-2026-draft-resolution-c-en',
   },
   {

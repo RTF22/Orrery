@@ -80,9 +80,10 @@ Exactly in this way, with 84,381.448″ and without frame bias, JPL Horizons pro
 ecliptic of J2000 ([Orbital elements](thema:bahnelemente)). The approximate planetary tables refer
 to the mean ecliptic and equinox of J2000 and, according to JPL, use the obliquity 23.43928°, that
 is 84,381.408″ — the same plane within their accuracy, since their nominal errors in heliocentric
-longitude range from 15″ for Mercury to 600″ for Saturn. Compared with the ecliptic of J2000
-according to IAU 2006, the Horizons plane is inclined by 0.04″, and its intersection with the ICRF
-equator is shifted by 0.05″ ([Petit and Luzum 2010](literatur:petit-2010), eq. 5.40 at the epoch).
+longitude range from 10″ for Neptune to 600″ for Saturn between 1800 and 2050. Compared with the
+ecliptic of J2000 according to IAU 2006, the Horizons plane is inclined by 0.04″, and its
+intersection with the ICRF equator is shifted by 0.05″
+([Petit and Luzum 2010](literatur:petit-2010), eq. 5.40 at the epoch).
 
 ## Precession, nutation and the equinox of date
 
@@ -230,9 +231,9 @@ validity; how they differ from osculating elements is explained in
 - **Future of the leap second:** It has been decided that the permitted magnitude of UT1 − UTC will
   be increased in or before 2035; a new maximum value that keeps UTC continuous for at least a
   century, and a plan for implementing it, are to be put to the General Conference in 2026
-  ([CGPM 2022](literatur:cgpm-2022)). Its draft Resolution C goes further: UTC is to become
-  continuous on 20 May 2027 and the maximum value of the magnitude of UT1 − UTC is to be 3600 s, which would keep
-  UTC continuous for several centuries. This has not been decided; the 28th General Conference
+  ([CGPM 2022](literatur:cgpm-2022)). The draft Resolution C prepared for it by the CIPM goes
+  further: UTC is to become continuous on 20 May 2027 and the maximum value of the magnitude of
+  UT1 − UTC is to be 3600 s, which would keep UTC continuous for several centuries. This has not been decided; the 28th General Conference
   meets from 13 to 15 October 2026 ([BIPM 2026](literatur:bipm-2026)). The procedure is disputed.
   Levine proposes an algorithmic rate adjustment without time steps
   ([Levine 2024](literatur:levine-2024)). Petit and Tagliaferro consider his description ambiguous

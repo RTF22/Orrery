@@ -80,9 +80,10 @@ Genau so, mit 84 381,448″ und ohne Rahmenversatz, entsteht die feste Ekliptik 
 Horizons ([Bahnelemente](thema:bahnelemente)). Die Näherungstafeln der Planeten beziehen sich auf
 die mittlere Ekliptik und das Äquinoktium J2000 und rechnen laut JPL mit der Schiefe 23,43928°,
 also 84 381,408″ — im Rahmen ihrer Genauigkeit dieselbe Ebene, denn ihre nominellen Fehler in
-heliozentrischer Länge reichen von 15″ bei Merkur bis 600″ bei Saturn. Gegen die Ekliptik J2000
-nach IAU 2006 ist die Ebene von Horizons um 0,04″ geneigt, und ihr Schnitt mit dem ICRF-Äquator
-liegt 0,05″ verschoben ([Petit und Luzum 2010](literatur:petit-2010), Gl. 5.40 zur Epoche).
+heliozentrischer Länge reichen im Zeitraum 1800 bis 2050 von 10″ bei Neptun bis 600″ bei Saturn.
+Gegen die Ekliptik J2000 nach IAU 2006 ist die Ebene von Horizons um 0,04″ geneigt, und ihr
+Schnitt mit dem ICRF-Äquator liegt
+0,05″ verschoben ([Petit und Luzum 2010](literatur:petit-2010), Gl. 5.40 zur Epoche).
 
 ## Präzession, Nutation und das Äquinoktium des Datums
 
@@ -231,9 +232,9 @@ Gültigkeit; wie sie sich von oskulierenden Elementen unterscheiden, erklärt
 - **Zukunft der Schaltsekunde:** Beschlossen ist, dass der zulässige Betrag von UT1 − UTC
   spätestens 2035 größer wird; ein neuer Höchstwert, der UTC für mindestens ein Jahrhundert stetig
   hält, und ein Plan zur Umsetzung sollen der Generalkonferenz 2026 vorgelegt werden
-  ([CGPM 2022](literatur:cgpm-2022)). Deren Entwurf der Resolution C geht weiter: UTC soll ab dem
-  20. Mai 2027 stetig laufen und der Höchstwert des Betrags von UT1 − UTC 3600 s betragen, was UTC über mehrere
-  Jahrhunderte stetig hielte. Beschlossen ist das nicht; die 28. Generalkonferenz tagt vom 13. bis
+  ([CGPM 2022](literatur:cgpm-2022)). Der Entwurf der Resolution C, den das CIPM dafür vorgelegt
+  hat, geht weiter: UTC soll ab dem 20. Mai 2027 stetig laufen und der Höchstwert des Betrags von
+  UT1 − UTC 3600 s betragen, was UTC über mehrere Jahrhunderte stetig hielte. Beschlossen ist das nicht; die 28. Generalkonferenz tagt vom 13. bis
   15. Oktober 2026 ([BIPM 2026](literatur:bipm-2026)). Umstritten ist das Verfahren. Levine schlägt
   eine algorithmische Ratenanpassung ohne Zeitsprünge vor ([Levine 2024](literatur:levine-2024)).
   Petit und Tagliaferro halten seine Beschreibung für mehrdeutig und seine Zahlenbeispiele für
