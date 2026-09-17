@@ -234,6 +234,7 @@ export const en: Record<Key, string> = {
   'info.schliessen': 'Hide info panel',
   'info.nichtUebersetzt': 'Not translated yet; German text shown.',
   'info.keinText': 'There is no text for this entry yet.',
+  'info.nurHochschule': 'This text is only available at university level.',
   'info.hochschuleFolgt': 'The university-level text will follow in a later phase; the secondary-school text is shown.',
   'info.szene.ziel': 'Location',
   'info.szene.blick': 'Looking at',

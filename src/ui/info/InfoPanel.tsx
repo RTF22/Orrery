@@ -8,7 +8,7 @@ import { bodyIndex } from '../../data';
 import { SCENES } from '../../data/scenes';
 import { NIVEAUS } from '../../data/themen';
 import type { Niveau } from '../../data/themen';
-import { ladeMitAusweich } from '../../data/texte';
+import { ladeMitAusweich, textVorhanden } from '../../data/texte';
 import type { GeladenerText, TextKennung } from '../../data/texte';
 import type { Verweis } from '../../data/verweise';
 import { t } from '../i18n';
@@ -185,7 +185,12 @@ export function InfoPanel(): React.JSX.Element {
   // (neue Kennung, neues Niveau oder neue Sprache) beschreibt der alte
   // Anzeigestand sonst fälschlich den neuen — etwa kurz „nicht übersetzt"
   // direkt nach einem Sprachwechsel.
-  if (frisch && geladen === null) hinweise.push('info.keinText');
+  if (frisch && geladen === null) {
+    // Gibt es den Text nur auf Hochschulniveau (Fachthemen, Entwurf 4d §5.4),
+    // wäre „kein Text" irreführend.
+    const nurHochschule = textVorhanden(language, 'hochschule', kennung) || textVorhanden('de', 'hochschule', kennung);
+    hinweise.push(nurHochschule ? 'info.nurHochschule' : 'info.keinText');
+  }
   if (frisch && geladen !== null && info.niveau === 'hochschule' && geladen.niveau !== 'hochschule') hinweise.push('info.hochschuleFolgt');
   if (frisch && geladen !== null && geladen.sprache !== language) hinweise.push('info.nichtUebersetzt');
 

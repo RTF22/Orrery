@@ -56,11 +56,14 @@ export function ausweichKandidaten(sprache: Sprache, niveau: Niveau): readonly (
 
 export interface GeladenerText { text: string; niveau: Niveau; sprache: Sprache }
 
+/** Lädt einen Text oder liefert null; einspritzbar, damit Tests nicht von echten Dateien abhängen. */
+export type TextLader = (sprache: Sprache, niveau: Niveau, k: TextKennung) => Promise<string | null>;
+
 export async function ladeMitAusweich(
-  sprache: Sprache, niveau: Niveau, k: TextKennung,
+  sprache: Sprache, niveau: Niveau, k: TextKennung, laden: TextLader = ladeText,
 ): Promise<GeladenerText | null> {
   for (const [s, n] of ausweichKandidaten(sprache, niveau)) {
-    const text = await ladeText(s, n, k);
+    const text = await laden(s, n, k);
     if (text !== null) return { text, niveau: n, sprache: s };
   }
   return null;

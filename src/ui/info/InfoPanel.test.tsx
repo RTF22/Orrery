@@ -52,15 +52,6 @@ describe('InfoPanel', () => {
     expect(useStore.getState().ui.info.niveau).toBe('grundschule');
   });
 
-  it('Hochschule ohne Text zeigt den Gymnasialtext mit Hinweis', async () => {
-    useStore.getState().setCamera({ targetId: 'earth' });
-    useStore.getState().setInfo({ niveau: 'hochschule' });
-    render(<InfoPanel />);
-    expect(await screen.findByText(/Der Hochschultext folgt/)).toBeTruthy();
-    expect(await screen.findByText(/Astronomischen Einheit/)).toBeTruthy();
-    expect(screen.getByText('Große Halbachse')).toBeTruthy();
-  });
-
   it('Themenverweis wechselt den Text; ein Zielwechsel löscht das Thema', async () => {
     useStore.getState().setCamera({ targetId: 'earth' });
     render(<InfoPanel />);

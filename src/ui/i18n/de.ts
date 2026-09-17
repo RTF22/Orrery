@@ -236,6 +236,7 @@ export const de = {
   'info.schliessen': 'Infopanel ausblenden',
   'info.nichtUebersetzt': 'Noch nicht übersetzt, deutscher Text.',
   'info.keinText': 'Zu diesem Eintrag gibt es noch keinen Text.',
+  'info.nurHochschule': 'Diesen Text gibt es nur auf Hochschulniveau.',
   'info.hochschuleFolgt': 'Der Hochschultext folgt in einer späteren Phase; gezeigt wird der Gymnasialtext.',
   'info.szene.ziel': 'Standort',
   'info.szene.blick': 'Blickziel',

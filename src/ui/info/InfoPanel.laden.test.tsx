@@ -14,7 +14,7 @@ import { fahrtAbbrechen } from '../kamerafahrt';
  */
 vi.mock('../../data/texte', async (importOriginal) => {
   const echt = await importOriginal<typeof import('../../data/texte')>();
-  return { ...echt, ladeMitAusweich: vi.fn(() => Promise.reject(new Error('Chunk fehlt'))) };
+  return { ...echt, ladeMitAusweich: vi.fn(() => Promise.reject(new Error('Chunk fehlt'))), textVorhanden: vi.fn(() => false) };
 });
 
 beforeEach(() => {
