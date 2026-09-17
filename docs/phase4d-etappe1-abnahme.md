@@ -57,23 +57,51 @@ npm test
       Tests  3532 passed (3532)
 ```
 
-Herleitung aus den in den Berichten protokollierten `npm test`-Ständen (volle Suite, nicht die
-engeren Vitest-Teilläufe der einzelnen Tasks):
+Herleitung je Task (Zuwachs an vitest-`Tests`, nicht an Testdateien), aus den Berichten
+`task-N-report.md` nachgerechnet, nicht aus den Vorab-Schätzungen der Planung übernommen:
 
-| Stand | Volle Suite | Zuwachs | Quelle |
-|---|---:|---:|---|
-| Ausgangsstand (master vor 4d-1, Tag `v0.4.0`) | 2905 | – | Stand-Notiz der Etappe 4c |
-| Nach Task 6, Commit `bc16f3a` | 2958 | +53 (Tasks 1–6 zusammen, im Ledger nicht Task für Task beziffert) | `task-6-report.md:111` |
-| Nach Task 10, erste Fassung, Commit `31d1aa5` | 3488 | +530 (Tasks 7–9 sowie Task 10 bis zur ersten Fassung zusammen; davon 20 namentlich als Dateitest-Fälle beziffert — `task-10-brief.md`: „2 Dateien × 10"; der übrige Teil, u. a. die zehn neuen Literaturkatalog-Einträge mit ihren eigenen Prüffällen, nicht einzeln aufgeschlüsselt) | `task-10-report.md:153` |
-| Nach Task 11, erste Fassung, Commit `69b8fd4` | 3510 | +22 (= 2 Dateien × 11 Dateitest-Fälle, `task-11-brief.md:19`; Task 10s Nacharbeit Runde 1, Commit `a21082a`, lag dazwischen und fügte keine neuen Fälle hinzu) | `task-11-report.md:189` |
-| Nach Task 12, erste Fassung, Commit `d0b1722` | 3532 | +22 (= 2 Dateien × 11 Dateitest-Fälle, `task-12-brief.md:18`) | `task-12-report.md:135` |
-| Bis HEAD (alle weiteren Nacharbeitsrunden der drei Pilottexte und der Beleglisten, keine neuen Testdateien) | 3532 | ±0 | dieser Prüflauf, Abschnitt 2 |
+| Task (Commit) | Zuwachs | Quelle |
+|---|---:|---|
+| Ausgangsstand (master vor 4d-1, Tag `v0.4.0`) | 2905 | Stand-Notiz der Etappe 4c |
+| Task 1, erste Fassung (`73021d9`) | +10 | „genau die im Brief angekündigten 10 neuen Fälle" (`task-1-report.md:59`) |
+| Task 2 (`fea3ab6`) | +14 | „14 Fälle bestanden beim ersten Durchlauf" (`task-2-report.md:42`) |
+| Task 1, Nacharbeit Backslash-Parität (`702f424`) | +1 | `markdownParser.test.ts` 20 → 21 (`task-1-report.md:186,198`) |
+| Task 3 (`cc6ef07`) | +2 | „die zwei Testfälle aus dem Brief" in `Markdown.test.tsx`, 6 → 8 (`task-3-report.md:10,23`) |
+| Task 4, erste Fassung (`9f096d0`) | +7 | „5 neue Fälle in `literatur.test.ts`, 1 neuer Fall in `verweise.literatur.test.ts`, 1 neuer Fall in `Markdown.literatur.test.tsx`", dazu 2 ersetzte Fälle ohne Zuwachs (`task-4-report.md:52`) |
+| Task 5 (`06bda46`) | +9 | nicht als Summenzeile im Bericht genannt; durch Differenz zum nächsten Ankerpunkt bestimmt (siehe unten) |
+| Task 6, erste Fassung (`cfe0766`) | +10 | „10 Fälle grün" in `literaturVergleich.test.ts`; die im selben Lauf sichtbaren 9 Fälle aus `deploy.test.ts` sind vorbestehend, nicht neu (`task-6-report.md:44–47,60`) |
 
-Offener Rest: Der Zuwachs der Tasks 1–6 (+53) und der Block Tasks 7–9 samt dem nicht per
-Dateitest bezifferten Teil von Task 10 (+530) sind in den Berichten nur als Summe an den
-genannten Prüfpunkten belegt, nicht Task für Task ausgewiesen — hier bewusst offen ausgewiesen
-statt geglättet. Die Rechnung 2905 + 53 + 530 + 22 + 22 = 3532 stimmt mit der gemessenen
-Endzahl exakt überein.
+**Anker 1:** `npm test` nach Task 6 — 90 Testdateien, **2958** Tests (`task-6-report.md:111`).
+2905 + 10 + 14 + 1 + 2 + 7 + 9 + 10 = 2958 — stimmt exakt; Task 5 ist damit über die Differenz
+bestimmt (kein Rest).
+
+| Task 4, Nacharbeit Umbenennung (`2ee9f04`) | +0 | reine Parameterumbenennung, „sonst nichts ändern" (`task-4-report.md:92`) |
+| Task 7 (`fd2ab7e`) | +0 | bestehender Fall in `themen.test.ts` inhaltlich erweitert statt ergänzt (3 → 3 Fälle); der Quellen-Abdeckungstest deckt die 14 neuen Quellen automatisch mit ab, ohne die Fallzahl zu erhöhen (`task-7-report.md:27–40`) |
+| Task 8 (`40f1478`) | +3 | „1 Fall in `index.test.ts`, 3 Fälle in `InfoPanel.hinweise.test.tsx`; 1 Fall … entfernt" (`task-8-report.md:60–61`) |
+| Task 9 (`2ad8450`) | +506 | `data/texte/dateien.test.ts`: 1766 → 2272 (252 Dateien × 9 + 4 Sammelfälle) (`task-9-report.md:38–42`) |
+| Task 6, Nacharbeit XML-Entitäten (`bc16f3a`) | +1 | „nur der neue Fall scheitert, die zehn bestehenden bleiben grün" in `literaturVergleich.test.ts`, 10 → 11 (`task-6-report.md:198–201`) |
+| Task 10, erste Fassung (`31d1aa5`) | +20 | „2 Dateien × 10" (`task-10-brief.md:18`); „davon 20 neue Fälle" (`task-10-report.md:150`) |
+
+**Anker 2:** `npm test` nach Task 10, erste Fassung — **3488** Tests (`task-10-report.md:153`).
+2958 + 0 + 0 + 3 + 506 + 1 + 20 = 3488 — stimmt exakt, kein Rest.
+
+| Task 11, erste Fassung (`69b8fd4`) | +22 | „2 Dateien × 11" (`task-11-brief.md:19`); „vorher 2490, neu 22" (`task-11-report.md:187`) |
+
+**Anker 3:** `npm test` nach Task 11, erste Fassung — **3510** Tests (`task-11-report.md:189`).
+3488 + 22 = 3510 — stimmt exakt.
+
+| Task 12, erste Fassung (`d0b1722`) | +22 | „2 Dateien × 11" (`task-12-brief.md:18`) |
+
+**Anker 4:** `npm test` nach Task 12, erste Fassung — **3532** Tests (`task-12-report.md:135`).
+3510 + 22 = 3532 — stimmt exakt.
+
+| Restliche Nacharbeitsrunden bis HEAD (`dc36107`, `4e5d336`, `f85613b`, `fabffd6`, `7accb28`, `f45ee17`, drei Beleglisten-Commits) | ±0 | reine Text- und Belegliste-Änderungen (`.md`), keine neuen Testdateien oder -fälle |
+
+**Ergebnis:** 2905 + 10 + 14 + 1 + 2 + 7 + 9 + 10 + 0 + 0 + 3 + 506 + 1 + 20 + 22 + 22 + 0 =
+**3532**, deckungsgleich mit der gemessenen Endzahl. Kein Posten bleibt unaufgeschlüsselt; die
+einzige nicht direkt aus einer Berichtszeile abgelesene, sondern über die Suite-Differenz
+bestimmte Zahl ist Task 5 (+9), was mit der Vorab-Schätzung der Planung (§Vorabprüfung,
+„3+4+2 Fälle") übereinstimmt, ohne dass der Bericht selbst eine Summe nennt.
 
 ```
 npm run build
@@ -508,9 +536,9 @@ Einzelvorkommen je Ziel (kein Bedarf für eine Stichprobenregel).
 - `objekt-earth`, Belegzeile Nr. 67: Die Belegspalte nennt bei `bouvier-2010` nur „(Nullpunkt)",
   obwohl die Quelle auch die 4568,2 Mio. Jahre stützt (Randnotiz aus der Nachprüfung von
   Runde 3, `task-11-nachpruefung-2.md`) — ohne Folgen für den Text, nicht geändert.
-- Test-Gesamtzahl (3532) ist über protokollierte Zwischenstände auf 2905 + 53 + 530 + 22 + 22
-  zurückgeführt (Abschnitt 2); die Blöcke „+53" (Tasks 1–6) und „+530" (Tasks 7–9 sowie Rest von
-  Task 10) sind dabei nur als Summe belegt, nicht Task für Task.
+- Test-Gesamtzahl (3532) ist Task für Task aus den Berichten hergeleitet (Abschnitt 2); einzige
+  nicht direkt als Summenzeile belegte Zahl ist Task 5 (+9), über die Differenz zweier
+  gemessener `npm test`-Ankerpunkte bestimmt.
 
 **Aufgeschobene Kleinigkeiten (minor deferred, aus dem Ledger):**
 
