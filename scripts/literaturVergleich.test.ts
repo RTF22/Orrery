@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
-  arxivEintragLesen, auswahl, crossrefJahre, jahrUrteil, normalisiere, pruefeArxiv, pruefeCrossref, wortanteil,
+  arxivEintragLesen, auswahl, crossrefJahre, jahrUrteil, mitWiederholung, normalisiere, pruefeArxiv, pruefeCrossref,
+  wortanteil, WIEDERHOLBARE_STATUS,
 } from './literaturVergleich.ts';
 import type { Publikation } from '../src/data/literatur.ts';
 
@@ -119,5 +120,60 @@ describe('auswahl', () => {
     expect(() => auswahl(['--nur'], [a, b, c])).toThrow('--nur braucht mindestens eine Kennung');
     expect(() => auswahl(['--nur', ''], [a, b, c])).toThrow('--nur braucht mindestens eine Kennung');
     expect(() => auswahl(['--nur', ' , ,'], [a, b, c])).toThrow('--nur braucht mindestens eine Kennung');
+  });
+});
+
+describe('mitWiederholung', () => {
+  /** Liefert der Reihe nach die angegebenen Status oder wirft die angegebenen Fehler. */
+  function folge(schritte: readonly (number | Error)[]): { abruf: () => Promise<{ status: number }>; aufrufe: () => number } {
+    let n = 0;
+    return {
+      abruf: () => {
+        const s = schritte[Math.min(n, schritte.length - 1)]!;
+        n += 1;
+        return s instanceof Error ? Promise.reject(s) : Promise.resolve({ status: s });
+      },
+      aufrufe: () => n,
+    };
+  }
+  const zeitueberschreitung = (): Error => Object.assign(new Error('Zeit abgelaufen'), { name: 'TimeoutError' });
+
+  it('wiederholt bei 502, 503 und 504 mit den angegebenen Pausen und liefert die erste gute Antwort', async () => {
+    expect([...WIEDERHOLBARE_STATUS].sort()).toEqual([502, 503, 504]);
+    const f = folge([504, 503, 200]);
+    const pausen: number[] = [];
+    const antwort = await mitWiederholung(f.abruf, async (ms) => { pausen.push(ms); }, [10, 20]);
+    expect(antwort.status).toBe(200);
+    expect(f.aufrufe()).toBe(3);
+    expect(pausen).toEqual([10, 20]);
+  });
+
+  it('gibt nach der letzten Wiederholung die letzte Antwort zurück', async () => {
+    const f = folge([504]);
+    const antwort = await mitWiederholung(f.abruf, async () => {}, [10, 20]);
+    expect(antwort.status).toBe(504);
+    expect(f.aufrufe()).toBe(3);
+  });
+
+  it('wiederholt nicht bei anderen Status', async () => {
+    for (const status of [200, 404, 429, 500]) {
+      const f = folge([status]);
+      expect((await mitWiederholung(f.abruf, async () => {}, [10])).status).toBe(status);
+      expect(f.aufrufe()).toBe(1);
+    }
+  });
+
+  it('wiederholt bei Zeitüberschreitung und wirft zuletzt, andere Fehler sofort', async () => {
+    const erholt = folge([zeitueberschreitung(), 200]);
+    expect((await mitWiederholung(erholt.abruf, async () => {}, [10])).status).toBe(200);
+    expect(erholt.aufrufe()).toBe(2);
+
+    const dauerhaft = folge([zeitueberschreitung()]);
+    await expect(mitWiederholung(dauerhaft.abruf, async () => {}, [10])).rejects.toThrow('Zeit abgelaufen');
+    expect(dauerhaft.aufrufe()).toBe(2);
+
+    const netz = folge([new TypeError('fetch failed')]);
+    await expect(mitWiederholung(netz.abruf, async () => {}, [10])).rejects.toThrow('fetch failed');
+    expect(netz.aufrufe()).toBe(1);
   });
 });

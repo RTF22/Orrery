@@ -147,3 +147,33 @@ export function auswahl(argv: readonly string[], katalog: readonly Publikation[]
   if (unbekannt.length > 0) throw new Error(`Unbekannte Kennungen: ${unbekannt.join(', ')}`);
   return katalog.filter((p) => ids.includes(p.id));
 }
+
+/** Vorübergehende Serverfehler, bei denen ein zweiter Versuch lohnt (ADS antwortet gelegentlich 504). */
+export const WIEDERHOLBARE_STATUS: ReadonlySet<number> = new Set([502, 503, 504]);
+
+const istZeitueberschreitung = (e: unknown): boolean =>
+  typeof e === 'object' && e !== null && (e as { name?: unknown }).name === 'TimeoutError';
+
+/**
+ * Ruft `abruf` auf und wiederholt nach den Pausen aus `pausenMs` bei einem
+ * Status aus WIEDERHOLBARE_STATUS oder einer Zeitüberschreitung
+ * (Entscheidung Jens, 17.09.2026). Nach der letzten Pause gilt das letzte
+ * Ergebnis. `abruf` muss bei jedem Aufruf ein neues Zeitlimit-Signal
+ * erzeugen, weil ein abgelaufenes Signal abgelaufen bleibt.
+ */
+export async function mitWiederholung<T extends { status: number }>(
+  abruf: () => Promise<T>,
+  warte: (ms: number) => Promise<void>,
+  pausenMs: readonly number[] = [2000, 5000],
+): Promise<T> {
+  for (let versuch = 0; ; versuch += 1) {
+    const pause = pausenMs[versuch];
+    try {
+      const antwort = await abruf();
+      if (pause === undefined || !WIEDERHOLBARE_STATUS.has(antwort.status)) return antwort;
+    } catch (e) {
+      if (pause === undefined || !istZeitueberschreitung(e)) throw e;
+    }
+    await warte(pause);
+  }
+}

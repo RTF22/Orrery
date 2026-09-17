@@ -6,15 +6,16 @@
  *   npm run literatur:pruefen -- --nur iess-2019,x     nur diese Einträge
  *
  * Braucht Netz, läuft nur von Hand, nicht in npm test. Abfragen nacheinander
- * mit Pause, ohne E-Mail-Adresse im Abruf. Exit-Code 1 bei mindestens einem
- * Fehler; Warnungen allein ergeben 0. Die Vergleiche stehen getestet in
- * literaturVergleich.ts.
+ * mit Pause, ohne E-Mail-Adresse im Abruf. Vorübergehende Serverfehler (502,
+ * 503, 504) und Zeitüberschreitungen wiederholt es bis zu zweimal nach 2 s
+ * und 5 s. Exit-Code 1 bei mindestens einem Fehler; Warnungen allein ergeben
+ * 0. Die Vergleiche stehen getestet in literaturVergleich.ts.
  */
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { LITERATUR } from '../src/data/literatur.ts';
 import type { Publikation } from '../src/data/literatur.ts';
-import { arxivEintragLesen, auswahl, pruefeArxiv, pruefeCrossref } from './literaturVergleich.ts';
+import { arxivEintragLesen, auswahl, mitWiederholung, pruefeArxiv, pruefeCrossref } from './literaturVergleich.ts';
 import type { Befund, CrossrefWerk, Urteil } from './literaturVergleich.ts';
 
 const KOPF = { 'User-Agent': 'Orrery-Literaturpruefung' };
@@ -29,10 +30,11 @@ async function pruefe(p: Publikation): Promise<Befund[]> {
   const fehler = (pruefung: Befund['pruefung'], text: string): Befund => ({ id: p.id, pruefung, urteil: 'fehler', text });
 
   if (p.doi !== undefined) {
+    const doi = p.doi;
     try {
-      const antwort = await fetch(`https://api.crossref.org/works/${encodeURIComponent(p.doi)}`, {
+      const antwort = await mitWiederholung(() => fetch(`https://api.crossref.org/works/${encodeURIComponent(doi)}`, {
         headers: KOPF, signal: AbortSignal.timeout(ZEITLIMIT_MS),
-      });
+      }), warte);
       if (!antwort.ok) befunde.push(fehler('crossref', `Crossref antwortet ${antwort.status}`));
       else befunde.push(...pruefeCrossref(p, ((await antwort.json()) as { message: CrossrefWerk }).message));
     } catch (e) {
@@ -42,10 +44,11 @@ async function pruefe(p: Publikation): Promise<Befund[]> {
   }
 
   if (p.arxiv !== undefined) {
+    const arxiv = p.arxiv;
     try {
-      const antwort = await fetch(`https://export.arxiv.org/api/query?id_list=${encodeURIComponent(p.arxiv)}`, {
+      const antwort = await mitWiederholung(() => fetch(`https://export.arxiv.org/api/query?id_list=${encodeURIComponent(arxiv)}`, {
         headers: KOPF, signal: AbortSignal.timeout(ZEITLIMIT_MS),
-      });
+      }), warte);
       if (!antwort.ok) befunde.push(fehler('arxiv', `arXiv antwortet ${antwort.status}`));
       else befunde.push(...pruefeArxiv(p, arxivEintragLesen(await antwort.text())));
     } catch (e) {
@@ -55,12 +58,15 @@ async function pruefe(p: Publikation): Promise<Befund[]> {
   }
 
   if (p.doi === undefined && p.arxiv === undefined && p.url !== undefined) {
+    const url = p.url;
     try {
-      let antwort = await fetch(p.url, {
+      let antwort = await mitWiederholung(() => fetch(url, {
         method: 'HEAD', headers: KOPF, redirect: 'follow', signal: AbortSignal.timeout(ZEITLIMIT_MS),
-      });
+      }), warte);
       if (antwort.status === 405) {
-        antwort = await fetch(p.url, { headers: KOPF, redirect: 'follow', signal: AbortSignal.timeout(ZEITLIMIT_MS) });
+        antwort = await mitWiederholung(() => fetch(url, {
+          headers: KOPF, redirect: 'follow', signal: AbortSignal.timeout(ZEITLIMIT_MS),
+        }), warte);
       }
       befunde.push({ id: p.id, pruefung: 'url', urteil: antwort.status < 400 ? 'ok' : 'fehler', text: `HTTP ${antwort.status}` });
     } catch (e) {
