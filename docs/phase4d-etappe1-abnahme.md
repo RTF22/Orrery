@@ -58,46 +58,40 @@ npm test
 ```
 
 Herleitung je Task (Zuwachs an vitest-`Tests`, nicht an Testdateien), aus den Berichten
-`task-N-report.md` nachgerechnet, nicht aus den Vorab-Schätzungen der Planung übernommen:
+`task-N-report.md` nachgerechnet, nicht aus den Vorab-Schätzungen der Planung übernommen. Eine
+durchgehende Tabelle (Nacharbeit Schlussprüfung 4d-1, Befund Triage Nr. 24: Die vorige Fassung
+zerteilte sie an vier Stellen durch „Anker"-Absätze in Fragmente ohne eigene Kopf- und
+Trennzeile, die GFM nicht als Tabelle darstellt); die Spalte „Anker" markiert die vier Stellen,
+an denen ein tatsächlicher `npm test`-Lauf die laufende Summe bestätigt:
 
-| Task (Commit) | Zuwachs | Quelle |
-|---|---:|---|
-| Ausgangsstand (master vor 4d-1, Tag `v0.4.0`) | 2905 | Stand-Notiz der Etappe 4c |
-| Task 1, erste Fassung (`73021d9`) | +10 | „genau die im Brief angekündigten 10 neuen Fälle" (`task-1-report.md:59`) |
-| Task 2 (`fea3ab6`) | +14 | „14 Fälle bestanden beim ersten Durchlauf" (`task-2-report.md:42`) |
-| Task 1, Nacharbeit Backslash-Parität (`702f424`) | +1 | `markdownParser.test.ts` 20 → 21 (`task-1-report.md:186,198`) |
-| Task 3 (`cc6ef07`) | +2 | „die zwei Testfälle aus dem Brief" in `Markdown.test.tsx`, 6 → 8 (`task-3-report.md:10,23`) |
-| Task 4, erste Fassung (`9f096d0`) | +7 | „5 neue Fälle in `literatur.test.ts`, 1 neuer Fall in `verweise.literatur.test.ts`, 1 neuer Fall in `Markdown.literatur.test.tsx`", dazu 2 ersetzte Fälle ohne Zuwachs (`task-4-report.md:52`) |
-| Task 5 (`06bda46`) | +9 | nicht als Summenzeile im Bericht genannt; durch Differenz zum nächsten Ankerpunkt bestimmt (siehe unten) |
-| Task 6, erste Fassung (`cfe0766`) | +10 | „10 Fälle grün" in `literaturVergleich.test.ts`; die im selben Lauf sichtbaren 9 Fälle aus `deploy.test.ts` sind vorbestehend, nicht neu (`task-6-report.md:44–47,60`) |
+| Task (Commit) | Zuwachs | Laufende Summe | Anker | Quelle |
+|---|---:|---:|---|---|
+| Ausgangsstand (master vor 4d-1, Tag `v0.4.0`) | – | 2905 | – | Stand-Notiz der Etappe 4c |
+| Task 1, erste Fassung (`73021d9`) | +10 | 2915 | – | „genau die im Brief angekündigten 10 neuen Fälle" (`task-1-report.md:59`) |
+| Task 2 (`fea3ab6`) | +14 | 2929 | – | „14 Fälle bestanden beim ersten Durchlauf" (`task-2-report.md:42`) |
+| Task 1, Nacharbeit Backslash-Parität (`702f424`) | +1 | 2930 | – | `markdownParser.test.ts` 20 → 21 (`task-1-report.md:186,198`) |
+| Task 3 (`cc6ef07`) | +2 | 2932 | – | „die zwei Testfälle aus dem Brief" in `Markdown.test.tsx`, 6 → 8 (`task-3-report.md:10,23`) |
+| Task 4, erste Fassung (`9f096d0`) | +7 | 2939 | – | „5 neue Fälle in `literatur.test.ts`, 1 neuer Fall in `verweise.literatur.test.ts`, 1 neuer Fall in `Markdown.literatur.test.tsx`", dazu 2 ersetzte Fälle ohne Zuwachs (`task-4-report.md:52`) |
+| Task 5 (`06bda46`) | +9 | 2948 | – | nicht als Summenzeile im Bericht genannt; durch Differenz zum nächsten Ankerpunkt bestimmt |
+| Task 6, erste Fassung (`cfe0766`) | +10 | **2958** | **Anker 1** (90 Testdateien, `task-6-report.md:111`) | „10 Fälle grün" in `literaturVergleich.test.ts`; die im selben Lauf sichtbaren 9 Fälle aus `deploy.test.ts` sind vorbestehend, nicht neu (`task-6-report.md:44–47,60`) |
+| Task 4, Nacharbeit Umbenennung (`2ee9f04`) | +0 | 2958 | – | reine Parameterumbenennung, „sonst nichts ändern" (`task-4-report.md:92`) |
+| Task 7 (`fd2ab7e`) | +0 | 2958 | – | bestehender Fall in `themen.test.ts` inhaltlich erweitert statt ergänzt (3 → 3 Fälle); der Quellen-Abdeckungstest deckt die 14 neuen Quellen automatisch mit ab, ohne die Fallzahl zu erhöhen (`task-7-report.md:27–40`) |
+| Task 8 (`40f1478`) | +3 | 2961 | – | „1 Fall in `index.test.ts`, 3 Fälle in `InfoPanel.hinweise.test.tsx`; 1 Fall … entfernt" (`task-8-report.md:60–61`) |
+| Task 9 (`2ad8450`) | +506 | 3467 | – | `data/texte/dateien.test.ts`: 1766 → 2272 (252 Dateien × 9 + 4 Sammelfälle) (`task-9-report.md:38–42`) |
+| Task 6, Nacharbeit XML-Entitäten (`bc16f3a`) | +1 | 3468 | – | „nur der neue Fall scheitert, die zehn bestehenden bleiben grün" in `literaturVergleich.test.ts`, 10 → 11 (`task-6-report.md:198–201`) |
+| Task 10, erste Fassung (`31d1aa5`) | +20 | **3488** | **Anker 2** (`task-10-report.md:153`) | „2 Dateien × 10" (`task-10-brief.md:18`); „davon 20 neue Fälle" (`task-10-report.md:150`) |
+| Hochschultext Bahnelemente: Nacharbeit nach der Fachprüfung (`a21082a`) | ±0 | 3488 | – | reine Textänderung (`.md`), keine neue Testdatei oder neuer Fall (Triage Nr. 25: zuvor nicht namentlich geführt) |
+| Task 11, erste Fassung (`69b8fd4`) | +22 | **3510** | **Anker 3** (`task-11-report.md:189`) | „2 Dateien × 11" (`task-11-brief.md:19`); „vorher 2490, neu 22" (`task-11-report.md:187`) |
+| Task 12, erste Fassung (`d0b1722`) | +22 | **3532** | **Anker 4** (`task-12-report.md:135`) | „2 Dateien × 11" (`task-12-brief.md:18`) |
+| Restliche Nacharbeitsrunden bis HEAD (`dc36107`, `4e5d336`, `1c4677b`, `7accb28`, `f85613b`, `fabffd6`, `f45ee17`, `a047080`, `1918ee2`) | ±0 | 3532 | – | reine Text- und Belegliste-Änderungen (`.md`), keine neuen Testdateien oder -fälle (Triage Nr. 25: `1c4677b` zuvor nur als „drei Beleglisten-Commits" geführt, jetzt einzeln benannt) |
 
-**Anker 1:** `npm test` nach Task 6 — 90 Testdateien, **2958** Tests (`task-6-report.md:111`).
-2905 + 10 + 14 + 1 + 2 + 7 + 9 + 10 = 2958 — stimmt exakt; Task 5 ist damit über die Differenz
-bestimmt (kein Rest).
+**Anmerkungen zu den vier Ankerpunkten:** Jeder Anker ist ein tatsächlich gemessener
+`npm test`-Lauf, der die bis dahin laufende Summe bestätigt, ohne Rest: Anker 1
+2905 + 10 + 14 + 1 + 2 + 7 + 9 + 10 = 2958 (Task 5 ist damit über die Differenz zum Anker
+bestimmt, nicht aus einer eigenen Berichtszeile); Anker 2 2958 + 0 + 0 + 3 + 506 + 1 + 20 = 3488;
+Anker 3 3488 + 0 (`a21082a`) + 22 = 3510; Anker 4 3510 + 22 = 3532.
 
-| Task 4, Nacharbeit Umbenennung (`2ee9f04`) | +0 | reine Parameterumbenennung, „sonst nichts ändern" (`task-4-report.md:92`) |
-| Task 7 (`fd2ab7e`) | +0 | bestehender Fall in `themen.test.ts` inhaltlich erweitert statt ergänzt (3 → 3 Fälle); der Quellen-Abdeckungstest deckt die 14 neuen Quellen automatisch mit ab, ohne die Fallzahl zu erhöhen (`task-7-report.md:27–40`) |
-| Task 8 (`40f1478`) | +3 | „1 Fall in `index.test.ts`, 3 Fälle in `InfoPanel.hinweise.test.tsx`; 1 Fall … entfernt" (`task-8-report.md:60–61`) |
-| Task 9 (`2ad8450`) | +506 | `data/texte/dateien.test.ts`: 1766 → 2272 (252 Dateien × 9 + 4 Sammelfälle) (`task-9-report.md:38–42`) |
-| Task 6, Nacharbeit XML-Entitäten (`bc16f3a`) | +1 | „nur der neue Fall scheitert, die zehn bestehenden bleiben grün" in `literaturVergleich.test.ts`, 10 → 11 (`task-6-report.md:198–201`) |
-| Task 10, erste Fassung (`31d1aa5`) | +20 | „2 Dateien × 10" (`task-10-brief.md:18`); „davon 20 neue Fälle" (`task-10-report.md:150`) |
-
-**Anker 2:** `npm test` nach Task 10, erste Fassung — **3488** Tests (`task-10-report.md:153`).
-2958 + 0 + 0 + 3 + 506 + 1 + 20 = 3488 — stimmt exakt, kein Rest.
-
-| Task 11, erste Fassung (`69b8fd4`) | +22 | „2 Dateien × 11" (`task-11-brief.md:19`); „vorher 2490, neu 22" (`task-11-report.md:187`) |
-
-**Anker 3:** `npm test` nach Task 11, erste Fassung — **3510** Tests (`task-11-report.md:189`).
-3488 + 22 = 3510 — stimmt exakt.
-
-| Task 12, erste Fassung (`d0b1722`) | +22 | „2 Dateien × 11" (`task-12-brief.md:18`) |
-
-**Anker 4:** `npm test` nach Task 12, erste Fassung — **3532** Tests (`task-12-report.md:135`).
-3510 + 22 = 3532 — stimmt exakt.
-
-| Restliche Nacharbeitsrunden bis HEAD (`dc36107`, `4e5d336`, `f85613b`, `fabffd6`, `7accb28`, `f45ee17`, drei Beleglisten-Commits) | ±0 | reine Text- und Belegliste-Änderungen (`.md`), keine neuen Testdateien oder -fälle |
-
-**Ergebnis:** 2905 + 10 + 14 + 1 + 2 + 7 + 9 + 10 + 0 + 0 + 3 + 506 + 1 + 20 + 22 + 22 + 0 =
+**Ergebnis:** 2905 + 10 + 14 + 1 + 2 + 7 + 9 + 10 + 0 + 0 + 3 + 506 + 1 + 20 + 0 + 22 + 22 + 0 =
 **3532**, deckungsgleich mit der gemessenen Endzahl. Kein Posten bleibt unaufgeschlüsselt; die
 einzige nicht direkt aus einer Berichtszeile abgelesene, sondern über die Suite-Differenz
 bestimmte Zahl ist Task 5 (+9), was mit der Vorab-Schätzung der Planung (§Vorabprüfung,
@@ -539,11 +533,18 @@ Einzelvorkommen je Ziel (kein Bedarf für eine Stichprobenregel).
 - Test-Gesamtzahl (3532) ist Task für Task aus den Berichten hergeleitet (Abschnitt 2); einzige
   nicht direkt als Summenzeile belegte Zahl ist Task 5 (+9), über die Differenz zweier
   gemessener `npm test`-Ankerpunkte bestimmt.
+- Schlussprüfung 4d-1, Befund M9: Der Literaturkatalog lädt eager über `verweise.ts` und
+  `Markdown.tsx`, während die Texte selbst faul laden; bei mehreren Hundert Einträgen nach
+  4d-11 spürbar im Hauptbundle — Planungsfrage für 4d-2 (faules Laden oder Aufteilung).
+- Schlussprüfung 4d-1, Befund M10: Literaturkarten sind nicht fokussierbar, ihre Links heißen
+  je Karte gleich („DOI"); bei 38 Karten für Screenreader eine Liste aus gleichnamigen
+  Verweisen — vor Phase 5 zusammen mit `aria-label` beheben (Muster aus Phase 4c).
 
 **Aufgeschobene Kleinigkeiten (minor deferred, aus dem Ledger):**
 
 - Task 1/2: kein Testfall für Prototyp-Namen (`\constructor`); leere Gruppe `{}` ergibt leeres
-  `mrow` statt Fehler, ungetestet; `texUebersetzer.ts:351` unerreichbarer Ternary-Zweig;
+  `mrow` statt Fehler, ungetestet; `texUebersetzer.ts:186` unerreichbarer Ternary-Zweig (Zeile
+  bei der Nacharbeit der Schlussprüfung berichtigt, stand zuvor veraltet bei „351");
   `markdownParser.ts` Ausrichtungs-Wächter `zellen.length === 0` praktisch unerreichbar.
 - Task 3: Tabellenrahmen `border-white/15` statt der Panel-Trennlinienfarbe `border-white/10`;
   `Formel.tsx` `title` enthält zusätzlich „(Stelle n)"; kein Test für leere Tabellenzelle /
@@ -638,9 +639,95 @@ Aus dieser Abnahme selbst:
 13. **Prüfskript bei HTTP 504 von `herald-2014`** (Ruling Task 12, Zeile 206 im Ledger): Dieser
     Lauf war fehlerfrei (HTTP 200), die Frage bleibt für künftige Läufe offen — Wiederholung im
     Skript einbauen, oder die Adresse aus dem ADS-System durch eine andere ersetzen?
+14. **Funktionsnamen ohne Abstand** (Schlussprüfung 4d-1, Befund M2): `\sin`, `\cos` und
+    ähnliche Funktionsnamen setzt der Übersetzer als `mi` ohne Operatorabstand; TeX setzt dort
+    einen dünnen Abstand. In `thema-bahnelemente` betrifft das 17 Stellen, u. a. die
+    Kepler-Gleichung `M = E - e\sin E` — erwartet ist ein gedrängtes „e sinE"-Bild. Bei der
+    Pilotdurchsicht bitte gezielt darauf achten, ob der gedrängte Satz stört; falls ja, kommt
+    `<mo>&#x2061;</mo>` (Funktionsanwendung) plus ein schmaler Zwischenraum als eigener Task mit
+    Test.
 
 Code-Befunde außerhalb dieser Etappe (nur je eine Zeile, Einzelheiten in Abschnitt 7 und im
 Ledger): Erdrotationsmodell, UTC/TDB-Verwechslung, Erde im Baryzentrum, Albedo-Modell,
 Mondraten-Präzession, Mondfinsternis-Szene (Blende/Belichtung/Kernschatten), Miranda-Knotenrate,
 Tethys-`lpDot`, Keplerlöser-Divergenz bei e = 0,999 — alle nur beschrieben, keine Codeänderung
 in dieser Etappe.
+
+## Nacharbeit nach der Schlussprüfung
+
+Unabhängige Schlussprüfung (Senior Code Review, nur lesend, Paket `6d68b19..3a1bfdb`,
+`.superpowers/sdd/2026-09-17-phase4d-hochschule-etappe1/final-review-report.md`): Critical 0,
+Important 1, Minor 11, dazu Triage der 25 aufgeschobenen Ledger-Kleinigkeiten (1 davon vor dem
+Merge zu beheben). Verbleib je Befund:
+
+| Befund | Verbleib |
+|---|---|
+| I1 (Important): nicht geschlossene oder zerbrochene Formeln rutschen still als Text durch den Dateitest | behoben — `dateien.test.ts` fordert zusätzlich, dass kein Textknoten `$` enthält |
+| M1: Zwillingsvergleich normiert Leerraum nur zusammengefasst statt entfernt | behoben — `normiertesTex` entfernt Leerraum vollständig; Entwurf §5.5 ergänzt |
+| M2: Funktionsnamen (`\sin`, `\cos`, …) ohne Operatorabstand | nicht behoben — Sichtprüfung bei Jens' Pilotdurchsicht (Frage 14 in Abschnitt 8) |
+| M3: „nur Hochschule" erscheint auch auf dem Hochschul-Tab nach fehlgeschlagenem Laden | behoben — Bedingung um `info.niveau !== 'hochschule'` ergänzt, doppelter `de`-Aufruf (Kleinigkeit Nr. 18) entfällt dabei |
+| M4: Maskierung von `$` beim Öffnen und Schließen asymmetrisch | behoben — als JSDoc festgehalten, keine Verhaltensänderung |
+| M5: Katalog-Invarianten „importiert nichts" und „alphabetisch sortiert" ungetestet | behoben — zwei neue Tests in `literatur.test.ts` |
+| M6: Prüfskript ohne Zeitlimit, `--nur` ohne Kennungen prüft still nichts | behoben — `AbortSignal.timeout(30_000)` an jedem Abruf, `auswahl` wirft bei leerer Auswahl |
+| M7: Entwurf §3.3 kennt die Schreibregeln aus Plan-Ruling 9 nicht | behoben — Nachtrag (4d-1) unter §3.3 ergänzt, jede Regel am Code geprüft |
+| M8: `Formel.tsx` baut die MathML-Elementbäume bei jedem Panel-Render neu auf | behoben — Komponente mit `memo` umschlossen (Props sind zwei Primitive) |
+| M9: Literaturkatalog lädt eager, wächst im Hauptbundle | nicht behoben — Planungsfrage für 4d-2 (Abschnitt 7) |
+| M10: Literaturkarten nicht fokussierbar, gleichlautende Linktexte je Karte | nicht behoben — vor Phase 5 (Abschnitt 7) |
+| M11: Dateitest wiederholt die Baumdurchquerung aus `zitate.ts` | nicht behoben — gewollte unabhängige Gegenprüfung, keine Änderung nötig |
+| Triage Nr. 24: §2-Tabelle durch „Anker"-Absätze in Fragmente ohne Kopfzeile zerteilt | behoben — durchgehende Tabelle mit Anker-Spalte, Anmerkungen darunter |
+| Triage Nr. 25: `a21082a`/`1c4677b` nicht namentlich als ±0 geführt | behoben — beide einzeln in der Tabelle genannt |
+| Triage Nr. 3: veraltete Zeilenangabe `texUebersetzer.ts:351` | behoben — auf den heutigen Stand `:186` berichtigt |
+
+**Neue Testzahl:** 3532 (Stand der ursprünglichen Abnahme) + 0 (I1, bestehender Test erweitert)
++ 1 (M1, neuer Test für `normiertesTex`) + 1 (M3, neuer Test für den Hochschul-Tab) + 0 (M4, nur
+JSDoc) + 2 (M5, „importiert nichts" und „alphabetisch sortiert") + 1 (M6, „--nur ohne
+Kennungen") + 0 (M7, nur Entwurf) + 0 (M8, `memo` ohne neuen Test) = **3537**, deckungsgleich
+mit der gemessenen Zahl.
+
+**Schlusszeilen:**
+
+```
+npm run lint
+```
+Ohne Befund (keine Ausgabe außer den Aufrufzeilen).
+
+```
+npm test
+```
+```
+ Test Files  91 passed (91)
+      Tests  3537 passed (3537)
+```
+
+```
+npm run build
+```
+```
+✓ built in 590ms
+(!) Some chunks are larger than 500 kB after minification. Consider: …
+```
+Nur der bekannte, unveränderte Hinweis zur Chunkgröße (`index-*.js`, 1 243,77 kB / gzip
+331,91 kB).
+
+```
+npm run literatur:pruefen -- --nur bouvier-2010
+```
+```
+Prüfe 1 von 51 Einträgen
+bouvier-2010                 crossref  ok       Erstautor, Jahr und Titel stimmen
+
+1 ok, 0 Warnungen, 0 Fehler
+```
+Exit-Code 0 — bestätigt, dass die neue `signal`-Option den Abruf nicht verändert.
+
+```
+npm run literatur:pruefen -- --nur
+```
+```
+--nur braucht mindestens eine Kennung
+```
+Exit-Code 1 — bestätigt, dass `--nur` ohne Kennungen jetzt scheitert statt still 0 von 51
+Einträgen zu prüfen.
+
+Trailer-Kontrolle nach jedem Commit (`git log --format=%B -1 | grep -ci 'claude\|anthropic\|co-
+authored'`): 0. Abschließend `git ls-files -z | xargs -0 grep -liE 'claude|anthropic'`: leer.

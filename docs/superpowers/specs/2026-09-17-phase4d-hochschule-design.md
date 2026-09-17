@@ -124,6 +124,14 @@ ein `\right` ohne `\left` ergeben `{ fehler, stelle }`. Weitere Befehle kommen n
 ein Text sie braucht, jeweils als eigener Task mit Test. Gleichungsnummern, `aligned`,
 Matrizen und Makros gehören nicht zur Teilmenge.
 
+**Nachtrag (4d-1):** Schreibregeln für die Autoren der Etappen 4d-2 bis 4d-11, damit der
+Dateitest keine vermeidbaren Runden verursacht: `\leq`, `\geq` und `\neq` sind Aliase zu `\le`,
+`\ge` und `\ne`. `.` und `:` zählen als Operatoren, nicht als Satzzeichen im Fließtext.
+`\text{…}` darf keine verschachtelten geschweiften Klammern enthalten. `\mathrm` verbindet
+benachbarte Buchstaben nur innerhalb einer Zeile zu einem `mi`, nicht über eine Hoch- oder
+Tiefstellung hinweg. Eine Ziffernfolge ist stets ein einziges Argument — es gilt Klammerpflicht,
+etwa `\frac{1}{2}` statt `\frac12`.
+
 ### 3.4 Ausgabe
 
 - `Formel.tsx` ruft `texNachMathml` in `useMemo` und gibt den Baum rekursiv mit
@@ -353,7 +361,8 @@ Zeile, Verweise, Quellenverweis hat Karte) und zu §4.4:
 Zitatprüfung aus §4.4) gelten für alle Textdateien, nicht nur für Hochschultexte — das
 verhindert `$`, `|` und `literatur:` schon in Grundschul- und Gymnasialtexten. Der
 Zwillingsvergleich (Punkt 5) normiert in Formeln zusätzlich den Leerraum (`T^2 = a^3` gilt als
-gleich `T^2=a^3`).
+gleich `T^2=a^3`). Inhalte von `\text{…}` müssen in beiden Sprachfassungen gleich sein, sonst
+schlägt der Zwillingsvergleich fehl.
 
 ## 6. Arbeitsweise und inhaltliche Prüfung
 
