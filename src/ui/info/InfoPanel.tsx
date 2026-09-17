@@ -17,6 +17,8 @@ import { parseMarkdown, titelVon } from './markdownParser';
 import { Markdown } from './Markdown';
 import { Datenblock, VERWEIS_KNOPF } from './Datenblock';
 import { Quellenkarten } from './Quellenkarten';
+import { Literaturkarten } from './Literaturkarten';
+import { zitierteArbeiten } from './zitate';
 import { Griff } from './Griff';
 import { verweisAusfuehren } from './verweisAusfuehren';
 import { INFO_PANEL, SCHMAL_ABFRAGE, infoOffen } from './konstanten';
@@ -156,6 +158,13 @@ export function InfoPanel(): React.JSX.Element {
 
   const geladen = anzeige?.geladen ?? null;
   const text = geladen?.text ?? null;
+  // Literaturkarten nur zu einem echten Hochschultext, nicht zum
+  // Gymnasialtext als Ersatz (Entwurf 4d §4.3). Wie der Textkörper bleiben
+  // sie bis zum frischen Stand stehen.
+  const arbeiten = useMemo(
+    () => (geladen !== null && geladen.niveau === 'hochschule' ? zitierteArbeiten(parseMarkdown(geladen.text)) : []),
+    [geladen],
+  );
   /**
    * Ist der zuletzt fertig geladene Anzeigestand tatsächlich der aktuell
    * gewünschte (Kennung, Niveau und Sprache)? Solange nicht, zeigt der Kopf
@@ -286,6 +295,7 @@ export function InfoPanel(): React.JSX.Element {
         <div className="min-h-24 overflow-y-auto px-3 py-2" style={{ flex: `${1 - info.teilung} 1 0px` }}>
           <h3 className="m-0 mb-1 text-xs font-semibold opacity-70">{t('info.quellen')}</h3>
           <Quellenkarten kennung={schluessel} hervorgehoben={hervorgehoben} />
+          <Literaturkarten arbeiten={arbeiten} hervorgehoben={hervorgehoben} />
         </div>
       </div>
     </aside>

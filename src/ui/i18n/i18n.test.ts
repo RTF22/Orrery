@@ -11,6 +11,7 @@ import { bodies } from '../../data/index';
  */
 const GLEICH_ERLAUBT = new Set<string>([
   'app.title', 'panel.info', 'language.de', 'language.en', 'key.arrows', 'time.pause',
+  'literatur.doi', 'literatur.ads', 'literatur.preprint',
   'body.venus.name', 'body.mars.name', 'body.jupiter.name', 'body.saturn.name',
   'body.uranus.name', 'body.phobos.name', 'body.deimos.name', 'body.io.name',
   'body.europa.name', 'body.mimas.name', 'body.enceladus.name', 'body.tethys.name',
