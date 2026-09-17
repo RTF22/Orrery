@@ -259,15 +259,6 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1038/s43017-021-00203-6',
   },
   {
-    id: 'keen-1983',
-    autoren: ['Keen, R. A.'],
-    etAl: false,
-    jahr: 1983,
-    titel: 'Volcanic Aerosols and Lunar Eclipses',
-    erschienen: 'Science 222, 1011–1013',
-    doi: '10.1126/science.222.4627.1011',
-  },
-  {
     id: 'kloss-2026',
     autoren: ['Kloss, C.', 'Finlay, C. C.', 'Olsen, N.'],
     etAl: true,
