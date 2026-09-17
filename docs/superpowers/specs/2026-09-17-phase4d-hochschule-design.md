@@ -158,7 +158,7 @@ interface Publikation {
   titel: string;
   erschienen: string;  // 'Science 364, eaat2965' bzw. Buch oder Konferenzband
   doi?: string;        // '10.1126/science.aat2965'
-  arxiv?: string;      // '1812.04571', freier Volltext
+  arxiv?: string;      // Form 'JJMM.NNNNN', freier Volltext
   bibcode?: string;    // ADS
   url?: string;        // nur für Berichte und Datensätze ohne DOI
 }
