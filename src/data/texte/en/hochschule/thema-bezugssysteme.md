@@ -16,9 +16,10 @@ right ascension close to the dynamical equinox of that epoch. The IAU adopted th
 on 1 January 1998 it replaced the FK5 system ([Petit and Luzum 2010](literatur:petit-2010),
 chapter 2). In relativity two coordinate systems belong to it: the barycentric BCRS with the time
 coordinate TCB and the geocentric GCRS with TCG, whose spatial axes are kinematically
-non-rotating with respect to the BCRS. The resolutions fix the orientation of the BCRS axes only
-up to a constant rotation; the natural choice is the ICRS
-([Soffel et al. 2003](literatur:soffel-2003)).
+non-rotating with respect to the BCRS. Resolution B1.3 of 2000 fixed the orientation of the BCRS
+axes only up to a constant rotation ([Soffel et al. 2003](literatur:soffel-2003)); since IAU
+Resolution B2 of 2006, the BCRS and GCRS are, unless otherwise stated, oriented according to the
+axes of the ICRS ([Petit and Luzum 2010](literatur:petit-2010), sections 5.2.2 and 5.3.1).
 
 The ICRS is realised by radio positions of compact extragalactic sources measured with Very Long
 Baseline Interferometry (VLBI). Defining sources hold the axes in place; the positions depend on
@@ -27,7 +28,7 @@ neither equator, equinox nor ecliptic
 
 | Realisation | Sources | of which defining | Key figure | Reference |
 |---|---:|---:|---|---|
-| ICRF1 (1995) | 608 | 212 | axes stable to ±0.02 mas | [Petit and Luzum 2010](literatur:petit-2010) |
+| ICRF1 (from 1998) | 608 | 212 | axes stable to ±0.02 mas | [Petit and Luzum 2010](literatur:petit-2010) |
 | ICRF2 (from 2010) | 3414 | 295 | noise floor ≈ 0.04 mas, axes stable to 0.01 mas | [Petit and Luzum 2010](literatur:petit-2010) |
 | ICRF3 (from 2019) | 4536 at 8.4 GHz | 303 | noise floor 0.03 mas | [Charlot et al. 2020](literatur:charlot-2020) |
 
@@ -41,9 +42,12 @@ rotate it by at most 6 µas, less than the 10 µas directional stability of ICRF
 ICRF3 in August 2018, and it has replaced ICRF2 since 1 January 2019
 ([Charlot et al. 2020](literatur:charlot-2020)).
 
-In the optical, Gaia-CRF3 serves as the realisation of the ICRS
-([Yao et al. 2025](literatur:yao-2025)). Already against its predecessor Gaia-CRF2, ICRF3 showed no
-deformations larger than 0.03 mas; for 22% of the sources, however, optical and radio positions
+In the optical, Gaia-CRF3 realises the ICRS; in 2021 the IAU declared ICRF3 in the radio and
+Gaia-CRF3 in the optical to be realisations of the ICRS. The orientation of the roughly 1.6 million
+quasar-like sources of Gaia-CRF3 is tied to ICRF3 through about 2000 common sources; for 3142
+optical counterparts of ICRF3 sources the median offset from the radio position is about 0.5 mas
+([Gaia Collaboration, Klioner et al. 2022](literatur:gaia-2022)). Already against its predecessor
+Gaia-CRF2, ICRF3 showed no deformations larger than 0.03 mas; for 22% of the sources, however, optical and radio positions
 differ significantly, possibly because of extended source structure
 ([Charlot et al. 2020](literatur:charlot-2020)). An overview is given by
 [International Celestial Reference System](quelle:wikipedia-en-icrs).
@@ -51,8 +55,8 @@ differ significantly, possibly because of extended source structure
 ## Ecliptic, equinox and frame bias
 
 Orbital elements are traditionally referred to the ecliptic and equinox of an epoch. Both are
-determined dynamically and do not coincide exactly with the axes of the ICRS. The pole at J2000.0
-lies
+determined dynamically and do not coincide exactly with the axes of the ICRS. The mean pole of
+J2000.0 lies
 
 $$\xi_0 = -16.617\,\mathrm{mas}, \quad \eta_0 = -6.819\,\mathrm{mas}$$
 
@@ -65,12 +69,18 @@ the rotating orbital plane ([Petit and Luzum 2010](literatur:petit-2010), sectio
 
 The mean obliquity of the ecliptic at J2000.0 is 84,381.406″ according to IAU 2006, with an
 uncertainty of 0.001″; the IAU 2000 model still used 84,381.448″
-([Petit and Luzum 2010](literatur:petit-2010), table 1.1 and section 5.6.2). With this obliquity
+([Petit and Luzum 2010](literatur:petit-2010), table 1.1 and section 5.6.2). With an obliquity
 $\varepsilon_0$, equatorial coordinates $\vec{r}_\alpha$ and ecliptic coordinates
 $\vec{r}_\lambda$ of the same epoch are related by a rotation of the coordinate axes about the
 x-axis, which points to the vernal equinox:
 
 $$\vec{r}_\lambda = R_x(\varepsilon_0)\,\vec{r}_\alpha$$
+
+Exactly in this way, with 84,381.448″ and without frame bias, JPL Horizons produces its fixed
+ecliptic of J2000, to which the approximate planetary tables also refer
+([Orbital elements](thema:bahnelemente)). Compared with the ecliptic of J2000 according to
+IAU 2006, this plane is inclined by 0.04″, and its intersection with the ICRF equator is shifted by
+0.05″ ([Petit and Luzum 2010](literatur:petit-2010), eq. 5.40 at the epoch).
 
 ## Precession, nutation and the equinox of date
 
@@ -81,9 +91,9 @@ the Earth-Moon barycentre tilts against the fixed ecliptic of J2000.0
 ([Petit and Luzum 2010](literatur:petit-2010), eq. 5.38). Coordinates "of date" therefore refer to
 the mean equator and mean equinox of an instant, "true" coordinates also include nutation.
 
-In the IAU 2006 precession the angle $\psi_A$ grows by 5038.48″ per Julian century (eq. 5.39); the
-general precession in longitude $p_A$ increases by 0.02438175 rad per century according to
-eq. 5.44, so one cycle takes about 25,770 years
+In the IAU 2006 precession the angle $\psi_A$ grows by 5038.48″ per Julian century (eq. 5.39). The
+general precession in longitude $p_A$, in the form the Conventions use as an argument of planetary
+nutation, grows by 0.02438175 rad per century (eq. 5.44); one cycle thus takes about 25,770 years
 ([Petit and Luzum 2010](literatur:petit-2010)). By 17 September 2026 the mean equinox has thus
 moved 0.37° along the ecliptic. According to the polynomial part of the series for the
 coordinates of the CIP, the celestial pole has moved about 0.15° away from the pole of the GCRS
@@ -146,7 +156,7 @@ mean Earth/polar axis system ([Archinal et al. 2011](literatur:archinal-2011)).
 For the [Earth](objekt:earth) the 2009 report still contained approximations, among them
 $W = 190.147^\circ + 360.9856235^\circ\,d$ ([Archinal et al. 2011](literatur:archinal-2011)). The
 2015 report removed these expressions: their accuracy was poor, they failed near J2000.0, and yet
-they were used as a recommended model; for Earth rotation it refers to the IERS. The low-precision
+they were sometimes used as a recommended model; for Earth rotation it refers to the IERS. The low-precision
 series for the orientation of the Moon was removed as well
 ([Archinal et al. 2018](literatur:archinal-2018)). DE440 and DE441 give the orientation of the
 lunar mantle as libration angles with respect to ICRF3, referred to its principal axes from data
@@ -191,7 +201,12 @@ to the ICRS: the orbits of the inner planets are aligned with ICRF3 through VLBI
 Mars-orbiting spacecraft with an average accuracy of about 0.2 mas, and Jupiter and Saturn through
 measurements of Juno and Cassini. DE441 omits the damping between the liquid lunar core and the
 mantle, and is therefore less accurate than DE440 for the current century, but covers the years
-−13,200 to +17,191 instead of 1550 to 2650 ([Park et al. 2021](literatur:park-2021)). Notes on
+−13,200 to +17,191 instead of 1550 to 2650 ([Park et al. 2021](literatur:park-2021)). Asteroid
+orbits in the dynamical model of DE440, determined without Gaia data, show an orientation offset of
+about 10 mas and rotation rates below 0.5 mas per year against the Gaia observations of 1001
+asteroids, far more than the reported differences between DE440 and ICRF3. The authors attribute
+this to systematic errors in older asteroid astrometry; with Gaia data in the orbit determination
+the offset drops to about 0.2 mas ([Yao et al. 2025](literatur:yao-2025)). Notes on
 using the files are given at [JPL planetary ephemerides](quelle:jpl-ephemeriden).
 
 Mean elements, or elements fitted to a time window, are by contrast approximations of limited
@@ -200,24 +215,28 @@ validity; how they differ from osculating elements is explained in
 
 ## Open questions
 
-- **Bright Gaia frame:** There is a systematic rotation between the bright and faint parts of
-  Gaia-CRF3, which future data releases are to correct. From radio stars with VLBI astrometry,
-  Zhang et al. estimate the spin in agreement with Gaia's internal estimate and find indications
-  that the orientation error also depends on magnitude
-  ([Zhang et al. 2025](literatur:zhang-2025)). For the bright frame down to G = 13 mag, Lunz et al. find no
-  significant orientation offset from ICRF3 but a spin about the y-axis of 0.072 ± 0.025 mas per
-  year; the uncorrected bright frame agrees better with ICRF3 than the corrected one
-  ([Lunz et al. 2024](literatur:lunz-2024)).
-- **Ephemerides versus Gaia:** Asteroid orbits in the dynamical model of DE440, determined without
-  Gaia data, show an orientation offset of about 10 mas against the Gaia observations, far more
-  than the roughly 0.2 mas between DE440 and ICRF3. The authors suspect systematic errors in older
-  asteroid astrometry; with Gaia data in the orbit determination the offset drops to about 0.2 mas
-  ([Yao et al. 2025](literatur:yao-2025); [Park et al. 2021](literatur:park-2021)).
-- **Future of the leap second:** There is broad agreement to enlarge the tolerance between UT1 and
-  UTC beyond 0.9 s. As the procedure, Levine proposes an algorithmic rate adjustment without time
-  steps ([Levine 2024](literatur:levine-2024)). According to Agnew, UTC as currently
-  defined would need its first negative leap second by 2029, which could force changes earlier
-  than planned ([Agnew 2024](literatur:agnew-2024)).
+- **Bright Gaia frame:** The stellar frame of Gaia, especially for bright stars, may have
+  significantly larger systematic errors than the quasar frame Gaia-CRF3
+  ([Gaia Collaboration, Klioner et al. 2022](literatur:gaia-2022)); there is a systematic rotation
+  between the bright and faint parts, which future data releases are to correct. Comparisons with
+  radio stars whose positions VLBI measures in ICRF3 point in different directions. Zhang et al.
+  find the spin in agreement with Gaia's internal estimate and indications that the orientation
+  error also depends on magnitude ([Zhang et al. 2025](literatur:zhang-2025)). For the bright frame
+  down to G = 13 mag, Lunz et al. find no significant orientation offset but a spin about the y-axis
+  of 0.072 ± 0.025 mas per year, and in their analysis the uncorrected bright frame agrees better
+  with ICRF3 than the corrected one ([Lunz et al. 2024](literatur:lunz-2024)).
+- **Future of the leap second:** It has been decided that the permitted magnitude of UT1 − UTC will
+  be increased in or before 2035; a new maximum value that keeps UTC continuous for at least a
+  century, and a plan for implementing it, are to be put to the General Conference in 2026
+  ([CGPM 2022](literatur:cgpm-2022)). The procedure is disputed. Levine proposes an algorithmic
+  rate adjustment without time steps ([Levine 2024](literatur:levine-2024)). Petit and Tagliaferro
+  consider his description ambiguous and his numerical examples misleading: instead of the
+  tolerance of one minute he states, excursions of UT1 − UTC of several minutes would have to be
+  tolerated ([Petit and Tagliaferro 2025](literatur:petit-2025)). In his reply, Levine concludes
+  that the advantages of the method outweigh its drawbacks
+  ([Levine 2025](literatur:levine-2025)). According to Agnew, UTC as currently defined would need
+  its first negative leap second by 2029, which could force changes earlier than planned
+  ([Agnew 2024](literatur:agnew-2024)).
 
 ## In the model
 
@@ -228,24 +247,27 @@ validity; how they differ from osculating elements is explained in
   TT − UTC = 69.184 s today, and TDB differs from TT by milliseconds only: the Earth lags 2.8″ in
   longitude, the Moon 38″. For the rotation of the Earth, UT1 would be the correct argument, which
   differs from UTC by at most 0.9 s.
-- **Frame:** All orbits and poles are computed in the fixed ecliptic of J2000. Orrery rotates
-  equatorial pole directions with 84,381.448″, the IAU 2000 value, instead of 84,381.406″. The ICRF
-  and the mean equator of J2000.0 are treated as identical; the frame bias of 18 mas at the pole
-  and 14.6 mas at the equinox is missing. Both deviations stay below 0.05″, far below the 2.8″ from
-  the missing time-scale conversion. Precession and nutation are missing as well. For orbits in the
-  fixed frame this is correct; the Earth's pole, however, stands still as a result (see Earth), and
-  conversely the lunar rates contain precession (see lunar node).
-- **Reference planes:** The planets, the Moon and five dwarf planets including Pluto have elements
+- **Frame:** All orbits and poles are computed in JPL's fixed ecliptic of J2000, the ICRF rotated
+  by 84,381.448″ without frame bias. The elements of the planets, the dwarf planets and all moons
+  except the Earth's Moon come from JPL sources ([Orbital elements](thema:bahnelemente)); Orrery
+  rotates the equatorial poles by the same angle and so stays within the frame of its data.
+  Precession and nutation are missing. For orbits in the fixed frame this is correct; the Earth's
+  pole, however, stands still as a result (see Earth), and conversely the lunar rates contain
+  precession (see lunar node).
+- **Reference planes:** The planets, the Moon (with rates from the equinox of date, see lunar
+  node) and five dwarf planets including Pluto have elements
   referred to the ecliptic of J2000; the other 20 moons are referred to the equator of their parent
   body with its fixed pole. There is no separate Laplace plane (details in
   [Orbital elements](thema:bahnelemente)).
 - **Lunar node:** The node and perigee rates of the Moon are counted from the mean equinox of date.
   The node rate of −1934.1363° per century agrees to within $3 \cdot 10^{-5}$ degrees per century
-  with the expression DE440 uses for the longitude of the node from that equinox
-  ([Park et al. 2021](literatur:park-2021)). Against the fixed ecliptic of J2000, the osculating
+  with the expression DE440 uses in its Earth orientation model for the argument of the 18.6-year
+  nutation term, counted from the mean equinox of date ([Park et al. 2021](literatur:park-2021)). Against the fixed ecliptic of J2000, the osculating
   elements from DE441 for 1900 to 2100 give rates of −1935.53° and +4067.63° per century, smaller
   by 1.39° and 1.38°, as much as the general precession. In the fixed frame of the model, node and
   perigee are therefore 0.37° too large in longitude in September 2026 and 2.8° too small in 1800.
+  The mean longitude itself grows at the rate from the sidereal month and thus in the fixed frame;
+  what is shifted are the mean anomaly and the argument of latitude, each by about 0.37° in 2026.
 - **Poles and rotation:** Poles are stored as fixed right ascension and declination without rates
   or periodic terms. The rotation phase is zero at the epoch for all 35 bodies and grows with a
   fixed period. It is counted not from $Q$ but from the direction into which the shortest rotation

@@ -16,9 +16,10 @@ Rektaszension nahe dem dynamischen Äquinoktium dieser Epoche. Die IAU nahm das 
 1. Januar 1998 löste es das FK5-System ab ([Petit und Luzum 2010](literatur:petit-2010),
 Kapitel 2). Relativistisch gehören dazu zwei Koordinatensysteme: das baryzentrische BCRS mit der
 Zeitkoordinate TCB und das geozentrische GCRS mit TCG, dessen räumliche Achsen gegen das BCRS
-kinematisch nicht rotieren. Die Resolutionen legen die Richtung der BCRS-Achsen nur bis auf eine
-feste Drehung fest; die natürliche Wahl ist das ICRS
-([Soffel et al. 2003](literatur:soffel-2003)).
+kinematisch nicht rotieren. Die Resolution B1.3 von 2000 legte die Richtung der BCRS-Achsen nur
+bis auf eine feste Drehung fest ([Soffel et al. 2003](literatur:soffel-2003)); seit der
+IAU-Resolution B2 von 2006 sind BCRS und GCRS, sofern nicht anders angegeben, nach den Achsen des
+ICRS ausgerichtet ([Petit und Luzum 2010](literatur:petit-2010), Abschnitte 5.2.2 und 5.3.1).
 
 Realisiert wird das ICRS durch Radiopositionen kompakter extragalaktischer Quellen, gemessen mit
 Very Long Baseline Interferometry (VLBI). Definierende Quellen halten die Achsen fest; die
@@ -27,7 +28,7 @@ Positionen hängen weder von Äquator noch von Äquinoktium oder Ekliptik ab
 
 | Realisierung | Quellen | davon definierend | Kennwert | Beleg |
 |---|---:|---:|---|---|
-| ICRF1 (1995) | 608 | 212 | Achsen stabil auf ±0,02 mas | [Petit und Luzum 2010](literatur:petit-2010) |
+| ICRF1 (ab 1998) | 608 | 212 | Achsen stabil auf ±0,02 mas | [Petit und Luzum 2010](literatur:petit-2010) |
 | ICRF2 (ab 2010) | 3414 | 295 | Rauschboden ≈ 0,04 mas, Achsen stabil auf 0,01 mas | [Petit und Luzum 2010](literatur:petit-2010) |
 | ICRF3 (ab 2019) | 4536 bei 8,4 GHz | 303 | Rauschboden 0,03 mas | [Charlot et al. 2020](literatur:charlot-2020) |
 
@@ -41,9 +42,12 @@ dieser Quellen drehen ihn um höchstens 6 µas, weniger als die Richtungsstabili
 10 µas. Die IAU nahm ICRF3 im August 2018 an, seit dem 1. Januar 2019 ersetzt es ICRF2
 ([Charlot et al. 2020](literatur:charlot-2020)).
 
-Im Optischen dient Gaia-CRF3 als Realisierung des ICRS
-([Yao et al. 2025](literatur:yao-2025)). Schon gegen den Vorgänger Gaia-CRF2 zeigte ICRF3 keine
-Verformungen über 0,03 mas; bei 22 % der Quellen liegen optischer Ort und Radioort aber
+Im Optischen realisiert Gaia-CRF3 das ICRS; die IAU erklärte 2021 ICRF3 im Radiobereich und
+Gaia-CRF3 im Optischen zu Realisierungen des ICRS. Die Orientierung der rund 1,6 Millionen
+quasarähnlichen Quellen von Gaia-CRF3 ist über rund 2000 gemeinsame Quellen an ICRF3
+angeschlossen; für 3142 optische Gegenstücke von ICRF3-Quellen liegt der Median des Versatzes zum
+Radioort bei etwa 0,5 mas ([Gaia Collaboration, Klioner et al. 2022](literatur:gaia-2022)).
+Schon gegen den Vorgänger Gaia-CRF2 zeigte ICRF3 keine Verformungen über 0,03 mas; bei 22 % der Quellen liegen optischer Ort und Radioort aber
 signifikant auseinander, möglicherweise wegen ausgedehnter Quellstrukturen
 ([Charlot et al. 2020](literatur:charlot-2020)). Einen Überblick gibt
 [International Celestial Reference System](quelle:wikipedia-de-icrs).
@@ -51,8 +55,8 @@ signifikant auseinander, möglicherweise wegen ausgedehnter Quellstrukturen
 ## Ekliptik, Äquinoktium und Rahmenversatz
 
 Bahnelemente beziehen sich traditionell auf Ekliptik und Äquinoktium einer Epoche. Beide sind
-dynamisch bestimmt und fallen nicht exakt mit den Achsen des ICRS zusammen. Der Pol bei J2000,0
-liegt um
+dynamisch bestimmt und fallen nicht exakt mit den Achsen des ICRS zusammen. Der mittlere Pol von
+J2000,0 liegt um
 
 $$\xi_0 = -16{,}617\,\mathrm{mas}, \quad \eta_0 = -6{,}819\,\mathrm{mas}$$
 
@@ -65,12 +69,18 @@ Bahnebene ([Petit und Luzum 2010](literatur:petit-2010), Abschnitt 5.5.4).
 
 Die mittlere Schiefe der Ekliptik zu J2000,0 beträgt nach IAU 2006 84 381,406″ mit 0,001″
 Unsicherheit; das Modell IAU 2000 verwendete noch 84 381,448″
-([Petit und Luzum 2010](literatur:petit-2010), Tabelle 1.1 und Abschnitt 5.6.2). Mit dieser
+([Petit und Luzum 2010](literatur:petit-2010), Tabelle 1.1 und Abschnitt 5.6.2). Mit einer
 Schiefe $\varepsilon_0$ gehen äquatoriale Koordinaten $\vec{r}_\alpha$ und ekliptikale
 Koordinaten $\vec{r}_\lambda$ derselben Epoche durch eine Drehung des Achsenkreuzes um die x-Achse
 zum Frühlingspunkt ineinander über:
 
 $$\vec{r}_\lambda = R_x(\varepsilon_0)\,\vec{r}_\alpha$$
+
+Genau so, mit 84 381,448″ und ohne Rahmenversatz, entsteht die feste Ekliptik J2000 von JPL
+Horizons, auf die sich auch die Näherungstafeln der Planeten beziehen
+([Bahnelemente](thema:bahnelemente)). Gegen die Ekliptik J2000 nach IAU 2006 ist diese Ebene um
+0,04″ geneigt, und ihr Schnitt mit dem ICRF-Äquator liegt 0,05″ verschoben
+([Petit und Luzum 2010](literatur:petit-2010), Gl. 5.40 zur Epoche).
 
 ## Präzession, Nutation und das Äquinoktium des Datums
 
@@ -83,9 +93,9 @@ deshalb auf den mittleren Äquator und das mittlere Äquinoktium eines Zeitpunkt
 Koordinaten zusätzlich auf die Nutation.
 
 In der Präzession IAU 2006 wächst der Winkel $\psi_A$ um 5038,48″ je julianischem Jahrhundert
-(Gl. 5.39); die allgemeine Präzession in Länge $p_A$ nimmt nach Gl. 5.44 um 0,02438175 rad je
-Jahrhundert zu, ein Umlauf dauert danach rund 25 770 Jahre
-([Petit und Luzum 2010](literatur:petit-2010)). Bis zum 17. September 2026 ist das mittlere
+(Gl. 5.39). Die allgemeine Präzession in Länge $p_A$, wie sie die Conventions als Argument der
+Planetennutation führen, wächst um 0,02438175 rad je Jahrhundert (Gl. 5.44); ein Umlauf dauert
+danach rund 25 770 Jahre ([Petit und Luzum 2010](literatur:petit-2010)). Bis zum 17. September 2026 ist das mittlere
 Äquinoktium damit um 0,37° längs der Ekliptik gewandert. Der Himmelspol hat sich nach dem
 polynomialen Teil der Reihen für die Koordinaten des CIP um rund 0,15° vom Pol des GCRS entfernt
 ([Petit und Luzum 2010](literatur:petit-2010), Gl. 5.16).
@@ -147,7 +157,7 @@ System aus mittlerer Erdrichtung und Polachse ([Archinal et al. 2011](literatur:
 Für die [Erde](objekt:earth) enthielt der Bericht von 2009 noch Näherungen, darunter
 $W = 190{,}147^\circ + 360{,}9856235^\circ\,d$ ([Archinal et al. 2011](literatur:archinal-2011)).
 Der Bericht von 2015 strich diese Ausdrücke: Sie waren ungenau, versagten nahe J2000,0 und wurden
-dennoch als Empfehlung benutzt; für die Erdrotation verweist er auf den IERS. Ebenso entfiel die
+dennoch mitunter als Empfehlung benutzt; für die Erdrotation verweist er auf den IERS. Ebenso entfiel die
 Reihe niedriger Genauigkeit für die Orientierung des Mondes
 ([Archinal et al. 2018](literatur:archinal-2018)). DE440 und DE441 führen die Orientierung des
 Mondmantels als Librationswinkel gegen ICRF3, bezogen auf seine Hauptträgheitsachsen aus Daten der
@@ -192,7 +202,12 @@ ICRS angeschlossen: Die Bahnen der inneren Planeten sind über VLBI-Messungen an
 Mittel auf etwa 0,2 mas an ICRF3 ausgerichtet, Jupiter und Saturn über Messungen an Juno und
 Cassini. DE441 verzichtet auf die Dämpfung zwischen flüssigem Mondkern und Mantel, ist deshalb in
 diesem Jahrhundert ungenauer als DE440, deckt aber die Jahre −13 200 bis +17 191 statt 1550 bis
-2650 ab ([Park et al. 2021](literatur:park-2021)). Hinweise zur Nutzung der Dateien gibt
+2650 ab ([Park et al. 2021](literatur:park-2021)). Asteroidenbahnen im dynamischen Modell von
+DE440, bestimmt ohne Gaia-Daten, zeigen gegen die Gaia-Beobachtungen von 1001 Asteroiden einen
+Orientierungsversatz von etwa 10 mas und Drehraten unter 0,5 mas je Jahr, weit mehr als die
+gemeldeten Abweichungen zwischen DE440 und ICRF3. Die Autoren führen das auf systematische Fehler
+älterer Asteroidenastrometrie zurück; mit Gaia-Daten in der Bahnbestimmung sinkt der Versatz auf
+etwa 0,2 mas ([Yao et al. 2025](literatur:yao-2025)). Hinweise zur Nutzung der Dateien gibt
 [Planetare Ephemeriden des JPL](quelle:jpl-ephemeriden).
 
 Mittlere oder an ein Zeitfenster angepasste Elemente sind dagegen Näherungen mit begrenzter
@@ -201,24 +216,28 @@ Gültigkeit; wie sie sich von oskulierenden Elementen unterscheiden, erklärt
 
 ## Offene Fragen
 
-- **Heller Gaia-Rahmen:** Zwischen hellem und schwachem Teil von Gaia-CRF3 besteht eine
-  systematische Drehung, die künftige Datenfreigaben korrigieren sollen. Aus Radiosternen mit
-  VLBI-Astrometrie schätzen Zhang et al. die Drehrate im Einklang mit Gaias interner Schätzung
-  und finden Hinweise, dass auch der Orientierungsfehler von der Helligkeit abhängt
-  ([Zhang et al. 2025](literatur:zhang-2025)). Lunz et al. finden für den hellen Rahmen bis G = 13 mag
-  keinen signifikanten Orientierungsversatz gegen ICRF3, aber eine Drehrate um die y-Achse von
-  0,072 ± 0,025 mas je Jahr; der unkorrigierte helle Rahmen passt dabei besser zu ICRF3 als der
-  korrigierte ([Lunz et al. 2024](literatur:lunz-2024)).
-- **Ephemeriden gegen Gaia:** Asteroidenbahnen im dynamischen Modell von DE440, bestimmt ohne
-  Gaia-Daten, zeigen gegen die Gaia-Beobachtungen einen Orientierungsversatz von etwa 10 mas,
-  weit mehr als die etwa 0,2 mas zwischen DE440 und ICRF3. Die Autoren vermuten systematische
-  Fehler älterer Asteroidenastrometrie; mit Gaia-Daten in der Bahnbestimmung sinkt der Versatz
-  auf etwa 0,2 mas ([Yao et al. 2025](literatur:yao-2025); [Park et al. 2021](literatur:park-2021)).
-- **Zukunft der Schaltsekunde:** Weithin besteht Einigkeit, die Toleranz zwischen UT1 und UTC
-  über 0,9 s hinaus zu vergrößern. Levine schlägt als Verfahren eine algorithmische
-  Ratenanpassung ohne Zeitsprünge vor ([Levine 2024](literatur:levine-2024)). Nach
-  Agnew bräuchte UTC in heutiger Form bis 2029 erstmals eine negative Schaltsekunde, was
-  Änderungen früher als geplant erzwingen könnte ([Agnew 2024](literatur:agnew-2024)).
+- **Heller Gaia-Rahmen:** Der Sternrahmen von Gaia kann vor allem bei hellen Sternen deutlich
+  größere systematische Fehler haben als der Quasarrahmen Gaia-CRF3
+  ([Gaia Collaboration, Klioner et al. 2022](literatur:gaia-2022)); zwischen hellem und schwachem
+  Teil besteht eine systematische Drehung, die künftige Datenfreigaben korrigieren sollen. Die
+  Vergleiche mit Radiosternen, deren Orte VLBI im ICRF3 misst, weisen in verschiedene Richtungen.
+  Zhang et al. finden die Drehrate im Einklang mit Gaias interner Schätzung und Hinweise, dass auch
+  der Orientierungsfehler von der Helligkeit abhängt ([Zhang et al. 2025](literatur:zhang-2025)).
+  Lunz et al. finden für den hellen Rahmen bis G = 13 mag keinen signifikanten Orientierungsversatz,
+  aber eine Drehrate um die y-Achse von 0,072 ± 0,025 mas je Jahr, und der unkorrigierte helle
+  Rahmen passt bei ihnen besser zu ICRF3 als der korrigierte ([Lunz et al. 2024](literatur:lunz-2024)).
+- **Zukunft der Schaltsekunde:** Beschlossen ist, dass der zulässige Betrag von UT1 − UTC
+  spätestens 2035 größer wird; ein neuer Höchstwert, der UTC für mindestens ein Jahrhundert stetig
+  hält, und ein Plan zur Umsetzung sollen der Generalkonferenz 2026 vorgelegt werden
+  ([CGPM 2022](literatur:cgpm-2022)). Umstritten ist das Verfahren. Levine schlägt eine
+  algorithmische Ratenanpassung ohne Zeitsprünge vor ([Levine 2024](literatur:levine-2024)).
+  Petit und Tagliaferro halten seine Beschreibung für mehrdeutig und seine Zahlenbeispiele für
+  irreführend: Statt der von ihm genannten Toleranz von einer Minute müssten Abweichungen von
+  UT1 − UTC über mehrere Minuten zugelassen werden
+  ([Petit und Tagliaferro 2025](literatur:petit-2025)). Levine hält in seiner Erwiderung die
+  Vorteile des Verfahrens für überwiegend ([Levine 2025](literatur:levine-2025)). Nach Agnew
+  bräuchte UTC in heutiger Form bis 2029 erstmals eine negative Schaltsekunde, was Änderungen früher
+  als geplant erzwingen könnte ([Agnew 2024](literatur:agnew-2024)).
 
 ## Im Modell
 
@@ -229,25 +248,28 @@ Gültigkeit; wie sie sich von oskulierenden Elementen unterscheiden, erklärt
   fehlen so heute TT − UTC = 69,184 s, und TDB weicht von TT nur um Millisekunden ab: Die Erde
   bleibt 2,8″ in Länge zurück, der Mond 38″. Für die Drehung der Erde wäre UT1 das richtige
   Argument, das höchstens 0,9 s von UTC abweicht.
-- **Rahmen:** Alle Bahnen und Pole rechnen in der festen Ekliptik J2000. Äquatoriale Polrichtungen
-  dreht Orrery mit 84 381,448″, dem Wert von IAU 2000, statt mit 84 381,406″. ICRF und mittlerer
-  Äquator von J2000,0 gelten als gleich; der Rahmenversatz von 18 mas im Pol und 14,6 mas im
-  Äquinoktium fehlt. Beide Abweichungen bleiben unter 0,05″, weit unter den 2,8″ der fehlenden
-  Zeitskalenumrechnung. Präzession und Nutation fehlen ebenfalls. Für Bahnen im festen Rahmen ist
-  das richtig; der Erdpol aber steht dadurch still (siehe Erde), und in den Mondraten steckt
-  umgekehrt die Präzession (siehe Mondknoten).
-- **Bezugsebenen:** Die Planeten, der Erdmond und fünf Zwergplaneten einschließlich Pluto haben
+- **Rahmen:** Alle Bahnen und Pole rechnen in der festen Ekliptik J2000 von JPL, dem um
+  84 381,448″ gedrehten ICRF ohne Rahmenversatz. Aus JPL-Quellen stammen die Elemente der Planeten,
+  der Zwergplaneten und aller Monde außer dem Erdmond ([Bahnelemente](thema:bahnelemente)); Orrery
+  dreht die äquatorialen Pole mit demselben Winkel und bleibt so im Rahmen seiner Daten. Präzession
+  und Nutation fehlen. Für Bahnen im festen Rahmen ist das richtig; der Erdpol aber steht dadurch
+  still (siehe Erde), und in den Mondraten steckt umgekehrt die Präzession (siehe Mondknoten).
+- **Bezugsebenen:** Die Planeten, der Erdmond (mit Raten vom Äquinoktium des Datums, siehe
+  Mondknoten) und fünf Zwergplaneten einschließlich Pluto haben
   Elemente gegen die Ekliptik J2000, die übrigen 20 Monde gegen den Äquator ihres Mutterkörpers
   mit dessen festem Pol; eine eigene Laplace-Ebene gibt es nicht (Einzelheiten unter
   [Bahnelemente](thema:bahnelemente)).
 - **Mondknoten:** Die Knoten- und Perigäumsraten des Erdmonds zählen vom mittleren Äquinoktium des
   Datums. Die Knotenrate von −1934,1363° je Jahrhundert stimmt bis auf $3 \cdot 10^{-5}$ Grad je
-  Jahrhundert mit dem Ausdruck überein, den DE440 für die Knotenlänge gegen dieses Äquinoktium
-  verwendet ([Park et al. 2021](literatur:park-2021)). Gegen die feste Ekliptik J2000 ergeben
+  Jahrhundert mit dem Ausdruck überein, den DE440 im Modell der Erdorientierung für das Argument des
+  18,6-Jahres-Glieds der Nutation verwendet, gezählt vom mittleren Äquinoktium des Datums
+  ([Park et al. 2021](literatur:park-2021)). Gegen die feste Ekliptik J2000 ergeben
   die oskulierenden Elemente aus DE441 von 1900 bis 2100 Raten von −1935,53° und +4067,63° je
   Jahrhundert, um 1,39° und 1,38° kleiner, so viel wie die allgemeine Präzession. Im festen Rahmen
   des Modells liegen Knoten und Perigäum deshalb im September 2026 bei 0,37° zu großer Länge, im
-  Jahr 1800 bei 2,8° zu kleiner.
+  Jahr 1800 bei 2,8° zu kleiner. Die mittlere Länge selbst wächst mit der Rate aus dem siderischen
+  Monat und damit im festen Rahmen; verschoben sind die mittlere Anomalie und das Argument der
+  Breite, 2026 um je rund 0,37°.
 - **Pole und Rotation:** Pole stehen als feste Rektaszension und Deklination ohne Raten und
   periodische Glieder im Datensatz. Die Rotationsphase ist bei allen 35 Körpern zur Epoche null
   und wächst mit fester Periode. Sie zählt nicht von $Q$, sondern von der Richtung, in die die
