@@ -132,11 +132,17 @@ export function pruefeArxiv(p: Publikation, e: ArxivEintrag | null): Befund[] {
   return befunde;
 }
 
-/** Einträge für den Lauf: ohne --nur alle, sonst die genannten in Katalogreihenfolge. */
+/**
+ * Einträge für den Lauf: ohne --nur alle, sonst die genannten in
+ * Katalogreihenfolge. --nur ohne Kennungen (fehlender oder leerer Wert)
+ * ist ein Fehler statt eines stillen Leerlaufs, der wie ein erfolgreicher
+ * Lauf aussähe (Schlussprüfung 4d-1, Befund M6).
+ */
 export function auswahl(argv: readonly string[], katalog: readonly Publikation[]): Publikation[] {
   const stelle = argv.indexOf('--nur');
   if (stelle < 0) return [...katalog];
   const ids = (argv[stelle + 1] ?? '').split(',').map((s) => s.trim()).filter((s) => s !== '');
+  if (ids.length === 0) throw new Error('--nur braucht mindestens eine Kennung');
   const unbekannt = ids.filter((id) => !katalog.some((p) => p.id === id));
   if (unbekannt.length > 0) throw new Error(`Unbekannte Kennungen: ${unbekannt.join(', ')}`);
   return katalog.filter((p) => ids.includes(p.id));

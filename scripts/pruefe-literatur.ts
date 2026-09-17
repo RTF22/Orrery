@@ -19,6 +19,8 @@ import type { Befund, CrossrefWerk, Urteil } from './literaturVergleich.ts';
 
 const KOPF = { 'User-Agent': 'Orrery-Literaturpruefung' };
 const PAUSE_MS = 200;
+/** Zeitlimit je Abruf, damit ein hängender Dienst nicht die Standardgrenzen von undici ausreizt. */
+const ZEITLIMIT_MS = 30_000;
 
 const warte = (ms: number): Promise<void> => new Promise((fertig) => { setTimeout(fertig, ms); });
 
@@ -28,7 +30,9 @@ async function pruefe(p: Publikation): Promise<Befund[]> {
 
   if (p.doi !== undefined) {
     try {
-      const antwort = await fetch(`https://api.crossref.org/works/${encodeURIComponent(p.doi)}`, { headers: KOPF });
+      const antwort = await fetch(`https://api.crossref.org/works/${encodeURIComponent(p.doi)}`, {
+        headers: KOPF, signal: AbortSignal.timeout(ZEITLIMIT_MS),
+      });
       if (!antwort.ok) befunde.push(fehler('crossref', `Crossref antwortet ${antwort.status}`));
       else befunde.push(...pruefeCrossref(p, ((await antwort.json()) as { message: CrossrefWerk }).message));
     } catch (e) {
@@ -39,7 +43,9 @@ async function pruefe(p: Publikation): Promise<Befund[]> {
 
   if (p.arxiv !== undefined) {
     try {
-      const antwort = await fetch(`https://export.arxiv.org/api/query?id_list=${encodeURIComponent(p.arxiv)}`, { headers: KOPF });
+      const antwort = await fetch(`https://export.arxiv.org/api/query?id_list=${encodeURIComponent(p.arxiv)}`, {
+        headers: KOPF, signal: AbortSignal.timeout(ZEITLIMIT_MS),
+      });
       if (!antwort.ok) befunde.push(fehler('arxiv', `arXiv antwortet ${antwort.status}`));
       else befunde.push(...pruefeArxiv(p, arxivEintragLesen(await antwort.text())));
     } catch (e) {
@@ -50,8 +56,12 @@ async function pruefe(p: Publikation): Promise<Befund[]> {
 
   if (p.doi === undefined && p.arxiv === undefined && p.url !== undefined) {
     try {
-      let antwort = await fetch(p.url, { method: 'HEAD', headers: KOPF, redirect: 'follow' });
-      if (antwort.status === 405) antwort = await fetch(p.url, { headers: KOPF, redirect: 'follow' });
+      let antwort = await fetch(p.url, {
+        method: 'HEAD', headers: KOPF, redirect: 'follow', signal: AbortSignal.timeout(ZEITLIMIT_MS),
+      });
+      if (antwort.status === 405) {
+        antwort = await fetch(p.url, { headers: KOPF, redirect: 'follow', signal: AbortSignal.timeout(ZEITLIMIT_MS) });
+      }
       befunde.push({ id: p.id, pruefung: 'url', urteil: antwort.status < 400 ? 'ok' : 'fehler', text: `HTTP ${antwort.status}` });
     } catch (e) {
       befunde.push(fehler('url', `nicht erreichbar: ${String(e)}`));

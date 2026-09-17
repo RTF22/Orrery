@@ -114,4 +114,10 @@ describe('auswahl', () => {
   it('wirft bei unbekannten Kennungen', () => {
     expect(() => auswahl(['--nur', 'x-1999'], [a, b, c])).toThrow('Unbekannte Kennungen: x-1999');
   });
+
+  it('wirft bei --nur ohne Kennungen, statt still nichts zu prüfen (Schlussprüfung 4d-1, Befund M6)', () => {
+    expect(() => auswahl(['--nur'], [a, b, c])).toThrow('--nur braucht mindestens eine Kennung');
+    expect(() => auswahl(['--nur', ''], [a, b, c])).toThrow('--nur braucht mindestens eine Kennung');
+    expect(() => auswahl(['--nur', ' , ,'], [a, b, c])).toThrow('--nur braucht mindestens eine Kennung');
+  });
 });
