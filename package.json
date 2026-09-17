@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "deploy": "npm run build && node scripts/deploy.ts",
     "deploy:trocken": "node scripts/deploy.ts --trocken",
+    "literatur:pruefen": "node scripts/pruefe-literatur.ts",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
