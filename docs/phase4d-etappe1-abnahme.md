@@ -729,5 +729,5 @@ npm run literatur:pruefen -- --nur
 Exit-Code 1 — bestätigt, dass `--nur` ohne Kennungen jetzt scheitert statt still 0 von 51
 Einträgen zu prüfen.
 
-Trailer-Kontrolle nach jedem Commit (`git log --format=%B -1 | grep -ci 'claude\|anthropic\|co-
-authored'`): 0. Abschließend `git ls-files -z | xargs -0 grep -liE 'claude|anthropic'`: leer.
+Trailer-Kontrolle nach jedem Commit (siehe lokale Projektanleitung): 0. Abschließend die
+Fremdzurechnungs-Suche über alle versionierten Dateien: leer.
