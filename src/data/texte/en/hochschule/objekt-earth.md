@@ -37,7 +37,8 @@ $$J_2 = \frac{C - (A + B)/2}{M a_\mathrm{E}^2}, \quad H = \frac{C - (A + B)/2}{C
 
 Their ratio $C/(M a_\mathrm{E}^2) = J_2/H = 0.330698$ does not depend on $G$; the table values
 give a formal uncertainty of $1 \cdot 10^{-7}$. The absolute $C$, in contrast, needs the mass
-and hence $G$, so $G$ and $H$ limit its uncertainty ([Chen et al. 2015](literatur:chen-2015)).
+and hence $G$; its accuracy is limited by the uncertainties of $G$ and $H$
+([Chen et al. 2015](literatur:chen-2015)).
 For the mean moment of inertia $I = (A + B + C)/3$,
 
 $$\frac{I}{M a_\mathrm{E}^2} = \frac{C}{M a_\mathrm{E}^2} - \frac{2}{3}\,J_2 = 0.329976$$
@@ -126,7 +127,8 @@ $$B_0 = \sqrt{\left( g_1^0 \right)^2 + \left( g_1^1 \right)^2 + \left( h_1^1 \ri
 
 For 2025.0 these are $B_0 = 29733\,\mathrm{nT}$ and
 $m = 7.69 \cdot 10^{22}\,\mathrm{A}\,\mathrm{m}^2$; the dipole axis is tilted by about 9.2° from
-the rotation axis, and the model places the geomagnetic north pole at 80.85° N, 72.76° W. In
+the rotation axis, and the IGRF places the geomagnetic north pole at 80.85° N (geodetic
+latitude), 72.76° W. In
 1900 the moment was $8.32 \cdot 10^{22}\,\mathrm{A}\,\mathrm{m}^2$, so it fell by 7.6 % in 125
 years, and the forecast change of $g_1^0$ by +12.6 nT per year continues the decline. In the
 field changes at the core–mantle boundary on sub-decadal time scales, the CHAOS-8 model finds
@@ -180,7 +182,8 @@ need a negative leap second by 2029, three years earlier without the accelerated
 
 Calcium–aluminium-rich inclusions in meteorites, the first solids of the Solar System, formed
 $4567.30 \pm 0.16$ million years ago ([Connelly et al. 2012](literatur:connelly-2012)); their
-age serves as the zero point for times after the formation of the Solar System. The
+age serves as the zero point for times after the formation of the Solar System
+([Bouvier and Wadhwa 2010](literatur:bouvier-2010)). The
 [Moon](objekt:moon) is regarded as the product of a giant impact. Canup and Asphaug found
 impacts by a smaller body than previously thought viable that, near the end of the Earth's
 growth, yield an iron-poor Moon and the present angular momentum

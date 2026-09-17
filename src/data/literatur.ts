@@ -96,6 +96,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1038/s41561-018-0288-0',
   },
   {
+    id: 'bouvier-2010',
+    autoren: ['Bouvier, A.', 'Wadhwa, M.'],
+    etAl: false,
+    jahr: 2010,
+    titel: 'The age of the Solar System redefined by the oldest Pb–Pb age of a meteoritic inclusion',
+    erschienen: 'Nature Geoscience 3, 637–641',
+    doi: '10.1038/ngeo941',
+  },
+  {
     id: 'broucke-1972',
     autoren: ['Broucke, R. A.', 'Cefola, P. J.'],
     etAl: false,

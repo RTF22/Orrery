@@ -37,7 +37,7 @@ $$J_2 = \frac{C - (A + B)/2}{M a_\mathrm{E}^2}, \quad H = \frac{C - (A + B)/2}{C
 
 Ihr Quotient $C/(M a_\mathrm{E}^2) = J_2/H = 0{,}330698$ hängt nicht von $G$ ab; die
 Tabellenwerte ergeben formal $1 \cdot 10^{-7}$ Unsicherheit. Das absolute $C$ braucht dagegen
-die Masse und damit $G$, deshalb begrenzen $G$ und $H$ seine Unsicherheit
+die Masse und damit $G$; seine Genauigkeit begrenzen die Unsicherheiten von $G$ und $H$
 ([Chen et al. 2015](literatur:chen-2015)). Für das mittlere Trägheitsmoment $I = (A + B + C)/3$
 gilt
 
@@ -129,7 +129,8 @@ $$B_0 = \sqrt{\left( g_1^0 \right)^2 + \left( g_1^1 \right)^2 + \left( h_1^1 \ri
 
 Für 2025,0 sind das $B_0 = 29733\,\mathrm{nT}$ und
 $m = 7{,}69 \cdot 10^{22}\,\mathrm{A}\,\mathrm{m}^2$; die Dipolachse ist rund 9,2° gegen die
-Drehachse geneigt, und den geomagnetischen Nordpol führt das Modell bei 80,85° N und 72,76° W.
+Drehachse geneigt, und den geomagnetischen Nordpol führt das IGRF bei 80,85° N (geodätische
+Breite) und 72,76° W.
 1900 betrug das Moment $8{,}32 \cdot 10^{22}\,\mathrm{A}\,\mathrm{m}^2$, es sank also in 125
 Jahren um 7,6 %, und die vorhergesagte Änderung von $g_1^0$ um +12,6 nT je Jahr setzt die
 Abnahme fort. In den Feldänderungen an der Kern-Mantel-Grenze über weniger als ein Jahrzehnt
@@ -184,7 +185,8 @@ drei Jahre früher ([Agnew 2024](literatur:agnew-2024)).
 Kalzium-Aluminium-reiche Einschlüsse in Meteoriten, die ersten Festkörper des Sonnensystems,
 entstanden vor $4567{,}30 \pm 0{,}16$ Millionen Jahren
 ([Connelly et al. 2012](literatur:connelly-2012)); ihr Alter dient als Nullpunkt für Zeitangaben
-nach Entstehung des Sonnensystems. Der [Mond](objekt:moon) gilt als Ergebnis eines
+nach Entstehung des Sonnensystems ([Bouvier und Wadhwa 2010](literatur:bouvier-2010)). Der
+[Mond](objekt:moon) gilt als Ergebnis eines
 Rieseneinschlags. Canup und Asphaug fanden Stöße mit einem kleineren Körper als zuvor für
 möglich gehalten, die gegen Ende des Erdwachstums einen eisenarmen Mond und den heutigen
 Drehimpuls ergeben ([Canup und Asphaug 2001](literatur:canup-2001)). In solchen Rechnungen
