@@ -51,9 +51,7 @@ Winkel ihre Bedeutung verlieren:
 | $L = \varpi + M$ | Summe über beide Ebenen, gleichförmig in der Zeit | $I \to 180^\circ$ |
 
 Für die wenig geneigten Planetenbahnen bleibt $L$ also immer bestimmt und $\varpi$, solange $e$
-nicht zu klein wird. Wie empfindlich $\varpi$ bei kleinem $e$ ist, zeigt Venus mit
-$e = 0{,}0068$: Die beiden Näherungstafeln des JPL geben für ihre Rate 0,0027° und 0,0568° je
-Jahrhundert ([JPL Approximate Positions](quelle:jpl-approx-pos)).
+nicht zu klein wird.
 
 ## Keplergleichung
 
@@ -65,14 +63,15 @@ $$M = E - e \sin E$$
 
 $$E_{k+1} = E_k - \frac{E_k - e \sin E_k - M}{1 - e \cos E_k}$$
 
-Es konvergiert quadratisch, sobald der Startwert im Einzugsbereich liegt. Für verbreitete
+Es konvergiert lokal quadratisch. Für verbreitete
 Startwerte lassen sich Bereiche in $(e, M)$ mit garantierter Konvergenz und
 A-priori-Fehlerschranke beweisen, und mit $e \to 0$ wird die Konvergenz immer schneller
 ([Elipe et al. 2017](literatur:elipe-2017)). Kritisch ist $e \to 1$ bei kleinem Betrag von
 $M$, wo die Ableitung $1 - e \cos E$ gegen null geht. Mit dem Startwert $E_0 = M$ zeigt die
 Iteration bei sehr großer Exzentrizität chaotisches Verhalten und kann zeitweise zwischen zwei
-falschen Werten pendeln; mit $E_0 = \pi$ konvergiert sie stets schnell
-([Charles und Tatum 1997](literatur:charles-1997)). Die Anleitung des JPL normiert $M$ auf
+falschen Werten pendeln; mit $E_0 = \pi$ konvergiert sie für $0 \le M \le \pi$ stets schnell
+([Charles und Tatum 1997](literatur:charles-1997)), für negatives $M$ entsprechend mit
+$E_0 = -\pi$. Die Anleitung des JPL normiert $M$ auf
 ±180°, beginnt mit $E_0 = M + e \sin M$ und hält eine Toleranz von $10^{-6}$ Grad für
 ausreichend ([JPL Approximate Positions](quelle:jpl-approx-pos)). Aus $E$ folgen die
 Koordinaten in der Bahnebene, $\xi$ in Richtung Perizentrum:
@@ -148,7 +147,10 @@ Planeten sind über einige zehn Millionen Jahre nicht vorhersagbar
 
 Die Elemente der JPL-Näherungstafeln sind weder oskulierend noch mittlere Elemente im Sinn der
 Störungstheorie: Laut JPL sind sie an ein Zeitfenster angepasst, stellen keine Mittelung dar
-und gelten außerhalb des Fensters nicht. Die nominellen Fehler für 1800 bis 2050 betragen in
+und gelten außerhalb des Fensters nicht. Wie stark die Raten von Fenster und Form der Anpassung
+abhängen, zeigen die Tafeln für 1800 bis 2050 und für 3000 v. Chr. bis 3000 n. Chr.: Für
+$\dot{\varpi}$ geben sie bei Venus ($e = 0{,}0068$) 0,0027° und 0,0568° je Jahrhundert, bei
+Saturn ($e = 0{,}054$) sogar −0,419° und +0,542°. Die nominellen Fehler für 1800 bis 2050 betragen in
 heliozentrischer Länge 15″ bei Merkur, 400″ bei Jupiter und 600″ bei Saturn; für 3000 v. Chr.
 bis 3000 n. Chr. braucht die mittlere Anomalie von Jupiter bis Neptun zusätzlich
 $b T^2 + c \cos(f T) + s \sin(f T)$ ([JPL Approximate Positions](quelle:jpl-approx-pos)). Eine
@@ -178,10 +180,15 @@ Bahnen und geradlinige Bewegung; eine Variante verschiebt die Singularität nach
 
 Alle drei Fälle kommen in Orrerys Datensätzen vor. [Io](objekt:io) hat in der JPL-Tabelle
 $I = 0{,}0^\circ$ ohne Knotenperiode, [Deimos](objekt:deimos) $e = 0{,}000$ ohne
-Periapsisperiode ([Mittlere Bahnelemente der Monde](quelle:jpl-satelliten-bahnen)). Die fünf
-großen Uranusmonde haben gegen den IAU-Nordpol des Uranus Inklinationen nahe 180°; bei vier
-von ihnen, 0,003° bis 0,19° davon entfernt, zeigt der oskulierende Knoten über 40 Jahre keinen
-belastbaren linearen Trend. In diesen Fällen setzt der Datensatz die betroffene Rate null.
+Periapsisperiode ([Mittlere Bahnelemente der Monde](quelle:jpl-satelliten-bahnen)); der
+Datensatz setzt dort die Knoten- beziehungsweise die Apsidenrate null. Die großen Uranusmonde
+laufen gegen den IAU-Nordpol des Uranus mit Inklinationen zwischen 175,6° und 180,0°. In
+Horizons wandert der oskulierende Knoten von Ariel, im Mittel 0,02° von 180° entfernt, von 1986
+bis 2026 so unregelmäßig, dass er im quadratischen Mittel um 40° von der Ausgleichsgeraden
+abweicht; bei Titania kehrt er nach 25 Jahren um. Umbriel und Oberon zeigen dagegen gleichmäßige
+Knotenraten von 3,7° und 0,7° je Jahr, während die Knotenperioden der JPL-Tabelle 2,8° und 1,9°
+je Jahr ergeben ([JPL Horizons](quelle:jpl-horizons)). Der Datensatz hält die Knoten aller fünf
+Uranusmonde fest.
 
 ## Monde und die Laplace-Ebene
 
@@ -213,31 +220,41 @@ $I = 5{,}16^\circ$, Knotenperiode 18,6 Jahre
   eigenen Epoche, alle Raten außer $\dot{L}$ null. Für [Pluto](objekt:pluto) (JD 2457588,5,
   19. Juli 2016) stimmen sie mit der heliozentrischen oskulierenden Bahn des Pluto-Schwerpunkts
   aus DE441 überein; gegen DE441 weicht sein Ort 2000 um 0,05°, 2050 um 0,13°, 1900 um 0,15°
-  und 1800 um 1,4° ab.
-- **Erdmond:** mittlere Elemente gegen die Ekliptik mit linearer Knoten- und Apsidendrehung,
-  ohne periodische Glieder.
+  und 1800 um 1,4° ab. Hauptursache ist die mittlere Bewegung der Momentaufnahme: Sie liegt
+  0,44 % unter der baryzentrischen, weil $a$ um 0,10 AE größer ist und nur die Sonnenmasse als
+  Zentralmasse zählt; bis 1800 summiert sich das auf 1,39°.
+- **Erdmond:** mittlere Elemente gegen die Ekliptik, $a$, $e$ und $I = 5{,}145^\circ$ aus dem
+  NSSDC-Faktenblatt, $L$, $\varpi$ und $\Omega$ mit linearen Raten nach Meeus (Astronomical
+  Algorithms), ohne periodische Glieder; daher weicht $I$ von den 5,16° der JPL-Tabelle ab.
 - **Übrige Monde:** Elemente gegen den Äquator des Mutterkörpers mit dessen IAU-Pol zur Epoche
   J2000; die Knotenlänge zählt wie bei JPL vom Knoten dieser Ebene auf dem ICRF-Äquator, so
   zeigt sie auch der Datenblock. Mars- und Jupitermonde nutzen die mittleren JPL-Elemente und
   setzen die Laplace-Ebene dem Äquator gleich, obwohl sie bei Kallisto 0,4° und bei Deimos
   0,9° davon abweicht. Saturn-, Uranus-, Neptun- und Plutomonde nutzen oskulierende
-  Horizons-Elemente zu J2000, mit
-  Präzessionsraten aus der JPL-Tabelle, wo diese sich gegen Horizons bewähren, sonst ohne. Bei
-  Iapetus präzediert der Knoten so um Saturns Pol statt um den Laplace-Pol; seine Neigung gegen
-  Saturns Äquator weicht von Horizons 2050 um 0,71° und 2076 um 1,11° ab.
+  Horizons-Elemente zu J2000. Bei den Saturnmonden präzedieren Knoten und Apsiden mit Raten aus
+  der JPL-Tabelle (die Knoten von Enceladus und Dione stehen fest), bei den Uranusmonden nur die
+  Apsiden; Triton und Charon präzedieren nicht. Bei Iapetus präzediert der Knoten so um Saturns
+  Pol statt um den Laplace-Pol; seine Neigung gegen Saturns Äquator weicht von Horizons 2050 um
+  0,71° und 2076 um 1,11° ab.
 - **Keplergleichung:** Newton-Verfahren ab $E_0 = M + e \sin M$, Abbruch bei einem Schritt unter
   $10^{-12}$ rad, höchstens 30 Schritte. Nachgerechnet auf 200 001 gleichabständigen Werten von
   $M$ genügen für die größte Exzentrizität im Katalog ([Eris](objekt:eris), 0,438) höchstens
-  5 Schritte, bei $e = 0{,}99$ höchstens 10; bei $e = 0{,}999$ verfehlen 943 Werte mit kleinem
-  Betrag von $M$ das Abbruchkriterium.
+  5 Schritte, bei $e = 0{,}99$ höchstens 10. Bei $e = 0{,}999$ erreichen 943 Werte mit kleinem
+  Betrag von $M$ das Abbruchkriterium nicht; bei 886 davon bleibt ein Residuum über $10^{-6}$
+  rad, die Iterierten laufen bis in die Größenordnung $10^{16}$ auseinander, und der Löser gibt
+  den letzten Wert ungeprüft zurück.
 - **Umlaufzeit:** Der Datenblock rechnet sie nach der Formel oben aus $a$ zur Epoche und
   $G\,(M + m)$ mit $G$ nach CODATA 2018. Dieses Produkt liegt für die Sonne um
   $4{,}5 \cdot 10^{-5}$ über dem nominellen Massenparameter, die Umlaufzeiten der Planeten
-  rechnerisch um 0,002 % zu kurz. Bewegt werden die Körper dagegen mit $\dot{L}$: Für Uranus und
+  rechnerisch um 0,002 % zu kurz. Bewegt werden die Körper dagegen mit $\dot{L}$. Für Uranus und
   Neptun ist die Kepler-Umlaufzeit um 0,05 % beziehungsweise 0,06 % länger als
-  $360^\circ/\dot{L}$, für den Erdmond um 0,11 % kürzer.
-- **Zeit:** Die Uhr zählt julianische Tage in UTC und setzt sie ohne Umrechnung als TDB ein. Die
-  69 s verschieben Merkur um 8″ bis 18″ in heliozentrischer Länge, in der Größenordnung des
-  nominellen Fehlers der Tafel. Weitere Vereinfachungen: [Grenzen des Modells](thema:modell).
+  $360^\circ/\dot{L}$; zählt man die Massen der inneren Planeten, vor allem Jupiter und Saturn,
+  zur Zentralmasse, wie es für weit außen laufende Bahnen näherungsweise gilt, bleiben −0,016 %
+  und −0,006 %. Für den Erdmond ist sie um 0,11 % kürzer.
+- **Zeit:** Die Uhr zählt julianische Tage in UTC und setzt sie ohne Umrechnung als TDB ein. Der
+  Versatz TDB − UT beträgt laut Horizons 18,6 s für 1800, −1,9 s für 1900 und 69,2 s heute
+  ([JPL Horizons](quelle:jpl-horizons)); heute verschiebt er Merkur um 8″ bis 18″ in
+  heliozentrischer Länge, in der Größenordnung des nominellen Fehlers der Tafel. Weitere
+  Vereinfachungen: [Grenzen des Modells](thema:modell).
 
 *Stand: September 2026*

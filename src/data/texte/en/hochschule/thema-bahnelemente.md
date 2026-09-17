@@ -51,9 +51,7 @@ angles lose their meaning:
 | $L = \varpi + M$ | sum across both planes, uniform in time | $I \to 180^\circ$ |
 
 For the planets' low-inclination orbits, $L$ therefore always remains defined, and so does
-$\varpi$ as long as $e$ does not become too small. How sensitive $\varpi$ is at small $e$ is
-shown by Venus with $e = 0.0068$: JPL's two approximate tables give its rate as 0.0027° and
-0.0568° per century ([JPL Approximate Positions](quelle:jpl-approx-pos)).
+$\varpi$ as long as $e$ does not become too small.
 
 ## Kepler's equation
 
@@ -66,14 +64,15 @@ The usual method is Newton's iteration
 
 $$E_{k+1} = E_k - \frac{E_k - e \sin E_k - M}{1 - e \cos E_k}$$
 
-It converges quadratically once the starting value lies in the basin of attraction. For common
+It converges locally quadratically. For common
 starters, regions in $(e, M)$ with guaranteed convergence and an a priori error bound can be
 proven, and convergence becomes ever faster as $e \to 0$
 ([Elipe et al. 2017](literatur:elipe-2017)). The critical case is $e \to 1$ at small absolute
 $M$, where the derivative $1 - e \cos E$ approaches zero. With the starter $E_0 = M$, the
 iteration behaves chaotically at very high eccentricity and can temporarily oscillate between
-two incorrect values; with $E_0 = \pi$ it always converges rapidly
-([Charles and Tatum 1997](literatur:charles-1997)). JPL's recipe reduces $M$ to ±180°, starts
+two incorrect values; with $E_0 = \pi$ it always converges rapidly for $0 \le M \le \pi$
+([Charles and Tatum 1997](literatur:charles-1997)), and correspondingly with $E_0 = -\pi$ for
+negative $M$. JPL's recipe reduces $M$ to ±180°, starts
 from $E_0 = M + e \sin M$ and considers a tolerance of $10^{-6}$ degrees sufficient
 ([JPL Approximate Positions](quelle:jpl-approx-pos)). From $E$ follow the coordinates in the
 orbital plane, with $\xi$ pointing to pericentre:
@@ -148,7 +147,10 @@ unpredictable over a few tens of millions of years ([Laskar 1989](literatur:lask
 
 The elements of JPL's approximate tables are neither osculating nor mean elements in the sense
 of perturbation theory: according to JPL, they are fitted to a time window, do not represent
-any mean and are not valid outside the window. The nominal errors for 1800 to 2050 in
+any mean and are not valid outside the window. How strongly the rates depend on the window and
+on the form of the fit is shown by the tables for 1800 to 2050 and for 3000 BC to 3000 AD: for
+$\dot{\varpi}$ they give 0.0027° and 0.0568° per century for Venus ($e = 0.0068$), and even
+−0.419° and +0.542° for Saturn ($e = 0.054$). The nominal errors for 1800 to 2050 in
 heliocentric longitude are 15″ for Mercury, 400″ for Jupiter and 600″ for Saturn; for 3000 BC to
 3000 AD, the mean anomaly of Jupiter to Neptune additionally needs
 $b T^2 + c \cos(f T) + s \sin(f T)$ ([JPL Approximate Positions](quelle:jpl-approx-pos)). A
@@ -179,10 +181,15 @@ rectilinear motion remain singular; a variant moves the singularity to $I = 0$
 All three cases occur in Orrery's data sets. In JPL's table, [Io](objekt:io) has
 $I = 0.0^\circ$ without a node precession period, and [Deimos](objekt:deimos) has
 $e = 0.000$ without an apsidal period
-([Planetary Satellite Mean Elements](quelle:jpl-satelliten-bahnen)). The five major moons of
-Uranus have inclinations close to 180° relative to Uranus' IAU north pole; for four of them,
-0.003° to 0.19° away from it, the osculating node shows no reliable linear trend over 40 years.
-In these cases the data set sets the affected rate to zero.
+([Planetary Satellite Mean Elements](quelle:jpl-satelliten-bahnen)); there the data set sets
+the node rate and the apsidal rate, respectively, to zero. The major moons of Uranus orbit with
+inclinations between 175.6° and 180.0° relative to Uranus' IAU north pole. In Horizons, the
+osculating node of Ariel, on average 0.02° from 180°, moves so irregularly from 1986 to 2026
+that it deviates from the fitted straight line by 40° root mean square; for Titania it reverses
+after 25 years. Umbriel and Oberon, by contrast, show uniform node rates of 3.7° and 0.7° per
+year, whereas the node periods in JPL's table give 2.8° and 1.9° per year
+([JPL Horizons](quelle:jpl-horizons)). The data set keeps the nodes of all five moons of Uranus
+fixed.
 
 ## Satellites and the Laplace plane
 
@@ -214,30 +221,40 @@ $I = 5.16^\circ$, node period 18.6 years
   own epoch, all rates except $\dot{L}$ zero. For [Pluto](objekt:pluto) (JD 2457588.5,
   19 July 2016) they agree with the heliocentric osculating orbit of the Pluto system
   barycentre from DE441; relative to DE441, its position deviates by 0.05° in 2000, 0.13° in
-  2050, 0.15° in 1900 and 1.4° in 1800.
-- **Earth's Moon:** mean elements relative to the ecliptic with linear regression of the node
-  and advance of the apsides, without periodic terms.
+  2050, 0.15° in 1900 and 1.4° in 1800. The main cause is the mean motion of the snapshot: it is
+  0.44 % below the barycentric one, because $a$ is 0.10 au larger and only the Sun's mass counts
+  as central mass; by 1800 this adds up to 1.39°.
+- **Earth's Moon:** mean elements relative to the ecliptic, with $a$, $e$ and $I = 5.145^\circ$
+  from the NSSDC fact sheet and $L$, $\varpi$ and $\Omega$ with linear rates after Meeus
+  (Astronomical Algorithms), without periodic terms; hence $I$ differs from the 5.16° in JPL's
+  table.
 - **Other satellites:** elements relative to the parent body's equator, using its IAU pole at
   epoch J2000; as at JPL, the longitude of the node is counted from the node of this plane on
   the ICRF equator, and the data block shows it that way. The moons of Mars and Jupiter use
   JPL's mean elements and equate the Laplace plane with the equator, although it deviates from
   it by 0.4° for Callisto and 0.9° for Deimos. The moons of Saturn, Uranus, Neptune and Pluto
-  use osculating Horizons elements at J2000, with precession rates from JPL's table where these
-  hold up against Horizons, otherwise without. For Iapetus the node therefore precesses about
-  Saturn's pole instead of the Laplace pole; its inclination to Saturn's equator deviates from
-  Horizons by 0.71° in 2050 and 1.11° in 2076.
+  use osculating Horizons elements at J2000. For the moons of Saturn, nodes and apsides precess
+  at rates from JPL's table (the nodes of Enceladus and Dione are fixed); for the moons of
+  Uranus only the apsides precess; Triton and Charon do not precess. For Iapetus the node
+  therefore precesses about Saturn's pole instead of the Laplace pole; its inclination to
+  Saturn's equator deviates from Horizons by 0.71° in 2050 and 1.11° in 2076.
 - **Kepler's equation:** Newton's method from $E_0 = M + e \sin M$, stopping at a step below
   $10^{-12}$ rad, at most 30 steps. Recomputed on 200,001 equally spaced values of $M$, the
   largest eccentricity in the catalogue ([Eris](objekt:eris), 0.438) needs at most 5 steps,
-  $e = 0.99$ at most 10; at $e = 0.999$, 943 values with small absolute $M$ miss the stopping
-  criterion.
+  $e = 0.99$ at most 10. At $e = 0.999$, 943 values with small absolute $M$ do not reach the
+  stopping criterion; for 886 of them a residual above $10^{-6}$ rad remains, the iterates
+  diverge up to the order of $10^{16}$, and the solver returns the last value unchecked.
 - **Orbital period:** the data block computes it with the formula above from $a$ at epoch and
   $G\,(M + m)$ with $G$ from CODATA 2018. For the Sun this product exceeds the nominal mass
   parameter by $4.5 \cdot 10^{-5}$, so the planets' periods come out 0.002 % too short. The
-  bodies, however, move with $\dot{L}$: for Uranus and Neptune the Keplerian period is 0.05 %
-  and 0.06 % longer than $360^\circ/\dot{L}$, for the Earth's Moon 0.11 % shorter.
-- **Time:** the clock counts Julian days in UTC and uses them as TDB without conversion. The
-  69 s shift Mercury by 8″ to 18″ in heliocentric longitude, of the same order as the nominal
-  error of the table. Further simplifications: [limits of the model](thema:modell).
+  bodies, however, move with $\dot{L}$. For Uranus and Neptune the Keplerian period is 0.05 %
+  and 0.06 % longer than $360^\circ/\dot{L}$; counting the masses of the inner planets, above
+  all Jupiter and Saturn, as central mass, which approximately holds for orbits this far out,
+  leaves −0.016 % and −0.006 %. For the Earth's Moon it is 0.11 % shorter.
+- **Time:** the clock counts Julian days in UTC and uses them as TDB without conversion.
+  According to Horizons, the offset TDB − UT is 18.6 s for 1800, −1.9 s for 1900 and 69.2 s
+  today ([JPL Horizons](quelle:jpl-horizons)); today it shifts Mercury by 8″ to 18″ in
+  heliocentric longitude, of the same order as the nominal error of the table. Further
+  simplifications: [limits of the model](thema:modell).
 
 *As of September 2026*
