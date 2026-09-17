@@ -132,6 +132,12 @@ benachbarte Buchstaben nur innerhalb einer Zeile zu einem `mi`, nicht über eine
 Tiefstellung hinweg. Eine Ziffernfolge ist stets ein einziges Argument — es gilt Klammerpflicht,
 etwa `\frac{1}{2}` statt `\frac12`.
 
+**Nachtrag (4d-2):** Funktionsnamen (`\sin`, `\cos`, `\tan`, `\arcsin`, `\arctan`, `\exp`,
+`\ln`, `\log`, `\max`, `\min`) stehen als `mi` mit nachfolgender Funktionsanwendung
+(`<mo>&#x2061;</mo>`, auch für Screenreader). Ein dünner Abstand (0,1667 em) steht davor, wenn
+Gewöhnliches oder eine schließende Klammer vorangeht, und danach, wenn kein Operator und keine
+Klammer folgt — wie in TeX. So erscheint `M = E - e\sin E` nicht mehr als gedrängtes „e sinE".
+
 ### 3.4 Ausgabe
 
 - `Formel.tsx` ruft `texNachMathml` in `useMemo` und gibt den Baum rekursiv mit

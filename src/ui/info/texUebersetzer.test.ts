@@ -98,8 +98,28 @@ describe('texNachMathml', () => {
     expect(zeile('90^\\circ')).toEqual([el('msup', [mn('90'), mo('∘')])]);
   });
 
-  it('setzt Funktionsnamen aufrecht als ein Zeichen', () => {
-    expect(zeile('\\sin E')).toEqual([mi('sin'), mi('E')]);
+  it('setzt Funktionsnamen mit Funktionsanwendung und dünnem Abstand wie TeX', () => {
+    const fa = mo('⁡');
+    const sp = el('mspace', [], { width: '0.1667em' });
+    expect(zeile('\\sin E')).toEqual([mi('sin'), fa, sp, mi('E')]);
+    expect(zeile('e \\sin E')).toEqual([mi('e'), sp, mi('sin'), fa, sp, mi('E')]);
+    expect(zeile('\\sin^2 E')).toEqual([el('msup', [mi('sin'), mn('2')]), fa, sp, mi('E')]);
+    expect(zeile('\\sin\\cos x')).toEqual([mi('sin'), fa, sp, mi('cos'), fa, sp, mi('x')]);
+    expect(zeile('\\sin\\left(x\\right)')).toEqual([
+      mi('sin'), fa, sp, el('mrow', [mo('(', STRETCHY), mi('x'), mo(')', STRETCHY)]),
+    ]);
+    expect(zeile('(x)\\ln y')).toEqual([mo('('), mi('x'), mo(')'), sp, mi('ln'), fa, sp, mi('y')]);
+  });
+
+  it('setzt keinen zusätzlichen Abstand neben Operatoren, Klammern, Abständen und am Zeilenende', () => {
+    const fa = mo('⁡');
+    const sp = el('mspace', [], { width: '0.1667em' });
+    expect(zeile('\\sin(x)')).toEqual([mi('sin'), fa, mo('('), mi('x'), mo(')')]);
+    expect(zeile('a = \\cos E')).toEqual([mi('a'), mo('='), mi('cos'), fa, sp, mi('E')]);
+    expect(zeile('a\\,\\sin E')).toEqual([mi('a'), sp, mi('sin'), fa, sp, mi('E')]);
+    expect(zeile('(\\cos E - e)')).toEqual([mo('('), mi('cos'), fa, sp, mi('E'), mo('−'), mi('e'), mo(')')]);
+    expect(zeile('\\ln')).toEqual([mi('ln'), fa]);
+    expect(zeile('x^{\\sin}')).toEqual([el('msup', [mi('x'), el('mrow', [mi('sin'), fa])])]);
   });
 
   it('setzt Summen im Block mit Grenzen darüber und darunter, Integrale immer als Index', () => {

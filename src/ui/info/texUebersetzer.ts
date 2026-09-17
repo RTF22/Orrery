@@ -128,10 +128,42 @@ function zerlegen(tex: string): Token[] {
 }
 
 /** Ein Element der Zeile samt Hoch- und Tiefstellung, die erst am Ende gebaut wird. */
-interface Atom { basis: MathKnoten; grenzen: boolean; unten: MathKnoten | null; oben: MathKnoten | null }
+interface Atom { basis: MathKnoten; grenzen: boolean; funktion: boolean; unten: MathKnoten | null; oben: MathKnoten | null }
 
-const einfach = (basis: MathKnoten): Atom => ({ basis, grenzen: false, unten: null, oben: null });
+const einfach = (basis: MathKnoten): Atom => ({ basis, grenzen: false, funktion: false, unten: null, oben: null });
 const zeileAus = (kinder: MathKnoten[]): MathKnoten => (kinder.length === 1 ? kinder[0]! : { tag: 'mrow', kinder });
+
+/** Dünner Abstand wie \, in TeX (3 mu). */
+const duenn = (): MathKnoten => ({ tag: 'mspace', attribute: { width: '0.1667em' }, kinder: [] });
+
+const istMo = (k: MathKnoten | undefined): boolean => k !== undefined && 'text' in k && k.tag === 'mo';
+
+/**
+ * Funktionsnamen wie in TeX (Entwurf 4d §3.3, Nachtrag 4d-2): hinter dem
+ * Namen samt Hoch- und Tiefstellung die unsichtbare Funktionsanwendung
+ * U+2061; ein dünner Abstand davor, wenn Gewöhnliches oder eine schließende
+ * Klammer vorangeht, und danach, wenn kein Operator folgt. Operatoren und
+ * Klammern (mo) bringen ihren Abstand in MathML selbst mit; ein vorhandener
+ * mspace wird nicht verdoppelt.
+ */
+function mitFunktionsabstaenden(atome: readonly Atom[], knoten: readonly MathKnoten[]): MathKnoten[] {
+  const zeile: MathKnoten[] = [];
+  knoten.forEach((k, i) => {
+    const funktion = atome[i]?.funktion === true;
+    if (funktion) {
+      const vorher = zeile[zeile.length - 1];
+      const schliessend = vorher !== undefined && 'text' in vorher && (vorher.text === ')' || vorher.text === ']');
+      if (vorher !== undefined && vorher.tag !== 'mspace' && (!istMo(vorher) || schliessend)) zeile.push(duenn());
+    }
+    zeile.push(k);
+    if (funktion) {
+      zeile.push({ tag: 'mo', text: '⁡' });
+      const danach = knoten[i + 1];
+      if (danach !== undefined && !istMo(danach)) zeile.push(duenn());
+    }
+  });
+  return zeile;
+}
 
 /** \mathrm: alle mi aufrecht, benachbarte Buchstaben in einer Zeile zu einem mi. */
 function aufrecht(k: MathKnoten): MathKnoten {
@@ -196,7 +228,7 @@ export function texNachMathml(tex: string, block: boolean): Uebersetzung {
         }
         atome.push(atom());
       }
-      return atome.map(bauen);
+      return mitFunktionsabstaenden(atome, atome.map(bauen));
     };
 
     const gruppe = (): MathKnoten => {
@@ -234,10 +266,10 @@ export function texNachMathml(tex: string, block: boolean): Uebersetzung {
       if (operator !== undefined) return einfach({ tag: 'mo', text: operator });
       const symbol = aus(SYMBOLE, n);
       if (symbol !== undefined) return einfach({ tag: 'mi', text: symbol });
-      if (FUNKTIONEN.has(n)) return einfach({ tag: 'mi', text: n });
+      if (FUNKTIONEN.has(n)) return { ...einfach({ tag: 'mi', text: n }), funktion: true };
       const grossoperator = aus(GROSSOPERATOREN, n);
       if (grossoperator !== undefined) {
-        return { basis: { tag: 'mo', attribute: { largeop: 'true' }, text: grossoperator }, grenzen: n === 'sum', unten: null, oben: null };
+        return { basis: { tag: 'mo', attribute: { largeop: 'true' }, text: grossoperator }, grenzen: n === 'sum', funktion: false, unten: null, oben: null };
       }
       const abstand = aus(ABSTAENDE, n);
       if (abstand !== undefined) return einfach({ tag: 'mspace', attribute: { width: abstand }, kinder: [] });
