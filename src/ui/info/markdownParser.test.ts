@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseInline, parseMarkdown, titelVon } from './markdownParser';
+import { inlineText, parseInline, parseMarkdown, tabellenzellen, titelVon } from './markdownParser';
 
 const text = (t: string) => ({ typ: 'text' as const, text: t });
 
@@ -88,5 +88,91 @@ describe('parseMarkdown', () => {
   it('titelVon liefert die erste Überschrift der Ebene 1 als Text', () => {
     expect(titelVon(parseMarkdown('# Die *Erde*\n\nx'))).toBe('Die Erde');
     expect(titelVon(parseMarkdown('## nur klein'))).toBeNull();
+  });
+});
+
+const formel = (tex: string) => ({ typ: 'formel' as const, tex });
+
+describe('Formeln (Entwurf 4d §3.1)', () => {
+  it('erkennt eine Formel im Satz', () => {
+    expect(parseInline('Es gilt $a^2$ hier.')).toEqual([text('Es gilt '), formel('a^2'), text(' hier.')]);
+    expect(parseInline('$x$')).toEqual([formel('x')]);
+  });
+
+  it('folgt der Regel von Pandoc: Leerraum innen am Rand oder Ziffer danach schließen nicht', () => {
+    expect(parseInline('kostet 5 $ und 6 $')).toEqual([text('kostet 5 $ und 6 $')]);
+    expect(parseInline('$5 und $6')).toEqual([text('$5 und $6')]);
+    expect(parseInline('$a$5')).toEqual([text('$a$5')]);
+    expect(parseInline('ein $ allein')).toEqual([text('ein $ allein')]);
+  });
+
+  it('maskiert \\$ als Dollarzeichen', () => {
+    expect(parseInline('Preis \\$5 und \\$6')).toEqual([text('Preis $5 und $6')]);
+  });
+
+  it('wertet in Formeln kein Markdown aus, außerhalb schon', () => {
+    expect(parseInline('$a*b$ und *k*')).toEqual([
+      formel('a*b'), text(' und '), { typ: 'kursiv', kinder: [text('k')] },
+    ]);
+    expect(parseInline('[Wert $x$](objekt:earth)')).toEqual([
+      { typ: 'link', ziel: 'objekt:earth', kinder: [text('Wert '), formel('x')] },
+    ]);
+  });
+
+  it('macht aus einem Absatz mit $$ am Anfang und Ende eine Blockformel', () => {
+    expect(parseMarkdown('Vorher\n\n$$\nT^2 = a^3\n$$\n\nNachher')).toEqual([
+      { typ: 'absatz', kinder: [text('Vorher')] },
+      { typ: 'formel', tex: 'T^2 = a^3' },
+      { typ: 'absatz', kinder: [text('Nachher')] },
+    ]);
+    expect(parseMarkdown('$$x$$')).toEqual([{ typ: 'formel', tex: 'x' }]);
+  });
+
+  it('liefert als Klartext einer Formel ihren Quelltext', () => {
+    expect(inlineText([text('a '), formel('x^2')])).toBe('a x^2');
+  });
+});
+
+describe('Tabellen (Entwurf 4d §3.1)', () => {
+  it('zerlegt Zeilen an unmaskierten Strichen und löst \\| danach auf', () => {
+    expect(tabellenzellen('| a | b |')).toEqual(['a', 'b']);
+    expect(tabellenzellen('| $\\|x\\|$ | c \\| d |')).toEqual(['$|x|$', 'c | d']);
+    expect(tabellenzellen('| a | b')).toBeNull();
+    expect(tabellenzellen('a | b |')).toBeNull();
+    expect(tabellenzellen('| a \\|')).toBeNull();
+  });
+
+  it('erkennt Kopf, Ausrichtung und Datenzeilen mit Inline-Elementen', () => {
+    const md = '| Größe | Wert | Mitte |\n|:---|---:|:---:|\n| $J_2$ | **1** | x |\n| a \\| b | 2 | y |';
+    expect(parseMarkdown(md)).toEqual([{
+      typ: 'tabelle',
+      ausrichtung: ['links', 'rechts', 'mitte'],
+      kopf: [[text('Größe')], [text('Wert')], [text('Mitte')]],
+      zeilen: [
+        [[formel('J_2')], [{ typ: 'fett', kinder: [text('1')] }], [text('x')]],
+        [[text('a | b')], [text('2')], [text('y')]],
+      ],
+    }]);
+  });
+
+  it('schließt einen vorangehenden Absatz und endet an einer Zeile ohne Strich', () => {
+    expect(parseMarkdown('Vorher\n| a |\n|---|\n| 1 |\nNachher')).toEqual([
+      { typ: 'absatz', kinder: [text('Vorher')] },
+      { typ: 'tabelle', ausrichtung: ['links'], kopf: [[text('a')]], zeilen: [[[text('1')]]] },
+      { typ: 'absatz', kinder: [text('Nachher')] },
+    ]);
+  });
+
+  it('macht aus Strichzeilen ohne gültige Form einen eigenen Absatz', () => {
+    expect(parseMarkdown('| a | b |\n|---|---|\n| 1 |')).toEqual([
+      { typ: 'absatz', kinder: [text('| a | b | |---|---| | 1 |')] },
+    ]);
+    expect(parseMarkdown('| a | b |\nText')).toEqual([
+      { typ: 'absatz', kinder: [text('| a | b |')] },
+      { typ: 'absatz', kinder: [text('Text')] },
+    ]);
+    expect(parseMarkdown('| a |\n|--|\n| 1 |')).toEqual([
+      { typ: 'absatz', kinder: [text('| a | |--| | 1 |')] },
+    ]);
   });
 });

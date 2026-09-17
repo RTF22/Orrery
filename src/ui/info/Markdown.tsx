@@ -60,6 +60,7 @@ function Inlines({ kinder, onVerweis }: { kinder: Inline[]; onVerweis: (v: Verwe
       {kinder.map((k, i) => {
         switch (k.typ) {
           case 'text': return <Fragment key={i}>{k.text}</Fragment>;
+          case 'formel': return <code key={i}>{k.tex}</code>;
           case 'fett': return <strong key={i}><Inlines kinder={k.kinder} onVerweis={onVerweis} /></strong>;
           case 'kursiv': return <em key={i}><Inlines kinder={k.kinder} onVerweis={onVerweis} /></em>;
           case 'link':
@@ -97,6 +98,10 @@ function Blockknoten({ block, onVerweis }: { block: Block; onVerweis: (v: Verwei
         </Tag>
       );
     }
+    case 'formel':
+      return <code>{block.tex}</code>;
+    case 'tabelle':
+      return <p className="m-0">{block.kopf.length}</p>;
   }
 }
 

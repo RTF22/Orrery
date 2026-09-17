@@ -1,21 +1,28 @@
 /**
- * Markdown-Teilmenge für die Erläuterungstexte (Entwurf 4c §4.2):
+ * Markdown-Teilmenge für die Erläuterungstexte (Entwurf 4c §4.2, 4d §3.1):
  * Überschriften # bis ###, Absätze, Listen mit - oder 1., fett, kursiv,
- * Links. Alles andere bleibt Klartext, HTML wird nie durchgereicht — deshalb
- * braucht die Ausgabe keine Bereinigung. Zeichenweise Zerlegung statt
- * regulärer Ausdrücke, damit Klammern in Linktexten und Sternchen in
- * Zahlen (5*10) nicht kippen.
+ * Links, Formeln ($…$ im Satz, $$…$$ als Absatz) und Pipe-Tabellen. Alles
+ * andere bleibt Klartext, HTML wird nie durchgereicht — deshalb braucht
+ * die Ausgabe keine Bereinigung. Zeichenweise Zerlegung statt regulärer
+ * Ausdrücke, damit Klammern in Linktexten und Sternchen in Zahlen (5*10)
+ * nicht kippen. TeX wird hier nicht übersetzt, nur als Quelle gehalten
+ * (texUebersetzer.ts).
  */
 export type Inline =
   | { typ: 'text'; text: string }
+  | { typ: 'formel'; tex: string }
   | { typ: 'fett'; kinder: Inline[] }
   | { typ: 'kursiv'; kinder: Inline[] }
   | { typ: 'link'; ziel: string; kinder: Inline[] };
 
+export type Ausrichtung = 'links' | 'mitte' | 'rechts';
+
 export type Block =
   | { typ: 'ueberschrift'; ebene: 1 | 2 | 3; kinder: Inline[] }
   | { typ: 'absatz'; kinder: Inline[] }
-  | { typ: 'liste'; geordnet: boolean; punkte: Inline[][] };
+  | { typ: 'liste'; geordnet: boolean; punkte: Inline[][] }
+  | { typ: 'formel'; tex: string }
+  | { typ: 'tabelle'; ausrichtung: Ausrichtung[]; kopf: Inline[][]; zeilen: Inline[][][] };
 
 const WORTZEICHEN = /[\p{L}\p{N}]/u;
 
@@ -56,6 +63,28 @@ function liesLink(text: string, start: number): { linktext: string; ziel: string
   return { linktext, ziel, ende: j + 1 };
 }
 
+const LEERRAUM = /\s/;
+const ZIFFER = /[0-9]/;
+
+/**
+ * Liest ab `start` (ein `$`) eine Formel im Satz nach der Regel von Pandoc:
+ * Nach dem öffnenden `$` steht kein Leerraum und kein weiteres `$`, vor dem
+ * schließenden kein Leerraum und kein Backslash, danach keine Ziffer. Ohne
+ * passendes Ende bleibt das Zeichen Text („kostet 5 $").
+ */
+function liesFormel(text: string, start: number): { tex: string; ende: number } | null {
+  const erstes = text[start + 1];
+  if (erstes === undefined || erstes === '$' || LEERRAUM.test(erstes)) return null;
+  for (let j = start + 2; j < text.length; j += 1) {
+    if (text[j] !== '$') continue;
+    const davor = text[j - 1] ?? '';
+    if (LEERRAUM.test(davor) || davor === '\\') continue;
+    if (ZIFFER.test(text[j + 1] ?? '')) continue;
+    return { tex: text.slice(start + 1, j), ende: j + 1 };
+  }
+  return null;
+}
+
 /** Benachbarte Textknoten zusammenziehen, rekursiv. */
 function verschmelzen(liste: Inline[]): Inline[] {
   const out: Inline[] = [];
@@ -64,6 +93,8 @@ function verschmelzen(liste: Inline[]): Inline[] {
     if (el.typ === 'text') {
       if (letzter?.typ === 'text') letzter.text += el.text;
       else out.push({ typ: 'text', text: el.text });
+    } else if (el.typ === 'formel') {
+      out.push(el);
     } else {
       out.push({ ...el, kinder: verschmelzen(el.kinder) });
     }
@@ -85,6 +116,20 @@ export function parseInline(text: string): Inline[] {
   let i = 0;
   while (i < text.length) {
     const c = text[i]!;
+    if (c === '\\' && text[i + 1] === '$') {
+      puffer += '$';
+      i += 2;
+      continue;
+    }
+    if (c === '$') {
+      const formel = liesFormel(text, i);
+      if (formel !== null) {
+        leeren();
+        ziel().push({ typ: 'formel', tex: formel.tex });
+        i = formel.ende;
+        continue;
+      }
+    }
     if (c === '[') {
       const link = liesLink(text, i);
       if (link !== null) {
@@ -135,6 +180,63 @@ export function parseInline(text: string): Inline[] {
 
 const UEBERSCHRIFT = /^(#{1,3})\s+(.*\S)\s*$/;
 const LISTENPUNKT = /^(-|\d+\.)\s+(.*)$/;
+const TRENNZELLE = /^:?-{3,}:?$/;
+
+/**
+ * Zerlegt eine Tabellenzeile in Zellen (Entwurf 4d §3.1): Die Zeile beginnt
+ * und endet mit `|`; zuerst wird an unmaskierten `|` getrennt, danach wird
+ * `\|` zu `|`, auch innerhalb von Formeln. Keine Tabellenzeile: null.
+ */
+export function tabellenzellen(zeile: string): string[] | null {
+  const s = zeile.trim();
+  if (s.length < 2 || !s.startsWith('|') || !s.endsWith('|') || s.endsWith('\\|')) return null;
+  const inhalt = s.slice(1, -1);
+  const zellen: string[] = [];
+  let aktuell = '';
+  for (let i = 0; i < inhalt.length; i += 1) {
+    const c = inhalt[i]!;
+    if (c === '\\' && inhalt[i + 1] === '|') {
+      aktuell += '|';
+      i += 1;
+      continue;
+    }
+    if (c === '|') {
+      zellen.push(aktuell.trim());
+      aktuell = '';
+      continue;
+    }
+    aktuell += c;
+  }
+  zellen.push(aktuell.trim());
+  return zellen;
+}
+
+function ausrichtungen(zellen: readonly string[]): Ausrichtung[] | null {
+  if (zellen.length === 0 || !zellen.every((z) => TRENNZELLE.test(z))) return null;
+  return zellen.map((z) => (z.startsWith(':') && z.endsWith(':') ? 'mitte' : z.endsWith(':') ? 'rechts' : 'links'));
+}
+
+/** Tabelle aus zusammenhängenden |-Zeilen, oder null, wenn die Form nicht stimmt. */
+function tabelle(zeilen: readonly string[]): Block | null {
+  const [kopfZeile, trennZeile, ...rest] = zeilen;
+  if (kopfZeile === undefined || trennZeile === undefined) return null;
+  const kopf = tabellenzellen(kopfZeile);
+  const trenn = tabellenzellen(trennZeile);
+  const ausrichtung = trenn === null ? null : ausrichtungen(trenn);
+  if (kopf === null || ausrichtung === null || ausrichtung.length !== kopf.length) return null;
+  const daten: string[][] = [];
+  for (const zeile of rest) {
+    const zellen = tabellenzellen(zeile);
+    if (zellen === null || zellen.length !== kopf.length) return null;
+    daten.push(zellen);
+  }
+  return {
+    typ: 'tabelle',
+    ausrichtung,
+    kopf: kopf.map((z) => parseInline(z)),
+    zeilen: daten.map((zeile) => zeile.map((z) => parseInline(z))),
+  };
+}
 
 export function parseMarkdown(text: string): Block[] {
   const bloecke: Block[] = [];
@@ -143,7 +245,13 @@ export function parseMarkdown(text: string): Block[] {
 
   const absatzSchliessen = (): void => {
     if (absatz.length === 0) return;
-    bloecke.push({ typ: 'absatz', kinder: parseInline(absatz.join(' ')) });
+    const roh = absatz.join(' ');
+    // Blockformel (Entwurf 4d §3.1): ein Absatz, der mit $$ beginnt und endet.
+    if (roh.length >= 4 && roh.startsWith('$$') && roh.endsWith('$$')) {
+      bloecke.push({ typ: 'formel', tex: roh.slice(2, -2).trim() });
+    } else {
+      bloecke.push({ typ: 'absatz', kinder: parseInline(roh) });
+    }
     absatz = [];
   };
   const listeSchliessen = (): void => {
@@ -152,11 +260,27 @@ export function parseMarkdown(text: string): Block[] {
     liste = null;
   };
 
-  for (const roh of text.replace(/\r\n?/g, '\n').split('\n')) {
+  const zeilen = text.replace(/\r\n?/g, '\n').split('\n');
+  for (let n = 0; n < zeilen.length; n += 1) {
+    const roh = zeilen[n]!;
     const zeile = roh.trimEnd();
     if (zeile.trim() === '') {
       absatzSchliessen();
       listeSchliessen();
+      continue;
+    }
+    if (zeile.trimStart().startsWith('|')) {
+      // Zusammenhängende |-Zeilen bilden eine Tabelle. Stimmt die Form nicht,
+      // werden sie ein eigener Absatz, den der Dateitest erkennt.
+      absatzSchliessen();
+      listeSchliessen();
+      const strichzeilen: string[] = [];
+      while (n < zeilen.length && (zeilen[n] ?? '').trimStart().startsWith('|')) {
+        strichzeilen.push((zeilen[n] ?? '').trim());
+        n += 1;
+      }
+      n -= 1;
+      bloecke.push(tabelle(strichzeilen) ?? { typ: 'absatz', kinder: parseInline(strichzeilen.join(' ')) });
       continue;
     }
     const kopf = UEBERSCHRIFT.exec(zeile);
@@ -189,7 +313,7 @@ export function parseMarkdown(text: string): Block[] {
 }
 
 export function inlineText(kinder: Inline[]): string {
-  return kinder.map((k) => (k.typ === 'text' ? k.text : inlineText(k.kinder))).join('');
+  return kinder.map((k) => (k.typ === 'text' ? k.text : k.typ === 'formel' ? k.tex : inlineText(k.kinder))).join('');
 }
 
 export function titelVon(bloecke: Block[]): string | null {
