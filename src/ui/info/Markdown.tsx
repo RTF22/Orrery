@@ -2,9 +2,11 @@ import { Fragment, useMemo } from 'react';
 import type { MouseEvent, ReactNode } from 'react';
 import { parseMarkdown } from './markdownParser';
 import type { Block, Inline } from './markdownParser';
+import type { Ausrichtung } from './markdownParser';
 import { verweisAufloesen } from '../../data/verweise';
 import type { Verweis } from '../../data/verweise';
 import { VERWEIS_KNOPF } from './Datenblock';
+import { Formel } from './Formel';
 
 interface Props {
   text: string;
@@ -60,7 +62,7 @@ function Inlines({ kinder, onVerweis }: { kinder: Inline[]; onVerweis: (v: Verwe
       {kinder.map((k, i) => {
         switch (k.typ) {
           case 'text': return <Fragment key={i}>{k.text}</Fragment>;
-          case 'formel': return <code key={i}>{k.tex}</code>;
+          case 'formel': return <Formel key={i} tex={k.tex} block={false} />;
           case 'fett': return <strong key={i}><Inlines kinder={k.kinder} onVerweis={onVerweis} /></strong>;
           case 'kursiv': return <em key={i}><Inlines kinder={k.kinder} onVerweis={onVerweis} /></em>;
           case 'link':
@@ -81,6 +83,9 @@ const UEBERSCHRIFT_KLASSE = {
   3: 'mt-1 text-sm font-medium opacity-90',
 } as const;
 
+const ZELLE = 'whitespace-nowrap border border-white/15 px-2 py-1';
+const AUSRICHTUNG: Record<Ausrichtung, string> = { links: 'text-left', mitte: 'text-center', rechts: 'text-right' };
+
 function Blockknoten({ block, onVerweis }: { block: Block; onVerweis: (v: Verweis) => void }): React.JSX.Element {
   switch (block.typ) {
     case 'ueberschrift': {
@@ -99,9 +104,36 @@ function Blockknoten({ block, onVerweis }: { block: Block; onVerweis: (v: Verwei
       );
     }
     case 'formel':
-      return <code>{block.tex}</code>;
+      return <Formel tex={block.tex} block />;
     case 'tabelle':
-      return <p className="m-0">{block.kopf.length}</p>;
+      // Zellen brechen nicht um; ist die Tabelle breiter als die Spalte,
+      // scrollt der Rahmen (Entwurf 4d §3.4).
+      return (
+        <div data-tabelle className="overflow-x-auto">
+          <table className="border-collapse text-xs tabular-nums">
+            <thead>
+              <tr>
+                {block.kopf.map((zelle, i) => (
+                  <th key={i} scope="col" className={`${ZELLE} font-semibold ${AUSRICHTUNG[block.ausrichtung[i] ?? 'links']}`}>
+                    <Inlines kinder={zelle} onVerweis={onVerweis} />
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {block.zeilen.map((zeile, r) => (
+                <tr key={r}>
+                  {zeile.map((zelle, i) => (
+                    <td key={i} className={`${ZELLE} ${AUSRICHTUNG[block.ausrichtung[i] ?? 'links']}`}>
+                      <Inlines kinder={zelle} onVerweis={onVerweis} />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
   }
 }
 

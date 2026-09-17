@@ -66,4 +66,37 @@ describe('Markdown', () => {
     expect(screen.getByText('tot')).toBeTruthy();
     expect(screen.queryByRole('link', { name: 'böse' })).toBeNull();
   });
+
+  it('setzt Formeln als MathML; Blockformeln scrollen waagerecht, Fehler zeigen den Quelltext', () => {
+    const { container } = render(
+      <Markdown text={'Es gilt $a^2$.\n\n$$\\frac{1}{2}$$\n\nFalsch: $\\foo$'} onVerweis={() => {}} />,
+    );
+    const formeln = container.querySelectorAll('math');
+    expect(formeln).toHaveLength(2);
+    expect(formeln[0]?.namespaceURI).toBe('http://www.w3.org/1998/Math/MathML');
+    expect(formeln[0]?.getAttribute('display')).toBe('inline');
+    expect(container.querySelector('msup')?.namespaceURI).toBe('http://www.w3.org/1998/Math/MathML');
+    const block = container.querySelector('[data-blockformel]');
+    expect(block?.className).toContain('overflow-x-auto');
+    expect(block?.querySelector('math')?.getAttribute('display')).toBe('block');
+    expect(block?.querySelector('mfrac')).not.toBeNull();
+    const fehler = container.querySelector('code[data-formelfehler]');
+    expect(fehler?.textContent).toBe('\\foo');
+    expect(fehler?.getAttribute('data-formelfehler')).toBe('Unbekannter Befehl \\foo');
+  });
+
+  it('gibt Tabellen mit Kopf, Ausrichtung und Formeln in Zellen aus', () => {
+    const { container } = render(
+      <Markdown text={'| Größe | Wert |\n|:---|---:|\n| $J_2$ | 1 |'} onVerweis={() => {}} />,
+    );
+    expect(screen.getByRole('table')).toBeTruthy();
+    const koepfe = screen.getAllByRole('columnheader');
+    expect(koepfe.map((k) => k.textContent)).toEqual(['Größe', 'Wert']);
+    expect(koepfe[0]?.getAttribute('scope')).toBe('col');
+    expect(koepfe[1]?.className).toContain('text-right');
+    const zellen = screen.getAllByRole('cell');
+    expect(zellen[0]?.querySelector('msub')).not.toBeNull();
+    expect(zellen[1]?.className).toContain('whitespace-nowrap');
+    expect(container.querySelector('[data-tabelle]')?.className).toContain('overflow-x-auto');
+  });
 });
