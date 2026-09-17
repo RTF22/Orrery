@@ -647,6 +647,13 @@ Aus dieser Abnahme selbst:
     `<mo>&#x2061;</mo>` (Funktionsanwendung) plus ein schmaler Zwischenraum als eigener Task mit
     Test.
 
+**Entscheidungen von Jens (17.09.2026):** Die drei Pilottexte sind ohne Änderungswünsche
+freigegeben; die Fragen 1, 2 und 4 bis 11 bleiben damit so, wie die Texte sie heute lösen.
+Frage 3: Die Quellenkarte `jpl-horizons` zeigt künftig auf das Handbuch. Frage 13: Das
+Prüfskript wiederholt Abrufe bei vorübergehenden Serverfehlern. Frage 14: Funktionsnamen
+bekommen den Abstand wie in TeX. Die drei Änderungen gehören zu Etappe 4d-2. Frage 12 entscheidet
+der Plan 4d-2.
+
 Code-Befunde außerhalb dieser Etappe (nur je eine Zeile, Einzelheiten in Abschnitt 7 und im
 Ledger): Erdrotationsmodell, UTC/TDB-Verwechslung, Erde im Baryzentrum, Albedo-Modell,
 Mondraten-Präzession, Mondfinsternis-Szene (Blende/Belichtung/Kernschatten), Miranda-Knotenrate,
