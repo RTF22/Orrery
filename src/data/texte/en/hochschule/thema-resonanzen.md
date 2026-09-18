@@ -44,12 +44,13 @@ Here $\Delta$ is the fractional deviation of the period ratio from its resonant 
 the combined mass of both bodies to the central mass, $e$ the eccentricity (the relative eccentricity
 for two massive bodies), $e_\mathrm{c}$ the eccentricity at which the orbits cross, and $A_q$ a factor
 of 0.845, 0.754 and 0.748 for orders 1 to 3. The width therefore grows with the square root of mass
-and $e^q$. The pendulum model treats $e$ as fixed and fails for nearly circular orbits; there the second
+and $\tilde{e}^{q}$. The pendulum model treats $e$ as fixed and fails for nearly circular orbits; there the second
 fundamental model of resonance is needed. Where neighbouring resonances overlap, the motion becomes
 chaotic ([Tamayo and Hadden 2025](literatur:tamayo-2025), sections 3.2 and 5.6).
 
-Not every oscillating angle means libration in the strict sense. Among the satellite resonances, only
-Mimas–Tethys and Titan–Hyperion have a separatrix, and only their angles librate with large amplitudes,
+Not every oscillating angle means libration in the strict sense. Among the satellite resonances, on
+today's analysis only Mimas–Tethys and Titan–Hyperion have a separatrix, and only their angles librate
+with large amplitudes,
 which are regarded as relics of the time of capture. Io–Europa, Europa–Ganymede and Enceladus–Dione lie
 too far from exact resonance for that ([Luan and Goldreich 2017](literatur:luan-2017)). Their angles do
 oscillate, but in phase space the trajectories circulate around a shifted centre without being enclosed
@@ -134,10 +135,14 @@ resonance clears its region: the Hilda asteroids reside in the 3:2 resonance
 
 ## Resonance capture by migration
 
-A pair is captured permanently into resonance when its orbits slowly approach each other. For capture
-into 2:1, the rate and form of the migration hardly matter; what matters is that the orbits converge,
-as long as the migration is not unreasonably fast ([Peale and Lee 2002](literatur:peale-2002)). The
-Mimas–Tethys and Enceladus–Dione resonances also require converging orbits
+A pair is captured permanently into resonance when its orbits slowly approach each other. For the two
+planets of GJ 876, forced inward migration of the outer one leads to certain capture into the 2:1
+resonance as long as the eccentricities stay small and the migration rate does not exceed a limit;
+larger eccentricities rather lead to capture into higher-order resonances
+([Lee and Peale 2002](literatur:lee-2002)). Peale and Lee base their picture of migrating moons on
+this: the rate and form of the migration hardly matter, only that the orbits converge
+([Peale and Lee 2002](literatur:peale-2002), note 26). The Mimas–Tethys and Enceladus–Dione resonances
+also require converging orbits
 ([Ćuk et al. 2024](literatur:cuk-2024)). For the Galilean moons, Yoder and Peale outlined a tidal path:
 Jupiter pushes Io outwards fastest, the first two two-body angles are captured with probability 1, the
 third, and with it $\varphi_\mathrm{L}$, with about 0.9, and dissipation in Io damps the amplitudes
@@ -203,23 +208,26 @@ $e = 0.104$, from close encounters ([Ćuk et al. 2024](literatur:cuk-2024)).
   is within the rounding of the six-digit orbital periods, which for Io alone allows ±2.1° per century.
 - **Perijoves of Io and Europa:** At the epoch the three two-body angles are at 0.3°, 180.2° and 0.2°.
   The data sets, however, advance the perijoves with periods of 1.33 and 1.46 years instead of letting
-  them regress at $n_1 - 2n_2$; the angles therefore circulate once in 243 and 255 days.
+  them regress at $-(n_1 - 2n_2)$ and $-(n_2 - 2n_3)$; the first angle therefore circulates once in
+  243 days, the other two in 255 days.
 - **Pluto and Neptune:** At the epoch $\varphi_\mathrm{P} = 242.6^\circ$. The period ratio of the data
   sets is 1.5116 instead of 3:2 on average, so $\varphi_\mathrm{P}$ decreases by 3.35° per century and
   circulates in 10,752 years. Today conjunctions still avoid perihelion: in 1892 Pluto was at a mean
   anomaly of 219°, 48.1 AU from the Sun and 19.4 AU from Neptune, and between 1800 and 2050 the two come
   no closer than 19.0 AU. Around 1500 BC and around AD 9200, however, conjunctions fall at perihelion;
-  between 4700 BC and AD 20,000 the smallest distance is 2.8 AU (year 9734, shortly after Pluto's
-  perihelion). The argument of perihelion is fixed at 113.7°.
+  between 4700 BC and AD 20,000 the smallest distance is 2.8 AU (year 9734, about 22 years after
+  Pluto's perihelion). The argument of perihelion is fixed at 113.7°.
 - **Saturnian moons:** The Mimas–Tethys angle is at −61.2° at the epoch and drifts by 13.3° per century
   instead of oscillating by 95° over 70 years. Hyperion is not in the catalogue.
-- **Asteroid belt:** The point cloud receives Kirkwood gaps as dips in density in semi-major axis at 4:1,
-  3:1, 5:2, 7:3 and 2:1, down to 10 % at the centre. Among the 50,000 particles of the highest quality
-  level, a strip 0.02 AU wide around 3:1, 5:2 and 7:3 contains only 19, 26 and 34 % as many particles as
-  strips of equal width 0.06 to 0.10 AU away on average. Sorted by distance from the Sun on
-  17 September 2026, with a mean eccentricity of 0.125, the figures are instead 104, 100 and 106 %: the
-  gaps cannot be seen in the view. The particles' elements are fixed, so a secular resonance such as
-  $\nu_6$ does not exist.
+- **Asteroid belt:** The density factor from which the point cloud is drawn carries gaps at 4:1, 3:1,
+  5:2, 7:3 and 2:1, each down to 10 % at the centre. In the belt itself the particles only range from
+  2.10 to 3.30 AU: the 4:1 gap at 2.065 AU lies outside and does not noticeably thin the edge, and of
+  the 2:1 gap at 3.279 AU only the inner flank lies within the range. Among the 50,000 particles of the
+  highest quality level, a strip 0.02 AU wide around 3:1, 5:2 and 7:3 contains only 19, 26 and 34 %
+  (around 2:1, 12 %) as many particles as strips of equal width 0.06 to 0.10 AU away on average. Sorted
+  by distance from the Sun on 17 September 2026, with a mean eccentricity of 0.125, the figures are
+  instead 104, 100 and 105 %: the gaps cannot be seen in the view. The particles' elements are fixed,
+  so a secular resonance such as $\nu_6$ does not exist.
 - **Plutinos:** The Kuiper cloud contains Plutinos with semi-major axes around 39.4 AU, but with random
   angles; for half of the particles around 39.4 AU, $\varphi_\mathrm{P}$ at the epoch is closer to 0°
   than to 180°, so there is no protection from Neptune. Further simplifications:

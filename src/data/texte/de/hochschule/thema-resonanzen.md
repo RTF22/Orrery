@@ -44,12 +44,13 @@ Dabei ist $\Delta$ die relative Abweichung des Umlaufzeitverhältnisses vom reso
 Verhältnis der Massensumme beider Körper zur Zentralmasse, $e$ die Exzentrizität (bei zwei massiven
 Körpern die relative), $e_\mathrm{c}$ die Exzentrizität, bei der sich die Bahnen kreuzen, und $A_q$ ein
 Faktor von 0,845, 0,754 und 0,748 für die Ordnungen 1 bis 3. Die Breite wächst also mit der Wurzel aus
-Masse und $e^q$. Das Pendelmodell setzt $e$ als fest voraus und versagt für fast kreisförmige Bahnen;
+Masse und $\tilde{e}^{q}$. Das Pendelmodell setzt $e$ als fest voraus und versagt für fast kreisförmige Bahnen;
 dort braucht es das zweite Fundamentalmodell der Resonanz. Überlappen benachbarte Resonanzen, wird die
 Bewegung chaotisch ([Tamayo und Hadden 2025](literatur:tamayo-2025), Abschnitte 3.2 und 5.6).
 
 Nicht jeder schwingende Winkel bedeutet Libration im strengen Sinn. Unter den Resonanzen der
-Satelliten besitzen nur Mimas–Tethys und Titan–Hyperion eine Separatrix, und nur ihre Winkel librieren
+Satelliten besitzen nach heutiger Analyse nur Mimas–Tethys und Titan–Hyperion eine Separatrix, und
+nur ihre Winkel librieren
 mit großen Amplituden, die als Überbleibsel aus der Zeit des Einfangs gelten. Io–Europa, Europa–Ganymed
 und Enceladus–Dione liegen dafür zu weit von der exakten Resonanz
 ([Luan und Goldreich 2017](literatur:luan-2017)). Ihre Winkel schwingen zwar, doch im Phasenraum
@@ -135,10 +136,14 @@ ihren Bereich: Die Hilda-Asteroiden sitzen in der 3:2-Resonanz ([Nesvorný 2018]
 
 ## Resonanzeinfang durch Migration
 
-Ein Paar gerät dauerhaft in Resonanz, wenn sich seine Bahnen langsam aufeinander zu bewegen. Für den
-Einfang in 2:1 kommt es dabei kaum auf Rate und Form der Migration an, sondern darauf, dass die Bahnen
-konvergieren, solange die Migration nicht unvernünftig schnell ist
-([Peale und Lee 2002](literatur:peale-2002)). Auch die Resonanzen Mimas–Tethys und Enceladus–Dione
+Ein Paar gerät dauerhaft in Resonanz, wenn sich seine Bahnen langsam aufeinander zu bewegen. Für die
+beiden Planeten von GJ 876 führt eine erzwungene Einwärtswanderung des äußeren sicher in die
+2:1-Resonanz, solange die Exzentrizitäten klein bleiben und die Wanderungsrate eine Schranke nicht
+überschreitet; größere Exzentrizitäten führen eher in Resonanzen höherer Ordnung
+([Lee und Peale 2002](literatur:lee-2002)). Peale und Lee stützen darauf ihr Bild wandernder Monde:
+Auf Rate und Form der Wanderung komme es kaum an, nur darauf, dass die Bahnen konvergieren
+([Peale und Lee 2002](literatur:peale-2002), Anmerkung 26). Auch die Resonanzen Mimas–Tethys und
+Enceladus–Dione
 setzen konvergierende Bahnen voraus ([Ćuk et al. 2024](literatur:cuk-2024)). Für die Galileischen
 Monde entwarfen Yoder und Peale einen Weg über Gezeiten: Jupiter schiebt Io am schnellsten nach außen,
 die ersten beiden Zweikörperwinkel werden mit Wahrscheinlichkeit 1 eingefangen, der dritte und mit ihm
@@ -205,25 +210,28 @@ $e = 0{,}104$ vor nahen Begegnungen ([Ćuk et al. 2024](literatur:cuk-2024)).
   Abweichung liegt innerhalb der Rundung der sechsstelligen Umlaufzeiten, die allein bei Io ±2,1° je
   Jahrhundert zulässt.
 - **Perijoven von Io und Europa:** Zur Epoche stehen die drei Zweikörperwinkel bei 0,3°, 180,2° und
-  0,2°. Die Datensätze lassen die Perijoven aber mit Perioden von 1,33 und 1,46 Jahren vorwärts laufen
-  statt mit $n_1 - 2n_2$ rückwärts; so laufen die Winkel in 243 und 255 Tagen einmal um.
+  0,2°. Die Datensätze lassen die Perijoven aber mit Perioden von 1,33 und 1,46 Jahren vorwärts laufen,
+  statt rückwärts mit $-(n_1 - 2n_2)$ beziehungsweise $-(n_2 - 2n_3)$; so läuft der erste Winkel in
+  243 Tagen einmal um, die beiden anderen in 255 Tagen.
 - **Pluto und Neptun:** Zur Epoche ist $\varphi_\mathrm{P} = 242{,}6^\circ$. Das Umlaufzeitverhältnis
   der Datensätze beträgt 1,5116 statt im Mittel 3:2, deshalb nimmt $\varphi_\mathrm{P}$ um 3,35° je
   Jahrhundert ab und läuft in 10 752 Jahren um. Heute weichen die Konjunktionen dem Perihel noch aus:
   1892 stand Pluto bei der mittleren Anomalie 219°, 48,1 AE von der Sonne und 19,4 AE von Neptun
   entfernt, und von 1800 bis 2050 kommen sich beide nicht näher als 19,0 AE. Um 1500 v. Chr. und um
   9200 n. Chr. fallen Konjunktionen dagegen ins Perihel; zwischen 4700 v. Chr. und 20 000 n. Chr.
-  beträgt der kleinste Abstand 2,8 AE (Jahr 9734, kurz nach Plutos Perihel). Das Perihelargument steht
+  beträgt der kleinste Abstand 2,8 AE (Jahr 9734, rund 22 Jahre nach Plutos Perihel). Das Perihelargument steht
   fest bei 113,7°.
 - **Saturnmonde:** Der Winkel von Mimas und Tethys liegt zur Epoche bei −61,2° und wandert um 13,3° je
   Jahrhundert, statt in 70 Jahren um 95° zu pendeln. Hyperion fehlt im Katalog.
-- **Asteroidengürtel:** Die Punktwolke erhält Kirkwood-Lücken als Einbrüche der Dichte in der großen
-  Halbachse bei 4:1, 3:1, 5:2, 7:3 und 2:1, in der Mitte auf 10 %. Unter den 50 000 Teilchen der
-  höchsten Qualitätsstufe enthält ein 0,02 AE breiter Streifen um 3:1, 5:2 und 7:3 nur 19, 26 und 34 %
-  so viele Teilchen wie im Mittel gleich breite Streifen 0,06 bis 0,10 AE daneben. Nach dem Abstand zur
-  Sonne sortiert sind es am 17. September 2026 bei einer mittleren Exzentrizität von 0,125 dagegen 104,
-  100 und 106 %: Im Bild sind die Lücken nicht zu sehen. Die Elemente der Teilchen stehen fest, eine
-  säkulare Resonanz wie $\nu_6$ gibt es daher nicht.
+- **Asteroidengürtel:** Der Dichtefaktor, aus dem die Punktwolke gezogen wird, trägt Lücken bei 4:1,
+  3:1, 5:2, 7:3 und 2:1, in der Mitte je auf 10 %. Im Gürtel selbst reichen die Teilchen nur von 2,10
+  bis 3,30 AE: Die 4:1-Lücke bei 2,065 AE liegt davor und dünnt den Rand nicht merklich aus, von der
+  2:1-Lücke bei 3,279 AE liegt nur die innere Flanke im Bereich. Unter den 50 000 Teilchen der höchsten
+  Qualitätsstufe enthält ein 0,02 AE breiter Streifen um 3:1, 5:2 und 7:3 nur 19, 26 und 34 % (um 2:1
+  12 %) so viele Teilchen wie im Mittel gleich breite Streifen 0,06 bis 0,10 AE daneben. Nach dem
+  Abstand zur Sonne sortiert sind es am 17. September 2026 bei einer mittleren Exzentrizität von 0,125
+  dagegen 104, 100 und 105 %: Im Bild sind die Lücken nicht zu sehen. Die Elemente der Teilchen stehen
+  fest, eine säkulare Resonanz wie $\nu_6$ gibt es daher nicht.
 - **Plutinos:** Die Kuiper-Wolke enthält Plutinos mit großen Halbachsen um 39,4 AE, aber mit
   zufälligen Winkeln; bei der Hälfte der Teilchen um 39,4 AE liegt $\varphi_\mathrm{P}$ zur Epoche
   näher an 0° als an 180°, ein Schutz vor Neptun besteht nicht. Weitere Vereinfachungen:

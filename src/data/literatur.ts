@@ -590,6 +590,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1051/0004-6361:20041335',
   },
   {
+    id: 'lee-2002',
+    autoren: ['Lee, M. H.', 'Peale, S. J.'],
+    etAl: false,
+    jahr: 2002,
+    titel: 'Dynamics and Origin of the 2:1 Orbital Resonances of the GJ 876 Planets',
+    erschienen: 'The Astrophysical Journal 567, 596–609',
+    doi: '10.1086/338504',
+  },
+  {
     id: 'levine-2024',
     autoren: ['Levine, J.'],
     etAl: false,
