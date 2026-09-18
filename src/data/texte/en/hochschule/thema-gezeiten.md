@@ -59,9 +59,10 @@ value of $k_2$ gave 0.0424 ([Thor et al. 2021](literatur:thor-2021)). For Titan,
 measured $0.589 \pm 0.150$ and $0.637 \pm 0.224$ (2σ), a deformation consistent with a global
 ocean ([Iess et al. 2012](literatur:iess-2012)). An independent analysis of the Cassini data found
 only $0.375 \pm 0.06$ ([Goossens et al. 2024](literatur:goossens-2024)); four earlier analyses lay
-between 0.59 and 0.64 ([Durante et al. 2026](literatur:durante-2026)), to which Goossens et al.
-replied ([Goossens et al. 2026](literatur:goossens-2026)). Two more recent analyses support the high
-value: $0.608 \pm 0.048$ ([Petricca et al. 2025](literatur:petricca-2025)) and
+between 0.59 and 0.64 ([Durante et al. 2026](literatur:durante-2026)). In their reply, Goossens et
+al. hold that differences in the processing do not explain the deviating value
+([Goossens et al. 2026](literatur:goossens-2026)). Two more recent analyses support the high value:
+$0.608 \pm 0.048$ ([Petricca et al. 2025](literatur:petricca-2025)) and
 $0.596 \pm 0.094$ ([Magnanini et al. 2026](literatur:magnanini-2026), Table C.2), both 1σ.
 
 ## Phase lag, quality factor Q and k₂/Q
@@ -177,7 +178,7 @@ fraction of Io and expected visible consequences in the Voyager 1 images
 ([Peale et al. 1979](literatur:peale-1979)). The measured dissipation agrees with the observed heat
 flow, so Io is close to thermal equilibrium ([Lainey et al. 2009](literatur:lainey-2009)). With
 $k_2/Q = 0.015 \pm 0.003$ and the forced eccentricity $e = 0.0041$
-([Bagheri et al. 2026](literatur:bagheri-2026)) the formula gives 93 TW, 75 to 112 TW within the
+([Lari and Saillenfest 2024](literatur:lari-2024)) the formula gives 93 TW, 75 to 112 TW within the
 uncertainty; about $10^{5}$ GW, that is 100 TW, are observed
 ([Fuller et al. 2016](literatur:fuller-2016)). The small real part of $k_2$ from the Juno flybys
 fits a mostly solid mantle. A magma ocean beneath a 50 km thick layer would have raised it to at
@@ -199,10 +200,11 @@ rough timescale
 $$t \approx \frac{2}{3}\,\frac{Q}{k_2}\,\frac{C\,\omega_0\, a^6}{G M^2 R^5}$$
 
 with $k_2$, $Q$, radius $R$ and moment of inertia $C$ of the moon, initial angular velocity
-$\omega_0$ and planet mass $M$; the torque is assumed constant. The literature gives the same estimate
-with a prefactor of 1/3 ([Gladman et al. 1996](literatur:gladman-1996), eq. 9); the difference is a
-matter of the convention for $Q$ ([Efroimsky and Lainey 2007](literatur:efroimsky-2007)). Because of
-the sixth power of the
+$\omega_0$ and planet mass $M$; the torque is assumed constant. The literature also gives the same
+estimate with a prefactor of 1/3. Such a factor of two arises easily from the conventions for $Q$,
+in which the phase lag is twice the geometric angle
+([Efroimsky and Lainey 2007](literatur:efroimsky-2007)); in any case the estimate holds only to
+within an order of magnitude. Because of the sixth power of the
 distance, despinning acts above all on close moons. Most major moons rotate synchronously, and the
 Moon needs a permanent quadrupole moment to remain so
 ([Murray and Dermott 2000](literatur:murray-2000), chapter 5). The spin axis ends in a Cassini
@@ -242,9 +244,10 @@ $900\,\mathrm{kg}\,\mathrm{m}^{-3}$, Saturn's fluid limit lies at about 129,000 
 edge of the A ring at 136,780 km; for porous particles of 400 to
 $600\,\mathrm{kg}\,\mathrm{m}^{-3}$ it moves out to 169,000 to 148,000 km, beyond the main rings.
 A different criterion leads back to the ring edge: a loose aggregate grows only until it fills its
-Roche lobe, that is up to the critical density $\rho = 3 M/(\gamma\,a^3)$ with
-$\gamma \approx 1.59$; for the same densities this limit lies at 139,000 to 121,000 km, at the outer
-edge of the main rings. The small moons there have exactly such densities, 0.4 to
+Roche lobe, that is up to the critical density $\rho = 3 M/(\gamma\,d^3)$ with the planet mass $M$,
+the orbital distance $d$ and $\gamma \approx 1.59$; for the same densities this limit lies at
+139,000 to 121,000 km, that is within the A ring. The small moons there have exactly such
+densities, 0.4 to
 $0.6\,\mathrm{g}\,\mathrm{cm}^{-3}$, and the ring particles themselves are likely to have similarly
 low densities ([Porco et al. 2007](literatur:porco-2007)); see [Rings](thema:ringe).
 
@@ -280,9 +283,10 @@ $10^{8}$ years; strong fragments will strike Mars obliquely and slowly
   hand, was taken as evidence of an ocean ([Iess et al. 2012](literatur:iess-2012)), and with the
   smaller value of Goossens et al. a lower-density ocean would be more likely
   ([Goossens et al. 2024](literatur:goossens-2024)). The real part itself is disputed too: its low
-  value is attributed to the data processing ([Durante et al. 2026](literatur:durante-2026)), and
-  its authors have replied ([Goossens et al. 2026](literatur:goossens-2026)). The Dragonfly mission
-  is to test the question again ([Petricca et al. 2025](literatur:petricca-2025)).
+  value is attributed to the data processing ([Durante et al. 2026](literatur:durante-2026)); its
+  authors object that these differences do not explain the deviating value
+  ([Goossens et al. 2026](literatur:goossens-2026)). The Dragonfly mission is to test the question
+  again ([Petricca et al. 2025](literatur:petricca-2025)).
 - **The Moon's h₂:** Laser altimetry gives about 10 % less than an interior model fitted to $k_2$,
   laser ranging mostly more. Laser ranging measures only on the near side and can be biased by the
   thermal expansion of retroreflectors and regolith; for laser altimetry, thermal or instrumental

@@ -59,9 +59,10 @@ von $k_2$ trifft, 0,0424 ([Thor et al. 2021](literatur:thor-2021)). Bei Titan ma
 $0{,}589 \pm 0{,}150$ und $0{,}637 \pm 0{,}224$ (2σ), eine Verformung, die mit einem globalen
 Ozean verträglich ist ([Iess et al. 2012](literatur:iess-2012)). Eine eigene Auswertung der
 Cassini-Daten fand nur $0{,}375 \pm 0{,}06$ ([Goossens et al. 2024](literatur:goossens-2024));
-vier frühere Analysen lagen bei 0,59 bis 0,64 ([Durante et al. 2026](literatur:durante-2026)),
-worauf Goossens et al. geantwortet haben ([Goossens et al. 2026](literatur:goossens-2026)). Zwei
-neuere Auswertungen stützen den hohen Wert: $0{,}608 \pm 0{,}048$
+vier frühere Analysen lagen bei 0,59 bis 0,64 ([Durante et al. 2026](literatur:durante-2026)).
+Goossens et al. halten in ihrer Antwort dagegen, Unterschiede in der Auswertung erklärten den
+abweichenden Wert nicht ([Goossens et al. 2026](literatur:goossens-2026)). Zwei neuere Auswertungen
+stützen den hohen Wert: $0{,}608 \pm 0{,}048$
 ([Petricca et al. 2025](literatur:petricca-2025)) und $0{,}596 \pm 0{,}094$
 ([Magnanini et al. 2026](literatur:magnanini-2026), Tabelle C.2), beide 1σ.
 
@@ -180,8 +181,8 @@ geschmolzen haben, und rechneten mit sichtbaren Folgen in den Bildern von Voyage
 ([Peale et al. 1979](literatur:peale-1979)). Die gemessene Dissipation passt zum beobachteten
 Wärmefluss; Io ist demnach nahe am thermischen Gleichgewicht
 ([Lainey et al. 2009](literatur:lainey-2009)). Mit $k_2/Q = 0{,}015 \pm 0{,}003$ und der
-erzwungenen Exzentrizität $e = 0{,}0041$ ([Bagheri et al. 2026](literatur:bagheri-2026)) ergibt die
-Formel 93 TW, im Fehlerbereich 75 bis 112 TW; beobachtet sind rund $10^{5}$ GW, also 100 TW
+erzwungenen Exzentrizität $e = 0{,}0041$ ([Lari und Saillenfest 2024](literatur:lari-2024)) ergibt
+die Formel 93 TW, im Fehlerbereich 75 bis 112 TW; beobachtet sind rund $10^{5}$ GW, also 100 TW
 ([Fuller et al. 2016](literatur:fuller-2016)). Der kleine Realteil von $k_2$ aus den
 Juno-Vorbeiflügen passt zu einem überwiegend festen Mantel. Ein Magmaozean unter einer 50 km dicken
 Schicht hätte ihn auf mindestens 0,8 gehoben; ausgeschlossen ist ein flacher globaler Magmaozean,
@@ -203,10 +204,11 @@ $$t \approx \frac{2}{3}\,\frac{Q}{k_2}\,\frac{C\,\omega_0\, a^6}{G M^2 R^5}$$
 
 mit $k_2$, $Q$, Radius $R$ und Trägheitsmoment $C$ des Mondes, anfänglicher Winkelgeschwindigkeit
 $\omega_0$ und Planetenmasse $M$; das Drehmoment ist dabei als konstant angenommen. In der Literatur
-steht dieselbe Abschätzung mit dem Vorfaktor 1/3 ([Gladman et al. 1996](literatur:gladman-1996),
-Gl. 9); der Unterschied ist eine Frage der Konvention für $Q$
-([Efroimsky und Lainey 2007](literatur:efroimsky-2007)). Wegen der
-sechsten Potenz des Abstands wirkt die Bremsung vor allem auf nahe Monde. Die meisten großen Monde
+findet sich dieselbe Abschätzung auch mit dem Vorfaktor 1/3. Ein solcher Faktor zwei entsteht
+leicht aus den Konventionen für $Q$, in denen der Phasenverzug doppelt so groß ist wie der
+geometrische Winkel ([Efroimsky und Lainey 2007](literatur:efroimsky-2007)); die Abschätzung gilt
+ohnehin nur der Größenordnung nach. Wegen der sechsten Potenz des Abstands wirkt die Bremsung vor
+allem auf nahe Monde. Die meisten großen Monde
 rotieren synchron, und der Mond braucht ein bleibendes Quadrupolmoment, um es zu bleiben
 ([Murray und Dermott 2000](literatur:murray-2000), Kapitel 5). Die Drehachse endet in einem
 Cassini-Zustand, bei den meisten synchron gebremsten Monden in Zustand 1, beim Mond, für den es
@@ -245,10 +247,11 @@ $900\,\mathrm{kg}\,\mathrm{m}^{-3}$ liegt Saturns flüssige Grenze bei rund 129 
 der Außenkante des A-Rings bei 136 780 km; für poröse Teilchen mit 400 bis
 $600\,\mathrm{kg}\,\mathrm{m}^{-3}$ rückt sie auf 169 000 bis 148 000 km, jenseits der Hauptringe.
 Ein anderes Kriterium führt an den Ringrand zurück: Ein loses Aggregat wächst nur, bis es seinen
-Roche-Bereich ausfüllt, also bis zur kritischen Dichte $\rho = 3 M/(\gamma\,a^3)$ mit
-$\gamma \approx 1{,}59$; für dieselben Dichten liegt diese Grenze bei 139 000 bis 121 000 km, am
-Außenrand der Hauptringe. Die kleinen Monde dort haben gerade solche Dichten, 0,4 bis
-$0{,}6\,\mathrm{g}\,\mathrm{cm}^{-3}$, und die Ringteilchen selbst dürften ähnlich wenig dicht sein
+Roche-Bereich ausfüllt, also bis zur kritischen Dichte $\rho = 3 M/(\gamma\,d^3)$ mit der
+Planetenmasse $M$, dem Bahnabstand $d$ und $\gamma \approx 1{,}59$; für dieselben Dichten liegt
+diese Grenze bei 139 000 bis 121 000 km, also im Bereich des A-Rings. Die kleinen Monde dort haben
+gerade solche Dichten, 0,4 bis $0{,}6\,\mathrm{g}\,\mathrm{cm}^{-3}$, und die Ringteilchen selbst
+dürften ähnlich wenig dicht sein
 ([Porco et al. 2007](literatur:porco-2007)); siehe [Ringe](thema:ringe).
 
 Phobos hat eine mittlere Dichte von rund $1850\,\mathrm{kg}\,\mathrm{m}^{-3}$; seine Bahn liegt
@@ -284,9 +287,9 @@ und langsam auf Mars ([Black und Mittal 2015](literatur:black-2015)).
   von Goossens et al. wäre ein Ozean geringerer Dichte wahrscheinlicher
   ([Goossens et al. 2024](literatur:goossens-2024)). Auch der Realteil selbst ist strittig: Sein
   niedriger Wert wird auf die Auswertung zurückgeführt
-  ([Durante et al. 2026](literatur:durante-2026)), seine Urheber haben darauf geantwortet
-  ([Goossens et al. 2026](literatur:goossens-2026)). Die Mission Dragonfly soll die Frage erneut
-  prüfen ([Petricca et al. 2025](literatur:petricca-2025)).
+  ([Durante et al. 2026](literatur:durante-2026)); seine Urheber widersprechen, diese Unterschiede
+  erklärten den abweichenden Wert nicht ([Goossens et al. 2026](literatur:goossens-2026)). Die
+  Mission Dragonfly soll die Frage erneut prüfen ([Petricca et al. 2025](literatur:petricca-2025)).
 - **h₂ des Mondes:** Die Laserhöhenmessung ergibt rund 10 % weniger als ein an $k_2$ angepasstes
   Innenmodell, die Laserentfernungen meist mehr. Laserentfernungen messen nur auf der Vorderseite und
   können durch die Wärmeausdehnung von Reflektoren und Regolith verzerrt sein; bei der

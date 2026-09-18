@@ -68,15 +68,6 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1007/s10569-019-9925-1',
   },
   {
-    id: 'bagheri-2026',
-    autoren: ['Bagheri, A.', 'Vance, S. D.', 'Fuller, J.'],
-    etAl: true,
-    jahr: 2026,
-    titel: 'Joint dynamical-geophysical evidence for a limit cycle in the Galilean moons',
-    erschienen: 'arXiv-Vorabdruck',
-    arxiv: '2608.04226',
-  },
-  {
     id: 'barboni-2017',
     autoren: ['Barboni, M.', 'Boehnke, P.', 'Keller, B.'],
     etAl: true,
