@@ -167,14 +167,17 @@ Radius und 5955 bis 6290 kg/m³ mittlerer Dichte
 ## Love-Zahl k₂ als Randbedingung
 
 Aus gemessenen Verformungen lässt sich der Dichteverlauf im Erdinneren abschätzen, bei Gasplaneten
-gibt vor allem die Abplattung Auskunft ([Love-Zahlen](quelle:wikipedia-de-love-zahlen)). Die
-Rotation verformt einen Körper über sehr lange Zeiten, und wie stark, beschreibt die fluide
-Love-Zahl $k_\mathrm{f}$ aus der Radau-Darwin-Näherung; die Gezeiten verformen ihn mit ihrer
-Periode, und das beschreibt $k_2$ (Definition und Messwerte unter [Gezeiten](thema:gezeiten)).
-Weichen beide voneinander ab, verhält sich ein Teil des Körpers bei der Gezeitenperiode nicht wie
-eine Flüssigkeit. So entspricht Titans Schwerefeld, mit den Beziehungen für gebunden rotierende
-Monde an $J_2$ und $C_{22}$ zugleich angepasst, einem $k_\mathrm{f}$ von rund 1,01 (aus $J_2$ allein
-1,00, aus $C_{22}$ allein 1,05), die Gezeitenantwort aber nur einem $k_2$ von rund 0,62
+gibt vor allem die Abplattung Auskunft ([Love-Zahlen](quelle:wikipedia-de-love-zahlen)). Rotation
+und bei gebunden rotierenden Monden die statische Gezeit verformen einen Körper über sehr lange
+Zeiten; wie stark sein Schwerefeld darauf antwortet, beschreibt die fluide Love-Zahl $k_\mathrm{f}$,
+die über Radau-Darwin mit dem Trägheitsmoment zusammenhängt
+([Hemingway et al. 2018](literatur:hemingway-2018), Gl. 10 bis 12). Die veränderlichen Gezeiten
+verformen ihn außerdem mit ihrer Periode, und das beschreibt $k_2$ (Definition und Messwerte unter
+[Gezeiten](thema:gezeiten)). Weichen beide voneinander ab, verhält sich ein Teil des Körpers bei der
+Gezeitenperiode nicht wie eine Flüssigkeit. So entspricht Titans Schwerefeld, mit den Beziehungen
+für gebunden rotierende Monde an $J_2$ und $C_{22}$ zugleich angepasst, einem $k_\mathrm{f}$ von
+rund 1,01 (mit Durantes $J_2$ und $C_{22}$ nachgerechnet: aus $J_2$ allein 1,00, aus $C_{22}$ allein
+1,05), die Gezeitenantwort aber nur einem $k_2$ von rund 0,62
 ([Durante et al. 2019](literatur:durante-2019)); wie groß $k_2$ wirklich ist, ist umstritten (siehe
 [Gezeiten](thema:gezeiten)).
 

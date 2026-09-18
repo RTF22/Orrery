@@ -166,15 +166,18 @@ days mainly on the shape of the core. If the mantle is entirely solid, this impl
 
 Measured deformations allow the density profile of the Earth's interior to be estimated; for gas
 planets the flattening is the main indicator
-([Love numbers, German Wikipedia](quelle:wikipedia-de-love-zahlen)). Rotation deforms a body over
-very long times, and how strongly is described by the fluid Love number $k_\mathrm{f}$ from the
-Radau–Darwin approximation; tides deform it at their period, which is described by $k_2$ (definition
-and measured values under [Tides and the Roche limit](thema:gezeiten)). If the two differ, part of
-the body does not behave like a fluid at the tidal period. Titan's gravity field, fitted to $J_2$
-and $C_{22}$ together with the relations for synchronously rotating moons, thus corresponds to a
-$k_\mathrm{f}$ of about 1.01 (1.00 from $J_2$ alone, 1.05 from $C_{22}$ alone), but its tidal
-response only to a $k_2$ of about 0.62 ([Durante et al. 2019](literatur:durante-2019)); how large
-$k_2$ really is remains disputed (see [Tides and the Roche limit](thema:gezeiten)).
+([Love numbers, German Wikipedia](quelle:wikipedia-de-love-zahlen)). Rotation and, for synchronously
+rotating moons, the static tide deform a body over very long times; how strongly its gravity field
+responds is described by the fluid Love number $k_\mathrm{f}$, which Radau–Darwin relates to the
+moment of inertia ([Hemingway et al. 2018](literatur:hemingway-2018), Eqs. 10 to 12). The varying
+tides also deform it at their period, which is described by $k_2$ (definition and measured values
+under [Tides and the Roche limit](thema:gezeiten)). If the two differ, part of the body does not
+behave like a fluid at the tidal period. Titan's gravity field, fitted to $J_2$ and $C_{22}$
+together with the relations for synchronously rotating moons, thus corresponds to a $k_\mathrm{f}$
+of about 1.01 (recomputed with Durante's $J_2$ and $C_{22}$: 1.00 from $J_2$ alone, 1.05 from
+$C_{22}$ alone), but its tidal response only to a $k_2$ of about 0.62
+([Durante et al. 2019](literatur:durante-2019)); how large $k_2$ really is remains disputed (see
+[Tides and the Roche limit](thema:gezeiten)).
 
 For Mars, $k_2 = 0.169 \pm 0.006$, the period of the free polar motion (Chandler period) of 206.9 ±
 0.5 days and the moments of inertia from the precession enter the interior models together; the
