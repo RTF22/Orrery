@@ -39,12 +39,13 @@ passes up to December 2018 gave, at the reference radius of 71,492 km,
 $J_2 = 14696.5735 \cdot 10^{-6}$, $J_4 = -586.6085 \cdot 10^{-6}$ and $J_6 = 34.2007 \cdot 10^{-6}$,
 with uncertainties of a few $10^{-9}$ (3σ; [Durante et al. 2020](literatur:durante-2020), Table 2).
 Without internal flows the field of a rotating fluid planet would be axially and north–south
-symmetric and dominated by even coefficients that scale roughly as $q^n$; $q$ is the ratio of
-centrifugal acceleration to gravity at the equator ([Iess et al. 2018](literatur:iess-2018)). With
-$q = 0.0892$ for Jupiter ([Militzer and Hubbard 2023](literatur:militzer-2023), Table 1) the
-measured values give $J_2/q = 0.165$, $J_4/q^2 = -0.074$ and $J_6/q^3 = 0.048$. The odd coefficients
-$J_3$, $J_5$, $J_7$ and $J_9$, by contrast, measure how deep the winds of the individual zones
-reach. Juno found a north–south asymmetry, the signature of flows in the atmosphere and interior
+symmetric and dominated by the even coefficients, with $J_{2n}$ roughly proportional to $q^n$; $q$
+is the ratio of centrifugal acceleration to gravity at the equator
+([Iess et al. 2018](literatur:iess-2018)). With $q = 0.0892$ for Jupiter
+([Militzer and Hubbard 2023](literatur:militzer-2023), Table 1) the measured values give
+$J_2/q = 0.165$, $J_4/q^2 = -0.074$ and $J_6/q^3 = 0.048$. The odd coefficients $J_3$, $J_5$, $J_7$
+and $J_9$, by contrast, measure how deep the winds of the individual zones reach. Juno found a
+north–south asymmetry, the signature of flows in the atmosphere and interior
 ([Iess et al. 2018](literatur:iess-2018)); thus $J_3 = (-0.0450 \pm 0.0033) \cdot 10^{-6}$ (3σ;
 [Durante et al. 2020](literatur:durante-2020)). Accordingly the winds reach about 3000 km deep on
 Jupiter and about 9000 km on [Saturn](objekt:saturn); on Saturn they contribute about 6 % of $J_6$
@@ -95,8 +96,13 @@ Love number $k_\mathrm{f}$; the form in the source is equivalent
 
 $$\frac{C}{M a^2} = \frac{2}{3}\left( 1 - \frac{2}{5}\sqrt{\frac{4 - k_\mathrm{f}}{1 + k_\mathrm{f}}} \right), \quad k_\mathrm{f} = \frac{3 J_2}{q}, \quad q = \frac{\omega^2 a^3}{GM}$$
 
-For the homogeneous sphere $k_\mathrm{f} = 3/2$, and the formula gives exactly 2/5. It becomes exact
-in the limit of slow rotation and large $J_2$, that is, for nearly homogeneous bodies
+The form $k_\mathrm{f} = 3 J_2/q$ holds for a rotating planet. For a synchronously rotating moon,
+rotation and tide act together; in hydrostatic equilibrium, $J_2 = \frac{5}{6}\,k_\mathrm{f}\,q$ and
+$C_{22} = \frac{1}{4}\,k_\mathrm{f}\,q$ with $q = \omega^2 R^3/(GM)$, and the Radau–Darwin formula
+relates $k_\mathrm{f}$ to the moment of inertia in the same way
+([Hemingway et al. 2018](literatur:hemingway-2018), Eqs. 15, 16 and 21). For the homogeneous sphere
+$k_\mathrm{f} = 3/2$, and the formula gives exactly 2/5. It becomes exact in the limit of slow
+rotation and large $J_2$, that is, for nearly homogeneous bodies
 ([Militzer and Hubbard 2023](literatur:militzer-2023)). Its validity has limits:
 
 - It presupposes hydrostatic equilibrium and even then remains an approximation; even for a
@@ -106,12 +112,14 @@ in the limit of slow rotation and large $J_2$, that is, for nearly homogeneous b
   strongly throughout the interior ([Militzer and Hubbard 2023](literatur:militzer-2023)). With
   their $J_2$ and $q$ it gives 0.2582 for Jupiter, 2.2 % below the model value 0.26393, and 0.2193
   for Saturn, 0.5 % above the model value 0.2181.
-- Non-hydrostatic contributions corrupt $J_2$. For Mars the formula with $q = 0.00459$ gives 0.3751,
-  3.0 % more than the precession. The shape and gravity field of Mars can be explained if on long
-  time scales it behaves like a fluid beneath a solid shell with embedded mass anomalies; gravity
-  field and shape then have a non-hydrostatic part
-  ([Le Maistre et al. 2023](literatur:le-maistre-2023), Supplement section 10). For the Earth the
-  formula gives 0.3315, 0.25 % above $J_2/H$.
+- Non-hydrostatic contributions corrupt $J_2$: solid bodies, too, support non-hydrostatic topography
+  at their exteriors, and measured shape and gravity reflect a mostly hydrostatic body with
+  superimposed non-hydrostatic parts ([Hemingway et al. 2018](literatur:hemingway-2018), section
+  2.1.6). For Mars the formula with $q = 0.00459$ gives 0.3751, 3.0 % more than the precession. The
+  shape and gravity field of Mars can be explained if on long time scales it behaves like a fluid
+  beneath a solid shell with embedded mass anomalies; gravity field and shape then have a
+  non-hydrostatic part ([Le Maistre et al. 2023](literatur:le-maistre-2023), Supplement section 10).
+  For the Earth the formula gives 0.3315, 0.25 % above $J_2/H$.
 - For synchronously rotating moons, rotation and tide together produce $J_2$ and $C_{22}$ in the
   hydrostatic ratio 10/3. This ratio is necessary but not sufficient for hydrostatic equilibrium
   ([Durante et al. 2019](literatur:durante-2019)).
@@ -162,10 +170,11 @@ planets the flattening is the main indicator
 very long times, and how strongly is described by the fluid Love number $k_\mathrm{f}$ from the
 Radau–Darwin approximation; tides deform it at their period, which is described by $k_2$ (definition
 and measured values under [Tides and the Roche limit](thema:gezeiten)). If the two differ, part of
-the body does not behave like a fluid at the tidal period. Titan's gravity field thus corresponds to
-a $k_\mathrm{f}$ of about 1.01, but its tidal response only to a $k_2$ of about 0.62
-([Durante et al. 2019](literatur:durante-2019)); how large $k_2$ really is remains disputed (see
-[Tides and the Roche limit](thema:gezeiten)).
+the body does not behave like a fluid at the tidal period. Titan's gravity field, fitted to $J_2$
+and $C_{22}$ together with the relations for synchronously rotating moons, thus corresponds to a
+$k_\mathrm{f}$ of about 1.01 (1.00 from $J_2$ alone, 1.05 from $C_{22}$ alone), but its tidal
+response only to a $k_2$ of about 0.62 ([Durante et al. 2019](literatur:durante-2019)); how large
+$k_2$ really is remains disputed (see [Tides and the Roche limit](thema:gezeiten)).
 
 For Mars, $k_2 = 0.169 \pm 0.006$, the period of the free polar motion (Chandler period) of 206.9 ±
 0.5 days and the moments of inertia from the precession enter the interior models together; the
@@ -174,9 +183,11 @@ long periods ([Konopliv et al. 2020](literatur:konopliv-2020)). For the Moon, de
 inertia and $k_2$ fit models with a fluid outer core of 200 to 380 km radius, a solid inner core of
 0 to 280 km and a zone of low shear-wave velocity deep in the mantle; the whole core holds at most
 1.5 % of the mass ([Williams et al. 2014](literatur:williams-2014)). Jupiter's
-$k_{22} = 0.565 \pm 0.018$ (3σ) lies below the prediction of static interior models for the tide
-raised by Io ([Durante et al. 2020](literatur:durante-2020)); for its interpretation see
-[Tides and the Roche limit](thema:gezeiten).
+$k_{22} = 0.565 \pm 0.018$ (3σ), determined with the same Love number for all moons, lies below the
+prediction of static interior models for the tide raised by Io; with satellite-dependent Love
+numbers the uncertainty for Io grows to 0.074, the deviation from the static value lies below it and
+is therefore not yet established ([Durante et al. 2020](literatur:durante-2020)). For its
+interpretation see [Tides and the Roche limit](thema:gezeiten).
 
 ## Seismology
 
@@ -186,11 +197,11 @@ quality factors, mass and moment of inertia, and 1.75 million travel times of P 
 ([Dziewonski and Anderson 1981](literatur:dziewonski-1981)).
 
 On the Moon, the seismometers of the Apollo missions recorded. A reanalysis with array-seismology
-methods found in 2011 a solid inner and a fluid outer core beneath a partially molten layer, about
-60 % liquid by volume ([Weber et al. 2011](literatur:weber-2011)). Two analyses of the Apollo data
-from the same year left the size of the fluid core open by ±55 km; the radius from laser ranging
-agrees to 0.3 % with one of them (Garcia et al. 2011) and differs by 13 % from the other (Weber et
-al.) ([Viswanathan et al. 2019](literatur:viswanathan-2019)).
+methods pointed in 2011 to a solid inner and a fluid outer core beneath a partially molten layer,
+about 60 % liquid by volume ([Weber et al. 2011](literatur:weber-2011)). Two analyses of the Apollo
+data from the same year left the size of the fluid core open by ±55 km; the radius from laser
+ranging agrees to 0.3 % with one of them (Garcia et al. 2011) and differs by 13 % from the other
+(Weber et al.) ([Viswanathan et al. 2019](literatur:viswanathan-2019)).
 
 On Mars, InSight provided a single seismometer. Waves reflected from the core–mantle boundary,
 inverted together with geodetic data, gave in 2021 a liquid core of 1830 ± 40 km radius and a mean
@@ -200,12 +211,13 @@ density of 5.7 to 6.3 g/cm³, which requires many light elements in the iron
 At Saturn the [rings](thema:ringe) serve as a seismometer. During stellar occultations Cassini
 observed waves in the C ring that are excited by oscillation modes of the planet, mainly fundamental
 modes (f modes), and in addition gravity modes (g modes). A mode excites the ring particles at its
-Lindblad resonance; the azimuthal order $m$ is read off the shape of the wave. g modes exist only
-where a compositional stratification suppresses convection. Mankovich and Fuller identified the wave
-W76.44 with the g mode with $l = 2$ and $m = -2$ of lowest radial order. Together with $J_2$, $J_4$,
-$J_6$ and the frequencies of three of the four observed waves with $m = -2$, this requires a stably
-stratified transition zone between core and envelope out to $r/R = 0.59 \pm 0.01$ containing about
-17 Earth masses of ice and rock ([Mankovich and Fuller 2021](literatur:mankovich-2021)).
+Lindblad resonance; the azimuthal order $m$ is read off the shape of the wave. g modes are restored
+by buoyancy; that Saturn shows them means that part of its interior is stabilized against convection
+by a composition gradient. Mankovich and Fuller identified the wave W76.44 with the g mode with
+$l = 2$ and $m = -2$ of lowest radial order. Together with $J_2$, $J_4$, $J_6$ and the frequencies
+of three of the four observed waves with $m = -2$, this requires a stably stratified transition zone
+between core and envelope out to $r/R = 0.59 \pm 0.01$ containing about 17 Earth masses of ice and
+rock ([Mankovich and Fuller 2021](literatur:mankovich-2021)).
 
 ## Dilute cores of the giant planets
 
@@ -215,20 +227,21 @@ with a discrete core of heavy elements at the centre
 smaller in magnitude than such models with a large, distinct core predict
 ([Militzer et al. 2022](literatur:militzer-2022)). Already after the first two orbits it emerged
 that a dilute core helps, with its heavy elements spread over 0.3 to 0.5 of the planetary radius;
-depending on the equation of state it contains 7 to 25 Earth masses of heavy elements, and the deep
-metallic envelope is in any case more enriched than the outer molecular one
-([Wahl et al. 2017](literatur:wahl-2017)). Models with winds and an equation of state from ab initio
-calculations match all measured coefficients with a dilute core extending to 63 % of the radius, in
-which heavy elements make up only 18 % of the mass
+depending on the equation of state and the degree of dilution the core contains 7 to 25 Earth masses
+of heavy elements, more dilute cores more, and the deep metallic envelope is in any case more
+enriched than the outer molecular one ([Wahl et al. 2017](literatur:wahl-2017)). Models with winds
+and an equation of state from ab initio calculations match all measured coefficients with a dilute
+core extending to 63 % of the radius, in which heavy elements make up only 18 % of the mass
 ([Militzer et al. 2022](literatur:militzer-2022)).
 
 Jupiter's moment of inertia has not been measured directly; the table value below is a model
 calculation ([Moment of inertia factor (Wikipedia)](quelle:wikipedia-en-moment-of-inertia-factor)).
 $J_2$, $J_4$ and $J_6$ do not determine it uniquely but constrain it to better than 1 %; models that
 match all coefficients up to $J_{10}$ give 0.26393 ± 0.00001
-([Militzer and Hubbard 2023](literatur:militzer-2023)). The precession of the axis, inversely
-proportional to the moment of inertia, should become measurable more accurately towards the end of
-the Juno mission ([Durante et al. 2020](literatur:durante-2020)).
+([Militzer and Hubbard 2023](literatur:militzer-2023)). The precession of the axis is inversely
+proportional to the moment of inertia; Durante et al. expected in 2020 that it would be measured
+more accurately towards the end of the Juno mission ([Durante et al. 2020](literatur:durante-2020)).
+No such measurement has been published so far.
 
 ## Moment of inertia factors compared
 
@@ -273,7 +286,7 @@ non-hydrostatic contributions ([Gomez Casajus et al. 2022](literatur:gomez-casaj
   ([Le Maistre et al. 2023](literatur:le-maistre-2023)). Bi et al., in contrast, found in 2025
   phases that traverse the core or reflect off an inner core, and determined its radius as 613 ± 67
   km ([Bi et al. 2025](literatur:bi-2025)).
-- **The lunar core:** Apollo seismology showed a solid inner core
+- **The lunar core:** Apollo seismology pointed to a solid inner core
   ([Weber et al. 2011](literatur:weber-2011)); the geodetic data allow an inner core of 0 to 280 km,
   so they do not require one, and limit the whole core to at most 1.5 % of the mass
   ([Williams et al. 2014](literatur:williams-2014)). The hydrostatic core flattening from laser
@@ -293,17 +306,19 @@ non-hydrostatic contributions ([Gomez Casajus et al. 2022](literatur:gomez-casaj
   ([Nettelmann and Fortney 2025](literatur:nettelmann-2025)). How a dilute core forms and survives
   is not understood ([Wahl et al. 2017](literatur:wahl-2017)).
 - **Saturn's moment of inertia:** The pole precession gives 0.2263 ± 0.0101 (3σ) at the radius of
-  60,268 km, more than all model predictions but within 3σ
+  60,268 km, more than all model predictions but within 3σ; the value assumes a rigid body rotating
+  at the rate of Mankovich et al. 2019 and a pole aligned with the angular momentum
   ([Jacobson 2022](literatur:jacobson-2022)). Models with winds that match the gravity field predict
   0.2181 ± 0.0002; the deep winds lower the value by 0.4 %, which a measurement over a sufficiently
   long arc of the precession could test ([Militzer and Hubbard 2023](literatur:militzer-2023)). The
-  two values differ by 2.4σ of the measurement.
-- **Titan's hydrostatic state:** From $J_2/C_{22} = 3.186 \pm 0.077$, consistent with 10/3 at the 2σ
-  level, follows a moment of inertia close to 0.341. Titan's shape, however, is considerably more
-  flattened than equilibrium would imply; equilibrium is therefore not guaranteed, and a
-  non-hydrostatic interior would also allow smaller values
-  ([Durante et al. 2019](literatur:durante-2019)). The reanalysis with ten flybys found
-  $J_2/C_{22} = 3.316 \pm 0.051$, a field in a relaxed hydrostatic state, and
+  two values differ by 2.4σ with the uncertainty of Jacobson's Table 9 and by 3.3σ with that of
+  Table 8 (0.0025 as 1σ); the two tables are not consistent in their uncertainty.
+- **Titan's hydrostatic state:** $J_2/C_{22} = 3.186 \pm 0.077$ is consistent with 10/3 at the 2σ
+  level; under the hydrostatic assumption, $J_2$ and $C_{22}$ give a moment of inertia close to
+  0.341 via Radau–Darwin. Titan's shape, however, is considerably more flattened than equilibrium
+  would imply; equilibrium is therefore not guaranteed, and a non-hydrostatic interior would also
+  allow smaller values ([Durante et al. 2019](literatur:durante-2019)). A reanalysis of the same ten
+  flybys found $J_2/C_{22} = 3.316 \pm 0.051$, a field in a relaxed hydrostatic state, and
   $C/(M R^2) = 0.343 \pm 0.001$; it interprets Titan as having no global ocean
   ([Petricca et al. 2025](literatur:petricca-2025)). The dispute about $k_2$ and the ocean is
   covered under [Tides and the Roche limit](thema:gezeiten).

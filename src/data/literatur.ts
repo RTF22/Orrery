@@ -561,6 +561,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1016/j.icarus.2016.02.048',
   },
   {
+    id: 'hemingway-2018',
+    autoren: ['Hemingway, D.', 'Iess, L.', 'Tajeddine, R.'],
+    etAl: true,
+    jahr: 2018,
+    titel: 'The Interior of Enceladus',
+    erschienen: 'Enceladus and the Icy Moons of Saturn (University of Arizona Press), 57–77',
+    doi: '10.2458/azu_uapress_9780816537075-ch004',
+  },
+  {
     id: 'herald-2014',
     autoren: ['Herald, D.', 'Sinnott, R. W.'],
     etAl: false,

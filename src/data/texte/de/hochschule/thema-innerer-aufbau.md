@@ -39,9 +39,9 @@ ergaben die zehn Schwerefeld-Durchgänge von Juno bis Dezember 2018 beim Bezugsr
 $J_2 = 14696{,}5735 \cdot 10^{-6}$, $J_4 = -586{,}6085 \cdot 10^{-6}$ und
 $J_6 = 34{,}2007 \cdot 10^{-6}$, mit Unsicherheiten von einigen $10^{-9}$ (3σ;
 [Durante et al. 2020](literatur:durante-2020), Tabelle 2). Ohne innere Strömungen wäre das Feld
-eines rotierenden Fluidplaneten achsen- und nord-süd-symmetrisch und von geraden Koeffizienten
-beherrscht, die ungefähr wie $q^n$ skalieren; $q$ ist das Verhältnis von Fliehkraft zu Schwere am
-Äquator ([Iess et al. 2018](literatur:iess-2018)). Mit $q = 0{,}0892$ für Jupiter
+eines rotierenden Fluidplaneten achsen- und nord-süd-symmetrisch und von den geraden Koeffizienten
+beherrscht, mit $J_{2n}$ ungefähr proportional zu $q^n$; $q$ ist das Verhältnis von Fliehkraft zu
+Schwere am Äquator ([Iess et al. 2018](literatur:iess-2018)). Mit $q = 0{,}0892$ für Jupiter
 ([Militzer und Hubbard 2023](literatur:militzer-2023), Tabelle 1) ergeben die Messwerte
 $J_2/q = 0{,}165$, $J_4/q^2 = -0{,}074$ und $J_6/q^3 = 0{,}048$. Die ungeraden Koeffizienten $J_3$,
 $J_5$, $J_7$ und $J_9$ messen dagegen, wie tief die Winde der einzelnen Zonen reichen. Juno fand
@@ -96,8 +96,13 @@ mit der fluiden Love-Zahl $k_\mathrm{f}$ geschrieben, die Form in der Quelle ist
 
 $$\frac{C}{M a^2} = \frac{2}{3}\left( 1 - \frac{2}{5}\sqrt{\frac{4 - k_\mathrm{f}}{1 + k_\mathrm{f}}} \right), \quad k_\mathrm{f} = \frac{3 J_2}{q}, \quad q = \frac{\omega^2 a^3}{GM}$$
 
-Für die homogene Kugel ist $k_\mathrm{f} = 3/2$, und die Formel gibt genau 2/5. Exakt wird sie im
-Grenzfall kleiner Rotation und großer $J_2$, also für nahezu homogene Körper
+Die Form $k_\mathrm{f} = 3 J_2/q$ gilt für einen rotierenden Planeten. Bei einem gebunden
+rotierenden Mond wirken Rotation und Gezeit zusammen; im hydrostatischen Gleichgewicht gilt dann
+$J_2 = \frac{5}{6}\,k_\mathrm{f}\,q$ und $C_{22} = \frac{1}{4}\,k_\mathrm{f}\,q$ mit
+$q = \omega^2 R^3/(GM)$, und die Radau-Darwin-Formel verknüpft $k_\mathrm{f}$ in derselben Weise mit
+dem Trägheitsmoment ([Hemingway et al. 2018](literatur:hemingway-2018), Gl. 15, 16 und 21). Für die
+homogene Kugel ist $k_\mathrm{f} = 3/2$, und die Formel gibt genau 2/5. Exakt wird sie im Grenzfall
+kleiner Rotation und großer $J_2$, also für nahezu homogene Körper
 ([Militzer und Hubbard 2023](literatur:militzer-2023)). Ihre Gültigkeit hat Grenzen:
 
 - Sie setzt hydrostatisches Gleichgewicht voraus und bleibt auch dann eine Näherung; selbst für
@@ -107,12 +112,15 @@ Grenzfall kleiner Rotation und großer $J_2$, also für nahezu homogene Körper
   Inneren stark ändert ([Militzer und Hubbard 2023](literatur:militzer-2023)). Mit deren $J_2$ und
   $q$ ergibt sie für Jupiter 0,2582, 2,2 % unter dem Modellwert 0,26393, für Saturn 0,2193, 0,5 %
   über dem Modellwert 0,2181.
-- Nicht hydrostatische Anteile verfälschen $J_2$. Für Mars ergibt die Formel mit $q = 0{,}00459$ den
-  Wert 0,3751, 3,0 % mehr als die Präzession. Form und Schwerefeld des Mars lassen sich erklären,
-  wenn er sich auf lange Sicht wie eine Flüssigkeit unter einer festen Schale mit eingebetteten
-  Massenanomalien verhält; Schwerefeld und Form haben dann einen nicht hydrostatischen Anteil
-  ([Le Maistre et al. 2023](literatur:le-maistre-2023), Supplement Abschnitt 10). Für die Erde liegt
-  die Formel mit 0,3315 um 0,25 % über $J_2/H$.
+- Nicht hydrostatische Anteile verfälschen $J_2$: Auch feste Körper tragen außen nicht
+  hydrostatische Topographie, und gemessene Form und Schwerefeld zeigen einen überwiegend
+  hydrostatischen Körper mit überlagerten nicht hydrostatischen Anteilen
+  ([Hemingway et al. 2018](literatur:hemingway-2018), Abschnitt 2.1.6). Für Mars ergibt die Formel
+  mit $q = 0{,}00459$ den Wert 0,3751, 3,0 % mehr als die Präzession. Form und Schwerefeld des Mars
+  lassen sich erklären, wenn er sich auf lange Sicht wie eine Flüssigkeit unter einer festen Schale
+  mit eingebetteten Massenanomalien verhält; Schwerefeld und Form haben dann einen nicht
+  hydrostatischen Anteil ([Le Maistre et al. 2023](literatur:le-maistre-2023), Supplement Abschnitt
+  10). Für die Erde liegt die Formel mit 0,3315 um 0,25 % über $J_2/H$.
 - Bei gebunden rotierenden Monden erzeugen Rotation und Gezeit zusammen $J_2$ und $C_{22}$ im
   hydrostatischen Verhältnis 10/3. Dieses Verhältnis ist notwendig, aber nicht hinreichend für
   hydrostatisches Gleichgewicht ([Durante et al. 2019](literatur:durante-2019)).
@@ -164,9 +172,11 @@ Rotation verformt einen Körper über sehr lange Zeiten, und wie stark, beschrei
 Love-Zahl $k_\mathrm{f}$ aus der Radau-Darwin-Näherung; die Gezeiten verformen ihn mit ihrer
 Periode, und das beschreibt $k_2$ (Definition und Messwerte unter [Gezeiten](thema:gezeiten)).
 Weichen beide voneinander ab, verhält sich ein Teil des Körpers bei der Gezeitenperiode nicht wie
-eine Flüssigkeit. So entspricht Titans Schwerefeld einem $k_\mathrm{f}$ von rund 1,01, die
-Gezeitenantwort aber nur einem $k_2$ von rund 0,62 ([Durante et al. 2019](literatur:durante-2019));
-wie groß $k_2$ wirklich ist, ist umstritten (siehe [Gezeiten](thema:gezeiten)).
+eine Flüssigkeit. So entspricht Titans Schwerefeld, mit den Beziehungen für gebunden rotierende
+Monde an $J_2$ und $C_{22}$ zugleich angepasst, einem $k_\mathrm{f}$ von rund 1,01 (aus $J_2$ allein
+1,00, aus $C_{22}$ allein 1,05), die Gezeitenantwort aber nur einem $k_2$ von rund 0,62
+([Durante et al. 2019](literatur:durante-2019)); wie groß $k_2$ wirklich ist, ist umstritten (siehe
+[Gezeiten](thema:gezeiten)).
 
 Beim Mars fließen $k_2 = 0{,}169 \pm 0{,}006$, die Periode der freien Polbewegung (Chandler-Periode)
 von 206,9 ± 0,5 Tagen und die Trägheitsmomente aus der Präzession gemeinsam in die Innenmodelle ein;
@@ -175,9 +185,11 @@ lange Perioden ([Konopliv et al. 2020](literatur:konopliv-2020)). Für den Mond 
 Trägheitsmoment und $k_2$ zu Modellen mit einem flüssigen äußeren Kern von 200 bis 380 km Radius,
 einem festen inneren Kern von 0 bis 280 km und einer Zone niedriger Scherwellengeschwindigkeit tief
 im Mantel; der ganze Kern trägt höchstens 1,5 % der Masse
-([Williams et al. 2014](literatur:williams-2014)). Jupiters $k_{22} = 0{,}565 \pm 0{,}018$ (3σ)
-liegt unter der Vorhersage statischer Innenmodelle für die Gezeit durch Io
-([Durante et al. 2020](literatur:durante-2020)); zur Deutung siehe [Gezeiten](thema:gezeiten).
+([Williams et al. 2014](literatur:williams-2014)). Jupiters $k_{22} = 0{,}565 \pm 0{,}018$ (3σ),
+bestimmt mit derselben Love-Zahl für alle Monde, liegt unter der Vorhersage statischer Innenmodelle
+für die Gezeit durch Io; mit Love-Zahlen je Mond wächst die Unsicherheit für Io auf 0,074, die
+Abweichung vom statischen Wert liegt darunter und ist damit noch nicht belegt
+([Durante et al. 2020](literatur:durante-2020)). Zur Deutung siehe [Gezeiten](thema:gezeiten).
 
 ## Seismologie
 
@@ -187,8 +199,8 @@ zusammengefassten Laufzeiten, 100 Gütefaktoren, Masse und Trägheitsmoment sowi
 Laufzeiten von P- und S-Wellen ([Dziewonski und Anderson 1981](literatur:dziewonski-1981)).
 
 Auf dem Mond registrierten die Seismometer der Apollo-Missionen. Eine Neuauswertung mit Verfahren
-der Array-Seismologie fand 2011 einen festen inneren und einen flüssigen äußeren Kern unter einer
-teilweise geschmolzenen Schicht, dem Volumen nach zu rund 60 % flüssig
+der Array-Seismologie deutete 2011 auf einen festen inneren und einen flüssigen äußeren Kern unter
+einer teilweise geschmolzenen Schicht hin, dem Volumen nach zu rund 60 % flüssig
 ([Weber et al. 2011](literatur:weber-2011)). Zwei Auswertungen der Apollo-Daten aus demselben Jahr
 ließen die Größe des flüssigen Kerns um ±55 km offen; der Radius aus den Laserentfernungen stimmt
 auf 0,3 % mit der einen (Garcia et al. 2011) überein und weicht um 13 % von der anderen (Weber et
@@ -203,7 +215,8 @@ Bei Saturn dienen die [Ringe](thema:ringe) als Seismometer. Cassini beobachtete 
 im C-Ring Wellen, die von Eigenschwingungen des Planeten angeregt werden, vor allem von
 Grundschwingungen (f-Moden), daneben von Schwerewellen (g-Moden). Eine Mode regt die Ringteilchen an
 ihrer Lindblad-Resonanz an; die azimutale Ordnung $m$ liest man an der Form der Welle ab. g-Moden
-gibt es nur, wo eine Zusammensetzungsschichtung die Konvektion unterdrückt. Mankovich und Fuller
+werden vom Auftrieb getragen; dass Saturn sie zeigt, bedeutet, dass ein Teil seines Inneren durch
+einen Gradienten der Zusammensetzung gegen Konvektion stabilisiert ist. Mankovich und Fuller
 ordneten die Welle W76.44 der g-Mode mit $l = 2$ und $m = -2$ der niedrigsten radialen Ordnung zu.
 Zusammen mit $J_2$, $J_4$, $J_6$ und den Frequenzen von drei der vier beobachteten Wellen mit
 $m = -2$ verlangt das eine stabil geschichtete Übergangszone zwischen Kern und Hülle bis
@@ -218,11 +231,11 @@ mit einem scharf begrenzten Kern aus schweren Elementen in der Mitte
 nach kleiner, als solche Modelle mit großem, scharf begrenztem Kern vorhersagen
 ([Militzer et al. 2022](literatur:militzer-2022)). Schon nach den ersten beiden Umläufen zeigte
 sich, dass ein verdünnter Kern hilft, dessen schwere Elemente über 0,3 bis 0,5 des Planetenradius
-verteilt sind; je nach Zustandsgleichung enthält er 7 bis 25 Erdmassen schwerer Elemente, und die
-tiefe metallische Hülle ist in jedem Fall stärker angereichert als die äußere molekulare
-([Wahl et al. 2017](literatur:wahl-2017)). Modelle mit Winden und einer Zustandsgleichung aus
-Ab-initio-Rechnungen treffen alle gemessenen Koeffizienten mit einem verdünnten Kern bis 63 % des
-Radius, in dem schwere Elemente nur 18 % der Masse ausmachen
+verteilt sind; je nach Zustandsgleichung und Verdünnung enthält der Kern 7 bis 25 Erdmassen schwerer
+Elemente, verdünntere Kerne mehr, und die tiefe metallische Hülle ist in jedem Fall stärker
+angereichert als die äußere molekulare ([Wahl et al. 2017](literatur:wahl-2017)). Modelle mit Winden
+und einer Zustandsgleichung aus Ab-initio-Rechnungen treffen alle gemessenen Koeffizienten mit einem
+verdünnten Kern bis 63 % des Radius, in dem schwere Elemente nur 18 % der Masse ausmachen
 ([Militzer et al. 2022](literatur:militzer-2022)).
 
 Das Trägheitsmoment Jupiters ist nicht direkt gemessen, der Tabellenwert unten ist eine
@@ -230,9 +243,10 @@ Modellrechnung
 ([Trägheitsmomentfaktor (englische Wikipedia)](quelle:wikipedia-en-moment-of-inertia-factor)).
 $J_2$, $J_4$ und $J_6$ legen es nicht eindeutig fest, grenzen es aber auf besser als 1 % ein;
 Modelle, die alle Koeffizienten bis $J_{10}$ treffen, ergeben 0,26393 ± 0,00001
-([Militzer und Hubbard 2023](literatur:militzer-2023)). Die Präzession der Achse, umgekehrt
-proportional zum Trägheitsmoment, sollte sich gegen Ende der Juno-Mission genauer messen lassen
-([Durante et al. 2020](literatur:durante-2020)).
+([Militzer und Hubbard 2023](literatur:militzer-2023)). Die Präzession der Achse ist umgekehrt
+proportional zum Trägheitsmoment; Durante et al. erwarteten 2020, dass sie sich gegen Ende der
+Juno-Mission genauer messen lasse ([Durante et al. 2020](literatur:durante-2020)). Veröffentlicht
+ist eine solche Messung bisher nicht.
 
 ## Trägheitsmomentfaktoren im Vergleich
 
@@ -279,7 +293,7 @@ berücksichtigt nicht hydrostatische Anteile
   ([Le Maistre et al. 2023](literatur:le-maistre-2023)). Bi et al. fanden dagegen 2025 Phasen, die
   den Kern durchlaufen oder an einem inneren Kern reflektiert werden, und bestimmten seinen Radius
   zu 613 ± 67 km ([Bi et al. 2025](literatur:bi-2025)).
-- **Kern des Mondes:** Die Apollo-Seismik zeigte einen festen inneren Kern
+- **Kern des Mondes:** Die Apollo-Seismik deutete auf einen festen inneren Kern hin
   ([Weber et al. 2011](literatur:weber-2011)); die geodätischen Daten lassen einen inneren Kern von
   0 bis 280 km zu, verlangen ihn also nicht, und begrenzen den ganzen Kern auf höchstens 1,5 % der
   Masse ([Williams et al. 2014](literatur:williams-2014)). Die hydrostatische Kernabplattung aus den
@@ -299,17 +313,21 @@ berücksichtigt nicht hydrostatische Anteile
   ([Nettelmann und Fortney 2025](literatur:nettelmann-2025)). Wie sich ein verdünnter Kern bildet
   und hält, ist nicht verstanden ([Wahl et al. 2017](literatur:wahl-2017)).
 - **Saturns Trägheitsmoment:** Die Polpräzession ergibt beim Radius 60 268 km 0,2263 ± 0,0101 (3σ),
-  mehr als alle Modellvorhersagen, aber innerhalb von 3σ ([Jacobson 2022](literatur:jacobson-2022)).
-  Modelle mit Winden, die das Schwerefeld treffen, sagen 0,2181 ± 0,0002 voraus; die tiefen Winde
-  senken den Wert um 0,4 %, was eine Messung über einen hinreichend langen Abschnitt der Präzession
-  prüfen könnte ([Militzer und Hubbard 2023](literatur:militzer-2023)). Zwischen beiden Werten
-  liegen 2,4σ der Messung.
-- **Hydrostatik Titans:** Aus $J_2/C_{22} = 3{,}186 \pm 0{,}077$, verträglich mit 10/3 auf dem
-  2σ-Niveau, folgt ein Trägheitsmoment nahe 0,341. Titans Form ist aber deutlich stärker
-  abgeplattet, als es dem Gleichgewicht entspräche; das Gleichgewicht ist damit nicht gesichert, und
-  ein nicht hydrostatisches Inneres ließe auch kleinere Werte zu
-  ([Durante et al. 2019](literatur:durante-2019)). Die Neuauswertung mit zehn Vorbeiflügen fand
-  $J_2/C_{22} = 3{,}316 \pm 0{,}051$, ein Feld im entspannten hydrostatischen Zustand und
+  mehr als alle Modellvorhersagen, aber innerhalb von 3σ; der Wert setzt einen starren Körper mit
+  der Rotationsrate nach Mankovich et al. 2019 und einen am Drehimpuls ausgerichteten Pol voraus
+  ([Jacobson 2022](literatur:jacobson-2022)). Modelle mit Winden, die das Schwerefeld treffen, sagen
+  0,2181 ± 0,0002 voraus; die tiefen Winde senken den Wert um 0,4 %, was eine Messung über einen
+  hinreichend langen Abschnitt der Präzession prüfen könnte
+  ([Militzer und Hubbard 2023](literatur:militzer-2023)). Zwischen beiden Werten liegen mit der
+  Unsicherheit aus Jacobsons Tabelle 9 2,4σ, mit der aus Tabelle 8 (0,0025 als 1σ) 3,3σ; die beiden
+  Tabellen sind in der Unsicherheit nicht einheitlich.
+- **Hydrostatik Titans:** $J_2/C_{22} = 3{,}186 \pm 0{,}077$ ist mit 10/3 auf dem 2σ-Niveau
+  verträglich; unter der hydrostatischen Annahme ergeben $J_2$ und $C_{22}$ über Radau-Darwin ein
+  Trägheitsmoment nahe 0,341. Titans Form ist aber deutlich stärker abgeplattet, als es dem
+  Gleichgewicht entspräche; das Gleichgewicht ist damit nicht gesichert, und ein nicht
+  hydrostatisches Inneres ließe auch kleinere Werte zu
+  ([Durante et al. 2019](literatur:durante-2019)). Eine Neuauswertung derselben zehn Vorbeiflüge
+  fand $J_2/C_{22} = 3{,}316 \pm 0{,}051$, ein Feld im entspannten hydrostatischen Zustand und
   $C/(M R^2) = 0{,}343 \pm 0{,}001$; sie deutet Titan ohne globalen Ozean
   ([Petricca et al. 2025](literatur:petricca-2025)). Die Streitfrage um $k_2$ und den Ozean steht
   unter [Gezeiten](thema:gezeiten).
