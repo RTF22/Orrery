@@ -44,15 +44,15 @@ Here $\Delta$ is the fractional deviation of the period ratio from its resonant 
 the combined mass of both bodies to the central mass, $e$ the eccentricity (the relative eccentricity
 for two massive bodies), $e_\mathrm{c}$ the eccentricity at which the orbits cross, and $A_q$ a factor
 of 0.845, 0.754 and 0.748 for orders 1 to 3. The width therefore grows with the square root of mass
-and $\tilde{e}^{q}$. The pendulum model treats $e$ as fixed and fails for nearly circular orbits; there the second
-fundamental model of resonance is needed. Where neighbouring resonances overlap, the motion becomes
-chaotic ([Tamayo and Hadden 2025](literatur:tamayo-2025), sections 3.2 and 5.6).
+and $\tilde{e}^{q}$. The pendulum model treats $e$ as fixed and fails for nearly circular orbits;
+there the second fundamental model of resonance is needed. Where neighbouring resonances overlap, the
+motion becomes chaotic ([Tamayo and Hadden 2025](literatur:tamayo-2025), sections 3.2 and 5.6).
 
 Not every oscillating angle means libration in the strict sense. Among the satellite resonances, on
-today's analysis only Mimas–Tethys and Titan–Hyperion have a separatrix, and only their angles librate
-with large amplitudes,
-which are regarded as relics of the time of capture. Io–Europa, Europa–Ganymede and Enceladus–Dione lie
-too far from exact resonance for that ([Luan and Goldreich 2017](literatur:luan-2017)). Their angles do
+current analysis only Mimas–Tethys and Titan–Hyperion have a separatrix, and only their angles librate
+with large amplitudes that are regarded as relics of the time of capture. Io–Europa, Europa–Ganymede
+and Enceladus–Dione lie too far from exact resonance for that
+([Luan and Goldreich 2017](literatur:luan-2017)). Their angles do
 oscillate, but in phase space the trajectories circulate around a shifted centre without being enclosed
 by a separatrix ([Lari and Saillenfest 2024](literatur:lari-2024)).
 
@@ -137,13 +137,13 @@ resonance clears its region: the Hilda asteroids reside in the 3:2 resonance
 
 A pair is captured permanently into resonance when its orbits slowly approach each other. For the two
 planets of GJ 876, forced inward migration of the outer one leads to certain capture into the 2:1
-resonance as long as the eccentricities stay small and the migration rate does not exceed a limit;
-larger eccentricities rather lead to capture into higher-order resonances
+resonance provided the eccentricities are initially small and the migration rate does not exceed a
+limit; larger eccentricities rather lead to capture into higher-order resonances
 ([Lee and Peale 2002](literatur:lee-2002)). Peale and Lee base their picture of migrating moons on
 this: the rate and form of the migration hardly matter, only that the orbits converge
 ([Peale and Lee 2002](literatur:peale-2002), note 26). The Mimas–Tethys and Enceladus–Dione resonances
-also require converging orbits
-([Ćuk et al. 2024](literatur:cuk-2024)). For the Galilean moons, Yoder and Peale outlined a tidal path:
+also require converging orbits ([Ćuk et al. 2024](literatur:cuk-2024)).
+For the Galilean moons, Yoder and Peale outlined a tidal path:
 Jupiter pushes Io outwards fastest, the first two two-body angles are captured with probability 1, the
 third, and with it $\varphi_\mathrm{L}$, with about 0.9, and dissipation in Io damps the amplitudes
 ([Yoder and Peale 1981](literatur:yoder-1981)).
@@ -221,10 +221,12 @@ $e = 0.104$, from close encounters ([Ćuk et al. 2024](literatur:cuk-2024)).
   instead of oscillating by 95° over 70 years. Hyperion is not in the catalogue.
 - **Asteroid belt:** The density factor from which the point cloud is drawn carries gaps at 4:1, 3:1,
   5:2, 7:3 and 2:1, each down to 10 % at the centre. In the belt itself the particles only range from
-  2.10 to 3.30 AU: the 4:1 gap at 2.065 AU lies outside and does not noticeably thin the edge, and of
-  the 2:1 gap at 3.279 AU only the inner flank lies within the range. Among the 50,000 particles of the
-  highest quality level, a strip 0.02 AU wide around 3:1, 5:2 and 7:3 contains only 19, 26 and 34 %
-  (around 2:1, 12 %) as many particles as strips of equal width 0.06 to 0.10 AU away on average. Sorted
+  2.10 to 3.30 AU: the 4:1 gap at 2.065 AU lies outside and does not noticeably thin the edge, and the
+  2:1 gap at 3.279 AU is cut off by the upper limit — the density factor there is still reduced by
+  28 %, so beyond the gap there is no undiluted comparison class left. Among the 50,000 particles of
+  the highest quality level, a strip 0.02 AU wide around 3:1, 5:2 and 7:3 contains only 19, 26 and 34 %
+  as many particles as strips of equal width 0.06 to 0.10 AU away on average, and around 2:1, 12 % of
+  the two inner strips. Sorted
   by distance from the Sun on 17 September 2026, with a mean eccentricity of 0.125, the figures are
   instead 104, 100 and 105 %: the gaps cannot be seen in the view. The particles' elements are fixed,
   so a secular resonance such as $\nu_6$ does not exist.

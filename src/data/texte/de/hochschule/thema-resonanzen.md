@@ -44,15 +44,15 @@ Dabei ist $\Delta$ die relative Abweichung des Umlaufzeitverhältnisses vom reso
 Verhältnis der Massensumme beider Körper zur Zentralmasse, $e$ die Exzentrizität (bei zwei massiven
 Körpern die relative), $e_\mathrm{c}$ die Exzentrizität, bei der sich die Bahnen kreuzen, und $A_q$ ein
 Faktor von 0,845, 0,754 und 0,748 für die Ordnungen 1 bis 3. Die Breite wächst also mit der Wurzel aus
-Masse und $\tilde{e}^{q}$. Das Pendelmodell setzt $e$ als fest voraus und versagt für fast kreisförmige Bahnen;
-dort braucht es das zweite Fundamentalmodell der Resonanz. Überlappen benachbarte Resonanzen, wird die
-Bewegung chaotisch ([Tamayo und Hadden 2025](literatur:tamayo-2025), Abschnitte 3.2 und 5.6).
+Masse und $\tilde{e}^{q}$. Das Pendelmodell setzt $e$ als fest voraus und versagt für fast
+kreisförmige Bahnen; dort braucht es das zweite Fundamentalmodell der Resonanz. Überlappen benachbarte
+Resonanzen, wird die Bewegung chaotisch
+([Tamayo und Hadden 2025](literatur:tamayo-2025), Abschnitte 3.2 und 5.6).
 
 Nicht jeder schwingende Winkel bedeutet Libration im strengen Sinn. Unter den Resonanzen der
-Satelliten besitzen nach heutiger Analyse nur Mimas–Tethys und Titan–Hyperion eine Separatrix, und
-nur ihre Winkel librieren
-mit großen Amplituden, die als Überbleibsel aus der Zeit des Einfangs gelten. Io–Europa, Europa–Ganymed
-und Enceladus–Dione liegen dafür zu weit von der exakten Resonanz
+Satelliten besitzen nach heutiger Analyse nur Mimas–Tethys und Titan–Hyperion eine Separatrix, und nur
+ihre Winkel librieren mit großen Amplituden, die als Überbleibsel aus der Zeit des Einfangs gelten.
+Io–Europa, Europa–Ganymed und Enceladus–Dione liegen dafür zu weit von der exakten Resonanz
 ([Luan und Goldreich 2017](literatur:luan-2017)). Ihre Winkel schwingen zwar, doch im Phasenraum
 umlaufen die Bahnen ein verschobenes Zentrum, ohne von einer Separatrix eingeschlossen zu sein
 ([Lari und Saillenfest 2024](literatur:lari-2024)).
@@ -138,13 +138,13 @@ ihren Bereich: Die Hilda-Asteroiden sitzen in der 3:2-Resonanz ([Nesvorný 2018]
 
 Ein Paar gerät dauerhaft in Resonanz, wenn sich seine Bahnen langsam aufeinander zu bewegen. Für die
 beiden Planeten von GJ 876 führt eine erzwungene Einwärtswanderung des äußeren sicher in die
-2:1-Resonanz, solange die Exzentrizitäten klein bleiben und die Wanderungsrate eine Schranke nicht
+2:1-Resonanz, sofern die Exzentrizitäten anfangs klein sind und die Wanderungsrate eine Schranke nicht
 überschreitet; größere Exzentrizitäten führen eher in Resonanzen höherer Ordnung
 ([Lee und Peale 2002](literatur:lee-2002)). Peale und Lee stützen darauf ihr Bild wandernder Monde:
 Auf Rate und Form der Wanderung komme es kaum an, nur darauf, dass die Bahnen konvergieren
 ([Peale und Lee 2002](literatur:peale-2002), Anmerkung 26). Auch die Resonanzen Mimas–Tethys und
-Enceladus–Dione
-setzen konvergierende Bahnen voraus ([Ćuk et al. 2024](literatur:cuk-2024)). Für die Galileischen
+Enceladus–Dione setzen konvergierende Bahnen voraus
+([Ćuk et al. 2024](literatur:cuk-2024)). Für die Galileischen
 Monde entwarfen Yoder und Peale einen Weg über Gezeiten: Jupiter schiebt Io am schnellsten nach außen,
 die ersten beiden Zweikörperwinkel werden mit Wahrscheinlichkeit 1 eingefangen, der dritte und mit ihm
 $\varphi_\mathrm{L}$ mit etwa 0,9, und die Dissipation in Io dämpft die Amplituden
@@ -219,16 +219,18 @@ $e = 0{,}104$ vor nahen Begegnungen ([Ćuk et al. 2024](literatur:cuk-2024)).
   1892 stand Pluto bei der mittleren Anomalie 219°, 48,1 AE von der Sonne und 19,4 AE von Neptun
   entfernt, und von 1800 bis 2050 kommen sich beide nicht näher als 19,0 AE. Um 1500 v. Chr. und um
   9200 n. Chr. fallen Konjunktionen dagegen ins Perihel; zwischen 4700 v. Chr. und 20 000 n. Chr.
-  beträgt der kleinste Abstand 2,8 AE (Jahr 9734, rund 22 Jahre nach Plutos Perihel). Das Perihelargument steht
-  fest bei 113,7°.
+  beträgt der kleinste Abstand 2,8 AE (Jahr 9734, rund 22 Jahre nach Plutos Perihel). Das
+  Perihelargument steht fest bei 113,7°.
 - **Saturnmonde:** Der Winkel von Mimas und Tethys liegt zur Epoche bei −61,2° und wandert um 13,3° je
   Jahrhundert, statt in 70 Jahren um 95° zu pendeln. Hyperion fehlt im Katalog.
 - **Asteroidengürtel:** Der Dichtefaktor, aus dem die Punktwolke gezogen wird, trägt Lücken bei 4:1,
   3:1, 5:2, 7:3 und 2:1, in der Mitte je auf 10 %. Im Gürtel selbst reichen die Teilchen nur von 2,10
-  bis 3,30 AE: Die 4:1-Lücke bei 2,065 AE liegt davor und dünnt den Rand nicht merklich aus, von der
-  2:1-Lücke bei 3,279 AE liegt nur die innere Flanke im Bereich. Unter den 50 000 Teilchen der höchsten
-  Qualitätsstufe enthält ein 0,02 AE breiter Streifen um 3:1, 5:2 und 7:3 nur 19, 26 und 34 % (um 2:1
-  12 %) so viele Teilchen wie im Mittel gleich breite Streifen 0,06 bis 0,10 AE daneben. Nach dem
+  bis 3,30 AE: Die 4:1-Lücke bei 2,065 AE liegt davor und dünnt den Rand nicht merklich aus, und die
+  2:1-Lücke bei 3,279 AE schneidet die obere Grenze an — dort ist der Dichtefaktor noch um 28 %
+  eingebrochen, eine unverdünnte Vergleichsklasse jenseits der Lücke gibt es also nicht. Unter den
+  50 000 Teilchen der höchsten Qualitätsstufe enthält ein 0,02 AE breiter Streifen um 3:1, 5:2 und 7:3
+  nur 19, 26 und 34 % so viele Teilchen wie im Mittel gleich breite Streifen 0,06 bis 0,10 AE daneben,
+  um 2:1 12 % der beiden inneren Streifen. Nach dem
   Abstand zur Sonne sortiert sind es am 17. September 2026 bei einer mittleren Exzentrizität von 0,125
   dagegen 104, 100 und 105 %: Im Bild sind die Lücken nicht zu sehen. Die Elemente der Teilchen stehen
   fest, eine säkulare Resonanz wie $\nu_6$ gibt es daher nicht.
