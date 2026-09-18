@@ -20,9 +20,9 @@ $\Delta$ from the observer, all lengths in au, is
 $$m = m_\odot - 2.5\,\log_{10}\left[p\,\Phi(\alpha)\,\frac{R^2}{r^2\,\Delta^2}\right]$$
 
 Here $m_\odot$ is the magnitude of the Sun in the same band at a distance of 1 au, −26.75 in the V
-band. In this way Mallama et al. recover the geometric albedo 0.499 from Saturn's V magnitude of
-−8.91 and its mean disk radius of 57,240 km ([Mallama et al. 2017](literatur:mallama-2017), Section
-6 and Table 6).
+band. In this way Mallama et al. recover the geometric albedo 0.499 from Saturn's V magnitude
+referred to 1 au and full phase with the rings edge-on, −8.91, and its mean disk radius of 57,240 km
+([Mallama et al. 2017](literatur:mallama-2017), Sections 1 and 6, Tables 3 and 6, Appendix A-6).
 
 The Bond albedo $A$, also called spherical albedo, is the fraction of the radiation falling on the
 cross-section that the body scatters back in all directions; its ratio to the geometric albedo is
@@ -54,12 +54,15 @@ The Bond albedo of the Lambert sphere is thus $A_\mathrm{L}$ itself, its geometr
 of it; it cannot exceed $2/3$.
 
 The Lommel–Seeliger law describes single scattering by isotropically scattering particles of
-single-scattering albedo $w$, with $\mu$ the cosine of the emission angle:
+single-scattering albedo $w$, with $\mu$ the cosine of the emission angle; it follows from radiative
+transfer theory when multiple scattering is neglected for a small single-scattering albedo
+([Muinonen and Wilkman 2015](literatur:muinonen-2015), Eqs. 2.1 and 2.2):
 
 $$\frac{I}{F} = \frac{w}{4}\,\frac{\mu_0}{\mu_0 + \mu}$$
 
 At $\alpha = 0$, $\mu_0 = \mu$; the disk appears uniformly bright without limb darkening, and
-$p = w/8$. The phase function and phase integral of the sphere are
+$p = w/8$ ([Muinonen and Wilkman 2015](literatur:muinonen-2015), Eq. 2.10). The phase function and
+phase integral of the sphere are
 
 $$\Phi_\mathrm{LS}(\alpha) = 1 + \sin\frac{\alpha}{2}\,\tan\frac{\alpha}{2}\,\ln\tan\frac{\alpha}{4}, \quad q = \frac{16}{3}\,(1 - \ln 2) \approx 1.64$$
 
@@ -67,15 +70,18 @@ in agreement with the value 1.64 given by [Shevchenko et al. 2019](literatur:she
 $\alpha = 90^\circ$ the Lambert sphere retains 0.318 and the Lommel–Seeliger sphere 0.377 of its
 brightness at full phase.
 
-Neither law knows an opposition effect, and neither fits airless bodies. Measured phase curves of
-asteroids give phase integrals from 0.34 to 0.54, 0.44 on average, because mutual shadowing of
-regolith particles makes the phase curve steep; for the Moon Shevchenko et al. obtained 0.48 ± 0.02,
-clearly less than the older value 0.60 of Lane and Irvine (1973), a difference they attribute to
-newer, better measurements of the lunar phase curve
-([Shevchenko et al. 2019](literatur:shevchenko-2019)). The mid-sized moons of Saturn lie between
-0.71 and 0.80 at 0.55 µm ([Buratti et al. 2022](literatur:buratti-2022), Table 2). For cloud-covered
-planets the phase curve falls off more gently, and the phase integral exceeds 1: for Jupiter roughly
-1.1 to 1.3 below 1050 nm ([Li et al. 2018](literatur:li-2018)), for Uranus 1.36 ± 0.03 bolometric
+Neither law knows an opposition effect. Lommel–Seeliger serves as a model for dark, particulate
+surfaces such as those of primitive asteroids
+([Muinonen and Wilkman 2015](literatur:muinonen-2015)), but neither law reproduces the measured
+phase curves of airless bodies: for asteroid classes of low to high albedo, measured phase curves
+give phase integrals from 0.35 to 0.54, 0.44 on average, because mutual shadowing of regolith
+particles makes the phase curve steep; for the Moon Shevchenko et al. obtained 0.48 ± 0.02, clearly
+less than the older value 0.60 of Lane and Irvine (1973), a difference they attribute to newer,
+better measurements of the lunar phase curve ([Shevchenko et al. 2019](literatur:shevchenko-2019)).
+The mid-sized moons of Saturn lie between 0.71 and 0.80 at 0.55 µm
+([Buratti et al. 2022](literatur:buratti-2022), Table 2). For cloud-covered planets the phase curve
+falls off more gently, and the phase integral exceeds 1: for Jupiter roughly 1.1 to 1.3 below 1050
+nm ([Li et al. 2018](literatur:li-2018)), for Uranus 1.36 ± 0.03 bolometric
 ([Irwin et al. 2025](literatur:irwin-2025)).
 
 ## Phase curve and opposition effect
@@ -102,15 +108,17 @@ detail ([Hapke 2012a](literatur:hapke-2012a)). One signature is polarization: in
 the linear polarization ratio decreases and the circular one increases in the opposition peak
 ([Hapke et al. 1993](literatur:hapke-1993)).
 
-The observations sort by albedo and wavelength. Shadow hiding could explain the sharp peak of Europa
-only with unreasonable porosities (Domingue et al. 1991, after
+The observations sort by albedo, which also changes with wavelength: the darker the surface, the
+steeper the phase curve; the brighter, the more pronounced the coherent spike
+([Buratti et al. 2022](literatur:buratti-2022), Section 4). Shadow hiding could explain the sharp
+peak of Europa only with unreasonable porosities (Domingue et al. 1991, after
 [Buratti et al. 2022](literatur:buratti-2022)). On [Enceladus](objekt:enceladus), HST images between
 0.26° and 6.4° showed a steep, narrow surge that is best described by a model combining moderate
 shadow hiding and narrow coherent backscattering
 ([Verbiscer et al. 2005](literatur:verbiscer-2005)). For the mid-sized moons of Saturn the phase
 curves in the visible and near infrared do not fit pure shadow hiding, whereas at 3.6 µm, where the
 geometric albedo drops to about 0.2 and multiple scattering hardly matters, they do; the dark
-hemisphere of [Iapetus](objekt:iapetus) shows no appreciable surge
+hemisphere of [Iapetus](objekt:iapetus) seems to show no appreciable surge
 ([Buratti et al. 2022](literatur:buratti-2022)). How strongly the effect shapes observations is
 shown by [Mercury](objekt:mercury): it appears brightest near superior conjunction, at small phase
 angle and greatest distance ([Mallama and Hilton 2018](literatur:mallama-2018)).
@@ -183,12 +191,12 @@ acid droplets scatter light forward. It reaches greatest brilliancy on average a
 $\alpha = 123.5^\circ$ with −4.81; it was brightest in the period analysed on 19 December 1989 at
 −4.92. For the [Earth](objekt:earth), seen from space, $V_1(0) = -3.99$ corresponds to the geometric
 albedo 0.434; model calculations give, depending on cloud cover, 0.12 without clouds up to 0.76
-under altostratus and 0.358 for realistic clouds, which is why the Earth's magnitude is less
-predictable than that of the other planets. Mars varies with the longitude of the visible hemisphere
-by up to 0.06 magnitudes. For Saturn the rings dominate: near $\alpha = 0$ they become much brighter
-than at 6°, while the globe stays almost the same. Uranus appears brighter when more of its
-methane-depleted polar regions is visible. Neptune brightened markedly between about 1980 and 2000
-and remained roughly constant thereafter up to the analysis. The brightest mean opposition magnitude
+under altostratus and, between 0.5 and 0.9 µm, 0.358 for realistic clouds, which is why the Earth's
+magnitude is probably less predictable than that of most other planets. Mars varies with the
+longitude of the visible hemisphere by up to 0.06 magnitudes. For Saturn the rings dominate: near
+$\alpha = 0$ they become much brighter than at 6°, while the globe stays almost the same. Uranus
+appears brighter when more of its methane-depleted polar regions is visible. Neptune brightened
+markedly between about 1980 and 2000 (see Open questions). The brightest mean opposition magnitude
 belongs to Jupiter at −2.70, the faintest to Neptune at 7.71
 ([Mallama and Hilton 2018](literatur:mallama-2018)).
 
@@ -203,7 +211,7 @@ the last column.
 | [Earth](objekt:earth) | 0.434 | 0.293 | [Mallama et al. 2017](literatur:mallama-2017); [Stephens et al. 2015](literatur:stephens-2015) |
 | [Jupiter](objekt:jupiter) | 0.538 | 0.503 ± 0.012 | [Mallama et al. 2017](literatur:mallama-2017); [Li et al. 2018](literatur:li-2018) |
 | [Saturn](objekt:saturn) | 0.499 | 0.41 ± 0.02 | [Mallama et al. 2017](literatur:mallama-2017); [Wang et al. 2024a](literatur:wang-2024a) |
-| [Uranus](objekt:uranus) | 0.488 | 0.349 ± 0.016 | [Mallama et al. 2017](literatur:mallama-2017); [Irwin et al. 2025](literatur:irwin-2025) |
+| [Uranus](objekt:uranus) | 0.488 | 0.349 ± 0.016 (orbital mean) | [Mallama et al. 2017](literatur:mallama-2017); [Irwin et al. 2025](literatur:irwin-2025) |
 | [Enceladus](objekt:enceladus) | 1.24 ± 0.01 | 0.89 ± 0.02 | [Buratti et al. 2022](literatur:buratti-2022) |
 | [Iapetus](objekt:iapetus), dark leading side | – | 0.06 ± 0.01 | [Blackburn et al. 2011](literatur:blackburn-2011) |
 | [Iapetus](objekt:iapetus), bright trailing side | – | 0.25 ± 0.03 | [Blackburn et al. 2011](literatur:blackburn-2011) |
@@ -261,7 +269,10 @@ power of 14.098 W m⁻² this gave an internal heat flux of 7.485 instead of 5.4
   incorrect ([Hapke et al. 2012b](literatur:hapke-2012b)). Another analysis of the same camera finds
   a narrow coherent component with a width from 1.2° in the highlands in red light to 3.9° in the
   maria in blue light, with an albedo dependence as expected from theory, and estimates its maximum
-  amplitude at about 8% ([Velikodsky et al. 2016](literatur:velikodsky-2016)).
+  amplitude at about 8%. The width is defined there specifically, as the largest phase angle up to
+  which the slope of the spike grows with albedo
+  ([Velikodsky et al. 2016](literatur:velikodsky-2016)); the numbers of the two works measure
+  different quantities and cannot be compared directly.
 - **Bond albedo of the giant planets:** For Jupiter, the Voyager radiometer and a Pioneer phase
   integral of 1.25 gave 0.343 ± 0.032, whose error is an estimate of systematic effects
   ([Hanel et al. 1981](literatur:hanel-1981)); Cassini data gave 0.503 ± 0.012. Li et al. name
@@ -272,24 +283,33 @@ power of 14.098 W m⁻² this gave an internal heat flux of 7.485 instead of 5.4
   latitude, 4.6% darker than the global mean, explains only part of the difference. The Voyager
   analysis is hard to reproduce for lack of details, and the Saturn determination follows the method
   the group had described earlier, among others for Jupiter
-  ([Wang et al. 2024a](literatur:wang-2024a)). For Uranus an aerosol model fitted to observations
-  gives an orbital mean of 0.349 ± 0.016 and a ratio of emitted to absorbed power of 1.15 ± 0.06;
-  this value rests on the emission measured by Voyager 2, whose re-determination the authors
-  recommend ([Irwin et al. 2025](literatur:irwin-2025)).
+  ([Wang et al. 2024a](literatur:wang-2024a)). For Uranus, Irwin et al. set against the Voyager
+  values of Pearl et al. (1990), an orbital mean of 0.300 ± 0.049 and a ratio of emitted to absorbed
+  power of 1.06 ± 0.08, consistent with thermal equilibrium, an aerosol model fitted to
+  observations: 0.349 ± 0.016 and 1.15 ± 0.06. Their value still rests on the emission measured by
+  Voyager 2, whose re-determination they recommend ([Irwin et al. 2025](literatur:irwin-2025), Table
+  1). With an energy balance over a whole orbit, Wang et al. also find an energy loss, with an
+  internal heat flux of 0.078 ± 0.018 W m⁻² ([Wang et al. 2025](literatur:wang-2025)).
 - **Brightening of Neptune:** Why Neptune brightened between 1980 and 2000 was considered
   unexplained in 2018. Karkoschka (2011) suggests darkening events in which haze particles are
   lifted and then settle again, Sromovsky et al. (2003) a seasonal change as on Uranus; Lockwood and
   Jerzykiewicz (2006) objected that the seasonal model reproduces older observations poorly. If it
   were correct, Neptune should soon fade again after its solstice in 2005 (all after
-  [Mallama and Hilton 2018](literatur:mallama-2018)).
+  [Mallama and Hilton 2018](literatur:mallama-2018)). According to Lowell and HST data the
+  brightness rose until 2005, stayed flat until about 2012 and decreased overall thereafter. From
+  1994 to 2022 the cloud activity in the near infrared was correlated with the Sun's Lyman-α
+  radiation, which Chavez et al. take as support for photochemical cloud formation driven by solar
+  ultraviolet; seasonal effects are probably important for the slow changes, but the other long-term
+  variations must have a different origin ([Chavez et al. 2023](literatur:chavez-2023)).
 
 ## In the model
 
 - **Albedo value:** Every body except the Sun carries a geometric albedo, which the data panel shows
   as "Geometric albedo". The values of the planets agree with the V-band values of
-  [Mallama et al. 2017](literatur:mallama-2017), Table 7; Enceladus carries 1.0, the Moon 0.12 and
-  Iapetus 0.275, according to a comment in the data set the mean of the hemispheric values 0.05 and
-  0.5. Orrery computes neither Bond albedo, phase integral, phase angle nor apparent magnitudes;
+  [Mallama et al. 2017](literatur:mallama-2017), Table 7; Enceladus carries 1.0, the value of the
+  NSSDC fact sheet, and thus lies below the newer measurements in the table; the Moon carries 0.12
+  and Iapetus 0.275, the mean of the hemispheric values 0.05 and 0.5 from the same fact sheet.
+  Orrery computes neither Bond albedo, phase integral, phase angle nor apparent magnitudes;
   magnitudes occur only for the background stars, as point size.
 - **Map and factor:** The textures are not reflectance maps; the map of Enceladus has a mean of only
   0.172. Orrery averages their linear colour values, the three channels with equal weight, weighted
@@ -300,13 +320,15 @@ power of 14.098 W m⁻² this gave an internal heat flux of 7.485 instead of 5.4
   have a mean of 0.116. The contrast of the map remains: for Iapetus the hemisphere centred on the
   darkest viewing direction has a mean reflectance of 0.053, the one centred on the brightest 0.373.
 - **Scattering:** The material of three.js 0.186 with roughness 1 and no metalness scatters
-  Lambertian times $1 - F$, with the Fresnel factor $F \approx 0.04$ at normal viewing, plus a faint
-  uncoloured gloss that the albedo factor does not scale. A sphere of reflectance $p$ therefore has
-  in the model, computed without gloss and fill light, the geometric albedo $0.640\,p$, the phase
-  integral 1.49 and the Bond albedo $0.955\,p$; for a target at 1 au the gloss adds about 0.011 to
-  the geometric albedo. The Earth thus appears with 0.278 and 0.415 instead of the measured 0.434
-  and 0.293, Enceladus with 0.64 instead of 1.24. Opposition effect, Lommel–Seeliger or Hapke
-  behaviour, clouds and scattering in atmospheres are missing; the Earth map is cloudless.
+  Lambertian times $1 - F$. The Fresnel factor $F$ applies at the half vector between light and
+  viewing direction and therefore depends only on the phase angle: 0.04 at full phase, 0.13 at 135°,
+  0.41 at 160°. In addition there is a faint uncoloured gloss that the albedo factor does not scale.
+  A sphere of reflectance $p$ therefore has in the model, computed without gloss and fill light, the
+  geometric albedo $0.640\,p$, the phase integral 1.49, slightly below 1.5 because of the growing
+  $F$, and the Bond albedo $0.955\,p$; for a target at 1 au the gloss adds about 0.011 to the
+  geometric albedo. The Earth thus appears with 0.278 and 0.415 instead of the measured 0.434 and
+  0.293, Enceladus with 0.64 instead of 1.24. Opposition effect, Lommel–Seeliger or Hapke behaviour,
+  clouds and scattering in atmospheres are missing; the Earth map is cloudless.
 - **Fill light:** The night-side fill, by default a quarter of the day level, lies with the same map
   over the whole visible disk, on the day side as well. At full phase it raises the disk mean from
   $0.640\,p$ to $0.890\,p$; at 90° phase angle 55%, at 135° 90% of the disk light comes from it. The
@@ -317,10 +339,10 @@ power of 14.098 W m⁻² this gave an internal heat flux of 7.485 instead of 5.4
   normal incidence, without Fresnel factor and fill, reaches the linear value 1. Every target thus
   appears equally bright, however far it is from the Sun, although on 17 September 2026 Neptune
   receives only 1/883 of the Earth's irradiance. For the other bodies in the image the irradiance
-  $E$ relative to 1 au counts only as $E^{0.3}$, and in the default view "Diagram" the compressed
-  distance $r_\mathrm{d} = r^{0.6}$ applies, both in au. With the Earth as target, Neptune appears
-  at 0.295 of its day level instead of 0.00113, i.e. 261 times too bright, in the "Realistic" view
-  115 times.
+  $E$ relative to 1 au counts, with the default of the "Distance compensation" slider, only as
+  $E^{0.3}$, and in the default view "Diagram" the compressed distance $r_\mathrm{d} = r^{0.6}$
+  applies, both in au. With the Earth as target, Neptune appears at 0.295 of its day level instead
+  of 0.00113, i.e. 261 times too bright, in the "Realistic" view 115 times.
 - **Tone curve:** The image values pass through the ACES curve of three.js and the sRGB encoding.
   The linear value 1 ends up at 226 of 255, with the fill, i.e. 1.25, at 233. At the subsolar point
   of a surface of reflectance 0.12, including Fresnel factor and fill, the value is 112, for

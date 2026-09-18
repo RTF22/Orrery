@@ -20,9 +20,10 @@ Sonne und $\Delta$ vom Beobachter, alle Längen in AE:
 $$m = m_\odot - 2{,}5\,\log_{10}\left[p\,\Phi(\alpha)\,\frac{R^2}{r^2\,\Delta^2}\right]$$
 
 Dabei ist $m_\odot$ die Helligkeit der Sonne im selben Band in 1 AE Abstand, im V-Band −26,75. So
-rechnen Mallama et al. aus der V-Helligkeit des Saturns von −8,91 und seinem mittleren
-Scheibenradius von 57 240 km die geometrische Albedo 0,499 zurück
-([Mallama et al. 2017](literatur:mallama-2017), Abschnitt 6 und Tabelle 6).
+rechnen Mallama et al. aus der auf 1 AE und volle Phase bezogenen V-Helligkeit des Saturns bei
+Kantenstellung der Ringe, −8,91, und seinem mittleren Scheibenradius von 57 240 km die geometrische
+Albedo 0,499 zurück ([Mallama et al. 2017](literatur:mallama-2017), Abschnitte 1 und 6, Tabellen 3
+und 6, Anhang A-6).
 
 Die Bond-Albedo $A$, auch sphärische Albedo, ist der Anteil der auf den Querschnitt fallenden
 Strahlung, den der Körper in alle Richtungen zurückwirft; ihr Verhältnis zur geometrischen Albedo
@@ -55,12 +56,15 @@ Die Bond-Albedo der Lambert-Kugel ist also $A_\mathrm{L}$ selbst, ihre geometris
 Drittel davon; über $2/3$ kommt sie nicht hinaus.
 
 Das Lommel-Seeliger-Gesetz beschreibt einfache Streuung an isotrop streuenden Teilchen der
-Einfachstreualbedo $w$, mit $\mu$ dem Kosinus des Austrittswinkels:
+Einfachstreualbedo $w$, mit $\mu$ dem Kosinus des Austrittswinkels; es folgt aus der
+Strahlungstransporttheorie, wenn man bei kleiner Einfachstreualbedo die Mehrfachstreuung weglässt
+([Muinonen und Wilkman 2015](literatur:muinonen-2015), Gl. 2.1 und 2.2):
 
 $$\frac{I}{F} = \frac{w}{4}\,\frac{\mu_0}{\mu_0 + \mu}$$
 
 Bei $\alpha = 0$ ist $\mu_0 = \mu$; die Scheibe erscheint ohne Randverdunkelung gleichmäßig hell,
-und $p = w/8$. Phasenfunktion und Phasenintegral der Kugel sind
+und $p = w/8$ ([Muinonen und Wilkman 2015](literatur:muinonen-2015), Gl. 2.10). Phasenfunktion und
+Phasenintegral der Kugel sind
 
 $$\Phi_\mathrm{LS}(\alpha) = 1 + \sin\frac{\alpha}{2}\,\tan\frac{\alpha}{2}\,\ln\tan\frac{\alpha}{4}, \quad q = \frac{16}{3}\,(1 - \ln 2) \approx 1{,}64$$
 
@@ -68,13 +72,16 @@ in Übereinstimmung mit dem Wert 1,64 bei [Shevchenko et al. 2019](literatur:she
 $\alpha = 90^\circ$ behält die Lambert-Kugel 0,318, die Lommel-Seeliger-Kugel 0,377 ihrer Helligkeit
 bei voller Phase.
 
-Keines der beiden Gesetze kennt einen Oppositionseffekt, und keines trifft luftlose Körper. Aus
-gemessenen Phasenkurven ergeben sich für Asteroiden Phasenintegrale von 0,34 bis 0,54, im Mittel
-0,44, weil die gegenseitige Abschattung der Regolithteilchen die Phasenkurve steil macht; für den
-Mond erhielten Shevchenko et al. 0,48 ± 0,02, deutlich weniger als den älteren Wert 0,60 von Lane
-und Irvine (1973); den Unterschied führen sie auf neuere, bessere Messungen der Mondphasenkurve
-zurück ([Shevchenko et al. 2019](literatur:shevchenko-2019)). Die mittelgroßen Saturnmonde liegen
-bei 0,55 µm zwischen 0,71 und 0,80 ([Buratti et al. 2022](literatur:buratti-2022), Tabelle 2). Bei
+Keines der beiden Gesetze kennt einen Oppositionseffekt. Lommel-Seeliger gilt als Modell für dunkle,
+feinkörnige Oberflächen wie die primitiver Asteroiden
+([Muinonen und Wilkman 2015](literatur:muinonen-2015)), die gemessenen Phasenkurven luftloser Körper
+gibt aber keines der beiden wieder: Für Asteroidenklassen niedriger bis hoher Albedo ergeben sich
+aus gemessenen Phasenkurven Phasenintegrale von 0,35 bis 0,54, im Mittel 0,44, weil die gegenseitige
+Abschattung der Regolithteilchen die Phasenkurve steil macht; für den Mond erhielten Shevchenko et
+al. 0,48 ± 0,02, deutlich weniger als den älteren Wert 0,60 von Lane und Irvine (1973); den
+Unterschied führen sie auf neuere, bessere Messungen der Mondphasenkurve zurück
+([Shevchenko et al. 2019](literatur:shevchenko-2019)). Die mittelgroßen Saturnmonde liegen bei 0,55
+µm zwischen 0,71 und 0,80 ([Buratti et al. 2022](literatur:buratti-2022), Tabelle 2). Bei
 wolkenbedeckten Planeten fällt die Phasenkurve flacher ab, und das Phasenintegral liegt über 1: für
 Jupiter unter 1050 nm etwa zwischen 1,1 und 1,3 ([Li et al. 2018](literatur:li-2018)), für Uranus
 bolometrisch bei 1,36 ± 0,03 ([Irwin et al. 2025](literatur:irwin-2025)).
@@ -104,7 +111,9 @@ Lehrbuch behandelt sie ausführlich ([Hapke 2012a](literatur:hapke-2012a)). Ein 
 Polarisation: An Apollo-Bodenproben sinkt im Oppositionspeak das lineare und steigt das zirkulare
 Polarisationsverhältnis ([Hapke et al. 1993](literatur:hapke-1993)).
 
-Die Beobachtungen ordnen sich nach Albedo und Wellenlänge. Den scharfen Peak von Europa konnte
+Die Beobachtungen ordnen sich nach der Albedo, die sich auch mit der Wellenlänge ändert: Je dunkler
+die Oberfläche, desto steiler die Phasenkurve, je heller, desto ausgeprägter die kohärente Spitze
+([Buratti et al. 2022](literatur:buratti-2022), Abschnitt 4). Den scharfen Peak von Europa konnte
 Schattenverbergen nur mit unvernünftigen Porositäten erklären (Domingue et al. 1991, nach
 [Buratti et al. 2022](literatur:buratti-2022)). An [Enceladus](objekt:enceladus) zeigten
 HST-Aufnahmen zwischen 0,26° und 6,4° einen steilen, schmalen Anstieg, den ein Modell aus mäßigem
@@ -112,7 +121,7 @@ Schattenverbergen und schmaler kohärenter Rückstreuung am besten beschreibt
 ([Verbiscer et al. 2005](literatur:verbiscer-2005)). Bei den mittelgroßen Saturnmonden passen die
 Phasenkurven im Sichtbaren und nahen Infrarot nicht zu reinem Schattenverbergen, bei 3,6 µm, wo die
 geometrische Albedo auf etwa 0,2 fällt und Mehrfachstreuung kaum zählt, dagegen schon; die dunkle
-Hemisphäre von [Iapetus](objekt:iapetus) zeigt keinen nennenswerten Anstieg
+Hemisphäre von [Iapetus](objekt:iapetus) scheint keinen nennenswerten Anstieg zu zeigen
 ([Buratti et al. 2022](literatur:buratti-2022)). Wie stark der Effekt Beobachtungen prägt, zeigt
 [Merkur](objekt:mercury): Er erscheint nahe der oberen Konjunktion, bei kleinem Phasenwinkel und
 größtem Abstand, am hellsten ([Mallama und Hilton 2018](literatur:mallama-2018)).
@@ -185,12 +194,12 @@ Schwefelsäuretröpfchen Licht nach vorn streuen. Ihren größten Glanz erreicht
 $\alpha = 123{,}5^\circ$ mit −4,81; am hellsten war sie im untersuchten Zeitraum am 19. Dezember
 1989 mit −4,92. Für die [Erde](objekt:earth), vom All aus gesehen, entspricht $V_1(0) = -3{,}99$ der
 geometrischen Albedo 0,434; Modellrechnungen ergeben je nach Bewölkung 0,12 ohne Wolken bis 0,76
-unter Altostratus und 0,358 für eine realistische Bewölkung, weshalb die Helligkeit der Erde
-schlechter vorhersagbar ist als die anderer Planeten. Mars schwankt mit der Länge der sichtbaren
-Hälfte um bis zu 0,06 Magnituden. Bei Saturn überwiegen die Ringe: Nahe $\alpha = 0$ werden sie viel
-heller als bei 6°, während die Kugel fast gleich bleibt. Uranus erscheint heller, wenn mehr von
-seinen methanarmen Polregionen zu sehen ist. Neptun wurde zwischen etwa 1980 und 2000 deutlich
-heller und blieb danach bis zur Auswertung ungefähr konstant. Die hellste mittlere
+unter Altostratus und zwischen 0,5 und 0,9 µm 0,358 für eine realistische Bewölkung, weshalb die
+Helligkeit der Erde wohl schlechter vorhersagbar ist als die der meisten anderen Planeten. Mars
+schwankt mit der Länge der sichtbaren Hälfte um bis zu 0,06 Magnituden. Bei Saturn überwiegen die
+Ringe: Nahe $\alpha = 0$ werden sie viel heller als bei 6°, während die Kugel fast gleich bleibt.
+Uranus erscheint heller, wenn mehr von seinen methanarmen Polregionen zu sehen ist. Neptun wurde
+zwischen etwa 1980 und 2000 deutlich heller (siehe Offene Fragen). Die hellste mittlere
 Oppositionshelligkeit hat Jupiter mit −2,70, die schwächste Neptun mit 7,71
 ([Mallama und Hilton 2018](literatur:mallama-2018)).
 
@@ -205,7 +214,7 @@ stehen in der letzten Spalte.
 | [Erde](objekt:earth) | 0,434 | 0,293 | [Mallama et al. 2017](literatur:mallama-2017); [Stephens et al. 2015](literatur:stephens-2015) |
 | [Jupiter](objekt:jupiter) | 0,538 | 0,503 ± 0,012 | [Mallama et al. 2017](literatur:mallama-2017); [Li et al. 2018](literatur:li-2018) |
 | [Saturn](objekt:saturn) | 0,499 | 0,41 ± 0,02 | [Mallama et al. 2017](literatur:mallama-2017); [Wang et al. 2024a](literatur:wang-2024a) |
-| [Uranus](objekt:uranus) | 0,488 | 0,349 ± 0,016 | [Mallama et al. 2017](literatur:mallama-2017); [Irwin et al. 2025](literatur:irwin-2025) |
+| [Uranus](objekt:uranus) | 0,488 | 0,349 ± 0,016 (Bahnmittel) | [Mallama et al. 2017](literatur:mallama-2017); [Irwin et al. 2025](literatur:irwin-2025) |
 | [Enceladus](objekt:enceladus) | 1,24 ± 0,01 | 0,89 ± 0,02 | [Buratti et al. 2022](literatur:buratti-2022) |
 | [Iapetus](objekt:iapetus), dunkle Vorderseite | – | 0,06 ± 0,01 | [Blackburn et al. 2011](literatur:blackburn-2011) |
 | [Iapetus](objekt:iapetus), helle Rückseite | – | 0,25 ± 0,03 | [Blackburn et al. 2011](literatur:blackburn-2011) |
@@ -263,8 +272,10 @@ zusammen mit einer abgestrahlten Leistung von 14,098 W m⁻² ergab sich ein inn
   unvollständig oder vielleicht falsch ist ([Hapke et al. 2012b](literatur:hapke-2012b)). Eine
   andere Auswertung derselben Kamera findet eine schmale kohärente Komponente von 1,2° Breite im
   Hochland im Roten bis 3,9° im Mare im Blauen, mit einer Albedoabhängigkeit wie von der Theorie
-  erwartet, und schätzt ihre größte Amplitude auf etwa 8 %
-  ([Velikodsky et al. 2016](literatur:velikodsky-2016)).
+  erwartet, und schätzt ihre größte Amplitude auf etwa 8 %. Die Breite ist dort eigens definiert,
+  als größter Phasenwinkel, bis zu dem die Steigung der Spitze mit der Albedo wächst
+  ([Velikodsky et al. 2016](literatur:velikodsky-2016)); die Zahlen beider Arbeiten messen
+  verschiedene Größen und lassen sich nicht direkt vergleichen.
 - **Bond-Albedo der Riesenplaneten:** Für Jupiter ergaben Voyager-Radiometer und ein
   Pioneer-Phasenintegral von 1,25 den Wert 0,343 ± 0,032, dessen Fehler eine Schätzung
   systematischer Effekte ist ([Hanel et al. 1981](literatur:hanel-1981)); Cassini-Daten ergaben
@@ -276,23 +287,33 @@ zusammen mit einer abgestrahlten Leistung von 14,098 W m⁻² ergab sich ein inn
   erklärt nur einen Teil des Unterschieds. Die Voyager-Auswertung ist mangels Angaben schwer
   nachzuvollziehen, und die Saturn-Bestimmung folgt dem Verfahren, das die Gruppe zuvor unter
   anderem für Jupiter beschrieben hatte ([Wang et al. 2024a](literatur:wang-2024a)). Für Uranus
-  ergibt ein an Beobachtungen angepasstes Aerosolmodell im Bahnmittel 0,349 ± 0,016 und ein
-  Verhältnis von abgestrahlter zu absorbierter Leistung von 1,15 ± 0,06; dieser Wert beruht auf der
-  von Voyager 2 gemessenen Abstrahlung, deren Neubestimmung die Autoren empfehlen
-  ([Irwin et al. 2025](literatur:irwin-2025)).
+  stellen Irwin et al. den Voyager-Werten von Pearl et al. (1990), im Bahnmittel 0,300 ± 0,049 und
+  einem Verhältnis von abgestrahlter zu absorbierter Leistung von 1,06 ± 0,08, verträglich mit
+  thermischem Gleichgewicht, ein an Beobachtungen angepasstes Aerosolmodell gegenüber: 0,349 ± 0,016
+  und 1,15 ± 0,06. Ihr Wert beruht weiter auf der von Voyager 2 gemessenen Abstrahlung, deren
+  Neubestimmung sie empfehlen ([Irwin et al. 2025](literatur:irwin-2025), Tabelle 1). Mit einer
+  Energiebilanz über einen ganzen Umlauf finden auch Wang et al. einen Energieverlust, mit einem
+  inneren Wärmestrom von 0,078 ± 0,018 W m⁻² ([Wang et al. 2025](literatur:wang-2025)).
 - **Helligkeitsanstieg Neptuns:** Warum Neptun zwischen 1980 und 2000 heller wurde, galt 2018 als
   ungeklärt. Karkoschka (2011) vermutet Verdunkelungsereignisse, bei denen Dunstteilchen aufsteigen
   und danach wieder absinken, Sromovsky et al. (2003) eine jahreszeitliche Änderung wie bei Uranus;
   Lockwood und Jerzykiewicz (2006) wandten ein, dass das jahreszeitliche Modell ältere Beobachtungen
   schlecht wiedergibt. Träfe es zu, müsste Neptun nach seiner Sonnenwende 2005 bald wieder schwächer
-  werden (alle nach [Mallama und Hilton 2018](literatur:mallama-2018)).
+  werden (alle nach [Mallama und Hilton 2018](literatur:mallama-2018)). Nach Lowell- und HST-Daten
+  stieg die Helligkeit bis 2005, blieb bis etwa 2012 gleich und nahm danach insgesamt ab. Die
+  Wolkenaktivität im nahen Infrarot hing von 1994 bis 2022 mit der Lyman-α-Strahlung der Sonne
+  zusammen, was Chavez et al. als Stütze für eine photochemische Wolkenbildung durch solares
+  Ultraviolett werten; jahreszeitliche Effekte seien für die langsamen Änderungen wohl wichtig, die
+  übrigen langfristigen Schwankungen müssten eine andere Ursache haben
+  ([Chavez et al. 2023](literatur:chavez-2023)).
 
 ## Im Modell
 
 - **Albedowert:** Jeder Körper außer der Sonne trägt eine geometrische Albedo, die der Datenblock
   als „Geometrische Albedo" zeigt. Die Werte der Planeten stimmen mit den V-Band-Werten von
-  [Mallama et al. 2017](literatur:mallama-2017) überein, Tabelle 7; Enceladus trägt 1,0, der Mond
-  0,12 und Iapetus 0,275, laut Kommentar im Datensatz das Mittel der Hemisphärenwerte 0,05 und 0,5.
+  [Mallama et al. 2017](literatur:mallama-2017) überein, Tabelle 7; Enceladus trägt 1,0, den Wert
+  des NSSDC-Faktenblatts, und liegt damit unter den neueren Messungen der Tabelle; der Mond trägt
+  0,12 und Iapetus 0,275, das Mittel der Hemisphärenwerte 0,05 und 0,5 desselben Faktenblatts.
   Bond-Albedo, Phasenintegral, Phasenwinkel und scheinbare Helligkeiten rechnet Orrery nicht;
   Magnituden kommen nur bei den Hintergrundsternen vor, als Punktgröße.
 - **Karte und Faktor:** Die Texturen sind keine Reflexionskarten; die Karte von Enceladus hat im
@@ -305,13 +326,15 @@ zusammen mit einer abgestrahlten Leistung von 14,098 W m⁻² ergab sich ein inn
   Iapetus hat die um die dunkelste Blickrichtung zentrierte Halbkugel die mittlere Reflexion 0,053,
   die um die hellste 0,373.
 - **Streuung:** Das Material von three.js 0.186 mit Rauheit 1 und ohne Metallanteil streut
-  lambertsch mal $1 - F$, mit dem Fresnel-Faktor $F \approx 0{,}04$ bei senkrechtem Blick, dazu ein
-  schwacher ungefärbter Glanz, den der Albedofaktor nicht skaliert. Eine Kugel der Reflexion $p$ hat
-  im Modell deshalb, ohne Glanz und Fülllicht nachgerechnet, die geometrische Albedo $0{,}640\,p$,
-  das Phasenintegral 1,49 und die Bond-Albedo $0{,}955\,p$; der Glanz addiert bei einem Ziel in 1 AE
-  etwa 0,011 zur geometrischen Albedo. Die Erde erscheint so mit 0,278 und 0,415 statt der Messwerte
-  0,434 und 0,293, Enceladus mit 0,64 statt 1,24. Oppositionseffekt, Lommel-Seeliger- oder
-  Hapke-Verhalten, Wolken und Streuung in Atmosphären fehlen; die Erdkarte ist wolkenlos.
+  lambertsch mal $1 - F$. Der Fresnel-Faktor $F$ gilt am Halbvektor zwischen Licht- und
+  Blickrichtung und hängt deshalb nur vom Phasenwinkel ab: 0,04 bei voller Phase, 0,13 bei 135°,
+  0,41 bei 160°. Dazu kommt ein schwacher ungefärbter Glanz, den der Albedofaktor nicht skaliert.
+  Eine Kugel der Reflexion $p$ hat im Modell deshalb, ohne Glanz und Fülllicht nachgerechnet, die
+  geometrische Albedo $0{,}640\,p$, das Phasenintegral 1,49, wegen des wachsenden $F$ etwas unter
+  1,5, und die Bond-Albedo $0{,}955\,p$; der Glanz addiert bei einem Ziel in 1 AE etwa 0,011 zur
+  geometrischen Albedo. Die Erde erscheint so mit 0,278 und 0,415 statt der Messwerte 0,434 und
+  0,293, Enceladus mit 0,64 statt 1,24. Oppositionseffekt, Lommel-Seeliger- oder Hapke-Verhalten,
+  Wolken und Streuung in Atmosphären fehlen; die Erdkarte ist wolkenlos.
 - **Fülllicht:** Die Nachtseitenfüllung, im Standard ein Viertel des Tagniveaus, liegt mit derselben
   Karte über der ganzen sichtbaren Scheibe, auch auf der Tagseite. Bei voller Phase hebt sie das
   Scheibenmittel von $0{,}640\,p$ auf $0{,}890\,p$; bei 90° Phasenwinkel stammen 55 %, bei 135° 90 %
@@ -322,10 +345,10 @@ zusammen mit einer abgestrahlten Leistung von 14,098 W m⁻² ergab sich ein inn
   senkrechtem Licht, ohne Fresnel-Faktor und Füllung, den linearen Wert 1 erreicht. Jedes Ziel
   erscheint damit gleich hell, wie weit es auch von der Sonne steht, obwohl Neptun am 17. September
   2026 nur 1/883 der Bestrahlung der Erde erhält. Für die übrigen Körper im Bild zählt die
-  Bestrahlung $E$ relativ zu 1 AE nur als $E^{0{,}3}$, und in der Standarddarstellung „Schaubild"
-  gilt der gestauchte Abstand $r_\mathrm{d} = r^{0{,}6}$, beide in AE. Steht die Erde im Ziel,
-  erscheint Neptun mit 0,295 ihres Tagniveaus statt mit 0,00113, also 261-mal zu hell, in der
-  Darstellung „Realistisch" 115-mal.
+  Bestrahlung $E$ relativ zu 1 AE mit dem Standardwert des Reglers „Distanzausgleich" nur als
+  $E^{0{,}3}$, und in der Standarddarstellung „Schaubild" gilt der gestauchte Abstand
+  $r_\mathrm{d} = r^{0{,}6}$, beide in AE. Steht die Erde im Ziel, erscheint Neptun mit 0,295 ihres
+  Tagniveaus statt mit 0,00113, also 261-mal zu hell, in der Darstellung „Realistisch" 115-mal.
 - **Tonwertkurve:** Die Bildwerte durchlaufen die ACES-Kurve von three.js und die sRGB-Kodierung.
   Der lineare Wert 1 landet bei 226 von 255, mit der Füllung, also 1,25, bei 233. Am subsolaren
   Punkt einer Fläche der Reflexion 0,12 stehen samt Fresnel-Faktor und Füllung 112, bei der

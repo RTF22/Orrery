@@ -333,6 +333,16 @@ export const LITERATUR: readonly Publikation[] = [
     arxiv: '2010.13625',
   },
   {
+    id: 'chavez-2023',
+    autoren: ['Chavez, E.', 'de Pater, I.', 'Redwing, E.'],
+    etAl: true,
+    jahr: 2023,
+    titel: 'Evolution of Neptune at near-infrared wavelengths from 1994 through 2022',
+    erschienen: 'Icarus 404, 115667',
+    doi: '10.1016/j.icarus.2023.115667',
+    arxiv: '2307.08157',
+  },
+  {
     id: 'chen-2015',
     autoren: ['Chen, W.', 'Li, J. C.', 'Ray, J.'],
     etAl: true,
@@ -1219,6 +1229,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1016/j.icarus.2010.04.003',
   },
   {
+    id: 'muinonen-2015',
+    autoren: ['Muinonen, K.', 'Wilkman, O.'],
+    etAl: false,
+    jahr: 2015,
+    titel: 'Spherical albedo of a Lommel-Seeliger scattering ellipsoidal asteroid',
+    erschienen: 'Proceedings of the International Astronomical Union 10 (S318), 206–211',
+    doi: '10.1017/S1743921315008819',
+  },
+  {
     id: 'murray-2000',
     autoren: ['Murray, C. D.', 'Dermott, S. F.'],
     etAl: false,
@@ -1681,6 +1700,15 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'Cassini spacecraft reveals global energy imbalance of Saturn',
     erschienen: 'Nature Communications 15, 5045',
     doi: '10.1038/s41467-024-48969-9',
+  },
+  {
+    id: 'wang-2025',
+    autoren: ['Wang, X.', 'Li, L.', 'Roman, M. T.'],
+    etAl: true,
+    jahr: 2025,
+    titel: 'Internal Heat Flux and Energy Imbalance of Uranus',
+    erschienen: 'Geophysical Research Letters 52, e2025GL115660',
+    doi: '10.1029/2025GL115660',
   },
   {
     id: 'warren-2011',
