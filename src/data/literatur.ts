@@ -106,7 +106,7 @@ export const LITERATUR: readonly Publikation[] = [
   },
   {
     id: 'bipm-2026',
-    autoren: ['BIPM, Bureau international des poids et mesures'],
+    autoren: ['BIPM'],
     etAl: false,
     jahr: 2026,
     titel: 'Draft Resolution C: On the technical actions needed to ensure the continuity of UTC (28th meeting of the CGPM, 2026)',
@@ -196,12 +196,12 @@ export const LITERATUR: readonly Publikation[] = [
   },
   {
     id: 'cgpm-2022',
-    autoren: ['CGPM, General Conference on Weights and Measures'],
+    autoren: ['CGPM'],
     etAl: false,
     jahr: 2022,
-    titel: 'Resolution 4 of the 27th CGPM (2022): On the use and future development of UTC',
-    erschienen: 'Proceedings of the 27th CGPM (2022), BIPM 2024, p. 398',
-    url: 'https://www.bipm.org/en/cgpm-2022/resolution-4',
+    titel: 'On the use and future development of UTC',
+    erschienen: 'Resolution 4 of the 27th meeting of the CGPM (2022), BIPM 2024, p. 398',
+    doi: '10.59161/CGPM2022RES4E',
   },
   {
     id: 'charles-1997',
@@ -362,7 +362,7 @@ export const LITERATUR: readonly Publikation[] = [
   },
   {
     id: 'gaia-2022',
-    autoren: ['Gaia Collaboration, Klioner, S. A.', 'Lindegren, L.', 'Mignard, F.'],
+    autoren: ['Gaia Collaboration', 'Klioner, S. A.', 'Lindegren, L.'],
     etAl: true,
     jahr: 2022,
     titel: 'Gaia Early Data Release 3: The celestial reference frame (Gaia-CRF3)',

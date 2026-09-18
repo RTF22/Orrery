@@ -65,10 +65,17 @@ export function pruefeCrossref(p: Publikation, w: CrossrefWerk): Befund[] {
   const befunde: Befund[] = [];
   const melde = (urteil: Urteil, text: string): void => { befunde.push({ id: p.id, pruefung: 'crossref', urteil, text }); };
   const katalogAutor = p.autoren[0] ?? '';
-  const erster = w.author?.[0];
-  const family = erster?.family ?? erster?.name ?? '';
-  if (normalisiere(family) !== normalisiere(nachnameVon(katalogAutor))) {
-    melde('fehler', `Erstautor bei Crossref „${family}", im Katalog „${katalogAutor}"`);
+  // Beschlüsse und Berichte von Körperschaften führt Crossref oft ganz ohne
+  // Autoren (etwa cgpm-2022); dann bleibt der Erstautor ungeprüft, statt als
+  // Fehler zu gelten (Ruling Jens, 18.09.2026).
+  if (w.author === undefined || w.author.length === 0) {
+    melde('warnung', 'Crossref führt keine Autoren, Erstautor ungeprüft');
+  } else {
+    const erster = w.author[0];
+    const family = erster?.family ?? erster?.name ?? '';
+    if (normalisiere(family) !== normalisiere(nachnameVon(katalogAutor))) {
+      melde('fehler', `Erstautor bei Crossref „${family}", im Katalog „${katalogAutor}"`);
+    }
   }
   const jahre = crossrefJahre(w);
   const jahr = jahrUrteil(p.jahr, jahre);

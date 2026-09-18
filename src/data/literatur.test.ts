@@ -7,6 +7,13 @@ import type { Publikation } from './literatur';
 const DOI = /^10\.\d{4,9}\/\S+$/;
 const ARXIV = /^(\d{4}\.\d{4,5}(v\d+)?|[a-z-]+(\.[A-Z]{2})?\/\d{7})$/;
 const KENNUNG = /^[a-z][a-z0-9-]*-(\d{4})[a-z]?$/;
+/**
+ * Autorfeld: entweder Personenform „Nachname, I." (Komma, danach ein Zeichen)
+ * oder Körperschaft ohne Komma, die mit einem Großbuchstaben beginnt und
+ * mindestens drei Zeichen hat (Ruling Jens, 18.09.2026: 'CGPM', 'BIPM',
+ * 'Gaia Collaboration').
+ */
+const AUTOR_MUSTER = /^(?:\S.*, \S|[A-ZÄÖÜ][^,]{2,}$)/;
 
 /**
  * Rohtext von literatur.ts, ohne Node-Dateisystem gelesen (wie in
@@ -51,7 +58,7 @@ describe('Literaturkatalog (Entwurf 4d §4.4)', () => {
     for (const p of LITERATUR) {
       expect(p.autoren.length, p.id).toBeGreaterThanOrEqual(1);
       expect(p.autoren.length, p.id).toBeLessThanOrEqual(3);
-      for (const autor of p.autoren) expect(autor, p.id).toMatch(/^\S.*, \S/);
+      for (const autor of p.autoren) expect(autor, p.id).toMatch(AUTOR_MUSTER);
       expect(p.titel.trim().length, p.id).toBeGreaterThan(0);
       expect(p.erschienen.trim().length, p.id).toBeGreaterThan(0);
       expect(p.doi !== undefined || p.arxiv !== undefined || p.url !== undefined, `${p.id}: DOI, arXiv oder URL`).toBe(true);
@@ -74,6 +81,13 @@ describe('Literaturkatalog (Entwurf 4d §4.4)', () => {
   it('ist alphabetisch nach Kennung sortiert (Ruling 13, Schlussprüfung 4d-1, Befund M5)', () => {
     const ids = LITERATUR.map((p) => p.id);
     expect(ids).toEqual([...ids].sort());
+  });
+
+  it('lässt Personennamen und Körperschaften als Autorfeld zu, keine Behelfe (Ruling Jens, 18.09.2026)', () => {
+    const erlaubt = ['Foo, B.', 'de Beispiel, C.', 'ESA', 'Nasa Working Group'];
+    for (const autor of erlaubt) expect(autor).toMatch(AUTOR_MUSTER);
+    const abgelehnt = ['muster', 'A', 'AB', 'Müller,A.'];
+    for (const autor of abgelehnt) expect(autor).not.toMatch(AUTOR_MUSTER);
   });
 });
 

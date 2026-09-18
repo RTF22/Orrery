@@ -58,6 +58,17 @@ describe('pruefeCrossref', () => {
     expect(befunde[0]?.text).toContain('Mayer');
   });
 
+  it('meldet einen Crossref-Datensatz ohne Autoren als Warnung, nicht als Fehler (Ruling Jens, 18.09.2026)', () => {
+    const ohneFeld = { ...WERK, author: undefined };
+    expect(pruefeCrossref(P, ohneFeld)).toEqual([
+      { id: 'mueller-2019', pruefung: 'crossref', urteil: 'warnung', text: 'Crossref führt keine Autoren, Erstautor ungeprüft' },
+    ]);
+    const leeresArray = { ...WERK, author: [] };
+    expect(pruefeCrossref(P, leeresArray)).toEqual([
+      { id: 'mueller-2019', pruefung: 'crossref', urteil: 'warnung', text: 'Crossref führt keine Autoren, Erstautor ungeprüft' },
+    ]);
+  });
+
   it('vergleicht den Titel auch mit angehängtem Untertitel', () => {
     const werkMitUntertitel = {
       ...WERK,

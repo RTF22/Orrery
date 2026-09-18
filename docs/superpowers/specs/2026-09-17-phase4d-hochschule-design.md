@@ -188,6 +188,13 @@ ohne `doi`, aber mit `arxiv` gilt als **Preprint**. Umlaute im Erstautor werden 
 umschrieben (`gruen-2020`). Das Suffix trennt mehrere Arbeiten desselben Erstautors im selben
 Jahr.
 
+**Nachtrag (4d-2, Ruling Jens, 18.09.2026):** Ein `autoren`-Eintrag darf statt der Personenform
+auch eine Körperschaft ohne Komma sein (`'CGPM'`, `'BIPM'`, `'Gaia Collaboration'`), wenn ein
+Beschluss oder Bericht keinen persönlichen Erstautor führt. Ein Katalogeintrag mit mehreren
+Autoren, von denen der erste eine Körperschaft ist, listet sie als getrennte Einträge im Array
+(`['Gaia Collaboration', 'Klioner, S. A.', 'Lindegren, L.']`), nicht als einen Behelfstext mit
+zwei Kommas.
+
 ### 4.2 Verweis `literatur:`
 
 - `data/verweise.ts`: `Verweis` bekommt `{ art: 'literatur'; publikation: Publikation }`;
@@ -277,6 +284,11 @@ Zeitschriften getrennt (`subtitle`); der Titel wird deshalb mit dem Haupttitel a
 **Nachtrag (4d-1):** Ein abweichender arXiv-Titel ist bei Einträgen mit DOI nur eine Warnung
 (veröffentlichte Fassungen tragen oft andere Titel; die DOI-Prüfung sichert den Titel), ohne
 DOI ein Fehler. Das Jahr wird gegen arXiv nicht geprüft.
+
+**Nachtrag (4d-2, Ruling Jens, 18.09.2026):** Führt der Crossref-Datensatz gar keine Autoren
+(`author` fehlt oder ist leer), ist das eine Warnung statt eines Fehlers, Jahr und Titel werden
+weiter geprüft. Anlass: Beschlüsse und Berichte von Körperschaften (etwa `cgpm-2022`) stehen bei
+Crossref ohne Autorenfeld.
 
 ## 5. Gestalt der Texte
 
