@@ -80,23 +80,27 @@ export interface BeltSpec {
  *
  * Lage der Resonanzen q:p mit Jupiter (Umlaufzeit des Asteroiden = p/q der
  * Jupiterzeit) nach Kepler-3: a = a_J · (p/q)^(2/3) mit a_J = 5,2044 AE:
- *   4:1  (1/4)^(2/3) = 0,3969 → 2,0656 AE
- *   3:1  (1/3)^(2/3) = 0,4807 → 2,5019 AE
- *   5:2  (2/5)^(2/3) = 0,5429 → 2,8254 AE
- *   7:3  (3/7)^(2/3) = 0,5685 → 2,9587 AE
- *   2:1  (1/2)^(2/3) = 0,6300 → 3,2787 AE
+ *   4:1  (1/4)^(2/3) = 0,39685 → 2,0654 AE
+ *   3:1  (1/3)^(2/3) = 0,48075 → 2,5020 AE
+ *   5:2  (2/5)^(2/3) = 0,54288 → 2,8254 AE
+ *   7:3  (3/7)^(2/3) = 0,56844 → 2,9584 AE
+ *   2:1  (1/2)^(2/3) = 0,62996 → 3,2786 AE
  * Die Breite w ist der Gauß-Parameter in exp(−((a−a_res)/w)²); die
  * Halbwertsbreite beträgt 1,665·w, also 0,017 bis 0,033 AE — die 3:1- und
  * 2:1-Lücken sind in der MPC-Verteilung breiter als 7:3.
  *
- * Zwei der fünf Lücken sind im erzeugten Gürtel nicht (oder nur halb) zu
- * sehen: Die 4:1-Lücke bei 2,0656 AE liegt vor der unteren Bereichsgrenze
- * 2,1 AE, ihr Einbruch ist dort schon wieder auf über 99 % abgeklungen und
- * trägt nichts bei; die 2:1-Lücke bei 3,2787 AE wird von der oberen Grenze
- * 3,3 AE halbiert, von ihr liegt also nur die innere Flanke im Bereich. Beide
- * bleiben in der Liste, weil sie die Kanten richtig ausdünnen und weil die
- * Tabelle die Resonanzen physikalisch vollständig beschreiben soll — geprüft
- * wird die Lückenwirkung deshalb an der 3:1-Lücke (belts.test.ts).
+ * Nur eine der fünf Lücken ist im erzeugten Gürtel praktisch nicht zu sehen:
+ * Die 4:1-Lücke bei 2,0654 AE liegt vor der unteren Bereichsgrenze 2,1 AE,
+ * ihr Einbruch ist dort schon wieder auf über 99 % abgeklungen und trägt
+ * nichts bei. Die 2:1-Lücke bei 3,2786 AE liegt dagegen mit ihrer Mitte
+ * innerhalb des Bereichs 2,1 bis 3,3 AE; die obere Grenze 3,3 AE schneidet
+ * nur ihren äußeren Ausläufer ab, rund 1,07 Gaußbreiten (w = 0,020) hinter
+ * der Mitte — dort ist kirkwoodDensity(3,3) ≈ 0,715, also noch rund 28 %
+ * Einbruch, und rund 93,5 % des Lückenprofils 0,9·exp(−x²) liegen im
+ * Bereich. Beide Lücken bleiben in der vollständigen Liste, weil sie die
+ * Kanten richtig ausdünnen (die 2:1-Lücke fast vollständig) und weil die
+ * Tabelle die Resonanzen physikalisch vollständig beschreiben soll —
+ * geprüft wird die Lückenwirkung deshalb an der 3:1-Lücke (belts.test.ts).
  */
 const RESONANZEN: ReadonlyArray<{ p: number; q: number; w: number }> = [
   { p: 1, q: 4, w: 0.012 },
