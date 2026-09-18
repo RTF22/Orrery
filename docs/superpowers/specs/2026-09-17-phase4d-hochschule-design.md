@@ -327,8 +327,11 @@ Stoff entfallen, Pflichtabschnitte nie. `###` ist frei. Die erste Zeile bleibt d
   `*As of <Month> <Year>*` (etwa `*Stand: September 2026*`, `*As of September 2026*`). Monat
   und Jahr sind die des Commits, mit dem der Text fertig wird; eine inhaltliche Nacharbeit
   setzt sie neu, eine reine Tippfehlerkorrektur nicht.
-- Richtwerte ohne Testgrenze: große Körper 1500 bis 2500 Wörter, kleine Monde 600 bis 1000,
-  Themen 1000 bis 2000, Szenen 300 bis 600.
+- Richtwerte ohne Testgrenze (angehoben am 18.09.2026 nach Entscheidung von Jens): große Körper
+  1500 bis 3500 Wörter, kleine Monde 600 bis 1000, Themen 1500 bis 4000, Szenen 300 bis 900. Der
+  Richtwert steuert die Gliederungstiefe (§5.1); sachliche Vollständigkeit geht vor Wortzahl —
+  Grundlage sind die Fachprüfungen der Etappe 4d-2, die keinen Text als zu lang beanstandet
+  haben, sondern Lücken gefunden haben.
 
 ### 5.3 Fachthemen
 
