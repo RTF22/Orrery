@@ -243,7 +243,7 @@ export const en: Record<Key, string> = {
   'camera.mode.fly': 'Fly',
   'shortcuts.fly': 'Fly: forward, left, back, right',
   'shortcuts.flyUpDown': 'Descend and climb while flying',
-  'shortcuts.orbit': 'Orbit the body nearest the centre; Q and E lower and raise',
+  'shortcuts.orbit': 'Orbit the body nearest the centre; W/S nearer and farther, Q/E lower and raise',
   'shortcuts.flyLook': 'Look around while flying',
   'shortcuts.flySpeed': 'Change the flight speed',
   'key.drag': 'Drag',

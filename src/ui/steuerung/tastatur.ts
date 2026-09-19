@@ -52,7 +52,12 @@ export function tastaturAnhaengen(fenster: Window = window): Tastatur {
     if (fenster.document.visibilityState === 'hidden') vergessen();
   };
 
-  fenster.addEventListener('keydown', onKeyDown);
+  // Einfangphase (M3 aus der Schlussprüfung Flug Etappe 1): useShortcuts.ts
+  // liest e.defaultPrevented in der Bubble-Phase auf demselben Fenster. Ohne
+  // capture entscheidet die Registrierreihenfolge der Effekte, und auf
+  // Colemak, Neo 2 oder Bépo lösen Flugtasten (nach e.code) zugleich ein
+  // Kürzel (nach e.key) aus. Mit capture läuft dieser Listener immer zuerst.
+  fenster.addEventListener('keydown', onKeyDown, { capture: true });
   fenster.addEventListener('keyup', onKeyUp);
   fenster.addEventListener('blur', vergessen);
   fenster.document.addEventListener('visibilitychange', onSichtbarkeit);
@@ -60,7 +65,7 @@ export function tastaturAnhaengen(fenster: Window = window): Tastatur {
   return {
     stand: () => ({ gehalten, shift }),
     loesen: () => {
-      fenster.removeEventListener('keydown', onKeyDown);
+      fenster.removeEventListener('keydown', onKeyDown, { capture: true });
       fenster.removeEventListener('keyup', onKeyUp);
       fenster.removeEventListener('blur', vergessen);
       fenster.document.removeEventListener('visibilitychange', onSichtbarkeit);

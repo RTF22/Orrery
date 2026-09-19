@@ -2,6 +2,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { tastaturAnhaengen, tastenAbsicht } from './tastatur';
 import type { Flugtaste, Tastatur } from './tastatur';
+import { handleShortcut } from '../shortcuts/useShortcuts';
 
 let tastatur: Tastatur | null = null;
 afterEach(() => {
@@ -75,6 +76,22 @@ describe('tastaturAnhaengen', () => {
     document.dispatchEvent(new Event('visibilitychange'));
     expect(tastatur.stand().gehalten.size).toBe(0);
     Object.defineProperty(document, 'visibilityState', { value: 'visible', configurable: true });
+  });
+
+  it('läuft vor einem schon registrierten Kürzel-Listener, auch auf fremden Layouts (M3)', () => {
+    // Simuliert useShortcuts.ts: bereits vor dem Flug-Listener registriert,
+    // liest e.defaultPrevented. Colemag/Neo/Bépo: code KeyS, aber key 'r'.
+    let ausgeloest = false;
+    const onKeyDown = (e: KeyboardEvent): void => {
+      if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey) return;
+      if (handleShortcut(e.key)) { e.preventDefault(); ausgeloest = true; }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    tastatur = tastaturAnhaengen(window);
+    taste('keydown', 'KeyS', { key: 'r' });
+    window.removeEventListener('keydown', onKeyDown);
+    expect(tastatur.stand().gehalten.has('KeyS')).toBe(true);
+    expect(ausgeloest).toBe(false);
   });
 
   it('hört nach loesen() nicht mehr zu', () => {

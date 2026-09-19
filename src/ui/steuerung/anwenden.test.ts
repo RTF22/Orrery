@@ -157,6 +157,17 @@ describe('steuerungTakt: Flug', () => {
 });
 
 describe('Tempofaktor', () => {
+  it('verwirft NaN und Unendlich, das Tempo bleibt', () => {
+    tempoAendern(1.25);
+    const vorher = tempoFaktor();
+    tempoAendern(NaN);
+    expect(tempoFaktor()).toBe(vorher);
+    tempoAendern(Infinity);
+    expect(tempoFaktor()).toBe(vorher);
+    tempoAendern(-Infinity);
+    expect(tempoFaktor()).toBe(vorher);
+  });
+
   it('vervielfacht in den Grenzen und meldet jeden neuen Wert', () => {
     const werte: number[] = [];
     const ab = tempoAbonnieren((w) => { werte.push(w); });
@@ -249,5 +260,19 @@ describe('steuerungTakt: Drehen mit Shift', () => {
     useStore.getState().setCamera({ mode: 'attached', targetId: 'earth' });
     steuerungTakt(jd, 0, umgebung(['KeyA'], vorKoerper('earth'), false));
     expect(useStore.getState().camera.mode).toBe('fly');
+  });
+
+  it('wählt im Flug mit Shift auch ohne gefundenen Körper den Bezug neu (M1)', () => {
+    // Nur die Sonne sichtbar (wie im Test „tut ohne Körper …“ oben): koerperNaechstDerMitte
+    // findet niemanden, der bisherige Bezug Erde ist zusätzlich ausgeblendet.
+    for (const b of bodies) if (b.id !== 'sun') useStore.getState().toggleVisible(b.id);
+    useStore.getState().setCamera({
+      mode: 'fly', fly: { refId: 'earth', x: 4 * radius('earth'), y: 0, z: 0, yaw: 0, pitch: 0 },
+    });
+    const pose: GezeigtePose = { positionKm: { x: 1e9, y: 0, z: 0 }, blick: { x: 1, y: 0, z: 0 }, jd };
+    steuerungTakt(jd, 0, umgebung(['KeyA'], pose, true));
+    const { camera } = useStore.getState();
+    expect(camera.mode).toBe('fly');
+    expect(camera.fly.refId).toBe('sun');
   });
 });

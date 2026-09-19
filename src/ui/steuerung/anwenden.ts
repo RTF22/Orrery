@@ -24,8 +24,13 @@ const tempoHoerer = new Set<(wert: number) => void>();
 
 export const tempoFaktor = (): number => tempo;
 
-/** Vervielfacht den Tempofaktor in seinen Grenzen und meldet den neuen Wert. */
+/**
+ * Vervielfacht den Tempofaktor in seinen Grenzen und meldet den neuen Wert.
+ * NaN und ±Infinity werden verworfen, das Tempo bleibt (Raddeltas sind heute
+ * stets endlich, ein künftiger Aufrufer aus dem Controller womöglich nicht).
+ */
 export function tempoAendern(faktor: number): void {
+  if (!Number.isFinite(faktor)) return;
   tempo = begrenze(tempo * faktor, TEMPO_MIN, TEMPO_MAX);
   for (const hoerer of tempoHoerer) hoerer(tempo);
 }
@@ -85,7 +90,8 @@ export function heftenUm(id: string, pose: GezeigtePose): void {
  * Ein Bild Drehen mit Shift (§4.2). Aus Flug, Frei und Kino wird der Körper
  * nächst der Bildmitte Ziel; in Geheftet und Folgen bleibt das Ziel, das dort
  * ohnehin in der Mitte steht (ein vorbeiziehender Mond wird so nicht Ziel).
- * Folgen wird Geheftet. Ohne Körper vor der Kamera geschieht nichts.
+ * Folgen wird Geheftet. Ohne Körper vor der Kamera bleibt der Modus, wie er
+ * war — ein begonnenes Kino endet trotzdem (stopCinema lief schon vorher).
  */
 function drehen(dt: number, absicht: Absicht, u: SteuerungUmgebung): void {
   const modus = useStore.getState().camera.mode;
@@ -168,6 +174,10 @@ export function steuerungTakt(jd: number, dt: number, u: SteuerungUmgebung): voi
   }
   if (gedrueckt) {
     drehen(dt, tastenAbsicht(stand.gehalten), u);
+    // Shift ohne getroffenen Körper lässt drehen den Flug unverändert (M1):
+    // Bezugswahl und Mindesthöhe laufen trotzdem, je Bild und auch ohne
+    // Eingabe (Entwurf §3.3).
+    if (useStore.getState().camera.mode === 'fly') flugNachfuehren(jd, dt, null);
     return;
   }
   if (useStore.getState().camera.mode === 'fly') flugNachfuehren(jd, dt, null);
