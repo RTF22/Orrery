@@ -7,10 +7,12 @@ import { bodies } from '../../data/index';
 
 /**
  * Werte, die auf Englisch bewusst gleich lauten: Eigennamen, Symbole, und
- * 'time.pause' als echtes Lehnwort (Terminologietabelle: Pause → Pause).
+ * 'time.pause'/'shortcuts.padTitle' als echte Lehnwörter (Pause → Pause,
+ * Controller → Controller).
  */
 const GLEICH_ERLAUBT = new Set<string>([
   'app.title', 'panel.info', 'language.de', 'language.en', 'key.arrows', 'time.pause',
+  'shortcuts.padTitle',
   'literatur.doi', 'literatur.ads', 'literatur.preprint',
   'body.venus.name', 'body.mars.name', 'body.jupiter.name', 'body.saturn.name',
   'body.uranus.name', 'body.phobos.name', 'body.deimos.name', 'body.io.name',

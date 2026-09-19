@@ -20,7 +20,10 @@ import { useWakeLock } from './wakeLock';
  * ist entweder ein Literal (Buchstaben wie „H") oder, wenn sie einen Namen
  * statt eines Symbols trägt, ebenfalls ein Sprachschlüssel.
  */
-const KUERZEL: readonly (readonly [string | { key: string }, string])[] = [
+/** Zeilen der Kürzelübersicht: Taste (Literal oder Textschlüssel) und Textschlüssel der Wirkung. */
+type Kuerzel = readonly (readonly [string | { key: string }, string])[];
+
+const KUERZEL: Kuerzel = [
   ['H', 'shortcuts.toggleUi'],
   ['F', 'shortcuts.fullscreen'],
   [{ key: 'key.space' }, 'shortcuts.pause'],
@@ -39,20 +42,46 @@ const KUERZEL: readonly (readonly [string | { key: string }, string])[] = [
   ['?', 'shortcuts.toggleHelp'],
 ];
 
+/** Controller nach der Standardbelegung (Entwurf Flug und Controller §5.2, §5.3). */
+const PAD_KUERZEL: Kuerzel = [
+  [{ key: 'padKey.leftStick' }, 'shortcuts.padLook'],
+  ['RT / LT', 'shortcuts.padFly'],
+  [{ key: 'padKey.lbStick' }, 'shortcuts.padOrbit'],
+  [{ key: 'padKey.rightStick' }, 'shortcuts.padCrosshair'],
+  ['A', 'shortcuts.padGoTo'],
+  ['B', 'shortcuts.padSystem'],
+  ['R3', 'shortcuts.padCenter'],
+  [{ key: 'padKey.dpadSides' }, 'shortcuts.rate'],
+  [{ key: 'padKey.dpadUp' }, 'shortcuts.pause'],
+  [{ key: 'padKey.dpadDown' }, 'shortcuts.reverse'],
+  [{ key: 'padKey.menu' }, 'shortcuts.cinema'],
+  ['RB', 'shortcuts.nextScene'],
+  [{ key: 'padKey.view' }, 'shortcuts.toggleUi'],
+  ['Y', 'shortcuts.info'],
+];
+
+function Kuerzelliste({ eintraege }: { eintraege: Kuerzel }): React.JSX.Element {
+  return (
+    <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
+      {eintraege.map(([taste, schluessel]) => {
+        const label = typeof taste === 'string' ? taste : t(taste.key);
+        return (
+          <div key={schluessel} className="contents">
+            <dt className="font-mono text-xs opacity-80">{label}</dt>
+            <dd className="m-0">{t(schluessel)}</dd>
+          </div>
+        );
+      })}
+    </dl>
+  );
+}
+
 function Kuerzeluebersicht(): React.JSX.Element {
   return (
     <Panel id={SHORTCUTS_PANEL} title={t('shortcuts.title')}>
-      <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
-        {KUERZEL.map(([taste, schluessel]) => {
-          const label = typeof taste === 'string' ? taste : t(taste.key);
-          return (
-            <div key={schluessel} className="contents">
-              <dt className="font-mono text-xs opacity-80">{label}</dt>
-              <dd className="m-0">{t(schluessel)}</dd>
-            </div>
-          );
-        })}
-      </dl>
+      <Kuerzelliste eintraege={KUERZEL} />
+      <h3 className="mb-1 mt-3 text-xs font-semibold opacity-80">{t('shortcuts.padTitle')}</h3>
+      <Kuerzelliste eintraege={PAD_KUERZEL} />
     </Panel>
   );
 }

@@ -18,6 +18,10 @@ import { fahreZu } from '../ui/kamerafahrt';
 import { zeigerAusgeblendet } from '../ui/idle';
 import { themaVerfallStarten } from '../ui/info/themaVerfall';
 import { steuerungTakt, tempoAendern } from '../ui/steuerung/anwenden';
+import type { SteuerungUmgebung } from '../ui/steuerung/anwenden';
+import { padLeserErstellen } from '../ui/steuerung/gamepad';
+import { kreuzSichtbar } from '../ui/steuerung/kreuz';
+import { Fadenkreuz } from '../ui/steuerung/Fadenkreuz';
 import { tastaturAnhaengen } from '../ui/steuerung/tastatur';
 import { letztePose } from '../render/camera/controller';
 import { TempoHinweis } from '../ui/steuerung/TempoHinweis';
@@ -76,6 +80,19 @@ function App(): React.JSX.Element {
     // Flugtasten (Entwurf Flug und Controller §4): gehalten, je Bild ausgewertet.
     const tastatur = tastaturAnhaengen(window);
 
+    // Tastatur, Controller und Fadenkreuz je Bild (Entwurf Flug und Controller
+    // §5, §6.2). Ohne sicheren Kontext oder Gamepad-API schaltet sich der Leser
+    // still ab. Die Canvas füllt das Fenster; innerWidth/innerHeight erzwingen
+    // anders als clientWidth keinen Layoutdurchgang je Bild.
+    const steuerung: SteuerungUmgebung = {
+      tasten: tastatur.stand,
+      letztePose,
+      pad: padLeserErstellen({ isSecureContext: window.isSecureContext, navigator }),
+      leinwand: () => ({ breite: window.innerWidth, hoehe: window.innerHeight }),
+      zeiger: (zeiger) => { szene.setZeiger(zeiger); },
+      trefferBei: (x, y) => szene.trefferBei(x, y, 'pad'),
+    };
+
     // Der Renderer meldet jede Größen- und Pixeldichteänderung; die
     // Composer-Ziele hängen sich hier an, damit sie nie hinterherhinken.
     ctx.afterResize = () => { postfx.resize(); };
@@ -86,7 +103,7 @@ function App(): React.JSX.Element {
     const stopLoop = startLoop((jd, dt) => {
       // Vor dem Kino-Takt: Ein Flug beendet das Kino im selben Bild (Entwurf
       // Flug und Controller §6.2). Die Lage ist die des zuletzt gezeigten Bildes.
-      steuerungTakt(jd, dt, { tasten: tastatur.stand, letztePose });
+      steuerungTakt(jd, dt, steuerung);
       // Vor dem Lesen des Zustands: Szene und Kamera sollen im selben Bild
       // denselben Stand sehen.
       tickCinema(dt);
@@ -97,7 +114,8 @@ function App(): React.JSX.Element {
       if (zeigerAusgeblendet()) szene.setZeiger(null);
       szene.update(jd, dt, state);
 
-      const zeigerForm = szene.hervorgehoben() === null ? '' : 'pointer';
+      // Hebt das Fadenkreuz etwas hervor, bleibt die Form des Mauszeigers, wie sie ist.
+      const zeigerForm = szene.hervorgehoben() === null || kreuzSichtbar() ? '' : 'pointer';
       if (canvas.style.cursor !== zeigerForm) canvas.style.cursor = zeigerForm;
 
       if (state.display.bloom !== bloomAn || state.quality.tier !== stufe) {
@@ -135,6 +153,8 @@ function App(): React.JSX.Element {
       <Bedienoberflaeche />
       {/* Außerhalb der Bedienoberfläche: bleibt sichtbar, wenn H sie ausblendet. */}
       <TempoHinweis />
+      {/* Über der Bedienoberfläche; bleibt sichtbar, wenn H sie ausblendet. */}
+      <Fadenkreuz />
     </>
   );
 }
