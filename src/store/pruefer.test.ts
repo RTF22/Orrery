@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { pruefeZustand } from './pruefer';
+import { fromShareable } from './serialize';
+import { DEFAULT_STATE } from './index';
 
 describe('pruefeZustand', () => {
   it('liefert für Nicht-Objekte ein leeres Objekt', () => {
@@ -120,5 +122,23 @@ describe('pruefeZustand: ui.info', () => {
     expect(pruefeZustand({ ui: { info: { thema: null, breiteRem: 18 } } }))
       .toEqual({ ui: { info: { thema: null, breiteRem: 18 } } });
     expect(pruefeZustand({ ui: { info: { thema: 7 } } })).toEqual({});
+  });
+});
+
+describe('pruefeZustand: Flug', () => {
+  it('kennt den Modus fly und die Felder der Fluglage', () => {
+    const fly = { refId: 'saturn', x: 1e6, y: -2e6, z: 3e5, yaw: 12, pitch: -1.2 };
+    expect(pruefeZustand({ camera: { mode: 'fly', fly } })).toEqual({ camera: { mode: 'fly', fly } });
+  });
+
+  it('verwirft unbekannte Bezugskörper und Werte außerhalb der Bereiche feldweise', () => {
+    expect(pruefeZustand({
+      camera: { fly: { refId: 'vulcan', x: 2e13, y: 5, z: -1e13, pitch: 2, yaw: Infinity } },
+    })).toEqual({ camera: { fly: { y: 5, z: -1e13 } } });
+  });
+
+  it('lässt einen alten Zustand ohne fly beim Standard', () => {
+    const z = fromShareable(pruefeZustand({ camera: { mode: 'attached', targetId: 'mars' } }));
+    expect(z.camera.fly).toEqual(DEFAULT_STATE.camera.fly);
   });
 });

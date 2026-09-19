@@ -27,6 +27,17 @@ export const DEFAULT_STATE: AppState = {
   camera: {
     mode: 'free', targetId: 'sun', distance: 8e8,
     azimuth: 0.6, elevation: 0.5, freezeJd: null,
+    // Ein Flug beginnt immer an der gezeigten Lage. Der Standard entspricht
+    // der Startansicht: der Punkt aus distance/azimuth/elevation, Blick zur
+    // Sonne (azimuth + π, −elevation).
+    fly: {
+      refId: 'sun',
+      x: 8e8 * Math.cos(0.5) * Math.cos(0.6),
+      y: 8e8 * Math.cos(0.5) * Math.sin(0.6),
+      z: 8e8 * Math.sin(0.5),
+      yaw: 0.6 + Math.PI,
+      pitch: -0.5,
+    },
   },
   cinema: {
     running: false, nummer: 0, elapsedSec: 0,

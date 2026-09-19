@@ -1,6 +1,6 @@
 import type { Niveau } from '../data/themen';
 
-export type CameraMode = 'free' | 'attached' | 'follow' | 'cinema';
+export type CameraMode = 'free' | 'attached' | 'follow' | 'cinema' | 'fly';
 export type QualityTier = 'auto' | 'low' | 'medium' | 'high';
 
 /**
@@ -47,6 +47,13 @@ export interface AppState {
      * Ursprung ruht, ist das ohnehin derselbe Punkt.
      */
     freezeJd: number | null;
+    /**
+     * Nur für den Modus Flug (Entwurf Flug und Controller §3.2): Bezugskörper,
+     * Lage der Kamera relativ zu ihm in dargestellten km und Blickrichtung,
+     * gezählt wie azimuth/elevation. targetId bleibt davon unberührt; es
+     * bestimmt weiter Infopanel und Objektbaum.
+     */
+    fly: { refId: string; x: number; y: number; z: number; yaw: number; pitch: number };
   };
   /**
    * Der Kino-Modus. `nummer` und `elapsedSec` beschreiben die Stelle im

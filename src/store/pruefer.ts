@@ -24,7 +24,7 @@ export function istPlain(x: unknown): x is Plain {
 
 /** Aufzählungen je Pfad; ein Wert außerhalb der Liste wird verworfen. */
 const AUFZAEHLUNGEN: Readonly<Record<string, readonly string[]>> = {
-  'camera.mode': ['free', 'attached', 'follow', 'cinema'],
+  'camera.mode': ['free', 'attached', 'follow', 'cinema', 'fly'],
   'quality.tier': ['auto', 'low', 'medium', 'high'],
   'ui.language': ['de', 'en'],
   'scale.preset': Object.keys(SCALE_PRESETS),
@@ -53,8 +53,9 @@ const BOOLESCHE_RECORDS: ReadonlySet<string> = new Set(['visible', 'ui.panels'])
  * eingeklemmt, damit ein Eintrag aus einer Datei nie stillschweigend einen
  * anderen Wert bekommt als den, der darin steht. Julianische Tage begrenzt
  * der Zeitbereich aus sim/time.ts (1. Januar 1 bis 31. Dezember 9999).
- * `camera.azimuth` (Winkel ohne Grenze, wickelt um) und `cinema.seed`
- * (beliebige ganze Zahl) bleiben bewusst ohne Eintrag hier.
+ * `camera.azimuth` und `camera.fly.yaw` (Winkel ohne Grenze, wickeln um) und
+ * `cinema.seed` (beliebige ganze Zahl) bleiben bewusst ohne Eintrag hier. Die
+ * Lage im Flug reicht wie `camera.distance` bis 10¹³ km.
  */
 const BEREICHE: Readonly<Record<string, readonly [number, number]>> = {
   'time.jd': [JD_MIN, JD_MAX],
@@ -69,6 +70,10 @@ const BEREICHE: Readonly<Record<string, readonly [number, number]>> = {
   'camera.distance': [1e2, 1e13],
   'camera.elevation': [-Math.PI / 2, Math.PI / 2],
   'camera.freezeJd': [JD_MIN, JD_MAX],
+  'camera.fly.x': [-1e13, 1e13],
+  'camera.fly.y': [-1e13, 1e13],
+  'camera.fly.z': [-1e13, 1e13],
+  'camera.fly.pitch': [-Math.PI / 2, Math.PI / 2],
   'cinema.nummer': [0, 1e6],
   'cinema.elapsedSec': [0, 1e7],
   'cinema.idleResumeSec': [1, 3600],
@@ -94,7 +99,7 @@ function pruefeFeld(pfad: string, wert: unknown, standard: unknown): unknown {
   if (Object.hasOwn(AUFZAEHLUNGEN, pfad)) {
     return typeof wert === 'string' && AUFZAEHLUNGEN[pfad]?.includes(wert) ? wert : VERWORFEN;
   }
-  if (pfad === 'camera.targetId') {
+  if (pfad === 'camera.targetId' || pfad === 'camera.fly.refId') {
     return typeof wert === 'string' && Object.hasOwn(bodyIndex, wert) ? wert : VERWORFEN;
   }
   if (pfad === 'ui.info.thema') {

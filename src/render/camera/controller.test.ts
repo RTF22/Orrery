@@ -30,7 +30,7 @@ describe('createCameraController', () => {
     camera.up.set(0, 0, 1);
     const state: AppState = {
       ...structuredClone(DEFAULT_STATE),
-      camera: { mode: 'attached', targetId: 'earth', distance: 2e6, azimuth: 0.6, elevation: 0.5, freezeJd: null },
+      camera: { ...DEFAULT_STATE.camera, mode: 'attached', targetId: 'earth', distance: 2e6 },
     };
 
     const cameraKm = einschwingen(camera, state, jd);
@@ -45,7 +45,7 @@ describe('createCameraController', () => {
     camera.up.set(0, 0, 1);
     const state: AppState = {
       ...structuredClone(DEFAULT_STATE),
-      camera: { mode: 'attached', targetId: 'earth', distance: 2e6, azimuth: 0.6, elevation: 0.5, freezeJd: null },
+      camera: { ...DEFAULT_STATE.camera, mode: 'attached', targetId: 'earth', distance: 2e6 },
     };
 
     // Ein Tag je Sekunde: Die Erde legt dabei je Bild rund 40 000 km zurück.
@@ -84,6 +84,7 @@ describe('freier Modus mit eingefrorenem Bezugspunkt', () => {
   const freiAufErde = (distance: number): AppState => ({
     ...structuredClone(DEFAULT_STATE),
     camera: {
+      ...DEFAULT_STATE.camera,
       mode: 'free', targetId: 'earth', distance,
       azimuth: 0.6, elevation: 0.5, freezeJd: jd,
     },
