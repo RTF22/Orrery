@@ -86,6 +86,23 @@ export interface CameraController {
  */
 export const FLUG_DAEMPFUNG_S = 0.15;
 
+/**
+ * Dämpfung einer Wiederherstellung in den Flug (Nachtrag Flug §13.4): Beginnt
+ * der Flug nicht an der gezeigten Lage (Kino beenden mit gemerktem Flug,
+ * Ansicht im Flugmodus laden), gleitet die Kamera so ruhig hinüber wie bei
+ * einem Moduswechsel der Umlaufmodi, statt in einem Drittel der Zeit.
+ */
+export const FLUG_UEBERGANG_S = 0.45;
+/** Ab diesem Rest gilt ein Übergang als angekommen: Anteil der Lage, Länge der Blickdifferenz. */
+export const UEBERGANG_REST = 1e-3;
+
+/** Ist die gedämpfte Fluglage noch nicht bei der Solllage aus dem Store angekommen? */
+function nochUnterwegs(lage: Vec3, blick: Vec3, fly: AppState['camera']['fly']): boolean {
+  const soll = { x: fly.x, y: fly.y, z: fly.z };
+  return laenge(minus(soll, lage)) > UEBERGANG_REST * Math.max(laenge(soll), 1)
+    || laenge(minus(blickVektor(fly), blick)) > UEBERGANG_REST;
+}
+
 let zuletztGezeigt: GezeigtePose | null = null;
 
 /**
@@ -123,6 +140,8 @@ export function createCameraController(camera: THREE.PerspectiveCamera): CameraC
   const vLage: Vec3 = { x: 0, y: 0, z: 0 };
   const vBlick: Vec3 = { x: 0, y: 0, z: 0 };
   let pose: GezeigtePose | null = null;
+  // Wiederherstellung in den Flug läuft noch (Nachtrag §13.4).
+  let uebergang = false;
 
   const nullen = (v: Vec3): void => { v.x = 0; v.y = 0; v.z = 0; };
   const schluesselVon = (state: AppState): string =>
@@ -161,12 +180,18 @@ export function createCameraController(camera: THREE.PerspectiveCamera): CameraC
       nullen(vLage);
       nullen(vBlick);
       imFlug = true;
+      // Beginnt der Flug nicht an der gezeigten Lage, gleitet die Kamera wie
+      // bei den Umlaufmodi hinüber (Nachtrag §13.4). Im allerersten Bild ist
+      // die Lage die aus dem Store, dort gibt es keinen Übergang.
+      uebergang = nochUnterwegs(flugLage, flugBlick, fly);
     } else if (fly.refId !== flugRef) {
       flugLage = plus(flugLage, minus(scaledPositionAt(flugRef, bodyIndex, jd, s), ref));
     }
     flugRef = fly.refId;
-    flugLage = smoothDampVec3(flugLage, { x: fly.x, y: fly.y, z: fly.z }, vLage, FLUG_DAEMPFUNG_S, dt);
-    flugBlick = normiert(smoothDampVec3(flugBlick, blickVektor(fly), vBlick, FLUG_DAEMPFUNG_S, dt));
+    const zeitkonstante = uebergang ? FLUG_UEBERGANG_S : FLUG_DAEMPFUNG_S;
+    flugLage = smoothDampVec3(flugLage, { x: fly.x, y: fly.y, z: fly.z }, vLage, zeitkonstante, dt);
+    flugBlick = normiert(smoothDampVec3(flugBlick, blickVektor(fly), vBlick, zeitkonstante, dt));
+    if (uebergang && !nochUnterwegs(flugLage, flugBlick, fly)) uebergang = false;
     const position = plus(ref, flugLage);
     ausrichten(flugBlick, kmToUnits(laenge(flugLage)));
     merke({ positionKm: position, blick: flugBlick, jd });

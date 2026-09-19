@@ -252,4 +252,40 @@ describe('Flug', () => {
     const relativDanach = minus(erstes, scaledPositionAt('moon', bodyIndex, jdJetzt, s));
     expect(laenge(minus(relativDanach, minus(gezeigt.positionKm, mondVorher)))).toBeLessThan(1);
   });
+
+  /** Geheftet an der Erde eingeschwungen, dann Flug mit einer weit entfernten gemerkten Lage. */
+  function wiederherstellung() {
+    const c = createCameraController(neueKamera());
+    const geheftet: AppState = {
+      ...structuredClone(DEFAULT_STATE),
+      camera: { ...DEFAULT_STATE.camera, mode: 'attached', targetId: 'earth', distance: 2e6 },
+    };
+    for (let i = 0; i < 600; i++) c.update(geheftet, jd, 1 / 60, s);
+    const gezeigt = letztePose()!;
+    const erde = scaledPositionAt('earth', bodyIndex, jd, s);
+    const blick = blickAus(gezeigt.blick);
+    // Gemerkte Fluglage weit neben der gezeigten, wie nach dem Beenden eines Kinos.
+    const gemerkt = { x: 4e7, y: -3e7, z: 1e7 };
+    return { c, gezeigt, erde, blick, gemerkt };
+  }
+
+  it('gleitet bei einer Wiederherstellung in den Flug mit 0,45 s statt 0,15 s (Nachtrag §13.4)', () => {
+    const { c, gezeigt, erde, blick, gemerkt } = wiederherstellung();
+    const anfang = laenge(minus(minus(gezeigt.positionKm, erde), gemerkt));
+    let p = gezeigt.positionKm;
+    for (let i = 0; i < 27; i++) p = c.update(mitFlug('earth', gemerkt, blick), jd, 1 / 60, s);
+    const rest = laenge(minus(minus(p, erde), gemerkt)) / anfang;
+    // Kritisch gedämpft bleibt nach einer Zeitkonstante (1 + 2)·e⁻² ≈ 0,41; mit 0,15 s wären es 7·e⁻⁶ ≈ 0,02.
+    expect(rest).toBeGreaterThan(0.3);
+    expect(rest).toBeLessThan(0.5);
+  });
+
+  it('dämpft nach dem Ankommen einer Wiederherstellung wieder mit 0,15 s', () => {
+    const { c, erde, blick, gemerkt } = wiederherstellung();
+    for (let i = 0; i < 600; i++) c.update(mitFlug('earth', gemerkt, blick), jd, 1 / 60, s);
+    const weiter = { x: gemerkt.x + 1e5, y: gemerkt.y, z: gemerkt.z };
+    let p = { x: 0, y: 0, z: 0 };
+    for (let i = 0; i < 27; i++) p = c.update(mitFlug('earth', weiter, blick), jd, 1 / 60, s);
+    expect(laenge(minus(minus(p, erde), weiter)) / 1e5).toBeLessThan(0.05);
+  });
 });
