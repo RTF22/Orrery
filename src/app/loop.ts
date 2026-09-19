@@ -1,5 +1,6 @@
 import { useStore } from '../store';
 import { detectTier, MESSFENSTER } from './quality';
+import { imZeitbereich } from '../sim/time';
 
 /**
  * Die Renderschleife. Sie liest den Store direkt (ohne Abonnement), damit
@@ -13,6 +14,10 @@ export function startLoop(onFrame: (jd: number, dtSek: number) => void): () => v
   // gemessen, damit eine spätere Lastspitze die Stufe nicht nachträglich
   // drückt (und die Auswahl des Betrachters nie überschreibt).
   let messwerte: number[] | null = [];
+
+  // Meldung einer Ausnahme aus onFrame, um wiederholt gleiche Meldungen
+  // nicht bei jedem Bild erneut in die Konsole zu schreiben.
+  let letzteMeldung = '';
 
   const tick = (jetzt: number): void => {
     if (!laeuft) return;
@@ -32,9 +37,23 @@ export function startLoop(onFrame: (jd: number, dtSek: number) => void): () => v
 
     const s = useStore.getState();
     if (!s.time.paused) {
-      useStore.setState({ time: { ...s.time, jd: s.time.jd + s.time.rateDaysPerSec * dtSek } });
+      const roh = s.time.jd + s.time.rateDaysPerSec * dtSek;
+      const jd = imZeitbereich(roh);
+      // Am Rand des Zeitbereichs (sim/time.ts) hält die Uhr an, statt in
+      // Zeiten zu laufen, in denen die Bahnelemente ungültig werden.
+      useStore.setState({ time: { ...s.time, jd, paused: jd !== roh } });
     }
-    onFrame(useStore.getState().time.jd, dtSek);
+    // Eine Ausnahme in einem Bild darf die Schleife nicht beenden: Das nächste
+    // Bild wird trotzdem angefordert, gleiche Meldungen erscheinen nur einmal.
+    try {
+      onFrame(useStore.getState().time.jd, dtSek);
+    } catch (fehler) {
+      const meldung = fehler instanceof Error ? fehler.message : String(fehler);
+      if (meldung !== letzteMeldung) {
+        letzteMeldung = meldung;
+        console.error('Bild übersprungen:', fehler);
+      }
+    }
     requestAnimationFrame(tick);
   };
 
