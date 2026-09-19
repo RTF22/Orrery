@@ -17,6 +17,9 @@ import { sicherungStarten, startZustand } from './persistenz';
 import { fahreZu } from '../ui/kamerafahrt';
 import { zeigerAusgeblendet } from '../ui/idle';
 import { themaVerfallStarten } from '../ui/info/themaVerfall';
+import { steuerungTakt } from '../ui/steuerung/anwenden';
+import { tastaturAnhaengen } from '../ui/steuerung/tastatur';
+import { letztePose } from '../render/camera/controller';
 
 /**
  * Einstiegspunkt der Anwendung.
@@ -54,7 +57,7 @@ function App(): React.JSX.Element {
     const szene = buildScene(ctx, overlay, (key) => t(key));
     if (import.meta.env.DEV) {
       // Für die Abnahme der Klickflächen: Kamera und Szene ohne Klickweg abfragen.
-      Object.assign(window as unknown as Record<string, unknown>, { kamera: ctx.camera, szene });
+      Object.assign(window as unknown as Record<string, unknown>, { kamera: ctx.camera, szene, letztePose });
     }
     const postfx = createPostFx(ctx);
     // Ziehen dreht, Rad und Zwei-Finger-Geste zoomen; Tippen fährt zum
@@ -67,6 +70,9 @@ function App(): React.JSX.Element {
       onZeiger: (zeiger) => { szene.setZeiger(zeiger); },
     });
 
+    // Flugtasten (Entwurf Flug und Controller §4): gehalten, je Bild ausgewertet.
+    const tastatur = tastaturAnhaengen(window);
+
     // Der Renderer meldet jede Größen- und Pixeldichteänderung; die
     // Composer-Ziele hängen sich hier an, damit sie nie hinterherhinken.
     ctx.afterResize = () => { postfx.resize(); };
@@ -75,6 +81,9 @@ function App(): React.JSX.Element {
     let stufe: QualityTier | null = null;
 
     const stopLoop = startLoop((jd, dt) => {
+      // Vor dem Kino-Takt: Ein Flug beendet das Kino im selben Bild (Entwurf
+      // Flug und Controller §6.2). Die Lage ist die des zuletzt gezeigten Bildes.
+      steuerungTakt(jd, dt, { tasten: tastatur.stand, letztePose });
       // Vor dem Lesen des Zustands: Szene und Kamera sollen im selben Bild
       // denselben Stand sehen.
       tickCinema(dt);
@@ -106,6 +115,7 @@ function App(): React.JSX.Element {
     return () => {
       stopLoop();
       stopInput();
+      tastatur.loesen();
       szene.dispose();
       postfx.dispose();
       ctx.dispose();
