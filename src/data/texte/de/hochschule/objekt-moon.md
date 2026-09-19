@@ -108,7 +108,8 @@ haben einen flüssigen äußeren Kern von 200 bis 380 km Radius, einen festen in
 1,5 % der Masse ([Williams et al. 2014](literatur:williams-2014)). Ein erweitertes dynamisches
 Modell der Laserentfernungen fand eine Abplattung der Kern-Mantel-Grenze von
 $(2{,}2 \pm 0{,}6) \cdot 10^{-4}$, hydrostatisch für einen Radius von 381 ± 12 km und einen
-Kernanteil von 1,59 bis 1,77 % der Masse ([Viswanathan et al. 2019](literatur:viswanathan-2019)).
+Kernanteil von 1,59 bis 1,77 % der Masse, also dagegen mehr als diese Obergrenze
+([Viswanathan et al. 2019](literatur:viswanathan-2019)).
 Ob die Grenzschicht tatsächlich teilweise geschmolzen ist, hängt an der Deutung der
 Frequenzabhängigkeit von $Q$: Ein Modell mit Korngrenzengleiten im Mantel erklärt sie ebenso, und
 die vorhandenen Daten unterscheiden beide nicht ([Walterová et al. 2023](literatur:walterova-2023)).
@@ -144,8 +145,10 @@ ihnen verfeinert, bleibt die Chronologiefunktion eine Summe aus exponentiellem A
 Glied, und die Einschlagrate nahm früh gleichmäßig ab statt sprunghaft
 ([Yue et al. 2026](literatur:yue-2026)). Basalt von Chang'e-5 kristallisierte vor
 $2030 \pm 4$ Millionen Jahren, das jüngste radiometrische Alter eines Mondbasalts und ein wichtiger
-Eichpunkt; der Vulkanismus dauerte damit 800 bis 900 Millionen Jahre länger als bekannt
-([Li et al. 2021](literatur:li-2021)). Auf der Rückseite trat Vulkanismus vor
+Eichpunkt; der Vulkanismus dauerte damit 800 bis 900 Millionen Jahre länger als bis dahin bekannt
+([Li et al. 2021](literatur:li-2021)). Unter rund 3000 Glasperlen aus demselben Regolith sind drei
+vulkanischen Ursprungs und nur $123 \pm 15$ Millionen Jahre alt, reich an Seltenen Erden und
+Thorium ([Wang et al. 2024b](literatur:wang-2024b)). Auf der Rückseite trat Vulkanismus vor
 $4203 \pm 4$ Millionen Jahren aus einer KREEP-reichen Quelle und vor $2807 \pm 3$ Millionen Jahren
 aus einer KREEP-armen auf, über 1,4 Milliarden Jahre hinweg; weil das jüngere Alter zur
 Kraterzählung passt, gilt die Chronologie der Vorderseite auch für die Rückseite
@@ -159,7 +162,7 @@ $155 \pm 12\,\mathrm{kg}$ Wasserdampf und Eis, geschätzt $5{,}6 \pm 2{,}9$ Mass
 Regolith der Einschlagstelle
 ([Colaprete et al. 2010](literatur:colaprete-2010)). Im Streulicht der Kältefallen zeigen Spektren
 von Moon Mineralogy Mapper Wassereis unmittelbar an der Oberfläche, innerhalb von 20° um beide Pole
-und bei höchstens 110 K; nur etwa 3,5 % der Kältefallen zeigen es, stellenweise mit rund 30
+und meist bei höchstens 110 K; nur etwa 3,5 % der Kältefallen zeigen es, stellenweise mit rund 30
 Massenprozent ([Li et al. 2018a](literatur:li-2018a)).
 
 ## Atmosphäre und Magnetosphäre
@@ -206,8 +209,9 @@ für den synodischen Monat ([Petit und Luzum 2010](literatur:petit-2010), Gl. 5.
 Die [Sonne](objekt:sun) verformt die Bahn ständig. 2008 bis 2010 schwankte die momentane
 Exzentrizität zwischen 0,0266 und 0,0762, am größten, wenn die Apsidenlinie zur Sonne zeigt, im
 Mittel alle 205,9 Tage, und die Neigung zwischen 5,00° und 5,30°, am größten, wenn die Sonne in der
-Knotenlinie steht ([Espenak und Meeus 2009](literatur:espenak-2009)). In der ekliptikalen Länge
-erscheint das als Reihe:
+Knotenlinie steht, zu [Finsternissen](thema:finsternis) also stets nahe dem Höchstwert
+([Espenak und Meeus 2009](literatur:espenak-2009)). In der ekliptikalen Länge erscheint das als
+Reihe:
 
 $$\lambda = L + 2e\sin l + \frac{5}{4}e^2\sin 2l + 1{,}274^\circ \sin(2D - l) + 0{,}658^\circ \sin 2D - 0{,}185^\circ \sin l_\odot + \ldots$$
 
@@ -216,19 +220,23 @@ Elongation $D$. Die ersten beiden Glieder sind die Mittelpunktsgleichung der Kep
 $2e = 6{,}29^\circ$. Es folgen die Evektion mit 31,81 Tagen Periode, die Variation mit 14,77 Tagen
 und die jährliche Gleichung mit 365,26 Tagen; die Perioden folgen aus den Raten der
 Fundamentalargumente ([Petit und Luzum 2010](literatur:petit-2010), Gl. 5.43). Die Punkte stehen
-für kleinere Glieder und die Reduktion der Bahnlänge auf die Ekliptik. Die Amplituden stammen aus
-einer eigenen Zerlegung: Die Differenz zwischen der geozentrischen Länge des Mondes in der
-Ephemeride DE441 ([Park et al. 2021](literatur:park-2021)) und einer Kepler-Ellipse mit mittleren
-Elementen, 1990 bis 2030 alle sechs Stunden, erklären diese drei und fünf kleinere Glieder von 0,04°
-bis 0,06° bis auf 0,044° im quadratischen Mittel.
+für kleinere Glieder und die Reduktion der Bahnlänge auf die Ekliptik. Die Amplituden sind die der
+Hauptlösung ELP 2000-82B, 4586,43″, 2369,91″ und −666,44″, dazu 22 639,55″ oder 6,2888° für das
+erste Glied der Mittelpunktsgleichung
+([Chapront-Touzé und Chapront 1988](literatur:chapront-touze-1988)). Eine eigene Gegenprobe ergibt
+dieselben Werte: Die Differenz zwischen der geozentrischen Länge des Mondes in der Ephemeride DE441
+([Park et al. 2021](literatur:park-2021)) und einer Kepler-Ellipse mit mittleren Elementen, 1990
+bis 2030 alle sechs Stunden, erklären diese drei und fünf kleinere Glieder von 0,04° bis 0,06° bis
+auf 0,044° im quadratischen Mittel.
 
 Die Rotation ist [gebunden](thema:gebundene-rotation), und die Drehachse folgt den Cassini-Gesetzen:
 Der Mondäquator präzediert mit dem Bahnknoten in 18,6 Jahren rückläufig längs der Ekliptik und ist
 gegen sie nur um 1,543° geneigt, und zwar entgegengesetzt zur Bahnneigung
 ([Williams et al. 2014](literatur:williams-2014)). Drehachse, Bahnnormale und die Achse, um die die
-Bahn präzediert, beim Mond nahezu der Ekliptikpol, liegen so in einer Ebene. Peale zeigte, dass
-solche gleichebenen Lagen stabil sind und Extremwerte der Orientierungsenergie darstellen
-([Peale 1969](literatur:peale-1969)). Die Drehachse steht damit
+Bahn präzediert, beim Mond nahezu der Ekliptikpol, liegen so in einer Ebene. Peale zeigte, dass die
+stabilen gleichebenen Lagen Extremwerte der Orientierungsenergie sind
+([Peale 1969](literatur:peale-1969)); der Mond steht im Cassini-Zustand 2, weil es für ihn den
+Zustand 1 nicht gibt ([Gladman et al. 1996](literatur:gladman-1996)). Die Drehachse steht damit
 $1{,}543^\circ + 5{,}145^\circ = 6{,}688^\circ$ gegen die Bahnnormale; das Faktenblatt nennt 6,68°.
 Die Reibung im Mond und an der Kerngrenze verschiebt
 den Pol um 0,27″ und den Knoten um −10,0″ aus dieser Lage
@@ -303,8 +311,9 @@ erklärt auch, warum es weniger große Becken gibt als erwartet
   Unterschied, Fischer et al. auch nicht unterhalb eines ppm
   ([Young et al. 2016](literatur:young-2016); [Fischer et al. 2024](literatur:fischer-2024)).
   Welches Szenario zutrifft, ist offen.
-- **Alter:** früh, vor 4,51 Milliarden Jahren ([Barboni et al. 2017](literatur:barboni-2017);
-  [Nimmo et al. 2024](literatur:nimmo-2024)), oder später, vor $4{,}425 \pm 0{,}025$ Milliarden
+- **Alter:** früh, spätestens vor 4,51 Milliarden Jahren ([Barboni et al. 2017](literatur:barboni-2017))
+  beziehungsweise innerhalb weniger zehn Millionen Jahre nach Entstehung des Sonnensystems
+  ([Nimmo et al. 2024](literatur:nimmo-2024)), oder später, vor $4{,}425 \pm 0{,}025$ Milliarden
   Jahren ([Maurice et al. 2020](literatur:maurice-2020)); das Anorthositalter von 4,36 Milliarden
   Jahren verlangt entweder einen spät erstarrten Mond oder eine andere Herkunft der Anorthosite
   ([Borg et al. 2011](literatur:borg-2011)).
@@ -337,10 +346,15 @@ erklärt auch, warum es weniger große Becken gibt als erwartet
   linear. Die Raten von Knoten und Perigäum nach Meeus sind um die allgemeine Präzession von
   1,3969713° je Jahrhundert vermindert, auf −1935,5333° und +4067,6168° je Jahrhundert
   ([Bezugssysteme](thema:bezugssysteme)); der Knoten läuft so in 18,600 Jahren, das Perigäum in
-  8,850 Jahren um. Periodische Störungen fehlen: Gegen DE441 weicht die Länge 1990 bis 2030 um bis zu
-  2,39° ab, im quadratischen Mittel um 1,03°, die Breite um bis zu 0,34° und der Abstand um bis zu
-  7010 km. Fast alles davon sind Evektion, Variation und jährliche Gleichung (siehe Bahn); die
-  mittlere Länge driftet von 1800 bis 2100 nicht. Die [Mondfinsternis](szene:mondfinsternis) trifft
+  8,850 Jahren um. Der Abstand, den der Datenblock zeigt, bleibt so zwischen
+  $a\,(1 - e) = 363359\,\mathrm{km}$ und $a\,(1 + e) = 405574\,\mathrm{km}$. Periodische
+  Störungen fehlen: Gegen DE441 weicht die Länge 1990 bis 2030 um bis zu 2,39° ab, im quadratischen
+  Mittel um 1,03°, die Breite um bis zu 0,34° und der Abstand um bis zu 7010 km. In der Länge sind
+  das fast ganz Evektion, Variation und jährliche Gleichung, im Abstand Evektion und Variation
+  (siehe Bahn); in der Breite ist es die Schwankung von Neigung und Knoten, Hauptglied
+  $0{,}173^\circ \sin(2D - F)$ mit dem mittleren Argument der Breite $F$
+  ([Chapront-Touzé und Chapront 1988](literatur:chapront-touze-1988)). Die mittlere Länge driftet von
+  1800 bis 2100 nicht. Die [Mondfinsternis](szene:mondfinsternis) trifft
   so bis zu 3 h daneben. Der Erdmittelpunkt sitzt im Erde-Mond-Schwerpunkt
   ([Erde](objekt:earth)); der Vektor von der Erde zum Mond ist davon nicht betroffen.
 - **Rotation:** Die Rotationsperiode 655,71984 h ist genau die siderische Umlaufzeit $360^\circ/\dot{L}$
@@ -357,8 +371,9 @@ erklärt auch, warum es weniger große Becken gibt als erwartet
   Evektion und Variation fehlen in dieser Libration.
 - **Pol und Cassini-Zustand:** Der Pol steht fest, während der Bahnknoten wandert. Zur Epoche liegen
   Pol und Bahnnormale 6,72° auseinander, fast in Cassini-Lage; nach einem halben Knotenumlauf
-  (2. Mai 2009, wieder am 8. Dezember 2027) sind es nur 3,57°, am 19. September 2026 3,76°, und erst
-  am 27. März 2037 wieder 6,72°. Die Libration in Breite schwankt so zwischen etwa ±3,6° und ±6,7°.
+  (2. Mai 2009, wieder am 8. Dezember 2027) sind es nur 3,57°, am 19. September 2026 3,76°; 6,72°
+  werden im Takt des Knotenumlaufs wieder erreicht, am 20. August 2018 und am 27. März 2037. Die
+  Libration in Breite schwankt so zwischen etwa ±3,6° und ±6,7°.
   Die Achsneigung des Datenblocks, 6,7°, ist der Wert zur Epoche.
 - **Maßstab:** Der Mondabstand wächst mit dem Größenfaktor wie die Radien: in „Schaubild" 50-fach
   auf 19,2 Millionen km, in „Kompakt" 200-fach auf 76,9 Millionen km; das Verhältnis von Abstand und
@@ -371,8 +386,9 @@ erklärt auch, warum es weniger große Becken gibt als erwartet
   Bond-Albedo von $0{,}955\,p = 0{,}115$; das Faktenblatt nennt 0,12 und 0,11
   ([NSSDC Moon Fact Sheet](quelle:nssdc-moon)). Das Phasenintegral des Modells ist 1,49, das aus
   gemessenen Phasenkurven des Mondes bestimmte $0{,}48 \pm 0{,}02$
-  ([Shevchenko et al. 2019](literatur:shevchenko-2019)); Oppositionseffekt und die steile
-  Phasenkurve des Regoliths fehlen ([Albedo und Helligkeit](thema:photometrie)).
+  ([Shevchenko et al. 2019](literatur:shevchenko-2019)). Die beiden Werte des Faktenblatts ergäben
+  zusammen ein Phasenintegral von 0,92 und passen damit nicht zu diesem Messwert. Oppositionseffekt
+  und die steile Phasenkurve des Regoliths fehlen ([Albedo und Helligkeit](thema:photometrie)).
 - **Datenblock:** Der Durchmesser 3475 km ist der doppelte Kartenradius 1737,4 km, nach der
   Laserhöhenmessung wären es 3474,3 km. Die Masse, 7,35 · 10²² kg (im Datensatz
   $7{,}346 \cdot 10^{22}\,\mathrm{kg}$), ergibt mal $G$ nach CODATA 2018 ein $GM$ 29 ppm über dem Wert

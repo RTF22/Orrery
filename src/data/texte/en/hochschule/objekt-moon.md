@@ -104,8 +104,8 @@ fluid outer core of 200 to 380 km radius, a solid inner core of 0 to 280 km and 
 low shear-wave velocity; the whole core holds at most 1.5 % of the mass
 ([Williams et al. 2014](literatur:williams-2014)). An extended dynamical model of the laser ranging
 found a flattening of the core-mantle boundary of $(2.2 \pm 0.6) \cdot 10^{-4}$, hydrostatic for a
-radius of 381 ± 12 km and a core fraction of 1.59 to 1.77 % of the mass
-([Viswanathan et al. 2019](literatur:viswanathan-2019)). Whether the boundary layer is actually
+radius of 381 ± 12 km and a core fraction of 1.59 to 1.77 % of the mass, by contrast more than this
+upper limit ([Viswanathan et al. 2019](literatur:viswanathan-2019)). Whether the boundary layer is actually
 partially molten depends on how the frequency dependence of $Q$ is interpreted: a model with grain
 boundary sliding in the mantle explains it equally well, and the available data do not distinguish
 the two ([Walterová et al. 2023](literatur:walterova-2023)).
@@ -139,8 +139,10 @@ $2807 \pm 3$ and norites of $4247 \pm 5$ million years. Refined with them, the c
 remains a combination of an exponential decrease and a linear term, and the impact rate declined
 smoothly at early times rather than abruptly ([Yue et al. 2026](literatur:yue-2026)). Basalt from
 Chang'e-5 crystallised $2030 \pm 4$ million years ago, the youngest radiometric age of a lunar basalt
-and a key calibration point; volcanism thus lasted 800 to 900 million years longer than known
-([Li et al. 2021](literatur:li-2021)). On the far side, volcanism occurred $4203 \pm 4$ million years
+and a key calibration point; volcanism thus lasted 800 to 900 million years longer than known until
+then ([Li et al. 2021](literatur:li-2021)). Among about 3000 glass beads from the same regolith, three
+are of volcanic origin and only $123 \pm 15$ million years old, rich in rare earth elements and
+thorium ([Wang et al. 2024b](literatur:wang-2024b)). On the far side, volcanism occurred $4203 \pm 4$ million years
 ago from a KREEP-rich source and $2807 \pm 3$ million years ago from a KREEP-poor one, over more than
 1.4 billion years; because the younger age agrees with crater counts, the near-side chronology also
 applies to the far side ([Zhang et al. 2025a](literatur:zhang-2025a)).
@@ -152,7 +154,7 @@ crater Cabeus; within the field of view of LCROSS the ejecta plume held up to
 $155 \pm 12\,\mathrm{kg}$ of water vapour and ice, an estimated $5.6 \pm 2.9$ per cent by mass of
 ice in the regolith at the impact site ([Colaprete et al. 2010](literatur:colaprete-2010)). In the
 scattered light inside cold traps, spectra from the Moon Mineralogy Mapper show water ice right at
-the surface, within 20° of both poles and at no more than 110 K; only about 3.5 % of the cold traps
+the surface, within 20° of both poles and mostly at no more than 110 K; only about 3.5 % of the cold traps
 show it, locally at about 30 per cent by mass ([Li et al. 2018a](literatur:li-2018a)).
 
 ## Atmosphere and magnetosphere
@@ -196,8 +198,8 @@ month ([Petit and Luzum 2010](literatur:petit-2010), Eq. 5.43).
 The [Sun](objekt:sun) continually distorts the orbit. From 2008 to 2010 the instantaneous
 eccentricity varied between 0.0266 and 0.0762, largest when the line of apsides points towards the
 Sun, on average every 205.9 days, and the inclination between 5.00° and 5.30°, largest when the Sun
-is in the line of nodes ([Espenak and Meeus 2009](literatur:espenak-2009)). In ecliptic longitude this
-appears as a series:
+is in the line of nodes, so always close to its maximum at [eclipses](thema:finsternis)
+([Espenak and Meeus 2009](literatur:espenak-2009)). In ecliptic longitude this appears as a series:
 
 $$\lambda = L + 2e\sin l + \frac{5}{4}e^2\sin 2l + 1.274^\circ \sin(2D - l) + 0.658^\circ \sin 2D - 0.185^\circ \sin l_\odot + \ldots$$
 
@@ -206,19 +208,22 @@ The first two terms are the equation of the centre of the Kepler ellipse, $2e = 
 followed by the evection with a period of 31.81 days, the variation with 14.77 days and the annual
 equation with 365.26 days; the periods follow from the rates of the fundamental arguments
 ([Petit and Luzum 2010](literatur:petit-2010), Eq. 5.43). The dots stand for smaller terms and the
-reduction of the orbital longitude to the ecliptic. The amplitudes come from our own decomposition:
-the difference between the geocentric longitude of the Moon in the ephemeris DE441
-([Park et al. 2021](literatur:park-2021)) and a Kepler ellipse with mean elements, every six hours
-from 1990 to 2030, is explained by these three and five smaller terms of 0.04° to 0.06° down to
-0.044° root mean square.
+reduction of the orbital longitude to the ecliptic. The amplitudes are those of the main problem of
+ELP 2000-82B, 4586.43″, 2369.91″ and −666.44″, plus 22,639.55″ or 6.2888° for the first term of the
+equation of the centre ([Chapront-Touzé and Chapront 1988](literatur:chapront-touze-1988)). Our own
+cross-check gives the same values: the difference between the geocentric longitude of the Moon in
+the ephemeris DE441 ([Park et al. 2021](literatur:park-2021)) and a Kepler ellipse with mean
+elements, every six hours from 1990 to 2030, is explained by these three and five smaller terms of
+0.04° to 0.06° down to 0.044° root mean square.
 
 The rotation is [tidally locked](thema:gebundene-rotation), and the spin axis follows Cassini's laws:
 the lunar equator precesses retrograde along the ecliptic with the orbital node in 18.6 years and is
 tilted to it by only 1.543°, opposite to the orbital inclination
 ([Williams et al. 2014](literatur:williams-2014)). The spin axis, the orbit normal and the axis about
 which the orbit precesses, for the Moon nearly the ecliptic pole, thus lie in one plane. Peale showed
-that such coplanar configurations are stable and represent extremes of the orientation energy
-([Peale 1969](literatur:peale-1969)). The spin axis is therefore inclined by
+that the stable coplanar configurations represent extremes of the orientation energy
+([Peale 1969](literatur:peale-1969)); the Moon is in Cassini state 2 because state 1 does not exist
+for it ([Gladman et al. 1996](literatur:gladman-1996)). The spin axis is therefore inclined by
 $1.543^\circ + 5.145^\circ = 6.688^\circ$ to the orbit normal; the fact sheet gives 6.68°.
 Friction in the Moon and at the core boundary shifts
 the pole by 0.27″ and the node by −10.0″ from this configuration
@@ -289,8 +294,9 @@ the Solar System, which also explains why there are fewer large basins than expe
   Fischer et al. find no difference, Fischer et al. not even below one ppm
   ([Young et al. 2016](literatur:young-2016); [Fischer et al. 2024](literatur:fischer-2024)).
   Which scenario is correct remains open.
-- **Age:** early, 4.51 billion years ago ([Barboni et al. 2017](literatur:barboni-2017);
-  [Nimmo et al. 2024](literatur:nimmo-2024)), or later, $4.425 \pm 0.025$ billion years ago
+- **Age:** early, no later than 4.51 billion years ago ([Barboni et al. 2017](literatur:barboni-2017))
+  or within a few tens of million years of the formation of the Solar System
+  ([Nimmo et al. 2024](literatur:nimmo-2024)), or later, $4.425 \pm 0.025$ billion years ago
   ([Maurice et al. 2020](literatur:maurice-2020)); the anorthosite age of 4.36 billion years
   requires either a late-solidifying Moon or a different origin of the anorthosites
   ([Borg et al. 2011](literatur:borg-2011)).
@@ -322,10 +328,15 @@ the Solar System, which also explains why there are fewer large basins than expe
   linearly. The node and perigee rates from Meeus are reduced by the general precession of
   1.3969713° per century, to −1935.5333° and +4067.6168° per century
   ([Reference systems](thema:bezugssysteme)); the node thus circulates in 18.600 years, the perigee in
-  8.850 years. Periodic perturbations are missing: against DE441 the longitude deviates from 1990 to
-  2030 by up to 2.39°, 1.03° root mean square, the latitude by up to 0.34° and the distance by up to
-  7010 km. Almost all of this is evection, variation and annual equation (see Orbit); the mean
-  longitude does not drift from 1800 to 2100. The [lunar eclipse](szene:mondfinsternis) is thus off
+  8.850 years. The distance shown in the data panel thus stays between
+  $a\,(1 - e) = 363359\,\mathrm{km}$ and $a\,(1 + e) = 405574\,\mathrm{km}$. Periodic
+  perturbations are missing: against DE441 the longitude deviates from 1990 to 2030 by up to 2.39°,
+  1.03° root mean square, the latitude by up to 0.34° and the distance by up to 7010 km. In longitude
+  almost all of this is evection, variation and annual equation, in distance evection and variation
+  (see Orbit); in latitude it is the variation of inclination and node, main term
+  $0.173^\circ \sin(2D - F)$ with the mean argument of latitude $F$
+  ([Chapront-Touzé and Chapront 1988](literatur:chapront-touze-1988)). The mean longitude does not
+  drift from 1800 to 2100. The [lunar eclipse](szene:mondfinsternis) is thus off
   by up to 3 h. The Earth's centre sits at the Earth-Moon barycentre ([Earth](objekt:earth)); the
   vector from the Earth to the Moon is not affected by this.
 - **Rotation:** The rotation period of 655.71984 h is exactly the sidereal period $360^\circ/\dot{L}$
@@ -342,8 +353,8 @@ the Solar System, which also explains why there are fewer large basins than expe
   of evection and variation are missing from this libration.
 - **Pole and Cassini state:** The pole is fixed while the orbital node moves. At the epoch pole and
   orbit normal are 6.72° apart, almost in the Cassini configuration; after half a nodal cycle
-  (2 May 2009, again on 8 December 2027) they are only 3.57° apart, on 19 September 2026 3.76°, and
-  only on 27 March 2037 6.72° again. The libration in latitude thus varies between about ±3.6° and
+  (2 May 2009, again on 8 December 2027) they are only 3.57° apart, on 19 September 2026 3.76°; 6.72°
+  recurs with the nodal cycle, on 20 August 2018 and on 27 March 2037. The libration in latitude thus varies between about ±3.6° and
   ±6.7°. The obliquity in the data panel, 6.7°, is the value at the epoch.
 - **Scale:** The lunar distance grows with the size factor like the radii: in "Diagram" 50-fold to
   19.2 million km, in "Compact" 200-fold to 76.9 million km; the ratio of distance to Earth radius
@@ -355,8 +366,9 @@ the Solar System, which also explains why there are fewer large basins than expe
   $0.955\,p = 0.115$; the fact sheet gives 0.12 and 0.11
   ([NSSDC Moon Fact Sheet](quelle:nssdc-moon)). The phase integral of the model is 1.49, the one
   determined from measured lunar phase curves $0.48 \pm 0.02$
-  ([Shevchenko et al. 2019](literatur:shevchenko-2019)); the opposition effect and the steep phase
-  curve of the regolith are missing ([Albedo and brightness](thema:photometrie)).
+  ([Shevchenko et al. 2019](literatur:shevchenko-2019)). Together the two fact-sheet values would
+  give a phase integral of 0.92 and thus do not fit this measurement. The opposition effect and the
+  steep phase curve of the regolith are missing ([Albedo and brightness](thema:photometrie)).
 - **Data panel:** The diameter of 3475 km is twice the cartographic radius of 1737.4 km; laser
   altimetry would give 3474.3 km. The mass, 7.35 · 10²² kg ($7.346 \cdot 10^{22}\,\mathrm{kg}$ in
   the data set), multiplied by $G$ from CODATA 2018 gives a $GM$ 29 ppm above the ephemeris value. The

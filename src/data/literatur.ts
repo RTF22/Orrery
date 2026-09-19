@@ -419,6 +419,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.59161/CGPM2022RES4E',
   },
   {
+    id: 'chapront-touze-1988',
+    autoren: ['Chapront-Touzé, M.', 'Chapront, J.'],
+    etAl: false,
+    jahr: 1988,
+    titel: 'Lunar Solution ELP 2000-82B',
+    erschienen: 'Datenkatalog VI/79 am CDS Straßburg; Astronomy and Astrophysics 124, 50 (1983) und 190, 342 (1988)',
+    url: 'https://cdsarc.cds.unistra.fr/viz-bin/cat/VI/79',
+  },
+  {
     id: 'charles-1997',
     autoren: ['Charles, E. D.', 'Tatum, J. B.'],
     etAl: false,
@@ -2246,6 +2255,15 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'Cassini spacecraft reveals global energy imbalance of Saturn',
     erschienen: 'Nature Communications 15, 5045',
     doi: '10.1038/s41467-024-48969-9',
+  },
+  {
+    id: 'wang-2024b',
+    autoren: ['Wang, B.-W.', 'Zhang, Q. W. L.', 'Chen, Y.'],
+    etAl: true,
+    jahr: 2024,
+    titel: 'Returned samples indicate volcanism on the Moon 120 million years ago',
+    erschienen: 'Science 385, 1077–1080',
+    doi: '10.1126/science.adk6635',
   },
   {
     id: 'wang-2025',
