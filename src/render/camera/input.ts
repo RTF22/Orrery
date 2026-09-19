@@ -1,11 +1,8 @@
 import { useStore } from '../../store';
 import { TIPP_SCHWELLE_PX, zeigerartVon } from '../treffer';
 import type { Zeigerart } from '../treffer';
+import { ELEVATION_GRENZE, MIN_DISTANCE_KM, MAX_DISTANCE_KM } from './flug';
 
-/** Knapp unter dem Pol, damit die Ansicht nicht umklappt. */
-const ELEVATION_GRENZE = Math.PI / 2 - 0.01;
-const MIN_DISTANCE_KM = 1e2;
-const MAX_DISTANCE_KM = 1e13;
 /** Bildschirmbreite entspricht etwa einer halben Umdrehung. */
 const DREH_PRO_PIXEL = Math.PI / 600;
 

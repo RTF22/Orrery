@@ -46,7 +46,7 @@ const BOOLESCHE_RECORDS: ReadonlySet<string> = new Set(['visible', 'ui.panels'])
  * „endlich" genügt darum nicht mehr. Die Grenzen sind Zwillinge der Regler
  * und der Kameraeingabe: GROESSE_MIN/MAX in ScalePanel, RATE_MAX in
  * TimePanel, die Reglergrenzen in DisplayPanel und ScalePanel,
- * MIN_/MAX_DISTANCE_KM und ELEVATION_GRENZE in render/camera/input.ts.
+ * MIN_/MAX_DISTANCE_KM und ELEVATION_GRENZE in render/camera/flug.ts.
  * store/ darf weder ui/ noch render/ importieren, deshalb stehen die Zahlen
  * hier noch einmal; wer dort eine Grenze ändert, zieht sie hier nach. Ein
  * Wert außerhalb fällt weg wie jedes andere ungültige Feld — nicht
