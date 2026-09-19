@@ -55,14 +55,31 @@ describe('tastaturAnhaengen', () => {
     expect(taste('keydown', 'KeyA', { ctrlKey: true }).defaultPrevented).toBe(false);
   });
 
-  it('merkt Shift vom letzten Tastenereignis', () => {
+  it('merkt Shift vom letzten Tastenereignis und sperrt beim Loslassen gehaltene Tasten (Nachtrag §13.3)', () => {
     tastatur = tastaturAnhaengen(window);
     taste('keydown', 'ShiftLeft', { key: 'Shift', shiftKey: true });
     taste('keydown', 'KeyA', { shiftKey: true });
     expect(tastatur.stand().shift).toBe(true);
+    expect(tastatur.stand().gehalten.has('KeyA')).toBe(true);
     taste('keyup', 'ShiftLeft', { key: 'Shift', shiftKey: false });
     expect(tastatur.stand().shift).toBe(false);
-    expect(tastatur.stand().gehalten.has('KeyA')).toBe(true);
+    expect(tastatur.stand().gehalten.has('KeyA')).toBe(false);
+  });
+
+  it('gibt eine gesperrte Taste erst nach neuem Druck frei; Wiederholungen lösen die Sperre nicht', () => {
+    tastatur = tastaturAnhaengen(window);
+    taste('keydown', 'ShiftLeft', { key: 'Shift', shiftKey: true });
+    taste('keydown', 'KeyA', { shiftKey: true });
+    taste('keydown', 'KeyW', { shiftKey: true });
+    taste('keyup', 'ShiftLeft', { key: 'Shift', shiftKey: false });
+    taste('keydown', 'KeyA', { repeat: true });
+    expect(tastatur.stand().gehalten.size).toBe(0);
+    taste('keyup', 'KeyA');
+    taste('keydown', 'KeyA');
+    expect([...tastatur.stand().gehalten]).toEqual(['KeyA']);
+    taste('keyup', 'KeyW');
+    taste('keydown', 'KeyW');
+    expect([...tastatur.stand().gehalten].sort()).toEqual(['KeyA', 'KeyW']);
   });
 
   it('vergisst alles beim Verlassen des Fensters und beim Verbergen der Seite', () => {

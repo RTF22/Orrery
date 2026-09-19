@@ -27,25 +27,43 @@ const istFlugtaste = (code: string): code is Flugtaste =>
  * Eingabefelder sowie Strg, Alt und Meta bleiben unberührt, damit die
  * Browserkürzel wirken. Verlässt der Fokus das Fenster oder wird die Seite
  * verborgen, sind alle Tasten vergessen — sonst flöge ein „hängendes W" weiter.
+ * Lässt man Shift los, bleiben die dabei gehaltenen Tasten gesperrt, bis sie
+ * neu gedrückt werden (Nachtrag §13.3).
  */
 export function tastaturAnhaengen(fenster: Window = window): Tastatur {
   const gehalten = new Set<Flugtaste>();
+  // Beim Loslassen von Shift noch gehaltene Tasten (Nachtrag §13.3): Sie zählen
+  // erst nach einem neuen Druck. Wer den Griff Shift+A zuerst an Shift löst,
+  // flöge sonst seitwärts davon, statt geheftet zu bleiben.
+  const gesperrt = new Set<Flugtaste>();
   let shift = false;
 
+  const shiftSetzen = (neu: boolean): void => {
+    if (shift && !neu) {
+      for (const t of gehalten) gesperrt.add(t);
+      gehalten.clear();
+    }
+    shift = neu;
+  };
   const onKeyDown = (e: KeyboardEvent): void => {
-    shift = e.shiftKey;
+    shiftSetzen(e.shiftKey);
     if (!istFlugtaste(e.code)) return;
     if (e.ctrlKey || e.altKey || e.metaKey || istEingabefeld(e.target)) return;
     e.preventDefault();
     if (e.repeat) return;
+    gesperrt.delete(e.code);
     gehalten.add(e.code);
   };
   const onKeyUp = (e: KeyboardEvent): void => {
-    shift = e.shiftKey;
-    if (istFlugtaste(e.code)) gehalten.delete(e.code);
+    shiftSetzen(e.shiftKey);
+    if (istFlugtaste(e.code)) {
+      gehalten.delete(e.code);
+      gesperrt.delete(e.code);
+    }
   };
   const vergessen = (): void => {
     gehalten.clear();
+    gesperrt.clear();
     shift = false;
   };
   const onSichtbarkeit = (): void => {

@@ -274,7 +274,7 @@ describe('steuerungTakt: Drehen mit Shift', () => {
     expect(z.camera.targetId).toBe('saturn');
   });
 
-  it('kehrt beim Loslassen von Shift mit gehaltener Taste in den Flug zurück', () => {
+  it('fliegt nach dem Drehen beim nächsten Druck ohne Shift wieder', () => {
     useStore.getState().setCamera({ mode: 'attached', targetId: 'earth' });
     steuerungTakt(jd, 0, umgebung(['KeyA'], vorKoerper('earth'), false));
     expect(useStore.getState().camera.mode).toBe('fly');
