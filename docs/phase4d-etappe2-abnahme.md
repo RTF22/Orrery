@@ -413,7 +413,7 @@ des jeweiligen Tasks (siehe Abschnitt 2), Runden/Fehler/Hinweise aus den Fachpr�
 | `thema-resonanzen` (Task 5) | 2371 / 2567 | 89 | 46 / 23 | 21 | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 2/2 (Runde 1: F1 „Im Modell/Asteroidengürtel" behauptet eine 4:1-Lücke, die es in der Punktwolke nicht gibt; Runde 2: neuer Fehler, der eigene Korrekturvorschlag aus Runde 1 „nur die innere Flanke von 2:1 im Bereich" stimmte nicht mit dem Code überein — richtig: die 2:1-Lücke wird von der oberen Grenze 3,3 AE angeschnitten) | Streubreite 7:3 bewusst nicht vereinheitlicht — zwei richtige, unterschiedliche Messmethoden nebeneinander in Belegzeile 81 (Ruling, kein Fehler); H6 (neuere Pluto-Integrationen ~82°/23°) bewusst nicht umgesetzt, bräuchte neuen Katalogeintrag |
 | `thema-innerer-aufbau` (Task 6) | 3899 / 4274<sup>†</sup> | 121 | 84 / 28 | 22 | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 1/1 (F1 fluide Love-Zahl gilt nicht für gebunden rotierende Monde wie Titan) | Wortzahl en 4274 über der Obergrenze 4000 (§8) |
 | `thema-photometrie` (Task 7) | 3586 / 3927 | 128 | 76 / 25 | 23 | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 1/1 (F1 Fresnel-Reflexion am Halbvektor statt am Phasenwinkel) | keine |
-| `thema-entstehung` (Task 8) | 3677 / 4024<sup>†</sup> | 117 | 89 / 49 | 42 | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 2/2 (F1 St=1-Korngröße nur für MMSN gültig gemacht, F2 veraltete gleiche ¹⁸²W/¹⁸⁴W-Anomalie) | Wortzahl en 4024 über der Obergrenze 4000 (§8); Prüfskript scheitert am Titel von Brennecka 2010 (Ursache offen, betrifft nicht diesen Text direkt, da nicht im Katalog) |
+| `thema-entstehung` (Task 8) | 3677 / 4024<sup>†</sup> | 117 | 89 / 49 | 42 | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 2/2 (F1 St=1-Korngröße nur für MMSN gültig gemacht, F2 veraltete gleiche ¹⁸²W/¹⁸⁴W-Anomalie) | Wortzahl en 4024 über der Obergrenze 4000 (§8); Prüfskript scheiterte am Titel von Brennecka 2010, Ursache jetzt bekannt und behoben (§8 Frage 9, Commit b19f682), betraf nicht diesen Text direkt, da nicht im Katalog |
 
 <sup>†</sup> Wortzahl: Richtwert für Themen 1500–4000 Wörter je Fassung (Entwurf §5.2 nach Zwischen-Task
 2b, siehe Task-10-Ergänzung); `thema-photometrie` liegt mit 3586/3927 englisch am nächsten an der
@@ -760,12 +760,15 @@ Zwischen-Task auf `hochschule-2`.
 **Code-Befunde aus den Texten (nicht behoben, aus dem Ledger, für Jens/spätere Etappen):**
 
 - Kepler-Absturz ab Jahr 12 563 (Saturns linear fortgeschriebene Exzentrizität wird negativ,
-  `solveKepler` wirft, Bildschleife steht dauerhaft; Ruling Task 8, hohe Priorität).
-- Perijoven von Io und Europa laufen im Datensatz vorwärts statt zu librieren (Ruling Task 5).
+  `solveKepler` wirft, Bildschleife steht dauerhaft; Ruling Task 8, hohe Priorität) — **behoben**:
+  Zeitbereich JD 0 … 31.12.9999 (`docs/zeitbereich-abnahme.md`, Commit 6566e32), danach
+  Untergrenze 1. Januar 1 (Nachtrag dort, Commit a7f06d0).
+- Perijoven von Io und Europa laufen im Datensatz vorwärts statt zu librieren (Ruling Task 5) —
+  bleibt offen.
 - Kommentar `src/render/lighting.ts` „1,0 landet bei 232 von 255" — nachgerechnet 226, 233 erst mit
-  der Füllung (Task 7).
+  der Füllung (Task 7) — **behoben** (Commit c3b5a3f).
 - Prüfskript scheitert am Titel von Brennecka 2010, Ursache nicht untersucht — die Arbeit wurde
-  deshalb nicht in den Katalog aufgenommen (Task 8).
+  deshalb nicht in den Katalog aufgenommen (Task 8) — **behoben** (§8 Frage 9, Commit b19f682).
 
 ## 8. Halt: Fragen an Jens
 
@@ -834,6 +837,15 @@ Zwischen-Task auf `hochschule-2`.
    ist betroffen. Vorschlag: eigener kleiner Code-Task mit Test genau an diesem Datensatz für 4d-3
    (zusätzlich die normalisierten Titel ohne Leerzeichen vergleichen, oder Leerraum direkt nach
    `</sup>`/`</sub>` entfernen und mit NFKD normalisieren). Für 4d-3 einplanen?
+
+**Entscheidungen von Jens (19.09.2026):** Frage 1: Die relative Messvorlage ist bestätigt, auch
+für künftige Etappen. Frage 2: Der Schaltsekunden-Absatz in `thema-bezugssysteme` wird nach der
+28. CGPM (13.–15.10.2026) nachgeführt; der Pilot bleibt unverändert. Frage 3: Die offenen
+sachlichen Hinweise werden bei der nächsten inhaltlichen Änderung an `thema-bezugssysteme`
+mitgenommen, zuerst Belegzeile 79. Frage 4: Der Pilot ist angeglichen (Commit 46ea81b). Frage 5:
+Die Wortzahlen bleiben. Frage 6: Die Streubreite bleibt. Frage 7: Die Pluto-Integrationen sind
+für eine spätere Etappe vorgemerkt. Frage 8: behoben (Zeitbereich, `docs/zeitbereich-abnahme.md`,
+Commits 6566e32 und a7f06d0). Frage 9: behoben (Commit b19f682).
 
 Speziell aus §8 der Abnahme 4d-1, seither entschieden (zur Nachvollziehbarkeit, keine neue Frage):
 Quellenkarte `jpl-horizons` zeigt jetzt auf das Handbuch (`8ab158e`), das Prüfskript wiederholt bei
