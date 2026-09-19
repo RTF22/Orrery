@@ -4,7 +4,7 @@ import {
 } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
 import {
-  createIdleWatcher, IDLE_HIDE_SEC, useIdleHide, zeigerAusgeblendet,
+  createIdleWatcher, eingabeMelden, IDLE_HIDE_SEC, useIdleHide, zeigerAusgeblendet,
 } from './idle';
 
 describe('createIdleWatcher', () => {
@@ -74,5 +74,17 @@ describe('zeigerAusgeblendet', () => {
     expect(zeigerAusgeblendet()).toBe(true);
     hook.unmount();
     expect(zeigerAusgeblendet()).toBe(false);
+  });
+
+  it('lässt sich ohne Fensterereignis wecken (Controller, eingabeMelden)', () => {
+    vi.useFakeTimers();
+    const hook = renderHook(() => useIdleHide());
+    act(() => { vi.advanceTimersByTime((IDLE_HIDE_SEC + 1) * 1000); });
+    expect(zeigerAusgeblendet()).toBe(true);
+    act(() => { eingabeMelden(); });
+    expect(zeigerAusgeblendet()).toBe(false);
+    hook.unmount();
+    // Ohne eingehängten Wächter bleibt der Aufruf folgenlos.
+    expect(() => { eingabeMelden(); }).not.toThrow();
   });
 });

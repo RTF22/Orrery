@@ -58,6 +58,18 @@ let zeigerAus = false;
 /** Ist der Mauszeiger gerade wegen Untätigkeit ausgeblendet? */
 export const zeigerAusgeblendet = (): boolean => zeigerAus;
 
+/** Weckt den eingehängten Wächter; null, solange useIdleHide nicht läuft. */
+let melden: ((jetztMs: number) => void) | null = null;
+
+/**
+ * Meldet eine Eingabe ohne Fensterereignis an den Ruhewächter (Entwurf Flug und
+ * Controller §5.5): Controller-Eingaben halten Oberfläche, Mauszeiger und
+ * Fadenkreuz sichtbar. Ohne eingehängten Wächter geschieht nichts.
+ */
+export function eingabeMelden(): void {
+  melden?.(Date.now());
+}
+
 /**
  * Verbindet den Wächter mit den Ereignissen des Fensters und liefert, ob
  * gerade Ruhe herrscht. Der Mauszeiger wird über eine Klasse am
@@ -73,6 +85,7 @@ export function useIdleHide(): boolean {
       onActive: () => { zeigerAus = false; setUntaetig(false); },
       onTick: (jetztMs) => { resumeIfIdle(jetztMs); },
     });
+    melden = (jetztMs) => { waechter.handleInput(jetztMs); };
 
     const beiEingabe = (e: Event): void => {
       // Die Bedienung des Kino-Modus zählt nicht als Störung — sonst hielte
@@ -95,6 +108,7 @@ export function useIdleHide(): boolean {
       for (const name of EINGABE_EREIGNISSE) {
         window.removeEventListener(name, beiEingabe);
       }
+      melden = null;
       waechter.dispose();
       zeigerAus = false;
     };

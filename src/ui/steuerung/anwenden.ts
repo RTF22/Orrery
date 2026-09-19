@@ -4,13 +4,16 @@ import { scaledPositionAt } from '../../sim/scale';
 import { SCENES } from '../../data/scenes';
 import { plannedSceneAt } from '../../sim/director';
 import {
-  begrenze, blickAus, flugSchritt, fluggeschwindigkeit, koerperNaechstDerMitte, koerperStaende, kugelUm, laenge,
-  mindesthoehe, minus, plus, waehleBezug, ELEVATION_GRENZE, MAX_DISTANCE_KM, MIN_DISTANCE_KM,
+  begrenze, blickAus, blickDrehen, flugSchritt, fluggeschwindigkeit, koerperNaechstDerMitte, koerperStaende, kugelUm,
+  laenge, mindesthoehe, minus, plus, waehleBezug, ELEVATION_GRENZE, MAX_DISTANCE_KM, MIN_DISTANCE_KM,
 } from '../../render/camera/flug';
 import type { Absicht, GezeigtePose } from '../../render/camera/flug';
-import { cinemaAktiv, stopCinema } from '../cinemaControl';
+import { cinemaAktiv, noteUserInput, stopCinema } from '../cinemaControl';
 import { fahrtAbbrechen } from '../kamerafahrt';
 import { blickzielVon } from '../../render/camera/cinema';
+import { eingabeMelden } from '../idle';
+import { padAuswerten, PAD } from './gamepad';
+import type { PadAbsicht, PadBild, PadRoh, Stick } from './gamepad';
 import { tastenAbsicht } from './tastatur';
 import type { Tastenstand } from './tastatur';
 
@@ -52,6 +55,8 @@ export interface SteuerungUmgebung {
   tasten(): Tastenstand;
   /** Gezeigte Kameralage des letzten Bildes samt jd (render/camera/controller.ts). */
   letztePose(): GezeigtePose | null;
+  /** Controller dieses Bildes (Leser aus gamepad.ts); ohne ihn gibt es keinen. */
+  pad?(): PadRoh | null;
 }
 
 /** Körper, auf den die geplante Szene des Kinos blickt (Nachtrag §13.2). */
@@ -89,6 +94,14 @@ export function flugStarten(pose: GezeigtePose): void {
 export const DREH_AZIMUT_JE_S = Math.PI / 3;
 export const DREH_ELEVATION_JE_S = Math.PI / 4;
 export const ZOOM_JE_S = 2;
+/** Controller (§5.2): Blick mit dem linken Stick im Flug und Drehen mit LB, je bei vollem Ausschlag. */
+export const STICK_BLICK_JE_S = Math.PI / 2;
+export const STICK_DREH_JE_S = Math.PI / 2;
+
+/** Drehraten um den Körper in rad/s: seitlich (Azimut) sowie auf und ab (Elevation). */
+interface Drehraten { azimut: number; elevation: number }
+const TASTEN_RATEN: Drehraten = { azimut: DREH_AZIMUT_JE_S, elevation: DREH_ELEVATION_JE_S };
+const PAD_RATEN: Drehraten = { azimut: STICK_DREH_JE_S, elevation: STICK_DREH_JE_S };
 
 /**
  * Heftet die Kamera an einen Körper, mit Abstand und Winkeln der gezeigten
@@ -104,13 +117,14 @@ export function heftenUm(id: string, pose: GezeigtePose): void {
 }
 
 /**
- * Ein Bild Drehen mit Shift (§4.2). Aus Flug, Frei und Kino wird der Körper
- * nächst der Bildmitte Ziel; in Geheftet und Folgen bleibt das Ziel, das dort
- * ohnehin in der Mitte steht (ein vorbeiziehender Mond wird so nicht Ziel).
- * Folgen wird Geheftet. Ohne Körper vor der Kamera bleibt der Modus, wie er
- * war — ein begonnenes Kino endet trotzdem (stopCinema lief schon vorher).
+ * Ein Bild Drehen mit Shift oder LB (§4.2). Aus Flug, Frei und Kino wird der
+ * Körper nächst der Bildmitte Ziel; in Geheftet und Folgen bleibt das Ziel,
+ * das dort ohnehin in der Mitte steht (ein vorbeiziehender Mond wird so nicht
+ * Ziel). Folgen wird Geheftet. Ohne Körper vor der Kamera bleibt der Modus,
+ * wie er war — ein begonnenes Kino endet trotzdem (stopCinema lief schon
+ * vorher).
  */
-function drehen(dt: number, absicht: Absicht, u: SteuerungUmgebung): void {
+function drehen(dt: number, absicht: Absicht, raten: Drehraten, u: SteuerungUmgebung): void {
   const modus = useStore.getState().camera.mode;
   if (modus !== 'attached') {
     const pose = u.letztePose();
@@ -129,9 +143,9 @@ function drehen(dt: number, absicht: Absicht, u: SteuerungUmgebung): void {
   }
   const { camera, setCamera } = useStore.getState();
   setCamera({
-    azimuth: camera.azimuth + absicht.seit * DREH_AZIMUT_JE_S * dt,
+    azimuth: camera.azimuth + absicht.seit * raten.azimut * dt,
     elevation: begrenze(
-      camera.elevation + absicht.hoch * DREH_ELEVATION_JE_S * dt, -ELEVATION_GRENZE, ELEVATION_GRENZE,
+      camera.elevation + absicht.hoch * raten.elevation * dt, -ELEVATION_GRENZE, ELEVATION_GRENZE,
     ),
     distance: begrenze(camera.distance * ZOOM_JE_S ** (-absicht.vor * dt), MIN_DISTANCE_KM, MAX_DISTANCE_KM),
   });
@@ -172,30 +186,108 @@ function flugNachfuehren(jd: number, dt: number, absicht: Absicht | null): void 
 }
 
 /**
- * Je Bild vor dem Kino-Takt (Entwurf §6.2). Gehaltene Flugtasten ohne Shift
- * starten den Flug an der gezeigten Lage und fliegen; im Flug laufen
- * Mindesthöhe und Bezugswahl auch ohne Eingabe. Mit Shift dreht die Kamera
- * um den Körper nächst der Bildmitte (§4.2).
+ * Drehen und danach — falls der Flug bleibt, weil kein Körper gefunden wurde —
+ * Bezugswahl und Mindesthöhe, je Bild auch ohne Eingabe (M1, §3.3).
  */
-export function steuerungTakt(jd: number, dt: number, u: SteuerungUmgebung): void {
+function drehenUndNachfuehren(
+  jd: number, dt: number, absicht: Absicht, raten: Drehraten, u: SteuerungUmgebung,
+): void {
+  drehen(dt, absicht, raten, u);
+  if (useStore.getState().camera.mode === 'fly') flugNachfuehren(jd, dt, null);
+}
+
+/**
+ * Fliegen (§4.1, §5.2): startet den Flug an der gezeigten Lage, lenkt den
+ * Blick mit dem linken Stick und macht den Flugschritt.
+ */
+function fliegen(jd: number, dt: number, absicht: Absicht, blick: Stick | null, u: SteuerungUmgebung): void {
+  if (useStore.getState().camera.mode !== 'fly') {
+    const pose = u.letztePose();
+    if (pose === null) return;
+    flugStarten(pose);
+  }
+  if (blick !== null && (blick.x !== 0 || blick.y !== 0)) {
+    const { camera, setCamera } = useStore.getState();
+    // Wie in Spielen: rechts = nach rechts schauen (yaw sinkt), oben = nach
+    // oben schauen; die y-Achse der API zählt nach unten.
+    const neu = blickDrehen(camera.fly, -blick.x * STICK_BLICK_JE_S * dt, -blick.y * STICK_BLICK_JE_S * dt);
+    setCamera({ fly: { ...camera.fly, ...neu } });
+  }
+  flugNachfuehren(jd, dt, absicht);
+}
+
+/** Gedrückte Tasten des letzten Controllerbildes; null vor dem ersten Auftauchen. */
+let padVorher: boolean[] | null = null;
+let lbVorher = false;
+/** LB wurde losgelassen, während Stick oder Trigger lenkten (Nachtrag §13.3). */
+let padGesperrt = false;
+
+/** Vergisst den Controller: beim Trennen und für Tests. Das nächste Auftauchen gilt wieder als erstes. */
+export function padZuruecksetzen(): void {
+  padVorher = null;
+  lbVorher = false;
+  padGesperrt = false;
+}
+
+const lenkt = (a: PadAbsicht): boolean => a.links.x !== 0 || a.links.y !== 0 || a.vor !== 0;
+const bewegt = (a: PadAbsicht): boolean => lenkt(a) || a.rechts.x !== 0 || a.rechts.y !== 0;
+
+/**
+ * Liest den Controller, führt Vorzustand und LB-Sperre und meldet Eingaben
+ * (§5.5), weil der Controller keine Fensterereignisse auslöst: jede an den
+ * Ruhewächter; jede außer Menü/Start und RB hält ein Kino an, wie C und N;
+ * jede außer A und B bricht eine Kamerafahrt ab — A und B starten selbst
+ * eine. Liefert null ohne Controller und beim ersten Auftauchen.
+ */
+function padTakt(u: SteuerungUmgebung): PadBild | null {
+  const roh = u.pad?.() ?? null;
+  if (roh === null) {
+    padZuruecksetzen();
+    return null;
+  }
+  const erstes = padVorher === null;
+  const { bild, gedrueckt } = padAuswerten(roh, padVorher);
+  padVorher = gedrueckt;
+  if (erstes) return null;
+  const a = bild.absicht;
+  if (lbVorher && !a.lb && lenkt(a)) padGesperrt = true;
+  if (!lenkt(a)) padGesperrt = false;
+  lbVorher = a.lb;
+  if (bild.eingabe) {
+    eingabeMelden();
+    if (bewegt(a) || bild.flanken.some((t) => t !== PAD.MENUE && t !== PAD.RB)) noteUserInput();
+    if (bewegt(a) || bild.flanken.some((t) => t !== PAD.A && t !== PAD.B)) fahrtAbbrechen();
+  }
+  return bild;
+}
+
+/** Bewegung eines Bildes, die Tastatur vor dem Controller. */
+function bewegen(jd: number, dt: number, u: SteuerungUmgebung, bild: PadBild | null): void {
   const stand = u.tasten();
-  const gedrueckt = stand.gehalten.size > 0;
-  if (gedrueckt && !stand.shift) {
-    if (useStore.getState().camera.mode !== 'fly') {
-      const pose = u.letztePose();
-      if (pose === null) return;
-      flugStarten(pose);
-    }
-    flugNachfuehren(jd, dt, tastenAbsicht(stand.gehalten));
+  if (stand.gehalten.size > 0) {
+    const absicht = tastenAbsicht(stand.gehalten);
+    if (stand.shift) drehenUndNachfuehren(jd, dt, absicht, TASTEN_RATEN, u);
+    else fliegen(jd, dt, absicht, null, u);
     return;
   }
-  if (gedrueckt) {
-    drehen(dt, tastenAbsicht(stand.gehalten), u);
-    // Shift ohne getroffenen Körper lässt drehen den Flug unverändert (M1):
-    // Bezugswahl und Mindesthöhe laufen trotzdem, je Bild und auch ohne
-    // Eingabe (Entwurf §3.3).
-    if (useStore.getState().camera.mode === 'fly') flugNachfuehren(jd, dt, null);
+  const a = bild?.absicht;
+  if (a !== undefined && lenkt(a) && !padGesperrt) {
+    // LB wirkt wie Shift (§5.2): Stick rechts = Kamera nach rechts, oben = nach
+    // oben (die y-Achse der API zählt nach unten), RT heran, LT weiter weg.
+    if (a.lb) drehenUndNachfuehren(jd, dt, { vor: a.vor, seit: a.links.x, hoch: -a.links.y }, PAD_RATEN, u);
+    else fliegen(jd, dt, { vor: a.vor, seit: 0, hoch: 0 }, a.links, u);
     return;
   }
   if (useStore.getState().camera.mode === 'fly') flugNachfuehren(jd, dt, null);
+}
+
+/**
+ * Je Bild vor dem Kino-Takt (Entwurf §6.2). Gehaltene Flugtasten ohne Shift
+ * sowie linker Stick oder Trigger ohne LB starten den Flug an der gezeigten
+ * Lage und fliegen; im Flug laufen Mindesthöhe und Bezugswahl auch ohne
+ * Eingabe. Mit Shift oder LB dreht die Kamera um den Körper nächst der
+ * Bildmitte (§4.2, §5.2).
+ */
+export function steuerungTakt(jd: number, dt: number, u: SteuerungUmgebung): void {
+  bewegen(jd, dt, u, padTakt(u));
 }

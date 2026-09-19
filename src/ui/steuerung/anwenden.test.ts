@@ -1,11 +1,15 @@
 // @vitest-environment jsdom
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { act, renderHook } from '@testing-library/react';
 import {
-  steuerungTakt, tempoAendern, tempoAbonnieren, tempoFaktor, tempoZuruecksetzen,
+  steuerungTakt, tempoAendern, tempoAbonnieren, tempoFaktor, tempoZuruecksetzen, padZuruecksetzen,
   TEMPO_START, TEMPO_MIN, TEMPO_MAX,
 } from './anwenden';
 import type { SteuerungUmgebung } from './anwenden';
 import type { Flugtaste } from './tastatur';
+import { PAD } from './gamepad';
+import type { PadRoh } from './gamepad';
+import { padAttrappe } from './padAttrappe';
 import { useStore, DEFAULT_STATE } from '../../store';
 import { bodies, bodyIndex } from '../../data';
 import { scaledPositionAt, scaledRadius } from '../../sim/scale';
@@ -14,6 +18,7 @@ import type { GezeigtePose } from '../../render/camera/flug';
 import { startCinema, stopCinema } from '../cinemaControl';
 import { fahreZu, fahrtAbbrechen, fahrtLaeuft } from '../kamerafahrt';
 import { SCENES } from '../../data/scenes';
+import { IDLE_HIDE_SEC, useIdleHide, zeigerAusgeblendet } from '../idle';
 
 const jd = DEFAULT_STATE.time.jd;
 const s = DEFAULT_STATE.scale;
@@ -39,11 +44,21 @@ const weltlage = () => {
   return plus(lage(fly.refId), fly);
 };
 
+/** Gezeigte Lage 2·10⁷ km sonnenseitig vor dem Körper, Blick um `versatzKm` an seiner Mitte vorbei. */
+function vorKoerper(id: string, versatzKm = 2e5): GezeigtePose {
+  const k = lage(id);
+  const aussen = normiert(k);
+  const quer = normiert(kreuz(aussen, { x: 0, y: 0, z: 1 }));
+  const von = minus(k, mal(aussen, 2e7));
+  return { positionKm: von, blick: normiert(minus(plus(k, mal(quer, versatzKm)), von)), jd };
+}
+
 beforeEach(() => {
   fahrtAbbrechen();
   stopCinema();
   useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
   tempoZuruecksetzen();
+  padZuruecksetzen();
 });
 
 describe('steuerungTakt: Flug', () => {
@@ -202,15 +217,6 @@ describe('Tempofaktor', () => {
 });
 
 describe('steuerungTakt: Drehen mit Shift', () => {
-  /** Gezeigte Lage 2·10⁷ km sonnenseitig vor dem Körper, Blick um `versatzKm` an seiner Mitte vorbei. */
-  function vorKoerper(id: string, versatzKm = 2e5): GezeigtePose {
-    const k = lage(id);
-    const aussen = normiert(k);
-    const quer = normiert(kreuz(aussen, { x: 0, y: 0, z: 1 }));
-    const von = minus(k, mal(aussen, 2e7));
-    return { positionKm: von, blick: normiert(minus(plus(k, mal(quer, versatzKm)), von)), jd };
-  }
-
   it('heftet aus dem Flug an den Körper nächst der Mitte, ohne die Lage zu ändern', () => {
     // Die Marsmonde stünden sonst womöglich näher an der Achse.
     useStore.getState().toggleVisible('phobos');
@@ -292,5 +298,139 @@ describe('steuerungTakt: Drehen mit Shift', () => {
     const { camera } = useStore.getState();
     expect(camera.mode).toBe('fly');
     expect(camera.fly.refId).toBe('sun');
+  });
+});
+
+describe('steuerungTakt: Controller', () => {
+  const ruhe = padAttrappe();
+  const mitPad = (p: PadRoh | null, pose: GezeigtePose | null): SteuerungUmgebung =>
+    ({ ...umgebung([], pose), pad: () => p });
+  /** Erstes Bild mit neutralem Controller: Das Auftauchen bleibt ohne Wirkung (§5.1). */
+  const anmelden = (pose: GezeigtePose | null = null): void => { steuerungTakt(jd, 0, mitPad(ruhe, pose)); };
+
+  it('bleibt beim ersten Auftauchen ohne Wirkung, auch mit ausgelenktem Stick', () => {
+    steuerungTakt(jd, 0.5, mitPad(padAttrappe({ axes: [1, 0, 0, 0] }), vorErde()));
+    expect(useStore.getState().camera.mode).toBe('free');
+  });
+
+  it('startet mit dem linken Stick den Flug an der gezeigten Lage und lenkt den Blick mit 90°/s wie in Spielen', () => {
+    const pose = vorErde();
+    anmelden(pose);
+    steuerungTakt(jd, 0.5, mitPad(padAttrappe({ axes: [1, 0, 0, 0] }), pose));
+    let { camera } = useStore.getState();
+    expect(camera.mode).toBe('fly');
+    // Rechts = nach rechts schauen: yaw sinkt.
+    expect(camera.fly.yaw).toBeCloseTo(Math.PI - Math.PI / 4, 12);
+    expect(laenge(minus(weltlage(), pose.positionKm))).toBeLessThan(1e-3);
+    // Oben (y der API negativ) = nach oben schauen.
+    steuerungTakt(jd, 0.5, mitPad(padAttrappe({ axes: [0, -1, 0, 0] }), pose));
+    ({ camera } = useStore.getState());
+    expect(camera.fly.pitch).toBeCloseTo(Math.PI / 4, 12);
+  });
+
+  it('fliegt mit RT so schnell wie mit W und mit LT zurück', () => {
+    const pose = vorErde();
+    steuerungTakt(jd, 0.1, umgebung(['KeyW'], pose));
+    const mitW = weltlage();
+    useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
+    anmelden(pose);
+    steuerungTakt(jd, 0.1, mitPad(padAttrappe({ werte: { [PAD.RT]: 1 } }), pose));
+    expect(laenge(minus(weltlage(), mitW))).toBeLessThan(1e-3);
+    steuerungTakt(jd, 0.1, mitPad(padAttrappe({ werte: { [PAD.LT]: 1 } }), pose));
+    expect(laenge(minus(weltlage(), lage('earth')))).toBeGreaterThan(laenge(minus(mitW, lage('earth'))));
+  });
+
+  it('dreht mit LB und Stick um den Körper nächst der Bildmitte mit 90°/s; LB allein tut nichts', () => {
+    useStore.getState().toggleVisible('phobos');
+    useStore.getState().toggleVisible('deimos');
+    const pose = vorKoerper('mars');
+    anmelden(pose);
+    steuerungTakt(jd, 0.5, mitPad(padAttrappe({ gedrueckt: [PAD.LB] }), pose));
+    expect(useStore.getState().camera.mode).toBe('free');
+    steuerungTakt(jd, 0, mitPad(padAttrappe({ gedrueckt: [PAD.LB], axes: [1, 0, 0, 0] }), pose));
+    const vorher = useStore.getState().camera;
+    expect(vorher.mode).toBe('attached');
+    expect(vorher.targetId).toBe('mars');
+    steuerungTakt(jd, 0.5, mitPad(padAttrappe({ gedrueckt: [PAD.LB], axes: [1, 0, 0, 0] }), pose));
+    expect(useStore.getState().camera.azimuth).toBeCloseTo(vorher.azimuth + Math.PI / 4, 12);
+  });
+
+  it('fährt mit LB und RT heran, Faktor 2 je Sekunde', () => {
+    useStore.getState().setCamera({ mode: 'attached', targetId: 'earth', distance: 1e6 });
+    const pose = vorKoerper('earth');
+    anmelden(pose);
+    steuerungTakt(jd, 1, mitPad(padAttrappe({ gedrueckt: [PAD.LB], werte: { [PAD.RT]: 1 } }), pose));
+    expect(useStore.getState().camera.distance).toBeCloseTo(5e5, 6);
+  });
+
+  it('sperrt Stick und Trigger nach dem Loslassen von LB, bis sie in der Totzone waren (Nachtrag §13.3)', () => {
+    useStore.getState().setCamera({ mode: 'attached', targetId: 'earth', distance: 1e6 });
+    const pose = vorKoerper('earth');
+    anmelden(pose);
+    steuerungTakt(jd, 0.1, mitPad(padAttrappe({ gedrueckt: [PAD.LB], axes: [1, 0, 0, 0] }), pose));
+    steuerungTakt(jd, 0.1, mitPad(padAttrappe({ axes: [1, 0, 0, 0] }), pose));
+    expect(useStore.getState().camera.mode).toBe('attached');
+    steuerungTakt(jd, 0.1, mitPad(ruhe, pose));
+    steuerungTakt(jd, 0.1, mitPad(padAttrappe({ axes: [1, 0, 0, 0] }), pose));
+    expect(useStore.getState().camera.mode).toBe('fly');
+  });
+
+  it('meldet jede Controller-Eingabe beim Ruhewächter, auch eine Taste ohne Belegung', () => {
+    vi.useFakeTimers();
+    const hook = renderHook(() => useIdleHide());
+    act(() => { vi.advanceTimersByTime((IDLE_HIDE_SEC + 1) * 1000); });
+    expect(zeigerAusgeblendet()).toBe(true);
+    anmelden();
+    act(() => { steuerungTakt(jd, 0, mitPad(padAttrappe({ gedrueckt: [PAD.X] }), null)); });
+    expect(zeigerAusgeblendet()).toBe(false);
+    hook.unmount();
+    vi.useRealTimers();
+  });
+
+  it('hält mit dem rechten Stick ein laufendes Kino an', () => {
+    useStore.getState().setCinema({ pauseOnInput: true });
+    anmelden();
+    startCinema();
+    steuerungTakt(jd, 0, mitPad(padAttrappe({ axes: [0, 0, 0.5, 0] }), null));
+    expect(useStore.getState().cinema.running).toBe(false);
+    expect(useStore.getState().camera.mode).toBe('cinema');
+  });
+
+  it('bricht mit einem Stick eine laufende Kamerafahrt ab', () => {
+    anmelden();
+    fahreZu('mars', { jetzt: () => 0, anfordern: () => 1, abbrechen: () => { /* von Hand */ } });
+    steuerungTakt(jd, 0, mitPad(padAttrappe({ axes: [0, 0, 0.5, 0] }), null));
+    expect(fahrtLaeuft()).toBe(false);
+  });
+
+  it('beendet mit dem linken Stick ein Kino samt Wiederherstellung und fliegt ab dem gezeigten Bild', () => {
+    useStore.getState().setTime({ rateDaysPerSec: 3 });
+    const pose = vorErde();
+    anmelden(pose);
+    startCinema();
+    useStore.getState().setTime({ rateDaysPerSec: 50 });
+    steuerungTakt(jd, 0, mitPad(padAttrappe({ axes: [0.5, 0, 0, 0] }), pose));
+    const z = useStore.getState();
+    expect(z.cinema.running).toBe(false);
+    expect(z.camera.mode).toBe('fly');
+    expect(z.time.rateDaysPerSec).toBe(3);
+  });
+
+  it('lässt im selben Bild die Tastatur vor dem Controller wirken', () => {
+    const pose = vorErde();
+    anmelden(pose);
+    steuerungTakt(jd, 0.5, { ...umgebung(['KeyW'], pose), pad: () => padAttrappe({ axes: [1, 0, 0, 0] }) });
+    expect(useStore.getState().camera.mode).toBe('fly');
+    expect(useStore.getState().camera.fly.yaw).toBeCloseTo(Math.PI, 12);
+  });
+
+  it('vergisst beim Trennen den Vorzustand: Nach dem Wiederauftauchen wirkt erst das zweite Bild', () => {
+    const pose = vorErde();
+    anmelden(pose);
+    steuerungTakt(jd, 0, mitPad(null, pose));
+    steuerungTakt(jd, 0, mitPad(padAttrappe({ axes: [1, 0, 0, 0] }), pose));
+    expect(useStore.getState().camera.mode).toBe('free');
+    steuerungTakt(jd, 0, mitPad(padAttrappe({ axes: [1, 0, 0, 0] }), pose));
+    expect(useStore.getState().camera.mode).toBe('fly');
   });
 });
