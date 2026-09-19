@@ -39,7 +39,7 @@ In der Fassung von Chiang und Youdin gilt, mit $x$ als Sonnenabstand in AE
 $$\Sigma_\mathrm{g} = 2200\,x^{-3/2}\,\mathrm{g}\,\mathrm{cm}^{-2}, \quad \Sigma_\mathrm{p} = 33\,Z_\mathrm{rel}\,x^{-3/2}\,\mathrm{g}\,\mathrm{cm}^{-2}, \quad T = 120\,x^{-3/7}\,\mathrm{K}$$
 
 Bis 100 AE enthält diese Scheibe 0,03 Sonnenmassen. $Z_\mathrm{rel}$ skaliert die kondensierten Stoffe:
-1 mit allen Eisen, 0,78 oberhalb von etwa 41 K, wo Methaneis verdampft, und 0,33 oberhalb von etwa
+1, wenn alle Eise kondensiert sind, 0,78 oberhalb von etwa 41 K, wo Methaneis verdampft, und 0,33 oberhalb von etwa
 182 K, wo auch Wasser und alle übrigen Eise fehlen (Kondensationsdaten nach Lodders, zitiert bei
 Chiang und Youdin). Das Temperaturprofil gilt für die Mittelebene einer passiven, nur vom Stern
 beheizten Scheibe; turbulente Akkretion kann sie wärmer machen. Beobachtungen bestimmen $T(r)$ über
@@ -59,31 +59,30 @@ Planetesimalbildung aus verschiedenen Quellregionen auslösen
 
 ## Vom Staub zu Planetesimalen
 
-Um Planetesimale zu bilden, müssen Staubkörner unter einem Mikrometer in wenigen Millionen Jahren um
-mehr als zwölf Größenordnungen wachsen ([Andrews 2020](literatur:andrews-2020)). Das Gas wird von
+Um Planetesimale zu bilden, müssen Staubkörner unter einem Mikrometer in wenigen Millionen Jahren im
+Durchmesser um mehr als zwölf Größenordnungen wachsen ([Andrews 2020](literatur:andrews-2020)). Das Gas wird von
 seinem nach außen fallenden Druck gestützt und umläuft den Stern um $\eta\,v_\mathrm{K}$ langsamer als
 keplersch, mit $\eta\,v_\mathrm{K} \sim c_\mathrm{s}^2/v_\mathrm{K}$, im MMSN etwa 25 m/s. Ein
 Teilchen spürt Gegenwind, verliert Drehimpuls und driftet nach innen
-([Chiang und Youdin 2010](literatur:chiang-2010), Gl. 10 und 15):
+([Chiang und Youdin 2010](literatur:chiang-2010), Gl. 8 und 13):
 
 $$v_r = -\frac{2\,\mathrm{St}}{1 + \mathrm{St}^2}\,\eta\,v_\mathrm{K}, \quad \mathrm{St} = \Omega_\mathrm{K}\,t_\mathrm{s}$$
 
 Mit der Stoppzeit $t_\mathrm{s}$ ist die Stokes-Zahl $\mathrm{St}$ dimensionslos. Die Drift ist am
-schnellsten bei $\mathrm{St} = 1$, im MMSN für Körper von 35 cm bei 1 AE bis 120 cm bei 7 AE; bei 1 AE
-driften sie auf einer Zeitskala von nur etwa 200 Jahren zum Stern. Das ist die Drift- oder
-Meterbarriere; zudem haften solche Brocken schlecht aneinander
+schnellsten bei $\mathrm{St} = 1$; für Körper der Dichte $1\,\mathrm{g}\,\mathrm{cm}^{-3}$ in einer
+Scheibe von doppelter MMSN-Masse sind das 35 cm bei 1 AE bis 120 cm bei 7 AE, und bei 1 AE driften sie
+auf einer Zeitskala von nur etwa 200 Jahren zum Stern ([Chiang und Youdin 2010](literatur:chiang-2010)).
+Das ist die Drift- oder Meterbarriere; zudem haften solche Brocken schlecht aneinander
 ([Johansen et al. 2007](literatur:johansen-2007)). Beobachtungen, vor allem mit dem Interferometer
 ALMA, zeigen deutliche Spuren von Wachstum und Wanderung der Feststoffe, aber in einer glatten
 Gasscheibe wäre die Drift zu schnell. Ringe und Lücken markieren vermutlich lokale Druckmaxima, in denen sich driftende Teilchen fangen; dort kann das
 Verhältnis von Feststoff zu Gas gegen eins gehen ([Andrews 2020](literatur:andrews-2020)).
 
-Hier setzt die Streaming-Instabilität an. Weil Gas und Feststoffe über Reibung aneinander ziehen und
-gegeneinander strömen, wachsen Dichtestörungen der Teilchen an, ohne dass Eigengravitation nötig
-wäre. Am schnellsten wachsen sie bei einer Stoppzeit nahe der dynamischen Zeit und einem
+Bei der Streaming-Instabilität ziehen Gas und Feststoffe über Reibung aneinander und strömen
+gegeneinander; dabei wachsen Dichtestörungen der Teilchen an, ohne dass Eigengravitation nötig wäre. Am schnellsten wachsen sie bei einer Stoppzeit nahe der dynamischen Zeit und einem
 Dichteverhältnis von Feststoff zu Gas von Ordnung eins ([Youdin und Goodman 2005](literatur:youdin-2005)).
-In Simulationen verdichtete sie Brocken aus kurzlebigen Hochdruckgebieten des turbulenten Gases um
-eine weitere Größenordnung zu gravitativ gebundenen Haufen mit Massen von Zwergplaneten, schneller
-als die Drift ([Johansen et al. 2007](literatur:johansen-2007)). Belege liefert der Kuipergürtel: Doppelobjekte aus
+In Simulationen verdichtete sie Brocken um eine weitere Größenordnung zu gravitativ gebundenen Haufen
+mit Massen von Zwergplaneten, schneller als die Drift ([Johansen et al. 2007](literatur:johansen-2007)). Belege liefert der Kuipergürtel: Doppelobjekte aus
 der Streaming-Instabilität sollten zu etwa 80 % prograd umeinander laufen, wie beobachtet
 ([Nesvorný et al. 2019](literatur:nesvorny-2019)). Das Kontaktdoppel Arrokoth, an dem New Horizons im
 Januar 2019 vorbeiflog, ging aus einer sanften Verschmelzung zweier Körper hervor, die sich in einer
@@ -95,23 +94,24 @@ sehr großen Körper; sie entstanden oder entwickelten sich demnach anders als d
 ## Protoplaneten: oligarchisches Wachstum oder Kieselakkretion
 
 Klassisch wachsen Planetesimale durch Stöße, zuerst im Runaway, dann oligarchisch: Benachbarte
-Protoplaneten ähnlicher Masse halten Abstände von typisch zehn Hill-Radien, während die meisten
-Planetesimale klein bleiben ([Kokubo und Ida 1998](literatur:kokubo-1998)). Hat ein Protoplanet einen
-Ring der Breite $b\,r_\mathrm{H}$ aufgesammelt, endet sein Wachstum bei der Isolationsmasse (Herleitung
-aus $M = 2\pi a\,b\,r_\mathrm{H}\,\Sigma_\mathrm{p}$, Hill-Radius nach
-[Chiang und Youdin 2010](literatur:chiang-2010)):
+Protoplaneten ähnlicher Masse halten Abstände von typisch zehn Hill-Radien
+([Kokubo und Ida 1998](literatur:kokubo-1998)). Hat ein Protoplanet den
+Ring der Breite $b\,r_\mathrm{H}$ um seine Bahn aufgesammelt, endet sein Wachstum bei der
+Isolationsmasse $M_\mathrm{iso} \simeq 2\pi a\,b\,r_\mathrm{H}\,\Sigma_\mathrm{p}$. Mit dem Hill-Radius
+zweier benachbarter Protoplaneten gleicher Masse und $b \approx 10$ wie in N-Körper-Simulationen
+([Kokubo und Genda 2010](literatur:kokubo-2010)) folgt
 
-$$r_\mathrm{H} = a \left(\frac{M}{3 M_\odot}\right)^{1/3}, \quad M_\mathrm{iso} = \frac{(2\pi\,b\,a^2\,\Sigma_\mathrm{p})^{3/2}}{(3 M_\odot)^{1/2}}$$
+$$r_\mathrm{H} = a \left(\frac{2 M_\mathrm{iso}}{3 M_\odot}\right)^{1/3}, \quad M_\mathrm{iso} = (2\pi\,b\,a^2\,\Sigma_\mathrm{p})^{3/2} \left(\frac{2}{3 M_\odot}\right)^{1/2}$$
 
-Mit $b = 10$ und dem MMSN oben ergibt das bei 1 AE ohne Eis ($Z_\mathrm{rel} = 0{,}33$) 0,13
-Erdmassen und bei 5,2 AE mit Wassereis ($Z_\mathrm{rel} = 0{,}78$) 1,6 Erdmassen; Chiang und Youdin
-setzen für die Ringbreite etwa fünf Hill-Radien an, was die Massen um den Faktor 2,8 senkt. Für
-Jupiters Kern ist das zu wenig. Das Kernakkretionsmodell von Pollack et al. braucht bei Jupiter eine
+Im MMSN oben ergibt das bei 1 AE 0,18 Erdmassen, wenn man wie Chiang und Youdin an der Erdbahn ohne
+Eis rechnet ($Z_\mathrm{rel} = 0{,}33$, so normieren sie Gl. 2; die passive Scheibe wäre dort schon kalt
+genug für Eis), und bei 5,2 AE mit Wassereis ($Z_\mathrm{rel} = 0{,}78$) 2,3 Erdmassen. Für einen Jupiterkern von etwa zehn Erdmassen ist das
+zu wenig. Das Kernakkretionsmodell von Pollack et al. braucht bei Jupiter eine
 Oberflächendichte der Planetesimale von etwa $10\,\mathrm{g}\,\mathrm{cm}^{-2}$, nach ihrer Angabe das
 Drei- bis Vierfache des MMSN, und ergibt dann Bildungszeiten von 1 bis 10 Millionen Jahren für Jupiter
-und Saturn und von 2 bis 16 Millionen Jahren für Uranus
+und Saturn
 ([Pollack et al. 1996](literatur:pollack-1996)). Mit dieser Dichte liefert die Formel oben bei 5,2 AE
-etwa 16 Erdmassen.
+etwa 23 Erdmassen.
 
 Kieselakkretion ändert die Rechnung. Kiesel von Zentimetergröße sind lose an das Gas gekoppelt; die
 Gasreibung vergrößert ihren Einfangquerschnitt drastisch, und in der Hill-Sphäre eines Kerns werden
@@ -128,9 +128,6 @@ bleiben dort hängen. In einer Scheibe mit der relativen Skalenhöhe $h$ gilt
 ([Lambrechts et al. 2014](literatur:lambrechts-2014), Gl. 12 und Abschnitt 4.1)
 
 $$M_\mathrm{PIM} \approx 20\,M_\oplus \left(\frac{h}{0{,}05}\right)^3, \quad h = \frac{H}{a}$$
-
-In einer völlig reibungsfreien Scheibe liegt der Wert wahrscheinlich um höchstens einen Faktor zwei
-tiefer.
 
 ## Riesenplaneten und Kernakkretion
 
@@ -155,7 +152,11 @@ Nullpunkt der Chronologie sind die Kalzium-Aluminium-reichen Einschlüsse (CAI),
 Festkörper. Uran-korrigierte Blei-Blei-Alter ergeben $4567{,}30 \pm 0{,}16$ Millionen Jahre; die
 Chondrenbildung begann gleichzeitig mit den CAI und dauerte etwa 3 Millionen Jahre
 ([Connelly et al. 2012](literatur:connelly-2012)). Bouvier und Wadhwa datierten einen CAI auf 4568,2
-Millionen Jahre ([Bouvier und Wadhwa 2010](literatur:bouvier-2010)).
+Millionen Jahre ([Bouvier und Wadhwa 2010](literatur:bouvier-2010)). Blei-Blei-Alter hängen am
+Verhältnis ²³⁸U/²³⁵U. Es wurde bis 2010 in allen Datierungen als einheitlich 137,88 angenommen,
+schwankt in CAI aber, was Alter um bis zu 5 Millionen Jahre verschieben kann; die erste Datierung eines
+CAI mit gemessenem Verhältnis ergab $4567{,}18 \pm 0{,}50$ Millionen Jahre
+([Amelin et al. 2010](literatur:amelin-2010)).
 
 Relative Alter liefern kurzlebige, heute ausgestorbene Nuklide. Ist $R$ das Verhältnis eines solchen
 Nuklids zu einem stabilen Isotop desselben Elements beim Schließen einer Probe und $R_0$ sein Wert in
@@ -177,23 +178,31 @@ Eisenmeteorite wahrscheinlich etwa 0,1 bis 0,3 Millionen Jahre nach den CAI und 
 über rund eine Million Jahre ab ([Kruijer et al. 2014](literatur:kruijer-2014)). [Mars](objekt:mars)
 erreichte nach einem genauer bestimmten Hf/W-Verhältnis seines Mantels die halbe heutige Größe in
 $1{,}8_{-1{,}0}^{+0{,}9}$ Millionen Jahren oder weniger, passend zu einem gestrandeten Embryo
-([Dauphas und Pourmand 2011](literatur:dauphas-2011)); ältere Rechnungen ließen für seine Kernbildung
-0 bis 20 Millionen Jahre offen ([Kleine et al. 2009](literatur:kleine-2009)). Für die
+([Dauphas und Pourmand 2011](literatur:dauphas-2011)). Für die
 [Erde](objekt:earth) reichen Wolfram-Modellalter der Kernbildung von etwa 30 bis über 100 Millionen
 Jahre nach den CAI, weil sie empfindlich von großen Einschlägen und von der Frage abhängen, wie weit
-sich die Kerne der Einschlagkörper mit dem Mantel ausglichen. Die gleichen ¹⁸²W/¹⁸⁴W-Verhältnisse von
-Mond- und Erdmantel sprechen dafür, dass der Mond bildende Einschlag erst nach dem Aussterben von
-¹⁸²Hf kam, mehr als etwa 50 Millionen Jahre nach den CAI, sofern sich die Hf/W-Verhältnisse von Mond
-und Erde um mehr als etwa 10 % unterscheiden ([Kleine et al. 2009](literatur:kleine-2009)).
+sich die Kerne der Einschlagkörper mit dem Mantel ausglichen. Aus den damals als gleich
+gemessenen ¹⁸²W/¹⁸⁴W-Verhältnissen von Mond- und Erdmantel schlossen Kleine et al., dass der Mond
+bildende Einschlag erst nach dem Aussterben von ¹⁸²Hf kam, mehr als etwa 50 Millionen Jahre nach den
+CAI, sofern sich die Hf/W-Verhältnisse von Mond und Erde um mehr als etwa 10 % unterscheiden
+([Kleine et al. 2009](literatur:kleine-2009)). Genauere Messungen von 2015 zeigen beim Mond einen
+Überschuss an ¹⁸²W von $20{,}6 \pm 5{,}1$ ppm ([Touboul et al. 2015](literatur:touboul-2015))
+beziehungsweise $27 \pm 4$ ppm ([Kruijer et al. 2015](literatur:kruijer-2015)) gegenüber dem heutigen
+Erdmantel. Beide Gruppen führen ihn auf ungleich verteilte späte Akkretion zurück, vor der die Werte
+gleich waren; dass der Rieseneinschlag keinen Unterschied hinterließ, nennen Kruijer et al.
+rätselhaft.
 
 ## Isotopendichotomie und Jupiters frühes Wachstum
 
 Massenunabhängige Isotopenanomalien teilen die Meteoriten in zwei Gruppen: In
 $\varepsilon^{54}\mathrm{Cr}$ gegen $\varepsilon^{50}\mathrm{Ti}$ und gegen $\Delta^{17}\mathrm{O}$
 liegen die kohligen Chondrite (CC) mit großem Abstand von allen übrigen Stoffen (NC). Erde und Mars
-gehören zur NC-Gruppe; nach dem Hebelgesetz beträgt der kohlige Anteil grob 24 % bei der Erde und 9 %
-bei Mars, höchstens etwa 32 % und 18 %. Neben schubweiser Akkretion erwog Warren, ausdrücklich
-spekulativ, eine Grenze zwischen innerem und äußerem Sonnensystem ([Warren 2011](literatur:warren-2011)).
+gehören zur NC-Gruppe; Warren schätzte nach dem Hebelgesetz einen kohligen Anteil von grob 24 % bei
+der Erde und 9 % bei Mars, höchstens etwa 32 % und 18 %, ohne null auszuschließen. Neben schubweiser
+Akkretion erwog er, ausdrücklich spekulativ, eine Grenze zwischen innerem und äußerem Sonnensystem
+([Warren 2011](literatur:warren-2011)). Neuere Abschätzungen kommen für die Erde auf 2 % aus
+Stickstoff- und Wasserstoffisotopen, Mischmodelle für Erde und Mars auf 3 bis 10 %
+([Brasser und Mojzsis 2020](literatur:brasser-2020)).
 Molybdän- und Wolframisotope in Eisenmeteoriten zeigen, dass beide Reservoire von etwa 1 bis etwa 3
 bis 4 Millionen Jahre nach den CAI nebeneinander bestanden und getrennt blieben. Als plausibelste
 Ursache nennen Kruijer et al. eine Lücke, die der junge Jupiter in die Scheibe riss: Sein Kern hätte dann in weniger
@@ -209,9 +218,8 @@ Millionen Jahren, und das Massenverhältnis von Erde und Mars passt. Jupiter lee
 Asteroidengürtel und füllt ihn neu, innen mit Körpern aus 1 bis 3 AE, außen mit Körpern aus dem Bereich
 zwischen und jenseits der Riesenplaneten; das erklärt die deutlichen Unterschiede der Zusammensetzung
 im Gürtel ([Walsh et al. 2011](literatur:walsh-2011)). Voraussetzung ist die 3:2-Resonanz von Jupiter
-und Saturn, in die beide bei konvergenter Wanderung unter Standardbedingungen geraten. Die
-2:1-Resonanz ist in einer massearmen, wenig viskosen Scheibe möglich, die Umkehr dann aber schwerer zu
-erreichen ([Nesvorný 2018](literatur:nesvorny-2018)).
+und Saturn, in die beide bei konvergenter Wanderung unter Standardbedingungen geraten
+([Nesvorný 2018](literatur:nesvorny-2018)).
 
 ## Nach dem Gas: das Nizza-Modell
 
@@ -225,26 +233,25 @@ beschreibt [Bahnresonanzen](thema:resonanzen).
 Das Nizza-Modell fügt eine Instabilität hinzu. In der ursprünglichen Fassung beginnen die
 Riesenplaneten auf fast kreisförmigen, koplanaren Bahnen und kreuzen bei der Wanderung durch eine
 Planetesimalscheibe die 1:2-Resonanz von Jupiter und Saturn. So entstehen die heutigen großen
-Halbachsen, die Exzentrizitäten, die bei Jupiter, Saturn und Uranus bis 6, 9 und 8 % reichen, und die
-Neigungen von Saturn, Uranus und Neptun von bis zu etwa 2° gegen Jupiters mittlere Bahnebene
-([Tsiganis et al. 2005](literatur:tsiganis-2005)). Gomes et al. verbanden die Instabilität mit dem
+Halbachsen, Exzentrizitäten und gegenseitigen Neigungen ([Tsiganis et al. 2005](literatur:tsiganis-2005)). Gomes et al. verbanden die Instabilität mit dem
 späten schweren Bombardement (LHB), einer aus der Petrologie des Mondes erschlossenen Spitze der
 Kraterrate etwa 700 Millionen Jahre nach der Planetenbildung ([Gomes et al. 2005](literatur:gomes-2005)).
 
 Die späteren Varianten beginnen mit einer resonanten Kette, die die Gasphase hinterließ. Damit die
 säkularen Resonanzen die Gesteinsplaneten und den Asteroidengürtel nicht zu stark anregen, muss das
 Umlaufzeitverhältnis $P_6/P_5$ von Saturn zu Jupiter sprunghaft von unter 2,1 auf über 2,3 gewachsen
-sein, vermutlich durch Begegnungen mit einem Eisriesen („springender Jupiter";
-[Nesvorný 2018](literatur:nesvorny-2018)). In fast $10^4$ Simulationen verlief die Instabilität mit
+sein, vielleicht durch Begegnungen mit einem Eisriesen („springender Jupiter"). Bei einer frühen
+Instabilität entfällt die Bedingung für die Gesteinsplaneten, die für den Asteroidengürtel bleibt
+([Nesvorný 2018](literatur:nesvorny-2018)). In fast $10^4$ Simulationen verlief die Instabilität mit
 vier Riesenplaneten und Jupiter und Saturn in 3:2 meist zu heftig und warf mindestens einen Eisriesen
 aus. Besser passte ein zusätzlicher Eisriese von der Masse Uranus' oder Neptuns, den Jupiter hinauswarf,
 am besten mit einer äußeren Scheibe von etwa 20 Erdmassen; selbst dann entsprach das Ergebnis nur mit
 einer Wahrscheinlichkeit von etwa 5 % dem heutigen Sonnensystem
 ([Nesvorný und Morbidelli 2012](literatur:nesvorny-2012)). Die Übersicht von Nesvorný setzt daraus,
 bei erheblichen Unsicherheiten, eine Abfolge zusammen: Neptun anfangs bei etwa 20 bis 25 AE, der
-zusätzliche Eisriese bei etwa 10 AE, eine Planetesimalscheibe bis etwa 30 AE mit 15 bis 20 Erdmassen,
-Neptuns Wanderung über mehr als 10 Millionen Jahre und die Instabilität, als Neptun etwa 27,7 AE
-erreichte. Die zerstreute Scheibe füllte den Kuipergürtel, die gestreute Scheibe, die Oortsche Wolke
+zusätzliche Eisriese bei etwa 10 AE, eine Planetesimalscheibe bis etwa 30 AE mit 15 bis 20 Erdmassen
+und die Instabilität, als Neptun etwa 27,7 AE
+erreichte. Die aufgelöste Planetesimalscheibe füllte den Kuipergürtel, die gestreute Scheibe, die Oortsche Wolke
 und die Jupiter-Trojaner und, mit einer Wahrscheinlichkeit von $5 \cdot 10^{-6}$ je Planetesimal, auch
 den Asteroidengürtel ([Nesvorný 2018](literatur:nesvorny-2018); siehe auch
 [Zwergplaneten](thema:zwergplaneten) und [Kirkwood-Lücken](thema:kirkwood-luecken)).
@@ -253,19 +260,17 @@ den Asteroidengürtel ([Nesvorný 2018](literatur:nesvorny-2018); siehe auch
 
 Nach geochemischen Daten und Modellen endete die Bildung der Gesteinsplaneten wahrscheinlich etwa 30
 bis 100 Millionen Jahre nach der Auflösung der Gasscheibe ([Nesvorný 2018](literatur:nesvorny-2018)).
-Den Abschluss bildete für die Erde der Rieseneinschlag, aus dem der [Mond](objekt:moon) hervorging;
+Den Abschluss bildete für die Erde der Rieseneinschlag, aus dem der [Mond](objekt:moon) hervorging
+([Maurice et al. 2020](literatur:maurice-2020));
 Einschlagsmodelle und Isotopenbefunde stehen unter [Erde](objekt:earth). Sein Zeitpunkt ist strittig:
 Zirkone aus Apollo-14-Proben verlangen einen Mond in den ersten etwa 60 Millionen Jahren
 ([Barboni et al. 2017](literatur:barboni-2017)); ein langlebiger Magmaozean führt dagegen auf
 $4{,}425 \pm 0{,}025$ Milliarden Jahre, rund 140 Millionen Jahre nach den CAI
-([Maurice et al. 2020](literatur:maurice-2020)). Fällt die Instabilität der Riesenplaneten in 60 bis
-100 Millionen Jahre, könnte sie mit dem Einschlag zusammenhängen
-([Avdellidou et al. 2024](literatur:avdellidou-2024)).
+([Maurice et al. 2020](literatur:maurice-2020)).
 
 ## Zeitleiste
 
-Zeiten nach der Bildung der CAI, ohne die Unsicherheit des Nullpunkts; strittige Einträge nennen
-beide Werte:
+Zeiten nach der Bildung der CAI:
 
 | Zeit nach CAI | Ereignis | Beleg |
 |---|---|---|

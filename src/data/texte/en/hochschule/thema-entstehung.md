@@ -36,7 +36,7 @@ their orbits. In the version of Chiang and Youdin, with $x$ as the heliocentric 
 $$\Sigma_\mathrm{g} = 2200\,x^{-3/2}\,\mathrm{g}\,\mathrm{cm}^{-2}, \quad \Sigma_\mathrm{p} = 33\,Z_\mathrm{rel}\,x^{-3/2}\,\mathrm{g}\,\mathrm{cm}^{-2}, \quad T = 120\,x^{-3/7}\,\mathrm{K}$$
 
 Out to 100 AU this disc contains 0.03 solar masses. $Z_\mathrm{rel}$ scales the condensed material: 1
-with all ices, 0.78 above about 41 K, where methane ice sublimates, and 0.33 above about 182 K, where
+when all ices have condensed, 0.78 above about 41 K, where methane ice sublimates, and 0.33 above about 182 K, where
 water and all other ices are lost as well (condensation data after Lodders, as cited by Chiang and
 Youdin). The temperature profile applies to the midplane of a passive disc heated only by the star;
 turbulent accretion can make it warmer. Observations determine $T(r)$ from optically thick lines and
@@ -59,25 +59,25 @@ in size within a few million years ([Andrews 2020](literatur:andrews-2020)). The
 its outward-decreasing pressure and orbits the star slower than Keplerian by $\eta\,v_\mathrm{K}$, with
 $\eta\,v_\mathrm{K} \sim c_\mathrm{s}^2/v_\mathrm{K}$, about 25 m/s in the MMSN. A particle feels a
 headwind, loses angular momentum and drifts inwards
-([Chiang and Youdin 2010](literatur:chiang-2010), eqs. 10 and 15):
+([Chiang and Youdin 2010](literatur:chiang-2010), eqs. 8 and 13):
 
 $$v_r = -\frac{2\,\mathrm{St}}{1 + \mathrm{St}^2}\,\eta\,v_\mathrm{K}, \quad \mathrm{St} = \Omega_\mathrm{K}\,t_\mathrm{s}$$
 
 With the stopping time $t_\mathrm{s}$, the Stokes number $\mathrm{St}$ is dimensionless. The drift is
-fastest at $\mathrm{St} = 1$, which in the MMSN corresponds to bodies of 35 cm at 1 AU up to 120 cm at
-7 AU; at 1 AU they drift towards the star on a timescale of only about 200 years. This is the drift or
-metre barrier; in addition, such boulders stick together poorly
+fastest at $\mathrm{St} = 1$; for bodies of density $1\,\mathrm{g}\,\mathrm{cm}^{-3}$ in a disc of twice
+the MMSN mass this means 35 cm at 1 AU up to 120 cm at 7 AU, and at 1 AU they drift towards the star on
+a timescale of only about 200 years ([Chiang and Youdin 2010](literatur:chiang-2010)). This is the
+drift or metre barrier; in addition, such boulders stick together poorly
 ([Johansen et al. 2007](literatur:johansen-2007)). Observations, above all with the interferometer
 ALMA, show clear signs of growth and migration of the solids, but in a smooth gas disc the drift would
 be too fast. Rings and gaps probably mark local pressure maxima in which drifting particles are trapped; there the ratio of solids to gas can approach
 unity ([Andrews 2020](literatur:andrews-2020)).
 
-This is where the streaming instability comes in. Because gas and solids pull on each other through
-drag and stream against each other, particle density perturbations grow without self-gravity being
-required. They grow fastest for a stopping time close to the dynamical time and a solid-to-gas density
+In the streaming instability, gas and solids pull on each other through drag and stream against each
+other; particle density perturbations then grow without self-gravity being required. They grow fastest for a stopping time close to the dynamical time and a solid-to-gas density
 ratio of order unity ([Youdin and Goodman 2005](literatur:youdin-2005)). In simulations, it concentrated
-boulders from transient high-pressure regions of the turbulent gas by a further order of magnitude
-into gravitationally bound clusters with masses of dwarf planets, faster than the drift
+boulders by a further order of magnitude into gravitationally bound clusters with masses of dwarf
+planets, faster than the drift
 ([Johansen et al. 2007](literatur:johansen-2007)). The Kuiper belt supplies evidence: binaries from the streaming instability should orbit each other
 prograde in about 80 % of cases, as observed ([Nesvorný et al. 2019](literatur:nesvorny-2019)). The
 contact binary Arrokoth, which New Horizons flew past in January 2019, resulted from a gentle merger of
@@ -89,22 +89,24 @@ evolved differently from the other trans-Neptunian objects ([Nesvorný 2018](lit
 ## Protoplanets: oligarchic growth or pebble accretion
 
 Classically, planetesimals grow by collisions, first in runaway and then in oligarchic growth:
-neighbouring protoplanets of similar mass keep separations of typically ten Hill radii, while most
-planetesimals remain small ([Kokubo and Ida 1998](literatur:kokubo-1998)). Once a protoplanet has
-swept up an annulus of width $b\,r_\mathrm{H}$, its growth ends at the isolation mass (derived from
-$M = 2\pi a\,b\,r_\mathrm{H}\,\Sigma_\mathrm{p}$, Hill radius after
-[Chiang and Youdin 2010](literatur:chiang-2010)):
+neighbouring protoplanets of similar mass keep separations of typically ten Hill radii
+([Kokubo and Ida 1998](literatur:kokubo-1998)). Once a protoplanet has
+swept up the annulus of width $b\,r_\mathrm{H}$ around its orbit, its growth ends at the isolation
+mass $M_\mathrm{iso} \simeq 2\pi a\,b\,r_\mathrm{H}\,\Sigma_\mathrm{p}$. With the Hill radius of two
+neighbouring protoplanets of equal mass and $b \approx 10$ as in N-body simulations
+([Kokubo and Genda 2010](literatur:kokubo-2010)) this gives
 
-$$r_\mathrm{H} = a \left(\frac{M}{3 M_\odot}\right)^{1/3}, \quad M_\mathrm{iso} = \frac{(2\pi\,b\,a^2\,\Sigma_\mathrm{p})^{3/2}}{(3 M_\odot)^{1/2}}$$
+$$r_\mathrm{H} = a \left(\frac{2 M_\mathrm{iso}}{3 M_\odot}\right)^{1/3}, \quad M_\mathrm{iso} = (2\pi\,b\,a^2\,\Sigma_\mathrm{p})^{3/2} \left(\frac{2}{3 M_\odot}\right)^{1/2}$$
 
-With $b = 10$ and the MMSN above, this gives 0.13 Earth masses at 1 AU without ice
-($Z_\mathrm{rel} = 0.33$) and 1.6 Earth masses at 5.2 AU with water ice ($Z_\mathrm{rel} = 0.78$);
-Chiang and Youdin take an annulus width of about five Hill radii, which lowers the masses by a factor of
-2.8. For Jupiter's core this is too little. The core accretion model of Pollack et al. requires a
+In the MMSN above this gives 0.18 Earth masses at 1 AU if, like Chiang and Youdin, one calculates without
+ice at Earth's orbit ($Z_\mathrm{rel} = 0.33$, which is how they normalise eq. 2; the passive disc would
+already be cold enough for ice there), and 2.3 Earth masses at 5.2 AU with water ice
+($Z_\mathrm{rel} = 0.78$). For a
+Jupiter core of about ten Earth masses this is too little. The core accretion model of Pollack et al. requires a
 planetesimal surface density of about $10\,\mathrm{g}\,\mathrm{cm}^{-2}$ at Jupiter, by their account
 three to four times the MMSN value, and then yields formation times of 1 to 10 million years for
-Jupiter and Saturn and of 2 to 16 million years for Uranus
-([Pollack et al. 1996](literatur:pollack-1996)). With this density, the formula above gives about 16
+Jupiter and Saturn
+([Pollack et al. 1996](literatur:pollack-1996)). With this density, the formula above gives about 23
 Earth masses at 5.2 AU.
 
 Pebble accretion changes the calculation. Centimetre-sized pebbles are loosely coupled to the gas; gas drag
@@ -121,8 +123,6 @@ becomes super-Keplerian, and drifting pebbles are held up there. In a disc with 
 $h$ ([Lambrechts et al. 2014](literatur:lambrechts-2014), eq. 12 and section 4.1)
 
 $$M_\mathrm{PIM} \approx 20\,M_\oplus \left(\frac{h}{0.05}\right)^3, \quad h = \frac{H}{a}$$
-
-In a completely inviscid disc the value is probably lower by no more than a factor of two.
 
 ## Giant planets and core accretion
 
@@ -145,7 +145,10 @@ The zero point of the chronology is the calcium-aluminium-rich inclusions (CAIs)
 Uranium-corrected lead-lead ages give $4567.30 \pm 0.16$ million years; chondrule formation started
 at the same time as the CAIs and lasted about 3 million years
 ([Connelly et al. 2012](literatur:connelly-2012)). Bouvier and Wadhwa dated one CAI to 4568.2 million
-years ([Bouvier and Wadhwa 2010](literatur:bouvier-2010)).
+years ([Bouvier and Wadhwa 2010](literatur:bouvier-2010)). Lead-lead ages depend on the ²³⁸U/²³⁵U
+ratio. Until 2010 it was assumed to be uniform at 137.88 in all datings, but it varies in CAIs, which can
+shift ages by up to 5 million years; the first dating of a CAI with a measured ratio gave
+$4567.18 \pm 0.50$ million years ([Amelin et al. 2010](literatur:amelin-2010)).
 
 Relative ages come from short-lived, now extinct nuclides. If $R$ is the ratio of such a nuclide to a
 stable isotope of the same element when a sample closes and $R_0$ its value in the CAIs, the interval
@@ -167,23 +170,30 @@ meteorites probably accreted about 0.1 to 0.3 million years after the CAIs and s
 over about one million years ([Kruijer et al. 2014](literatur:kruijer-2014)). [Mars](objekt:mars),
 based on a more precisely determined Hf/W ratio of its mantle, reached half its present size in
 $1.8_{-1.0}^{+0.9}$ million years or less, consistent with a stranded embryo
-([Dauphas and Pourmand 2011](literatur:dauphas-2011)); earlier calculations left 0 to 20 million years
-open for its core formation ([Kleine et al. 2009](literatur:kleine-2009)). For the
+([Dauphas and Pourmand 2011](literatur:dauphas-2011)). For the
 [Earth](objekt:earth), tungsten model ages of core formation range from about 30 to more than 100
 million years after the CAIs, because they depend sensitively on large impacts and on how far the cores
-of the impactors equilibrated with the mantle. The identical ¹⁸²W/¹⁸⁴W ratios of the lunar and
-terrestrial mantles indicate that the Moon-forming impact came only after ¹⁸²Hf had become extinct, more
-than about 50 million years after the CAIs, provided that the Hf/W ratios of Moon and Earth differ by
-more than about 10 % ([Kleine et al. 2009](literatur:kleine-2009)).
+of the impactors equilibrated with the mantle. From the ¹⁸²W/¹⁸⁴W ratios of the lunar and
+terrestrial mantles, then measured as identical, Kleine et al. concluded that the Moon-forming impact
+came only after ¹⁸²Hf had become extinct, more than about 50 million years after the CAIs, provided that
+the Hf/W ratios of Moon and Earth differ by more than about 10 % ([Kleine et al. 2009](literatur:kleine-2009)).
+More precise measurements from 2015 show a lunar ¹⁸²W excess of $20.6 \pm 5.1$ ppm
+([Touboul et al. 2015](literatur:touboul-2015)) and $27 \pm 4$ ppm
+([Kruijer et al. 2015](literatur:kruijer-2015)) relative to the present-day terrestrial mantle. Both
+groups attribute it to disproportional late accretion, before which the values were identical; Kruijer
+et al. call it enigmatic that the giant impact left no difference.
 
 ## Isotopic dichotomy and Jupiter's early growth
 
 Mass-independent isotopic anomalies divide the meteorites into two groups: in
 $\varepsilon^{54}\mathrm{Cr}$ against $\varepsilon^{50}\mathrm{Ti}$ and against $\Delta^{17}\mathrm{O}$,
 the carbonaceous chondrites (CC) lie far apart from all other materials (NC). Earth and Mars belong to
-the NC group; by the lever rule, the carbonaceous fraction is very roughly 24 % for the Earth and 9 %
-for Mars, at most about 32 % and 18 %. Besides episodic accretion, Warren considered, explicitly as
-speculation, a boundary between the inner and outer Solar System ([Warren 2011](literatur:warren-2011)).
+the NC group; by the lever rule, Warren estimated a carbonaceous fraction of very roughly 24 % for the
+Earth and 9 % for Mars, at most about 32 % and 18 %, without excluding zero. Besides episodic accretion,
+he considered, explicitly as speculation, a boundary between the inner and outer Solar System
+([Warren 2011](literatur:warren-2011)). More recent estimates arrive at 2 % for the Earth from nitrogen
+and hydrogen isotopes, and mixing models for Earth and Mars at 3 to 10 %
+([Brasser and Mojzsis 2020](literatur:brasser-2020)).
 Molybdenum and tungsten isotopes in iron meteorites show that both reservoirs coexisted from about 1 to
 about 3 to 4 million years after the CAIs and remained separate. Kruijer et al. name as the most plausible
 cause a gap that the young Jupiter opened in the disc: its core would then have reached about 20 Earth masses in
@@ -199,8 +209,7 @@ million years, and the mass ratio of Earth and Mars fits. Jupiter empties the as
 it, the inner belt with bodies from 1 to 3 AU and the outer belt with bodies from between and beyond the
 giant planets; this explains the marked differences in composition across the belt
 ([Walsh et al. 2011](literatur:walsh-2011)). It requires the 3:2 resonance of Jupiter and Saturn, into
-which both are captured under standard conditions during convergent migration. The 2:1 resonance is
-possible in a low-mass, low-viscosity disc, but the reversal is then harder to achieve
+which both are captured under standard conditions during convergent migration
 ([Nesvorný 2018](literatur:nesvorny-2018)).
 
 ## After the gas: the Nice model
@@ -214,24 +223,24 @@ process is described under [Orbital resonances](thema:resonanzen).
 
 The Nice model adds an instability. In the original version the giant planets start on nearly circular,
 coplanar orbits and, while migrating through a planetesimal disc, Jupiter and Saturn cross their 1:2
-resonance. This produces today's semi-major axes, the eccentricities, which reach up to 6, 9 and 8 % for
-Jupiter, Saturn and Uranus, and the inclinations of Saturn, Uranus and Neptune of up to about 2° to
-Jupiter's mean orbital plane ([Tsiganis et al. 2005](literatur:tsiganis-2005)). Gomes et al. linked the
+resonance. This produces today's semi-major axes, eccentricities and mutual inclinations
+([Tsiganis et al. 2005](literatur:tsiganis-2005)). Gomes et al. linked the
 instability to the Late Heavy Bombardment (LHB), a spike in the cratering rate about 700 million years
 after planet formation inferred from lunar petrology ([Gomes et al. 2005](literatur:gomes-2005)).
 
 The later variants start from a resonant chain left by the gas phase. For the secular resonances not to
 excite the terrestrial planets and the asteroid belt too strongly, the period ratio $P_6/P_5$ of Saturn
-to Jupiter must have jumped from below 2.1 to above 2.3, probably through encounters with an ice giant
-("jumping Jupiter"; [Nesvorný 2018](literatur:nesvorny-2018)). In nearly $10^4$ simulations, the
+to Jupiter must have jumped from below 2.1 to above 2.3, perhaps through encounters with an ice giant
+("jumping Jupiter"). With an early instability the constraint from the terrestrial planets falls away,
+that from the asteroid belt remains ([Nesvorný 2018](literatur:nesvorny-2018)). In nearly $10^4$ simulations, the
 instability with four giant planets and Jupiter and Saturn in 3:2 was mostly too violent and ejected at
 least one ice giant. An additional ice giant with the mass of Uranus or Neptune, ejected by Jupiter,
 fitted better, best with an outer disc of about 20 Earth masses; even then the result matched today's
 Solar System with a probability of only about 5 % ([Nesvorný and Morbidelli 2012](literatur:nesvorny-2012)).
 Nesvorný's review assembles, with considerable uncertainties, a sequence from this: Neptune initially at
 about 20 to 25 AU, the additional ice giant at about 10 AU, a planetesimal disc out to about 30 AU with
-15 to 20 Earth masses, Neptune migrating over more than 10 million years, and the instability when
-Neptune reached about 27.7 AU. The dispersed disc populated the Kuiper belt, the scattered disc, the
+15 to 20 Earth masses and the instability when
+Neptune reached about 27.7 AU. The dispersed planetesimal disc populated the Kuiper belt, the scattered disc, the
 Oort cloud and the Jupiter Trojans and, with a probability of $5 \cdot 10^{-6}$ per planetesimal, the
 asteroid belt as well ([Nesvorný 2018](literatur:nesvorny-2018); see also
 [Dwarf planets](thema:zwergplaneten) and [Kirkwood gaps](thema:kirkwood-luecken)).
@@ -240,18 +249,17 @@ asteroid belt as well ([Nesvorný 2018](literatur:nesvorny-2018); see also
 
 According to geochemical data and models, the formation of the terrestrial planets probably ended
 about 30 to 100 million years after the gas disc dispersed ([Nesvorný 2018](literatur:nesvorny-2018)).
-For the Earth it ended with the giant impact from which the [Moon](objekt:moon) emerged; impact models
+For the Earth it ended with the giant impact from which the [Moon](objekt:moon) emerged
+([Maurice et al. 2020](literatur:maurice-2020)); impact models
 and isotopic findings are described under [Earth](objekt:earth). Its timing is disputed: zircons from
 Apollo 14 samples require a Moon within the first about 60 million years
 ([Barboni et al. 2017](literatur:barboni-2017)); a long-lived magma ocean instead leads to
 $4.425 \pm 0.025$ billion years, about 140 million years after the CAIs
-([Maurice et al. 2020](literatur:maurice-2020)). If the giant-planet instability fell at 60 to 100
-million years, it might be related to the impact ([Avdellidou et al. 2024](literatur:avdellidou-2024)).
+([Maurice et al. 2020](literatur:maurice-2020)).
 
 ## Timeline
 
-Times after the formation of the CAIs, without the uncertainty of the zero point; disputed entries give
-both values:
+Times after the formation of the CAIs:
 
 | Time after CAIs | Event | Source |
 |---|---|---|
