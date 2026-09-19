@@ -341,9 +341,10 @@ Zeiten nach der Bildung der CAI:
   1800 bis 2050. Nur die acht Planeten haben Raten für $a$ und $e$. Linear fortgeschrieben würde die
   Exzentrizität Saturns im Jahr 12 563 null und danach negativ, rückwärts die Neptuns im Jahr
   −14 828; solche Werte weist der Keplerlöser zurück. Orrery begrenzt die Zeit deshalb auf den
-  Julianischen Tag 0 (4713 v. Chr.) bis zum 31. Dezember 9999, der Zeitraffer hält an diesen Rändern
-  an. Darin bleiben die Exzentrizitäten der Planeten zwischen 0 und 1; am kleinsten wird die der
-  Venus mit 0,0035 im Jahr 9999.
+  1. Januar 1 bis zum 31. Dezember 9999, der Zeitraffer hält an diesen Rändern an. Alle Daten stehen
+  im gregorianischen Kalender, auch vor dessen Einführung 1582; der 1. Januar 1 entspricht dem
+  3. Januar 1 im julianischen Kalender. Darin bleiben die Exzentrizitäten der Planeten zwischen 0
+  und 1; am kleinsten wird die der Venus mit 0,0035 im Jahr 9999.
   Über 4,5 Milliarden Jahre zurückgeschrieben ergäben die Raten große Halbachsen von 5228 AE
   für Jupiter und −16 AE für Merkur.
 - **Chaos:** Auch eine vollständige Rechnung könnte den Weg nicht eindeutig zurückverfolgen: Die
