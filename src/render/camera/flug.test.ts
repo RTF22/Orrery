@@ -3,13 +3,14 @@ import {
   blickVektor, rechtsVektor, obenVektor, blickAus, koerperStaende, waehleBezug, hoehe,
   fluggeschwindigkeit, mindesthoehe, laenge, plus, mal, punkt, kreuz, ELEVATION_GRENZE,
   koerperNaechstDerMitte, kugelUm, flugSchritt, blickDrehen, minus, normiert,
-  MIN_DISTANCE_KM, MAX_DISTANCE_KM,
+  MIN_DISTANCE_KM, MAX_DISTANCE_KM, EINFLUSS_DECKEL,
 } from './flug';
 import type { KoerperStand } from './flug';
 import type { Pose } from './flug';
 import { DEFAULT_STATE } from '../../store';
 import { bodies, bodyIndex } from '../../data/index';
-import { scaledPositionAt, scaledRadius } from '../../sim/scale';
+import { scaledPositionAt, scaledRadius, SCALE_PRESETS } from '../../sim/scale';
+import { AU_KM } from '../../sim/orbit';
 
 const jd = DEFAULT_STATE.time.jd;
 const s = DEFAULT_STATE.scale;
@@ -94,6 +95,68 @@ describe('waehleBezug', () => {
 
   it('liefert ohne Körper null', () => {
     expect(waehleBezug({ x: 0, y: 0, z: 0 }, [], 'sun')).toBeNull();
+  });
+});
+
+describe('waehleBezug nach Systemen (Nachtrag §13.1)', () => {
+  const staende = koerperStaende(bodies, bodyIndex, jd, s, {});
+  const erdeStand = staende.find((k) => k.id === 'earth')!;
+
+  it('gibt Sonnenumläufern den Einflussbereich: Hill-Radius mal sizeScale, höchstens der halbe Sonnenabstand', () => {
+    const e = bodyIndex.earth!;
+    const hill = e.orbit!.a * AU_KM * Math.cbrt(e.physical.massKg / (3 * bodyIndex.sun!.physical.massKg));
+    const real = koerperStaende([e], bodyIndex, jd, SCALE_PRESETS.realistisch, {})[0]!;
+    expect(real.einfluss! / hill).toBeCloseTo(1, 12);
+    const kompakt = koerperStaende([e], bodyIndex, jd, SCALE_PRESETS.kompakt, {})[0]!;
+    const deckel = EINFLUSS_DECKEL * laenge(scaledPositionAt('earth', bodyIndex, jd, SCALE_PRESETS.kompakt));
+    expect(kompakt.einfluss! / deckel).toBeCloseTo(1, 12);
+    expect(erdeStand.mutter).toBe('sun');
+    const mond = staende.find((k) => k.id === 'moon')!;
+    expect(mond.mutter).toBe('earth');
+    expect(mond.einfluss).toBeUndefined();
+    expect(staende.find((k) => k.id === 'sun')!.einfluss).toBeUndefined();
+  });
+
+  it('bleibt zwischen Erde und Mond bei der Erde und nimmt dicht vor dem Mond den Mond', () => {
+    const erde = lage('earth');
+    const mond = lage('moon');
+    const richtung = normiert(minus(mond, erde));
+    const d = laenge(minus(mond, erde)) / radius('earth');
+    const auf = (erdradien: number) => plus(erde, mal(richtung, erdradien * radius('earth')));
+    // Vor dem Nachtrag gewann hier ab rund 15 Erdradien die Sonne.
+    expect(waehleBezug(auf(30), staende, null)).toBe('earth');
+    expect(waehleBezug(auf(30), staende, 'earth')).toBe('earth');
+    // Bisher Erde: Der Mond gewinnt erst unter vier Fünfteln des Erdmaßes, rund 11 Erdradien vor ihm.
+    expect(waehleBezug(auf(d - 12), staende, 'earth')).toBe('earth');
+    expect(waehleBezug(auf(d - 8), staende, 'earth')).toBe('moon');
+  });
+
+  it('verlässt das Erdsystem erst jenseits des Rückstellbereichs und tritt unter 1 ein', () => {
+    const aussen = normiert(erdeStand.pos);
+    const bei = (t: number) => plus(erdeStand.pos, mal(aussen, t * erdeStand.einfluss!));
+    expect(waehleBezug(bei(0.9), staende, 'sun')).toBe('earth');
+    expect(waehleBezug(bei(1.1), staende, 'sun')).toBe('sun');
+    expect(waehleBezug(bei(1.1), staende, 'earth')).toBe('earth');
+    expect(waehleBezug(bei(1.3), staende, 'earth')).toBe('sun');
+  });
+
+  it('nimmt bei überlappenden Bereichen das tiefere System, ein bisheriges erst unter vier Fünfteln', () => {
+    const zwei: KoerperStand[] = [
+      { id: 'stern', pos: { x: 0, y: 0, z: 0 }, radius: 100, mutter: null },
+      { id: 'a', pos: { x: 1000, y: 0, z: 0 }, radius: 1, mutter: 'stern', einfluss: 50 },
+      { id: 'b', pos: { x: 1060, y: 0, z: 0 }, radius: 1, mutter: 'stern', einfluss: 40 },
+      { id: 'am', pos: { x: 1010, y: 0, z: 0 }, radius: 0.5, mutter: 'a' },
+    ];
+    // x = 1035: Tiefe in a 35/50 = 0,7, in b 25/40 = 0,625.
+    expect(waehleBezug({ x: 1035, y: 0, z: 0 }, zwei, null)).toBe('b');
+    expect(waehleBezug({ x: 1035, y: 0, z: 0 }, zwei, 'a')).toBe('a');
+    // x = 1045: in a 0,9, in b 0,375 < 0,8 · 0,9 — auch vom Mond am aus gewinnt b.
+    expect(waehleBezug({ x: 1045, y: 0, z: 0 }, zwei, 'am')).toBe('b');
+  });
+
+  it('lässt Monde eines ausgeblendeten Mutterkörpers auf oberster Ebene mitbewerben', () => {
+    const ohneErde = koerperStaende(bodies, bodyIndex, jd, s, { earth: false });
+    expect(waehleBezug(plus(lage('moon'), { x: 0, y: 0, z: 1.5 * radius('moon') }), ohneErde, null)).toBe('moon');
   });
 });
 

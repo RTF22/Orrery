@@ -1,6 +1,7 @@
 import type { Body, BodyIndex, Vec3 } from '../../sim/types';
 import type { ScaleSettings } from '../../sim/scale';
 import { scaledPositionAt, scaledRadius } from '../../sim/scale';
+import { AU_KM } from '../../sim/orbit';
 
 /**
  * Reine Flugmathematik (Entwurf Flug und Controller §3, §4, §6.1): ohne DOM
@@ -20,6 +21,8 @@ export const BEZUG_RUECKSTELLUNG = 0.8;
 export const TEMPO_UNTERGRENZE_RADIEN = 0.05;
 /** Kleinster Abstand vom Mittelpunkt eines sichtbaren Körpers, in dessen Radien (§3.4). */
 export const MINDESTABSTAND_RADIEN = 1.05;
+/** Obergrenze des Einflussbereichs als Anteil des dargestellten Sonnenabstands (Nachtrag §13.1). */
+export const EINFLUSS_DECKEL = 0.5;
 
 /** Blickrichtung, gezählt wie azimuth/elevation: yaw um Ekliptik-Nord, pitch darüber. */
 export interface Blick { yaw: number; pitch: number }
@@ -27,8 +30,17 @@ export interface Blick { yaw: number; pitch: number }
 export interface Pose { positionKm: Vec3; blick: Vec3 }
 /** Gezeigte Lage mit dem jd ihres Bildes (letztePose, Entwurf §6.1): Übergänge rechnen Körperlagen zu diesem jd. */
 export interface GezeigtePose extends Pose { jd: number }
-/** Dargestellte Lage und dargestellter Radius eines sichtbaren Körpers. */
-export interface KoerperStand { id: string; pos: Vec3; radius: number }
+/**
+ * Dargestellte Lage und dargestellter Radius eines sichtbaren Körpers, dazu
+ * sein Mutterkörper und — bei Sonnenumläufern — der dargestellte
+ * Einflussbereich (Nachtrag §13.1). Fehlen beide (Literale in Tests), zählt
+ * der Stand zur obersten Ebene.
+ */
+export interface KoerperStand {
+  id: string; pos: Vec3; radius: number;
+  mutter?: string | null;
+  einfluss?: number;
+}
 
 export const plus = (a: Vec3, b: Vec3): Vec3 => ({ x: a.x + b.x, y: a.y + b.y, z: a.z + b.z });
 export const minus = (a: Vec3, b: Vec3): Vec3 => ({ x: a.x - b.x, y: a.y - b.y, z: a.z - b.z });
@@ -68,28 +80,43 @@ export function blickAus(v: Vec3): Blick {
   return { yaw: Math.atan2(v.y, v.x), pitch: begrenze(pitch, -ELEVATION_GRENZE, ELEVATION_GRENZE) };
 }
 
-/** Dargestellte Lage und Radius aller sichtbaren Körper zu `jd`. */
+/**
+ * Dargestellter Einflussbereich eines Sonnenumläufers (Nachtrag §13.1):
+ * Hill-Radius a · (m / 3M)^(1/3) mit der großen Halbachse zur Epoche,
+ * vergrößert um sizeScale wie die Mondbahnen (sim/scale.ts), höchstens
+ * EINFLUSS_DECKEL mal der dargestellte Sonnenabstand `pos`. Monde und die
+ * Sonne haben keinen.
+ */
+export function einflussbereich(b: Body, index: BodyIndex, pos: Vec3, s: ScaleSettings): number | undefined {
+  const sonne = index.sun;
+  if (b.parent !== 'sun' || b.orbit === null || sonne === undefined) return undefined;
+  const hill = b.orbit.a * AU_KM * Math.cbrt(b.physical.massKg / (3 * sonne.physical.massKg));
+  return Math.min(hill * s.sizeScale, EINFLUSS_DECKEL * laenge(pos));
+}
+
+/** Dargestellte Lage, Radius, Mutterkörper und Einflussbereich aller sichtbaren Körper zu `jd`. */
 export function koerperStaende(
   liste: readonly Body[], index: BodyIndex, jd: number, s: ScaleSettings,
   visible: Record<string, boolean>,
 ): KoerperStand[] {
   return liste
     .filter((b) => visible[b.id] !== false)
-    .map((b) => ({ id: b.id, pos: scaledPositionAt(b.id, index, jd, s), radius: scaledRadius(b, s) }));
+    .map((b) => {
+      const pos = scaledPositionAt(b.id, index, jd, s);
+      return { id: b.id, pos, radius: scaledRadius(b, s), mutter: b.parent, einfluss: einflussbereich(b, index, pos, s) };
+    });
 }
 
 /**
- * Bezugskörper (§3.3): kleinster Abstand in eigenen Radien. Ein anderer als
- * `bisher` gewinnt erst unter BEZUG_RUECKSTELLUNG mal dessen Maß; fehlt
- * `bisher` unter den Ständen (ausgeblendet), gilt der beste sofort.
+ * Kleinster Abstand in eigenen Radien (§3.3). Ein anderer als `bisher` gewinnt
+ * erst unter BEZUG_RUECKSTELLUNG mal dessen Maß; fehlt `bisher` unter den
+ * Kandidaten, gilt der beste sofort.
  */
-export function waehleBezug(
-  p: Vec3, staende: readonly KoerperStand[], bisher: string | null,
-): string | null {
+function naechsterInRadien(p: Vec3, kandidaten: readonly KoerperStand[], bisher: string | null): string | null {
   let bester: KoerperStand | null = null;
   let besterQ = Infinity;
   let bisherQ = Infinity;
-  for (const k of staende) {
+  for (const k of kandidaten) {
     const q = laenge(minus(p, k.pos)) / k.radius;
     if (k.id === bisher) bisherQ = q;
     if (q < besterQ) { besterQ = q; bester = k; }
@@ -97,6 +124,44 @@ export function waehleBezug(
   if (bester === null) return null;
   if (bisher !== null && bisherQ < Infinity && besterQ >= BEZUG_RUECKSTELLUNG * bisherQ) return bisher;
   return bester.id;
+}
+
+/**
+ * Bezugskörper (§3.3, Nachtrag §13.1), zweistufig. Zuerst das System: der
+ * Sonnenumläufer, in dessen Einflussbereich die Lage am tiefsten steht
+ * (t = Abstand / Einflussbereich < 1). Ein bisheriges System bleibt bis
+ * t ≥ 1 / BEZUG_RUECKSTELLUNG, ein anderes gewinnt vorher erst unter
+ * BEZUG_RUECKSTELLUNG · t_bisher. Dann darin der Körper mit dem kleinsten
+ * Abstand in eigenen Radien. Außerhalb jedes Systems konkurrieren die Sonne,
+ * die Sonnenumläufer und Monde ausgeblendeter Mutterkörper. Ohne das hätte im
+ * Schaubild die groß dargestellte Sonne schon wenige Erdradien vor der Erde
+ * gewonnen.
+ */
+export function waehleBezug(
+  p: Vec3, staende: readonly KoerperStand[], bisher: string | null,
+): string | null {
+  const zentren = staende.filter((k) => k.einfluss !== undefined && k.einfluss > 0);
+  const tiefe = (z: KoerperStand): number => laenge(minus(p, z.pos)) / (z.einfluss ?? Infinity);
+  const systemVon = (k: KoerperStand): KoerperStand | null =>
+    zentren.find((z) => z.id === k.id || z.id === k.mutter) ?? null;
+
+  let system: KoerperStand | null = null;
+  let systemT = Infinity;
+  for (const z of zentren) {
+    const t = tiefe(z);
+    if (t < 1 && t < systemT) { system = z; systemT = t; }
+  }
+  const bisherStand = bisher === null ? undefined : staende.find((k) => k.id === bisher);
+  const bisherSystem = bisherStand === undefined ? null : systemVon(bisherStand);
+  if (bisherSystem !== null) {
+    const t = tiefe(bisherSystem);
+    const anderesTiefer = system !== null && system !== bisherSystem && systemT < BEZUG_RUECKSTELLUNG * t;
+    if (t < 1 / BEZUG_RUECKSTELLUNG && !anderesTiefer) system = bisherSystem;
+  }
+  const kandidaten = system === null
+    ? staende.filter((k) => { const eigenes = systemVon(k); return eigenes === null || eigenes === k; })
+    : staende.filter((k) => systemVon(k) === system);
+  return naechsterInRadien(p, kandidaten, bisher);
 }
 
 /** Höhe über der nächsten sichtbaren Oberfläche und Radius dieses Körpers (§3.4). */
