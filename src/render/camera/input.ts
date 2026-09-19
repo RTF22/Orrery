@@ -1,13 +1,10 @@
 import { useStore } from '../../store';
 import { TIPP_SCHWELLE_PX, zeigerartVon } from '../treffer';
 import type { Zeigerart } from '../treffer';
-import { ELEVATION_GRENZE, MIN_DISTANCE_KM, MAX_DISTANCE_KM } from './flug';
+import { ELEVATION_GRENZE, MIN_DISTANCE_KM, MAX_DISTANCE_KM, begrenze } from './flug';
 
 /** Bildschirmbreite entspricht etwa einer halben Umdrehung. */
 const DREH_PRO_PIXEL = Math.PI / 600;
-
-const begrenze = (wert: number, min: number, max: number): number =>
-  Math.min(Math.max(wert, min), max);
 
 /**
  * Zoomt multiplikativ: Ein Rad-Klick verändert den Abstand immer um denselben
