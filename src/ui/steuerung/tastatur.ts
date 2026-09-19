@@ -45,17 +45,22 @@ export function tastaturAnhaengen(fenster: Window = window): Tastatur {
     }
     shift = neu;
   };
+  // Eingabefelder sowie Strg, Alt und Meta bleiben unberührt (§4.4) — auch für
+  // Shift selbst: sonst sperrt ein Großbuchstabe im Datumsfeld eine gehaltene
+  // Flugtaste, und Shift dort schaltete die Kamera ins Drehen.
+  const bleibtUnberuehrt = (e: KeyboardEvent): boolean =>
+    e.ctrlKey || e.altKey || e.metaKey || istEingabefeld(e.target);
   const onKeyDown = (e: KeyboardEvent): void => {
-    shiftSetzen(e.shiftKey);
+    if (!bleibtUnberuehrt(e)) shiftSetzen(e.shiftKey);
     if (!istFlugtaste(e.code)) return;
-    if (e.ctrlKey || e.altKey || e.metaKey || istEingabefeld(e.target)) return;
+    if (bleibtUnberuehrt(e)) return;
     e.preventDefault();
     if (e.repeat) return;
     gesperrt.delete(e.code);
     gehalten.add(e.code);
   };
   const onKeyUp = (e: KeyboardEvent): void => {
-    shiftSetzen(e.shiftKey);
+    if (!bleibtUnberuehrt(e)) shiftSetzen(e.shiftKey);
     if (istFlugtaste(e.code)) {
       gehalten.delete(e.code);
       gesperrt.delete(e.code);
