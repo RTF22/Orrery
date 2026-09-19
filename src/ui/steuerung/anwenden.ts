@@ -9,9 +9,10 @@ import {
 } from '../../render/camera/flug';
 import type { Absicht, GezeigtePose } from '../../render/camera/flug';
 import { cinemaAktiv, noteUserInput, stopCinema } from '../cinemaControl';
-import { fahrtAbbrechen } from '../kamerafahrt';
+import { fahreZu, fahreZuSystem, fahrtAbbrechen } from '../kamerafahrt';
 import { blickzielVon } from '../../render/camera/cinema';
 import { eingabeMelden } from '../idle';
+import { handleShortcut } from '../shortcuts/useShortcuts';
 import { padAuswerten, PAD } from './gamepad';
 import type { PadAbsicht, PadBild, PadRoh, Stick } from './gamepad';
 import { tastenAbsicht } from './tastatur';
@@ -66,6 +67,8 @@ export interface SteuerungUmgebung {
   leinwand?(): Leinwand;
   /** Zeiger für den Hover der Szene (szene.setZeiger). */
   zeiger?(z: { x: number; y: number; art: Zeigerart } | null): void;
+  /** Körper unter dem Fadenkreuz aus dem zuletzt berechneten Bild (szene.trefferBei mit Zeigerart pad). */
+  trefferBei?(x: number, y: number): string | null;
 }
 
 /** Körper, auf den die geplante Szene des Kinos blickt (Nachtrag §13.2). */
@@ -325,14 +328,54 @@ function kreuzTakt(dt: number, u: SteuerungUmgebung, pad: PadTakt): void {
 }
 
 /**
+ * Tasten, die wie ihr Tastenkürzel wirken (Entwurf §5.3): Tastatur und
+ * Controller verhalten sich dadurch gleich, auch im Kino.
+ */
+const KUERZEL_TASTEN: Readonly<Partial<Record<number, string>>> = {
+  [PAD.LINKS]: 'ArrowLeft',
+  [PAD.RECHTS]: 'ArrowRight',
+  [PAD.HOCH]: ' ',
+  [PAD.RUNTER]: 'r',
+  [PAD.MENUE]: 'c',
+  [PAD.RB]: 'n',
+  [PAD.VIEW]: 'h',
+  [PAD.Y]: 'i',
+};
+
+/**
+ * Tasten eines Bildes, nach Bewegung und Fadenkreuz (§5.3): A fährt zum
+ * Körper unter dem Kreuz (ohne Treffer nichts), B in die Draufsicht auf das
+ * System, die übrigen belegten Tasten rufen ihr Tastenkürzel. R3 wirkt im
+ * Fadenkreuz-Takt; X, L3 und die Xbox-Taste bleiben frei.
+ */
+function padTasten(bild: PadBild, u: SteuerungUmgebung): void {
+  for (const t of bild.flanken) {
+    if (t === PAD.A) {
+      const leinwand = u.leinwand?.();
+      if (leinwand === undefined) continue;
+      const { x, y } = kreuzLage(leinwand);
+      const id = u.trefferBei?.(x, y) ?? null;
+      if (id !== null) fahreZu(id);
+    } else if (t === PAD.B) {
+      fahreZuSystem();
+    } else {
+      const taste = KUERZEL_TASTEN[t];
+      if (taste !== undefined) handleShortcut(taste);
+    }
+  }
+}
+
+/**
  * Je Bild vor dem Kino-Takt (Entwurf §6.2). Gehaltene Flugtasten ohne Shift
  * sowie linker Stick oder Trigger ohne LB starten den Flug an der gezeigten
  * Lage und fliegen; im Flug laufen Mindesthöhe und Bezugswahl auch ohne
  * Eingabe. Mit Shift oder LB dreht die Kamera um den Körper nächst der
  * Bildmitte (§4.2, §5.2). Danach bewegt der rechte Stick das Fadenkreuz.
+ * Zuletzt wirken die Tasten des Controllers.
  */
 export function steuerungTakt(jd: number, dt: number, u: SteuerungUmgebung): void {
   const pad = padTakt(u);
   bewegen(jd, dt, u, pad.bild);
   kreuzTakt(dt, u, pad);
+  if (pad.bild !== null) padTasten(pad.bild, u);
 }

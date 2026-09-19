@@ -20,6 +20,7 @@ import { fahreZu, fahrtAbbrechen, fahrtLaeuft } from '../kamerafahrt';
 import { SCENES } from '../../data/scenes';
 import { IDLE_HIDE_SEC, useIdleHide, zeigerAusgeblendet } from '../idle';
 import { kreuzLage, kreuzSichtbar, kreuzZuruecksetzen } from './kreuz';
+import { INFO_PANEL } from '../info/konstanten';
 
 const jd = DEFAULT_STATE.time.jd;
 const s = DEFAULT_STATE.scale;
@@ -474,5 +475,69 @@ describe('steuerungTakt: Fadenkreuz', () => {
     const anzahl = zeiger.length;
     steuerungTakt(jd, 0, mitKreuz(null, zeiger));
     expect(zeiger.length).toBe(anzahl);
+  });
+});
+
+describe('steuerungTakt: Tasten des Controllers', () => {
+  const l = { breite: 800, hoehe: 600 };
+  type Treffer = (x: number, y: number) => string | null;
+  const mitTasten = (p: PadRoh, trefferBei: Treffer): SteuerungUmgebung =>
+    ({ ...umgebung([], null), pad: () => p, leinwand: () => l, trefferBei });
+  /** Ein Bild losgelassen, dann gedrückt: genau eine Flanke. */
+  const druecke = (taste: number, trefferBei: Treffer = () => null): void => {
+    steuerungTakt(jd, 0, mitTasten(padAttrappe(), trefferBei));
+    steuerungTakt(jd, 0, mitTasten(padAttrappe({ gedrueckt: [taste] }), trefferBei));
+  };
+
+  beforeEach(() => { kreuzZuruecksetzen(); });
+
+  it('fährt mit A zum Körper unter dem Kreuz', () => {
+    const gefragt: [number, number][] = [];
+    druecke(PAD.A, (x, y) => { gefragt.push([x, y]); return 'mars'; });
+    expect(gefragt).toEqual([[400, 300]]);
+    expect(useStore.getState().camera.targetId).toBe('mars');
+    expect(fahrtLaeuft()).toBe(true);
+  });
+
+  it('tut mit A ohne Treffer nichts', () => {
+    druecke(PAD.A);
+    expect(useStore.getState().camera.targetId).toBe('sun');
+    expect(fahrtLaeuft()).toBe(false);
+  });
+
+  it('fährt mit B in die Draufsicht auf das Sonnensystem', () => {
+    useStore.getState().setCamera({ targetId: 'mars' });
+    druecke(PAD.B);
+    expect(useStore.getState().camera.targetId).toBe('sun');
+    expect(fahrtLaeuft()).toBe(true);
+  });
+
+  it('ruft für Steuerkreuz, Ansicht und Y das Kürzel der Tastatur', () => {
+    const z = () => useStore.getState();
+    druecke(PAD.RECHTS);
+    expect(z().time.rateDaysPerSec).toBeCloseTo(1.5, 12);
+    druecke(PAD.LINKS);
+    expect(z().time.rateDaysPerSec).toBeCloseTo(1, 12);
+    druecke(PAD.RUNTER);
+    expect(z().time.rateDaysPerSec).toBeCloseTo(-1, 12);
+    druecke(PAD.HOCH);
+    expect(z().time.paused).toBe(true);
+    druecke(PAD.VIEW);
+    expect(z().ui.hidden).toBe(true);
+    const infoVorher = z().ui.panels[INFO_PANEL];
+    druecke(PAD.Y);
+    expect(z().ui.panels[INFO_PANEL]).toBeDefined();
+    expect(z().ui.panels[INFO_PANEL]).not.toBe(infoVorher);
+  });
+
+  it('startet und beendet das Kino mit Menü/Start; RB und Menü halten es nicht an', () => {
+    useStore.getState().setCinema({ pauseOnInput: true });
+    druecke(PAD.MENUE);
+    expect(useStore.getState().cinema.running).toBe(true);
+    druecke(PAD.RB);
+    expect(useStore.getState().cinema.running).toBe(true);
+    expect(useStore.getState().cinema.nummer).toBe(1);
+    druecke(PAD.MENUE);
+    expect(useStore.getState().cinema.running).toBe(false);
   });
 });
