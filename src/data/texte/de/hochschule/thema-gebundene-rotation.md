@@ -33,8 +33,10 @@ zwischen Beule und Verbindungslinie ([Efroimsky und Lainey 2007](literatur:efroi
 **Beispielrechnung.** Für den [Mond](objekt:moon) sind $k_2 = 0{,}02416 \pm 0{,}00022$ und
 $Q = 37{,}5 \pm 4$ bei einem Monat Periode aus Laserentfernungen und GRAIL bekannt, das mittlere
 Trägheitsmoment des festen Mondes ist $0{,}392728 \pm 0{,}000012\,M R^2$ und der mittlere Radius
-$1737{,}151\,\mathrm{km}$ ([Williams et al. 2014](literatur:williams-2014)). Mit der Erdmasse
-$M_\oplus$ und einer anfänglichen Rotationsperiode von 10 Stunden ergibt die Formel am heutigen
+$1737{,}151\,\mathrm{km}$ ([Williams et al. 2014](literatur:williams-2014)); $k_2$ gilt dort beim
+Bezugsradius 1738 km, was das Ergebnis dieser Abschätzung um weniger als 0,3 % verschiebt. Mit der
+Erdmasse $M_\oplus$ und einer anfänglichen Rotationsperiode von 10 Stunden ergibt die Formel am
+heutigen
 Abstand von 60,3 Erdradien rund 43 Millionen Jahre; das Drehmoment beträgt dabei
 $1{,}1 \cdot 10^{16}\,\mathrm{N}\,\mathrm{m}$. Bei 20 Erdradien, einem frühen Abstand des Mondes,
 sind es wegen der sechsten Potenz nur noch rund 57 000 Jahre. Die Bindung eines nahen Mondes ist
@@ -78,9 +80,11 @@ zwei Dritteln seiner Umlaufzeit festzuhalten; das hinreichende Kriterium lautet 
 $(B - A)/C > 7{,}1 \cdot 10^{-8}/(Q\,H(p,e))$. Gemessen ist Merkurs Unsymmetrie weit größer:
 $(B - A)/C_\mathrm{m} = (2{,}206 \pm 0{,}074) \cdot 10^{-4}$ für die librierende Außenschale und
 $C_\mathrm{m}/C = 0{,}421 \pm 0{,}021$ ([Stark et al. 2015](literatur:stark-2015)), zusammen
-$(B - A)/C = 9{,}3 \cdot 10^{-5}$, rund zehntausendmal mehr als nötig. Dass Merkur nicht synchron
-läuft, sondern in 3:2, zeigte erst die Radarmessung von 1965
-([Pettengill und Dyce 1965](literatur:pettengill-1965)).
+$(B - A)/C = 9{,}3 \cdot 10^{-5}$, rund zehntausendmal mehr als nötig. Dass Merkur überhaupt nicht
+synchron läuft, zeigten 1965 die ersten genauen Radarbeobachtungen seiner Rotation
+([Pettengill und Dyce 1965](literatur:pettengill-1965); [Stark et al. 2015](literatur:stark-2015),
+Abschnitt 1); die Deutung als 3:2-Kopplung und ihre Begründung über die permanente Deformation
+kamen erst danach ([Goldreich und Peale 1966](literatur:goldreich-1966)).
 
 Wie Merkur dorthin kam, ist bis heute Gegenstand der Modellrechnung. Mit einem realistischen
 Gezeitenmodell liegt die Einfangwahrscheinlichkeit in die 3:2-Resonanz bei nur rund 7 %; erst wenn
@@ -102,20 +106,27 @@ Frequenzverhältnis fest, das sonst langsam durchlaufen würde.
 ## Cassini-Zustände
 
 Gebundene Rotation legt nicht nur die Drehgeschwindigkeit fest, sondern auch die Lage der
-Drehachse. Cassini beschrieb für den Mond drei Gesetze: synchrone Rotation, eine konstante
-Neigung des Mondäquators gegen die Ekliptik, und die Lage von Drehachse, Ekliptiknormale und
-Bahnnormale in einer Ebene, die mit dem Bahnknoten umläuft. Colombo zeigte, dass das zweite und
+Drehachse. Die nach Cassini benannten Gesetze beschreiben die Bewegung der Mondachse: Der Mond
+rotiert synchron, sein Äquator ist konstant gegen die Ekliptik geneigt, und seine Äquatorebene
+präzediert mit der Bahnebene, sodass Drehachse, Ekliptiknormale und Bahnnormale in einer Ebene
+bleiben ([Williams et al. 2014](literatur:williams-2014), Abschnitt 6;
+[Ward 1975](literatur:ward-1975)). Colombo zeigte, dass das zweite und
 dritte Gesetz vom ersten unabhängig sind und eine Bewegung kleinster innerer Energiezerstreuung
 beschreiben ([Colombo 1966](literatur:colombo-1966)). Peale verallgemeinerte sie: Alle stabilen,
 gleichebenen Lagen von Drehvektor, Bahnnormale und Präzessionsvektor sind Extrema der
 Orientierungsenergie, und eine solche Lage verknüpft die Trägheitsmomentdifferenzen $(C - A)/C$ und
-$(B - A)/C$ ([Peale 1969](literatur:peale-1969)). Es gibt mehrere solcher Cassini-Zustände; sie
-werden durchnummeriert, und für gebremste Monde kommen vor allem die Zustände 1 und 2 in Frage.
+$(B - A)/C$ ([Peale 1969](literatur:peale-1969)). Ohne Dissipation sind höchstens vier solcher
+gleichebenen Lagen möglich; Peale hat sie aufgezählt und als Cassini-Zustände bezeichnet. Die
+Gezeitenreibung treibt die Drehachse in einen von zwei davon: Zustand 1 liegt nahe der
+Bahnnormale, Zustand 2 nahe der Normale der invariablen Ebene, und welcher besetzt wird, hängt vor
+allem vom Verhältnis der Präzessionsperioden von Drehachse und Bahn ab
+([Ward 1975](literatur:ward-1975)).
 
-Welcher davon besetzt wird, hängt vom Körper ab. Ward wandte die verallgemeinerten Gesetze auf
+Ward wandte die verallgemeinerten Gesetze auf
 mehrere Körper an und fand, dass allein der Mond eindeutig Zustand 2 einnimmt, während die meisten
 Körper in Zustand 1 liegen; Iapetus könnte je nach Abplattung in beiden liegen, und Merkurs
-resonante Rotation ändert an Zustand 1 wenig ([Ward 1975](literatur:ward-1975)). Eine
+resonante Rotation ändert wenig an der Gezeitendrift seiner Drehachse zu Zustand 1 hin
+([Ward 1975](literatur:ward-1975)). Eine
 systematische Untersuchung mit bleibender dreiachsiger Deformation bestätigte das: Für die
 Parameterbereiche der meisten wirklichen Monde, die auf synchrone Rotation abgebremst wurden, ist
 Zustand 1 der einzig mögliche Endpunkt, weil die Unsymmetrie den Zustand 2 mit höherer Schiefe
@@ -130,7 +141,8 @@ dafür, dass der Planet in oder nahe einem Cassini-Zustand liegt
 ([Margot et al. 2012](literatur:margot-2012)); die Messung aus der Bahn um Merkur ergab
 $2{,}029 \pm 0{,}085$ Bogenminuten ([Stark et al. 2015](literatur:stark-2015)). Bei
 [Titan](objekt:titan) sind die Schiefe $0{,}32 \pm 0{,}02^\circ$ und die Abweichung aus der
-Cassini-Ebene $0{,}12 \pm 0{,}02^\circ$; aus diesem Abstand vom erwarteten Zustand folgen
+Cassini-Ebene $0{,}12 \pm 0{,}02^\circ$, beides bestimmt von
+[Baland et al. 2011](literatur:baland-2011); aus diesem Abstand vom erwarteten Zustand folgen
 $k_2/Q$ zwischen 0,058 und 0,12 und ein Mindestwert $Q \approx 5$
 ([Downey und Nimmo 2025](literatur:downey-2025)).
 
@@ -159,11 +171,13 @@ abtastet, ist sie eines der wenigen Fernerkundungsverfahren für den
   $C/(M R^2) = 0{,}346 \pm 0{,}014$ und ein Anteil der librierenden Schale von
   $C_\mathrm{m}/C = 0{,}431 \pm 0{,}025$: Der Mantel ist von einem mindestens teilweise flüssigen
   Kern entkoppelt ([Margot et al. 2007](literatur:margot-2007);
-  [Margot et al. 2012](literatur:margot-2012)).
+  [Margot et al. 2012](literatur:margot-2012)). Die Messung aus der Umlaufbahn ergibt für denselben
+  Anteil unabhängig davon $0{,}421 \pm 0{,}021$
+  ([Stark et al. 2015](literatur:stark-2015)); beide Bestimmungen überlappen.
 - **Mimas.** Aus Cassini-Bildern gemessene Librationen bestätigen alle aus der Bahndynamik
   berechneten Amplituden bis auf eine, die doppelt so groß ist wie unter der Annahme
   hydrostatischen Gleichgewichts erwartet. Entweder hat Mimas ein stark nichthydrostatisches
-  Inneres oder einen hydrostatischen Ozean unter einer dicken Eisschale
+  Inneres oder ein hydrostatisches mit einem Ozean unter einer dicken Eisschale
   ([Tajeddine et al. 2014](literatur:tajeddine-2014)).
 - **Enceladus.** Ein über sieben Jahre aufgebautes Kontrollpunktnetz ergibt eine erzwungene
   Libration von $0{,}120 \pm 0{,}014^\circ$ (2σ). Der Wert ist zu groß, als dass der Kern starr mit
@@ -208,8 +222,9 @@ dieselbe Seite, und es wird kein Drehimpuls mehr übertragen. [Pluto](objekt:plu
 [Charon](objekt:charon) sind das bekannteste Beispiel im Sonnensystem. Rechnungen, die von einem
 Anfangszustand mit Charon auf einer exzentrischen Bahn bei
 etwa vier Plutoradien ausgehen — passend zu einer Entstehung durch einen Einschlag — und den
-gesamten Drehimpuls erhalten, erreichen den doppelt synchronen Endzustand nur, wenn der
-Schwerekoeffizient $C_{22}$ beider Körper mitgeführt wird; unterwegs wird Charons Drehung
+gesamten Drehimpuls erhalten, erreichen den doppelt synchronen Endzustand glatt und in sich
+stimmig, wenn der Schwerekoeffizient $C_{22}$ beider Körper mitgeführt wird; lässt man ihn weg,
+scheitert die Entwicklung in manchen Fällen. Unterwegs wird Charons Drehung
 vorübergehend in Spin-Bahn-Resonanzen eingefangen, um die sie dann gedämpft libriert. Der Verlauf
 hängt stark vom Gezeitenmodell ab, und das Verhältnis der Dissipation in Charon zu der in Pluto
 steuert, wie sich die Exzentrizität entwickelt ([Cheng et al. 2014](literatur:cheng-2014)). Die
@@ -228,8 +243,11 @@ $2{,}6392 \pm 0{,}0008^\circ$ und ein normiertes Trägheitsmoment von $0{,}337 \
 Rotationsperiode des festen Planeten schwankt um 61 ppm, rund 20 Minuten, was den Übergang von
 mindestens 4 % des atmosphärischen Drehimpulses auf den festen Körper verlangt
 ([Margot et al. 2021](literatur:margot-2021)). Genau dieser Austausch ist ein Grund, warum Venus
-nicht gebunden ist: Die Gezeit der dichten Atmosphäre wirkt der Gezeit des festen Körpers
-entgegen.
+nicht gebunden ist: Die thermische Gezeit der dichten Atmosphäre treibt die Drehung von der
+Synchronisation weg. Ein Klimamodell zeigt, dass dafür schon eine vergleichsweise dünne Atmosphäre
+genügt, und liefert vier asynchrone Gleichgewichtszustände, von denen zwei stabil sind, sobald die
+Amplitude der thermischen Gezeit eine Schwelle überschreitet
+([Leconte et al. 2015](literatur:leconte-2015)).
 
 Schon Goldreich und Peale erwogen für Venus eine Resonanz der zweiten Art, bei der die Drehung mit
 der synodischen Bewegung gegenüber der Erde kommensurabel wäre, fanden aber, dass dafür ein großes
@@ -249,10 +267,10 @@ Hyperion ist das Lehrbuchbeispiel: Unter der Annahme einer Drehung um eine Haupt
 Bahnebene umgibt eine große chaotische Zone den synchronen Zustand, so groß, dass sie die Zustände
 1:2 und 2:1 einschließt und eine Libration im 3:2-Zustand unmöglich macht. Rotation in dieser Zone
 ist außerdem gegen ein Kippen der Achse instabil, sodass der Mond taumelt, sobald die
-Gezeitenbremse ihn in die Zone führt ([Wisdom et al. 1984](literatur:wisdom-1984)). Cassini fand
-Hyperion als den einzigen Mond, bei dem chaotische Rotation beobachtet ist, mit einer mittleren
-Dichte von $544 \pm 50\,\mathrm{kg}\,\mathrm{m}^{-3}$ und einer Porosität über 40 %
-([Thomas et al. 2007](literatur:thomas-2007)).
+Gezeitenbremse ihn in die Zone führt ([Wisdom et al. 1984](literatur:wisdom-1984)). Hyperion galt
+seither als der einzige Mond, bei dem chaotische Rotation beobachtet ist; die Cassini-Bilder
+brachten dazu Gestalt, eine mittlere Dichte von $544 \pm 50\,\mathrm{kg}\,\mathrm{m}^{-3}$ und
+eine Porosität über 40 % ([Thomas et al. 2007](literatur:thomas-2007)).
 
 Eine dreidimensionale Behandlung ohne die Annahme einer Hauptachsendrehung kommt allerdings zu
 einem anderen Schluss: Resonanzen zwischen Nutations- und Bahnfrequenz treiben die Dynamik,
@@ -359,15 +377,23 @@ dem Nullmeridian in der Bildmitte also dem Nullmeridian — und der Richtung zum
   Rotationsperiode gleich der siderischen Umlaufzeit $360^\circ/\dot{L}$ des eigenen Datensatzes,
   bis auf Rundungsreste von höchstens $0{,}66 \cdot 10^{-6}$ (Deimos). Diese Reste lassen die
   Richtung zum Mutterkörper langsam über die Karte wandern: 6,9° je Jahrhundert bei Deimos, 1,2°
-  bei Mimas, 1,1° bei Miranda, bei allen übrigen unter 0,6°.
-- **Libration.** Sie entsteht im Modell nur aus der Exzentrizität — die Länge pendelt um $2e$,
-  beim Mond über 12,6°, bei Titan über 6,6° — und aus der Neigung der Bahn gegen den festen Pol,
-  die die Breite pendeln lässt. Der Ausschlag in Breite ist genau der Winkel zwischen Pol und
+  bei Mimas, 1,1° bei Miranda, bei allen übrigen unter 0,6°. Der Datenblock zeigt als Umlaufzeit
+  nicht diese, sondern die aus großer Halbachse und Massen gerechnete Kepler-Umlaufzeit; sie weicht
+  von $360^\circ/\dot{L}$ bei Mimas um 0,54 %, bei Enceladus um 0,32 %, beim Mond um −0,11 % und
+  bei den übrigen Monden um weniger als 0,21 % ab. Die angezeigte Umlaufzeit ist also nicht genau
+  die, an die die Rotation gekoppelt ist.
+- **Libration.** Sie entsteht im Modell nur aus der Exzentrizität — die Länge pendelt mit der
+  Amplitude $2e$, beim Mond also über eine Spanne von 12,6°, bei Titan über 6,6° — und aus der
+  Neigung der Bahn gegen den festen Pol, die die Breite pendeln lässt. Der Ausschlag in Breite ist
+  genau der Winkel zwischen Pol und
   Bahnnormale: beim Mond zur Epoche ±6,7°, bei Miranda ±4,3°, bei Triton ±21,4°. Bei den beiden
   letzteren wandert der Bahnknoten im Datensatz nicht, der Ausschlag bleibt also fest. Bei Triton
-  kommt dadurch auch in Länge
-  ein Ausschlag von ±2,1° zustande, obwohl $2e$ dort nur 0,02° beträgt: Es ist die Reduktion auf
-  den Äquator, nicht die Bahnexzentrizität.
+  und Miranda kommt dadurch auch in Länge
+  ein Ausschlag hinzu, bei Triton ±2,1°, obwohl $2e$ dort nur 0,02° beträgt: Es ist die Reduktion
+  auf den Äquator, nicht die Bahnexzentrizität. Eine Ausnahme ist Tethys: Dort ist die Rate des
+  Perizentrums im Datensatz größer als die der mittleren Länge, die mittlere Anomalie läuft
+  deshalb rückwärts, und die Libration in Länge hat zwar die richtige Amplitude, aber eine Periode
+  von 57,8 statt 1,89 Tagen.
   Bei Triton und Miranda ist dieser Ausschlag ein Artefakt des Datensatzes: Der IAU-Bericht gibt
   ihre Pole als Reihen mit großen periodischen Gliedern an — für Triton
   $299{,}36^\circ - 32{,}35^\circ \sin N_7 - \ldots$ und
@@ -390,7 +416,8 @@ dem Nullmeridian in der Bildmitte also dem Nullmeridian — und der Richtung zum
   58,6460768 Tage ist die Modellperiode 339 s zu lang. Die aus Pol und Bahn gerechnete Achsneigung
   Merkurs beträgt im Modell 0,034° und trifft damit die gemessenen $2{,}029 \pm 0{,}085$
   Bogenminuten: Der Pol des Datensatzes stammt aus dem IAU-Bericht und trägt die Cassini-Lage
-  bereits in sich, ohne dass das Modell sie nachbildete.
+  bereits in sich, ohne dass das Modell sie nachbildete. Der Datenblock rundet diesen Wert auf eine
+  Nachkommastelle und zeigt deshalb 0,0°.
 - **Venus.** Die Rotationsperiode ist $-5832{,}6$ h $= -243{,}025$ Tage; der Sonnentag beträgt im
   Modell 116,75 Tage und die synodische Periode gegenüber der Erde 583,92 Tage, also das
   5,0014-Fache — die bekannte Beinahe-Kommensurabilität bleibt damit erhalten. Die gerechnete
@@ -406,9 +433,12 @@ dem Nullmeridian in der Bildmitte also dem Nullmeridian — und der Richtung zum
   Rotationszustands. Weitere Vereinfachungen: [Grenzen des Modells](thema:modell).
 
 Die folgende Tabelle ist am Code nachgerechnet. Der Winkel misst den Abstand zwischen der
-Kartenmitte und der Richtung zum Mutterkörper, bei Pluto zu Charon; „+100 a" ist der
-1. Januar 2100. Bei Merkur wandert der Unterpunkt der Sonne in der 3:2-Kopplung ständig um den
-ganzen Körper, die beiden Winkel sind dort nur Momentaufnahmen.
+Kartenmitte und der Richtung zum Mutterkörper, bei Pluto zu Charon; für Pluto ist auch die
+Umlaufzeit der ersten Spalte die Charons, nicht seine eigene um die Sonne. „+100 a" ist der
+1. Januar 2100. Beide Winkelspalten sind Momentaufnahmen: Ihr Unterschied ist meist nicht die
+Drift, sondern die Librationsphase zum jeweiligen Zeitpunkt — beim Mond ist die Drift null und der
+Winkel trotzdem um 7,6° verschieden, bei Triton um 7,4° bei 0,06° Drift je Jahrhundert. Bei Merkur
+wandert der Unterpunkt der Sonne in der 3:2-Kopplung ohnehin ständig um den ganzen Körper.
 
 | Körper | $P_\mathrm{rot}/P_\mathrm{sid} - 1$ in $10^{-6}$ | Winkel J2000 | Winkel +100 a |
 |---|---|---|---|

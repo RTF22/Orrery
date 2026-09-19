@@ -32,7 +32,9 @@ bodies ([Efroimsky and Lainey 2007](literatur:efroimsky-2007)).
 **Worked example.** For the [Moon](objekt:moon), $k_2 = 0.02416 \pm 0.00022$ and
 $Q = 37.5 \pm 4$ at a period of one month are known from lunar laser ranging and GRAIL, the mean
 moment of inertia of the solid Moon is $0.392728 \pm 0.000012\,M R^2$ and the mean radius
-$1737.151\,\mathrm{km}$ ([Williams et al. 2014](literatur:williams-2014)). With the Earth's mass
+$1737.151\,\mathrm{km}$ ([Williams et al. 2014](literatur:williams-2014)); there $k_2$ refers to a
+reference radius of 1738 km, which shifts the result of this estimate by less than 0.3 %. With the
+Earth's mass
 $M_\oplus$ and an initial rotation period of 10 hours, the formula gives about 43 million years at
 today's distance of 60.3 Earth radii; the torque is then
 $1.1 \cdot 10^{16}\,\mathrm{N}\,\mathrm{m}$. At 20 Earth radii, an early distance of the Moon, the
@@ -77,8 +79,11 @@ $(B - A)/C > 7.1 \cdot 10^{-8}/(Q\,H(p,e))$. The measured asymmetry of Mercury i
 $(B - A)/C_\mathrm{m} = (2.206 \pm 0.074) \cdot 10^{-4}$ for the librating outer shell and
 $C_\mathrm{m}/C = 0.421 \pm 0.021$ ([Stark et al. 2015](literatur:stark-2015)), together
 $(B - A)/C = 9.3 \cdot 10^{-5}$, some ten thousand times more than required. That Mercury does not
-rotate synchronously but in 3:2 was only shown by the radar measurement of 1965
-([Pettengill and Dyce 1965](literatur:pettengill-1965)).
+rotate synchronously at all was shown in 1965 by the first accurate radar observations of its
+rotation ([Pettengill and Dyce 1965](literatur:pettengill-1965);
+[Stark et al. 2015](literatur:stark-2015), section 1); the reading as a 3:2 coupling and its
+justification through the permanent deformation came only afterwards
+([Goldreich and Peale 1966](literatur:goldreich-1966)).
 
 How Mercury got there is still a matter of modelling. With a realistic tidal model the probability
 of capture into the 3:2 resonance is only about 7 %; capture becomes very likely only once chaotic
@@ -98,20 +103,26 @@ a frequency ratio that would otherwise be passed through slowly.
 ## Cassini states
 
 Tidal locking fixes not only the spin rate but also the orientation of the spin axis.
-Cassini described three laws for the Moon: synchronous rotation, a constant inclination of the
-lunar equator to the ecliptic, and the coplanarity of spin axis, ecliptic normal and orbit normal,
-the plane turning with the orbital node. Colombo showed that the second and third laws are
+The laws named after Cassini describe the motion of the lunar axis: the Moon rotates
+synchronously, its equator keeps a constant inclination to the ecliptic, and its equatorial plane
+precesses with the orbital plane, so that spin axis, ecliptic normal and orbit normal stay
+coplanar ([Williams et al. 2014](literatur:williams-2014), section 6;
+[Ward 1975](literatur:ward-1975)). Colombo showed that the second and third laws are
 independent of the first and describe a motion of minimum internal energy dissipation
 ([Colombo 1966](literatur:colombo-1966)). Peale generalised them: all stable, coplanar
 configurations of spin vector, orbit normal and precession vector are extremes of the orientation
 energy, and such a configuration links the moment differences $(C - A)/C$ and $(B - A)/C$
-([Peale 1969](literatur:peale-1969)). There are several such Cassini states; they are numbered,
-and for despun moons states 1 and 2 are the ones that matter.
+([Peale 1969](literatur:peale-1969)). Without dissipation at most four such coplanar
+configurations are possible; Peale enumerated them and named them Cassini states. Tidal friction
+drives the spin axis into one of two of them: state 1 lies close to the orbit normal, state 2 close
+to the normal of the invariable plane, and which one is occupied depends mainly on the ratio of
+the precession periods of spin axis and orbit ([Ward 1975](literatur:ward-1975)).
 
-Which one is occupied depends on the body. Ward applied the generalised laws to several bodies and
+Ward applied the generalised laws to several bodies and
 found that only the Moon definitely occupies state 2, while most bodies lie in state 1; Iapetus
 could occupy either depending on its oblateness, and Mercury's resonant rotation has little effect
-on state 1 ([Ward 1975](literatur:ward-1975)). A systematic study including permanent triaxial
+on the tidal drift of its spin axis towards state 1
+([Ward 1975](literatur:ward-1975)). A systematic study including permanent triaxial
 deformation confirmed this: for the parameter ranges of most real satellites that have been despun
 to synchronous rotation, state 1 is the only possible endpoint, because the asymmetry destabilises
 the higher-obliquity state 2; the Moon is the exception, because state 1 does not exist for it
@@ -125,8 +136,9 @@ the direction of the tilt suggests that the planet is in or near a Cassini state
 ([Margot et al. 2012](literatur:margot-2012)); the measurement from orbit about Mercury gave
 $2.029 \pm 0.085$ arc minutes ([Stark et al. 2015](literatur:stark-2015)). For
 [Titan](objekt:titan) the obliquity is $0.32 \pm 0.02^\circ$ and the offset from the Cassini plane
-$0.12 \pm 0.02^\circ$; from this departure from the expected state follow values of $k_2/Q$ between
-0.058 and 0.12 and a minimum $Q \approx 5$
+$0.12 \pm 0.02^\circ$, both determined by
+[Baland et al. 2011](literatur:baland-2011); from this departure from the expected state follow
+values of $k_2/Q$ between 0.058 and 0.12 and a minimum $Q \approx 5$
 ([Downey and Nimmo 2025](literatur:downey-2025)).
 
 ## Optical and physical libration
@@ -154,11 +166,13 @@ interior, it is one of the few remote-sensing techniques for the
   second-degree gravitational harmonics this gives $C/(M R^2) = 0.346 \pm 0.014$ and a fraction of
   the librating shell of $C_\mathrm{m}/C = 0.431 \pm 0.025$: the mantle is decoupled from a core
   that is at least partially molten ([Margot et al. 2007](literatur:margot-2007);
-  [Margot et al. 2012](literatur:margot-2012)).
+  [Margot et al. 2012](literatur:margot-2012)). The measurement from orbit gives
+  $0.421 \pm 0.021$ for the same fraction independently
+  ([Stark et al. 2015](literatur:stark-2015)); the two determinations overlap.
 - **Mimas.** Librations measured from Cassini images confirm all the amplitudes calculated from
   orbital dynamics except one, which is twice as large as expected under the assumption of
   hydrostatic equilibrium. Either Mimas has a strongly non-hydrostatic interior or a hydrostatic
-  ocean beneath a thick icy shell ([Tajeddine et al. 2014](literatur:tajeddine-2014)).
+  one with an ocean beneath a thick icy shell ([Tajeddine et al. 2014](literatur:tajeddine-2014)).
 - **Enceladus.** A control point network built up over seven years gives a forced libration of
   $0.120 \pm 0.014^\circ$ (2σ). The value is too large for the core to be rigidly connected to the
   surface, and it requires a global ocean rather than a localised polar sea
@@ -201,8 +215,9 @@ same face, and no more angular momentum is transferred. [Pluto](objekt:pluto) an
 [Charon](objekt:charon) are the best known example in the Solar System.
 Calculations that start from an initial state with Charon on an eccentric orbit at about four Pluto
 radii — consistent with an impact origin — and conserve the total angular momentum reach the dual
-synchronous end state only if the gravitational coefficient $C_{22}$ of both bodies is carried
-along; on the way, Charon's spin is temporarily captured into spin-orbit resonances, about which it
+synchronous end state smoothly and self-consistently if the gravitational coefficient $C_{22}$ of
+both bodies is carried along; omitting it frustrates successful evolution in some cases. On the
+way, Charon's spin is temporarily captured into spin-orbit resonances, about which it
 then librates with damping. The course of events depends strongly on the tidal model, and the ratio
 of dissipation in Charon to that in Pluto controls how the eccentricity develops
 ([Cheng et al. 2014](literatur:cheng-2014)). The
@@ -221,7 +236,10 @@ $2.6392 \pm 0.0008^\circ$ and a normalised moment of inertia of $0.337 \pm 0.024
 period of the solid planet varies by 61 ppm, about 20 minutes, which requires that at least 4 % of
 the atmospheric angular momentum be transferred to the solid body
 ([Margot et al. 2021](literatur:margot-2021)). Exactly this exchange is one reason why Venus is not
-locked: the tide of the dense atmosphere works against the tide of the solid body.
+locked: the thermal tide of the dense atmosphere drives the rotation away from synchronisation. A
+global climate model shows that even a comparatively thin atmosphere suffices for this, and yields
+four asynchronous equilibrium spin states, two of them stable, once the amplitude of the thermal
+tide exceeds a threshold ([Leconte et al. 2015](literatur:leconte-2015)).
 
 Goldreich and Peale already considered a resonance of the second kind for Venus, in which the spin
 would be commensurate with the synodic motion relative to the Earth, but found that this would
@@ -241,8 +259,8 @@ textbook example: assuming rotation about a principal axis normal to the orbit p
 chaotic zone surrounds the synchronous state, so large that it encloses the 1:2 and 2:1 states and
 makes libration in the 3:2 state impossible. Rotation in this zone is also unstable against
 tipping of the axis, so the moon tumbles as soon as tidal braking carries it into the zone
-([Wisdom et al. 1984](literatur:wisdom-1984)). Cassini found Hyperion to be the only moon observed
-to undergo chaotic rotation, with a mean density of
+([Wisdom et al. 1984](literatur:wisdom-1984)). Since then Hyperion has counted as the only moon
+observed to undergo chaotic rotation; the Cassini images added its shape, a mean density of
 $544 \pm 50\,\mathrm{kg}\,\mathrm{m}^{-3}$ and a porosity above 40 %
 ([Thomas et al. 2007](literatur:thomas-2007)).
 
@@ -349,14 +367,22 @@ in the middle of the image, therefore the prime meridian — and the direction t
   sidereal orbital period $360^\circ/\dot{L}$ of the body's own data set, apart from rounding
   residues of at most $0.66 \cdot 10^{-6}$ (Deimos). These residues let the direction to the parent
   body drift slowly across the map: 6.9° per century for Deimos, 1.2° for Mimas, 1.1° for Miranda,
-  and below 0.6° for all the others.
-- **Libration.** In the model it arises only from the eccentricity — longitude swings by $2e$, for
-  the Moon over 12.6°, for Titan over 6.6° — and from the inclination of the orbit against the
+  and below 0.6° for all the others. As the orbital period the data block shows not this one but
+  the Keplerian period computed from semi-major axis and masses; it departs from
+  $360^\circ/\dot{L}$ by 0.54 % for Mimas, 0.32 % for Enceladus, −0.11 % for the Moon and by less
+  than 0.21 % for the remaining moons. The displayed orbital period is therefore not exactly the
+  one the rotation is locked to.
+- **Libration.** In the model it arises only from the eccentricity — longitude swings with
+  amplitude $2e$, for the Moon therefore over a range of 12.6°, for Titan over 6.6° — and from the
+  inclination of the orbit against the
   fixed pole, which makes latitude swing. The swing in latitude is exactly the angle between pole
   and orbit normal: for the Moon ±6.7° at epoch, for Miranda ±4.3°, for Triton ±21.4°. For the
   latter two the orbital node does not move in the data set, so the swing stays fixed. For Triton
-  this also produces a swing of ±2.1° in longitude, although $2e$ there is only 0.02°: it is the
-  reduction to the equator, not the orbital eccentricity.
+  and Miranda this also adds a swing in longitude, ±2.1° for Triton, although $2e$ there is only
+  0.02°: it is the reduction to the equator, not the orbital eccentricity. Tethys is an exception:
+  there the rate of the pericentre exceeds that of the mean longitude in the data set, the mean
+  anomaly therefore runs backwards, and the libration in longitude has the right amplitude but a
+  period of 57.8 instead of 1.89 days.
   For Triton and Miranda this swing is an artefact of the data set: the IAU report gives their
   poles as series with large periodic terms — for Triton
   $299.36^\circ - 32.35^\circ \sin N_7 - \ldots$ and
@@ -379,7 +405,8 @@ in the middle of the image, therefore the prime meridian — and the direction t
   58.6460768 days the model period is 339 s too long. The obliquity of Mercury computed from pole
   and orbit is 0.034° in the model and thus matches the measured $2.029 \pm 0.085$ arc minutes:
   the pole of the data set comes from the IAU report and already carries the Cassini configuration
-  within it, without the model reproducing it.
+  within it, without the model reproducing it. The data block rounds this value to one decimal and
+  therefore shows 0.0°.
 - **Venus.** The rotation period is $-5832.6$ h $= -243.025$ days; in the model the solar day is
   116.75 days and the synodic period relative to the Earth 583.92 days, that is 5.0014 times as
   long — the well known near-commensurability is thus preserved. The computed obliquity of
@@ -395,9 +422,12 @@ in the middle of the image, therefore the prime meridian — and the direction t
   simplifications: [Limits of the model](thema:modell).
 
 The following table is computed from the code. The angle measures the separation between the centre
-of the map and the direction to the parent body, for Pluto to Charon; "+100 a" is 1 January 2100.
-For Mercury the sub-solar point travels around the whole body under the 3:2 coupling, so the two
-angles there are only snapshots.
+of the map and the direction to the parent body, for Pluto to Charon; for Pluto the orbital period
+in the first column is Charon's too, not its own around the Sun. "+100 a" is 1 January 2100. Both
+angle columns are snapshots: their difference is usually not the drift but the libration phase at
+the respective moment — for the Moon the drift is zero and the angle still differs by 7.6°, for
+Triton by 7.4° at a drift of 0.06° per century. For Mercury the sub-solar point travels around the
+whole body under the 3:2 coupling anyway.
 
 | Body | $P_\mathrm{rot}/P_\mathrm{sid} - 1$ in $10^{-6}$ | angle J2000 | angle +100 a |
 |---|---|---|---|

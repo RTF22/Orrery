@@ -134,6 +134,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1126/science.adg8092',
   },
   {
+    id: 'baland-2011',
+    autoren: ['Baland, R.-M.', 'Van Hoolst, T.', 'Yseboodt, M.'],
+    etAl: true,
+    jahr: 2011,
+    titel: 'Titan’s obliquity as evidence of a subsurface ocean?',
+    erschienen: 'Astronomy & Astrophysics 530, A141',
+    doi: '10.1051/0004-6361/201116578',
+  },
+  {
     id: 'barboni-2017',
     autoren: ['Barboni, M.', 'Boehnke, P.', 'Keller, B.'],
     etAl: true,
@@ -1419,6 +1428,16 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'Spin state and deep interior structure of Mars from InSight radio tracking',
     erschienen: 'Nature 619, 733–737',
     doi: '10.1038/s41586-023-06150-0',
+  },
+  {
+    id: 'leconte-2015',
+    autoren: ['Leconte, J.', 'Wu, H.', 'Menou, K.'],
+    etAl: true,
+    jahr: 2015,
+    titel: 'Asynchronous rotation of Earth-mass planets in the habitable zone of lower-mass stars',
+    erschienen: 'Science 347, 632–635',
+    doi: '10.1126/science.1258686',
+    arxiv: '1502.01952',
   },
   {
     id: 'lee-2002',
