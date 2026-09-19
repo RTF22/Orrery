@@ -9,6 +9,9 @@ import { bodyIndex } from '../data';
 import { systemRadiusKm } from '../render/camera/cinema';
 import { KAMERA_FOV_GRAD } from '../render/renderer';
 import { noteUserInput, resumeIfIdle } from './cinemaControl';
+import { scaledPositionAt } from '../sim/scale';
+import { plus } from '../render/camera/flug';
+import type { GezeigtePose } from '../render/camera/flug';
 
 /** Handgesteuerte Uhr und Bildplanung, damit die Fahrt ohne Timer prüfbar ist. */
 function planer(): { optionen: Parameters<typeof fahreZu>[1]; vor(ms: number): void } {
@@ -188,5 +191,32 @@ describe('fahreZuSystem', () => {
     expect(useStore.getState().ui.info.thema).toBe('sonnensystem');
     // Kein Zwischenstand, in dem das Ziel schon Sonne ist, das Thema aber noch fehlt.
     expect(zuege.filter(([ziel, thema]) => ziel === 'sun' && thema !== 'sonnensystem')).toEqual([]);
+  });
+});
+
+describe('Fahrt aus dem Flug', () => {
+  it('beginnt an der gezeigten Lage statt beim Kugelabstand von vor dem Flug', () => {
+    const p = planer();
+    const { time, scale } = useStore.getState();
+    const mars = scaledPositionAt('mars', bodyIndex, time.jd, scale);
+    const pose: GezeigtePose = { positionKm: plus(mars, { x: 0, y: 3e6, z: 0 }), blick: { x: 0, y: -1, z: 0 }, jd: time.jd };
+    useStore.getState().setCamera({ mode: 'fly', distance: 1e9 });
+    fahreZu('mars', { ...p.optionen, pose: () => pose });
+    const { camera } = useStore.getState();
+    expect(camera.mode).toBe('attached');
+    expect(camera.distance).toBeCloseTo(3e6, 3);
+    expect(camera.azimuth).toBeCloseTo(Math.PI / 2, 9);
+    expect(camera.elevation).toBeCloseTo(0, 9);
+    for (let i = 0; i < 6; i += 1) p.vor(FAHRT_MS / 5);
+    expect(useStore.getState().camera.distance).toBeCloseTo(fokusAbstand(bodyIndex.mars!, scale), 6);
+  });
+
+  it('beginnt auch die Draufsicht aus dem Flug an der gezeigten Lage', () => {
+    const p = planer();
+    const pose: GezeigtePose = { positionKm: { x: 2e8, y: 0, z: 0 }, blick: { x: -1, y: 0, z: 0 }, jd: useStore.getState().time.jd };
+    useStore.getState().setCamera({ mode: 'fly', distance: 1e12 });
+    fahreZuSystem({ ...p.optionen, pose: () => pose });
+    expect(useStore.getState().camera.targetId).toBe('sun');
+    expect(useStore.getState().camera.distance).toBeCloseTo(2e8, 0);
   });
 });

@@ -242,4 +242,12 @@ export const de = {
   'info.szene.blick': 'Blickziel',
   'shortcuts.info': 'Infopanel ein- und ausblenden',
   'fly.tempo': 'Tempo',
+  'camera.mode.fly': 'Flug',
+  'shortcuts.fly': 'Fliegen: vor, links, zurück, rechts',
+  'shortcuts.flyUpDown': 'Im Flug sinken und steigen',
+  'shortcuts.orbit': 'Um den Körper in der Bildmitte drehen; mit Q und E senken und heben',
+  'shortcuts.flyLook': 'Im Flug umschauen',
+  'shortcuts.flySpeed': 'Im Flug die Geschwindigkeit ändern',
+  'key.drag': 'Ziehen',
+  'key.wheel': 'Mausrad',
 } as const;

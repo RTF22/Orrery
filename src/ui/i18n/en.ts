@@ -240,4 +240,12 @@ export const en: Record<Key, string> = {
   'info.szene.blick': 'Looking at',
   'shortcuts.info': 'Show and hide the info panel',
   'fly.tempo': 'Speed',
+  'camera.mode.fly': 'Fly',
+  'shortcuts.fly': 'Fly: forward, left, back, right',
+  'shortcuts.flyUpDown': 'Descend and climb while flying',
+  'shortcuts.orbit': 'Orbit the body nearest the centre; Q and E lower and raise',
+  'shortcuts.flyLook': 'Look around while flying',
+  'shortcuts.flySpeed': 'Change the flight speed',
+  'key.drag': 'Drag',
+  'key.wheel': 'Mouse wheel',
 };
