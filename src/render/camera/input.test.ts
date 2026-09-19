@@ -224,3 +224,49 @@ describe('attachCameraInput — Koordinaten', () => {
     stop();
   });
 });
+
+describe('attachCameraInput — Flug', () => {
+  const imFlug = (): void => {
+    useStore.getState().setCamera({ mode: 'fly', fly: { ...DEFAULT_STATE.camera.fly, yaw: 0, pitch: 0 } });
+  };
+
+  it('schaut im Flug beim Ziehen um; der Himmel folgt der Hand', () => {
+    imFlug();
+    const el = flaeche();
+    const stop = attachCameraInput(el);
+    const azimut = useStore.getState().camera.azimuth;
+    zeiger(el, 'pointerdown', 100, 100);
+    zeiger(el, 'pointermove', 120, 90);
+    const { camera } = useStore.getState();
+    // Nach rechts gezogen: Blick nach links (yaw wächst); nach oben: Blick sinkt.
+    expect(camera.fly.yaw).toBeCloseTo(20 * DREH, 12);
+    expect(camera.fly.pitch).toBeCloseTo(-10 * DREH, 12);
+    expect(camera.azimuth).toBe(azimut);
+    zeiger(el, 'pointerup', 120, 90);
+    stop();
+  });
+
+  it('ändert im Flug mit dem Rad das Tempo statt des Abstands', () => {
+    imFlug();
+    const el = flaeche();
+    const onTempo = vi.fn();
+    const stop = attachCameraInput(el, { onTempo });
+    const abstand = useStore.getState().camera.distance;
+    el.dispatchEvent(new WheelEvent('wheel', { deltaY: 100, cancelable: true }));
+    expect(onTempo.mock.calls[0]![0]).toBeCloseTo(1 / 1.25, 12);
+    el.dispatchEvent(new WheelEvent('wheel', { deltaY: -200, cancelable: true }));
+    expect(onTempo.mock.calls[1]![0]).toBeCloseTo(1.25 ** 2, 12);
+    expect(useStore.getState().camera.distance).toBe(abstand);
+    stop();
+  });
+
+  it('zoomt außerhalb des Flugs wie bisher', () => {
+    const el = flaeche();
+    const onTempo = vi.fn();
+    const stop = attachCameraInput(el, { onTempo });
+    el.dispatchEvent(new WheelEvent('wheel', { deltaY: 100, cancelable: true }));
+    expect(onTempo).not.toHaveBeenCalled();
+    expect(useStore.getState().camera.distance).toBeCloseTo(DEFAULT_STATE.camera.distance * 1.1, 0);
+    stop();
+  });
+});

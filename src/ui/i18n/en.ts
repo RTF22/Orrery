@@ -239,4 +239,5 @@ export const en: Record<Key, string> = {
   'info.szene.ziel': 'Location',
   'info.szene.blick': 'Looking at',
   'shortcuts.info': 'Show and hide the info panel',
+  'fly.tempo': 'Speed',
 };

@@ -17,9 +17,10 @@ import { sicherungStarten, startZustand } from './persistenz';
 import { fahreZu } from '../ui/kamerafahrt';
 import { zeigerAusgeblendet } from '../ui/idle';
 import { themaVerfallStarten } from '../ui/info/themaVerfall';
-import { steuerungTakt } from '../ui/steuerung/anwenden';
+import { steuerungTakt, tempoAendern } from '../ui/steuerung/anwenden';
 import { tastaturAnhaengen } from '../ui/steuerung/tastatur';
 import { letztePose } from '../render/camera/controller';
+import { TempoHinweis } from '../ui/steuerung/TempoHinweis';
 
 /**
  * Einstiegspunkt der Anwendung.
@@ -68,6 +69,8 @@ function App(): React.JSX.Element {
         if (id !== null) fahreZu(id);
       },
       onZeiger: (zeiger) => { szene.setZeiger(zeiger); },
+      // Im Flug regelt das Rad das Tempo (Entwurf Flug und Controller §4.3).
+      onTempo: (faktor) => { tempoAendern(faktor); },
     });
 
     // Flugtasten (Entwurf Flug und Controller §4): gehalten, je Bild ausgewertet.
@@ -130,6 +133,8 @@ function App(): React.JSX.Element {
       />
       <div ref={overlayRef} style={{ position: 'fixed', inset: 0, pointerEvents: 'none' }} />
       <Bedienoberflaeche />
+      {/* Außerhalb der Bedienoberfläche: bleibt sichtbar, wenn H sie ausblendet. */}
+      <TempoHinweis />
     </>
   );
 }

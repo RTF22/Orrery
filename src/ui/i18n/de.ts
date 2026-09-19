@@ -241,4 +241,5 @@ export const de = {
   'info.szene.ziel': 'Standort',
   'info.szene.blick': 'Blickziel',
   'shortcuts.info': 'Infopanel ein- und ausblenden',
+  'fly.tempo': 'Tempo',
 } as const;

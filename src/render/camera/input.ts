@@ -1,10 +1,13 @@
 import { useStore } from '../../store';
 import { TIPP_SCHWELLE_PX, zeigerartVon } from '../treffer';
 import type { Zeigerart } from '../treffer';
-import { ELEVATION_GRENZE, MIN_DISTANCE_KM, MAX_DISTANCE_KM, begrenze } from './flug';
+import { ELEVATION_GRENZE, MIN_DISTANCE_KM, MAX_DISTANCE_KM, begrenze, blickDrehen } from './flug';
 
 /** Bildschirmbreite entspricht etwa einer halben Umdrehung. */
 const DREH_PRO_PIXEL = Math.PI / 600;
+
+/** Radstufe des Tempofaktors im Flug (Entwurf Flug und Controller §3.4). */
+export const TEMPO_JE_RASTE = 1.25;
 
 /**
  * Zoomt multiplikativ: Ein Rad-Klick verändert den Abstand immer um denselben
@@ -18,6 +21,13 @@ function zoome(faktor: number): void {
 
 function drehe(dx: number, dy: number): void {
   const { camera, setCamera } = useStore.getState();
+  if (camera.mode === 'fly') {
+    // Im Flug schaut Ziehen um (Entwurf Flug und Controller §4.3). Der Himmel
+    // folgt der Hand wie in Stellarium: nach rechts gezogen dreht der Blick
+    // nach links, nach oben gezogen senkt er sich.
+    setCamera({ fly: { ...camera.fly, ...blickDrehen(camera.fly, dx * DREH_PRO_PIXEL, dy * DREH_PRO_PIXEL) } });
+    return;
+  }
   setCamera({
     azimuth: camera.azimuth - dx * DREH_PRO_PIXEL,
     elevation: begrenze(
@@ -37,6 +47,8 @@ export interface EingabeRueckrufe {
    * und beim Druck eines Fingers; ein Maus- oder Stiftdruck allein lässt ihn stehen.
    */
   onZeiger?: (zeiger: { x: number; y: number; art: Zeigerart } | null) => void;
+  /** Rad im Flug: Faktor auf das Flugtempo statt Zoom (Entwurf Flug und Controller §4.3). */
+  onTempo?: (faktor: number) => void;
 }
 
 interface Druck { startX: number; startY: number; x: number; y: number; art: Zeigerart; zieht: boolean; tippbar: boolean }
@@ -139,6 +151,11 @@ export function attachCameraInput(element: HTMLElement, rueckrufe: EingabeRueckr
     e.preventDefault();
     // deltaMode 1 zählt Zeilen statt Pixel (Firefox) — auf Pixel normieren.
     const schritte = (e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY) / 100;
+    if (useStore.getState().camera.mode === 'fly') {
+      // Eine Raste nach unten (beim Zoom „weiter weg") verlangsamt.
+      rueckrufe.onTempo?.(TEMPO_JE_RASTE ** -schritte);
+      return;
+    }
     zoome(1.1 ** schritte);
   };
 
