@@ -3,7 +3,7 @@ import { advanceCinema, blendedRate, RATE_BLEND_SEC, tickCinema, szenenBeginn } 
 import { DEFAULT_STATE, useStore } from '../store';
 import { naechsteMondfinsternis } from '../sim/finsternis';
 import { bodyIndex } from '../data/index';
-import { J2000 } from '../sim/time';
+import { J2000, JD_MAX } from '../sim/time';
 import { SCENES } from '../data/scenes';
 import { plannedSceneAt } from '../sim/director';
 
@@ -175,5 +175,23 @@ describe('tickCinema — Zeitsprung auf die nächste Mondfinsternis', () => {
     useStore.setState({ time: { ...useStore.getState().time, jd: mitten } });
     tickCinema(0.016);
     expect(useStore.getState().time.jd).toBe(mitten);
+  });
+
+  it('bleibt beim Sprung nahe JD_MAX im Zeitbereich', () => {
+    // Startwert 100 Tage vor JD_MAX: Die gefundene Finsternis liegt hier
+    // nachweislich jenseits von JD_MAX (jdNeu wäre ohne Klemmung größer),
+    // die Suche selbst darf über den Zeitbereich hinausreichen.
+    const start = JD_MAX - 100;
+    kinoVorSzene(indexMondfinsternis, start);
+
+    const f = naechsteMondfinsternis(bodyIndex, start)!;
+    expect(f).not.toBeNull();
+    const jdNeu = f.eintrittJd - 0.1 * (f.austrittJd - f.eintrittJd);
+    expect(jdNeu).toBeGreaterThan(JD_MAX);
+
+    tickCinema(0.016);
+    const nachher = useStore.getState();
+    expect(nachher.cinema.nummer).toBe(indexMondfinsternis);
+    expect(nachher.time.jd).toBe(JD_MAX);
   });
 });

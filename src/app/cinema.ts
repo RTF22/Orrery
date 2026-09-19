@@ -4,6 +4,7 @@ import { SCENES } from '../data/scenes';
 import { plannedSceneAt } from '../sim/director';
 import { naechsteMondfinsternis } from '../sim/finsternis';
 import { bodyIndex } from '../data/index';
+import { imZeitbereich } from '../sim/time';
 
 /** So lange fährt der Zeitraffer beim Szenenwechsel auf den neuen Wert. */
 export const RATE_BLEND_SEC = 2;
@@ -103,7 +104,9 @@ export function tickCinema(dtSek: number): void {
     cinema: nachher,
     time: {
       ...zustand.time,
-      jd: jdNeu,
+      // Die Suche selbst darf über den Zeitbereich hinausreichen (bis zu
+      // SUCHE_MAX_TAGE), geschrieben wird nur ein geklemmter Wert.
+      jd: imZeitbereich(jdNeu),
       paused: false,
       rateDaysPerSec: blendedRate(
         vonRate, geplant.scene.timeRateDaysPerSec, nachher.elapsedSec,
