@@ -66,7 +66,7 @@ laufender Uhr. Konsole seit dem Laden: 0 Fehler, 0 Warnungen.
 | 2 | Mitführung, 10 d/s, 5 s: Schwerpunkt der Saturnscheibe verschiebt sich um höchstens 3 px; Gegenprobe Frei: ein Vielfaches | 5005,9 ms, 50,04 d: 0,07 px; Gegenprobe Frei (gleiche Kameralage, `freezeJd`): 465,9 px (Vorhersage aus den Bahnlagen 446 px) | ja |
 | 3 | Bezugswechsel: Schritt im Wechselbild höchstens 1,5-mal der größte der drei Schritte davor und danach | Zwei Wechsel (siehe §5): Sonne → Mond 6143,0 km gegen 6337,7 km davor / 6008,3 km danach (0,97 bzw. 1,02); Erde → Sonne 34 795,6 km gegen 34 506,8 / 35 670,5 km (1,01 bzw. 0,98); `refId 'moon'` nach 9021 ms | ja |
 | 4 | Shift+A 150 ms: nach 3 s Jupiter höchstens 2 px von der Bildmitte; `targetId 'jupiter'`, `mode 'attached'`; Infopanel „Jupiter" | vorher 138,1 px rechts der Mitte; 152,3 ms gehalten; nach 3018,9 ms Schwerpunkt (1279,500 \| 646,998): 0,002 px von der Pixelmitte (1279,5 \| 647,0), 0,71 px von (1280 \| 647,5); `attached` / `jupiter`; Kopf `heading "Jupiter"` | ja |
-| 5 | Kino und Maus: `cinema.running` false, `mode 'fly'`, Rate wie vor dem Kino; größter Schritt in den fünf Bildern um den Wechsel ≤ größter Flugschritt danach; Ziehen 100 px → `fly.yaw` + 100·π/600 (±1 %); Rad eine Raste nach oben → „Tempo ×1,25" | false / `fly` / 1 d/s (vorher 1, im Kino 0,4); 61 478,4 km ≤ 363 428,7 km (Wechselschritt selbst 8866,9 km); Δyaw 0,5235988 (0,000 %); `role="status"` „Tempo ×1,25", nach 1544,6 ms wieder weg | ja |
+| 5 | Kino und Maus: `cinema.running` false, `mode 'fly'`, Rate wie vor dem Kino; größter Schritt in den fünf Bildern um den Wechsel ≤ größter Flugschritt danach; Ziehen 100 px → `fly.yaw` + 100·π/600 (±1 %); Rad eine Raste nach oben → „Tempo ×1,25" | false / `fly` / 1 d/s (vorher 1, im Kino 0,4); jd 2 451 676,1388 nach 5 s; 61 478,4 km ≤ 363 428,7 km (Wechselschritt selbst 8866,9 km); Δyaw 0,5235988 (0,000 %); `role="status"` „Tempo ×1,25", nach 1544,6 ms wieder weg | ja |
 | 6 | Kosten: Mittel (b) höchstens 0,5 ms über (a), kein Bildabstand über 25 ms | (a) Geheftet an der Erde, ohne Eingabe: 299 Abstände, Mittel 16,680 ms, größter 16,9 ms; (b) Flug mit gehaltenem W: 300 Abstände, Mittel 16,681 ms, größter 17,0 ms; Differenz +0,001 ms | ja |
 
 Einzelheiten je Messung:
@@ -89,7 +89,7 @@ Einzelheiten je Messung:
    den Datenblock und den Gymnasialtext; im Objektbaum ist „Jupiter" gedrückt.
 5. Oberfläche sichtbar, Standarddarstellung, `pauseOnInput: true`, Uhr 1 d/s, Kamera vorher
    Geheftet an Jupiter. Nach 3 s Ruhe echte Taste `c`: Kino läuft (Szene an Neptun, 0,4 d/s),
-   Vollbild gewährt. 5 s später Aufzeichnung (81 Bilder), W 302,9 ms. Schritte der gezeigten Lage
+   Vollbild gewährt. 5 s später (jd 2 451 676,1388) Aufzeichnung (81 Bilder), W 302,9 ms. Schritte der gezeigten Lage
    in den Bildern 17 bis 21 (Wechsel in Bild 19): 9571,8 / 9571,8 / 8866,9 / 31 523,0 /
    61 478,4 km. Relativ zu Neptun zum jd der gezeigten Lage: Kinoschritte 10 346 km,
    Wechselschritt 8947,8 km, danach wachsend bis 363 715 km. Ziehen ab (1280 | 1000) auf der
@@ -140,7 +140,8 @@ Plan-Rulings (beim Schreiben des Plans, von Jens noch nicht bestätigt):
     Weg des Körpers in einem Bild (gemessen 0,5° bei 1 d/s, 27° bei 30 d/s). `flugStarten` und
     `heftenUm` verlieren dafür ihren `jd`-Parameter.
 
-Rulings der Umsetzung:
+Rulings der Umsetzung (Tasks 2, 3, 7, 9 und 10; das Ruling aus dem Review von Task 4 steht oben als
+Plan-Ruling 17, nicht gesondert hier):
 
 - Ruling: (Task 2) `begrenze` in `input.ts` durch den Import aus `./flug` ersetzt, in Fixrunde 1
   (2ff404c) — der Brief verlegte nur die drei Konstanten, die Dopplung entstand durch den
@@ -154,6 +155,12 @@ Rulings der Umsetzung:
   unverändert.
 - Ruling: (Task 10) Umsetzer der Abnahme auf opus statt sonnet (Plan-Hinweis) — der Messaufbau im
   Browser verlangt Urteil; Kosten bei Irrtum: höhere Modellkosten.
+- Ruling: (Task 7, nachgetragen bei der Nacharbeit nach der Schlussprüfung, M2) Lässt man Shift bei
+  noch gehaltener Flugtaste los, fliegt die Kamera sofort weiter (Plan Task 7 legt das per Test fest
+  — „kehrt beim Loslassen von Shift mit gehaltener Taste in den Flug zurück" —, ohne dass einer der
+  17 Plan-Rulings dieses Verhalten nennt). Entwurf §4.2 („Lässt man Shift los, bleibt die Kamera
+  geheftet, bis wieder WASD ohne Shift kommt") lässt sich auch als neuer Tastendruck lesen; offene
+  Frage an Jens, siehe §6.
 
 Rulings dieser Abnahme:
 
@@ -207,6 +214,22 @@ Aus den Reviews der Tasks (zurückgestellt):
   Flug setzen `pose.jd = time.jd`, ein abweichendes `pose.jd` ist ungetestet (Task 9).
 - `letztePose()` gibt das interne Objekt heraus; `Readonly<GezeigtePose>` würde es absichern
   (Task 4).
+
+Aus der Schlussprüfung (zurückgestellt, M4 und M5):
+
+- M4: Der Abstand im Kamera-Panel veraltet im ruhenden Flug bei laufender Uhr, wenn `targetId` vom
+  Bezug abweicht (`CameraPanel.tsx`: `anzeigeAbstand` liest `letztePose()` nur beim Rendern, das
+  Panel rendert nur bei Änderungen von `camera`, und `flugNachfuehren` schreibt `camera` ohne
+  Bewegung/Bezugswechsel nicht, Ruling 12). Text und Regler zeigen dann einen stehenden Wert, der
+  Wert ist zudem stets ein Bild alt. Beheben: im Flug mit dem Takt von `useLiveJd` (250 ms) neu
+  rendern, oder so belassen.
+- M5: Blickdämpfung über die Sehne (`controller.ts:169`): Gedämpft wird der Blickvektor
+  komponentenweise und danach normiert. Bei großen Blicksprüngen (Ansicht oder Link im Flugmodus
+  laden, `stopCinema` stellt einen Flug wieder her) läuft der Zwischenvektor nahe am Ursprung
+  vorbei, die Drehung wird ungleichförmig; bei genau entgegengesetzter Richtung entsteht der
+  Nullvektor (kein NaN, aber `letztePose().blick` ist dann 0). Mit Maus und Tastatur praktisch
+  unerreichbar. Beheben (niedrige Priorität): yaw/pitch mit Umwicklung dämpfen oder sphärisch
+  interpolieren.
 - Vorbestehend: Ein Moduswechsel bei gleichem Ziel (etwa Folgen → Geheftet durch Shift) lässt die
   Kamera ein Bild im Raum stehen und 0,45 s nachholen (Schlüsselwechsel im Controller rechnet den
   Versatz mit dem Anker des Vorbilds); bei 30 d/s sichtbar (Task 4).
@@ -224,11 +247,69 @@ Aus den Reviews der Tasks (zurückgestellt):
 
 ## 6. Fragen an Jens
 
-1. Bezug zwischen Erde und Mond (§5, erster Punkt): So lassen, oder soll ein Planet Bezug bleiben,
-   solange die Kamera in seinem Mondsystem ist? Heute bleibt die Kamera halbwegs zum Mond bei
-   laufender Uhr zurück.
-2. Ziel nach dem Wechsel vom Kino in den Flug (§5, zweiter Punkt): Soll `targetId` das Ziel von vor
-   dem Kino bleiben (heute) oder das Ziel der laufenden Szene übernehmen?
-3. Bestätigung der 17 Plan-Rulings, der vier Rulings der Umsetzung und der fünf Rulings dieser
-   Abnahme (§4).
-4. Freigabe für den Plan der Etappe 2 (Controller und Fadenkreuz) nach dieser Abnahme.
+1. **(I1, Entwurffrage, geschärft)** Bezugsmaß im Schaubild (§5, erster Punkt): Die Sonne wird
+   zwischen Erde und Mond zum Bezug, weil q = |p − p_K| / R_K im Schaubild die Sonne begünstigt (sie
+   gewinnt ab rund 15 R_E, der Mond erst unter rund 8,9 Mondradien). Vorschlag der Schlussprüfung:
+   Bezug hierarchisch wählen — liegt die Kamera im dargestellten System eines Planeten, konkurriert
+   die Sonne nicht; als Systemgrenze ein mit `sizeScale` skalierter Hill-Radius (passt zur Kopplung
+   der Mondbahnen an `sizeScale` in `sim/scale.ts`) oder ein Vielfaches der äußersten sichtbaren
+   Mondbahn. Alternative: so lassen und in Kürzelübersicht/Doku erwähnen. Vor dem Plan der Etappe 2
+   zu entscheiden, die mit derselben Regel fliegt.
+2. **(Task-10-Bedenken 2, geschärft)** Ziel nach dem Wechsel vom Kino in den Flug (§5, zweiter
+   Punkt): `stopCinema` stellt `targetId` von vor dem Kino her, der Flug lässt es stehen
+   (Entscheidung 8) — mit Shift wird dagegen der Körper in der Bildmitte Ziel. Nach W bleibt so das
+   Infopanel auf einem Körper stehen, den die Kamera gar nicht ansteuert. Vorschlag: Beim Flugstart
+   aus dem Kino `targetId` auf `lookAtId ?? targetId` der laufenden Szene setzen.
+3. **(M2)** Lässt man Shift bei noch gehaltener Flugtaste los, fliegt die Kamera heute sofort weiter
+   (Ruling in §4 nachgetragen). Soll das stattdessen einen neuen Tastendruck brauchen (dann müsste
+   `tastatur.ts` die unter Shift gedrückten Tasten gesondert merken und erst nach ihrem `keyup` für
+   den Flug freigeben)?
+4. **(M6)** Große Übergänge in den Flug (Wiederherstellung eines Flugs durch `stopCinema`, geladene
+   Ansicht im Flugmodus) laufen mit der Flugdämpfung 0,15 s statt der 0,45 s der Umlaufmodi — über
+   Systemweiten wirkt das wie ein Sprung. Sollen solche Wiederherstellungen mit 0,45 s dämpfen?
+5. **(M7)** „Körper nächst der Bildmitte" wählt heute nach Winkel zur Achse, sobald keine Scheibe
+   getroffen wird; das bevorzugt kleine oder ferne Körper knapp neben der Mitte vor einer großen
+   Scheibe etwas weiter daneben (Abnahme Messung 4: Varianten wählten Io, Europa, Titan oder Saturn
+   statt Jupiter). Vorschlag: Winkel minus Winkelradius (Abstand zum Scheibenrand) als Maß.
+6. Bestätigung der 17 Plan-Rulings, der fünf Rulings der Umsetzung (Tasks 2, 3, 7, 9, 10; der
+   Ruling zu Task 7 ist der M2-Nachtrag) und der fünf Rulings dieser Abnahme (§4).
+7. Freigabe für den Plan der Etappe 2 (Controller und Fadenkreuz) nach dieser Abnahme und nach den
+   Antworten auf 1–5, da Etappe 2 auf demselben Bezugsmaß und derselben Blickführung aufbaut.
+
+## 7. Nacharbeit nach der Schlussprüfung
+
+Urteil der Schlussprüfung (54e90db..e55aa0f, Ready to merge: Yes): 0 Critical, 1 Important (I1, eine
+Entwurfsfrage, keine Abweichung der Umsetzung vom Entwurf), 9 Minor (M1–M9).
+
+Behoben (Commit `6a16cbb` „Flug: Nacharbeit nach der Schlussprüfung"):
+
+- **A1 (M1):** Shift mit gehaltener Flugtaste, aber ohne getroffenen Körper, setzte im Flug
+  Bezugswahl und Mindesthöhe aus. `steuerungTakt` ruft nach `drehen` jetzt zusätzlich
+  `flugNachfuehren(jd, dt, null)`, wenn der Modus weiterhin `fly` ist; der `drehen`-Kommentar nennt
+  jetzt auch das beendete Kino ohne getroffenen Körper.
+- **A2 (M3):** Auf Colemak, Neo 2 und Bépo lösten Flugtasten (nach `e.code`) zugleich ein Kürzel
+  (nach `e.key`) aus, weil der Kürzel-Listener vor dem Flug-Listener registriert wurde und beide in
+  der Bubble-Phase liefen. Der Flug-`keydown` in `tastatur.ts` läuft jetzt in der Einfangphase
+  (`{ capture: true }`); auf QWERTZ/QWERTY/AZERTY ändert sich nichts, und geprüft wurde, dass keine
+  andere Stelle (Ruhewächter, Kamerafahrt-Abbruch) `defaultPrevented` auswertet.
+- **A3 (M8):** Der Kürzeltext zu Shift+WASD nennt jetzt auch W/S („näher und weiter") in beiden
+  Sprachen.
+- **A4 (M9):** Die Tempo-Einblendung (`role="status"`) bleibt jetzt stets eingehängt und ist ohne
+  Text ohne Fläche, Rahmen oder Hintergrund (im Browser belegt: 0×0 px, `background rgba(0,0,0,0)`,
+  `border 0px`, `pointer-events: none`).
+- **A5 (Ledger-Minor Task 6):** `tempoAendern` verwirft jetzt NaN und ±Infinity, das Tempo bleibt
+  unverändert.
+
+Als Frage oder Unschärfe offen (Code unverändert, siehe §5/§6): I1 (Bezugsmaß im Schaubild), M2
+(Shift loslassen, jetzt als Ruling in §4 nachgetragen), M4 (Panel-Abstand veraltet im ruhenden
+Flug), M5 (Blickdämpfung über die Sehne), M6 (Dämpfung bei Wiederherstellung), M7 (Maß „nächst der
+Bildmitte"), Task-10-Bedenken 2 (Ziel nach W aus dem Kino, geschärft).
+
+Testzahl: 3766 → 3769 (+1 Test zu A1, +1 Test zu A2, +1 Test zu A5; A4 ersetzt den bestehenden
+`TempoHinweis`-Test 1:1 (weiterhin ein Test, neuer Ablauf), A3 ist ein reiner Textwechsel ohne
+eigenen Test).
+
+Prüfläufe nach der Nacharbeit: `npm test` → Test Files 98 passed (98), Tests 3769 passed (3769),
+Dauer 13,62 s. `npx tsc -b` → keine Ausgabe (fehlerfrei). `npm run lint` → `eslint .` ohne Befund.
+`npm run build` → `✓ built in 653ms`, Hauptchunk `index-CTXzbhtW.js` 1 291,02 kB (gzip 346,93 kB),
+nur der bekannte Chunkgrößen-Hinweis.
