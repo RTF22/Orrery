@@ -2,8 +2,10 @@ import { useId } from 'react';
 import { useStore } from '../../store';
 import { t } from '../i18n';
 import { Panel } from './Panel';
-import { formatJd, formatRate, isOutOfRange } from '../format';
-import { dateToJd, jdToDate } from '../../sim/time';
+import {
+  formatJd, formatRate, isOutOfRange, jdZuDatumsfeld,
+} from '../format';
+import { dateToJd } from '../../sim/time';
 
 /** Reglerbereich: eine Sekunde bis tausend Jahre je Sekunde. */
 const RATE_MIN = 1 / 86400;
@@ -17,12 +19,6 @@ const reglerZuRate = (v: number): number => RATE_MIN * (RATE_MAX / RATE_MIN) ** 
 const rateZuRegler = (rate: number): number =>
   Math.log(Math.min(Math.max(Math.abs(rate), RATE_MIN), RATE_MAX) / RATE_MIN)
   / Math.log(RATE_MAX / RATE_MIN);
-
-/** JD → „2026-09-11" für `<input type="date">`. */
-function jdZuFeldwert(jd: number): string {
-  const d = jdToDate(jd);
-  return Number.isFinite(d.getTime()) ? d.toISOString().slice(0, 10) : '';
-}
 
 export function TimePanel(): React.JSX.Element {
   const zeit = useStore((s) => s.time);
@@ -89,7 +85,7 @@ export function TimePanel(): React.JSX.Element {
             type="date"
             max="9999-12-31"
             className="rounded border border-white/15 bg-transparent px-2 py-1"
-            value={jdZuFeldwert(zeit.jd)}
+            value={jdZuDatumsfeld(zeit.jd)}
             onChange={(e) => {
               const teile = e.target.value.split('-').map(Number);
               const [jahr, monat, tag] = teile;

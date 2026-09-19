@@ -20,6 +20,20 @@ function datumsformat(): Intl.DateTimeFormat {
 
 export const formatJd = (jd: number): string => datumsformat().format(jdToDate(jd));
 
+/**
+ * JD → „2026-09-11" für `<input type="date">`. Leer bei nicht endlichen Daten
+ * und bei Jahren (UTC) außerhalb 1 bis 9999 — `<input type="date">` kann
+ * Jahre vor 1 grundsätzlich nicht darstellen, `toISOString` liefert für
+ * Jahre über 9999 ein erweitertes Format, das das Feld ebenfalls ablehnt.
+ */
+export function jdZuDatumsfeld(jd: number): string {
+  const d = jdToDate(jd);
+  if (!Number.isFinite(d.getTime())) return '';
+  const jahr = d.getUTCFullYear();
+  if (jahr < 1 || jahr > 9999) return '';
+  return d.toISOString().slice(0, 10);
+}
+
 /** Zahl in der Locale der aktuellen Sprache, gerundet auf maxStellen. */
 export const formatZahl = (n: number, maxStellen = 2): string =>
   n.toLocaleString(locale(), { maximumFractionDigits: maxStellen });

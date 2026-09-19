@@ -1,6 +1,8 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { formatJd, formatRate, formatZahl, formatAbstand, formatMasse, isOutOfRange } from './format';
-import { dateToJd, J2000 } from '../sim/time';
+import {
+  formatJd, formatRate, formatZahl, formatAbstand, formatMasse, isOutOfRange, jdZuDatumsfeld,
+} from './format';
+import { dateToJd, J2000, JD_MIN, JD_MAX } from '../sim/time';
 import { setSprache } from './i18n';
 
 describe('formatJd', () => {
@@ -51,6 +53,25 @@ describe('Formatierung je Sprache', () => {
     setSprache('en');
     expect(formatRate(2.5)).toBe('2.5 days/s');
     expect(formatRate(1)).toBe('1 day/s');
+  });
+});
+
+describe('jdZuDatumsfeld', () => {
+  it('formatiert ein Datum als yyyy-mm-dd', () => {
+    const jd = dateToJd(new Date(Date.UTC(2026, 8, 19)));
+    expect(jdZuDatumsfeld(jd)).toBe('2026-09-19');
+  });
+
+  it('liefert leer für Jahre vor 1 (JD_MIN, 4713 v. Chr.)', () => {
+    expect(jdZuDatumsfeld(JD_MIN)).toBe('');
+  });
+
+  it('erreicht am oberen Rand (JD_MAX) noch das Jahr 9999', () => {
+    expect(jdZuDatumsfeld(JD_MAX)).toBe('9999-12-31');
+  });
+
+  it('liefert leer knapp über JD_MAX (Jahr 10000)', () => {
+    expect(jdZuDatumsfeld(JD_MAX + 1)).toBe('');
   });
 });
 
