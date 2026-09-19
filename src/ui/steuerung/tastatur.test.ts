@@ -97,6 +97,18 @@ describe('tastaturAnhaengen', () => {
     expect(tastatur.stand().gehalten.has('KeyW')).toBe(true);
   });
 
+  it('übernimmt das Loslassen von Shift auch im Eingabefeld', () => {
+    tastatur = tastaturAnhaengen(window);
+    taste('keydown', 'KeyW');
+    taste('keydown', 'ShiftLeft', { key: 'Shift', shiftKey: true });
+    expect(tastatur.stand().shift).toBe(true);
+    const feld = document.createElement('input');
+    document.body.appendChild(feld);
+    taste('keyup', 'ShiftLeft', { key: 'Shift', shiftKey: false }, feld);
+    expect(tastatur.stand().shift).toBe(false);
+    expect(tastatur.stand().gehalten.has('KeyW')).toBe(false);
+  });
+
   it('vergisst alles beim Verlassen des Fensters und beim Verbergen der Seite', () => {
     tastatur = tastaturAnhaengen(window);
     taste('keydown', 'KeyW', { shiftKey: true });
