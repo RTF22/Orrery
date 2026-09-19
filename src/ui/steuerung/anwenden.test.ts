@@ -19,6 +19,7 @@ import { startCinema, stopCinema } from '../cinemaControl';
 import { fahreZu, fahrtAbbrechen, fahrtLaeuft } from '../kamerafahrt';
 import { SCENES } from '../../data/scenes';
 import { IDLE_HIDE_SEC, useIdleHide, zeigerAusgeblendet } from '../idle';
+import { kreuzLage, kreuzSichtbar, kreuzZuruecksetzen } from './kreuz';
 
 const jd = DEFAULT_STATE.time.jd;
 const s = DEFAULT_STATE.scale;
@@ -432,5 +433,46 @@ describe('steuerungTakt: Controller', () => {
     expect(useStore.getState().camera.mode).toBe('free');
     steuerungTakt(jd, 0, mitPad(padAttrappe({ axes: [1, 0, 0, 0] }), pose));
     expect(useStore.getState().camera.mode).toBe('fly');
+  });
+});
+
+describe('steuerungTakt: Fadenkreuz', () => {
+  const l = { breite: 800, hoehe: 600 };
+  const mitKreuz = (p: PadRoh | null, zeiger: unknown[]): SteuerungUmgebung =>
+    ({ ...umgebung([], null), pad: () => p, leinwand: () => l, zeiger: (z) => { zeiger.push(z); } });
+
+  beforeEach(() => { kreuzZuruecksetzen(); });
+
+  it('zeigt das Kreuz ab der ersten Eingabe, bewegt es eine Leinwandhöhe je Sekunde und meldet es als Zeiger pad', () => {
+    const zeiger: unknown[] = [];
+    steuerungTakt(jd, 0, mitKreuz(padAttrappe(), zeiger));
+    expect(kreuzSichtbar()).toBe(false);
+    expect(zeiger).toEqual([]);
+    steuerungTakt(jd, 0.25, mitKreuz(padAttrappe({ axes: [0, 0, 1, 0] }), zeiger));
+    expect(kreuzSichtbar()).toBe(true);
+    expect(kreuzLage(l)).toEqual({ x: 550, y: 300 });
+    expect(zeiger.at(-1)).toEqual({ x: 550, y: 300, art: 'pad' });
+  });
+
+  it('holt das Kreuz mit R3 zur Mitte', () => {
+    const zeiger: unknown[] = [];
+    steuerungTakt(jd, 0, mitKreuz(padAttrappe(), zeiger));
+    steuerungTakt(jd, 0.25, mitKreuz(padAttrappe({ axes: [0, 0, 0, 1] }), zeiger));
+    expect(kreuzLage(l).y).toBeCloseTo(450, 9);
+    steuerungTakt(jd, 0, mitKreuz(padAttrappe({ gedrueckt: [PAD.R3] }), zeiger));
+    expect(kreuzLage(l)).toEqual({ x: 400, y: 300 });
+  });
+
+  it('blendet das Kreuz beim Trennen aus und löscht den Zeiger genau einmal', () => {
+    const zeiger: unknown[] = [];
+    steuerungTakt(jd, 0, mitKreuz(padAttrappe(), zeiger));
+    steuerungTakt(jd, 0, mitKreuz(padAttrappe({ gedrueckt: [PAD.X] }), zeiger));
+    expect(kreuzSichtbar()).toBe(true);
+    steuerungTakt(jd, 0, mitKreuz(null, zeiger));
+    expect(kreuzSichtbar()).toBe(false);
+    expect(zeiger.at(-1)).toBeNull();
+    const anzahl = zeiger.length;
+    steuerungTakt(jd, 0, mitKreuz(null, zeiger));
+    expect(zeiger.length).toBe(anzahl);
   });
 });

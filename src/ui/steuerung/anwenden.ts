@@ -16,6 +16,11 @@ import { padAuswerten, PAD } from './gamepad';
 import type { PadAbsicht, PadBild, PadRoh, Stick } from './gamepad';
 import { tastenAbsicht } from './tastatur';
 import type { Tastenstand } from './tastatur';
+import type { Zeigerart } from '../../render/treffer';
+import {
+  kreuzAusblenden, kreuzBewegen, kreuzLage, kreuzMitte, kreuzSichtbar, kreuzZeichnen, kreuzZeigen,
+} from './kreuz';
+import type { Leinwand } from './kreuz';
 
 /**
  * Tempofaktor des Flugs (Entwurf Flug und Controller §3.4): flüchtig, nicht in
@@ -57,6 +62,10 @@ export interface SteuerungUmgebung {
   letztePose(): GezeigtePose | null;
   /** Controller dieses Bildes (Leser aus gamepad.ts); ohne ihn gibt es keinen. */
   pad?(): PadRoh | null;
+  /** Größe der Canvas in CSS-Pixeln, für das Fadenkreuz; ohne sie ruht es. */
+  leinwand?(): Leinwand;
+  /** Zeiger für den Hover der Szene (szene.setZeiger). */
+  zeiger?(z: { x: number; y: number; art: Zeigerart } | null): void;
 }
 
 /** Körper, auf den die geplante Szene des Kinos blickt (Nachtrag §13.2). */
@@ -232,23 +241,28 @@ export function padZuruecksetzen(): void {
 const lenkt = (a: PadAbsicht): boolean => a.links.x !== 0 || a.links.y !== 0 || a.vor !== 0;
 const bewegt = (a: PadAbsicht): boolean => lenkt(a) || a.rechts.x !== 0 || a.rechts.y !== 0;
 
+/** Controller eines Bildes: ausgewertetes Bild und ob er in diesem Bild verschwand. */
+interface PadTakt { bild: PadBild | null; getrennt: boolean }
+
 /**
  * Liest den Controller, führt Vorzustand und LB-Sperre und meldet Eingaben
  * (§5.5), weil der Controller keine Fensterereignisse auslöst: jede an den
  * Ruhewächter; jede außer Menü/Start und RB hält ein Kino an, wie C und N;
  * jede außer A und B bricht eine Kamerafahrt ab — A und B starten selbst
- * eine. Liefert null ohne Controller und beim ersten Auftauchen.
+ * eine. Ohne Controller und beim ersten Auftauchen ist das Bild null;
+ * `getrennt` meldet, dass er in diesem Bild verschwand.
  */
-function padTakt(u: SteuerungUmgebung): PadBild | null {
+function padTakt(u: SteuerungUmgebung): PadTakt {
   const roh = u.pad?.() ?? null;
   if (roh === null) {
+    const getrennt = padVorher !== null;
     padZuruecksetzen();
-    return null;
+    return { bild: null, getrennt };
   }
   const erstes = padVorher === null;
   const { bild, gedrueckt } = padAuswerten(roh, padVorher);
   padVorher = gedrueckt;
-  if (erstes) return null;
+  if (erstes) return { bild: null, getrennt: false };
   const a = bild.absicht;
   if (lbVorher && !a.lb && lenkt(a)) padGesperrt = true;
   if (!lenkt(a)) padGesperrt = false;
@@ -258,7 +272,7 @@ function padTakt(u: SteuerungUmgebung): PadBild | null {
     if (bewegt(a) || bild.flanken.some((t) => t !== PAD.MENUE && t !== PAD.RB)) noteUserInput();
     if (bewegt(a) || bild.flanken.some((t) => t !== PAD.A && t !== PAD.B)) fahrtAbbrechen();
   }
-  return bild;
+  return { bild, getrennt: false };
 }
 
 /** Bewegung eines Bildes, die Tastatur vor dem Controller. */
@@ -281,13 +295,44 @@ function bewegen(jd: number, dt: number, u: SteuerungUmgebung, bild: PadBild | n
   if (useStore.getState().camera.mode === 'fly') flugNachfuehren(jd, dt, null);
 }
 
+/** Fadenkreuz bei vollem Ausschlag: eine Canvas-Höhe je Sekunde (Entwurf §5.2). */
+export const KREUZ_HOEHEN_JE_S = 1;
+
+/**
+ * Fadenkreuz eines Bildes (§5.4): Jede Controller-Eingabe zeigt es, der rechte
+ * Stick bewegt es, R3 holt es zur Mitte, Trennen blendet es aus und löscht den
+ * Hover. Solange es sichtbar ist, geht seine Lage als Zeiger der Art pad an
+ * die Szene. Eine Mausbewegung blendet es aus (Fadenkreuz.tsx); den Hover der
+ * Maus löscht es dabei nicht.
+ */
+function kreuzTakt(dt: number, u: SteuerungUmgebung, pad: PadTakt): void {
+  const leinwand = u.leinwand?.();
+  if (leinwand === undefined) return;
+  const { bild } = pad;
+  if (bild !== null) {
+    if (bild.eingabe) kreuzZeigen();
+    const r = bild.absicht.rechts;
+    const weg = leinwand.hoehe * KREUZ_HOEHEN_JE_S * dt;
+    if (r.x !== 0 || r.y !== 0) kreuzBewegen(r.x * weg, r.y * weg, leinwand);
+    if (bild.flanken.includes(PAD.R3)) kreuzMitte(leinwand);
+  }
+  if (pad.getrennt) {
+    if (kreuzSichtbar()) u.zeiger?.(null);
+    kreuzAusblenden();
+  }
+  if (kreuzSichtbar()) u.zeiger?.({ ...kreuzLage(leinwand), art: 'pad' });
+  kreuzZeichnen(leinwand);
+}
+
 /**
  * Je Bild vor dem Kino-Takt (Entwurf §6.2). Gehaltene Flugtasten ohne Shift
  * sowie linker Stick oder Trigger ohne LB starten den Flug an der gezeigten
  * Lage und fliegen; im Flug laufen Mindesthöhe und Bezugswahl auch ohne
  * Eingabe. Mit Shift oder LB dreht die Kamera um den Körper nächst der
- * Bildmitte (§4.2, §5.2).
+ * Bildmitte (§4.2, §5.2). Danach bewegt der rechte Stick das Fadenkreuz.
  */
 export function steuerungTakt(jd: number, dt: number, u: SteuerungUmgebung): void {
-  bewegen(jd, dt, u, padTakt(u));
+  const pad = padTakt(u);
+  bewegen(jd, dt, u, pad.bild);
+  kreuzTakt(dt, u, pad);
 }

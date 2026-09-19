@@ -108,6 +108,12 @@ describe('findeTreffer', () => {
     expect(findeTreffer({ x: 101, y: 100 }, k, 8)).toBe('jupiter');
     expect(findeTreffer({ x: 106, y: 100 }, k, 8)).toBe('jupiter');
   });
+
+  it('fängt mit dem Fadenkreuz des Controllers wie mit dem Finger (20 px)', () => {
+    const k: Kandidaten = { ...leer, scheiben: [scheibe('mars', 100, 100, 2)] };
+    expect(findeTreffer({ x: 115, y: 100 }, k, FANG_PX.pad)).toBe('mars');
+    expect(findeTreffer({ x: 115, y: 100 }, k, FANG_PX.maus)).toBeNull();
+  });
 });
 
 describe('abstandZumSegment', () => {

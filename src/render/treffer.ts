@@ -6,12 +6,18 @@ import type { Matrix4 } from 'three';
  * projizierten Kandidaten, hier fällt nur die Entscheidung.
  */
 
-export type Zeigerart = 'maus' | 'finger';
+export type Zeigerart = 'maus' | 'finger' | 'pad';
 
-/** Fangradius um den Zeiger. Ein Finger trifft ungenauer als ein Mauszeiger. */
-export const FANG_PX: Record<Zeigerart, number> = { maus: 8, finger: 20 };
-/** Bewegung, ab der ein Druck als Ziehen gilt statt als Tippen. */
-export const TIPP_SCHWELLE_PX: Record<Zeigerart, number> = { maus: 4, finger: 10 };
+/**
+ * Fangradius um den Zeiger. Finger und Fadenkreuz des Controllers (Entwurf Flug
+ * und Controller §5.4) treffen ungenauer als ein Mauszeiger.
+ */
+export const FANG_PX: Record<Zeigerart, number> = { maus: 8, finger: 20, pad: 20 };
+/**
+ * Bewegung, ab der ein Druck als Ziehen gilt statt als Tippen. Das Fadenkreuz
+ * zieht nicht; sein Wert steht nur der Vollständigkeit halber wie beim Finger.
+ */
+export const TIPP_SCHWELLE_PX: Record<Zeigerart, number> = { maus: 4, finger: 10, pad: 10 };
 
 /** Stift zählt als Maus. */
 export const zeigerartVon = (pointerType: string): Zeigerart => (pointerType === 'touch' ? 'finger' : 'maus');
