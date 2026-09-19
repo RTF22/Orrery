@@ -51,8 +51,8 @@ $GM_\odot$, and masses should be quoted as $GM/G$ with the value of $G$ stated
 MESSENGER give
 $\dot{GM}_\odot/GM_\odot = (-6.13 \pm 1.47) \cdot 10^{-14}$ per year. The expected mass loss
 through the luminosity is $-0.679 \cdot 10^{-13}$ per year and through the solar wind
-$-0.2 \cdot 10^{-13}$ to $-0.69 \cdot 10^{-13}$ per year, together over the mission
-$-0.9 \cdot 10^{-13}$ to $-1.1 \cdot 10^{-13}$; the authors call the measured, somewhat smaller
+$-0.2 \cdot 10^{-13}$ to $-0.69 \cdot 10^{-13}$ per year, together on average over the duration
+of the mission $-0.9 \cdot 10^{-13}$ to $-1.1 \cdot 10^{-13}$ per year; the authors call the measured, somewhat smaller
 decrease consistent with this and use it to limit $|\dot{G}|/G$ to below
 $4 \cdot 10^{-14}$ per year ([Genova et al. 2018](literatur:genova-2018)). The share of the
 luminosity is
@@ -273,7 +273,8 @@ about 30 % below its present value; except for the first 0.2 billion years, appr
 
 $$\frac{L(t)}{L_\odot} = \frac{1}{1 + \frac{2}{5}\left(1 - \frac{t}{t_\odot}\right)}$$
 
-with the present age $t_\odot$ ([Feulner 2012](literatur:feulner-2012)). By radiative balance, a
+with the age $t$ since the arrival on the main sequence and the present age
+$t_\odot = 4.57$ billion years ([Feulner 2012](literatur:feulner-2012)). By radiative balance, a
 change of 30 % of the present value shifts the Earth's surface temperature by about 20 K
 ([Christensen-Dalsgaard 2021](literatur:christensen-dalsgaard-2021)). For the early Earth, stellar
 models predict about 25 % less insolation; without compensation it would have been frozen for the

@@ -51,8 +51,8 @@ $GM_\odot$, und Massen sollen als $GM/G$ mit genanntem $G$ angegeben werden
 Entfernungsmessungen zu MESSENGER folgt
 $\dot{GM}_\odot/GM_\odot = (-6{,}13 \pm 1{,}47) \cdot 10^{-14}$ je Jahr. Erwartet wird ein
 Massenverlust durch die Leuchtkraft von $-0{,}679 \cdot 10^{-13}$ je Jahr und durch den Sonnenwind
-von $-0{,}2 \cdot 10^{-13}$ bis $-0{,}69 \cdot 10^{-13}$ je Jahr, über die Mission zusammen
-$-0{,}9 \cdot 10^{-13}$ bis $-1{,}1 \cdot 10^{-13}$; die Autoren nennen die gemessene, etwas
+von $-0{,}2 \cdot 10^{-13}$ bis $-0{,}69 \cdot 10^{-13}$ je Jahr, zusammen im Mittel über die
+Missionsdauer $-0{,}9 \cdot 10^{-13}$ bis $-1{,}1 \cdot 10^{-13}$ je Jahr; die Autoren nennen die gemessene, etwas
 kleinere Abnahme damit verträglich und begrenzen daraus $|\dot{G}|/G$ auf unter
 $4 \cdot 10^{-14}$ je Jahr ([Genova et al. 2018](literatur:genova-2018)). Der Anteil der
 Leuchtkraft ist
@@ -286,7 +286,8 @@ näherungsweise
 
 $$\frac{L(t)}{L_\odot} = \frac{1}{1 + \frac{2}{5}\left(1 - \frac{t}{t_\odot}\right)}$$
 
-mit dem heutigen Alter $t_\odot$ ([Feulner 2012](literatur:feulner-2012)). Eine Änderung um 30 %
+mit dem Alter $t$ seit der Ankunft auf der Hauptreihe und dem heutigen Alter
+$t_\odot = 4{,}57$ Milliarden Jahre ([Feulner 2012](literatur:feulner-2012)). Eine Änderung um 30 %
 des heutigen Werts verschiebt nach der Strahlungsbilanz die Oberflächentemperatur der Erde um rund
 20 K ([Christensen-Dalsgaard 2021](literatur:christensen-dalsgaard-2021)). Für die frühe Erde sagen
 Sternmodelle eine um etwa 25 % geringere Einstrahlung voraus; ohne Ausgleich wäre sie in den
