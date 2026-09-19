@@ -49,10 +49,16 @@ describe('Formatierung je Sprache', () => {
     expect(formatJd(J2000)).toMatch(/^01\/01\/2000, 12:00$/);
   });
 
-  it('nennt für Jahre vor 1 die Ära, für JD_MIN (4714 v. Chr.)', () => {
-    expect(formatJd(JD_MIN)).toContain('v. Chr.');
+  it('nennt für Jahre vor 1 die Ära (JD 0, 4714 v. Chr.)', () => {
+    expect(formatJd(0)).toContain('v. Chr.');
     setSprache('en');
-    expect(formatJd(JD_MIN)).toContain('BC');
+    expect(formatJd(0)).toContain('BC');
+  });
+
+  it('zeigt am unteren Rand des Zeitbereichs (JD_MIN, Jahr 1) keine Ära', () => {
+    expect(formatJd(JD_MIN)).not.toContain('v. Chr.');
+    setSprache('en');
+    expect(formatJd(JD_MIN)).not.toContain('BC');
   });
 
   it('lässt ein Datum ab Jahr 1 ohne Ära, unverändert', () => {
@@ -76,8 +82,12 @@ describe('jdZuDatumsfeld', () => {
     expect(jdZuDatumsfeld(jd)).toBe('2026-09-19');
   });
 
-  it('liefert leer für Jahre vor 1 (JD_MIN, 4713 v. Chr.)', () => {
-    expect(jdZuDatumsfeld(JD_MIN)).toBe('');
+  it('liefert leer für Jahre vor 1 (JD 0, 4713 v. Chr.)', () => {
+    expect(jdZuDatumsfeld(0)).toBe('');
+  });
+
+  it('erreicht am unteren Rand (JD_MIN) das Jahr 1', () => {
+    expect(jdZuDatumsfeld(JD_MIN)).toBe('0001-01-01');
   });
 
   it('erreicht am oberen Rand (JD_MAX) noch das Jahr 9999', () => {

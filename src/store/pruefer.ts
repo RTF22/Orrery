@@ -52,7 +52,7 @@ const BOOLESCHE_RECORDS: ReadonlySet<string> = new Set(['visible', 'ui.panels'])
  * Wert außerhalb fällt weg wie jedes andere ungültige Feld — nicht
  * eingeklemmt, damit ein Eintrag aus einer Datei nie stillschweigend einen
  * anderen Wert bekommt als den, der darin steht. Julianische Tage begrenzt
- * der Zeitbereich aus sim/time.ts (JD 0 bis 31. Dezember 9999).
+ * der Zeitbereich aus sim/time.ts (1. Januar 1 bis 31. Dezember 9999).
  * `camera.azimuth` (Winkel ohne Grenze, wickelt um) und `cinema.seed`
  * (beliebige ganze Zahl) bleiben bewusst ohne Eintrag hier.
  */

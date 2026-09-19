@@ -99,9 +99,10 @@ describe('pruefeZustand: Wertebereiche', () => {
   });
 
   it('begrenzt time.jd und camera.freezeJd auf den Zeitbereich', () => {
-    const innen = { time: { jd: 5373483.5 }, camera: { freezeJd: 0 } };
+    const innen = { time: { jd: 5373483.5 }, camera: { freezeJd: 1721425.5 } };
     expect(pruefeZustand(innen)).toEqual(innen);
     expect(pruefeZustand({ time: { jd: 5373484 }, camera: { freezeJd: 6e6 } })).toEqual({});
+    expect(pruefeZustand({ time: { jd: 1721425 }, camera: { freezeJd: 0 } })).toEqual({});
   });
 });
 

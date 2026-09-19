@@ -48,6 +48,12 @@ describe('TimePanel', () => {
     expect(feld.max).toBe('9999-12-31');
   });
 
+  it('begrenzt das Datumsfeld nach unten auf das Jahr 1', () => {
+    render(<TimePanel />);
+    const feld = screen.getByLabelText(/Datum/) as HTMLInputElement;
+    expect(feld.min).toBe('0001-01-01');
+  });
+
   it('übernimmt die Jahre 1 bis 99 wörtlich statt sie ins 20. Jahrhundert zu verschieben', () => {
     render(<TimePanel />);
     const feld = screen.getByLabelText(/Datum/) as HTMLInputElement;

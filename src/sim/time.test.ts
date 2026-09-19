@@ -41,9 +41,10 @@ describe('Julianisches Datum', () => {
 });
 
 describe('Zeitbereich', () => {
-  it('reicht vom Julianischen Tag 0 bis zum 31. Dezember 9999', () => {
-    expect(JD_MIN).toBe(0);
+  it('reicht vom 1. Januar 1 bis zum 31. Dezember 9999', () => {
+    expect(JD_MIN).toBe(1721425.5);
     expect(JD_MAX).toBe(5373483.5);
+    expect(jdToDate(JD_MIN).toISOString()).toBe('0001-01-01T00:00:00.000Z');
     expect(jdToDate(JD_MAX).toISOString()).toBe('9999-12-31T00:00:00.000Z');
   });
 

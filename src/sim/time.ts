@@ -2,14 +2,17 @@
 export const J2000 = 2451545.0;
 
 /**
- * Zeitbereich, in dem Orrery rechnet: vom Julianischen Tag 0 (4713 v. Chr.)
- * bis zum 31. Dezember 9999, 0 Uhr UTC. Die linear fortgeschriebenen
+ * Zeitbereich, in dem Orrery rechnet: vom 1. Januar 1, 0 Uhr UTC (proleptisch
+ * gregorianisch, wie JavaScript `Date` rechnet; = 3. Januar 1 im julianischen
+ * Kalender) bis zum 31. Dezember 9999, 0 Uhr UTC. Die linear fortgeschriebenen
  * Bahnelemente bleiben darin rechenbar (Exzentrizität e in [0, 1)) — jenseits
  * davon würde etwa Saturns Exzentrizität im Jahr 12 563 negativ, und der
  * Kepler-Löser wiese sie zurück. Store und Bildschleife klemmen auf diesen
- * Bereich, das Kino ebenso; der Prüfer verwirft Werte außerhalb.
+ * Bereich, das Kino ebenso; der Prüfer verwirft Werte außerhalb. Das
+ * Datumsfeld (`<input type="date">`) kann Jahre vor 1 ohnehin nicht
+ * darstellen, die Untergrenze trifft also genau seinen unteren Rand.
  */
-export const JD_MIN = 0;
+export const JD_MIN = 1721425.5;
 export const JD_MAX = 5373483.5;
 
 /** Klemmt einen Julianischen Tag auf den Zeitbereich [JD_MIN, JD_MAX]. */
