@@ -56,8 +56,10 @@ Quellenkarten für alle Szenen) sind abgeschlossen. Phase 4c ist damit komplett
 (Tag `v0.4.0`). Phase 4d (Hochschulstufe) läuft: Etappe 1 bringt Formeln
 (TeX-Teilmenge als MathML), Tabellen, Zitate mit Literaturkarten, ein
 Prüfskript für den Literaturkatalog (`npm run literatur:pruefen`) und drei
-Pilottexte (Bahnelemente, Erde, Mondfinsternis). Offen sind die übrigen
-Hochschultexte (Etappen 4d-2 bis 4d-11) und Phase 5 (Ambient-Sound,
+Pilottexte (Bahnelemente, Erde, Mondfinsternis); Etappe 2 die sechs
+Fachthemen (Bezugssysteme und Zeitskalen, Gezeiten, Bahnresonanzen, innerer
+Aufbau, Albedo und Helligkeit, Entstehung des Sonnensystems). Offen sind die
+übrigen Hochschultexte (Etappen 4d-3 bis 4d-11) und Phase 5 (Ambient-Sound,
 Qualitätsstufen, Texturkompression, Veröffentlichung).
 
 ## Entwicklung
