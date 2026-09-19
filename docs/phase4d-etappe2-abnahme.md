@@ -375,20 +375,27 @@ zhang-2025                   crossref  ok       Erstautor, Jahr und Titel stimme
 ```
 
 **Eine Warnung, begründet:** `cgpm-2022` — „Crossref führt keine Autoren, Erstautor ungeprüft".
-`cgpm-2022` ist ein Behelfseintrag mit Körperschaft als Autor (Conférence Générale des Poids et
-Mesures, siehe Task 3, Ruling „Behelfseinträge bleiben"); Crossref liefert für diese Resolution
-keine Autorenliste, das ist seit der Nacharbeit von Task 3 bekannt und bewusst hingenommen — die
-Warnung ist die vom Prüfskript in Etappe 2b eingeführte Herabstufung genau dieses Falls (vorher ein
-Fehler, jetzt eine Warnung, siehe Task 2b). Kein Handlungsbedarf.
+`cgpm-2022` ist seit Zwischen-Task 2b ein regulärer Katalogeintrag mit Körperschaft als Autor
+(Conférence Générale des Poids et Mesures) und DOI; Crossref liefert für diese Resolution weiterhin
+keine Autorenliste — die Warnung ist die in 2b eingeführte Herabstufung genau dieses in Task 3
+zuerst als Behelf angelegten, seit 2b aber vollwertigen Falls (vorher ein Fehler, jetzt eine
+Warnung). Kein Handlungsbedarf.
 
-**Wiederholung bei Serverfehlern, einmal gebraucht:** Der erste Volllauf dieser Abnahme
-(`scratch-t10/pruefskript-lauf1.txt`) zeigte einen Fehler: `mahlke-2021` (arXiv) antwortete mit
-HTTP 429 (Ratenbegrenzung durch die vielen aufeinanderfolgenden Abrufe des Gesamtlaufs), ein Status,
-den die im Rahmen dieser Etappe eingeführte Wiederholungslogik nicht abdeckt (sie greift nur bei
-502/503/504 und Zeitüberschreitung, siehe `scripts/pruefe-literatur.ts`). Der sofort im Anschluss
-ausgeführte Einzelabruf `npm run literatur:pruefen -- --nur mahlke-2021` bestätigte: 2 ok, 0 Fehler
-— ein vorübergehender Ratenbegrenzungs-Effekt, kein dauerhafter Mangel. Der oben abgedruckte zweite
-Volllauf war ohne jede Wiederholung auf Anhieb fehlerfrei (`scratch-t10/pruefskript-lauf2.txt`).
+**Befund: arXiv-Ratenbegrenzung (429) im Volllauf, keine Wiederholung möglich.** Der erste Volllauf
+dieser Abnahme (`scratch-t10/pruefskript-lauf1.txt`) zeigte einen Fehler: `mahlke-2021` (arXiv)
+antwortete mit HTTP 429. Die in dieser Etappe eingeführte Wiederholungslogik greift hier **nicht**
+(sie deckt nach Plan-Ruling 3 nur 502/503/504 und Zeitüberschreitung ab, 429 ist ausdrücklich
+ausgenommen); der Lauf endete deshalb mit diesem einen Fehler, nicht mit einer stillen
+Wiederholung. Ursache (siehe Schlussprüfungsbefund M5): `scripts/pruefe-literatur.ts` verwendet
+für alle Dienste dieselbe `PAUSE_MS = 200`, arXiv bittet aber um rund 3 s zwischen Abfragen — bei
+199 Katalogeinträgen mit zunehmend vielen arXiv-Prüfungen wird das künftig eher häufiger als
+seltener auftreten. Der sofort im Anschluss ausgeführte Einzelabruf
+`npm run literatur:pruefen -- --nur mahlke-2021` bestätigte: 2 ok, 0 Fehler — der Eintrag selbst ist
+in Ordnung. Der oben abgedruckte zweite Volllauf war fehlerfrei, aber nur, weil die Ratenbegrenzung
+in diesem zweiten Versuch nicht erneut ausgelöst wurde, nicht weil das Skript sie behandelt. Vorschlag
+für 4d-3 (nicht Teil dieser Etappe): eigene, längere Pause für arXiv-Abrufe (≥ 3 s) oder eine
+gezielte Wiederholung bei 429 ausschließlich für arXiv mit `Retry-After`; die Regel „429 sofort
+Fehler" aus Plan-Ruling 3 für Crossref beibehalten.
 
 ## 4. Fachprüfung
 
@@ -402,8 +409,8 @@ des jeweiligen Tasks (siehe Abschnitt 2), Runden/Fehler/Hinweise aus den Fachpr�
 | Text | Wörter de/en | Belegzeilen | Zitate (Vorkommen/verschiedene Werke) | neue Katalogeinträge | Runden | Fehler gefunden/behoben | Hinweise offen (Entscheidung) |
 |---|---|---:|---|---:|---:|---|---|
 | `thema-bezugssysteme` (Task 3) | 3008 / 3335 | 110 | 51 / 20 | 14 | 3 (Fachprüfung, 2 Nachprüfungen) + Gegenprüfung | 4/4 (F1 BCRS-Präsens, F2 „Im Modell"-Rahmen, F-R3-1 JPL-Fehlerbereich, F-R3-2 unmaskiertes `\|`) | Schaltsekunden-Absatz nach der 28. CGPM (13.–15.10.2026) nachführen? (Frage an Jens, §8) |
-| `thema-gezeiten` (Task 4) | 3253 / 3555 | 121 | 71 / 31 | 26 (27 eingeführt, `bagheri-2026` in Runde 2 wieder entfernt) | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 2/2 (F1 Titan k_f/k₂-Verwechslung Planet↔gebundener Mond, F2 Gladman-Zitat ungeöffnet) | keine |
-| `thema-resonanzen` (Task 5) | 2371 / 2567 | 89 | 46 / 23 | 21 | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 2/2 (2:1-Lücke: erst „nur innere Flanke", dann „von der oberen Grenze angeschnitten") | Streubreite 7:3 bewusst nicht vereinheitlicht — zwei richtige, unterschiedliche Messmethoden nebeneinander in Belegzeile 81 (Ruling, kein Fehler); H6 (neuere Pluto-Integrationen ~82°/23°) bewusst nicht umgesetzt, bräuchte neuen Katalogeintrag |
+| `thema-gezeiten` (Task 4) | 3253 / 3555 | 121 | 71 / 31 | 26 (27 eingeführt, `bagheri-2026` in Runde 2 wieder entfernt) | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 2/2 (Runde 1: 0 Fehler; Runde 2: F1 Antwort von Goossens et al. 2026 fehlt als Gegenposition — Inhalt war zugänglich, Streitfrage blieb einseitig; F2 Gladman et al. 1996 Gl. 9 als Beleg zitiert, obwohl ungeöffnet) | keine |
+| `thema-resonanzen` (Task 5) | 2371 / 2567 | 89 | 46 / 23 | 21 | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 2/2 (Runde 1: F1 „Im Modell/Asteroidengürtel" behauptet eine 4:1-Lücke, die es in der Punktwolke nicht gibt; Runde 2: neuer Fehler, der eigene Korrekturvorschlag aus Runde 1 „nur die innere Flanke von 2:1 im Bereich" stimmte nicht mit dem Code überein — richtig: die 2:1-Lücke wird von der oberen Grenze 3,3 AE angeschnitten) | Streubreite 7:3 bewusst nicht vereinheitlicht — zwei richtige, unterschiedliche Messmethoden nebeneinander in Belegzeile 81 (Ruling, kein Fehler); H6 (neuere Pluto-Integrationen ~82°/23°) bewusst nicht umgesetzt, bräuchte neuen Katalogeintrag |
 | `thema-innerer-aufbau` (Task 6) | 3899 / 4274<sup>†</sup> | 121 | 84 / 28 | 22 | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 1/1 (F1 fluide Love-Zahl gilt nicht für gebunden rotierende Monde wie Titan) | Wortzahl en 4274 über der Obergrenze 4000 (§8) |
 | `thema-photometrie` (Task 7) | 3586 / 3927 | 128 | 76 / 25 | 23 | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 1/1 (F1 Fresnel-Reflexion am Halbvektor statt am Phasenwinkel) | keine |
 | `thema-entstehung` (Task 8) | 3677 / 4024<sup>†</sup> | 117 | 89 / 49 | 42 | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 2/2 (F1 St=1-Korngröße nur für MMSN gültig gemacht, F2 veraltete gleiche ¹⁸²W/¹⁸⁴W-Anomalie) | Wortzahl en 4024 über der Obergrenze 4000 (§8); Prüfskript scheitert am Titel von Brennecka 2010 (Ursache offen, betrifft nicht diesen Text direkt, da nicht im Katalog) |
@@ -533,7 +540,7 @@ in jeder Kombination `true` (jedes eindeutige `literatur:`-Ziel im Text hat gena
 alle mit Ergebnis „ok"). Der Szenenkopf zeigt bei
 Hochschultexten „Szene: …" wie bei Gymnasialtexten (Vorgabe aus 4c-4, bestätigt für Mondfinsternis).
 
-**Zwei Messlehren aus dieser Sichtprüfung** (Ledger-Rulings dieses Tasks, Abschnitt 6):
+**Zwei Messlehren aus dieser Sichtprüfung** (als Rulings ins Ledger nachgetragen, Abschnitt 6):
 
 1. Der im Brief vorgeschlagene Test `karte.classList.contains('border-sky-300')` schlägt in dieser
    Etappe grundsätzlich fehl — die tatsächliche Tailwind-Klasse der hervorgehobenen Karte heißt
@@ -629,17 +636,17 @@ Crossref ohne Autoren und abweichenden Titel als Fehler — kein Zwischen-Task, 
 zwei ungewöhnliche Autorfelder, später per kleinem Code-Task nachziehbar. (Umgesetzt in Zwischen-Task
 2b, siehe unten.)
 
-**Ruling (Task 3):** In die Nacharbeit Runde 3 kommen neben F-R3-1/F-R3-2 auch zwei
-Zuordnungshinweise (Versionsangabe „Version 5 vom 13.07.2026" gehört zu Draft Resolution V,
-Resolution C steht seit Version 2 vom 30.01.2026; Entwurf verfasst vom CIPM) — sachliche
-Zuordnungen, im selben Commit fast kostenlos — falls falsch: ein etwas größerer
-Nacharbeits-Commit.
-
 **Ruling (Task 5):** Der Code-Befund „Perijoven von Io und Europa laufen im Datensatz vorwärts,
 Zweikörperwinkel zirkulieren in 243/255 Tagen statt zu librieren" (vermutlich Vorzeichen aus der
 JPL-Tabelle) wird in dieser Etappe NICHT behoben — Etappe 4d-2 schreibt Texte, Datenänderungen
 fallen in einen eigenen Task mit Sichtprüfung; der Text beschreibt das Modell, wie es heute ist —
 falls falsch: Der Befund steht im Protokoll und kostet später einen eigenen Task.
+
+**Ruling (Task 3):** In die Nacharbeit Runde 3 kommen neben F-R3-1/F-R3-2 auch zwei
+Zuordnungshinweise (Versionsangabe „Version 5 vom 13.07.2026" gehört zu Draft Resolution V,
+Resolution C steht seit Version 2 vom 30.01.2026; Entwurf verfasst vom CIPM) — sachliche
+Zuordnungen, im selben Commit fast kostenlos — falls falsch: ein etwas größerer
+Nacharbeits-Commit.
 
 **Ruling (Task 5):** Der Methodenstreit um die Streubreite 7:3 wird geparkt statt erzwungen
 aufgelöst — beide Messungen sind korrekt und messen Verschiedenes, Belegzeile 81 stellt beide
@@ -658,21 +665,34 @@ Branch entstanden — falls falsch: Jens will ihn vor der Abnahme behoben haben,
 Zwischen-Task (Klemmung von e oder Gültigkeitsgrenze der Zeit) plus Anpassung von Belegzeile 108
 und „Im Modell".
 
-**Ruling (dieser Task, dazu):** Beim Verweis-Rundgang (Abschnitt 5.3) wurde der im Auftrag genannte
-Prüfausdruck `classList.contains('border-sky-300')` durch `className.includes('border-sky-300')`
-ersetzt, weil die tatsächliche Tailwind-Klasse der Hervorhebung `border-sky-300/80` heißt (eigenes
-Klassentoken mit Opazitäts-Suffix, von `classList.contains` mit dem kürzeren Literal nie getroffen)
-— funktional unverändertes Verhalten der Anwendung, nur der Testausdruck war zu eng — falls falsch:
-eine falsch-positive Bestätigung wäre nur durch eine echte Farbprüfung im Screenshot aufgefallen.
+**T10 Ruling:** Das Pixelkriterium in Plan-Schritt 3 misst E absolut in einer zentrierten Box — ein
+Fehler der Messvorlage, nicht des Codes; die Nacharbeit misst in derselben Ladung den Abstand vom
+ersten zum letzten `mi` (M → E) mit und ohne Abstände und bewertet ihn gegen ±15 % von 2 · 0,1667 em
+— der Entwurf verlangt Abstände wie TeX, das relative Maß prüft genau das — falls falsch: Jens will
+die Vorlage wörtlich erfüllt sehen, dann bleibt das Kriterium verfehlt und nur erklärt. (Ergebnis
+der Nachmessung in Abschnitt 5.1; da dieses Ruling ein Abnahmekriterium des Plans ändert, geht es
+als Bestätigungsfrage in Abschnitt 8.1, nicht als bloßer Hinweis.)
 
-**Ruling (dieser Task, dazu):** Die Baseline-Funktion für `szene:mondfinsternis` setzt zusätzlich
-`ui.info.thema: null` und `cinema.elapsedSec: 0` bei jedem `setCinema`-Neustart (nicht nur beim
-ersten) — ohne das erste blieb die Seite auf einem zuvor gesetzten Thema hängen (dieselbe Lehre wie
-4d-1 Abschnitt 5.4), ohne das zweite lief eine mit `running:true` neu gestartete Szene sofort über
-ihre Dauer hinaus weiter und sprang zur nächsten — beides Eigenheiten der Testmethode (rohe
-Store-Zustände statt der echten `startCinema()`-Funktion), kein Programmfehler — falls falsch: eine
-Kombination hätte einen falschen Kopf gezeigt und wäre am Kriterium „Kopf = Titel" gescheitert,
-nicht unbemerkt geblieben.
+**T10 Ruling (Umsetzer, vom Controller übernommen):** Rundgang prüft die Hervorhebung mit
+`className.includes('border-sky-300')` statt `classList.contains`, weil die Klasse
+`border-sky-300/80` heißt — nur der Testausdruck war zu eng — falls falsch: eine falsch-positive
+Bestätigung wäre nur im Screenshot aufgefallen.
+
+**T10 Ruling (Umsetzer, vom Controller übernommen):** Baseline für `szene:mondfinsternis` setzt bei
+jedem Neustart `ui.info.thema: null` und `cinema.elapsedSec: 0` — Eigenheit der Testmethode (rohe
+Store-Zustände statt `startCinema()`) — falls falsch: ein falscher Kopf wäre am Kriterium
+„Kopf = Titel" gescheitert.
+
+**Final Ruling:** Eine Fix-Welle vor dem Merge für I1, I2, M3 und M10 (`lighting.ts`-Kommentar); M1
+(Erdalbedo im freigegebenen Pilot) als Frage an Jens in Abschnitt 8, M2 und M6 als bekannte
+Unschärfen in Abschnitt 7 ohne Textänderung — die fachgeprüften Texte und der freigegebene Pilot
+werden nur bei Fehlern angefasst, M2 ist kein Fehler, M1 betrifft Jens' freigegebenen Wortlaut —
+falls falsch: eine weitere kleine Textnacharbeit nach Jens' Antwort.
+
+**Final Ruling:** Der Kepler-Absturz blockiert den Fast-Forward nicht (vorbestehend seit den
+linearen Raten, von der Schlussprüfung ebenso eingeordnet); er wird Jens als eigener Task mit hoher
+Priorität vor 4d-3 vorgeschlagen — falls falsch: Jens will ihn vor dem Merge behoben haben, dann ein
+Zwischen-Task auf `hochschule-2`.
 
 ## 7. Bekannte Unschärfen
 
@@ -686,7 +706,7 @@ nicht unbemerkt geblieben.
   18,66 px, Abweichung 1,8 % bzw. −0,1 % von 18,7 px) und **erfüllt beide Kriterien** (Abschnitt
   5.1). Die ursprüngliche Deutung einer Chrome-eigenen Abstandsregel vor Funktionsnamen war ein
   Messfehler der Vorlage (absolute statt relative Messung), kein Browserbefund — für künftige
-  Etappen soll die Messvorlage relativ messen (Hinweis in Abschnitt 8).
+  Etappen soll die Messvorlage relativ messen (Bestätigungsfrage in Abschnitt 8, Frage 1).
 - Konsole der Sitzung zeigt drei Warnungen (`requestFullscreen` ohne Nutzergeste), ursächlich ein
   Artefakt der drei skriptgestützten Szenenstarts dieser Sichtprüfung, durch Gegenprobe mit echtem
   Klick widerlegt als Anwendungsfehler (Abschnitt 5.4), wie bereits in 4d-1 festgestellt.
@@ -697,6 +717,17 @@ nicht unbemerkt geblieben.
   entfernt, nachdem sich Ios Exzentrizität zuverlässiger aus `lari-2024` ergab — im Katalog bleibt
   keine Spur davon zurück (durch `literatur.test.ts` bestätigt), der Nettozuwachs in Abschnitt 4
   berücksichtigt die Entfernung bereits.
+
+**Aus der Schlussprüfung, ohne Textänderung übernommen (Final Ruling, Abschnitt 6):**
+
+- **M2 — Mondkarte, scheinbarer Zahlenwiderspruch:** `thema-bezugssysteme` nennt für 2026–2036
+  „zwischen 31° und 44°", `thema-gezeiten` für 1800–2050 „zwischen 30,5° und 43,5° östlicher Länge"
+  — der kürzere Zeitraum hat den größeren Wert (Belege: 43,76–43,80° gegen 43,53°). Beides stimmt:
+  `thema-bezugssysteme` misst einen Winkelabstand mit Breitenlibration, `thema-gezeiten` die reine
+  Länge; der Wortlaut sagt das nicht ausdrücklich. Kein Fehler, deshalb keine Nacharbeit an den
+  fachgeprüften Texten in dieser Etappe.
+- **M6 — Prüfskript und Brennecka 2010, Ursache gefunden:** siehe Abschnitt 8, Frage 9. Die Arbeit
+  bleibt außerhalb des Katalogs, kein Text ist betroffen; eine Codeänderung ist für 4d-3 vorgeschlagen.
 
 **Aufgeschobene Kleinigkeiten (minor deferred, aus dem Ledger):**
 
@@ -738,43 +769,132 @@ nicht unbemerkt geblieben.
 
 ## 8. Halt: Fragen an Jens
 
-1. **Hinweis, keine Frage — Formelsatz-Kriterium Tinten-/DOM-Verschiebung** (Abschnitt 5.1): Die
-   relative Messung vom ersten zum letzten `mi`-Knoten (M → E) bestätigt den TeX-Abstand vollständig
-   (Abweichung 1,8 % Tinte / −0,1 % DOM von 18,7 px, beide innerhalb ±15 %). Die zunächst gemessene
-   Abweichung kam von einer absoluten Positionsmessung von „E" allein, die die Zentrierung der
-   `<math display="block">`-Box nicht berücksichtigte (eine schmalere Formel wird beidseitig neu
-   zentriert, nicht nur am rechten Ende verschoben). Für künftige Etappen soll die Messvorlage
-   grundsätzlich den Abstand zwischen erstem und letztem betroffenen Token messen (relativ),
-   nicht die absolute Position eines einzelnen Endes in einer zentrierten Box.
+1. **Formelsatz-Kriterium Tinten-/DOM-Verschiebung — Bestätigung der geänderten Messvorlage**
+   (Abschnitt 5.1, T10 Ruling in Abschnitt 6): Die ursprüngliche, im Plan wörtlich vorgegebene
+   Messung (absolute Position von „E") erfüllte das Kriterium nicht, weil `<math display="block">`
+   den Inhalt in einer unveränderten Blockbox zentriert und eine schmalere Formel beidseitig neu
+   zentriert (M +9,33 px, E −9,33 px), statt nur an einem Ende zu verschieben. Die Nacharbeit hat
+   deshalb stattdessen relativ gemessen (Abstand vom ersten zum letzten `mi`-Knoten, M → E: Tinte
+   19 px / +1,8 %, DOM 18,66 px / −0,1 % gegen 18,7 px erwartet, beide innerhalb ±15 %) — das ändert
+   ein Abnahmekriterium des Plans. **Bestätigt Jens diese Änderung der Messvorlage** (relativ statt
+   absolut, in künftigen Etappen ebenso), oder soll das Kriterium wörtlich (absolut) gelten, womit es
+   für `thema-bahnelemente` verfehlt bliebe?
 2. **Schaltsekunden-Absatz in `thema-bezugssysteme`**: Der Text ist nach dem heutigen Stand der
    28. CGPM (13.–15.10.2026 in Versailles) formuliert, die Abstimmung selbst hat noch nicht
-   stattgefunden. Nach der Sitzung nachführen?
-3. **Wortzahl über der bereits angehobenen Obergrenze 4000** (Zwischen-Task 2b): `thema-innerer-aufbau`
+   stattgefunden. Nach der Sitzung nachführen? Dieselbe Ledger-Zeile nennt außerdem: Der Pilot
+   `thema-bahnelemente` setzt die JPL-Ekliptik ebenfalls mit 84 381,448″ gleich, während die
+   JPL-Seite 23,43928° nennt — der Pilot ist freigegeben und wurde deshalb nicht geändert, zur
+   Nachvollziehbarkeit hier vermerkt (keine Handlung nötig, außer Jens möchte es vereinheitlichen).
+3. **Offene sachliche Hinweise aus der zweiten Nachprüfung von `thema-bezugssysteme`**, nach Jens'
+   Freigabe der Etappe nicht mehr umgesetzt: die 30-%-Schätzung steht in der Quelle als
+   Dringlichkeitsargument, nicht als Wahrscheinlichkeit; „Gegenstimme" trifft die Absicht der Quelle
+   nicht genau (Zitat aus zweiter Hand); Belegzeile 79 (Nr. 79) nennt noch den im Text gestrichenen
+   Halbsatz „könnte Änderungen früher als geplant erzwingen" (de:245–246 sagt das nicht mehr,
+   Schlussprüfungsbefund M4); „rechnen laut JPL mit der Schiefe" ist eine Folgerung aus dem
+   Umrechnungsweg, keine wörtliche JPL-Aussage; ein englischer Satz („How urgent a change is, is
+   judged differently") liest sich holprig; drei Zeilen sind über 100 Zeichen lang. Vorschlag: bei
+   der nächsten inhaltlichen Änderung an `thema-bezugssysteme` mitnehmen, insbesondere Belegzeile 79
+   aktualisieren; für sich genommen keines dieser Bedenken rechtfertigt eine eigene Nacharbeitsrunde
+   am bereits freigegebenen Text.
+4. **Albedo der Erde: zwei Zahlensätze für dieselbe Modellgröße** (Schlussprüfungsbefund M1): Der
+   freigegebene Pilot `objekt-earth` (de:277–281/en:273–276) geht von einem im Wesentlichen
+   lambertschen Modell aus (p = 2A/3 = 0,29, A = 0,434), `thema-photometrie` (de:333–337/en:326–331)
+   von Lambert mit Fresnel-Anteil am Halbvektor (p = 0,278, A = 0,415) — seit Task 9 nur einen Klick
+   voneinander entfernt (Verweis „Bond-Albedo" → photometrie). Beide Werte sind für sich vertretbar
+   (unterschiedliche Modelltiefe bzw. Quellenwahl). Vorschlag: die Modellgrenze im Pilot auf die
+   Zahlen aus `thema-photometrie` angleichen oder dort „ohne Fresnel-Faktor" ergänzen, den Messwert
+   mit Quelle nennen — soll das noch am freigegebenen Pilot geändert werden, oder so bleiben?
+5. **Wortzahl über der bereits angehobenen Obergrenze 4000** (Zwischen-Task 2b): `thema-innerer-aufbau`
    liegt englisch bei 4274, `thema-entstehung` bei 4024 (Abschnitt 4). Beide Texte sind laut
    Fachprüfung durch die verlangten Ergänzungen bzw. eine notwendige Differenzierung (Planeten vs.
    gebunden rotierende Monde) gewachsen. Kürzen, oder wie beim Pilot `objekt-earth` in 4d-1
    (Richtigkeit vor Wortzahl) so lassen?
-4. **Streubreite 7:3 in `thema-resonanzen`** (Ruling Task 5): Zwei unabhängig nachgerechnete, beide
+6. **Streubreite 7:3 in `thema-resonanzen`** (Ruling Task 5): Zwei unabhängig nachgerechnete, beide
    korrekte Messmethoden ergeben unterschiedliche Zahlen (98,7–106,5 % vs. 101,2–108,5 %); Belegzeile
    81 nennt beide nebeneinander, der Textwert 105,2 % ist unter beiden Methoden gleich. So belassen?
-5. **Neuere Pluto-Integrationen** (H6, Task 5, nicht umgesetzt): Neuere Arbeiten liefern für Pluto
+7. **Neuere Pluto-Integrationen** (H6, Task 5, nicht umgesetzt): Neuere Arbeiten liefern für Pluto
    inzwischen andere Werte (rund 82°/23° statt der zitierten); Aufnahme würde einen neuen
    Katalogeintrag brauchen. Für eine spätere Etappe vormerken, oder jetzt nachziehen?
-6. **Kepler-Absturz ab Jahr 12 563** (Ruling Task 8, hohe Priorität): Saturns linear fortgeschriebene
-   Bahnexzentrizität wird ab diesem Jahr (rückwärts ab −14 828 bei Neptun) negativ, `solveKepler`
-   wirft eine `RangeError`, die Bildschleife bleibt stehen. Erreichbar über Datumsfeld, Link oder
-   Zeitraffer. Der Fehler besteht unabhängig von dieser Etappe, wird hier aber in „Im Modell"
-   (Belegzeile 108 in `thema-entstehung`) beschrieben. Vor der nächsten Etappe als eigener Task mit
-   Test und Sichtprüfung beheben (Klemmung von `e` oder Gültigkeitsgrenze der Zeit), oder
+8. **Kepler-Absturz ab Jahr 12 563, hohe Priorität** (Ruling Task 8, neuer Befund aus der
+   Schlussprüfung): Saturns linear fortgeschriebene Bahnexzentrizität wird ab diesem Jahr (rückwärts
+   ab −14 828 bei Neptun) negativ, `solveKepler` wirft eine `RangeError`, `startLoop` fängt sie nicht
+   ab (`src/app/loop.ts`), die Bildschleife bleibt stehen. Neu bestätigt: Über einen Link ist das
+   sofort beim Laden auslösbar (JD ≈ 6,31·10⁶), weil der Feldprüfer `time.jd` bis 2·10⁸ zulässt
+   (`src/store/pruefer.ts:59`) — kein Zeitraffer nötig. Der Fehler besteht unabhängig von dieser
+   Etappe, wird hier aber in „Im Modell" (Belegzeile 108 in `thema-entstehung`) beschrieben.
+   Vorschlag: eigener Task mit Test und Sichtprüfung vor 4d-3 (Klemmung von `e` oder
+   Gültigkeitsgrenze der Zeit), danach `thema-entstehung` „Im Modell" und Belegzeile 108 anpassen. Er
+   blockiert den Fast-Forward dieser Etappe nicht (Final Ruling, Abschnitt 6). Vor 4d-3 beheben, oder
    zurückstellen?
-7. **Prüfskript und Brennecka 2010** (Task 8): Die Arbeit scheitert am automatischen Titelvergleich
-   des Prüfskripts aus ungeklärter Ursache und wurde deshalb nicht in den Katalog aufgenommen. Für
-   4d-3 untersuchen?
+9. **Prüfskript und Brennecka 2010 — Ursache jetzt bekannt** (Schlussprüfungsbefund M6): Crossref
+   liefert den Titel mit `<sup>238</sup>`/`<sub>`-Auszeichnung und Zeilenumbrüchen; die
+   Titelnormalisierung (`scripts/literaturVergleich.ts:20`) ersetzt die Tags durch Leerzeichen, der
+   ohnehin vorhandene Leerraum trennt „238" von „U" — im Katalog steht dagegen „238u" zusammen, macht
+   nur 64 % Wortübereinstimmung (Schwelle 80 %). Die Arbeit ist deshalb nicht im Katalog, kein Text
+   ist betroffen. Vorschlag: eigener kleiner Code-Task mit Test genau an diesem Datensatz für 4d-3
+   (zusätzlich die normalisierten Titel ohne Leerzeichen vergleichen, oder Leerraum direkt nach
+   `</sup>`/`</sub>` entfernen und mit NFKD normalisieren). Für 4d-3 einplanen?
 
 Speziell aus §8 der Abnahme 4d-1, seither entschieden (zur Nachvollziehbarkeit, keine neue Frage):
 Quellenkarte `jpl-horizons` zeigt jetzt auf das Handbuch (`8ab158e`), das Prüfskript wiederholt bei
 502/503/504 und Zeitüberschreitung (`0168d08`), Funktionsnamen bekommen den TeX-Abstand (`713ed22`,
 Ergebnis in Abschnitt 5.1) — alle drei wie am 17.09.2026 von Jens entschieden.
 
-Trailer- und Wortkontrolle nach dem Commit dieses Protokolls: wie in der lokalen
-Projektanleitung beschrieben, Ergebnis 0.
+## Nacharbeit nach der Schlussprüfung
+
+Unabhängige Schlussprüfung (Senior Code Review, nur lesend, Paket `2db1043..da9ffe4`, 29 Commits,
+`.superpowers/sdd/2026-09-17-phase4d-hochschule-etappe2/schlusspruefung.md`): 0 Critical, 2
+Important, 12 Minor. Verbleib je Befund:
+
+| Befund | Verbleib |
+|---|---|
+| I1 (Important): Abnahmeprotokoll weicht vom Ledger ab (fehlendes T10-Ruling, §8.1 als „Hinweis" statt Frage, zwei „dieser Task"-Rulings ohne damalige Ledger-Deckung, §4-Fehlerzuordnung gezeiten/resonanzen falsch, §8 ohne Ledger-Hinweise T3/Pilot-Ekliptik, §3-Überschrift irreführend, `cgpm-2022` noch „Behelfseintrag", Brennecka-Ursache fehlt) | behoben — §6 um das T10-Ruling und die beiden Final-Rulings ergänzt (die beiden Umsetzer-Rulings stehen jetzt auch im Ledger), §5.3 nennt sie nicht mehr pauschal „Ledger-Rulings"; §8.1 als Bestätigungsfrage formuliert; §4 gezeiten (Runde 1: 0 Fehler; Runde 2: F1 Goossens-Gegenposition, F2 Gladman ungeöffnet) und resonanzen (Runde 1: F1 4:1-Lücke in der Punktwolke; Runde 2: F1 „nur innere Flanke" traf nicht zu) berichtigt; §8 um Ledger Z. 82 (Pilot-Ekliptik) und Z. 93 (T3-Hinweise) sowie M1 (Erdalbedo) ergänzt; §3-Überschrift und 429-Bewertung als eigener Befund, `cgpm-2022`-Wortlaut auf „regulärer Eintrag" berichtigt; Brennecka-Ursache (M6) in §8 Frage 9 eingetragen |
+| I2 (Important): Belegliste `thema-resonanzen` Nr. 46 mit zwei unmaskierten `\|` (8 statt 6 Zellen) | behoben — beide `|` als `\|` maskiert, ohne Inhaltsänderung; alle 925 Belegzeilen unter `docs/belege/hochschule/` per Skript (`scratch-t10/spalten_check.py`) auf 6 Zellen geprüft: 0 Abweichungen |
+| M1: Albedo der Erde — Pilot `objekt-earth` (p 0,29/A 0,434) gegen `thema-photometrie` (0,278/0,415) | nicht behoben — als Frage in §8 (Frage 4) aufgenommen (Final Ruling): fachgeprüfter Text und freigegebener Pilot werden nur bei Fehlern angefasst, beide Werte sind für sich vertretbar |
+| M2: Mondkarte, scheinbarer Zahlenwiderspruch (Winkelabstand vs. Länge) | nicht behoben — kein Fehler (Final Ruling), als bekannte Unschärfe in §7 vermerkt |
+| M3: `thema-gezeiten` en:61 „An independent analysis" weicht im Sinn von de:61 „Eine eigene Auswertung" ab | behoben — „independent" → „separate" (ein Wort, wie beauftragt), Rest der Zeile unverändert |
+| M4: Belegzeile 79 in `thema-bezugssysteme` veraltet (Halbsatz im Text gestrichen) | nicht behoben — Ledger-Hinweis, als Vorschlag in §8 (Frage 3) aufgenommen, keine eigene Nacharbeitsrunde am freigegebenen Text |
+| M5: `PAUSE_MS` im Prüfskript zu kurz für arXiv, führte zu 429 im Volllauf | nicht behoben — Ursache in §3 als Befund dokumentiert, Vorschlag (eigene Pause oder gezielte Wiederholung) für 4d-3 |
+| M6: Ursache „Brennecka 2010 scheitert am Titelvergleich" gefunden (`<sup>`-Tags trennen „238" von „U") | nicht behoben (kein Katalogeintrag betroffen) — Ursache in §8 (Frage 9) und §7 dokumentiert, kleiner Code-Task für 4d-3 vorgeschlagen |
+| M7: Autorfeld-Regel im Test locker gefasst, JSDoc veraltet | nicht behoben — Code-Qualitätsbefund ohne Auswirkung auf diese Etappe, für einen künftigen Code-Task vorgemerkt |
+| M8: Formelsatz-Randfälle (`\sin\,x`, Funktionsname als Exponent, Abstand nach `\|`) ohne Textbezug | nicht behoben — kein Fall kommt in den 94 Funktionsnamen der Hochschultexte vor (Schlussprüfung, `funk.py`) |
+| M9: Suffixe/Linktexte (`nesvorny-2018a`, „Haisch Jr.") | nicht behoben — Kosmetik, optional |
+| M10: Kommentar `src/render/lighting.ts:41` „232" statt 226 | behoben — Kommentar auf 226 berichtigt (nachgerechnet: three-ACES bei Belichtung 1, `exposure/0,6` → RRT/ODT 0,7634 → sRGB 0,8877 → 226,4), nur Kommentar, keine Verhaltensänderung |
+| M11: eines der drei geprüften Suchmuster in 18 vorbestehenden Dateien aus der Zeit vor der Regel „nur Verweis, nie Suchmuster" | nicht behoben — vorbestehend (schon bei Basis-Commit 2db1043 18 Treffer), dieser Bereich fügt keinen hinzu; eigener Aufräum-Commit nach Rücksprache mit Jens (wie 22fdb7d) |
+| M12: Entwurf §4.5, Nachtrag (4d-2) steht vor Nachtrag (4d-1) | nicht behoben — Entwurfspflege, keine Auswirkung auf diese Etappe |
+
+**Schlusszeilen:**
+
+```
+npx vitest run src/data src/ui/info
+```
+```
+ Test Files  27 passed (27)
+      Tests  2660 passed (2660)
+```
+
+```
+npm test
+```
+```
+ Test Files  91 passed (91)
+      Tests  3665 passed (3665)
+```
+
+```
+npm run lint
+```
+Ohne Befund (keine Ausgabe außer den Aufrufzeilen).
+
+```
+npm run build
+```
+```
+✓ built in 714ms
+(!) Some chunks are larger than 500 kB after minification. Consider: …
+```
+Hauptchunk unverändert: 1 282,42 kB / gzip 343,63 kB (reine Text-/Kommentaränderungen, kein
+Codeumfang betroffen).
+
+Trailer-Kontrolle nach jedem Commit (siehe lokale Projektanleitung): 0. Abschließend die
+Fremdzurechnungs-Suche über die Wort- und Trailerprüfung dieses Protokolls: 0.

@@ -58,7 +58,7 @@ methods scatter: laser ranging gave $h_2$ between 0.0410 and 0.0476 depending on
 crossover points of the LOLA tracks $0.0371 \pm 0.0033$, and an interior model matching the GRAIL
 value of $k_2$ gave 0.0424 ([Thor et al. 2021](literatur:thor-2021)). For Titan, Cassini first
 measured $0.589 \pm 0.150$ and $0.637 \pm 0.224$ (2σ), a deformation consistent with a global
-ocean ([Iess et al. 2012](literatur:iess-2012)). An independent analysis of the Cassini data found
+ocean ([Iess et al. 2012](literatur:iess-2012)). A separate analysis of the Cassini data found
 only $0.375 \pm 0.06$ ([Goossens et al. 2024](literatur:goossens-2024)); four earlier analyses lay
 between 0.59 and 0.64 ([Durante et al. 2026](literatur:durante-2026)). In their reply, Goossens et
 al. hold that differences in the processing do not explain the deviating value
