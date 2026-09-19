@@ -38,7 +38,7 @@ export const MIN_COLOR_GAIN = 0.02;
 /**
  * Belichtungsreferenz: der lineare Wert, den eine weiße Lambert-Fläche am
  * Sonnenabstand des Zielkörpers unter senkrechtem Licht erreicht. 1,0 landet
- * nach dem ACES-Tonemapping (renderer.ts) bei 232 von 255 — die Reserve bis
+ * nach dem ACES-Tonemapping (renderer.ts) bei 226 von 255 — die Reserve bis
  * 255 bleibt für Eis und Wolken, die heller als eine graue Lambert-Fläche
  * zurückstrahlen (Albedo über 1, siehe PhysicalData.albedo).
  */
