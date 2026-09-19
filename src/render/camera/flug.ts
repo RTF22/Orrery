@@ -131,3 +131,65 @@ export function mindesthoehe(p: Vec3, staende: readonly KoerperStand[]): Vec3 {
   }
   return q;
 }
+
+/** Steuerabsicht je Achse in −1 … 1: vor (W/S), seit (D/A), hoch (E/Q). */
+export interface Absicht { vor: number; seit: number; hoch: number }
+
+/**
+ * Körper nächst der Bildmitte (§4.2): Liegt die Blickachse auf einer Scheibe
+ * (Winkel kleiner als der Winkelradius), der vorderste solche Körper; sonst
+ * der mit dem kleinsten Winkel zur Achse. Nur Körper vor der Kamera; einer,
+ * in dem die Kamera steckt, zählt nicht. Entspricht Rang 1a der
+ * Trefferprüfung (render/treffer.ts), braucht aber keine Kandidaten.
+ */
+export function koerperNaechstDerMitte(pose: Pose, staende: readonly KoerperStand[]): string | null {
+  let scheibe: { id: string; abstand: number } | null = null;
+  let naechster: { id: string; winkel: number } | null = null;
+  for (const k of staende) {
+    const d = minus(k.pos, pose.positionKm);
+    const abstand = laenge(d);
+    if (abstand <= k.radius) continue;
+    const vorn = punkt(d, pose.blick);
+    if (vorn <= 0) continue;
+    // atan2 statt acos: auch bei winzigen Winkeln ferner Körper genau.
+    const winkel = Math.atan2(laenge(kreuz(d, pose.blick)), vorn);
+    if (winkel < Math.asin(k.radius / abstand)) {
+      if (scheibe === null || abstand < scheibe.abstand) scheibe = { id: k.id, abstand };
+    } else if (naechster === null || winkel < naechster.winkel) {
+      naechster = { id: k.id, winkel };
+    }
+  }
+  return scheibe?.id ?? naechster?.id ?? null;
+}
+
+/**
+ * Kugelkoordinaten der Lage `p` um einen Körper, in den Grenzen der
+ * Orbit-Eingabe — damit eine Umlaufkamera dort beginnt, wo die gezeigte
+ * Kamera steht (§4.2, §4.5).
+ */
+export function kugelUm(p: Vec3, koerper: Vec3): { distance: number; azimuth: number; elevation: number } {
+  const v = minus(p, koerper);
+  const { yaw, pitch } = blickAus(v);
+  return { distance: begrenze(laenge(v), MIN_DISTANCE_KM, MAX_DISTANCE_KM), azimuth: yaw, elevation: pitch };
+}
+
+/**
+ * Ein Flugschritt (§4.1): Richtung aus Absicht und Kameraachsen, ab Länge 1
+ * normiert (schräg nicht schneller), Weg = Geschwindigkeit mal dt. Ohne
+ * Absicht kommt `p` selbst zurück.
+ */
+export function flugSchritt(p: Vec3, blick: Blick, absicht: Absicht, geschwindigkeit: number, dt: number): Vec3 {
+  let r = plus(
+    plus(mal(blickVektor(blick), absicht.vor), mal(rechtsVektor(blick), absicht.seit)),
+    mal(obenVektor(blick), absicht.hoch),
+  );
+  const l = laenge(r);
+  if (l === 0) return p;
+  if (l > 1) r = mal(r, 1 / l);
+  return plus(p, mal(r, geschwindigkeit * dt));
+}
+
+/** Dreht den Blick; yaw wickelt nicht, pitch bleibt in ±ELEVATION_GRENZE. */
+export function blickDrehen(b: Blick, dYaw: number, dPitch: number): Blick {
+  return { yaw: b.yaw + dYaw, pitch: begrenze(b.pitch + dPitch, -ELEVATION_GRENZE, ELEVATION_GRENZE) };
+}
