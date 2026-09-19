@@ -14,17 +14,9 @@ export interface Befund {
   text: string;
 }
 
-/**
- * Kleinbuchstaben ohne Auszeichnungen, Diakritika und Satzzeichen, Wörter durch ein Leerzeichen
- * getrennt. `<sup>`/`<sub>`-Tags (öffnend wie schließend) fallen samt direkt folgendem Leerraum
- * ohne Zwischenraum weg, damit eine hochgestellte Massenzahl wie „238" im Titel bei ihrem Element
- * bleibt (Crossref bricht die Zeile nach solchen Tags um, siehe literaturVergleich.test.ts).
- * Übrige Tags werden weiter durch ein Leerzeichen ersetzt. NFKD statt NFD macht aus hochgestellten
- * und tiefgestellten Ziffern (Katalogschreibweise wie „²³⁸U") gewöhnliche Ziffern.
- */
-export function normalisiere(s: string): string {
+/** Tags durch ein Leerzeichen ersetzt, NFKD, Kleinbuchstaben, ohne Diakritika und Satzzeichen. */
+function normalisiereKern(s: string): string {
   return s
-    .replace(/<\/?su[bp]>\s*/g, '')
     .replace(/<[^>]*>/g, ' ')
     .normalize('NFKD')
     .replace(/\p{M}/gu, '')
@@ -33,14 +25,50 @@ export function normalisiere(s: string): string {
     .trim();
 }
 
-/** Anteil gemeinsamer Wörter, bezogen auf den Titel mit mehr Wörtern (Minimum beider Anteile). */
-export function wortanteil(a: string, b: string): number {
-  const wa = new Set(normalisiere(a).split(' ').filter((w) => w !== ''));
-  const wb = new Set(normalisiere(b).split(' ').filter((w) => w !== ''));
+/**
+ * Kleinbuchstaben ohne Auszeichnungen, Diakritika und Satzzeichen, Wörter durch ein Leerzeichen
+ * getrennt. `<sup>`/`<sub>`-Tags (öffnend wie schließend) fallen samt direkt folgendem Leerraum
+ * ohne Zwischenraum weg, damit eine hochgestellte Massenzahl wie „238" im Titel bei ihrem Element
+ * bleibt (Crossref bricht die Zeile nach solchen Tags um, siehe literaturVergleich.test.ts).
+ * Übrige Tags werden weiter durch ein Leerzeichen ersetzt. NFKD statt NFD macht aus hochgestellten
+ * und tiefgestellten Ziffern (Katalogschreibweise wie „²³⁸U") gewöhnliche Ziffern.
+ *
+ * Das Verschmelzen ist nur eine von zwei möglichen Lesarten: Steht nach `</sup>`/`</sub>` statt
+ * eines Zeilenumbruchs ein echtes Leerzeichen vor dem nächsten Wort (z. B. „CO<sub>2</sub> ice"),
+ * verschmilzt diese Funktion die Ziffer fälschlich mit dem folgenden Wort. `wortanteil` prüft
+ * deshalb zusätzlich die getrennte Lesart (`normalisiereGetrennt`) und nimmt das bessere Ergebnis
+ * (Schlussprüfungsbefund M5).
+ */
+export function normalisiere(s: string): string {
+  return normalisiereKern(s.replace(/<\/?su[bp]>\s*/g, ''));
+}
+
+/**
+ * Zweite Lesart für `wortanteil`: `<sup>`/`<sub>`-Tags fallen weg, ohne den umgebenden Leerraum
+ * anzutasten — richtig, wenn der Leerraum nach dem Tag eine echte Worttrennung ist statt eines
+ * Zeilenumbruchs mitten im Wort.
+ */
+function normalisiereGetrennt(s: string): string {
+  return normalisiereKern(s.replace(/<\/?su[bp]>/g, ''));
+}
+
+function wortanteilMit(a: string, b: string, norm: (s: string) => string): number {
+  const wa = new Set(norm(a).split(' ').filter((w) => w !== ''));
+  const wb = new Set(norm(b).split(' ').filter((w) => w !== ''));
   if (wa.size === 0 || wb.size === 0) return 0;
   let gemeinsam = 0;
   for (const w of wa) if (wb.has(w)) gemeinsam += 1;
   return Math.min(gemeinsam / wa.size, gemeinsam / wb.size);
+}
+
+/**
+ * Anteil gemeinsamer Wörter, bezogen auf den Titel mit mehr Wörtern (Minimum beider Anteile).
+ * Prüft beide Lesarten eines schließenden `<sup>`/`<sub>`-Tags — verschmolzen (`normalisiere`)
+ * und getrennt (`normalisiereGetrennt`) — und nimmt das größere Ergebnis, weil beide Fälle bei
+ * Verlagen vorkommen (Schlussprüfungsbefund M5).
+ */
+export function wortanteil(a: string, b: string): number {
+  return Math.max(wortanteilMit(a, b, normalisiere), wortanteilMit(a, b, normalisiereGetrennt));
 }
 
 export function jahrUrteil(jahr: number, jahre: readonly number[]): Urteil {
