@@ -9,7 +9,7 @@ export const SHORTCUTS_PANEL = 'shortcuts';
 /** Faktor je Tastendruck auf die Zeitraffung — multiplikativ, nie additiv. */
 const RATE_SCHRITT = 1.5;
 
-function istEingabefeld(ziel: EventTarget | null): boolean {
+export function istEingabefeld(ziel: EventTarget | null): boolean {
   if (!(ziel instanceof HTMLElement)) return false;
   if (ziel.isContentEditable) return true;
   const tag = ziel.tagName;
