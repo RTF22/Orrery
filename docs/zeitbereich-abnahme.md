@@ -169,3 +169,46 @@ Prüfläufe danach: `npm run lint` ohne Befund, `npm test` 3686 Tests grün (93 
 `npm run build` erfolgreich (nur der bekannte Chunkgrößen-Hinweis, siehe §2).
 
 Trailer- und Wortprüfung nach der lokalen Projektanleitung durchgeführt, Ergebnis 0.
+
+## Nachtrag: Untergrenze Jahr 1
+
+Entscheidungen von Jens (19.09.2026):
+
+1. Die Untergrenze des Zeitbereichs wandert vom Julianischen Tag 0 auf den 1. Januar 1, 0 Uhr UTC
+   (proleptisch gregorianisch, wie JavaScript `Date` rechnet): `JD_MIN = 1 721 425,5`. Die
+   Obergrenze bleibt `JD_MAX = 5 373 483,5` (31. Dezember 9999).
+2. Der Hochschultext nennt den Kalenderunterschied: Orrery zeigt alle Daten im gregorianischen
+   Kalender, auch vor dessen Einführung 1582. Der 1. Januar 1 (gregorianisch) ist der 3. Januar 1
+   im julianischen Kalender.
+
+Damit ist Ruling 2 aus §4 („Die untere Grenze bleibt JD 0, wie von Jens gewählt …") abgelöst, und
+die offene Frage aus §5 zum Kalenderunterschied ist erledigt: Der Hochschultext nennt ihn jetzt.
+
+Commits:
+
+- a7f06d0 — Zeitbereich beginnt am 1. Januar 1
+- a0cd6c3 — Hochschultext Entstehung: Untergrenze Jahr 1 und Kalenderangabe
+
+Testzahl: 3686 → 3689 (+3: zwei neue Fälle in `format.test.ts` — an `JD_MIN` erscheint keine Ära
+mehr, `jdZuDatumsfeld(JD_MIN)` erreicht jetzt das Jahr 1 — und ein neuer Fall in
+`TimePanel.test.tsx` für `min="0001-01-01"` am Datumsfeld).
+
+Browserwerte (Zeitraffer rückwärts, Start 1. Januar 11, −365 250 d/s,
+`setCinema({ running: false, pauseOnInput: false })`, `quality.tier` auf `high` gesetzt):
+
+| Kriterium | Messwert |
+|---|---|
+| `jd` nach dem Anschlag | 1 721 425,5 (= `JD_MIN`) |
+| `time.paused` nach dem Anschlag | true |
+| Bilder/s nach dem Anschlag (eigener `requestAnimationFrame`-Zähler, 1 s) | 61 (> 30) |
+| Datumsfeld-Wert | `0001-01-01` |
+| Datumsfeld `min` | `0001-01-01` |
+| Datumsfeld `max` (unverändert) | `9999-12-31` |
+| Zeitanzeige | „01.01.1, 00:00" (ohne Ära) |
+| Konsolenfehler/-warnungen seit dem Navigieren | 0 |
+
+Lint, Tests, Build vor diesem Commit: `npm run lint` ohne Befund; `npm test` Test Files 93
+passed (93), Tests 3689 passed (3689); `npm run build` `✓ built in 642ms`, nur der bekannte
+Hinweis zu Chunkgrößen über 500 kB.
+
+Trailer- und Wortprüfung nach der lokalen Projektanleitung durchgeführt, Ergebnis 0.
