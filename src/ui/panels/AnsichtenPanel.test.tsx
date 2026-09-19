@@ -7,6 +7,12 @@ import { SCHLUESSEL_ANSICHTEN, EXPORT_FORMAT } from '../../store/persist';
 import type { Ansicht } from '../../store/persist';
 import { setSprache } from '../i18n';
 import { ablageFake } from '../../test/ablageFake';
+import { flugWiederherstellungMelden } from '../../render/camera/controller';
+
+vi.mock('../../render/camera/controller', async (original) => ({
+  ...(await original<typeof import('../../render/camera/controller')>()),
+  flugWiederherstellungMelden: vi.fn(),
+}));
 
 const gespeichert = (ablage: ReturnType<typeof ablageFake>): Ansicht[] =>
   JSON.parse(ablage.daten.get(SCHLUESSEL_ANSICHTEN) ?? '[]') as Ansicht[];
@@ -82,6 +88,19 @@ describe('AnsichtenPanel: speichern und laden', () => {
     expect(z.time.paused).toBe(true);
     expect(z.quality.tier).toBe('high');
     expect(z.ui.language).toBe('en');
+  });
+
+  it('meldet der Kamera beim Laden eine Wiederherstellung, damit ein laufender Flug ruhig hinübergleitet (Abnahme Flug Etappe 2, §7 Frage 4)', () => {
+    vi.mocked(flugWiederherstellungMelden).mockClear();
+    const ablage = mitAnsichten([
+      { name: 'Flug', state: { camera: { mode: 'fly', fly: { refId: 'earth', x: 4e7, y: -3e7, z: 1e7, yaw: 1, pitch: 0 } } } },
+    ]);
+    useStore.getState().setCamera({ mode: 'fly' });
+    render(<AnsichtenPanel ablage={ablage} />);
+    expect(flugWiederherstellungMelden).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: 'Ansicht laden: Flug' }));
+    expect(useStore.getState().camera.fly.x).toBe(4e7);
+    expect(flugWiederherstellungMelden).toHaveBeenCalledTimes(1);
   });
 
   it('liest eine beschädigte Ablage als leer', () => {

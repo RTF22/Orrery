@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import * as THREE from 'three';
-import { createCameraController, targetFor, letztePose } from './controller';
+import { createCameraController, flugWiederherstellungMelden, targetFor, letztePose } from './controller';
 import { DEFAULT_STATE } from '../../store';
 import { scaledPositionAt, scaledRadius } from '../../sim/scale';
 import { blickAus, kugelUm, laenge, minus, normiert, plus, punkt } from './flug';
@@ -284,6 +284,52 @@ describe('Flug', () => {
     const { c, erde, blick, gemerkt } = wiederherstellung();
     for (let i = 0; i < 600; i++) c.update(mitFlug('earth', gemerkt, blick), jd, 1 / 60, s);
     const weiter = { x: gemerkt.x + 1e5, y: gemerkt.y, z: gemerkt.z };
+    let p = { x: 0, y: 0, z: 0 };
+    for (let i = 0; i < 27; i++) p = c.update(mitFlug('earth', weiter, blick), jd, 1 / 60, s);
+    expect(laenge(minus(minus(p, erde), weiter)) / 1e5).toBeLessThan(0.05);
+  });
+
+  /** Eingeschwungener Flug an der Erde, danach ein Sprung der Solllage um viele Erdabstände. */
+  function sprungImFlug(melden: boolean): number {
+    const c = createCameraController(neueKamera());
+    const start = { x: 3e6, y: 1e6, z: 0 };
+    const blick = { yaw: 2, pitch: 0 };
+    for (let i = 0; i < 120; i++) c.update(mitFlug('earth', start, blick), jd, 1 / 60, s);
+    const erde = scaledPositionAt('earth', bodyIndex, jd, s);
+    const gemerkt = { x: 4e7, y: -3e7, z: 1e7 };
+    if (melden) flugWiederherstellungMelden();
+    let p = { x: 0, y: 0, z: 0 };
+    for (let i = 0; i < 27; i++) p = c.update(mitFlug('earth', gemerkt, blick), jd, 1 / 60, s);
+    return laenge(minus(minus(p, erde), gemerkt)) / laenge(minus(start, gemerkt));
+  }
+
+  it('gleitet im laufenden Flug nach einer gemeldeten Wiederherstellung mit 0,45 s (Abnahme Flug Etappe 2, §7 Frage 4)', () => {
+    const rest = sprungImFlug(true);
+    // Wie beim Eintritt: nach einer Zeitkonstante bleiben rund 0,41.
+    expect(rest).toBeGreaterThan(0.3);
+    expect(rest).toBeLessThan(0.5);
+  });
+
+  it('bleibt im laufenden Flug ohne gemeldete Wiederherstellung bei 0,15 s', () => {
+    expect(sprungImFlug(false)).toBeLessThan(0.05);
+  });
+
+  it('vergisst eine außerhalb des Flugs gemeldete Wiederherstellung', () => {
+    const c = createCameraController(neueKamera());
+    const geheftet: AppState = {
+      ...structuredClone(DEFAULT_STATE),
+      camera: { ...DEFAULT_STATE.camera, mode: 'attached', targetId: 'earth', distance: 2e6 },
+    };
+    for (let i = 0; i < 600; i++) c.update(geheftet, jd, 1 / 60, s);
+    flugWiederherstellungMelden();
+    c.update(geheftet, jd, 1 / 60, s);
+    // Flugstart an der gezeigten Lage, danach ein Schritt wie von der Steuerung: schnelle Dämpfung.
+    const gezeigt = letztePose()!;
+    const erde = scaledPositionAt('earth', bodyIndex, jd, s);
+    const blick = blickAus(gezeigt.blick);
+    const lage = minus(gezeigt.positionKm, erde);
+    c.update(mitFlug('earth', lage, blick), jd, 1 / 60, s);
+    const weiter = { x: lage.x + 1e5, y: lage.y, z: lage.z };
     let p = { x: 0, y: 0, z: 0 };
     for (let i = 0; i < 27; i++) p = c.update(mitFlug('earth', weiter, blick), jd, 1 / 60, s);
     expect(laenge(minus(minus(p, erde), weiter)) / 1e5).toBeLessThan(0.05);

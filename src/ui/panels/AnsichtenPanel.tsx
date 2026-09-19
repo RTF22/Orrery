@@ -5,6 +5,7 @@ import {
   ansichtenLesen, ansichtenSchreiben, nameBereinigen, EXPORT_DATEINAME, NAME_MAX,
 } from '../../store/persist';
 import type { Ablage, Ansicht } from '../../store/persist';
+import { flugWiederherstellungMelden } from '../../render/camera/controller';
 import type { Key } from '../i18n';
 import { t } from '../i18n';
 import { Panel } from './Panel';
@@ -97,6 +98,8 @@ export function AnsichtenPanel({ ablage = ablageHolen() }: Props): React.JSX.Ele
   const laden = (ansicht: Ansicht): void => {
     setMeldung(null);
     replaceAll(ansichtAnwenden(useStore.getState(), ansicht));
+    // Im laufenden Flug gleitet die Kamera sonst mit 0,15 s über den ganzen Weg.
+    flugWiederherstellungMelden();
   };
 
   const loeschen = (n: string): void => {

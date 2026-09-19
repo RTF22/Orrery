@@ -104,6 +104,20 @@ function nochUnterwegs(lage: Vec3, blick: Vec3, fly: AppState['camera']['fly']):
 }
 
 let zuletztGezeigt: GezeigtePose | null = null;
+let wiederherstellungGemeldet = false;
+
+/**
+ * Meldet, dass eine gespeicherte Fluglage in den Store geschrieben wurde
+ * (Ansicht laden). Im laufenden Flug gleitet die Kamera dann wie beim
+ * Eintritt mit FLUG_UEBERGANG_S hinüber, sofern die Lage abweicht; ohne
+ * Meldung hielte sie den Sprung für einen Flugschritt und nähme die 0,15 s
+ * (Abnahme Flug Etappe 2, §7 Frage 4, Entscheidung von Jens 19.09.2026).
+ * Der Eintritt in den Flug erkennt Wiederherstellungen selbst; das nächste
+ * Bild verbraucht die Meldung in jedem Modus.
+ */
+export function flugWiederherstellungMelden(): void {
+  wiederherstellungGemeldet = true;
+}
 
 /**
  * Gezeigte Kameralage des zuletzt gerechneten Bildes samt jd des Bildes
@@ -184,9 +198,18 @@ export function createCameraController(camera: THREE.PerspectiveCamera): CameraC
       // bei den Umlaufmodi hinüber (Nachtrag §13.4). Im allerersten Bild ist
       // die Lage die aus dem Store, dort gibt es keinen Übergang.
       uebergang = nochUnterwegs(flugLage, flugBlick, fly);
-    } else if (fly.refId !== flugRef) {
-      flugLage = plus(flugLage, minus(scaledPositionAt(flugRef, bodyIndex, jd, s), ref));
+    } else {
+      if (fly.refId !== flugRef) {
+        flugLage = plus(flugLage, minus(scaledPositionAt(flugRef, bodyIndex, jd, s), ref));
+      }
+      if (wiederherstellungGemeldet && nochUnterwegs(flugLage, flugBlick, fly)) {
+        // Wiederherstellung im laufenden Flug: ruhig hinübergleiten wie beim Eintritt.
+        nullen(vLage);
+        nullen(vBlick);
+        uebergang = true;
+      }
     }
+    wiederherstellungGemeldet = false;
     flugRef = fly.refId;
     const zeitkonstante = uebergang ? FLUG_UEBERGANG_S : FLUG_DAEMPFUNG_S;
     flugLage = smoothDampVec3(flugLage, { x: fly.x, y: fly.y, z: fly.z }, vLage, zeitkonstante, dt);
@@ -201,6 +224,7 @@ export function createCameraController(camera: THREE.PerspectiveCamera): CameraC
   return {
     update(state, jd, dt, s) {
       if (state.camera.mode === 'fly') return fliege(state, jd, dt, s);
+      wiederherstellungGemeldet = false;
 
       const ziel = targetFor(state, jd, s);
       // In allen drei Modi ist der Blickpunkt zugleich der Anker, an dem die
