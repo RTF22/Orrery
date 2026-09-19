@@ -13,6 +13,7 @@ import { kreuz, laenge, mal, minus, normiert, plus } from '../../render/camera/f
 import type { GezeigtePose } from '../../render/camera/flug';
 import { startCinema, stopCinema } from '../cinemaControl';
 import { fahreZu, fahrtAbbrechen, fahrtLaeuft } from '../kamerafahrt';
+import { SCENES } from '../../data/scenes';
 
 const jd = DEFAULT_STATE.time.jd;
 const s = DEFAULT_STATE.scale;
@@ -153,6 +154,23 @@ describe('steuerungTakt: Flug', () => {
     expect(fahrtLaeuft()).toBe(true);
     steuerungTakt(jd, 0, umgebung(['KeyW'], vorErde()));
     expect(fahrtLaeuft()).toBe(false);
+  });
+
+  it('macht beim Flug aus dem Kino den Körper zum Ziel, auf den die Szene blickt (Nachtrag §13.2)', () => {
+    useStore.getState().setCinema({ nummer: SCENES.findIndex((sz) => sz.id === 'phobos-tiefflug'), shuffle: false });
+    useStore.getState().setCamera({ targetId: 'jupiter' });
+    startCinema();
+    steuerungTakt(jd, 0, umgebung(['KeyW'], vorErde()));
+    const { camera } = useStore.getState();
+    expect(camera.mode).toBe('fly');
+    expect(camera.targetId).toBe('mars');
+  });
+
+  it('nimmt bei einer Sichtlinie den Standortkörper als Ziel', () => {
+    useStore.getState().setCinema({ nummer: SCENES.findIndex((sz) => sz.id === 'mondfinsternis'), shuffle: false });
+    startCinema();
+    steuerungTakt(jd, 0, umgebung(['KeyW'], vorErde()));
+    expect(useStore.getState().camera.targetId).toBe('moon');
   });
 });
 

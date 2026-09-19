@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { cinemaTargetFor, systemRadiusKm } from './cinema';
+import { blickzielVon, cinemaTargetFor, systemRadiusKm } from './cinema';
 import { plannedSceneAt } from '../../sim/director';
 import { SCENES } from '../../data/scenes';
 import { scaledPositionAt, scaledRadius } from '../../sim/scale';
@@ -205,5 +205,21 @@ describe('cinemaTargetFor — Bahntyp sichtlinie', () => {
     const zurErde = { x: erde.x - mond.x, y: erde.y - mond.y, z: erde.z - mond.z };
     const grad = (winkelZwischen(zurKamera, zurErde) * 180) / Math.PI;
     expect(grad).toBeCloseTo(10, 6);
+  });
+});
+
+describe('blickzielVon (Nachtrag Flug §13.2)', () => {
+  it('nennt den Körper, auf den die Szene blickt', () => {
+    expect(blickzielVon(szene('erdaufgang'))).toBe('earth');
+    expect(blickzielVon(szene('phobos-tiefflug'))).toBe('mars');
+    // Sichtlinie: lookAtId legt nur die Linie fest, der Blick gilt dem Standortkörper.
+    expect(blickzielVon(szene('mondfinsternis'))).toBe('moon');
+  });
+
+  it('stimmt für jede Szene mit dem Blickpunkt von cinemaTargetFor überein (Zwilling)', () => {
+    for (const sc of SCENES) {
+      const ziel = cinemaTargetFor(feste(sc), 0, jd, s);
+      expect(abstand(ziel.lookAtKm, scaledPositionAt(blickzielVon(sc), bodyIndex, jd, s))).toBeLessThan(1e-6);
+    }
   });
 });

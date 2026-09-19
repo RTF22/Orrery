@@ -1,6 +1,8 @@
 import { useStore } from '../../store';
 import { bodies, bodyIndex } from '../../data';
 import { scaledPositionAt } from '../../sim/scale';
+import { SCENES } from '../../data/scenes';
+import { plannedSceneAt } from '../../sim/director';
 import {
   begrenze, blickAus, flugSchritt, fluggeschwindigkeit, koerperNaechstDerMitte, koerperStaende, kugelUm, laenge,
   mindesthoehe, minus, plus, waehleBezug, ELEVATION_GRENZE, MAX_DISTANCE_KM, MIN_DISTANCE_KM,
@@ -8,6 +10,7 @@ import {
 import type { Absicht, GezeigtePose } from '../../render/camera/flug';
 import { cinemaAktiv, stopCinema } from '../cinemaControl';
 import { fahrtAbbrechen } from '../kamerafahrt';
+import { blickzielVon } from '../../render/camera/cinema';
 import { tastenAbsicht } from './tastatur';
 import type { Tastenstand } from './tastatur';
 
@@ -51,21 +54,35 @@ export interface SteuerungUmgebung {
   letztePose(): GezeigtePose | null;
 }
 
+/** Körper, auf den die geplante Szene des Kinos blickt (Nachtrag §13.2). */
+function kinoBlickziel(): string {
+  const { cinema } = useStore.getState();
+  return blickzielVon(plannedSceneAt(cinema.nummer, SCENES, cinema.seed, cinema.shuffle).scene);
+}
+
 /**
  * Startet den Flug an einer gezeigten Lage (Entwurf §3.1): Kino und Fahrt
  * enden, Bezug ist der Körper, dem die Lage in eigenen Radien am nächsten ist.
  * Gerechnet wird mit den Körperlagen des gezeigten Bildes (pose.jd); die
  * Kamera zieht danach mit dem Bezug weiter und springt auch bei laufender Uhr
- * nicht. targetId bleibt (Entscheidung 8).
+ * nicht. targetId bleibt (Entscheidung 8) — außer beim Wechsel aus dem Kino:
+ * Dann wird der Körper Ziel, auf den die Szene blickt (Nachtrag §13.2), sonst
+ * zeigte das Infopanel einen Körper, den die Kamera gar nicht ansteuert. Er
+ * wird vor stopCinema gelesen, das die Kamera von vor dem Start zurückholt.
  */
 export function flugStarten(pose: GezeigtePose): void {
-  if (cinemaAktiv()) stopCinema();
+  const kinoZiel = cinemaAktiv() ? kinoBlickziel() : null;
+  if (kinoZiel !== null) stopCinema();
   fahrtAbbrechen();
   const { scale, visible, setCamera } = useStore.getState();
   const staende = koerperStaende(bodies, bodyIndex, pose.jd, scale, visible);
   const refId = waehleBezug(pose.positionKm, staende, null) ?? 'sun';
   const ref = scaledPositionAt(refId, bodyIndex, pose.jd, scale);
-  setCamera({ mode: 'fly', fly: { refId, ...minus(pose.positionKm, ref), ...blickAus(pose.blick) } });
+  setCamera({
+    mode: 'fly',
+    ...(kinoZiel === null ? {} : { targetId: kinoZiel }),
+    fly: { refId, ...minus(pose.positionKm, ref), ...blickAus(pose.blick) },
+  });
 }
 
 /** Drehen mit Shift (Entwurf §4.2): A/D 60°/s, Q/E 45°/s, W/S Faktor 2 je Sekunde. */

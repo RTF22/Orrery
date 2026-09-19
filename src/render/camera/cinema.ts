@@ -2,6 +2,7 @@ import type { Vec3 } from '../../sim/types';
 import type { ScaleSettings } from '../../sim/scale';
 import type { PlannedScene } from '../../sim/director';
 import type { CameraTarget } from './controller';
+import type { Scene } from '../../data/scenes';
 import { scaledPositionAt, scaledRadius } from '../../sim/scale';
 import { velocityAt } from '../../sim/orbit';
 import { bodyIndex } from '../../data/index';
@@ -124,4 +125,13 @@ export function cinemaTargetFor(
         lookAtKm: blickziel,
       };
   }
+}
+
+/**
+ * Der Körper, auf den eine Szene blickt (Nachtrag Flug §13.2): bei der
+ * Sichtlinie der Standortkörper, sonst `lookAtId`, ohne ihn der
+ * Standortkörper. Zwilling der Blickpunktwahl in cinemaTargetFor.
+ */
+export function blickzielVon(scene: Scene): string {
+  return scene.path === 'sichtlinie' ? scene.targetId : (scene.lookAtId ?? scene.targetId);
 }
