@@ -214,4 +214,42 @@ describe('Flug', () => {
     const erwartet = plus(scaledPositionAt('mars', bodyIndex, jd, s), { x: 1e6, y: -2e6, z: 5e5 });
     expect(laenge(minus(p, erwartet))).toBeLessThan(1e-3);
   });
+
+  it('tritt auch bei laufender Uhr ohne Sprung relativ zum Körper in den Flug ein', () => {
+    const c = createCameraController(neueKamera());
+    const geheftet: AppState = {
+      ...structuredClone(DEFAULT_STATE),
+      camera: { ...DEFAULT_STATE.camera, mode: 'attached', targetId: 'earth', distance: 2e6 },
+    };
+    const schritt = 365 / 60;
+    let jdJetzt = jd;
+    for (let i = 0; i < 600; i++) { jdJetzt += schritt; c.update(geheftet, jdJetzt, 1 / 60, s); }
+    const gezeigt = letztePose()!;
+    const erdeVorher = scaledPositionAt('earth', bodyIndex, gezeigt.jd, s);
+    const relativVorher = minus(gezeigt.positionKm, erdeVorher);
+    jdJetzt += schritt;
+    const danach = c.update(mitFlug('earth', relativVorher, blickAus(gezeigt.blick)), jdJetzt, 1 / 60, s);
+    const relativDanach = minus(danach, scaledPositionAt('earth', bodyIndex, jdJetzt, s));
+    expect(laenge(minus(relativDanach, relativVorher))).toBeLessThan(1e-3);
+  });
+
+  it('verlässt den Flug auch bei laufender Uhr ohne Sprung relativ zum neuen Ziel', () => {
+    const c = createCameraController(neueKamera());
+    const schritt = 365 / 60;
+    let jdJetzt = jd;
+    for (let i = 0; i < 120; i++) {
+      jdJetzt += schritt;
+      c.update(mitFlug('earth', { x: 3e6, y: 1e6, z: 0 }, { yaw: 2, pitch: 0 }), jdJetzt, 1 / 60, s);
+    }
+    const gezeigt = letztePose()!;
+    const mondVorher = scaledPositionAt('moon', bodyIndex, gezeigt.jd, s);
+    const geheftet: AppState = {
+      ...structuredClone(DEFAULT_STATE),
+      camera: { ...DEFAULT_STATE.camera, mode: 'attached', targetId: 'moon', ...kugelUm(gezeigt.positionKm, mondVorher) },
+    };
+    jdJetzt += schritt;
+    const erstes = c.update(geheftet, jdJetzt, 1 / 60, s);
+    const relativDanach = minus(erstes, scaledPositionAt('moon', bodyIndex, jdJetzt, s));
+    expect(laenge(minus(relativDanach, minus(gezeigt.positionKm, mondVorher)))).toBeLessThan(1);
+  });
 });

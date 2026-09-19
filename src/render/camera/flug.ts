@@ -25,6 +25,8 @@ export const MINDESTABSTAND_RADIEN = 1.05;
 export interface Blick { yaw: number; pitch: number }
 /** Gezeigte Kameralage eines Bildes: Weltlage in km und Blickvektor der Länge 1. */
 export interface Pose { positionKm: Vec3; blick: Vec3 }
+/** Gezeigte Lage mit dem jd ihres Bildes (letztePose, Entwurf §6.1): Übergänge rechnen Körperlagen zu diesem jd. */
+export interface GezeigtePose extends Pose { jd: number }
 /** Dargestellte Lage und dargestellter Radius eines sichtbaren Körpers. */
 export interface KoerperStand { id: string; pos: Vec3; radius: number }
 

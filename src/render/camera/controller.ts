@@ -11,7 +11,7 @@ import { SCENES } from '../../data/scenes';
 import { cinemaTargetFor } from './cinema';
 import { kmToUnits, worldToRender } from '../units';
 import { blickVektor, laenge, mal, minus, normiert, plus } from './flug';
-import type { Pose } from './flug';
+import type { GezeigtePose } from './flug';
 
 export interface CameraTarget { positionKm: Vec3; lookAtKm: Vec3 }
 
@@ -86,14 +86,15 @@ export interface CameraController {
  */
 export const FLUG_DAEMPFUNG_S = 0.15;
 
-let zuletztGezeigt: Pose | null = null;
+let zuletztGezeigt: GezeigtePose | null = null;
 
 /**
- * Gezeigte Kameralage des zuletzt gerechneten Bildes (Entwurf Flug und
- * Controller §6.1). Flug, Drehen mit Shift und Kamerafahrt beginnen dort,
- * damit die Kamera beim Moduswechsel nicht springt; null vor dem ersten Bild.
+ * Gezeigte Kameralage des zuletzt gerechneten Bildes samt jd des Bildes
+ * (Entwurf Flug und Controller §6.1). Flug, Drehen mit Shift und Kamerafahrt
+ * beginnen dort, damit die Kamera beim Moduswechsel nicht springt; null vor
+ * dem ersten Bild.
  */
-export function letztePose(): Pose | null {
+export function letztePose(): GezeigtePose | null {
   return zuletztGezeigt;
 }
 
@@ -121,12 +122,12 @@ export function createCameraController(camera: THREE.PerspectiveCamera): CameraC
   let flugBlick: Vec3 = { x: 1, y: 0, z: 0 };
   const vLage: Vec3 = { x: 0, y: 0, z: 0 };
   const vBlick: Vec3 = { x: 0, y: 0, z: 0 };
-  let pose: Pose | null = null;
+  let pose: GezeigtePose | null = null;
 
   const nullen = (v: Vec3): void => { v.x = 0; v.y = 0; v.z = 0; };
   const schluesselVon = (state: AppState): string =>
     `${state.camera.mode}|${state.camera.targetId}|${state.camera.freezeJd ?? 'jetzt'}`;
-  const merke = (p: Pose): void => { pose = p; zuletztGezeigt = p; };
+  const merke = (p: GezeigtePose): void => { pose = p; zuletztGezeigt = p; };
 
   /** Kamera im Ursprung, Blick entlang `richtung` (Render-Einheiten), Ebenen nach `abstand`. */
   const ausrichten = (richtung: Vec3, abstand: number): void => {
@@ -151,7 +152,10 @@ export function createCameraController(camera: THREE.PerspectiveCamera): CameraC
         flugLage = { x: fly.x, y: fly.y, z: fly.z };
         flugBlick = blickVektor(fly);
       } else {
-        flugLage = minus(pose.positionKm, ref);
+        // Die Lage relativ zum Bezug im gezeigten Bild übernehmen (dessen
+        // jd, nicht das aktuelle) — die Kamera zieht von dort mit dem
+        // Körper weiter, statt um dessen Weg im laufenden Bild zu springen.
+        flugLage = minus(pose.positionKm, scaledPositionAt(fly.refId, bodyIndex, pose.jd, s));
         flugBlick = pose.blick;
       }
       nullen(vLage);
@@ -165,7 +169,7 @@ export function createCameraController(camera: THREE.PerspectiveCamera): CameraC
     flugBlick = normiert(smoothDampVec3(flugBlick, blickVektor(fly), vBlick, FLUG_DAEMPFUNG_S, dt));
     const position = plus(ref, flugLage);
     ausrichten(flugBlick, kmToUnits(laenge(flugLage)));
-    merke({ positionKm: position, blick: flugBlick });
+    merke({ positionKm: position, blick: flugBlick, jd });
     return position;
   };
 
@@ -188,12 +192,16 @@ export function createCameraController(camera: THREE.PerspectiveCamera): CameraC
         if (pose !== null) {
           // Ausstieg aus dem Flug: Die Kamera bleibt stehen, der Blickpunkt
           // liegt zuerst auf der alten Blickachse im Abstand des neuen Ankers.
-          // Versatz und Offset klingen gleich schnell ab; beginnt die
-          // Umlaufkamera an der gezeigten Lage (heftenUm, fahreZu), bleibt
-          // ihre Summe gleich und nur der Blick schwenkt.
-          const blickpunkt = plus(pose.positionKm, mal(pose.blick, laenge(minus(anker, pose.positionKm))));
+          // Die gezeigte Lage stammt aus einem früheren Bild (pose.jd); erst
+          // mit dem Weg des Ankers seither mitgeführt, dann weiterverrechnet
+          // — sonst spränge die Kamera um genau diesen Weg. Versatz und
+          // Offset klingen gleich schnell ab; beginnt die Umlaufkamera an
+          // der gezeigten Lage (heftenUm, fahreZu), bleibt ihre Summe gleich
+          // und nur der Blick schwenkt.
+          const gezeigt = plus(pose.positionKm, minus(anker, targetFor(state, pose.jd, s).lookAtKm));
+          const blickpunkt = plus(gezeigt, mal(pose.blick, laenge(minus(anker, gezeigt))));
           versatz = minus(blickpunkt, anker);
-          istOffset = minus(pose.positionKm, blickpunkt);
+          istOffset = minus(gezeigt, blickpunkt);
           nullen(vOffset);
           nullen(vVersatz);
           letzterAnker = anker;
@@ -230,7 +238,7 @@ export function createCameraController(camera: THREE.PerspectiveCamera): CameraC
       // Nahe und ferne Ebene richten sich nach der Zielentfernung.
       const blick = worldToRender(istBlick, istPosition);
       ausrichten(blick, Math.hypot(blick.x, blick.y, blick.z));
-      merke({ positionKm: istPosition, blick: normiert(minus(istBlick, istPosition)) });
+      merke({ positionKm: istPosition, blick: normiert(minus(istBlick, istPosition)), jd });
       return istPosition;
     },
   };
