@@ -126,6 +126,6 @@ React, Zustand, Tailwind, Vitest.
 
 ## Lizenz
 
-Noch nicht festgelegt. Bis zur Veröffentlichung bleibt das Repository privat, alle
-Rechte vorbehalten. Die Texturen unterliegen den in `ASSETS.md` genannten
+Noch nicht festgelegt. Das Repository ist öffentlich einsehbar; solange keine Lizenz
+festgelegt ist, bleiben alle Rechte vorbehalten. Die Texturen unterliegen den in `ASSETS.md` genannten
 Lizenzen (überwiegend CC BY 4.0).
