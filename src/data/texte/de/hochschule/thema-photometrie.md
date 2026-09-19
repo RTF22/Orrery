@@ -293,7 +293,8 @@ zusammen mit einer abgestrahlten Leistung von 14,098 W m⁻² ergab sich ein inn
   und 1,15 ± 0,06. Ihr Wert beruht weiter auf der von Voyager 2 gemessenen Abstrahlung, deren
   Neubestimmung sie empfehlen ([Irwin et al. 2025](literatur:irwin-2025), Tabelle 1). Mit einer
   Energiebilanz über einen ganzen Umlauf finden auch Wang et al. einen Energieverlust, mit einem
-  inneren Wärmestrom von 0,078 ± 0,018 W m⁻² ([Wang et al. 2025](literatur:wang-2025)).
+  inneren Wärmestrom von 0,078 ± 0,018 W m⁻², unter der Annahme einer jahreszeitlich kaum
+  veränderlichen Abstrahlung ([Wang et al. 2025](literatur:wang-2025)).
 - **Helligkeitsanstieg Neptuns:** Warum Neptun zwischen 1980 und 2000 heller wurde, galt 2018 als
   ungeklärt. Karkoschka (2011) vermutet Verdunkelungsereignisse, bei denen Dunstteilchen aufsteigen
   und danach wieder absinken, Sromovsky et al. (2003) eine jahreszeitliche Änderung wie bei Uranus;
@@ -345,10 +346,11 @@ zusammen mit einer abgestrahlten Leistung von 14,098 W m⁻² ergab sich ein inn
   senkrechtem Licht, ohne Fresnel-Faktor und Füllung, den linearen Wert 1 erreicht. Jedes Ziel
   erscheint damit gleich hell, wie weit es auch von der Sonne steht, obwohl Neptun am 17. September
   2026 nur 1/883 der Bestrahlung der Erde erhält. Für die übrigen Körper im Bild zählt die
-  Bestrahlung $E$ relativ zu 1 AE mit dem Standardwert des Reglers „Distanzausgleich" nur als
-  $E^{0{,}3}$, und in der Standarddarstellung „Schaubild" gilt der gestauchte Abstand
-  $r_\mathrm{d} = r^{0{,}6}$, beide in AE. Steht die Erde im Ziel, erscheint Neptun mit 0,295 ihres
-  Tagniveaus statt mit 0,00113, also 261-mal zu hell, in der Darstellung „Realistisch" 115-mal.
+  Bestrahlung $E$ relativ zu 1 AE mit dem Standardwert 0,7 des Reglers „Distanzausgleich" nur als
+  $E^{1 - 0{,}7} = E^{0{,}3}$, und in der Standarddarstellung „Schaubild" gilt der gestauchte
+  Abstand $r_\mathrm{d} = r^{0{,}6}$, beide in AE. Steht die Erde im Ziel, erscheint Neptun mit
+  0,295 ihres Tagniveaus statt mit 0,00113, also 261-mal zu hell, in der Darstellung „Realistisch"
+  115-mal.
 - **Tonwertkurve:** Die Bildwerte durchlaufen die ACES-Kurve von three.js und die sRGB-Kodierung.
   Der lineare Wert 1 landet bei 226 von 255, mit der Füllung, also 1,25, bei 233. Am subsolaren
   Punkt einer Fläche der Reflexion 0,12 stehen samt Fresnel-Faktor und Füllung 112, bei der

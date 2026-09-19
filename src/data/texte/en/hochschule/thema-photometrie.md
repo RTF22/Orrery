@@ -289,7 +289,8 @@ power of 14.098 W m⁻² this gave an internal heat flux of 7.485 instead of 5.4
   observations: 0.349 ± 0.016 and 1.15 ± 0.06. Their value still rests on the emission measured by
   Voyager 2, whose re-determination they recommend ([Irwin et al. 2025](literatur:irwin-2025), Table
   1). With an energy balance over a whole orbit, Wang et al. also find an energy loss, with an
-  internal heat flux of 0.078 ± 0.018 W m⁻² ([Wang et al. 2025](literatur:wang-2025)).
+  internal heat flux of 0.078 ± 0.018 W m⁻², assuming no significant seasonal variation in the
+  emitted power ([Wang et al. 2025](literatur:wang-2025)).
 - **Brightening of Neptune:** Why Neptune brightened between 1980 and 2000 was considered
   unexplained in 2018. Karkoschka (2011) suggests darkening events in which haze particles are
   lifted and then settle again, Sromovsky et al. (2003) a seasonal change as on Uranus; Lockwood and
@@ -339,10 +340,10 @@ power of 14.098 W m⁻² this gave an internal heat flux of 7.485 instead of 5.4
   normal incidence, without Fresnel factor and fill, reaches the linear value 1. Every target thus
   appears equally bright, however far it is from the Sun, although on 17 September 2026 Neptune
   receives only 1/883 of the Earth's irradiance. For the other bodies in the image the irradiance
-  $E$ relative to 1 au counts, with the default of the "Distance compensation" slider, only as
-  $E^{0.3}$, and in the default view "Diagram" the compressed distance $r_\mathrm{d} = r^{0.6}$
-  applies, both in au. With the Earth as target, Neptune appears at 0.295 of its day level instead
-  of 0.00113, i.e. 261 times too bright, in the "Realistic" view 115 times.
+  $E$ relative to 1 au counts, with the default value 0.7 of the "Distance compensation" slider,
+  only as $E^{1 - 0.7} = E^{0.3}$, and in the default view "Diagram" the compressed distance
+  $r_\mathrm{d} = r^{0.6}$ applies, both in au. With the Earth as target, Neptune appears at 0.295
+  of its day level instead of 0.00113, i.e. 261 times too bright, in the "Realistic" view 115 times.
 - **Tone curve:** The image values pass through the ACES curve of three.js and the sRGB encoding.
   The linear value 1 ends up at 226 of 255, with the fill, i.e. 1.25, at 233. At the subsolar point
   of a surface of reflectance 0.12, including Fresnel factor and fill, the value is 112, for
