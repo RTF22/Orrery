@@ -14,11 +14,19 @@ export interface Befund {
   text: string;
 }
 
-/** Kleinbuchstaben ohne Auszeichnungen, Diakritika und Satzzeichen, Wörter durch ein Leerzeichen getrennt. */
+/**
+ * Kleinbuchstaben ohne Auszeichnungen, Diakritika und Satzzeichen, Wörter durch ein Leerzeichen
+ * getrennt. `<sup>`/`<sub>`-Tags (öffnend wie schließend) fallen samt direkt folgendem Leerraum
+ * ohne Zwischenraum weg, damit eine hochgestellte Massenzahl wie „238" im Titel bei ihrem Element
+ * bleibt (Crossref bricht die Zeile nach solchen Tags um, siehe literaturVergleich.test.ts).
+ * Übrige Tags werden weiter durch ein Leerzeichen ersetzt. NFKD statt NFD macht aus hochgestellten
+ * und tiefgestellten Ziffern (Katalogschreibweise wie „²³⁸U") gewöhnliche Ziffern.
+ */
 export function normalisiere(s: string): string {
   return s
+    .replace(/<\/?su[bp]>\s*/g, '')
     .replace(/<[^>]*>/g, ' ')
-    .normalize('NFD')
+    .normalize('NFKD')
     .replace(/\p{M}/gu, '')
     .toLowerCase()
     .replace(/[^\p{L}\p{N}]+/gu, ' ')

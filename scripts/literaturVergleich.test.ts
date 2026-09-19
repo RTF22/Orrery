@@ -27,6 +27,24 @@ describe('normalisiere und wortanteil', () => {
     expect(wortanteil('A B C D', 'a b c')).toBe(0.75);
     expect(wortanteil('', 'x')).toBe(0);
   });
+
+  it('entfernt sup-Tags samt folgendem Leerraum und hochgestellte Ziffern wie gewöhnliche (Crossref-Titel Brennecka et al. 2010)', () => {
+    const crossref = [
+      '<sup>238</sup>\n            U/\n            <sup>235</sup>\n            U Variations',
+      ' in Meteorites: Extant\n            <sup>247</sup>\n            Cm and Implications for',
+      ' Pb-Pb Dating',
+    ].join('');
+    const katalog = '²³⁸U/²³⁵U Variations in Meteorites: Extant ²⁴⁷Cm and Implications for Pb-Pb Dating';
+    expect(normalisiere(crossref)).toBe(normalisiere(katalog));
+    expect(wortanteil(crossref, katalog)).toBe(1);
+  });
+
+  it('entfernt auch sub-Tags samt folgendem Leerraum und hochgestellte Ziffern wie gewöhnliche', () => {
+    const crossref = 'H<sub>2</sub>\n            O Content of Chondrites';
+    const katalog = 'H₂O Content of Chondrites';
+    expect(normalisiere(crossref)).toBe(normalisiere(katalog));
+    expect(wortanteil(crossref, katalog)).toBe(1);
+  });
 });
 
 describe('Jahre', () => {
