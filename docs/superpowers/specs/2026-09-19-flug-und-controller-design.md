@@ -570,3 +570,22 @@ Etappe 2 beginnt mit 13.1 bis 13.5, je als eigene Task mit Tests, danach Control
 Fadenkreuz nach §10. Die Abnahme (`docs/flug-etappe2-abnahme.md`) misst zusätzlich den
 Bezug zwischen Erde und Mond bei laufender Uhr, das Ziel nach dem Wechsel vom Kino in
 den Flug, die Sperre nach dem Loslassen von Shift und die Dauer einer Wiederherstellung.
+
+## 14. Nachtrag nach der Abnahme von Etappe 2 (19.09.2026)
+
+Jens folgte den Empfehlungen zu den Fragen in §7 der Abnahme (`docs/flug-etappe2-abnahme.md`).
+
+- **Körper nächst der Bildmitte:** Die Regel aus §13.5 (Winkel minus Winkelradius) bleibt. Ein
+  kleiner Körper, dessen Rand näher an der Bildmitte liegt als der Rand einer großen Scheibe,
+  wird Ziel; das Plankriterium der Abnahme war zu weit gefasst.
+- **Vollbild beim Kinostart über den Controller:** bleibt. Verweigert Chrome das Vollbild ohne
+  Nutzeraktivierung, läuft das Kino im Fenster.
+- **Kamerafahrt und Fadenkreuz (ändert §5.5):** Rechter Stick und R3 brechen eine Kamerafahrt
+  nicht mehr ab; wie die Maus darf das Fadenkreuz während der Fahrt weiterwandern. Alle übrigen
+  Eingaben außer A und B brechen weiter ab.
+- **Wiederherstellung im laufenden Flug (ergänzt §13.4):** Lädt man während des Fluges eine
+  Ansicht, meldet das Ansichten-Panel die Wiederherstellung an den Kamera-Controller
+  (`flugWiederherstellungMelden` in `render/camera/controller.ts`). Weicht die Lage ab, gleitet
+  die Kamera wie beim Eintritt mit 0,45 s hinüber. Das nächste Bild verbraucht die Meldung in
+  jedem Modus.
+- Alle Rulings der Etappe 2 (Abnahme §4) sind bestätigt.

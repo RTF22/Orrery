@@ -387,6 +387,16 @@ Die Startwerte lassen sich danach per Ruling ändern (Entwurf §9, §12.1).
 6. Prüfung von Hand nach §6 (einschließlich der zwei Punkte zur Nacharbeit); danach Fast-Forward nach
    `master` und weiter mit 4d-3.
 
+**Entscheidungen von Jens (19.09.2026):** „Mach alles wie empfohlen“. Frage 1: Die Regel aus
+§13.5 bleibt, das Plankriterium N5 war zu weit gefasst. Frage 2: Das Kino darf im Fenster laufen,
+wenn Chrome das Vollbild verweigert. Frage 3: Rechter Stick und R3 brechen keine Kamerafahrt mehr
+ab (Commit „Controller: rechter Stick und R3 brechen keine Kamerafahrt mehr ab“). Frage 4: Die
+Wiederherstellung wird auch im laufenden Flug erkannt, gemeldet vom Ansichten-Panel (Commit „Flug:
+Wiederherstellung auch im laufenden Flug ruhig dämpfen“). Frage 5: Alle Rulings sind bestätigt.
+Frage 6: Der Fast-Forward nach `master` geschah schon am 19.09.2026 (78e6f1d); die Prüfung von Hand
+mit dem Xbox-Controller steht noch aus, Befunde daraus kommen als eigene Commits. Nachtrag im
+Entwurf: §14.
+
 ## 8. Nacharbeit nach der Schlussprüfung
 
 Schlussprüfung (opus, Paket f5d8680..9c920d0): Urteil „Ready to merge? With fixes" — 0 Critical, 1
