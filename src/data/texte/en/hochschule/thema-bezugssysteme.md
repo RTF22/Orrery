@@ -78,10 +78,10 @@ $$\vec{r}_\lambda = R_x(\varepsilon_0)\,\vec{r}_\alpha$$
 
 Exactly in this way, with 84,381.448″ and without frame bias, JPL Horizons produces its fixed
 ecliptic of J2000 ([Orbital elements](thema:bahnelemente)). The approximate planetary tables refer
-to the mean ecliptic and equinox of J2000 and, according to JPL, use the obliquity 23.43928°, that
-is 84,381.408″ — the same plane within their accuracy, since their nominal errors in heliocentric
-longitude range from 10″ for Neptune to 600″ for Saturn between 1800 and 2050. Compared with the
-ecliptic of J2000 according to IAU 2006, the Horizons plane is inclined by 0.04″, and its
+to the mean ecliptic and equinox of J2000 and give the obliquity 23.43928° for the conversion to
+the ICRF, that is 84,381.408″ — the same plane within their accuracy, since their nominal errors in
+heliocentric longitude range from 10″ for Neptune to 600″ for Saturn between 1800 and 2050. Compared
+with the ecliptic of J2000 according to IAU 2006, the Horizons plane is inclined by 0.04″, and its
 intersection with the ICRF equator is shifted by 0.05″
 ([Petit and Luzum 2010](literatur:petit-2010), eq. 5.40 at the epoch).
 
@@ -241,11 +241,11 @@ validity; how they differ from osculating elements is explained in
   and his numerical examples misleading: instead of the tolerance of one minute he states,
   excursions of UT1 − UTC of several minutes would have to be tolerated
   ([Petit and Tagliaferro 2025](literatur:petit-2025)). In his reply, Levine concludes that the
-  advantages of the method outweigh its drawbacks ([Levine 2025](literatur:levine-2025)). How
-  urgent a change is, is judged differently: according to Agnew, UTC as currently defined would need
-  its first negative leap second by 2029 ([Agnew 2024](literatur:agnew-2024)), while a workshop of
-  the CCTF and the IERS in March 2025 put the probability of a negative leap second by 2035 at 30 %
-  ([BIPM 2026](literatur:bipm-2026)).
+  advantages of the method outweigh its drawbacks ([Levine 2025](literatur:levine-2025)). The draft
+  Resolution C urges haste, citing a workshop of the CCTF and the IERS in March 2025 which estimated
+  that the probability of a negative leap second will increase rapidly, reaching 30 % by 2035
+  ([BIPM 2026](literatur:bipm-2026)). According to Agnew, UTC as currently defined would need its
+  first negative leap second as early as 2029 ([Agnew 2024](literatur:agnew-2024)).
 
 ## In the model
 
@@ -261,22 +261,22 @@ validity; how they differ from osculating elements is explained in
   except the Earth's Moon come from JPL sources ([Orbital elements](thema:bahnelemente)); Orrery
   rotates the equatorial poles by the same angle and so stays within the frame of its data.
   Precession and nutation are missing. For orbits in the fixed frame this is correct; the Earth's
-  pole, however, stands still as a result (see Earth), and conversely the lunar rates contain
-  precession (see lunar node).
-- **Reference planes:** The planets, the Moon (with rates from the equinox of date, see lunar
-  node) and five dwarf planets including Pluto have elements
+  pole, however, stands still as a result (see Earth), and the lunar rates after Meeus are reduced
+  by the precession (see lunar node).
+- **Reference planes:** The planets, the Moon and five dwarf planets including Pluto have elements
   referred to the ecliptic of J2000; the other 20 moons are referred to the equator of their parent
   body with its fixed pole. There is no separate Laplace plane (details in
   [Orbital elements](thema:bahnelemente)).
-- **Lunar node:** The node and perigee rates of the Moon are counted from the mean equinox of date.
-  The node rate of −1934.1363° per century agrees to within $3 \cdot 10^{-5}$ degrees per century
+- **Lunar node:** Meeus counts the node and perigee of the Moon from the mean equinox of date. His
+  node rate of −1934.1363° per century agrees to within $3 \cdot 10^{-5}$ degrees per century
   with the expression DE440 uses in its Earth orientation model for the argument of the 18.6-year
-  nutation term, counted from the mean equinox of date ([Park et al. 2021](literatur:park-2021)). Against the fixed ecliptic of J2000, the osculating
-  elements from DE441 for 1900 to 2100 give rates of −1935.53° and +4067.63° per century, smaller
-  by 1.39° and 1.38°, as much as the general precession. In the fixed frame of the model, node and
-  perigee are therefore 0.37° too large in longitude in September 2026 and 2.8° too small in 1800.
-  The mean longitude itself grows at the rate from the sidereal month and thus in the fixed frame;
-  what is shifted are the mean anomaly and the argument of latitude, each by about 0.37° in 2026.
+  nutation term, counted from the mean equinox of date ([Park et al. 2021](literatur:park-2021)).
+  Orrery reduces the node and perigee rates by the general precession of 1.3969713° per century,
+  the linear term of $p_A$ above ([Petit and Luzum 2010](literatur:petit-2010)), to −1935.5333°
+  and +4067.6168° per century.
+  Against the fixed ecliptic of J2000, the osculating elements from DE441 for 1900 to 2100 give
+  rates of −1935.53° and +4067.63° per century. The mean longitude grows at the rate from the
+  sidereal month and thus likewise in the fixed frame.
 - **Poles and rotation:** Poles are stored as fixed right ascension and declination without rates
   or periodic terms. The rotation phase is zero at the epoch for all 35 bodies and grows with a
   fixed period. It is counted not from $Q$ but from the direction into which the shortest rotation

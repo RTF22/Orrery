@@ -227,8 +227,9 @@ $I = 5.16^\circ$, node period 18.6 years
 - **Earth's Moon:** mean elements relative to the ecliptic: $a$, $e$ and $I = 5.145^\circ$ from
   the NSSDC fact sheet, $\dot{L}$ from the sidereal period (27.3217 days there, computed with
   27.32166 days in the data set); $L$ at epoch as well as $\varpi$ and $\Omega$ with their rates
-  after Meeus (Astronomical Algorithms); without periodic terms. Hence $I$ differs from the
-  5.16° in JPL's table.
+  after Meeus (Astronomical Algorithms), the rates reduced by the general precession of 1.4° per
+  century because Meeus counts from the equinox of date; without periodic terms.
+  Hence $I$ differs from the 5.16° in JPL's table.
 - **Other satellites:** elements relative to the parent body's equator, using its IAU pole at
   epoch J2000; as at JPL, the longitude of the node is counted from the node of this plane on
   the ICRF equator, and the data block shows it that way. The moons of Mars and Jupiter use

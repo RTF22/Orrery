@@ -226,8 +226,9 @@ $I = 5{,}16^\circ$, Knotenperiode 18,6 Jahre
 - **Erdmond:** mittlere Elemente gegen die Ekliptik: $a$, $e$ und $I = 5{,}145^\circ$ aus dem
   NSSDC-Faktenblatt, $\dot{L}$ aus der siderischen Umlaufzeit (dort 27,3217 Tage, im Datensatz
   mit 27,32166 Tagen gerechnet); $L$ zur Epoche sowie $\varpi$ und $\Omega$ samt ihren Raten
-  nach Meeus (Astronomical Algorithms); ohne periodische Glieder. Daher weicht $I$ von den
-  5,16° der JPL-Tabelle ab.
+  nach Meeus (Astronomical Algorithms), die Raten um die allgemeine Präzession von 1,4° je
+  Jahrhundert vermindert, weil Meeus vom Äquinoktium des Datums zählt; ohne periodische Glieder.
+  Daher weicht $I$ von den 5,16° der JPL-Tabelle ab.
 - **Übrige Monde:** Elemente gegen den Äquator des Mutterkörpers mit dessen IAU-Pol zur Epoche
   J2000; die Knotenlänge zählt wie bei JPL vom Knoten dieser Ebene auf dem ICRF-Äquator, so
   zeigt sie auch der Datenblock. Mars- und Jupitermonde nutzen die mittleren JPL-Elemente und

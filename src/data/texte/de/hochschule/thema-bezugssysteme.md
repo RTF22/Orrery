@@ -78,10 +78,10 @@ $$\vec{r}_\lambda = R_x(\varepsilon_0)\,\vec{r}_\alpha$$
 
 Genau so, mit 84 381,448″ und ohne Rahmenversatz, entsteht die feste Ekliptik J2000 von JPL
 Horizons ([Bahnelemente](thema:bahnelemente)). Die Näherungstafeln der Planeten beziehen sich auf
-die mittlere Ekliptik und das Äquinoktium J2000 und rechnen laut JPL mit der Schiefe 23,43928°,
-also 84 381,408″ — im Rahmen ihrer Genauigkeit dieselbe Ebene, denn ihre nominellen Fehler in
-heliozentrischer Länge reichen im Zeitraum 1800 bis 2050 von 10″ bei Neptun bis 600″ bei Saturn.
-Gegen die Ekliptik J2000 nach IAU 2006 ist die Ebene von Horizons um 0,04″ geneigt, und ihr
+die mittlere Ekliptik und das Äquinoktium J2000 und geben für die Umrechnung ins ICRF die Schiefe
+23,43928° an, also 84 381,408″ — im Rahmen ihrer Genauigkeit dieselbe Ebene, denn ihre nominellen
+Fehler in heliozentrischer Länge reichen im Zeitraum 1800 bis 2050 von 10″ bei Neptun bis 600″ bei
+Saturn. Gegen die Ekliptik J2000 nach IAU 2006 ist die Ebene von Horizons um 0,04″ geneigt, und ihr
 Schnitt mit dem ICRF-Äquator liegt
 0,05″ verschoben ([Petit und Luzum 2010](literatur:petit-2010), Gl. 5.40 zur Epoche).
 
@@ -241,11 +241,11 @@ Gültigkeit; wie sie sich von oskulierenden Elementen unterscheiden, erklärt
   irreführend: Statt der von ihm genannten Toleranz von einer Minute müssten Abweichungen von
   UT1 − UTC über mehrere Minuten zugelassen werden
   ([Petit und Tagliaferro 2025](literatur:petit-2025)). Levine hält in seiner Erwiderung die
-  Vorteile des Verfahrens für überwiegend ([Levine 2025](literatur:levine-2025)). Wie dringend eine
-  Änderung ist, wird verschieden eingeschätzt: Nach Agnew bräuchte UTC in heutiger Form bis 2029
-  erstmals eine negative Schaltsekunde ([Agnew 2024](literatur:agnew-2024)), während ein Workshop
-  von CCTF und IERS vom März 2025 die Wahrscheinlichkeit einer negativen Schaltsekunde bis 2035 auf
-  30 % schätzt ([BIPM 2026](literatur:bipm-2026)).
+  Vorteile des Verfahrens für überwiegend ([Levine 2025](literatur:levine-2025)). Zur Eile mahnt
+  der Entwurf der Resolution C unter Verweis auf einen Workshop von CCTF und IERS vom März 2025,
+  nach dessen Schätzung die Wahrscheinlichkeit einer negativen Schaltsekunde rasch steigt und bis 2035 30 %
+  erreicht ([BIPM 2026](literatur:bipm-2026)). Nach Agnew bräuchte UTC in heutiger Form schon bis
+  2029 erstmals eine negative Schaltsekunde ([Agnew 2024](literatur:agnew-2024)).
 
 ## Im Modell
 
@@ -261,23 +261,22 @@ Gültigkeit; wie sie sich von oskulierenden Elementen unterscheiden, erklärt
   der Zwergplaneten und aller Monde außer dem Erdmond ([Bahnelemente](thema:bahnelemente)); Orrery
   dreht die äquatorialen Pole mit demselben Winkel und bleibt so im Rahmen seiner Daten. Präzession
   und Nutation fehlen. Für Bahnen im festen Rahmen ist das richtig; der Erdpol aber steht dadurch
-  still (siehe Erde), und in den Mondraten steckt umgekehrt die Präzession (siehe Mondknoten).
-- **Bezugsebenen:** Die Planeten, der Erdmond (mit Raten vom Äquinoktium des Datums, siehe
-  Mondknoten) und fünf Zwergplaneten einschließlich Pluto haben
+  still (siehe Erde), und die Mondraten nach Meeus sind um die Präzession vermindert (siehe
+  Mondknoten).
+- **Bezugsebenen:** Die Planeten, der Erdmond und fünf Zwergplaneten einschließlich Pluto haben
   Elemente gegen die Ekliptik J2000, die übrigen 20 Monde gegen den Äquator ihres Mutterkörpers
   mit dessen festem Pol; eine eigene Laplace-Ebene gibt es nicht (Einzelheiten unter
   [Bahnelemente](thema:bahnelemente)).
-- **Mondknoten:** Die Knoten- und Perigäumsraten des Erdmonds zählen vom mittleren Äquinoktium des
-  Datums. Die Knotenrate von −1934,1363° je Jahrhundert stimmt bis auf $3 \cdot 10^{-5}$ Grad je
+- **Mondknoten:** Meeus zählt Knoten und Perigäum des Erdmonds vom mittleren Äquinoktium des
+  Datums. Seine Knotenrate von −1934,1363° je Jahrhundert stimmt bis auf $3 \cdot 10^{-5}$ Grad je
   Jahrhundert mit dem Ausdruck überein, den DE440 im Modell der Erdorientierung für das Argument des
   18,6-Jahres-Glieds der Nutation verwendet, gezählt vom mittleren Äquinoktium des Datums
-  ([Park et al. 2021](literatur:park-2021)). Gegen die feste Ekliptik J2000 ergeben
-  die oskulierenden Elemente aus DE441 von 1900 bis 2100 Raten von −1935,53° und +4067,63° je
-  Jahrhundert, um 1,39° und 1,38° kleiner, so viel wie die allgemeine Präzession. Im festen Rahmen
-  des Modells liegen Knoten und Perigäum deshalb im September 2026 bei 0,37° zu großer Länge, im
-  Jahr 1800 bei 2,8° zu kleiner. Die mittlere Länge selbst wächst mit der Rate aus dem siderischen
-  Monat und damit im festen Rahmen; verschoben sind die mittlere Anomalie und das Argument der
-  Breite, 2026 um je rund 0,37°.
+  ([Park et al. 2021](literatur:park-2021)). Orrery vermindert Knoten- und Perigäumsrate um die
+  allgemeine Präzession von 1,3969713° je Jahrhundert, den linearen Term von $p_A$ oben
+  ([Petit und Luzum 2010](literatur:petit-2010)), auf −1935,5333° und +4067,6168° je Jahrhundert.
+  Gegen die feste Ekliptik J2000 ergeben die oskulierenden Elemente aus DE441 von 1900 bis 2100
+  Raten von −1935,53° und +4067,63° je Jahrhundert. Die mittlere Länge wächst mit der Rate aus dem
+  siderischen Monat und damit ebenfalls im festen Rahmen.
 - **Pole und Rotation:** Pole stehen als feste Rektaszension und Deklination ohne Raten und
   periodische Glieder im Datensatz. Die Rotationsphase ist bei allen 35 Körpern zur Epoche null
   und wächst mit fester Periode. Sie zählt nicht von $Q$, sondern von der Richtung, in die die

@@ -61,13 +61,13 @@ Aerosols über etwa 0,1 auf ([Guillet et al. 2023](literatur:guillet-2023)).
   Am 30. Dezember 1963 erreichte der total verfinsterte Mond nur +4,1 mag
   ([Herald und Sinnott 2014](literatur:herald-2014)), knapp 17 Größenklassen unter dem
   [mittleren Vollmond](quelle:nssdc-moon).
-- **Zeitpunkt:** Die Mondbahn ist eine Kepler-Ellipse ohne periodische Störungen; zudem enthalten
-  Knoten- und Perigäumsrate nach Meeus die [Präzession](thema:bezugssysteme) von 1,4° je Jahrhundert, mittlere Länge und
-  Erdbahn nicht. Gegen den [NASA-Katalog](quelle:nasa-eclipse) findet das Modell 1951 bis 2050
-  135 der 143 Kernschattenfinsternisse, das Maximum bis 3,0 h daneben (quadratisches Mittel
-  1,8 h); acht kleine partielle fehlen, bei elf weicht die Art ab, ohne die Präzession in den
-  Raten nur bei drei. Die Halbschattenfinsternisse vom 17. September 1959 und 3. März 2045 stuft
-  die Suche als partiell ein.
+- **Zeitpunkt:** Die Mondbahn ist eine Kepler-Ellipse ohne periodische Störungen. Knoten- und
+  Perigäumsrate nach Meeus sind um die [Präzession](thema:bezugssysteme) von 1,4° je Jahrhundert
+  vermindert und zählen so wie mittlere Länge und Erdbahn gegen die feste Ekliptik J2000. Gegen den
+  [NASA-Katalog](quelle:nasa-eclipse) findet das Modell 1951 bis 2050 135 der 143
+  Kernschattenfinsternisse, das Maximum bis 3,0 h daneben (quadratisches Mittel 1,8 h); acht kleine
+  partielle fehlen, und bei drei totalen meldet die Suche eine partielle. Keine
+  Halbschattenfinsternis gilt als Kernschattenfinsternis.
 - **Zeitraffer:** Nach dem Sprung gleitet er vom bisherigen Wert auf den Sollwert; nach 0,9 Tagen
   je Sekunde vergehen so in der ersten Sekunde rund 2 h (60 Bilder/s), und die Finsternis läuft
   ganz oder teilweise ungesehen ab.

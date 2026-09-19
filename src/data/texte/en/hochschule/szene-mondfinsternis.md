@@ -61,13 +61,13 @@ et al., L = 0 occurred only when the stratospheric aerosol optical depth exceede
   and lunar distance. On 30 December 1963 the totally eclipsed Moon reached only +4.1 mag
   ([Herald and Sinnott 2014](literatur:herald-2014)), almost 17 magnitudes below the
   [mean full Moon](quelle:nssdc-moon).
-- **Timing:** the lunar orbit is a Kepler ellipse without periodic perturbations; in addition,
-  the node and perigee rates after Meeus contain the [precession](thema:bezugssysteme) of 1.4° per century, whereas the
-  mean longitude and the Earth's orbit do not. Against the [NASA catalogue](quelle:nasa-eclipse),
-  the model finds 135 of the 143 umbral eclipses from 1951 to 2050, with the maximum off by up to
-  3.0 h (root mean square 1.8 h); eight small partial eclipses are missing, and eleven differ in
-  type, only three without the precession in the rates. The search classifies the penumbral
-  eclipses of 17 September 1959 and 3 March 2045 as partial.
+- **Timing:** the lunar orbit is a Kepler ellipse without periodic perturbations. The node and
+  perigee rates after Meeus are reduced by the [precession](thema:bezugssysteme) of 1.4° per
+  century and thus, like the mean longitude and the Earth's orbit, count against the fixed J2000
+  ecliptic. Against the [NASA catalogue](quelle:nasa-eclipse), the model finds 135 of the 143
+  umbral eclipses from 1951 to 2050, with the maximum off by up to 3.0 h (root mean square 1.8 h);
+  eight small partial eclipses are missing, and for three total eclipses the search reports a
+  partial one. No penumbral eclipse counts as an umbral one.
 - **Time-lapse:** after the jump, the rate glides from its previous value to the nominal one;
   coming from 0.9 days per second, about 2 h pass in the first second (60 frames/s), and all or
   part of the eclipse goes by unseen.
