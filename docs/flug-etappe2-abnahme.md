@@ -214,6 +214,10 @@ Rulings der Umsetzung (Tasks 1, 4, 8 und 10):
 - Ruling: (Task 10) Die Anpassung von `i18n.test.ts` (`shortcuts.padTitle` in `GLEICH_ERLAUBT`,
   „Controller" in beiden Sprachen) ist angenommen, obwohl sie nicht im Brief stand: Der Test verlangt
   sonst verschiedene Texte, das Wort ist in beiden Sprachen gleich.
+- Ruling: (Task 10) Kein Fixlauf für den Review-Befund, `leinwand()` in `main.tsx` lege je Bild ein
+  neues Objekt an: gleiche Klasse wie Task 1 und 8 (je Bild ein kleines Objekt); die drei
+  Allokationsbefunde (`waehleBezug`, `zeiger`, `leinwand`) gehen gebündelt an die Schlussprüfung, die
+  über eine gemeinsame Nacharbeit entscheidet.
 
 Rulings dieser Abnahme:
 
@@ -244,6 +248,33 @@ Rulings dieser Abnahme:
   beendet; das synthetische Escape von Playwright erreicht die Vollbildsteuerung des Browsers nicht.
 - Ruling: 6d misst die Schritte wie vorgegeben in Weltkoordinaten und zusätzlich relativ zum
   Blickziel Saturn zum `jd` der gezeigten Lage (die Uhr lief).
+- Ruling: (Task 11) N5 gilt als erfüllt: Das Plankriterium setzte voraus, dass Jupiters Rand in allen
+  Varianten am nächsten liegt; gemessen wird die Regel aus §13.5, und sie hält in allen 29 Varianten
+  (18/18 Jupiter, wo sein Rand am nächsten liegt, sonst der Körper mit dem nächsten Rand). Ob große
+  Scheiben stärker bevorzugt werden sollen, ist Frage 1 in §7.
+- Ruling: (Task 11) Die drei Allokationsbefunde aus den Tasks 1, 8 und 10 brauchen keine gemeinsame
+  Nacharbeit: Messung 7 ergab −0,038 ms mittleren Bildabstand mit aktivem Controller, größter Abstand
+  19,7 ms.
+- Ruling: (Task 11) Die im Review zu Task 11 vermissten Rulings (das zweite Task-10-Ruling oben sowie
+  diese beiden) kommen gesammelt in die Nacharbeit nach der Schlussprüfung, zusammen mit etwaigen
+  Codebefunden (§8).
+
+Rulings der Schlussprüfung (opus, Paket f5d8680..9c920d0):
+
+- Ruling: I-1 (Important) wird wie empfohlen behoben: Im Eintrittsbild nur `flugStarten`, Bewegung
+  und Blickdrehung erst ab dem nächsten Bild (rund 16 ms Verzug); dazu ein Regressionstest mit dem
+  echten Controller für W, RT und den linken Stick. §13.4 letzter Absatz geht dem Plantext (Task 5,
+  Plan-Ruling 8) vor; betroffene Tests bekommen einen zweiten Aufruf, ihre Aussage bleibt gleich.
+- Ruling: M-1 (veralteter Hover des Fadenkreuzes, wenn die Maus über einem Panel bewegt wird) und M-2
+  (nach der Ruhe zeigt jede Eingabe das Kreuz, nicht nur eine Controller-Eingabe) werden im selben
+  Auftrag behoben, je mit Test; dazu die Testlücken LB-Sperre mit einem Trigger, `triggerWert` über 1
+  und X/L3/Xbox-Taste ohne Wirkung — alle klein und im selben Modul.
+- Ruling: M-3 (der rechte Stick bricht eine Kamerafahrt ab, die Maus beim Bewegen nicht) und M-4
+  (eine Flug-Ansicht im laufenden Flug gleitet mit 0,15 s statt 0,45 s) gehen als Fragen an Jens ins
+  Protokoll (§7).
+- Ruling: M-6 (kein „erstes Auftauchen" beim Wechsel zwischen zwei Controllern) und M-7 (Messung 7
+  misst nur den rAF-Abstand, nicht die Rechenzeit je Bild) gehen als bekannte Unschärfen ins Protokoll
+  (§5); beides ohne Nacharbeit vor dem Merge.
 
 ## 5. Bekannte Unschärfen
 
@@ -286,6 +317,17 @@ Aus den Reviews der Tasks (zurückgestellt):
 - Task 9: Kein Test prüft, dass X, L3 und die Xbox-Taste wirkungslos bleiben. Die Abnahme drückte X
   dreimal ohne Wirkung; L3 und die Xbox-Taste sind nicht geprüft.
 
+Aus der Schlussprüfung (zurückgestellt, kein Merge-Hindernis):
+
+- **M-6:** Wechsel zwischen zwei Controllern ohne „erstes Auftauchen". Der Leser (`gamepad.ts`)
+  liefert den ersten Standard-Controller ohne Index; verschwindet er und ein zweiter rückt nach, gilt
+  dessen erstes Bild nicht als Auftauchen (Flanken gegen den Vorzustand des anderen Controllers).
+  Randfall, darf bleiben; bei Gelegenheit den Index mitführen.
+- **M-7:** Messung 7 ist an die Bildwiederholrate gebunden: −0,038 ms mittlerer Bildabstand belegt
+  nur, dass beide Fälle in 16,7 ms passen, nicht die tatsächliche Rechenzeit. Für die Allokationsbefunde
+  reicht das zusammen mit der Größenordnung (§4, Ruling Task 11); für künftige Kostenkriterien besser
+  `performance.now()` um `steuerungTakt` und `szene.update` messen.
+
 ## 6. Prüfung von Hand (Jens, Xbox-Controller)
 
 Chrome zeigt einen Controller erst nach einem Tastendruck am Controller (dieser erste Druck löst
@@ -311,6 +353,10 @@ braucht HTTPS (Let's Encrypt). Die Xbox-Taste belegen Windows, Steam und die Xbo
   halten das Kino nicht an, ein Stick schon.
 - **Ansicht/Y:** Ansicht blendet die Oberfläche aus und ein, Y das Infopanel.
 - X, L3 und die Xbox-Taste bleiben ohne Wirkung.
+- **Erster Flugschritt (nach der Nacharbeit zu I-1):** Fühlt sich der erste Flugschritt nach A, B oder
+  aus dem Kino so direkt an wie ein späterer, oder ist noch ein Nachziehen spürbar?
+- **Alter Controller:** Driftet ein älterer Controller über die Totzone 0,15 hinaus? Das hielte die
+  Oberfläche dauerhaft wach und bräche jede Kamerafahrt sofort ab.
 
 Die Startwerte lassen sich danach per Ruling ändern (Entwurf §9, §12.1).
 
@@ -325,7 +371,70 @@ Die Startwerte lassen sich danach per Ruling ändern (Entwurf §9, §12.1).
 2. **Vollbild beim Kinostart über den Controller (§5):** Wenn Chrome es ohne Nutzeraktivierung
    verweigert, läuft ein mit Menü/Start begonnenes Kino im Fenster. Ist das so in Ordnung, oder soll
    der Controller das Vollbild gar nicht erst anfordern?
-3. Bestätigung der 20 Plan-Rulings, der fünf Rulings der Umsetzung (Tasks 1, 4 zweimal, 8, 10) und
-   der acht Rulings dieser Abnahme (§4).
-4. Prüfung von Hand nach §6; danach Schlussprüfung der Etappe, Fast-Forward nach `master` und weiter
-   mit 4d-3.
+3. **Kamerafahrt gegen das Fadenkreuz (M-3):** Der rechte Stick und R3 bricht wie jede Controller-
+   Eingabe außer A und B eine laufende Kamerafahrt ab (Entwurf §5.5 wörtlich); die Maus bricht sie beim
+   Bewegen dagegen nicht ab (§1: nur `pointerdown`, `wheel`, `keydown`). Wer nach A das Kreuz
+   weiterführt, stoppt die 1,5-s-Fahrt auf halbem Weg. Vorschlag der Schlussprüfung: rechter Stick und
+   R3 lösen `fahrtAbbrechen` nicht mehr aus.
+4. **Flug-Ansicht während des Fluges (M-4):** Die Erkennung einer Wiederherstellung (Nachtrag §13.4,
+   0,45 s statt 0,15 s) prüft nur beim Eintritt in den Flug (`!imFlug`). Lädt man im laufenden Flug
+   eine Flug-Ansicht — oder wird sonst etwas „wiederhergestellt", während schon geflogen wird —,
+   gleitet die Kamera stattdessen mit den schnellen 0,15 s über womöglich große Wege. §13.4 nennt
+   diesen Fall als Beispiel, der Wortlaut begrenzt ihn aber auf den Eintritt. Soll die Erkennung auch
+   im laufenden Flug greifen, oder bleibt es beim Eintritt?
+5. Bestätigung der 20 Plan-Rulings, der sechs Rulings der Umsetzung (Tasks 1, 4 zweimal, 8, 10
+   zweimal), der elf Rulings dieser Abnahme und der vier Rulings der Schlussprüfung (§4).
+6. Prüfung von Hand nach §6 (einschließlich der zwei Punkte zur Nacharbeit); danach Fast-Forward nach
+   `master` und weiter mit 4d-3.
+
+## 8. Nacharbeit nach der Schlussprüfung
+
+Schlussprüfung (opus, Paket f5d8680..9c920d0): Urteil „Ready to merge? With fixes" — 0 Critical, 1
+Important (I-1), 7 Minor (M-1 bis M-7).
+
+**I-1 (Important) behoben.** Ursache: `steuerungTakt` läuft vor der Kamera; im Eintrittsbild schrieb
+`fliegen` (`ui/steuerung/anwenden.ts`) zuerst die gezeigte Lage in den Store (`flugStarten`) und im
+selben Bild schon den ersten Flugschritt beziehungsweise die erste Blickdrehung. Die Kamera
+(`render/camera/controller.ts`) verglich beim Eintritt die gezeigte Lage mit dieser schon bewegten
+Solllage, hielt das für eine Wiederherstellung (`uebergang = true`) und dämpfte mit 0,45 s statt der
+für einen echten Flugstart vorgesehenen 0,15 s (Nachtrag §13.4 letzter Absatz). Behebung: `fliegen`
+kehrt im Eintrittsbild nach `flugStarten` sofort zurück; Blickdrehung und Flugschritt beginnen erst
+ein Bild (rund 16 ms) später. Testnachweis: drei neue Regressionstests mit dem echten Controller (W,
+RT, linker Stick) in `anwenden.test.ts` — RED vor der Behebung (Rest der Abweichung nach 27 Bildern
+rund 0,38, wie die 0,407 der Schlussprüfung), GREEN danach (unter 0,05). Zwei bestehende Tests, die
+im ersten Aufruf schon eine Bewegung erwarteten, bekamen einen zweiten Aufruf (Eintritt, dann der
+bewegte Takt); ihre Aussage blieb unverändert.
+
+**Im selben Auftrag außerdem behoben** (Commit 2923edc „Flug: Nacharbeit nach der Schlussprüfung
+Etappe 2"):
+
+- **M-1:** Ein veralteter Hover des Fadenkreuzes blieb stehen, wenn die Maus über einem Panel (statt
+  der Canvas) bewegt wurde. `kreuz.ts` merkt jetzt, ob der zuletzt an die Szene gemeldete Zeiger vom
+  Fadenkreuz stammt; wird das Kreuz unsichtbar, während der Merker noch gesetzt ist, löscht
+  `kreuzTakt` den Zeiger einmal. Die Maus (`app/main.tsx`, `onZeiger`) löscht den Merker, sobald sie
+  ihren eigenen Zeiger meldet.
+- **M-2:** Nach 3 s Ruhe zeigte jede Eingabe — auch Tastatur oder Mausrad — das Fadenkreuz wieder,
+  nicht nur eine Controller-Eingabe. `kreuzTakt` blendet das Kreuz jetzt am Anfang jedes Bildes aus,
+  solange Ruhe herrscht; eine Controller-Eingabe im selben Bild zeigt es über `bild.eingabe` sofort
+  wieder.
+- **Testlücken:** LB-Sperre auch mit einem Trigger statt einem Stick geprüft; `triggerWert(2)` ergibt
+  1; X, L3 und die Xbox-Taste bleiben ohne Wirkung auf Zeit, Oberfläche, Kino und Ziel.
+
+**Als Frage oder Unschärfe stehen geblieben:** M-3 und M-4 als Fragen an Jens (§7, Fragen 3 und 4);
+M-5 (fehlende Ledger-Rulings) durch die Ergänzungen in §4 erledigt; M-6 und M-7 als bekannte
+Unschärfen (§5). M-3, M-4, M-6 und M-7 wurden absichtlich nicht im Code geändert.
+
+**Testzahl:** 3824 (Kopf 9c920d0) → 3832 nach der Nacharbeit (+8): drei Regressionstests zu I-1 (W,
+RT, linker Stick), je ein Test für die LB-Sperre mit einem Trigger, für M-2 und für X/L3/Xbox-Taste
+ohne Wirkung, dazu zwei Tests für M-1. `triggerWert(2)` kam als zusätzliche Zeile in einen
+bestehenden Test, ohne die Testzahl zu erhöhen.
+
+**Prüfläufe** (nach dem Code-Commit):
+
+- `npm test`: Test Files 101 passed (101); Tests 3832 passed (3832).
+- `npx tsc -b`: ohne Ausgabe.
+- `npm run lint`: `eslint .` ohne Befund.
+- `npm run build`: 409 Module, `✓ built in 622ms`, Hauptchunk `index-Y2TE7Fcm.js` 1 299,03 kB (gzip
+  349,86 kB), nur der bekannte Chunkgrößen-Hinweis.
+
+Wort- und Trailerprüfung ohne Treffer, beide Commits von Jens Fricke.
