@@ -31,6 +31,7 @@ describe('triggerWert', () => {
     expect(triggerWert(0.05)).toBe(0);
     expect(triggerWert(0.525)).toBeCloseTo(0.5, 12);
     expect(triggerWert(1)).toBe(1);
+    expect(triggerWert(2)).toBe(1);
     expect(triggerWert(NaN)).toBe(0);
     expect(triggerWert(-0.3)).toBe(0);
   });

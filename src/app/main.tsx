@@ -20,7 +20,7 @@ import { themaVerfallStarten } from '../ui/info/themaVerfall';
 import { steuerungTakt, tempoAendern } from '../ui/steuerung/anwenden';
 import type { SteuerungUmgebung } from '../ui/steuerung/anwenden';
 import { padLeserErstellen } from '../ui/steuerung/gamepad';
-import { kreuzSichtbar } from '../ui/steuerung/kreuz';
+import { kreuzSichtbar, zeigerVonMaus } from '../ui/steuerung/kreuz';
 import { Fadenkreuz } from '../ui/steuerung/Fadenkreuz';
 import { tastaturAnhaengen } from '../ui/steuerung/tastatur';
 import { letztePose } from '../render/camera/controller';
@@ -72,7 +72,7 @@ function App(): React.JSX.Element {
         const id = szene.trefferBei(x, y, art);
         if (id !== null) fahreZu(id);
       },
-      onZeiger: (zeiger) => { szene.setZeiger(zeiger); },
+      onZeiger: (zeiger) => { zeigerVonMaus(); szene.setZeiger(zeiger); },
       // Im Flug regelt das Rad das Tempo (Entwurf Flug und Controller §4.3).
       onTempo: (faktor) => { tempoAendern(faktor); },
     });

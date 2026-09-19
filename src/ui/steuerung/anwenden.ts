@@ -11,7 +11,7 @@ import type { Absicht, GezeigtePose } from '../../render/camera/flug';
 import { cinemaAktiv, noteUserInput, stopCinema } from '../cinemaControl';
 import { fahreZu, fahreZuSystem, fahrtAbbrechen } from '../kamerafahrt';
 import { blickzielVon } from '../../render/camera/cinema';
-import { eingabeMelden } from '../idle';
+import { eingabeMelden, zeigerAusgeblendet } from '../idle';
 import { handleShortcut } from '../shortcuts/useShortcuts';
 import { padAuswerten, PAD } from './gamepad';
 import type { PadAbsicht, PadBild, PadRoh, Stick } from './gamepad';
@@ -19,7 +19,8 @@ import { tastenAbsicht } from './tastatur';
 import type { Tastenstand } from './tastatur';
 import type { Zeigerart } from '../../render/treffer';
 import {
-  kreuzAusblenden, kreuzBewegen, kreuzLage, kreuzMitte, kreuzSichtbar, kreuzZeichnen, kreuzZeigen,
+  kreuzAusblenden, kreuzBewegen, kreuzLage, kreuzMeldet, kreuzMeldeteZuletzt, kreuzMitte, kreuzSichtbar,
+  kreuzZeichnen, kreuzZeigen, zeigerVonMaus,
 } from './kreuz';
 import type { Leinwand } from './kreuz';
 
@@ -211,12 +212,21 @@ function drehenUndNachfuehren(
 /**
  * Fliegen (§4.1, §5.2): startet den Flug an der gezeigten Lage, lenkt den
  * Blick mit dem linken Stick und macht den Flugschritt.
+ *
+ * Im Eintrittsbild (Moduswechsel zu fly) nur flugStarten und sofort zurück,
+ * ohne Blickdrehung oder Flugschritt (Nacharbeit I-1): Der Controller
+ * (render/camera/controller.ts) vergleicht beim Eintritt die gezeigte Lage
+ * mit der Solllage aus dem Store; bewegte fliegen im selben Bild schon,
+ * wähnte er eine Wiederherstellung und dämpfte mit 0,45 s statt der
+ * schnellen 0,15 s eines echten Flugstarts (Nachtrag §13.4 letzter Absatz).
+ * Der erste sichtbare Schritt folgt dadurch ein Bild (rund 16 ms) später.
  */
 function fliegen(jd: number, dt: number, absicht: Absicht, blick: Stick | null, u: SteuerungUmgebung): void {
   if (useStore.getState().camera.mode !== 'fly') {
     const pose = u.letztePose();
     if (pose === null) return;
     flugStarten(pose);
+    return;
   }
   if (blick !== null && (blick.x !== 0 || blick.y !== 0)) {
     const { camera, setCamera } = useStore.getState();
@@ -306,11 +316,19 @@ export const KREUZ_HOEHEN_JE_S = 1;
  * Stick bewegt es, R3 holt es zur Mitte, Trennen blendet es aus und löscht den
  * Hover. Solange es sichtbar ist, geht seine Lage als Zeiger der Art pad an
  * die Szene. Eine Mausbewegung blendet es aus (Fadenkreuz.tsx); den Hover der
- * Maus löscht es dabei nicht.
+ * Maus löscht es dabei nicht — das übernimmt hier der Merker `kreuzMeldet`
+ * (M-1), sobald das Kreuz unsichtbar wird, aber noch als dessen Quelle gilt.
+ *
+ * Nach 3 s Ruhe zeigt nur eine erneute Controller-Eingabe das Kreuz wieder,
+ * keine Tastatur- oder Mausrad-Eingabe (M-2, §5.4): `zeigerAusgeblendet`
+ * blendet es am Anfang jedes Bildes aus, solange Ruhe herrscht; eine
+ * Controller-Eingabe im selben Bild hat den Ruhewächter in padTakt schon
+ * geweckt und zeigt es weiter unten über `bild.eingabe` wieder.
  */
 function kreuzTakt(dt: number, u: SteuerungUmgebung, pad: PadTakt): void {
   const leinwand = u.leinwand?.();
   if (leinwand === undefined) return;
+  if (zeigerAusgeblendet()) kreuzAusblenden();
   const { bild } = pad;
   if (bild !== null) {
     if (bild.eingabe) kreuzZeigen();
@@ -319,11 +337,14 @@ function kreuzTakt(dt: number, u: SteuerungUmgebung, pad: PadTakt): void {
     if (r.x !== 0 || r.y !== 0) kreuzBewegen(r.x * weg, r.y * weg, leinwand);
     if (bild.flanken.includes(PAD.R3)) kreuzMitte(leinwand);
   }
-  if (pad.getrennt) {
-    if (kreuzSichtbar()) u.zeiger?.(null);
-    kreuzAusblenden();
+  if (pad.getrennt) kreuzAusblenden();
+  if (kreuzSichtbar()) {
+    u.zeiger?.({ ...kreuzLage(leinwand), art: 'pad' });
+    kreuzMeldet();
+  } else if (kreuzMeldeteZuletzt()) {
+    u.zeiger?.(null);
+    zeigerVonMaus();
   }
-  if (kreuzSichtbar()) u.zeiger?.({ ...kreuzLage(leinwand), art: 'pad' });
   kreuzZeichnen(leinwand);
 }
 

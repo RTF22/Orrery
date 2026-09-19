@@ -44,6 +44,29 @@ export function kreuzSichtbar(): boolean {
   return an && !zeigerAusgeblendet();
 }
 
+/**
+ * Stammt der zuletzt an die Szene gemeldete Zeiger vom Fadenkreuz (M-1)?
+ * Ohne diesen Merker bliebe ein veralteter Hover stehen, wenn die Maus über
+ * einem Panel (statt der Canvas) bewegt wird: Sie blendet das Kreuz aus, meldet
+ * dabei aber keinen eigenen Zeiger, und kreuzTakt ruft ohne den Merker gar
+ * nicht mehr `zeiger()` — der zuvor gemeldete Körper oder die Bahn bliebe
+ * bis zur nächsten Bewegung über der Canvas oder 3 s Ruhe hervorgehoben.
+ */
+let vonKreuz = false;
+
+/** Das Fadenkreuz hat seinen Zeiger gerade an die Szene gemeldet. */
+export function kreuzMeldet(): void { vonKreuz = true; }
+
+/** Stammt der zuletzt gemeldete Zeiger noch vom Fadenkreuz? */
+export function kreuzMeldeteZuletzt(): boolean { return vonKreuz; }
+
+/**
+ * Löscht den Merker, dass der zuletzt gemeldete Zeiger vom Fadenkreuz stammt:
+ * gerufen von der Maus (main.tsx, onZeiger meldet ihren eigenen Zeiger) und
+ * vom Fadenkreuz selbst, nachdem es seinen Zeiger gelöscht hat.
+ */
+export function zeigerVonMaus(): void { vonKreuz = false; }
+
 export function kreuzElementSetzen(el: HTMLElement | null): void {
   element = el;
   gezeichnet = null;
@@ -60,10 +83,11 @@ export function kreuzZeichnen(l: Leinwand): void {
   if (neu !== '') element.style.transform = neu;
 }
 
-/** Für Tests: Lage, Sichtbarkeit und Element vergessen. */
+/** Für Tests: Lage, Sichtbarkeit, Merker und Element vergessen. */
 export function kreuzZuruecksetzen(): void {
   lage = null;
   an = false;
+  vonKreuz = false;
   element = null;
   gezeichnet = null;
 }

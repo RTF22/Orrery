@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { act, renderHook } from '@testing-library/react';
+import * as THREE from 'three';
 import {
   steuerungTakt, tempoAendern, tempoAbonnieren, tempoFaktor, tempoZuruecksetzen, padZuruecksetzen,
   TEMPO_START, TEMPO_MIN, TEMPO_MAX,
@@ -13,13 +14,18 @@ import { padAttrappe } from './padAttrappe';
 import { useStore, DEFAULT_STATE } from '../../store';
 import { bodies, bodyIndex } from '../../data';
 import { scaledPositionAt, scaledRadius } from '../../sim/scale';
-import { kreuz, laenge, mal, minus, normiert, plus } from '../../render/camera/flug';
+import {
+  blickVektor, kreuz, laenge, mal, minus, normiert, plus, punkt,
+} from '../../render/camera/flug';
 import type { GezeigtePose } from '../../render/camera/flug';
+import { createCameraController, letztePose as controllerLetztePose } from '../../render/camera/controller';
+import type { AppState } from '../../store/types';
+import type { Vec3 } from '../../sim/types';
 import { startCinema, stopCinema } from '../cinemaControl';
 import { fahreZu, fahrtAbbrechen, fahrtLaeuft } from '../kamerafahrt';
 import { SCENES } from '../../data/scenes';
 import { IDLE_HIDE_SEC, useIdleHide, zeigerAusgeblendet } from '../idle';
-import { kreuzLage, kreuzSichtbar, kreuzZuruecksetzen } from './kreuz';
+import { kreuzAusblenden, kreuzLage, kreuzSichtbar, kreuzZuruecksetzen, zeigerVonMaus } from './kreuz';
 import { INFO_PANEL } from '../info/konstanten';
 
 const jd = DEFAULT_STATE.time.jd;
@@ -191,6 +197,95 @@ describe('steuerungTakt: Flug', () => {
   });
 });
 
+/**
+ * Regressionstest zu I-1 (Nacharbeit Flug Etappe 2): Jeder Flugstart per
+ * Taste, Trigger oder linkem Stick muss mit der schnellen Flugdämpfung
+ * 0,15 s laufen, nicht mit der Wiederherstellungsdämpfung 0,45 s. Geprüft
+ * wird mit dem echten Controller aus render/camera/controller.ts (wie in
+ * dessen eigenen Tests), weil `nochUnterwegs` dort lebt und das Verhalten
+ * von anwenden.ts (SteuerungUmgebung.letztePose) und dem Store abhängt.
+ */
+describe('steuerungTakt: Flugstart-Dämpfung (I-1)', () => {
+  const R = 1 / 60;
+  const winkel = (a: { x: number; y: number; z: number }, b: { x: number; y: number; z: number }): number =>
+    Math.acos(Math.min(1, punkt(normiert(a), normiert(b))));
+  /** AppState aus dem aktuellen Kamerastand des Stores, für den echten Controller. */
+  const zustandAusStore = (): AppState => ({ ...structuredClone(DEFAULT_STATE), camera: useStore.getState().camera });
+
+  /** Kamera geheftet an der Erde (2·10⁶ km), 600 Bilder eingeschwungen: gezeigte Lage vor dem Flugstart. */
+  function eingeschwungen(): { controller: ReturnType<typeof createCameraController>; gezeigt: GezeigtePose } {
+    const camera = new THREE.PerspectiveCamera(50, 1, 0.001, 1e12);
+    camera.up.set(0, 0, 1);
+    const controller = createCameraController(camera);
+    const geheftet: AppState = {
+      ...structuredClone(DEFAULT_STATE),
+      camera: { ...DEFAULT_STATE.camera, mode: 'attached', targetId: 'earth', distance: 2e6 },
+    };
+    for (let i = 0; i < 600; i++) controller.update(geheftet, jd, R, s);
+    return { controller, gezeigt: controllerLetztePose()! };
+  }
+
+  /**
+   * Ein Bild wie im echten Spielloop (app/main.tsx): steuerungTakt schreibt
+   * die Absicht in den Store, danach liest der Controller genau diesen
+   * Stand — diese Reihenfolge entscheidet bei I-1 über die Übergangsdämpfung
+   * (der Controller vergleicht beim Eintritt in den Flug die gezeigte Lage
+   * mit dem, was zu diesem Zeitpunkt im Store steht).
+   */
+  function bild(controller: ReturnType<typeof createCameraController>, u: SteuerungUmgebung, dt: number) {
+    steuerungTakt(jd, dt, u);
+    return controller.update(zustandAusStore(), jd, dt, s);
+  }
+
+  /** Hält die aktuelle Solllage 27 Bilder (0,45 s) fest und liefert die letzte gezeigte Position. */
+  function halten(controller: ReturnType<typeof createCameraController>): Vec3 {
+    const zustand = zustandAusStore();
+    let p = { x: 0, y: 0, z: 0 };
+    for (let i = 0; i < 27; i++) p = controller.update(zustand, jd, R, s);
+    return p;
+  }
+
+  it('startet mit W nur mit 0,15 s gedämpft, nicht mit der Wiederherstellung 0,45 s', () => {
+    const { controller, gezeigt } = eingeschwungen();
+    const u = umgebung(['KeyW'], gezeigt);
+    bild(controller, u, R); // Eintritt: Fix I-1, Soll = gezeigte Lage, uebergang bleibt false
+    const pNachBewegung = bild(controller, u, R); // Bewegungsschritt
+    const erde = scaledPositionAt('earth', bodyIndex, gezeigt.jd, s);
+    const soll = useStore.getState().camera.fly;
+    const anfang = laenge(minus(minus(pNachBewegung, erde), soll));
+    const p = halten(controller);
+    expect(laenge(minus(minus(p, erde), soll)) / anfang).toBeLessThan(0.05);
+  });
+
+  it('startet mit RT nur mit 0,15 s gedämpft, nicht mit der Wiederherstellung 0,45 s', () => {
+    const { controller, gezeigt } = eingeschwungen();
+    const u: SteuerungUmgebung = { ...umgebung([], gezeigt), pad: () => padAttrappe({ werte: { [PAD.RT]: 1 } }) };
+    // Erstes Auftauchen des Controllers bleibt ohne Wirkung, ohne Modus 'free': kein Controller-Bild dafür,
+    // sonst überschriebe dessen eigener Zweig die eingeschwungene Lage.
+    steuerungTakt(jd, 0, u);
+    bild(controller, u, R); // Eintritt: Fix I-1
+    const pNachBewegung = bild(controller, u, R); // Bewegungsschritt
+    const erde = scaledPositionAt('earth', bodyIndex, gezeigt.jd, s);
+    const soll = useStore.getState().camera.fly;
+    const anfang = laenge(minus(minus(pNachBewegung, erde), soll));
+    const p = halten(controller);
+    expect(laenge(minus(minus(p, erde), soll)) / anfang).toBeLessThan(0.05);
+  });
+
+  it('startet mit dem linken Stick nur mit 0,15 s gedämpft, nicht mit der Wiederherstellung 0,45 s', () => {
+    const { controller, gezeigt } = eingeschwungen();
+    const u: SteuerungUmgebung = { ...umgebung([], gezeigt), pad: () => padAttrappe({ axes: [0.6, 0, 0, 0] }) };
+    steuerungTakt(jd, 0, u); // erstes Auftauchen: ohne Wirkung (kein Controller-Bild, siehe oben)
+    bild(controller, u, R); // Eintritt: Fix I-1
+    bild(controller, u, R); // Bewegungsschritt (reine Blickdrehung, keine Translation)
+    const soll = useStore.getState().camera.fly;
+    const sollBlick = blickVektor(soll);
+    const anfang = winkel(controllerLetztePose()!.blick, sollBlick);
+    halten(controller);
+    expect(winkel(controllerLetztePose()!.blick, sollBlick) / anfang).toBeLessThan(0.05);
+  });
+});
+
 describe('Tempofaktor', () => {
   it('verwirft NaN und Unendlich, das Tempo bleibt', () => {
     tempoAendern(1.25);
@@ -318,6 +413,8 @@ describe('steuerungTakt: Controller', () => {
   it('startet mit dem linken Stick den Flug an der gezeigten Lage und lenkt den Blick mit 90°/s wie in Spielen', () => {
     const pose = vorErde();
     anmelden(pose);
+    // Eintritt (I-1): nur flugStarten, ohne Blickdrehung; die folgt erst im nächsten Bild.
+    steuerungTakt(jd, 0, mitPad(padAttrappe({ axes: [1, 0, 0, 0] }), pose));
     steuerungTakt(jd, 0.5, mitPad(padAttrappe({ axes: [1, 0, 0, 0] }), pose));
     let { camera } = useStore.getState();
     expect(camera.mode).toBe('fly');
@@ -332,10 +429,13 @@ describe('steuerungTakt: Controller', () => {
 
   it('fliegt mit RT so schnell wie mit W und mit LT zurück', () => {
     const pose = vorErde();
+    // Eintritt (I-1) je einmal ohne Bewegung, dann der bewegte Takt.
+    steuerungTakt(jd, 0, umgebung(['KeyW'], pose));
     steuerungTakt(jd, 0.1, umgebung(['KeyW'], pose));
     const mitW = weltlage();
     useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
     anmelden(pose);
+    steuerungTakt(jd, 0, mitPad(padAttrappe({ werte: { [PAD.RT]: 1 } }), pose));
     steuerungTakt(jd, 0.1, mitPad(padAttrappe({ werte: { [PAD.RT]: 1 } }), pose));
     expect(laenge(minus(weltlage(), mitW))).toBeLessThan(1e-3);
     steuerungTakt(jd, 0.1, mitPad(padAttrappe({ werte: { [PAD.LT]: 1 } }), pose));
@@ -374,6 +474,18 @@ describe('steuerungTakt: Controller', () => {
     expect(useStore.getState().camera.mode).toBe('attached');
     steuerungTakt(jd, 0.1, mitPad(ruhe, pose));
     steuerungTakt(jd, 0.1, mitPad(padAttrappe({ axes: [1, 0, 0, 0] }), pose));
+    expect(useStore.getState().camera.mode).toBe('fly');
+  });
+
+  it('sperrt auch einen Trigger nach dem Loslassen von LB, bis er in der Totzone war (Nachtrag §13.3)', () => {
+    useStore.getState().setCamera({ mode: 'attached', targetId: 'earth', distance: 1e6 });
+    const pose = vorKoerper('earth');
+    anmelden(pose);
+    steuerungTakt(jd, 0.1, mitPad(padAttrappe({ gedrueckt: [PAD.LB], werte: { [PAD.RT]: 1 } }), pose));
+    steuerungTakt(jd, 0.1, mitPad(padAttrappe({ werte: { [PAD.RT]: 1 } }), pose));
+    expect(useStore.getState().camera.mode).toBe('attached');
+    steuerungTakt(jd, 0.1, mitPad(ruhe, pose));
+    steuerungTakt(jd, 0.1, mitPad(padAttrappe({ werte: { [PAD.RT]: 1 } }), pose));
     expect(useStore.getState().camera.mode).toBe('fly');
   });
 
@@ -476,6 +588,56 @@ describe('steuerungTakt: Fadenkreuz', () => {
     steuerungTakt(jd, 0, mitKreuz(null, zeiger));
     expect(zeiger.length).toBe(anzahl);
   });
+
+  it('löscht den Zeiger, wenn die Maus das Kreuz über einem Panel ausblendet (M-1)', () => {
+    const zeiger: unknown[] = [];
+    steuerungTakt(jd, 0, mitKreuz(padAttrappe(), zeiger));
+    steuerungTakt(jd, 0.25, mitKreuz(padAttrappe({ axes: [0, 0, 1, 0] }), zeiger));
+    expect(kreuzSichtbar()).toBe(true);
+    kreuzAusblenden(); // wie das pointermove-Ausblenden über einem Panel (Fadenkreuz.tsx)
+    const vorher = zeiger.length;
+    steuerungTakt(jd, 0, mitKreuz(padAttrappe(), zeiger));
+    expect(zeiger.length).toBe(vorher + 1);
+    expect(zeiger.at(-1)).toBeNull();
+    steuerungTakt(jd, 0, mitKreuz(padAttrappe(), zeiger));
+    expect(zeiger.length).toBe(vorher + 1);
+  });
+
+  it('meldet keinen Zeiger, wenn die Maus vorher schon ihren eigenen gemeldet hat (M-1)', () => {
+    const zeiger: unknown[] = [];
+    steuerungTakt(jd, 0, mitKreuz(padAttrappe(), zeiger));
+    steuerungTakt(jd, 0.25, mitKreuz(padAttrappe({ axes: [0, 0, 1, 0] }), zeiger));
+    expect(kreuzSichtbar()).toBe(true);
+    zeigerVonMaus(); // main.tsx: onZeiger meldet den Mauszeiger, löscht den Merker
+    kreuzAusblenden();
+    const vorher = zeiger.length;
+    steuerungTakt(jd, 0, mitKreuz(padAttrappe(), zeiger));
+    expect(zeiger.length).toBe(vorher);
+  });
+
+  it('zeigt das Kreuz nach der Ruhe nur bei einer Controller-Eingabe wieder, nicht bei Tastatur oder Mausrad (M-2)', () => {
+    vi.useFakeTimers();
+    const hook = renderHook(() => useIdleHide());
+    const zeiger: unknown[] = [];
+    steuerungTakt(jd, 0, mitKreuz(padAttrappe(), zeiger));
+    steuerungTakt(jd, 0.25, mitKreuz(padAttrappe({ axes: [0, 0, 1, 0] }), zeiger));
+    expect(kreuzSichtbar()).toBe(true);
+
+    act(() => { vi.advanceTimersByTime((IDLE_HIDE_SEC + 1) * 1000); });
+    expect(zeigerAusgeblendet()).toBe(true);
+    // Ein Controller-Bild ohne neue Eingabe während der Ruhe: löscht den Merker „an“.
+    steuerungTakt(jd, 0, mitKreuz(padAttrappe(), zeiger));
+
+    act(() => { window.dispatchEvent(new Event('keydown')); });
+    expect(zeigerAusgeblendet()).toBe(false);
+    expect(kreuzSichtbar()).toBe(false);
+
+    steuerungTakt(jd, 0, mitKreuz(padAttrappe({ axes: [0, 0, 1, 0] }), zeiger));
+    expect(kreuzSichtbar()).toBe(true);
+
+    hook.unmount();
+    vi.useRealTimers();
+  });
 });
 
 describe('steuerungTakt: Tasten des Controllers', () => {
@@ -539,5 +701,19 @@ describe('steuerungTakt: Tasten des Controllers', () => {
     expect(useStore.getState().cinema.nummer).toBe(1);
     druecke(PAD.MENUE);
     expect(useStore.getState().cinema.running).toBe(false);
+  });
+
+  it('lässt X, L3 und die Xbox-Taste ohne Wirkung auf Zeit, Oberfläche, Kino und Ziel', () => {
+    const vorher = useStore.getState();
+    druecke(PAD.X);
+    druecke(PAD.L3);
+    druecke(16); // Xbox-Taste: kein Kürzel, weder A noch B
+    const z = useStore.getState();
+    expect(z.time.rateDaysPerSec).toBe(vorher.time.rateDaysPerSec);
+    expect(z.time.paused).toBe(vorher.time.paused);
+    expect(z.ui.hidden).toBe(vorher.ui.hidden);
+    expect(z.cinema.running).toBe(vorher.cinema.running);
+    expect(z.camera.targetId).toBe(vorher.camera.targetId);
+    expect(fahrtLaeuft()).toBe(false);
   });
 });
