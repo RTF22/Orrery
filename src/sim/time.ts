@@ -4,9 +4,10 @@ export const J2000 = 2451545.0;
 /**
  * Zeitbereich, in dem Orrery rechnet: vom Julianischen Tag 0 (4713 v. Chr.)
  * bis zum 31. Dezember 9999, 0 Uhr UTC. Die linear fortgeschriebenen
- * Bahnelemente bleiben darin gültig — jenseits davon würde etwa Saturns
- * Exzentrizität im Jahr 12 563 negativ, und der Kepler-Löser wiese sie zurück.
- * Store, Prüfer und Bildschleife klemmen auf diesen Bereich.
+ * Bahnelemente bleiben darin rechenbar (Exzentrizität e in [0, 1)) — jenseits
+ * davon würde etwa Saturns Exzentrizität im Jahr 12 563 negativ, und der
+ * Kepler-Löser wiese sie zurück. Store und Bildschleife klemmen auf diesen
+ * Bereich, das Kino ebenso; der Prüfer verwirft Werte außerhalb.
  */
 export const JD_MIN = 0;
 export const JD_MAX = 5373483.5;

@@ -72,4 +72,17 @@ describe('startLoop', () => {
     expect(fehler).toHaveBeenCalledTimes(1);
     stop();
   });
+
+  it('meldet denselben Fehler nach einer Erholung erneut', () => {
+    const fehler = vi.spyOn(console, 'error').mockImplementation(() => {});
+    let wirft = true;
+    const stop = startLoop(() => { if (wirft) throw new Error('kaputt'); });
+    bild(16); // wirft
+    wirft = false;
+    bild(16); // gelingt, löscht die letzte Meldung
+    wirft = true;
+    bild(16); // wirft erneut, dieselbe Meldung
+    expect(fehler).toHaveBeenCalledTimes(2);
+    stop();
+  });
 });

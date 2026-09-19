@@ -64,8 +64,9 @@ interface Actions {
  */
 export const useStore = create<AppState & Actions>((set) => ({
   ...structuredClone(DEFAULT_STATE),
-  // Jede Zeit, die über die Oberfläche hereinkommt (Datumsfeld, „Jetzt",
-  // Kino), bleibt im Zeitbereich (sim/time.ts).
+  // Jede Zeit, die über die Oberfläche hereinkommt (Datumsfeld, „Jetzt"),
+  // bleibt im Zeitbereich (sim/time.ts) — Bildschleife und Kino klemmen dort
+  // jeweils selbst.
   setTime: (p) => set((s) => ({
     time: { ...s.time, ...p, ...(p.jd === undefined ? {} : { jd: imZeitbereich(p.jd) }) },
   })),

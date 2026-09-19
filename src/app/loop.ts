@@ -47,6 +47,7 @@ export function startLoop(onFrame: (jd: number, dtSek: number) => void): () => v
     // Bild wird trotzdem angefordert, gleiche Meldungen erscheinen nur einmal.
     try {
       onFrame(useStore.getState().time.jd, dtSek);
+      letzteMeldung = ''; // ein Fehler, der sich erholt, wird bei Wiederkehr erneut gemeldet
     } catch (fehler) {
       const meldung = fehler instanceof Error ? fehler.message : String(fehler);
       if (meldung !== letzteMeldung) {
