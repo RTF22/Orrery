@@ -1280,7 +1280,7 @@ Run: `npx vitest run src/ui/steuerung src/ui/shortcuts`
 Expected: PASS.
 
 Run: `npm test`
-Expected: 3734 Tests grün (3725 + 9).
+Expected: 3736 Tests grün (3727 + 9; Task 4 endete nach Fixrunde 1 bei 3727).
 
 - [ ] **Step 5: Commit**
 
@@ -1299,8 +1299,8 @@ git commit -m "Steuerung: gehaltene Flugtasten nach ihrer Lage"
 - Modify: `src/app/main.tsx` (Tastatur anhängen, Takt vor `tickCinema`, DEV-Zugang `letztePose`)
 
 **Interfaces:**
-- Consumes: Task 2/3 (`koerperStaende`, `waehleBezug`, `fluggeschwindigkeit`, `flugSchritt`, `mindesthoehe`, `blickAus`, `plus`, `minus`, `begrenze`, `laenge`, `MAX_DISTANCE_KM`, `Absicht`, `Pose`), Task 4 (`letztePose`), Task 5 (`Tastenstand`, `tastenAbsicht`, `tastaturAnhaengen`).
-- Produces (aus `src/ui/steuerung/anwenden.ts`): `TEMPO_START`, `TEMPO_MIN`, `TEMPO_MAX`, `tempoFaktor()`, `tempoAendern(faktor)`, `tempoAbonnieren(hoerer): () => void`, `tempoZuruecksetzen()`, `interface SteuerungUmgebung { tasten(): Tastenstand; letztePose(): Pose | null }`, `flugStarten(pose: Pose, jd: number): void`, `steuerungTakt(jd: number, dt: number, u: SteuerungUmgebung): void`.
+- Consumes: Task 2/3 (`koerperStaende`, `waehleBezug`, `fluggeschwindigkeit`, `flugSchritt`, `mindesthoehe`, `blickAus`, `plus`, `minus`, `begrenze`, `laenge`, `MAX_DISTANCE_KM`, `Absicht`, `GezeigtePose`), Task 4 (`letztePose(): GezeigtePose | null`; `GezeigtePose` = Pose mit `jd` des Bildes, Ruling nach dem Review von Task 4), Task 5 (`Tastenstand`, `tastenAbsicht`, `tastaturAnhaengen`).
+- Produces (aus `src/ui/steuerung/anwenden.ts`): `TEMPO_START`, `TEMPO_MIN`, `TEMPO_MAX`, `tempoFaktor()`, `tempoAendern(faktor)`, `tempoAbonnieren(hoerer): () => void`, `tempoZuruecksetzen()`, `interface SteuerungUmgebung { tasten(): Tastenstand; letztePose(): GezeigtePose | null }`, `flugStarten(pose: GezeigtePose): void`, `steuerungTakt(jd: number, dt: number, u: SteuerungUmgebung): void`.
 
 - [ ] **Step 1: Failing tests schreiben**
 
@@ -1319,7 +1319,7 @@ import { useStore, DEFAULT_STATE } from '../../store';
 import { bodyIndex } from '../../data';
 import { scaledPositionAt, scaledRadius } from '../../sim/scale';
 import { laenge, minus, plus } from '../../render/camera/flug';
-import type { Pose } from '../../render/camera/flug';
+import type { GezeigtePose } from '../../render/camera/flug';
 import { startCinema, stopCinema } from '../cinemaControl';
 import { fahreZu, fahrtAbbrechen, fahrtLaeuft } from '../kamerafahrt';
 
@@ -1328,15 +1328,16 @@ const s = DEFAULT_STATE.scale;
 const lage = (id: string) => scaledPositionAt(id, bodyIndex, jd, s);
 const radius = (id: string) => scaledRadius(bodyIndex[id]!, s);
 
-function umgebung(tasten: Flugtaste[], pose: Pose | null, shift = false): SteuerungUmgebung {
+function umgebung(tasten: Flugtaste[], pose: GezeigtePose | null, shift = false): SteuerungUmgebung {
   return { tasten: () => ({ gehalten: new Set(tasten), shift }), letztePose: () => pose };
 }
 
 /** Gezeigte Lage vier Erdradien neben der Erde (+x), Blick auf sie. */
-function vorErde(): Pose {
+function vorErde(): GezeigtePose {
   return {
     positionKm: plus(lage('earth'), { x: 4 * radius('earth'), y: 0, z: 0 }),
     blick: { x: -1, y: 0, z: 0 },
+    jd,
   };
 }
 
@@ -1364,6 +1365,15 @@ describe('steuerungTakt: Flug', () => {
     expect(laenge(minus(weltlage(), pose.positionKm))).toBeLessThan(1e-3);
     expect(camera.fly.yaw).toBeCloseTo(Math.PI, 12);
     expect(camera.fly.pitch).toBeCloseTo(0, 12);
+  });
+
+  it('übernimmt bei laufender Uhr die Lage relativ zum Bezug im gezeigten Bild', () => {
+    // Gezeigt bei jd, der Takt läuft schon bei jd + 6: Die Kamera zieht mit der Erde weiter.
+    const pose = vorErde();
+    steuerungTakt(jd + 6, 0, umgebung(['KeyW'], pose));
+    const { fly } = useStore.getState().camera;
+    expect(fly.refId).toBe('earth');
+    expect(laenge(minus(fly, minus(pose.positionKm, lage('earth'))))).toBeLessThan(1e-3);
   });
 
   it('fliegt mit W in Blickrichtung um Tempo mal Höhe', () => {
@@ -1487,7 +1497,7 @@ import {
   begrenze, blickAus, flugSchritt, fluggeschwindigkeit, koerperStaende, laenge, mindesthoehe, minus, plus,
   waehleBezug, MAX_DISTANCE_KM,
 } from '../../render/camera/flug';
-import type { Absicht, Pose } from '../../render/camera/flug';
+import type { Absicht, GezeigtePose } from '../../render/camera/flug';
 import { cinemaAktiv, stopCinema } from '../cinemaControl';
 import { fahrtAbbrechen } from '../kamerafahrt';
 import { tastenAbsicht } from './tastatur';
@@ -1524,22 +1534,24 @@ export function tempoZuruecksetzen(): void {
 
 export interface SteuerungUmgebung {
   tasten(): Tastenstand;
-  /** Gezeigte Kameralage des letzten Bildes (render/camera/controller.ts). */
-  letztePose(): Pose | null;
+  /** Gezeigte Kameralage des letzten Bildes samt jd (render/camera/controller.ts). */
+  letztePose(): GezeigtePose | null;
 }
 
 /**
  * Startet den Flug an einer gezeigten Lage (Entwurf §3.1): Kino und Fahrt
  * enden, Bezug ist der Körper, dem die Lage in eigenen Radien am nächsten ist.
- * targetId bleibt (Entscheidung 8).
+ * Gerechnet wird mit den Körperlagen des gezeigten Bildes (pose.jd); die
+ * Kamera zieht danach mit dem Bezug weiter und springt auch bei laufender Uhr
+ * nicht. targetId bleibt (Entscheidung 8).
  */
-export function flugStarten(pose: Pose, jd: number): void {
+export function flugStarten(pose: GezeigtePose): void {
   if (cinemaAktiv()) stopCinema();
   fahrtAbbrechen();
   const { scale, visible, setCamera } = useStore.getState();
-  const staende = koerperStaende(bodies, bodyIndex, jd, scale, visible);
+  const staende = koerperStaende(bodies, bodyIndex, pose.jd, scale, visible);
   const refId = waehleBezug(pose.positionKm, staende, null) ?? 'sun';
-  const ref = scaledPositionAt(refId, bodyIndex, jd, scale);
+  const ref = scaledPositionAt(refId, bodyIndex, pose.jd, scale);
   setCamera({ mode: 'fly', fly: { refId, ...minus(pose.positionKm, ref), ...blickAus(pose.blick) } });
 }
 
@@ -1589,7 +1601,7 @@ export function steuerungTakt(jd: number, dt: number, u: SteuerungUmgebung): voi
     if (useStore.getState().camera.mode !== 'fly') {
       const pose = u.letztePose();
       if (pose === null) return;
-      flugStarten(pose, jd);
+      flugStarten(pose);
     }
     flugNachfuehren(jd, dt, tastenAbsicht(stand.gehalten));
     return;
@@ -1637,7 +1649,7 @@ Run: `npx vitest run src/ui/steuerung && npx tsc -b`
 Expected: PASS, tsc ohne Ausgabe.
 
 Run: `npm test`
-Expected: 3746 Tests grün (3734 + 12).
+Expected: 3749 Tests grün (3736 + 13).
 
 Sichtprobe im Browser (Server prüfen, navigieren, `quality.tier` hoch): Canvas anklicken, `KeyW` 1 s halten (`browser_press_key` genügt nicht; `browser_run_code_unsafe` mit `page.keyboard.down('KeyW')`, 1000 ms warten, `page.keyboard.up('KeyW')`), dann `window.store.getState().camera.mode` = `'fly'` und `window.letztePose()` näher an der Sonne als vorher. Nur prüfen, nichts committen.
 
@@ -1658,7 +1670,7 @@ git commit -m "Steuerung: Flug mit WASD und QE, Bezugswahl und Mindesthöhe je B
 
 **Interfaces:**
 - Consumes: `koerperNaechstDerMitte`, `kugelUm`, `ELEVATION_GRENZE`, `MIN_DISTANCE_KM`, `MAX_DISTANCE_KM` (Task 2/3); `steuerungTakt` (Task 6).
-- Produces: `export function heftenUm(id: string, pose: Pose, jd: number): void` (Task 9 nutzt sie im Kamera-Panel); `DREH_AZIMUT_JE_S`, `DREH_ELEVATION_JE_S`, `ZOOM_JE_S`.
+- Produces: `export function heftenUm(id: string, pose: GezeigtePose): void` (Task 9 nutzt sie im Kamera-Panel); `DREH_AZIMUT_JE_S`, `DREH_ELEVATION_JE_S`, `ZOOM_JE_S`.
 
 - [ ] **Step 1: Failing tests anhängen**
 
@@ -1667,12 +1679,12 @@ In `anwenden.test.ts` die Importe erweitern: `import { bodies, bodyIndex } from 
 ```ts
 describe('steuerungTakt: Drehen mit Shift', () => {
   /** Gezeigte Lage 2·10⁷ km sonnenseitig vor dem Körper, Blick um `versatzKm` an seiner Mitte vorbei. */
-  function vorKoerper(id: string, versatzKm = 2e5): Pose {
+  function vorKoerper(id: string, versatzKm = 2e5): GezeigtePose {
     const k = lage(id);
     const aussen = normiert(k);
     const quer = normiert(kreuz(aussen, { x: 0, y: 0, z: 1 }));
     const von = minus(k, mal(aussen, 2e7));
-    return { positionKm: von, blick: normiert(minus(plus(k, mal(quer, versatzKm)), von)) };
+    return { positionKm: von, blick: normiert(minus(plus(k, mal(quer, versatzKm)), von)), jd };
   }
 
   it('heftet aus dem Flug an den Körper nächst der Mitte, ohne die Lage zu ändern', () => {
@@ -1724,7 +1736,7 @@ describe('steuerungTakt: Drehen mit Shift', () => {
   it('tut ohne Körper vor der Kamera nichts; der Flug bleibt', () => {
     for (const b of bodies) if (b.id !== 'sun') useStore.getState().toggleVisible(b.id);
     useStore.getState().setCamera({ mode: 'fly' });
-    const pose: Pose = { positionKm: { x: 1e9, y: 0, z: 0 }, blick: { x: 1, y: 0, z: 0 } };
+    const pose: GezeigtePose = { positionKm: { x: 1e9, y: 0, z: 0 }, blick: { x: 1, y: 0, z: 0 }, jd };
     steuerungTakt(jd, 0, umgebung(['KeyA'], pose, true));
     expect(useStore.getState().camera.mode).toBe('fly');
   });
@@ -1763,13 +1775,14 @@ export const ZOOM_JE_S = 2;
 
 /**
  * Heftet die Kamera an einen Körper, mit Abstand und Winkeln der gezeigten
- * Lage (§4.2, §4.5): Die Kamera bleibt stehen, nur der Blick schwenkt.
+ * Lage relativ zum Körper im gezeigten Bild (pose.jd, §4.2, §4.5): Die Kamera
+ * bleibt stehen, nur der Blick schwenkt.
  */
-export function heftenUm(id: string, pose: Pose, jd: number): void {
+export function heftenUm(id: string, pose: GezeigtePose): void {
   const { scale, setCamera } = useStore.getState();
   setCamera({
     mode: 'attached', targetId: id, freezeJd: null,
-    ...kugelUm(pose.positionKm, scaledPositionAt(id, bodyIndex, jd, scale)),
+    ...kugelUm(pose.positionKm, scaledPositionAt(id, bodyIndex, pose.jd, scale)),
   });
 }
 
@@ -1779,7 +1792,7 @@ export function heftenUm(id: string, pose: Pose, jd: number): void {
  * ohnehin in der Mitte steht (ein vorbeiziehender Mond wird so nicht Ziel).
  * Folgen wird Geheftet. Ohne Körper vor der Kamera geschieht nichts.
  */
-function drehen(jd: number, dt: number, absicht: Absicht, u: SteuerungUmgebung): void {
+function drehen(dt: number, absicht: Absicht, u: SteuerungUmgebung): void {
   const modus = useStore.getState().camera.mode;
   if (modus !== 'attached') {
     const pose = u.letztePose();
@@ -1791,10 +1804,10 @@ function drehen(jd: number, dt: number, absicht: Absicht, u: SteuerungUmgebung):
     fahrtAbbrechen();
     const { scale, visible, camera } = useStore.getState();
     const id = neuWaehlen
-      ? koerperNaechstDerMitte(pose, koerperStaende(bodies, bodyIndex, jd, scale, visible))
+      ? koerperNaechstDerMitte(pose, koerperStaende(bodies, bodyIndex, pose.jd, scale, visible))
       : camera.targetId;
     if (id === null) return;
-    heftenUm(id, pose, jd);
+    heftenUm(id, pose);
   }
   const { camera, setCamera } = useStore.getState();
   setCamera({
@@ -1811,7 +1824,7 @@ In `steuerungTakt` nach dem Block `if (gedrueckt && !stand.shift) { … }` einf�
 
 ```ts
   if (gedrueckt) {
-    drehen(jd, dt, tastenAbsicht(stand.gehalten), u);
+    drehen(dt, tastenAbsicht(stand.gehalten), u);
     return;
   }
 ```
@@ -1824,7 +1837,7 @@ Run: `npx vitest run src/ui/steuerung`
 Expected: PASS.
 
 Run: `npm test`
-Expected: 3753 Tests grün (3746 + 7).
+Expected: 3756 Tests grün (3749 + 7).
 
 - [ ] **Step 5: Commit**
 
@@ -2051,7 +2064,7 @@ Run: `npx vitest run src/render/camera src/ui/steuerung src/ui/i18n && npx tsc -
 Expected: PASS, tsc ohne Ausgabe.
 
 Run: `npm test`
-Expected: 3757 Tests grün (3753 + 4).
+Expected: 3760 Tests grün (3756 + 4).
 
 - [ ] **Step 7: Commit**
 
@@ -2074,12 +2087,12 @@ git commit -m "Flug: Umschauen mit der Maus, Tempo mit dem Rad samt Einblendung"
 - Modify: `src/ui/i18n/de.ts`, `src/ui/i18n/en.ts`
 
 **Interfaces:**
-- Consumes: `letztePose` (Task 4), `kugelUm`, `laenge`, `minus`, `Pose` (Task 2/3), `flugStarten` (Task 6), `heftenUm` (Task 7).
-- Produces: `FahrtOptionen.pose?: () => Pose | null`.
+- Consumes: `letztePose(): GezeigtePose | null` (Task 4), `kugelUm`, `laenge`, `minus`, `GezeigtePose` (Task 2/3/4), `flugStarten(pose)` (Task 6), `heftenUm(id, pose)` (Task 7).
+- Produces: `FahrtOptionen.pose?: () => GezeigtePose | null`.
 
 - [ ] **Step 1: Failing tests schreiben**
 
-`src/ui/kamerafahrt.test.ts`: Importe um `import { scaledPositionAt } from '../sim/scale';`, `import { plus } from '../render/camera/flug';` und `import type { Pose } from '../render/camera/flug';` ergänzen, anhängen:
+`src/ui/kamerafahrt.test.ts`: Importe um `import { scaledPositionAt } from '../sim/scale';`, `import { plus } from '../render/camera/flug';` und `import type { GezeigtePose } from '../render/camera/flug';` ergänzen, anhängen:
 
 ```ts
 describe('Fahrt aus dem Flug', () => {
@@ -2087,7 +2100,7 @@ describe('Fahrt aus dem Flug', () => {
     const p = planer();
     const { time, scale } = useStore.getState();
     const mars = scaledPositionAt('mars', bodyIndex, time.jd, scale);
-    const pose: Pose = { positionKm: plus(mars, { x: 0, y: 3e6, z: 0 }), blick: { x: 0, y: -1, z: 0 } };
+    const pose: GezeigtePose = { positionKm: plus(mars, { x: 0, y: 3e6, z: 0 }), blick: { x: 0, y: -1, z: 0 }, jd: time.jd };
     useStore.getState().setCamera({ mode: 'fly', distance: 1e9 });
     fahreZu('mars', { ...p.optionen, pose: () => pose });
     const { camera } = useStore.getState();
@@ -2101,7 +2114,7 @@ describe('Fahrt aus dem Flug', () => {
 
   it('beginnt auch die Draufsicht aus dem Flug an der gezeigten Lage', () => {
     const p = planer();
-    const pose: Pose = { positionKm: { x: 2e8, y: 0, z: 0 }, blick: { x: -1, y: 0, z: 0 } };
+    const pose: GezeigtePose = { positionKm: { x: 2e8, y: 0, z: 0 }, blick: { x: -1, y: 0, z: 0 }, jd: useStore.getState().time.jd };
     useStore.getState().setCamera({ mode: 'fly', distance: 1e12 });
     fahreZuSystem({ ...p.optionen, pose: () => pose });
     expect(useStore.getState().camera.targetId).toBe('sun');
@@ -2185,14 +2198,14 @@ Importe ergänzen:
 import { scaledPositionAt } from '../sim/scale';
 import { letztePose } from '../render/camera/controller';
 import { kugelUm } from '../render/camera/flug';
-import type { Pose } from '../render/camera/flug';
+import type { GezeigtePose } from '../render/camera/flug';
 ```
 
 In `FahrtOptionen`:
 
 ```ts
   /** Gezeigte Lage, an der eine Fahrt aus dem Flug beginnt; Standard letztePose(). */
-  pose?: () => Pose | null;
+  pose?: () => GezeigtePose | null;
 ```
 
 In `fahre` den Block ab `const { camera, scale, time } = useStore.getState();` bis einschließlich `useStore.setState(…)` ersetzen durch:
@@ -2205,7 +2218,7 @@ In `fahre` den Block ab `const { camera, scale, time } = useStore.getState();` b
   const pose = camera.mode === 'fly' ? (optionen.pose ?? letztePose)() : null;
   const start = pose === null
     ? { distance: camera.distance, azimuth: camera.azimuth, elevation: camera.elevation }
-    : kugelUm(pose.positionKm, scaledPositionAt(id, bodyIndex, time.jd, scale));
+    : kugelUm(pose.positionKm, scaledPositionAt(id, bodyIndex, pose.jd, scale));
   const von = start.distance;
   const nach = zielAbstand(time.jd, scale);
   const elevationVon = start.elevation;
@@ -2251,10 +2264,10 @@ Vor `export function CameraPanel`:
  * (Entwurf Flug und Controller §4.5), und setzen dann ihren Wert.
  */
 function setzeUmlauf(patch: Partial<AppState['camera']>): void {
-  const { camera, time, setCamera } = useStore.getState();
+  const { camera, setCamera } = useStore.getState();
   if (camera.mode === 'fly') {
     const pose = letztePose();
-    if (pose !== null) heftenUm(camera.targetId, pose, time.jd);
+    if (pose !== null) heftenUm(camera.targetId, pose);
   }
   setCamera(patch);
 }
@@ -2263,8 +2276,8 @@ function setzeUmlauf(patch: Partial<AppState['camera']>): void {
 function anzeigeAbstand(camera: AppState['camera']): number {
   const pose = camera.mode === 'fly' ? letztePose() : null;
   if (pose === null) return camera.distance;
-  const { time, scale } = useStore.getState();
-  return laenge(minus(pose.positionKm, scaledPositionAt(camera.targetId, bodyIndex, time.jd, scale)));
+  const { scale } = useStore.getState();
+  return laenge(minus(pose.positionKm, scaledPositionAt(camera.targetId, bodyIndex, pose.jd, scale)));
 }
 ```
 
@@ -2275,7 +2288,7 @@ In `CameraPanel` nach `const abstandId = useId();`: `const abstand = anzeigeAbst
                 if (modus === 'fly') {
                   // Der Flug beginnt an der gezeigten Lage, wie mit W (§4.5).
                   const pose = letztePose();
-                  if (pose !== null) flugStarten(pose, useStore.getState().time.jd);
+                  if (pose !== null) flugStarten(pose);
                   return;
                 }
                 // Beim Wechsel in den freien Modus wird der Bezugspunkt auf
@@ -2334,7 +2347,7 @@ Run: `npx vitest run src/ui && npx tsc -b`
 Expected: PASS (auch `i18n.test.ts`: gleiche Schlüssel, übersetzt), tsc ohne Ausgabe.
 
 Run: `npm test`
-Expected: 3763 Tests grün (3757 + 6).
+Expected: 3766 Tests grün (3760 + 6).
 
 - [ ] **Step 7: Commit**
 
@@ -2359,7 +2372,7 @@ npm test
 npm run build
 ```
 
-Expected: Lint ohne Befund; 3763 Tests grün; Build erfolgreich (nur der bekannte Chunkgrößen-Hinweis).
+Expected: Lint ohne Befund; 3766 Tests grün; Build erfolgreich (nur der bekannte Chunkgrößen-Hinweis).
 
 - [ ] **Step 2: Vorbereitung im Browser**
 
@@ -2398,7 +2411,7 @@ Eigener `requestAnimationFrame`-Zähler je 5 s: (a) Geheftet an der Erde ohne Ei
 (Commits mit Kurzhash und Titel, Branch, Plan, Entwurf; was Etappe 1 liefert, in drei Sätzen)
 
 ## 2. Lint, Tests, Build
-(Schlusszeilen; Testzahl 3692 → 3763 mit Herleitung je Task)
+(Schlusszeilen; Testzahl 3692 → 3766 mit Herleitung je Task)
 
 ## 3. Sichtprüfung
 (Messungen 1 bis 6 als Tabelle: Kriterium, Messwert, erfüllt; Viewport, Stufe, jd)
@@ -2442,10 +2455,11 @@ Entscheidungen beim Schreiben dieses Plans, von Jens noch nicht bestätigt:
 14. Ruling: Der Flugzweig des Controllers nimmt im allerersten Bild (noch keine gezeigte Lage) die Lage aus dem Store, damit ein Link im Flugmodus dort beginnt.
 15. Ruling: Abnahme Punkt 4 misst nach 3 s statt 1 s (Entwurf §9): Bei 0,45 s Dämpfung stehen nach 1 s noch rund 6 % des Anfangsversatzes aus.
 16. Ruling: `fahre` setzt Abstand, Azimut und Elevation schon beim Start in den Store (bisher erst im ersten Schritt); ohne Flug sind das die bisherigen Werte.
+17. Ruling (nach dem Review von Task 4): `letztePose()` liefert `GezeigtePose` = `Pose` mit dem `jd` des Bildes (Entwurf §6.1). Eintritt, Ausstieg, `flugStarten`, `heftenUm` und die Fahrt aus dem Flug rechnen Körperlagen zu `pose.jd`; ohne das sprang die Kamera bei laufender Uhr um den Weg des Körpers in einem Bild (gemessen 0,5° bei 1 d/s, 27° bei 30 d/s). `flugStarten` und `heftenUm` verlieren dafür ihren `jd`-Parameter.
 
 ## Hinweise für die Umsetzung
 
 - Reihenfolge strikt 1 → 10; Task 7 baut auf Task 6 auf, Task 9 auf 4, 6 und 7.
 - Modelle: Tasks 1 bis 9 sind vollständig ausgeschrieben (Umsetzer sonnet), Task 10 Browser und Protokoll (sonnet). Reviews sonnet; Schlussprüfung der Etappe opus.
-- Soll-Testzahlen: 3696, 3708, 3719, 3725, 3734, 3746, 3753, 3757, 3763, 3763.
+- Soll-Testzahlen: 3696, 3708, 3719, 3727 (nach Fixrunde), 3736, 3749, 3756, 3760, 3766, 3766.
 - Etappe 2 (Controller und Fadenkreuz) bekommt einen eigenen Plan erst nach der Abnahme dieser Etappe.
