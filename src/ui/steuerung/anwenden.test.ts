@@ -510,11 +510,20 @@ describe('steuerungTakt: Controller', () => {
     expect(useStore.getState().camera.mode).toBe('cinema');
   });
 
-  it('bricht mit einem Stick eine laufende Kamerafahrt ab', () => {
+  it('bricht mit dem linken Stick eine laufende Kamerafahrt ab', () => {
+    anmelden();
+    fahreZu('mars', { jetzt: () => 0, anfordern: () => 1, abbrechen: () => { /* von Hand */ } });
+    steuerungTakt(jd, 0, mitPad(padAttrappe({ axes: [0.5, 0, 0, 0] }), null));
+    expect(fahrtLaeuft()).toBe(false);
+  });
+
+  it('lässt eine laufende Kamerafahrt beim rechten Stick und bei R3 weiterlaufen (Abnahme Flug Etappe 2, §7 Frage 3)', () => {
     anmelden();
     fahreZu('mars', { jetzt: () => 0, anfordern: () => 1, abbrechen: () => { /* von Hand */ } });
     steuerungTakt(jd, 0, mitPad(padAttrappe({ axes: [0, 0, 0.5, 0] }), null));
-    expect(fahrtLaeuft()).toBe(false);
+    expect(fahrtLaeuft()).toBe(true);
+    steuerungTakt(jd, 0, mitPad(padAttrappe({ gedrueckt: [PAD.R3] }), null));
+    expect(fahrtLaeuft()).toBe(true);
   });
 
   it('beendet mit dem linken Stick ein Kino samt Wiederherstellung und fliegt ab dem gezeigten Bild', () => {

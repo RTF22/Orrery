@@ -261,9 +261,11 @@ interface PadTakt { bild: PadBild | null; getrennt: boolean }
  * Liest den Controller, führt Vorzustand und LB-Sperre und meldet Eingaben
  * (§5.5), weil der Controller keine Fensterereignisse auslöst: jede an den
  * Ruhewächter; jede außer Menü/Start und RB hält ein Kino an, wie C und N;
- * jede außer A und B bricht eine Kamerafahrt ab — A und B starten selbst
- * eine. Ohne Controller und beim ersten Auftauchen ist das Bild null;
- * `getrennt` meldet, dass er in diesem Bild verschwand.
+ * jede außer A, B, rechtem Stick und R3 bricht eine Kamerafahrt ab — A und B
+ * starten selbst eine, und das Fadenkreuz darf wie die Maus während der Fahrt
+ * weiterwandern (Abnahme Flug Etappe 2, §7 Frage 3, Jens 19.09.2026). Ohne
+ * Controller und beim ersten Auftauchen ist das Bild null; `getrennt` meldet,
+ * dass er in diesem Bild verschwand.
  */
 function padTakt(u: SteuerungUmgebung): PadTakt {
   const roh = u.pad?.() ?? null;
@@ -283,7 +285,7 @@ function padTakt(u: SteuerungUmgebung): PadTakt {
   if (bild.eingabe) {
     eingabeMelden();
     if (bewegt(a) || bild.flanken.some((t) => t !== PAD.MENUE && t !== PAD.RB)) noteUserInput();
-    if (bewegt(a) || bild.flanken.some((t) => t !== PAD.A && t !== PAD.B)) fahrtAbbrechen();
+    if (lenkt(a) || bild.flanken.some((t) => t !== PAD.A && t !== PAD.B && t !== PAD.R3)) fahrtAbbrechen();
   }
   return { bild, getrennt: false };
 }
