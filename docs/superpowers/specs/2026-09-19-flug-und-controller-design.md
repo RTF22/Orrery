@@ -492,3 +492,81 @@ hinzu oder wurden genauer:
 8. Die Bezugswahl läuft je Bild auch ohne Eingabe (§3.3).
 9. Shift und LB wählen nur aus Flug, Frei und Kino neu; in Geheftet und Folgen
    drehen sie um das bestehende Ziel (§4.2).
+
+## 13. Nachtrag nach der Abnahme von Etappe 1 (19.09.2026)
+
+Die Abnahme `docs/flug-etappe1-abnahme.md` stellte in §6 fünf Fragen. Jens folgte
+am 19.09.2026 den Empfehlungen („Bei den Fragen folge ich erstmal gerne deinen
+Empfehlungen"). Die Punkte ändern §3.3, §4.2, §4.5 und §6.1 und kommen als erste
+Tasks in Etappe 2, vor Controller und Fadenkreuz.
+
+### 13.1 Bezug nach Systemen (ändert §3.3)
+
+Im Schaubild ist die Sonne 12,2·10⁶ km groß dargestellt, die Mondbahnen wachsen mit
+`sizeScale`. Nach dem Maß q = |p − p_K| / R_K allein gewann deshalb die Sonne ab rund
+15 Erdradien vor der Erde; bei laufender Uhr blieb die Kamera zwischen Erde und Mond
+im Raum stehen. Die Wahl wird zweistufig:
+
+- **Einflussbereich:** Jeder Körper, der die Sonne umläuft, hat einen dargestellten
+  Einflussbereich E_K = min(a_K · (m_K / (3 m_☉))^(1/3) · `sizeScale`,
+  0,5 · |p_K|): den Hill-Radius mit der großen Halbachse zur Epoche, vergrößert wie
+  die Mondbahnen (`sim/scale.ts`), höchstens der halbe dargestellte Sonnenabstand.
+  Im Schaubild zur Epoche J2000 hat die Erde E ≈ 7,4·10⁷ km (rund 232 dargestellte
+  Erdradien, der Deckel greift knapp), die Mondbahn liegt bei einem Viertel davon.
+- **System:** Die Kamera gehört zum System des Sonnenumläufers mit der kleinsten
+  Tiefe t = |p − p_K| / E_K unter t < 1, sonst zur obersten Ebene. Ein bisheriges
+  System bleibt bis t ≥ 1 / 0,8 = 1,25; ein anderes gewinnt vorher nur mit
+  t < 0,8 · t_bisher (Rückstellbereich wie beim Maß q).
+- **Bezug im System:** Kandidaten sind der Sonnenumläufer und seine sichtbaren Monde,
+  gewählt nach q mit dem Rückstellbereich aus §3.3. Auf der obersten Ebene
+  konkurrieren nach q die Sonne, alle Sonnenumläufer und Monde, deren Mutterkörper
+  ausgeblendet ist.
+- Zwischen Erde und Mond bleibt die Erde Bezug; der Mond wird es rund 11 Erdradien
+  vor ihm. Weit zwischen den Planeten gewinnt weiter die Sonne, nahe einem Planeten
+  dieser. Im Schaubild greift der Deckel bei den Riesenplaneten deutlich (Jupiter
+  2·10⁸ km statt 2,6·10⁹ km); zwischen Mars- und Jupiterbahn kann deshalb Jupiter
+  Bezug sein. Im Maßstab Kompakt reicht die dargestellte Mondbahn über den gedeckelten
+  Erdbereich hinaus; dort entscheidet wie bisher q.
+
+### 13.2 Ziel nach dem Wechsel vom Kino in den Flug (ergänzt §4.5 und Entscheidung 8)
+
+Ein Flug, der ein Kino beendet (WASD, später Stick oder Trigger), setzt `targetId` auf
+den Körper, auf den die laufende Szene blickt: beim Bahntyp `sichtlinie` den
+Standortkörper (`targetId` der Szene), sonst `lookAtId`, ohne ihn den
+Standortkörper. Das ist der Blickpunkt von `cinemaTargetFor`. Sonst bliebe das Ziel
+von vor dem Kino stehen, und das Infopanel zeigte einen Körper, den die Kamera gar
+nicht ansteuert. Shift und LB wählen wie bisher den Körper nächst der Bildmitte. Der
+Themenverfall gilt wie bei jedem Zielwechsel.
+
+### 13.3 Shift und LB loslassen (ersetzt den letzten Punkt von §4.2)
+
+Lässt man Shift los, während Flugtasten gehalten sind, bleiben diese Tasten gesperrt,
+bis sie losgelassen und neu gedrückt werden; die Kamera bleibt geheftet. Wer den Griff
+Shift+A zuerst an Shift löst, fliegt also nicht seitwärts davon. Tastenwiederholungen
+(`e.repeat`) lösen die Sperre nicht. Für den Controller gilt dasselbe: Lässt man LB
+los, während der linke Stick oder ein Trigger ausgelenkt ist, zählen beide erst
+wieder, nachdem sie in der Totzone waren.
+
+### 13.4 Dämpfung von Wiederherstellungen (ergänzt §6.1 und §12.2 Punkt 7)
+
+Weicht beim Eintritt in den Flug die Fluglage aus dem Store von der gezeigten Lage ab
+(Kino beenden mit gemerktem Flug, Ansicht im Flugmodus laden), dämpft der Controller
+Lage und Blick mit 0,45 s wie die Umlaufmodi, bis beide bis auf 10⁻³ angekommen sind
+(Anteil der Lage bzw. Länge der Blickdifferenz); danach wieder mit 0,15 s. Ein
+Flugstart per Taste, Stick oder Trigger beginnt an der gezeigten Lage und bleibt bei
+0,15 s. Ein Link im Flugmodus setzt die Lage im allerersten Bild ohne Übergang (§6.1).
+
+### 13.5 Körper nächst der Bildmitte (ändert den zweiten Unterpunkt von §4.2)
+
+Liegt die Bildmitte auf keiner Scheibe, gilt der Körper mit dem kleinsten Winkel
+zwischen Blickachse und Scheibenrand (Winkel zur Mitte minus Winkelradius), nicht mehr
+der mit dem kleinsten Winkel zur Mitte. Sonst gewann ein kleiner Mond knapp neben der
+Achse gegen eine große Scheibe, deren Rand der Achse näher lag (Abnahme Etappe 1,
+Messung 4: Io, Europa, Titan oder Saturn statt Jupiter).
+
+### 13.6 Etappe 2
+
+Etappe 2 beginnt mit 13.1 bis 13.5, je als eigene Task mit Tests, danach Controller und
+Fadenkreuz nach §10. Die Abnahme (`docs/flug-etappe2-abnahme.md`) misst zusätzlich den
+Bezug zwischen Erde und Mond bei laufender Uhr, das Ziel nach dem Wechsel vom Kino in
+den Flug, die Sperre nach dem Loslassen von Shift und die Dauer einer Wiederherstellung.
