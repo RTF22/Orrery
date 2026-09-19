@@ -47,4 +47,16 @@ describe('TimePanel', () => {
     const feld = screen.getByLabelText(/Datum/) as HTMLInputElement;
     expect(feld.max).toBe('9999-12-31');
   });
+
+  it('übernimmt die Jahre 1 bis 99 wörtlich statt sie ins 20. Jahrhundert zu verschieben', () => {
+    render(<TimePanel />);
+    const feld = screen.getByLabelText(/Datum/) as HTMLInputElement;
+    fireEvent.change(feld, { target: { value: '0050-03-01' } });
+    const erwartet = dateToJd((() => {
+      const d = new Date(0);
+      d.setUTCFullYear(50, 2, 1);
+      return d;
+    })());
+    expect(Math.abs(useStore.getState().time.jd - erwartet)).toBeLessThan(0.5);
+  });
 });

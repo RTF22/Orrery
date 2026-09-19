@@ -49,6 +49,20 @@ describe('Formatierung je Sprache', () => {
     expect(formatJd(J2000)).toMatch(/^01\/01\/2000, 12:00$/);
   });
 
+  it('nennt für Jahre vor 1 die Ära, für JD_MIN (4714 v. Chr.)', () => {
+    expect(formatJd(JD_MIN)).toContain('v. Chr.');
+    setSprache('en');
+    expect(formatJd(JD_MIN)).toContain('BC');
+  });
+
+  it('lässt ein Datum ab Jahr 1 ohne Ära, unverändert', () => {
+    const jd = dateToJd(new Date(Date.UTC(2026, 8, 11, 14, 32)));
+    expect(formatJd(jd)).not.toContain('v. Chr.');
+    expect(formatJd(jd)).toMatch(/^11\.09\.2026/);
+    setSprache('en');
+    expect(formatJd(jd)).not.toContain('BC');
+  });
+
   it('übersetzt die Zeitraffer-Einheit', () => {
     setSprache('en');
     expect(formatRate(2.5)).toBe('2.5 days/s');

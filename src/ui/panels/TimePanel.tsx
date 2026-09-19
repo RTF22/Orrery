@@ -91,7 +91,11 @@ export function TimePanel(): React.JSX.Element {
               const [jahr, monat, tag] = teile;
               if (jahr === undefined || monat === undefined || tag === undefined) return;
               if (!Number.isFinite(jahr * monat * tag)) return;
-              setTime({ jd: dateToJd(new Date(Date.UTC(jahr, monat - 1, tag))) });
+              // Date.UTC bildet Jahre 0–99 auf 1900–1999 ab; setUTCFullYear nimmt das Jahr
+              // wörtlich, auch für 1 bis 99.
+              const datum = new Date(0);
+              datum.setUTCFullYear(jahr, monat - 1, tag);
+              setTime({ jd: dateToJd(datum) });
             }}
           />
         </label>

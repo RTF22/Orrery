@@ -18,7 +18,30 @@ function datumsformat(): Intl.DateTimeFormat {
   return f;
 }
 
-export const formatJd = (jd: number): string => datumsformat().format(jdToDate(jd));
+/**
+ * Wie `datumsformat`, zusätzlich mit Ärajahr („v. Chr."/„BC") — ohne `era`
+ * gäbe `Intl.DateTimeFormat` für Jahre vor 1 nur das Ärajahr aus, JD 0 läse
+ * sich dann wie das Jahr 4714 n. Chr. statt 4714 v. Chr.
+ */
+const datumsformateVorChristus = new Map<string, Intl.DateTimeFormat>();
+
+function datumsformatVorChristus(): Intl.DateTimeFormat {
+  const l = locale();
+  let f = datumsformateVorChristus.get(l);
+  if (f === undefined) {
+    f = new Intl.DateTimeFormat(l, {
+      day: '2-digit', month: '2-digit', year: 'numeric', era: 'short',
+      hour: '2-digit', minute: '2-digit', timeZone: 'UTC',
+    });
+    datumsformateVorChristus.set(l, f);
+  }
+  return f;
+}
+
+export function formatJd(jd: number): string {
+  const d = jdToDate(jd);
+  return (d.getUTCFullYear() < 1 ? datumsformatVorChristus() : datumsformat()).format(d);
+}
 
 /**
  * JD → „2026-09-11" für `<input type="date">`. Leer bei nicht endlichen Daten
