@@ -328,7 +328,7 @@ Times after the formation of the CAIs:
   eccentricity would become zero in the year 12,563 and negative thereafter, and going backwards
   Neptune's in the year −14,828; the Kepler solver rejects such values. Orrery therefore limits time
   to Julian day 0 (4713 BC) through 31 December 9999, and the time-lapse stops at these limits.
-  Within this range all propagated eccentricities stay between 0 and 1; the smallest is Venus's,
+  Within this range the planets' eccentricities stay between 0 and 1; the smallest is Venus's,
   0.0035 in the year 9999.
   Propagated back over 4.5 billion years, the rates would give semi-major axes of 5228
   AU for Jupiter and −16 AU for Mercury.

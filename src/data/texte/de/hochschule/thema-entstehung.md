@@ -342,8 +342,8 @@ Zeiten nach der Bildung der CAI:
   Exzentrizität Saturns im Jahr 12 563 null und danach negativ, rückwärts die Neptuns im Jahr
   −14 828; solche Werte weist der Keplerlöser zurück. Orrery begrenzt die Zeit deshalb auf den
   Julianischen Tag 0 (4713 v. Chr.) bis zum 31. Dezember 9999, der Zeitraffer hält an diesen Rändern
-  an. Darin bleiben alle fortgeschriebenen Exzentrizitäten zwischen 0 und 1; am kleinsten wird die
-  der Venus mit 0,0035 im Jahr 9999.
+  an. Darin bleiben die Exzentrizitäten der Planeten zwischen 0 und 1; am kleinsten wird die der
+  Venus mit 0,0035 im Jahr 9999.
   Über 4,5 Milliarden Jahre zurückgeschrieben ergäben die Raten große Halbachsen von 5228 AE
   für Jupiter und −16 AE für Merkur.
 - **Chaos:** Auch eine vollständige Rechnung könnte den Weg nicht eindeutig zurückverfolgen: Die
