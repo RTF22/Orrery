@@ -271,10 +271,11 @@ earlier ([Valley et al. 2014](literatur:valley-2014)).
   obliquity is 23.4358°.
 - **Albedo:** a factor of about 3.2 raises the mean linear reflectance of the cloud-free day
   map, about 0.13, to the geometric albedo of 0.434, so the brightness of the clouds lies on
-  land and sea. The material scatters Lambertian times a [Fresnel factor](thema:photometrie) at
-  the half vector; such a sphere of reflectance 0.434 has in the model the geometric albedo
-  0.278 and the Bond albedo 0.415, matching neither measured value, 0.434 or 0.294. Clouds and
-  atmosphere are missing; only the umbra is tinted for lunar eclipses.
+  land and sea. The material scatters Lambertian times $1 - F$, with the
+  [Fresnel factor](thema:photometrie) $F$ at the half vector; such a sphere of reflectance 0.434
+  has in the model, computed without gloss and fill light, the geometric albedo 0.278 and the
+  Bond albedo 0.415, matching neither measured value, 0.434 or 0.294. Clouds and atmosphere are
+  missing; only the umbra is tinted for lunar eclipses.
 - The day–night boundary seen from close by is shown in
   [Sunrise over the limb of the Earth](szene:erdaufgang); further simplifications:
   [Limits of the model](thema:modell).

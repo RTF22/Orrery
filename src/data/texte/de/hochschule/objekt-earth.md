@@ -276,10 +276,11 @@ Erde früher lag ([Valley et al. 2014](literatur:valley-2014)).
   die mittlere Schiefe 23,4358°.
 - **Albedo:** Ein Faktor von rund 3,2 hebt die mittlere lineare Reflexion der wolkenlosen
   Tageskarte, rund 0,13, auf die geometrische Albedo 0,434; die Helligkeit der Wolken liegt so
-  auf Land und Meer. Das Material streut lambertsch mal einem [Fresnel-Faktor](thema:photometrie)
-  am Halbvektor; eine solche Kugel der Reflexion 0,434 hat im Modell die geometrische Albedo
-  0,278 und die Bond-Albedo 0,415 und trifft also keinen der Messwerte 0,434 und 0,294. Wolken
-  und Atmosphäre fehlen, nur der Kernschatten ist für Mondfinsternisse gefärbt.
+  auf Land und Meer. Das Material streut lambertsch mal $1 - F$ mit dem
+  [Fresnel-Faktor](thema:photometrie) $F$ am Halbvektor; eine solche Kugel der Reflexion 0,434
+  hat im Modell, ohne Glanz und Fülllicht nachgerechnet, die geometrische Albedo 0,278 und die
+  Bond-Albedo 0,415 und trifft also keinen der Messwerte 0,434 und 0,294. Wolken und Atmosphäre
+  fehlen, nur der Kernschatten ist für Mondfinsternisse gefärbt.
 - Die Tag-Nacht-Grenze aus der Nähe zeigt [Sonnenaufgang über dem Erdrand](szene:erdaufgang);
   weitere Vereinfachungen: [Grenzen des Modells](thema:modell).
 
