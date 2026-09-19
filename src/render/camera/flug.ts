@@ -203,15 +203,17 @@ export function mindesthoehe(p: Vec3, staende: readonly KoerperStand[]): Vec3 {
 export interface Absicht { vor: number; seit: number; hoch: number }
 
 /**
- * Körper nächst der Bildmitte (§4.2): Liegt die Blickachse auf einer Scheibe
- * (Winkel kleiner als der Winkelradius), der vorderste solche Körper; sonst
- * der mit dem kleinsten Winkel zur Achse. Nur Körper vor der Kamera; einer,
- * in dem die Kamera steckt, zählt nicht. Entspricht Rang 1a der
- * Trefferprüfung (render/treffer.ts), braucht aber keine Kandidaten.
+ * Körper nächst der Bildmitte (§4.2, Nachtrag §13.5): Liegt die Blickachse auf
+ * einer Scheibe (Winkel kleiner als der Winkelradius), der vorderste solche
+ * Körper; sonst der mit dem kleinsten Winkel zwischen Achse und Scheibenrand —
+ * sonst gewänne ein kleiner Mond knapp neben der Achse gegen eine große
+ * Scheibe, deren Rand ihr näher liegt. Nur Körper vor der Kamera; einer, in
+ * dem die Kamera steckt, zählt nicht. Entspricht Rang 1a der Trefferprüfung
+ * (render/treffer.ts), braucht aber keine Kandidaten.
  */
 export function koerperNaechstDerMitte(pose: Pose, staende: readonly KoerperStand[]): string | null {
   let scheibe: { id: string; abstand: number } | null = null;
-  let naechster: { id: string; winkel: number } | null = null;
+  let naechster: { id: string; rand: number } | null = null;
   for (const k of staende) {
     const d = minus(k.pos, pose.positionKm);
     const abstand = laenge(d);
@@ -220,10 +222,11 @@ export function koerperNaechstDerMitte(pose: Pose, staende: readonly KoerperStan
     if (vorn <= 0) continue;
     // atan2 statt acos: auch bei winzigen Winkeln ferner Körper genau.
     const winkel = Math.atan2(laenge(kreuz(d, pose.blick)), vorn);
-    if (winkel < Math.asin(k.radius / abstand)) {
+    const winkelradius = Math.asin(k.radius / abstand);
+    if (winkel < winkelradius) {
       if (scheibe === null || abstand < scheibe.abstand) scheibe = { id: k.id, abstand };
-    } else if (naechster === null || winkel < naechster.winkel) {
-      naechster = { id: k.id, winkel };
+    } else if (naechster === null || winkel - winkelradius < naechster.rand) {
+      naechster = { id: k.id, rand: winkel - winkelradius };
     }
   }
   return scheibe?.id ?? naechster?.id ?? null;

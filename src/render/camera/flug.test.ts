@@ -202,6 +202,12 @@ describe('koerperNaechstDerMitte', () => {
     expect(koerperNaechstDerMitte(pose, [k('h', 100, 20, 1), k('g', 100, 10, 1)])).toBe('g');
   });
 
+  it('misst ohne Scheibe auf der Achse bis zum Scheibenrand, nicht bis zur Mitte (Nachtrag §13.5)', () => {
+    // Die Mitte von i liegt näher an der Achse (0,080 rad gegen 0,100 rad), der
+    // Rand von j aber näher (0,050 rad gegen 0,079 rad).
+    expect(koerperNaechstDerMitte(pose, [k('i', 100, 8, 0.1), k('j', 100, 10, 5)])).toBe('j');
+  });
+
   it('übergeht Körper hinter der Kamera und den, in dem die Kamera steckt', () => {
     expect(koerperNaechstDerMitte(pose, [k('hinten', -10, 0, 1), k('innen', 0, 0, 5)])).toBeNull();
     expect(koerperNaechstDerMitte(pose, [k('innen', 0, 0, 5), k('f', 100, 50, 1)])).toBe('f');
