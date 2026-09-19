@@ -75,6 +75,29 @@ describe('naechsteMondfinsternis: Kanon-Finsternisse', () => {
   });
 });
 
+// Knoten und Perigäum des Mondes laufen gegen die feste Ekliptik J2000, nicht
+// mit den Raten nach Meeus vom Äquinoktium des Datums (Befund aus dem Pilot
+// szene-mondfinsternis, Etappe 4d-1). Mit den alten Raten lag der Knoten 1972
+// um 0,4° daneben: die Finsternis wurde partiell, und 1959 galt eine
+// Halbschattenfinsternis als partiell. Zeiten aus dem NASA-Katalog (TD).
+describe('naechsteMondfinsternis: Raten gegen die feste Ekliptik J2000', () => {
+  it('findet ab dem 15.01.1972 die totale Finsternis vom 30.01.1972 (10:54:05 TD) als total', () => {
+    const f = naechsteMondfinsternis(bodyIndex, 2441331.5);
+    expect(f).not.toBeNull();
+    expect(f!.maximumJd).toBeGreaterThanOrEqual(2441346.954 - TOLERANZ_TAGE);
+    expect(f!.maximumJd).toBeLessThanOrEqual(2441346.954 + TOLERANZ_TAGE);
+    expect(f!.art).toBe('total');
+  });
+
+  it('übergeht ab dem 01.09.1959 die Halbschattenfinsternis vom 17.09.1959 und findet die totale vom 13.03.1960', () => {
+    const f = naechsteMondfinsternis(bodyIndex, 2436812.5);
+    expect(f).not.toBeNull();
+    expect(f!.maximumJd).toBeGreaterThanOrEqual(2437006.853 - TOLERANZ_TAGE);
+    expect(f!.maximumJd).toBeLessThanOrEqual(2437006.853 + TOLERANZ_TAGE);
+    expect(f!.art).toBe('total');
+  });
+});
+
 describe('naechsteMondfinsternis: Ein-/Austritt gegen istPartiell/istTotal', () => {
   const f = naechsteMondfinsternis(bodyIndex, 2451545);
 

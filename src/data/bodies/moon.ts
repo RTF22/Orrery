@@ -11,17 +11,29 @@ import type { Body } from '../../sim/types';
 // LDot = 36525 / 27.32166 * 360 (julianisches Jahrhundert / siderischer Monat
 // in Tagen, mal 360°).
 //
-// L, lp und node zur Epoche J2000 sowie deren säkulare Raten stammen aus
+// L, lp und node zur Epoche J2000 sowie die Raten von lp und node stammen aus
 // Jean Meeus, Astronomical Algorithms, Kapitel 47 („Position of the Moon").
 // Diese Koeffizienten sind in der quelloffenen Implementierung PyMeeus
 // wörtlich abgedruckt (pymeeus/Moon.py, Funktionen longitude_mean_perigee
 // und longitude_mean_ascending_node):
 // https://github.com/architest/pymeeus/blob/master/pymeeus/Moon.py
 //
+// Meeus zählt lp und node vom mittleren Äquinoktium des Datums; seine Raten
+// +4069,0137287 und −1934,1362891 °/Jh. enthalten deshalb die allgemeine
+// Präzession in Länge. Orrery rechnet in der festen Ekliptik J2000, darum
+// sind beide Raten hier um 0,02438175 rad = 1,3969713° je Jahrhundert
+// vermindert (IERS Conventions 2010, Gl. 5.44, Argument p_A). Zur Epoche
+// sind beide Zählungen gleich, die Epochenwerte bleiben. Gegenprobe:
+// Ausgleichsgeraden durch die oskulierenden Elemente aus DE441 gegen die
+// feste Ekliptik J2000, 1900 bis 2100, ergeben −1935,53 und +4067,63 °/Jh.
+// (Belegliste thema-bezugssysteme). Mit den Raten vom Äquinoktium des Datums
+// lagen Knoten und Perigäum 2026 um 0,37° daneben, und die Finsternissuche
+// fand 1951 bis 2050 bei elf Mondfinsternissen die falsche Art (jetzt drei).
+//
 // Kontrollrechnungen (unabhängig von der Quelle nachvollziehbar):
 //  - a(1-e) ≈ 363 359 km, a(1+e) ≈ 405 574 km — nahe den bekannten mittleren
 //    Perigäums-/Apogäumsdistanzen (≈363 300 km / ≈405 500 km).
-//  - lpDot ≈ +4069°/Jh. (Apsidendrehung in ≈8,85 Jahren), nodeDot ≈ -1934°/Jh.
+//  - lpDot ≈ +4068°/Jh. (Apsidendrehung in ≈8,85 Jahren), nodeDot ≈ -1936°/Jh.
 //    (rückläufige Knotendrehung in ≈18,6 Jahren) — beide Größenordnungen
 //    stimmen mit unabhängigen Quellen überein (z. B. NASA, Eclipses and the
 //    Moon's Orbit, https://eclipse.gsfc.nasa.gov/SEhelp/moonorbit.html).
@@ -38,8 +50,9 @@ export const moon: Body = {
     e: 0.0549,            eDot: 0,
     i: 5.145,              iDot: 0,
     L: 218.3164477,        LDot: 481266.511625,
-    lp: 83.3532465,        lpDot: 4069.0137287,
-    node: 125.0445479,     nodeDot: -1934.1362891,
+    // Raten nach Meeus minus 1,3969713°/Jh. allgemeine Präzession (siehe oben).
+    lp: 83.3532465,        lpDot: 4069.0137287 - 1.3969713,
+    node: 125.0445479,     nodeDot: -1934.1362891 - 1.3969713,
     // frame: 'ecliptic', nicht 'parentEquator' — die Inklination i = 5.145°
     // dieses Datensatzes ist gegen die Ekliptik gemessen, nicht gegen den
     // Erdäquator. Die Neigung zum Erdäquator ist ohnehin nicht konstant: sie
