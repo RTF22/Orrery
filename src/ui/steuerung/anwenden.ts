@@ -2,8 +2,8 @@ import { useStore } from '../../store';
 import { bodies, bodyIndex } from '../../data';
 import { scaledPositionAt } from '../../sim/scale';
 import {
-  begrenze, blickAus, flugSchritt, fluggeschwindigkeit, koerperStaende, laenge, mindesthoehe, minus, plus,
-  waehleBezug, MAX_DISTANCE_KM,
+  begrenze, blickAus, flugSchritt, fluggeschwindigkeit, koerperNaechstDerMitte, koerperStaende, kugelUm, laenge,
+  mindesthoehe, minus, plus, waehleBezug, ELEVATION_GRENZE, MAX_DISTANCE_KM, MIN_DISTANCE_KM,
 } from '../../render/camera/flug';
 import type { Absicht, GezeigtePose } from '../../render/camera/flug';
 import { cinemaAktiv, stopCinema } from '../cinemaControl';
@@ -63,6 +63,57 @@ export function flugStarten(pose: GezeigtePose): void {
   setCamera({ mode: 'fly', fly: { refId, ...minus(pose.positionKm, ref), ...blickAus(pose.blick) } });
 }
 
+/** Drehen mit Shift (Entwurf §4.2): A/D 60°/s, Q/E 45°/s, W/S Faktor 2 je Sekunde. */
+export const DREH_AZIMUT_JE_S = Math.PI / 3;
+export const DREH_ELEVATION_JE_S = Math.PI / 4;
+export const ZOOM_JE_S = 2;
+
+/**
+ * Heftet die Kamera an einen Körper, mit Abstand und Winkeln der gezeigten
+ * Lage relativ zum Körper im gezeigten Bild (pose.jd, §4.2, §4.5): Die Kamera
+ * bleibt stehen, nur der Blick schwenkt.
+ */
+export function heftenUm(id: string, pose: GezeigtePose): void {
+  const { scale, setCamera } = useStore.getState();
+  setCamera({
+    mode: 'attached', targetId: id, freezeJd: null,
+    ...kugelUm(pose.positionKm, scaledPositionAt(id, bodyIndex, pose.jd, scale)),
+  });
+}
+
+/**
+ * Ein Bild Drehen mit Shift (§4.2). Aus Flug, Frei und Kino wird der Körper
+ * nächst der Bildmitte Ziel; in Geheftet und Folgen bleibt das Ziel, das dort
+ * ohnehin in der Mitte steht (ein vorbeiziehender Mond wird so nicht Ziel).
+ * Folgen wird Geheftet. Ohne Körper vor der Kamera geschieht nichts.
+ */
+function drehen(dt: number, absicht: Absicht, u: SteuerungUmgebung): void {
+  const modus = useStore.getState().camera.mode;
+  if (modus !== 'attached') {
+    const pose = u.letztePose();
+    if (pose === null) return;
+    const neuWaehlen = modus === 'fly' || modus === 'free' || modus === 'cinema';
+    // Das Kino zuerst beenden: stopCinema stellt die Kamera von vor dem Start
+    // her, gewählt wird aber im gezeigten Bild.
+    if (cinemaAktiv()) stopCinema();
+    fahrtAbbrechen();
+    const { scale, visible, camera } = useStore.getState();
+    const id = neuWaehlen
+      ? koerperNaechstDerMitte(pose, koerperStaende(bodies, bodyIndex, pose.jd, scale, visible))
+      : camera.targetId;
+    if (id === null) return;
+    heftenUm(id, pose);
+  }
+  const { camera, setCamera } = useStore.getState();
+  setCamera({
+    azimuth: camera.azimuth + absicht.seit * DREH_AZIMUT_JE_S * dt,
+    elevation: begrenze(
+      camera.elevation + absicht.hoch * DREH_ELEVATION_JE_S * dt, -ELEVATION_GRENZE, ELEVATION_GRENZE,
+    ),
+    distance: begrenze(camera.distance * ZOOM_JE_S ** (-absicht.vor * dt), MIN_DISTANCE_KM, MAX_DISTANCE_KM),
+  });
+}
+
 /**
  * Ein Bild im Flug: Schritt aus der Absicht, dann Mindesthöhe und Bezugswahl
  * (§3.3, §3.4). Ohne Bewegung und ohne Bezugswechsel bleibt der Store
@@ -100,7 +151,8 @@ function flugNachfuehren(jd: number, dt: number, absicht: Absicht | null): void 
 /**
  * Je Bild vor dem Kino-Takt (Entwurf §6.2). Gehaltene Flugtasten ohne Shift
  * starten den Flug an der gezeigten Lage und fliegen; im Flug laufen
- * Mindesthöhe und Bezugswahl auch ohne Eingabe.
+ * Mindesthöhe und Bezugswahl auch ohne Eingabe. Mit Shift dreht die Kamera
+ * um den Körper nächst der Bildmitte (§4.2).
  */
 export function steuerungTakt(jd: number, dt: number, u: SteuerungUmgebung): void {
   const stand = u.tasten();
@@ -112,6 +164,10 @@ export function steuerungTakt(jd: number, dt: number, u: SteuerungUmgebung): voi
       flugStarten(pose);
     }
     flugNachfuehren(jd, dt, tastenAbsicht(stand.gehalten));
+    return;
+  }
+  if (gedrueckt) {
+    drehen(dt, tastenAbsicht(stand.gehalten), u);
     return;
   }
   if (useStore.getState().camera.mode === 'fly') flugNachfuehren(jd, dt, null);

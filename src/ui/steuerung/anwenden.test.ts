@@ -7,9 +7,9 @@ import {
 import type { SteuerungUmgebung } from './anwenden';
 import type { Flugtaste } from './tastatur';
 import { useStore, DEFAULT_STATE } from '../../store';
-import { bodyIndex } from '../../data';
+import { bodies, bodyIndex } from '../../data';
 import { scaledPositionAt, scaledRadius } from '../../sim/scale';
-import { laenge, minus, plus } from '../../render/camera/flug';
+import { kreuz, laenge, mal, minus, normiert, plus } from '../../render/camera/flug';
 import type { GezeigtePose } from '../../render/camera/flug';
 import { startCinema, stopCinema } from '../cinemaControl';
 import { fahreZu, fahrtAbbrechen, fahrtLaeuft } from '../kamerafahrt';
@@ -169,5 +169,85 @@ describe('Tempofaktor', () => {
     ab();
     tempoAendern(2);
     expect(werte).toEqual([TEMPO_START * 1.25, TEMPO_MAX, TEMPO_MIN]);
+  });
+});
+
+describe('steuerungTakt: Drehen mit Shift', () => {
+  /** Gezeigte Lage 2·10⁷ km sonnenseitig vor dem Körper, Blick um `versatzKm` an seiner Mitte vorbei. */
+  function vorKoerper(id: string, versatzKm = 2e5): GezeigtePose {
+    const k = lage(id);
+    const aussen = normiert(k);
+    const quer = normiert(kreuz(aussen, { x: 0, y: 0, z: 1 }));
+    const von = minus(k, mal(aussen, 2e7));
+    return { positionKm: von, blick: normiert(minus(plus(k, mal(quer, versatzKm)), von)), jd };
+  }
+
+  it('heftet aus dem Flug an den Körper nächst der Mitte, ohne die Lage zu ändern', () => {
+    // Die Marsmonde stünden sonst womöglich näher an der Achse.
+    useStore.getState().toggleVisible('phobos');
+    useStore.getState().toggleVisible('deimos');
+    useStore.getState().setCamera({ mode: 'fly' });
+    const pose = vorKoerper('mars');
+    steuerungTakt(jd, 0, umgebung(['KeyA'], pose, true));
+    const { camera } = useStore.getState();
+    expect(camera.mode).toBe('attached');
+    expect(camera.targetId).toBe('mars');
+    expect(camera.freezeJd).toBeNull();
+    const zurueck = plus(lage('mars'), {
+      x: camera.distance * Math.cos(camera.elevation) * Math.cos(camera.azimuth),
+      y: camera.distance * Math.cos(camera.elevation) * Math.sin(camera.azimuth),
+      z: camera.distance * Math.sin(camera.elevation),
+    });
+    expect(laenge(minus(zurueck, pose.positionKm))).toBeLessThan(1e-3);
+  });
+
+  it('dreht mit Shift+D um 60°/s, fährt mit Shift+W je Sekunde auf die Hälfte, hebt mit Shift+E um 45°/s', () => {
+    useStore.getState().setCamera({ mode: 'attached', targetId: 'earth', distance: 1e6, azimuth: 0, elevation: 0 });
+    const pose = vorKoerper('earth');
+    steuerungTakt(jd, 0.5, umgebung(['KeyD'], pose, true));
+    expect(useStore.getState().camera.azimuth).toBeCloseTo(Math.PI / 6, 12);
+    steuerungTakt(jd, 1, umgebung(['KeyW'], pose, true));
+    expect(useStore.getState().camera.distance).toBeCloseTo(5e5, 6);
+    steuerungTakt(jd, 1, umgebung(['KeyE'], pose, true));
+    expect(useStore.getState().camera.elevation).toBeCloseTo(Math.PI / 4, 12);
+  });
+
+  it('behält in Geheftet das Ziel, auch wenn ein anderer Körper vor der Mitte steht', () => {
+    useStore.getState().setCamera({ mode: 'attached', targetId: 'earth' });
+    steuerungTakt(jd, 0, umgebung(['KeyA'], vorKoerper('moon', 0), true));
+    expect(useStore.getState().camera.targetId).toBe('earth');
+  });
+
+  it('macht aus Folgen Geheftet um dasselbe Ziel, ab der gezeigten Lage', () => {
+    useStore.getState().setCamera({ mode: 'follow', targetId: 'jupiter' });
+    const pose = vorKoerper('jupiter');
+    steuerungTakt(jd, 0, umgebung(['KeyA'], pose, true));
+    const { camera } = useStore.getState();
+    expect(camera.mode).toBe('attached');
+    expect(camera.targetId).toBe('jupiter');
+    expect(camera.distance).toBeCloseTo(laenge(minus(pose.positionKm, lage('jupiter'))), 3);
+  });
+
+  it('tut ohne Körper vor der Kamera nichts; der Flug bleibt', () => {
+    for (const b of bodies) if (b.id !== 'sun') useStore.getState().toggleVisible(b.id);
+    useStore.getState().setCamera({ mode: 'fly' });
+    const pose: GezeigtePose = { positionKm: { x: 1e9, y: 0, z: 0 }, blick: { x: 1, y: 0, z: 0 }, jd };
+    steuerungTakt(jd, 0, umgebung(['KeyA'], pose, true));
+    expect(useStore.getState().camera.mode).toBe('fly');
+  });
+
+  it('beendet mit Shift+WASD ein Kino und heftet an den Körper nächst der Mitte', () => {
+    startCinema();
+    steuerungTakt(jd, 0, umgebung(['KeyD'], vorKoerper('saturn'), true));
+    const z = useStore.getState();
+    expect(z.cinema.running).toBe(false);
+    expect(z.camera.mode).toBe('attached');
+    expect(z.camera.targetId).toBe('saturn');
+  });
+
+  it('kehrt beim Loslassen von Shift mit gehaltener Taste in den Flug zurück', () => {
+    useStore.getState().setCamera({ mode: 'attached', targetId: 'earth' });
+    steuerungTakt(jd, 0, umgebung(['KeyA'], vorKoerper('earth'), false));
+    expect(useStore.getState().camera.mode).toBe('fly');
   });
 });
