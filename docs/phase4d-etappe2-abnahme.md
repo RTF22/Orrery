@@ -408,7 +408,7 @@ des jeweiligen Tasks (siehe Abschnitt 2), Runden/Fehler/Hinweise aus den Fachpr�
 
 | Text | Wörter de/en | Belegzeilen | Zitate (Vorkommen/verschiedene Werke) | neue Katalogeinträge | Runden | Fehler gefunden/behoben | Hinweise offen (Entscheidung) |
 |---|---|---:|---|---:|---:|---|---|
-| `thema-bezugssysteme` (Task 3) | 3008 / 3335 | 110 | 51 / 20 | 14 | 3 (Fachprüfung, 2 Nachprüfungen) + Gegenprüfung | 4/4 (F1 BCRS-Präsens, F2 „Im Modell"-Rahmen, F-R3-1 JPL-Fehlerbereich, F-R3-2 unmaskiertes `\|`) | Schaltsekunden-Absatz nach der 28. CGPM (13.–15.10.2026) nachführen? (Frage an Jens, §8) |
+| `thema-bezugssysteme` (Task 3) | 3008 / 3335 | 110 | 51 / 20 | 14 | 3 (Fachprüfung, 2 Nachprüfungen) + Gegenprüfung | 4/4 (F1 BCRS-Präsens, F2 „Im Modell"-Rahmen, F-R3-1 JPL-Fehlerbereich, F-R3-2 unmaskiertes `\|`) | Schaltsekunden-Absatz wird nach der 28. CGPM (13.–15.10.2026) nachgeführt (entschieden, §8 Frage 2) |
 | `thema-gezeiten` (Task 4) | 3253 / 3555 | 121 | 71 / 31 | 26 (27 eingeführt, `bagheri-2026` in Runde 2 wieder entfernt) | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 2/2 (Runde 1: 0 Fehler; Runde 2: F1 Antwort von Goossens et al. 2026 fehlt als Gegenposition — Inhalt war zugänglich, Streitfrage blieb einseitig; F2 Gladman et al. 1996 Gl. 9 als Beleg zitiert, obwohl ungeöffnet) | keine |
 | `thema-resonanzen` (Task 5) | 2371 / 2567 | 89 | 46 / 23 | 21 | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 2/2 (Runde 1: F1 „Im Modell/Asteroidengürtel" behauptet eine 4:1-Lücke, die es in der Punktwolke nicht gibt; Runde 2: neuer Fehler, der eigene Korrekturvorschlag aus Runde 1 „nur die innere Flanke von 2:1 im Bereich" stimmte nicht mit dem Code überein — richtig: die 2:1-Lücke wird von der oberen Grenze 3,3 AE angeschnitten) | Streubreite 7:3 bewusst nicht vereinheitlicht — zwei richtige, unterschiedliche Messmethoden nebeneinander in Belegzeile 81 (Ruling, kein Fehler); H6 (neuere Pluto-Integrationen ~82°/23°) bewusst nicht umgesetzt, bräuchte neuen Katalogeintrag |
 | `thema-innerer-aufbau` (Task 6) | 3899 / 4274<sup>†</sup> | 121 | 84 / 28 | 22 | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 1/1 (F1 fluide Love-Zahl gilt nicht für gebunden rotierende Monde wie Titan) | Wortzahl en 4274 über der Obergrenze 4000 (§8) |
@@ -726,8 +726,8 @@ Zwischen-Task auf `hochschule-2`.
   `thema-bezugssysteme` misst einen Winkelabstand mit Breitenlibration, `thema-gezeiten` die reine
   Länge; der Wortlaut sagt das nicht ausdrücklich. Kein Fehler, deshalb keine Nacharbeit an den
   fachgeprüften Texten in dieser Etappe.
-- **M6 — Prüfskript und Brennecka 2010, Ursache gefunden:** siehe Abschnitt 8, Frage 9. Die Arbeit
-  bleibt außerhalb des Katalogs, kein Text ist betroffen; eine Codeänderung ist für 4d-3 vorgeschlagen.
+- **M6 — Prüfskript und Brennecka 2010, Ursache gefunden und behoben:** siehe Abschnitt 8, Frage 9
+  (Commit b19f682). Die Arbeit bleibt außerhalb des Katalogs, kein Text ist betroffen.
 
 **Aufgeschobene Kleinigkeiten (minor deferred, aus dem Ledger):**
 
@@ -862,12 +862,12 @@ Important, 12 Minor. Verbleib je Befund:
 |---|---|
 | I1 (Important): Abnahmeprotokoll weicht vom Ledger ab (fehlendes T10-Ruling, §8.1 als „Hinweis" statt Frage, zwei „dieser Task"-Rulings ohne damalige Ledger-Deckung, §4-Fehlerzuordnung gezeiten/resonanzen falsch, §8 ohne Ledger-Hinweise T3/Pilot-Ekliptik, §3-Überschrift irreführend, `cgpm-2022` noch „Behelfseintrag", Brennecka-Ursache fehlt) | behoben — §6 um das T10-Ruling und die beiden Final-Rulings ergänzt (die beiden Umsetzer-Rulings stehen jetzt auch im Ledger), §5.3 nennt sie nicht mehr pauschal „Ledger-Rulings"; §8.1 als Bestätigungsfrage formuliert; §4 gezeiten (Runde 1: 0 Fehler; Runde 2: F1 Goossens-Gegenposition, F2 Gladman ungeöffnet) und resonanzen (Runde 1: F1 4:1-Lücke in der Punktwolke; Runde 2: F1 „nur innere Flanke" traf nicht zu) berichtigt; §8 um Ledger Z. 82 (Pilot-Ekliptik) und Z. 93 (T3-Hinweise) sowie M1 (Erdalbedo) ergänzt; §3-Überschrift und 429-Bewertung als eigener Befund, `cgpm-2022`-Wortlaut auf „regulärer Eintrag" berichtigt; Brennecka-Ursache (M6) in §8 Frage 9 eingetragen |
 | I2 (Important): Belegliste `thema-resonanzen` Nr. 46 mit zwei unmaskierten `\|` (8 statt 6 Zellen) | behoben — beide `|` als `\|` maskiert, ohne Inhaltsänderung; alle 925 Belegzeilen unter `docs/belege/hochschule/` per Skript (`scratch-t10/spalten_check.py`) auf 6 Zellen geprüft: 0 Abweichungen |
-| M1: Albedo der Erde — Pilot `objekt-earth` (p 0,29/A 0,434) gegen `thema-photometrie` (0,278/0,415) | nicht behoben — als Frage in §8 (Frage 4) aufgenommen (Final Ruling): fachgeprüfter Text und freigegebener Pilot werden nur bei Fehlern angefasst, beide Werte sind für sich vertretbar |
+| M1: Albedo der Erde — Pilot `objekt-earth` (p 0,29/A 0,434) gegen `thema-photometrie` (0,278/0,415) | nicht behoben — als Frage in §8 (Frage 4) aufgenommen (Final Ruling): fachgeprüfter Text und freigegebener Pilot werden nur bei Fehlern angefasst, beide Werte sind für sich vertretbar; später erledigt: 46ea81b / 3a97089 (§8, Entscheidungen) |
 | M2: Mondkarte, scheinbarer Zahlenwiderspruch (Winkelabstand vs. Länge) | nicht behoben — kein Fehler (Final Ruling), als bekannte Unschärfe in §7 vermerkt |
 | M3: `thema-gezeiten` en:61 „An independent analysis" weicht im Sinn von de:61 „Eine eigene Auswertung" ab | behoben — „independent" → „separate" (ein Wort, wie beauftragt), Rest der Zeile unverändert |
 | M4: Belegzeile 79 in `thema-bezugssysteme` veraltet (Halbsatz im Text gestrichen) | nicht behoben — Ledger-Hinweis, als Vorschlag in §8 (Frage 3) aufgenommen, keine eigene Nacharbeitsrunde am freigegebenen Text |
 | M5: `PAUSE_MS` im Prüfskript zu kurz für arXiv, führte zu 429 im Volllauf | nicht behoben — Ursache in §3 als Befund dokumentiert, Vorschlag (eigene Pause oder gezielte Wiederholung) für 4d-3 |
-| M6: Ursache „Brennecka 2010 scheitert am Titelvergleich" gefunden (`<sup>`-Tags trennen „238" von „U") | nicht behoben (kein Katalogeintrag betroffen) — Ursache in §8 (Frage 9) und §7 dokumentiert, kleiner Code-Task für 4d-3 vorgeschlagen |
+| M6: Ursache „Brennecka 2010 scheitert am Titelvergleich" gefunden (`<sup>`-Tags trennen „238" von „U") | nicht behoben (kein Katalogeintrag betroffen) — Ursache in §8 (Frage 9) und §7 dokumentiert; später erledigt: b19f682 (§8, Entscheidungen) |
 | M7: Autorfeld-Regel im Test locker gefasst, JSDoc veraltet | nicht behoben — Code-Qualitätsbefund ohne Auswirkung auf diese Etappe, für einen künftigen Code-Task vorgemerkt |
 | M8: Formelsatz-Randfälle (`\sin\,x`, Funktionsname als Exponent, Abstand nach `\|`) ohne Textbezug | nicht behoben — kein Fall kommt in den 94 Funktionsnamen der Hochschultexte vor (Schlussprüfung, `funk.py`) |
 | M9: Suffixe/Linktexte (`nesvorny-2018a`, „Haisch Jr.") | nicht behoben — Kosmetik, optional |
