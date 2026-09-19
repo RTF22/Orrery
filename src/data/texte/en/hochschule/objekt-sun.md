@@ -27,7 +27,7 @@ nominal values closely follow.
 | $T_\mathrm{eff}$ | $5772.0\,\mathrm{K}$ | $0.8\,\mathrm{K}$ | Stefan–Boltzmann from $R_\odot$ and $L_\odot$ | [Prša et al. 2016](literatur:prsa-2016) |
 | $J_2$ | $2.246 \cdot 10^{-7}$ | $0.022 \cdot 10^{-7}$ | Mercury's orbit from ranging to MESSENGER | [Genova et al. 2018](literatur:genova-2018) |
 | $\Delta r/R$ | $9.02 \cdot 10^{-6}$ | $0.72 \cdot 10^{-6}$ | limb shape from HMI roll manoeuvres 2010 to 2023 | [Meftah and Mecheri 2025](literatur:meftah-2025) |
-| pole $\alpha_0$, $\delta_0$ | $286.13^\circ$, $63.87^\circ$ | about $0.1^\circ$ | IAU expression, for comparison only | [Archinal et al. 2011](literatur:archinal-2011) |
+| pole $\alpha_0$, $\delta_0$ | $286.13^\circ$, $63.87^\circ$ | about $0.1^\circ$ | IAU expression, for comparison only | [Archinal et al. 2018](literatur:archinal-2018); [Archinal et al. 2011](literatur:archinal-2011) |
 
 Two methods determine the radius: the intensity profile at the limb and the frequencies of the
 f modes, whose "seismic" radius is converted to optical depth unity. The two differed by about
@@ -44,15 +44,18 @@ Table 1.1). DE440 estimates $GM_\odot = 132712440041.279419\,\mathrm{km}^3\,\mat
 ([Park et al. 2021](literatur:park-2021), Table 2); the nominal value differs from it by
 $3 \cdot 10^{-10}$. The gravitational constant, in contrast, has been the least well known of the
 major fundamental constants for decades: its 16 laboratory measurements disagree, their
-uncertainties are expanded by a factor of 3.9, and no new one has been added since 2018
-([Mohr et al. 2025](literatur:mohr-2025)). $G$ is thus five orders of magnitude less certain than
+uncertainties are expanded by a factor of 3.9, and no new one was added between the 2018 and 2022
+adjustments ([Mohr et al. 2025](literatur:mohr-2025)). $G$ is thus five orders of magnitude less certain than
 $GM_\odot$, and masses should be quoted as $GM/G$ with the value of $G$ stated
 ([Prša et al. 2016](literatur:prsa-2016)). $GM_\odot$ decreases: seven years of ranging to
 MESSENGER give
-$\dot{GM}_\odot/GM_\odot = (-6.13 \pm 1.47) \cdot 10^{-14}$ per year, consistent with the mass
-loss through the luminosity, $-0.679 \cdot 10^{-13}$ per year, and through the solar wind,
-$-0.2 \cdot 10^{-13}$ to $-0.69 \cdot 10^{-13}$ per year
-([Genova et al. 2018](literatur:genova-2018)). The share of the luminosity is
+$\dot{GM}_\odot/GM_\odot = (-6.13 \pm 1.47) \cdot 10^{-14}$ per year. The expected mass loss
+through the luminosity is $-0.679 \cdot 10^{-13}$ per year and through the solar wind
+$-0.2 \cdot 10^{-13}$ to $-0.69 \cdot 10^{-13}$ per year, together over the mission
+$-0.9 \cdot 10^{-13}$ to $-1.1 \cdot 10^{-13}$; the authors call the measured, somewhat smaller
+decrease consistent with this and use it to limit $|\dot{G}|/G$ to below
+$4 \cdot 10^{-14}$ per year ([Genova et al. 2018](literatur:genova-2018)). The share of the
+luminosity is
 
 $$\dot{M}_\odot = \frac{L_\odot}{c^2} = 4.26 \cdot 10^{9}\,\mathrm{kg}\,\mathrm{s}^{-1},$$
 
@@ -77,7 +80,8 @@ $1360.8 \pm 0.5\,\mathrm{W}\,\mathrm{m}^{-2}$ in the 2008 minimum instead of the
 $1365.4 \pm 1.3\,\mathrm{W}\,\mathrm{m}^{-2}$ established in the 1990s; older radiometers picked up
 scattered light because their precision aperture sits behind the view-limiting aperture. From
 minimum to maximum the monthly mean rises by about $1.6\,\mathrm{W}\,\mathrm{m}^{-2}$, 0.12 %; over
-a 27-day solar rotation it can vary by more than 0.3 % ([Kopp and Lean 2011](literatur:kopp-2011)).
+a 27-day solar rotation the irradiance itself can vary by more than 0.3 %
+([Kopp and Lean 2011](literatur:kopp-2011)).
 
 ## Interior
 
@@ -105,10 +109,13 @@ slightly slower than the equator at the surface
 ([Christensen-Dalsgaard 2021](literatur:christensen-dalsgaard-2021)). Two shear layers separate
 the regions: one near the surface, between the fastest-rotating layer at about $0.95\,R_\odot$ and
 the surface, and the tachocline at the base of the convection zone. Its centroid lies slightly
-below that boundary and its thickness is about $0.05\,R_\odot$; Charbonneau et al. found it
-$(0.024 \pm 0.004)\,R_\odot$ shallower at 60° latitude than at the equator, other analyses found
-no variation with latitude. It is believed to play an important role in the dynamo
-([Howe 2009](literatur:howe-2009)).
+below that boundary and its thickness is about $0.05\,R_\odot$. Whether it depends on latitude was
+disputed: two analyses from 1998 and 1999 found no variation, Charbonneau et al. found it
+$(0.024 \pm 0.004)\,R_\odot$ shallower at 60° latitude than at the equator, Basu and Antia in 2003
+slightly shallower and thicker at high latitudes. It is believed to play an important role in the
+dynamo ([Howe 2009](literatur:howe-2009)). Antia and Basu confirmed the prolate shape in 2011 and
+also found a width increasing with latitude
+([Christensen-Dalsgaard 2021](literatur:christensen-dalsgaard-2021)).
 
 Neutrinos from the fusion reactions are the only direct probe of the deep interior. The pp chain
 produces about 99 % of the energy, the CNO cycle about 1 %
@@ -159,9 +166,10 @@ so at the limb 40 % of the central intensity remains. Three-dimensional simulati
 reproduce the observed limb darkening very well
 ([Christensen-Dalsgaard 2021](literatur:christensen-dalsgaard-2021)).
 
-Sunspots are vertical magnetic flux tubes 30 to 40 Mm in diameter. The field is strongest and
-vertical at the centre and becomes weaker and more inclined outwards; in two measured spots it
-reached about 3300 G in the large one and 2900 G in the small one. In 1908 Hale estimated 2600 to
+Sunspots are magnetic flux tubes; the two spots analysed by Borrero and Ichimoto show vertical
+tubes 30 to 40 Mm in diameter. The field is strongest and vertical at the centre and becomes
+weaker and more inclined outwards; it reached about 3300 G in the large spot and 2900 G in the
+small one. In 1908 Hale estimated 2600 to
 2900 G from the Zeeman splitting, the first detection of a magnetic field beyond the Earth
 ([Borrero and Ichimoto 2011](literatur:borrero-2011)).
 
@@ -179,8 +187,9 @@ and conduction, and the energy comes from motions in and below the photosphere
 ([Klimchuk 2006](literatur:klimchuk-2006)). That is $10^{4}$ and $300\,\mathrm{W}\,\mathrm{m}^{-2}$,
 against the $6.29 \cdot 10^{7}\,\mathrm{W}\,\mathrm{m}^{-2}$ radiated by the photosphere. Jostling of
 the footpoints by granulation at about 1 km s⁻¹ with a coronal field of 50 G supplies an energy
-flux of about 20 kW m⁻². How it is converted into heat divides the field into two schools:
-dissipation of waves against braiding of field lines with many small energy releases
+flux of about 20 kW m⁻². How it is converted into heat historically divided the field into two
+schools: dissipation of waves against braiding of field lines with many small energy releases;
+the review also lists turbulence and Taylor relaxation models
 ([Cranmer and Winebarger 2019](literatur:cranmer-2019)).
 
 The corona turns into the solar wind: slow, dense wind at 250 to 450 km s⁻¹ and fast, tenuous
@@ -222,15 +231,17 @@ $$\omega = \left(14.37 - 2.33\,\sin^2 B - 1.56\,\sin^4 B\right)^\circ\,\mathrm{d
 
 ([NSSDC Sun Fact Sheet](quelle:nssdc-sun)); one rotation takes 25.05 days at the equator, 30.65
 at 60° latitude and 34.35 days at the poles. Magnetic features rotate faster than the plasma:
-according to Snodgrass's measurements they follow $462 - 74\,\mu^2 - 53\,\mu^4$ nHz, the Doppler
-rate of the plasma $452 - 49\,\mu^2 - 84\,\mu^4$ nHz, with $\mu$ the sine of latitude; the usual
-explanation is that the features are anchored deeper, where rotation is faster
-([Howe 2009](literatur:howe-2009)).
+according to Snodgrass's measurements they follow $462 - 74\,\sin^2 B - 53\,\sin^4 B$ nHz, the
+Doppler rate of the plasma $452 - 49\,\sin^2 B - 84\,\sin^4 B$ nHz; the usual explanation is that
+the features are anchored deeper, where rotation is faster ([Howe 2009](literatur:howe-2009)).
 
-The [IAU rotation model](thema:bezugssysteme) counts the Sun in Carrington's system:
-$W = 84.176^\circ + 14.1844000^\circ\,d$, corrected for light travel time and intended for
-comparison only ([Archinal et al. 2011](literatur:archinal-2011)). The rate gives 25.380 days or
-609.12 hours sidereal and, as seen from the moving Earth, 27.275 days synodic. In the fact-sheet
+The [IAU rotation model](thema:bezugssysteme) gives for the Sun
+$W = 84.176^\circ + 14.1844000^\circ\,d$, corrected for light travel time and unchanged since the
+2009 report ([Archinal et al. 2018](literatur:archinal-2018), Table 1); the expressions for the Sun
+and Earth are intended for comparison only ([Archinal et al. 2011](literatur:archinal-2011)). The
+rate gives 25.380 days or 609.12 hours sidereal, the traditional sidereal period of Carrington's
+system ([Gonzalez 2025](literatur:gonzalez-2025)), and, as seen from the moving Earth, 27.275 days
+synodic. In the fact-sheet
 law the surface rotates at this rate at 16.0° latitude, in the law for magnetic features at 16.1°;
 by the Doppler measurement the plasma rotates more slowly even at the equator, at 14.06° per day.
 The pole at $\alpha_0 = 286.13^\circ$, $\delta_0 = 63.87^\circ$ has no rates; the solar equator is
@@ -249,15 +260,21 @@ Perryman and Schulze-Hartung call a suspected link between this motion and solar
 
 [Calcium–aluminium-rich inclusions](thema:entstehung) in meteorites formed
 $4567.30 \pm 0.16$ million years ago ([Connelly et al. 2012](literatur:connelly-2012)).
-Christensen-Dalsgaard identifies the age of the meteorites with the Sun's arrival on the main
-sequence, because planet formation took no longer than the contraction of the star.
-Helioseismology gives an independent age that depends on the composition: 4.57 billion years with
-the older, metal-rich one, 4.77 billion with that of 2009
+Christensen-Dalsgaard identifies, for simplicity, the age of the meteorites with the Sun's arrival
+on the main sequence, because planet formation probably took no longer than the contraction of the
+star. Helioseismology gives an independent age that depends on the composition: with the older,
+metal-rich one the best model, at 4.57 billion years, matches the meteoritic age; with that of
+2009 it gives 4.77 billion, clearly inconsistent with it
 ([Christensen-Dalsgaard 2021](literatur:christensen-dalsgaard-2021)).
 
 As hydrogen is turned into helium in the core, the mean molecular weight rises and the luminosity
-grows: by about 30 % since the arrival on the main sequence, which by radiative balance would shift
-the Earth's surface temperature by about 20 K
+grows. On arrival on the main sequence 4.57 billion years ago it was, according to standard models,
+about 30 % below its present value; except for the first 0.2 billion years, approximately
+
+$$\frac{L(t)}{L_\odot} = \frac{1}{1 + \frac{2}{5}\left(1 - \frac{t}{t_\odot}\right)}$$
+
+with the present age $t_\odot$ ([Feulner 2012](literatur:feulner-2012)). By radiative balance, a
+change of 30 % of the present value shifts the Earth's surface temperature by about 20 K
 ([Christensen-Dalsgaard 2021](literatur:christensen-dalsgaard-2021)). For the early Earth, stellar
 models predict about 25 % less insolation; without compensation it would have been frozen for the
 first two billion years, yet there was liquid water and life in the Archean. Most solutions invoke
@@ -313,7 +330,7 @@ branch, so the Earth probably is as well
   Carrington rate to within $3 \cdot 10^{-6}$ degrees per day, i.e. like the surface at 16°
   latitude; equator and poles do not rotate differently. The phase is zero at the epoch and counts
   from the direction into which the orientation of the sphere brings the map centre, 21.8° west of
-  the node $Q$. The prime meridian therefore lies 106.0° behind the Carrington meridian with
+  the node $Q$. The prime meridian therefore lies 106.0° behind the IAU prime meridian with
   $W_0 = 84.176^\circ$. Since the map shows no real features, this is not visible, but
   heliographic longitudes in the model are off by this angle.
 - **Pole:** it is fixed at the IAU values, which have no rates for the Sun; the conversion to the
@@ -323,8 +340,10 @@ branch, so the Earth probably is as well
   value and DE440. With the $1.9884 \cdot 10^{30}\,\mathrm{kg}$ of the current fact sheet it would
   be 5 ppm below. The Kepler orbital periods in the data block therefore come out about 23 ppm too
   short.
-- **Data block:** the diameter of 1,391,400 km is twice the nominal radius; the measured radius
-  would give 1,391,316 ± 280 km. The rotation period of 25.4 days is the sidereal Carrington period,
+- **Data block:** the diameter of 1,391,400 km is twice the nominal radius, which the 2015 report
+  of the IAU working group also lists as the solar radius
+  ([Archinal et al. 2018](literatur:archinal-2018), Table 4); the measured radius would give
+  1,391,316 ± 280 km. The rotation period of 25.4 days is the sidereal Carrington period,
   neither the synodic one of 27.3 days nor that at the equator. The axial tilt of 7.3° is the
   rounded angle of 7.252° between pole and ecliptic normal. Mass (1.99 · 10³⁰ kg) and pole
   (286.13°, 63.87°) are shown as in the data set.
@@ -351,7 +370,8 @@ branch, so the Earth probably is as well
   angular radius from the true radius and distance, and counts the covered fraction of its area.
   With Eddington limb darkening a small body in front of the disc centre would block 25 % more
   light than its area fraction, near the limb only half ([Eclipses](thema:finsternis)).
-- Orrery computes no irradiance, cycle, spots, corona, wind or heliosphere. Further
+- Orrery computes neither the irradiance in W m⁻² and its variation nor cycle, spots, corona, wind
+  or heliosphere; the lighting uses only the irradiance relative to 1 au. Further
   simplifications: [Limits of the model](thema:modell).
 
 *As of September 2026*

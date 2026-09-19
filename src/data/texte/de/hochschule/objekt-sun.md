@@ -27,7 +27,7 @@ Nennwerte nahe liegen.
 | $T_\mathrm{eff}$ | $5772{,}0\,\mathrm{K}$ | $0{,}8\,\mathrm{K}$ | Stefan-Boltzmann aus $R_\odot$ und $L_\odot$ | [Prša et al. 2016](literatur:prsa-2016) |
 | $J_2$ | $2{,}246 \cdot 10^{-7}$ | $0{,}022 \cdot 10^{-7}$ | Merkurbahn aus Entfernungsmessungen zu MESSENGER | [Genova et al. 2018](literatur:genova-2018) |
 | $\Delta r/R$ | $9{,}02 \cdot 10^{-6}$ | $0{,}72 \cdot 10^{-6}$ | Randform aus HMI-Rollmanövern 2010 bis 2023 | [Meftah und Mecheri 2025](literatur:meftah-2025) |
-| Pol $\alpha_0$, $\delta_0$ | $286{,}13^\circ$, $63{,}87^\circ$ | etwa $0{,}1^\circ$ | IAU-Ausdruck, nur zum Vergleich | [Archinal et al. 2011](literatur:archinal-2011) |
+| Pol $\alpha_0$, $\delta_0$ | $286{,}13^\circ$, $63{,}87^\circ$ | etwa $0{,}1^\circ$ | IAU-Ausdruck, nur zum Vergleich | [Archinal et al. 2018](literatur:archinal-2018); [Archinal et al. 2011](literatur:archinal-2011) |
 
 Den Radius bestimmen zwei Verfahren: das Helligkeitsprofil am Rand und die Frequenzen der
 f-Moden, deren „seismischer" Radius auf optische Tiefe eins umgerechnet wird. Beide wichen um
@@ -44,15 +44,18 @@ Tabelle 1.1). DE440 schätzt $GM_\odot = 132712440041{,}279419\,\mathrm{km}^3\,\
 ([Park et al. 2021](literatur:park-2021), Tabelle 2), der Nennwert weicht davon um
 $3 \cdot 10^{-10}$ ab. Die Gravitationskonstante ist dagegen seit Jahrzehnten die am schlechtesten
 bekannte der großen Naturkonstanten: Ihre 16 Labormessungen widersprechen einander, ihre
-Unsicherheiten werden um den Faktor 3,9 erweitert, und seit 2018 kam keine neue hinzu
-([Mohr et al. 2025](literatur:mohr-2025)). $G$ ist damit fünf Größenordnungen unsicherer als
+Unsicherheiten werden um den Faktor 3,9 erweitert, und zwischen den Ausgleichungen von 2018 und
+2022 kam keine neue hinzu ([Mohr et al. 2025](literatur:mohr-2025)). $G$ ist damit fünf Größenordnungen unsicherer als
 $GM_\odot$, und Massen sollen als $GM/G$ mit genanntem $G$ angegeben werden
 ([Prša et al. 2016](literatur:prsa-2016)). $GM_\odot$ nimmt ab: Aus sieben Jahren
 Entfernungsmessungen zu MESSENGER folgt
-$\dot{GM}_\odot/GM_\odot = (-6{,}13 \pm 1{,}47) \cdot 10^{-14}$ je Jahr, verträglich mit dem
-Massenverlust durch die Leuchtkraft, $-0{,}679 \cdot 10^{-13}$ je Jahr, und den Sonnenwind,
-$-0{,}2 \cdot 10^{-13}$ bis $-0{,}69 \cdot 10^{-13}$ je Jahr
-([Genova et al. 2018](literatur:genova-2018)). Der Anteil der Leuchtkraft ist
+$\dot{GM}_\odot/GM_\odot = (-6{,}13 \pm 1{,}47) \cdot 10^{-14}$ je Jahr. Erwartet wird ein
+Massenverlust durch die Leuchtkraft von $-0{,}679 \cdot 10^{-13}$ je Jahr und durch den Sonnenwind
+von $-0{,}2 \cdot 10^{-13}$ bis $-0{,}69 \cdot 10^{-13}$ je Jahr, über die Mission zusammen
+$-0{,}9 \cdot 10^{-13}$ bis $-1{,}1 \cdot 10^{-13}$; die Autoren nennen die gemessene, etwas
+kleinere Abnahme damit verträglich und begrenzen daraus $|\dot{G}|/G$ auf unter
+$4 \cdot 10^{-14}$ je Jahr ([Genova et al. 2018](literatur:genova-2018)). Der Anteil der
+Leuchtkraft ist
 
 $$\dot{M}_\odot = \frac{L_\odot}{c^2} = 4{,}26 \cdot 10^{9}\,\mathrm{kg}\,\mathrm{s}^{-1},$$
 
@@ -78,7 +81,8 @@ $1360{,}8 \pm 0{,}5\,\mathrm{W}\,\mathrm{m}^{-2}$ statt der in den 1990er-Jahren
 $1365{,}4 \pm 1{,}3\,\mathrm{W}\,\mathrm{m}^{-2}$; ältere Radiometer maßen Streulicht mit, weil
 ihre Präzisionsblende hinter der Gesichtsfeldblende sitzt. Vom Minimum zum Maximum steigt das
 Monatsmittel um etwa $1{,}6\,\mathrm{W}\,\mathrm{m}^{-2}$, 0,12 %; über eine Sonnenrotation von 27
-Tagen kann es um mehr als 0,3 % schwanken ([Kopp und Lean 2011](literatur:kopp-2011)).
+Tagen kann die Bestrahlungsstärke selbst um mehr als 0,3 % schwanken
+([Kopp und Lean 2011](literatur:kopp-2011)).
 
 ## Inneres
 
@@ -108,9 +112,13 @@ langsamer als der Äquator an der Oberfläche
 trennen die Bereiche: eine nahe der Oberfläche, zwischen der am schnellsten drehenden Schicht bei
 etwa $0{,}95\,R_\odot$ und der Oberfläche, und die Tachokline an der Unterseite der
 Konvektionszone. Ihr Schwerpunkt liegt etwas unter dieser Grenze, ihre Dicke bei etwa
-$0{,}05\,R_\odot$; Charbonneau et al. fanden sie bei 60° Breite um $(0{,}024 \pm 0{,}004)\,R_\odot$
-höher als am Äquator, andere Auswertungen keine Abhängigkeit von der Breite. Ihr wird eine
-wichtige Rolle im Dynamo zugeschrieben ([Howe 2009](literatur:howe-2009)).
+$0{,}05\,R_\odot$. Ob sie von der Breite abhängt, war strittig: Zwei Auswertungen von 1998 und 1999
+fanden keine Abhängigkeit, Charbonneau et al. fanden sie bei 60° Breite um
+$(0{,}024 \pm 0{,}004)\,R_\odot$ höher als am Äquator, Basu und Antia 2003 in hohen Breiten etwas
+höher und dicker. Ihr wird eine wichtige Rolle im Dynamo zugeschrieben
+([Howe 2009](literatur:howe-2009)). Antia und Basu bestätigten 2011 die zu den Polen hin gestreckte
+Form und fanden zudem eine mit der Breite wachsende Dicke
+([Christensen-Dalsgaard 2021](literatur:christensen-dalsgaard-2021)).
 
 Neutrinos aus den Fusionsreaktionen sind die einzige direkte Sonde des tiefen Inneren. Die
 pp-Kette liefert rund 99 % der Energie, der CNO-Zyklus etwa 1 %
@@ -164,9 +172,10 @@ am Rand also 40 % der Mittenhelligkeit. Dreidimensionale Simulationen der Konvek
 beobachtete Randverdunklung sehr gut wieder
 ([Christensen-Dalsgaard 2021](literatur:christensen-dalsgaard-2021)).
 
-Sonnenflecken sind senkrechte magnetische Flussröhren von 30 bis 40 Mm Durchmesser. Im Zentrum
-ist das Feld am stärksten und steht senkrecht, nach außen wird es schwächer und flacher; bei zwei
-vermessenen Flecken erreichte es etwa 3300 G im großen und 2900 G im kleinen. Hale
+Sonnenflecken sind magnetische Flussröhren; die beiden von Borrero und Ichimoto ausgewerteten
+Flecken zeigen senkrechte Röhren von 30 bis 40 Mm Durchmesser. Im Zentrum ist das Feld am
+stärksten und steht senkrecht, nach außen wird es schwächer und flacher; es erreichte etwa
+3300 G im großen und 2900 G im kleinen Fleck. Hale
 schätzte 1908 aus der Zeeman-Aufspaltung 2600 bis 2900 G, der erste Nachweis eines Magnetfelds
 außerhalb der Erde ([Borrero und Ichimoto 2011](literatur:borrero-2011)).
 
@@ -185,9 +194,10 @@ Energie stammt aus Bewegungen in und unter der Photosphäre
 ([Klimchuk 2006](literatur:klimchuk-2006)). Das sind $10^{4}$ und $300\,\mathrm{W}\,\mathrm{m}^{-2}$
 gegen $6{,}29 \cdot 10^{7}\,\mathrm{W}\,\mathrm{m}^{-2}$, die die Photosphäre abstrahlt. Das
 Verschieben der Fußpunkte durch die Granulation mit etwa 1 km s⁻¹ bei einem koronalen Feld von
-50 G liefert einen Energiefluss von etwa 20 kW m⁻². Wie er in Wärme umgesetzt wird, teilt die
-Fachwelt in zwei Schulen: Dissipation von Wellen gegen Verflechtung der Feldlinien mit vielen
-kleinen Energiefreisetzungen ([Cranmer und Winebarger 2019](literatur:cranmer-2019)).
+50 G liefert einen Energiefluss von etwa 20 kW m⁻². Wie er in Wärme umgesetzt wird, teilte die
+Fachwelt historisch in zwei Schulen: Dissipation von Wellen gegen Verflechtung der Feldlinien mit
+vielen kleinen Energiefreisetzungen; die Übersicht führt zudem Modelle der Turbulenz und der
+Taylor-Relaxation ([Cranmer und Winebarger 2019](literatur:cranmer-2019)).
 
 Die Korona geht in den Sonnenwind über: langsamer, dichter Wind mit 250 bis 450 km s⁻¹ und
 schneller, dünner mit 500 bis 800 km s⁻¹; Ströme aus großen koronalen Löchern erreichen bei 1 AE
@@ -231,14 +241,17 @@ $$\omega = \left(14{,}37 - 2{,}33\,\sin^2 B - 1{,}56\,\sin^4 B\right)^\circ\,\ma
 an ([NSSDC Sun Fact Sheet](quelle:nssdc-sun)); am Äquator dauert eine Umdrehung 25,05 Tage, bei
 60° Breite 30,65 und an den Polen 34,35 Tage. Magnetische Strukturen drehen schneller als das
 Plasma: Nach den Messungen von Snodgrass gilt für sie
-$462 - 74\,\mu^2 - 53\,\mu^4$ nHz, für die Doppler-Messung des Plasmas
-$452 - 49\,\mu^2 - 84\,\mu^4$ nHz, mit $\mu$ als Sinus der Breite; als Erklärung gilt, dass die
-Strukturen tiefer verankert sind, wo die Rotation schneller ist ([Howe 2009](literatur:howe-2009)).
+$462 - 74\,\sin^2 B - 53\,\sin^4 B$ nHz, für die Doppler-Messung des Plasmas
+$452 - 49\,\sin^2 B - 84\,\sin^4 B$ nHz; als Erklärung gilt, dass die Strukturen tiefer verankert
+sind, wo die Rotation schneller ist ([Howe 2009](literatur:howe-2009)).
 
-Das [IAU-Rotationsmodell](thema:bezugssysteme) zählt die Sonne im System von Carrington:
-$W = 84{,}176^\circ + 14{,}1844000^\circ\,d$, für die Lichtlaufzeit korrigiert und nur zum
-Vergleich gedacht ([Archinal et al. 2011](literatur:archinal-2011)). Die Rate ergibt 25,380 Tage
-oder 609,12 Stunden siderisch und, von der bewegten Erde aus, 27,275 Tage synodisch. Nach dem
+Das [IAU-Rotationsmodell](thema:bezugssysteme) gibt für die Sonne
+$W = 84{,}176^\circ + 14{,}1844000^\circ\,d$, für die Lichtlaufzeit korrigiert und seit dem
+Bericht von 2009 unverändert ([Archinal et al. 2018](literatur:archinal-2018), Tabelle 1); die
+Ausdrücke für Sonne und Erde sind nur zum Vergleich gedacht
+([Archinal et al. 2011](literatur:archinal-2011)). Die Rate ergibt 25,380 Tage oder 609,12 Stunden
+siderisch, die herkömmliche siderische Periode des Systems von Carrington
+([Gonzalez 2025](literatur:gonzalez-2025)), und von der bewegten Erde aus 27,275 Tage synodisch. Nach dem
 Gesetz des Faktenblatts dreht die Oberfläche bei 16,0° Breite mit dieser Rate, nach dem Gesetz für
 magnetische Strukturen bei 16,1°; das Plasma dreht nach der Doppler-Messung selbst am Äquator mit
 14,06° je Tag langsamer. Der Pol bei $\alpha_0 = 286{,}13^\circ$, $\delta_0 = 63{,}87^\circ$ hat
@@ -259,16 +272,23 @@ Perryman und Schulze-Hartung unbewiesen
 
 [Kalzium-Aluminium-reiche Einschlüsse](thema:entstehung) in Meteoriten entstanden vor
 $4567{,}30 \pm 0{,}16$ Millionen Jahren ([Connelly et al. 2012](literatur:connelly-2012)).
-Christensen-Dalsgaard setzt das Alter der Meteoriten mit der Ankunft der Sonne auf der Hauptreihe
-gleich, weil die Planetenbildung nicht länger dauerte als die Kontraktion des Sterns. Die
-Helioseismologie liefert ein unabhängiges Alter, das an der Zusammensetzung hängt: mit der
-älteren, metallreichen 4,57 Milliarden Jahre, mit der von 2009 4,77 Milliarden
-([Christensen-Dalsgaard 2021](literatur:christensen-dalsgaard-2021)).
+Christensen-Dalsgaard setzt das Alter der Meteoriten vereinfachend mit der Ankunft der Sonne auf
+der Hauptreihe gleich, weil die Planetenbildung wahrscheinlich nicht länger dauerte als die
+Kontraktion des Sterns. Die Helioseismologie liefert ein unabhängiges Alter, das an der
+Zusammensetzung hängt: Mit der älteren, metallreichen passt das beste Modell mit 4,57 Milliarden
+Jahren zum Meteoritenalter, mit der von 2009 ergibt sich 4,77 Milliarden, deutlich im Widerspruch
+dazu ([Christensen-Dalsgaard 2021](literatur:christensen-dalsgaard-2021)).
 
 Weil Wasserstoff im Kern zu Helium wird, steigt die mittlere Teilchenmasse, und die Leuchtkraft
-wächst: seit der Ankunft auf der Hauptreihe um etwa 30 %, was nach der Strahlungsbilanz die
-Oberflächentemperatur der Erde um rund 20 K verschieben würde
-([Christensen-Dalsgaard 2021](literatur:christensen-dalsgaard-2021)). Für die frühe Erde sagen
+wächst. Bei der Ankunft auf der Hauptreihe vor 4,57 Milliarden Jahren lag sie nach
+Standardmodellen etwa 30 % unter dem heutigen Wert; außer für die ersten 0,2 Milliarden Jahre gilt
+näherungsweise
+
+$$\frac{L(t)}{L_\odot} = \frac{1}{1 + \frac{2}{5}\left(1 - \frac{t}{t_\odot}\right)}$$
+
+mit dem heutigen Alter $t_\odot$ ([Feulner 2012](literatur:feulner-2012)). Eine Änderung um 30 %
+des heutigen Werts verschiebt nach der Strahlungsbilanz die Oberflächentemperatur der Erde um rund
+20 K ([Christensen-Dalsgaard 2021](literatur:christensen-dalsgaard-2021)). Für die frühe Erde sagen
 Sternmodelle eine um etwa 25 % geringere Einstrahlung voraus; ohne Ausgleich wäre sie in den
 ersten zwei Milliarden Jahren gefroren, doch im Archaikum gab es flüssiges Wasser und Leben. Die
 meisten Lösungen setzen auf mehr Treibhausgase, alle haben erhebliche Schwierigkeiten, und das
@@ -326,7 +346,7 @@ der Spitze des Riesenasts verschluckt werden, die Erde also wahrscheinlich auch
   Carrington-Rate bis auf $3 \cdot 10^{-6}$ Grad je Tag, also wie die Oberfläche bei 16° Breite;
   Äquator und Pole drehen nicht verschieden. Die Phase ist zur Epoche null und zählt von der
   Richtung, in die die Ausrichtung der Kugel die Kartenmitte bringt, 21,8° westlich des Knotens
-  $Q$. Der Nullmeridian liegt damit 106,0° hinter dem Carrington-Meridian mit
+  $Q$. Der Nullmeridian liegt damit 106,0° hinter dem IAU-Nullmeridian mit
   $W_0 = 84{,}176^\circ$. Weil die Karte keine echten Strukturen zeigt, ist das nicht zu sehen,
   heliographische Längen im Modell weichen aber um diesen Winkel ab.
 - **Pol:** Er steht fest bei den IAU-Werten, die für die Sonne keine Raten haben; die Umrechnung
@@ -335,8 +355,10 @@ der Spitze des Riesenasts verschluckt werden, die Erde also wahrscheinlich auch
   2018 ergibt das $1{,}327185 \cdot 10^{20}\,\mathrm{m}^3\,\mathrm{s}^{-2}$, 45 ppm über dem
   Nennwert und DE440. Mit den $1{,}9884 \cdot 10^{30}\,\mathrm{kg}$ des heutigen Faktenblatts wären
   es 5 ppm darunter. Die Kepler-Umlaufzeiten im Datenblock werden dadurch um rund 23 ppm zu kurz.
-- **Datenblock:** Der Durchmesser 1 391 400 km ist der doppelte Nennradius; der gemessene Radius
-  ergäbe 1 391 316 ± 280 km. Die Rotationsperiode 25,4 Tage ist die siderische Carrington-Periode,
+- **Datenblock:** Der Durchmesser 1 391 400 km ist der doppelte Nennradius, den auch der Bericht
+  der IAU-Arbeitsgruppe von 2015 als Sonnenradius führt
+  ([Archinal et al. 2018](literatur:archinal-2018), Tabelle 4); der gemessene Radius ergäbe
+  1 391 316 ± 280 km. Die Rotationsperiode 25,4 Tage ist die siderische Carrington-Periode,
   weder die synodische von 27,3 Tagen noch die am Äquator. Die Achsneigung 7,3° ist der gerundete
   Winkel von 7,252° zwischen Pol und Ekliptiknormale. Masse (1,99 · 10³⁰ kg) und Pol (286,13°,
   63,87°) stehen wie im Datensatz.
@@ -365,7 +387,8 @@ der Spitze des Riesenasts verschluckt werden, die Erde also wahrscheinlich auch
   Randverdunklung nach Eddington hielte ein kleiner Körper vor der Scheibenmitte 25 % mehr Licht
   zurück, als seine Fläche ausmacht, am Rand nur die Hälfte
   ([Finsternisse](thema:finsternis)).
-- Bestrahlungsstärke, Zyklus, Flecken, Korona, Wind und Heliosphäre rechnet Orrery nicht.
+- Die Bestrahlungsstärke in W m⁻² und ihre Schwankung, Zyklus, Flecken, Korona, Wind und
+  Heliosphäre rechnet Orrery nicht; die Beleuchtung nutzt nur die Bestrahlung relativ zu 1 AE.
   Weitere Vereinfachungen: [Grenzen des Modells](thema:modell).
 
 *Stand: September 2026*

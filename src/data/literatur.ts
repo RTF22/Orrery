@@ -728,6 +728,16 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1029/2022GL099475',
   },
   {
+    id: 'gonzalez-2025',
+    autoren: ['Gonzalez, G.'],
+    etAl: false,
+    jahr: 2025,
+    titel: 'Placing the Solar system in its astrophysical context',
+    erschienen: 'Monthly Notices of the Royal Astronomical Society 541, 3043–3072',
+    doi: '10.1093/mnras/staf1149',
+    arxiv: '2507.08911',
+  },
+  {
     id: 'goossens-2024',
     autoren: ['Goossens, S.', 'van Noort, B.', 'Mateo, A.'],
     etAl: true,
