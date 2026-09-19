@@ -75,10 +75,10 @@ unity ([Andrews 2020](literatur:andrews-2020)).
 
 In the streaming instability, gas and solids pull on each other through drag and stream against each
 other; particle density perturbations then grow without self-gravity being required. They grow fastest for a stopping time close to the dynamical time and a solid-to-gas density
-ratio of order unity ([Youdin and Goodman 2005](literatur:youdin-2005)). In simulations, it concentrated
-boulders by a further order of magnitude into gravitationally bound clusters with masses of dwarf
-planets, faster than the drift
-([Johansen et al. 2007](literatur:johansen-2007)). The Kuiper belt supplies evidence: binaries from the streaming instability should orbit each other
+ratio of order unity ([Youdin and Goodman 2005](literatur:youdin-2005)). In simulations, boulders first
+gathered in transient high-pressure regions of the turbulence, the streaming instability concentrated
+them by a further order of magnitude, and gravitationally bound clusters with masses of dwarf planets
+formed; the collapse proceeded much faster than the drift ([Johansen et al. 2007](literatur:johansen-2007)). The Kuiper belt supplies evidence: binaries from the streaming instability should orbit each other
 prograde in about 80 % of cases, as observed ([Nesvorný et al. 2019](literatur:nesvorny-2019)). The
 contact binary Arrokoth, which New Horizons flew past in January 2019, resulted from a gentle merger of
 two bodies that had formed in a collapsing cloud of particles
@@ -144,10 +144,11 @@ more under [Interior structure](thema:innerer-aufbau)).
 The zero point of the chronology is the calcium-aluminium-rich inclusions (CAIs), the first solids.
 Uranium-corrected lead-lead ages give $4567.30 \pm 0.16$ million years; chondrule formation started
 at the same time as the CAIs and lasted about 3 million years
-([Connelly et al. 2012](literatur:connelly-2012)). Bouvier and Wadhwa dated one CAI to 4568.2 million
-years ([Bouvier and Wadhwa 2010](literatur:bouvier-2010)). Lead-lead ages depend on the ²³⁸U/²³⁵U
-ratio. Until 2010 it was assumed to be uniform at 137.88 in all datings, but it varies in CAIs, which can
-shift ages by up to 5 million years; the first dating of a CAI with a measured ratio gave
+([Connelly et al. 2012](literatur:connelly-2012)). Bouvier and Wadhwa dated one CAI to
+$4568.2_{-0.4}^{+0.2}$ million years; they used the recently redetermined value of 137.84 for ²³⁸U/²³⁵U in
+natural uranium and estimated the deviation of their CAI from its Th/U ratio
+([Bouvier and Wadhwa 2010](literatur:bouvier-2010)). The ratio was long considered uniform at 137.88,
+but it varies in CAIs, which can shift lead-lead ages by up to 5 million years; the first dating of a CAI with a measured ratio gave
 $4567.18 \pm 0.50$ million years ([Amelin et al. 2010](literatur:amelin-2010)).
 
 Relative ages come from short-lived, now extinct nuclides. If $R$ is the ratio of such a nuclide to a
@@ -231,8 +232,8 @@ after planet formation inferred from lunar petrology ([Gomes et al. 2005](litera
 The later variants start from a resonant chain left by the gas phase. For the secular resonances not to
 excite the terrestrial planets and the asteroid belt too strongly, the period ratio $P_6/P_5$ of Saturn
 to Jupiter must have jumped from below 2.1 to above 2.3, perhaps through encounters with an ice giant
-("jumping Jupiter"). With an early instability the constraint from the terrestrial planets falls away,
-that from the asteroid belt remains ([Nesvorný 2018](literatur:nesvorny-2018)). In nearly $10^4$ simulations, the
+("jumping Jupiter"). With an early instability the constraint from the terrestrial planets could be
+bypassed; that from the asteroid belt would remain ([Nesvorný 2018](literatur:nesvorny-2018)). In nearly $10^4$ simulations, the
 instability with four giant planets and Jupiter and Saturn in 3:2 was mostly too violent and ejected at
 least one ice giant. An additional ice giant with the mass of Uranus or Neptune, ejected by Jupiter,
 fitted better, best with an outer disc of about 20 Earth masses; even then the result matched today's

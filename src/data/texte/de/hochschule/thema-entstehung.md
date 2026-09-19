@@ -81,8 +81,10 @@ Verhältnis von Feststoff zu Gas gegen eins gehen ([Andrews 2020](literatur:andr
 Bei der Streaming-Instabilität ziehen Gas und Feststoffe über Reibung aneinander und strömen
 gegeneinander; dabei wachsen Dichtestörungen der Teilchen an, ohne dass Eigengravitation nötig wäre. Am schnellsten wachsen sie bei einer Stoppzeit nahe der dynamischen Zeit und einem
 Dichteverhältnis von Feststoff zu Gas von Ordnung eins ([Youdin und Goodman 2005](literatur:youdin-2005)).
-In Simulationen verdichtete sie Brocken um eine weitere Größenordnung zu gravitativ gebundenen Haufen
-mit Massen von Zwergplaneten, schneller als die Drift ([Johansen et al. 2007](literatur:johansen-2007)). Belege liefert der Kuipergürtel: Doppelobjekte aus
+In Simulationen sammelten sich Brocken zuerst in kurzlebigen Hochdruckgebieten der Turbulenz, die
+Streaming-Instabilität verdichtete sie um eine weitere Größenordnung, und es entstanden gravitativ
+gebundene Haufen mit Massen von Zwergplaneten; der Kollaps verlief viel schneller als die Drift
+([Johansen et al. 2007](literatur:johansen-2007)). Belege liefert der Kuipergürtel: Doppelobjekte aus
 der Streaming-Instabilität sollten zu etwa 80 % prograd umeinander laufen, wie beobachtet
 ([Nesvorný et al. 2019](literatur:nesvorny-2019)). Das Kontaktdoppel Arrokoth, an dem New Horizons im
 Januar 2019 vorbeiflog, ging aus einer sanften Verschmelzung zweier Körper hervor, die sich in einer
@@ -151,10 +153,11 @@ unter [Innerer Aufbau](thema:innerer-aufbau)).
 Nullpunkt der Chronologie sind die Kalzium-Aluminium-reichen Einschlüsse (CAI), die ersten
 Festkörper. Uran-korrigierte Blei-Blei-Alter ergeben $4567{,}30 \pm 0{,}16$ Millionen Jahre; die
 Chondrenbildung begann gleichzeitig mit den CAI und dauerte etwa 3 Millionen Jahre
-([Connelly et al. 2012](literatur:connelly-2012)). Bouvier und Wadhwa datierten einen CAI auf 4568,2
-Millionen Jahre ([Bouvier und Wadhwa 2010](literatur:bouvier-2010)). Blei-Blei-Alter hängen am
-Verhältnis ²³⁸U/²³⁵U. Es wurde bis 2010 in allen Datierungen als einheitlich 137,88 angenommen,
-schwankt in CAI aber, was Alter um bis zu 5 Millionen Jahre verschieben kann; die erste Datierung eines
+([Connelly et al. 2012](literatur:connelly-2012)). Bouvier und Wadhwa datierten einen CAI auf
+$4568{,}2_{-0{,}4}^{+0{,}2}$ Millionen Jahre; sie rechneten mit dem kurz zuvor neu bestimmten Wert 137,84
+für ²³⁸U/²³⁵U in natürlichem Uran und schätzten die Abweichung ihres CAI aus seinem Th/U-Verhältnis ab
+([Bouvier und Wadhwa 2010](literatur:bouvier-2010)). Das Verhältnis galt lange als einheitlich 137,88,
+schwankt in CAI aber, was Blei-Blei-Alter um bis zu 5 Millionen Jahre verschieben kann; die erste Datierung eines
 CAI mit gemessenem Verhältnis ergab $4567{,}18 \pm 0{,}50$ Millionen Jahre
 ([Amelin et al. 2010](literatur:amelin-2010)).
 
@@ -241,8 +244,8 @@ Die späteren Varianten beginnen mit einer resonanten Kette, die die Gasphase hi
 säkularen Resonanzen die Gesteinsplaneten und den Asteroidengürtel nicht zu stark anregen, muss das
 Umlaufzeitverhältnis $P_6/P_5$ von Saturn zu Jupiter sprunghaft von unter 2,1 auf über 2,3 gewachsen
 sein, vielleicht durch Begegnungen mit einem Eisriesen („springender Jupiter"). Bei einer frühen
-Instabilität entfällt die Bedingung für die Gesteinsplaneten, die für den Asteroidengürtel bleibt
-([Nesvorný 2018](literatur:nesvorny-2018)). In fast $10^4$ Simulationen verlief die Instabilität mit
+Instabilität ließe sich die Bedingung für die Gesteinsplaneten umgehen, die für den Asteroidengürtel
+bliebe ([Nesvorný 2018](literatur:nesvorny-2018)). In fast $10^4$ Simulationen verlief die Instabilität mit
 vier Riesenplaneten und Jupiter und Saturn in 3:2 meist zu heftig und warf mindestens einen Eisriesen
 aus. Besser passte ein zusätzlicher Eisriese von der Masse Uranus' oder Neptuns, den Jupiter hinauswarf,
 am besten mit einer äußeren Scheibe von etwa 20 Erdmassen; selbst dann entsprach das Ergebnis nur mit
