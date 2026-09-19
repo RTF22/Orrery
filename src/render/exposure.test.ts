@@ -32,6 +32,12 @@ describe('exposureTargetId', () => {
       expect(exposureTargetId(state), szene.id).toBe(szene.lookAtId ?? szene.targetId);
     }
   });
+
+  it('nimmt im Flug den Bezugskörper', () => {
+    expect(exposureTargetId(mitKamera({
+      mode: 'fly', targetId: 'sun', fly: { ...DEFAULT_STATE.camera.fly, refId: 'saturn' },
+    }))).toBe('saturn');
+  });
 });
 
 describe('exposureFor', () => {

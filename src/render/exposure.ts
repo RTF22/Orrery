@@ -16,7 +16,8 @@ export const EXPOSURE_ZEITKONSTANTE_S = 1;
 /**
  * Der Körper, auf den die Kamera belichtet: im Kino-Modus der angesehene
  * Körper der geplanten Szene (`lookAtId`, sonst der Standortkörper), in den
- * Handmodi das Kameraziel. Dieselbe Auflösung wie in camera/controller.ts.
+ * Handmodi das Kameraziel, im Flug der Bezugskörper. Dieselbe Auflösung wie
+ * in camera/controller.ts.
  */
 export function exposureTargetId(state: AppState): string {
   if (state.camera.mode === 'cinema') {
@@ -25,6 +26,10 @@ export function exposureTargetId(state: AppState): string {
     );
     return scene.lookAtId ?? scene.targetId;
   }
+  // Im Flug der Bezugskörper: Wer zum Saturn fliegt, während das Ziel die
+  // Sonne ist, soll den Saturn richtig belichtet sehen (Plan Flug Etappe 1,
+  // Ruling 3).
+  if (state.camera.mode === 'fly') return state.camera.fly.refId;
   return state.camera.targetId;
 }
 
