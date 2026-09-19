@@ -42,7 +42,7 @@ Die Atmosphäre bricht Licht in den Kernschatten; tiefere, dichtere Schichten sc
 und lenken es weiter nach innen, weshalb die Helligkeit meist zum Rand hin zunimmt
 ([Espenak und Meeus 2009](literatur:espenak-2009)). Rayleigh-Streuung schwächt kurze
 Wellenlängen stärker: Bei wenig gestörter Stratosphäre erscheint der Mond meist kupfer- bis
-tiefrot, bei trüber dunkler ([Guillet et al. 2023](literatur:guillet-2023)). Die Danjon-Skala für
+tiefrot, bei trüber dunkler ([Guillet et al. 2023](literatur:guillet-2023)). Die [Danjon-Skala](thema:photometrie) für
 totale Finsternisse reicht von L = 0, Mond fast unsichtbar, bis L = 4, sehr hell kupferrot oder
 orange ([Espenak und Meeus 2009](literatur:espenak-2009)). Unter 46 von Guillet et al.
 herangezogenen Finsternissen trat L = 0 nur bei einer optischen Dicke des stratosphärischen
@@ -62,7 +62,7 @@ Aerosols über etwa 0,1 auf ([Guillet et al. 2023](literatur:guillet-2023)).
   ([Herald und Sinnott 2014](literatur:herald-2014)), knapp 17 Größenklassen unter dem
   [mittleren Vollmond](quelle:nssdc-moon).
 - **Zeitpunkt:** Die Mondbahn ist eine Kepler-Ellipse ohne periodische Störungen; zudem enthalten
-  Knoten- und Perigäumsrate nach Meeus die Präzession von 1,4° je Jahrhundert, mittlere Länge und
+  Knoten- und Perigäumsrate nach Meeus die [Präzession](thema:bezugssysteme) von 1,4° je Jahrhundert, mittlere Länge und
   Erdbahn nicht. Gegen den [NASA-Katalog](quelle:nasa-eclipse) findet das Modell 1951 bis 2050
   135 der 143 Kernschattenfinsternisse, das Maximum bis 3,0 h daneben (quadratisches Mittel
   1,8 h); acht kleine partielle fehlen, bei elf weicht die Art ab, ohne die Präzession in den

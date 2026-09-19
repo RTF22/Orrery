@@ -122,8 +122,8 @@ nutation in right ascension accumulated since J2000.0
 ## The Laplace plane of moons
 
 For moons, neither the ecliptic nor the planet's equator is a priori the natural reference plane.
-The orbits of most moons are governed by the quadrupole of the equatorial bulge and the tidal
-field of the Sun. On the classical Laplace surface, defined for circular orbits, the long-term
+The orbits of most moons are governed by the quadrupole of the equatorial bulge and the
+[tidal field of the Sun](thema:gezeiten). On the classical Laplace surface, defined for circular orbits, the long-term
 evolution driven by both forces vanishes, so orientation and shape of the orbit stay fixed; close
 to the planet the surface coincides with its equator, far out with its orbital plane. A
 dissipative disc around the planet should settle into it, and moons formed from such a disc are
@@ -162,7 +162,8 @@ $W = 190.147^\circ + 360.9856235^\circ\,d$ ([Archinal et al. 2011](literatur:arc
 they were sometimes used as a recommended model; for Earth rotation it refers to the IERS. The low-precision
 series for the orientation of the Moon was removed as well
 ([Archinal et al. 2018](literatur:archinal-2018)). DE440 and DE441 give the orientation of the
-lunar mantle as libration angles with respect to ICRF3, referred to its principal axes from data
+lunar mantle as libration angles with respect to ICRF3, referred to its
+[principal axes](thema:innerer-aufbau) from data
 of the GRAIL mission ([Park et al. 2021](literatur:park-2021)).
 
 ## Time scales

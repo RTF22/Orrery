@@ -1,7 +1,8 @@
 # Tides and the Roche limit
 
 Tides arise because the gravitational field of one body is not equally strong across the extent
-of another. How much a body deforms in response also depends on its internal structure
+of another. How much a body deforms in response also depends on its
+[internal structure](thema:innerer-aufbau)
 ([Murray and Dermott 2000](literatur:murray-2000), chapter 4); how much energy it loses in doing
 so determines how fast orbits and rotations change. This text leads from the tidal potential via
 Love numbers and dissipation to orbital evolution, tidal heating, tidal locking and the Roche
@@ -169,8 +170,9 @@ orbit and friction releases heat. If equator and orbit are coplanar
 $$\dot{E} = -\mathrm{Im}(k_2)\,\frac{21}{2}\,\frac{G M^2 R^5\, n\, e^2}{a^6} = \frac{21}{2}\,\frac{k_2}{Q}\,\frac{(n R)^5\, e^2}{G}$$
 
 with $k_2$, $Q$ and radius $R$ of the moon and planet mass $M$; the second form follows from
-$n^2 a^3 = G M$. The energy comes from the orbit, which would thereby become circular; orbital
-resonances maintain the eccentricity, for Io with Europa and Ganymede, for
+$n^2 a^3 = G M$. The energy comes from the orbit, which would thereby become circular;
+[orbital resonances](thema:resonanzen)
+maintain the eccentricity, for Io with Europa and Ganymede, for
 [Enceladus](objekt:enceladus) with Dione ([Tidal heating](quelle:wikipedia-en-tidal-heating)).
 
 In 1979 Peale, Cassen and Reynolds concluded that tidal dissipation had probably melted a large

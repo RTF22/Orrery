@@ -39,14 +39,14 @@ Their ratio $C/(M a_\mathrm{E}^2) = J_2/H = 0.330698$ does not depend on $G$; th
 give a formal uncertainty of $1 \cdot 10^{-7}$. The absolute $C$, in contrast, needs the mass
 and hence $G$; its accuracy is limited by the uncertainties of $G$ and $H$
 ([Chen et al. 2015](literatur:chen-2015)).
-For the mean moment of inertia $I = (A + B + C)/3$,
+For the mean [moment of inertia](thema:innerer-aufbau) $I = (A + B + C)/3$,
 
 $$\frac{I}{M a_\mathrm{E}^2} = \frac{C}{M a_\mathrm{E}^2} - \frac{2}{3}\,J_2 = 0.329976$$
 
 so relative to the mean radius of 6,371.0 km $I/(M R^2) = 0.33072$, well below 0.4 for a
 homogeneous sphere.
 
-The IERS Conventions count rotation through the Earth Rotation Angle in UT1
+The IERS Conventions count rotation through the [Earth Rotation Angle](thema:bezugssysteme) in UT1
 ([Petit and Luzum 2010](literatur:petit-2010), Eq. 5.14):
 
 $$\theta_\mathrm{ERA} = 2\pi\,(0.7790572732640 + 1.00273781191135448\,T_\mathrm{u})$$
@@ -108,7 +108,7 @@ ophiolites, blueschists and ultrahigh-pressure rocks ([Stern 2005](literatur:ste
 By volume, dry air consists of 78.08 % N₂, 20.95 % O₂, 9340 ppm Ar and 420 ppm CO₂; water vapour
 is typically about 1 %. The fact sheet gives a surface pressure of 1014 hPa, a mean temperature
 of 288 K, a mean molar mass of 28.97 g/mol and a scale height of 8.5 km; the isothermal
-approximation $h_\mathrm{s} = k_\mathrm{B} T/(\bar{m}\,g)$ gives 8.4 km. The Bond albedo is
+approximation $h_\mathrm{s} = k_\mathrm{B} T/(\bar{m}\,g)$ gives 8.4 km. The [Bond albedo](thema:photometrie) is
 0.294, the geometric albedo 0.434 ([NSSDC Earth Fact Sheet](quelle:nssdc-earth)). The northern
 and southern hemispheres reflect the same amount of sunlight to within about 0.2 W m⁻², because
 clouds in the south offset the brighter land in the north, and the reflected mean varies from
@@ -157,7 +157,7 @@ calibrating palaeoclimate data over 40 to 50 million years; beyond that, chaos p
 values, and for the Mesozoic the authors recommend the eccentricity term of largest amplitude,
 with a period of 405,000 years ([Laskar et al. 2004](literatur:laskar-2004)).
 
-Tidal friction transfers angular momentum from the Earth's rotation to the lunar orbit. Lunar
+[Tidal friction](thema:gezeiten) transfers angular momentum from the Earth's rotation to the lunar orbit. Lunar
 laser ranging, supplemented by geophysical tide models, gives
 $\mathrm{d}a/\mathrm{d}t = 38.30 \pm 0.08\,\mathrm{mm}$ per year; the geophysical model
 predicts a tidal increase in the length of day of 2.395 ms per century
@@ -180,7 +180,7 @@ need a negative leap second by 2029, three years earlier without the accelerated
 
 ## Formation and evolution
 
-Calcium–aluminium-rich inclusions in meteorites, the first solids of the Solar System, formed
+[Calcium–aluminium-rich inclusions](thema:entstehung) in meteorites, the first solids of the Solar System, formed
 $4567.30 \pm 0.16$ million years ago ([Connelly et al. 2012](literatur:connelly-2012)). Their
 formation marks the zero point for times after the formation of the Solar System
 ([Bouvier and Wadhwa 2010](literatur:bouvier-2010)); Bouvier and Wadhwa date the inclusion they

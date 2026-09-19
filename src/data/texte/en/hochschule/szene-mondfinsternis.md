@@ -42,8 +42,8 @@ The atmosphere refracts light into the umbra; lower, denser layers attenuate it 
 bend it further inwards, so the brightness usually increases towards the edge
 ([Espenak and Meeus 2009](literatur:espenak-2009)). Rayleigh scattering weakens short wavelengths
 more strongly: when the stratosphere is little perturbed, the eclipsed Moon tends to look copper to
-deep red, and darker when it is turbid ([Guillet et al. 2023](literatur:guillet-2023)). The Danjon
-scale for total eclipses runs from L = 0, Moon almost invisible, to L = 4, very bright copper-red
+deep red, and darker when it is turbid ([Guillet et al. 2023](literatur:guillet-2023)). The [Danjon
+scale](thema:photometrie) for total eclipses runs from L = 0, Moon almost invisible, to L = 4, very bright copper-red
 or orange ([Espenak and Meeus 2009](literatur:espenak-2009)). Among 46 eclipses drawn on by Guillet
 et al., L = 0 occurred only when the stratospheric aerosol optical depth exceeded about 0.1
 ([Guillet et al. 2023](literatur:guillet-2023)).
@@ -62,7 +62,7 @@ et al., L = 0 occurred only when the stratospheric aerosol optical depth exceede
   ([Herald and Sinnott 2014](literatur:herald-2014)), almost 17 magnitudes below the
   [mean full Moon](quelle:nssdc-moon).
 - **Timing:** the lunar orbit is a Kepler ellipse without periodic perturbations; in addition,
-  the node and perigee rates after Meeus contain the precession of 1.4° per century, whereas the
+  the node and perigee rates after Meeus contain the [precession](thema:bezugssysteme) of 1.4° per century, whereas the
   mean longitude and the Earth's orbit do not. Against the [NASA catalogue](quelle:nasa-eclipse),
   the model finds 135 of the 143 umbral eclipses from 1951 to 2050, with the maximum off by up to
   3.0 h (root mean square 1.8 h); eight small partial eclipses are missing, and eleven differ in

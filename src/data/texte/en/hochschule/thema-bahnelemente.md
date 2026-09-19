@@ -93,7 +93,7 @@ $\omega + \nu$.
 
 ## Reference frame and time scale
 
-The tables refer to the mean ecliptic and equinox of J2000. Today this plane is a convention:
+The tables refer to the mean ecliptic and [equinox of J2000](thema:bezugssysteme). Today this plane is a convention:
 JPL Horizons produces it by rotating the ICRF about its x-axis by the fixed value
 84,381.448″ (IAU 1976/1980), and points out that a mean orbital plane is ambiguous at high
 precision because of the mutual motion of the Earth and Moon; there, the DE440/DE441

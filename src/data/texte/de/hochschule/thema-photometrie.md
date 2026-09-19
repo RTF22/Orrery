@@ -254,7 +254,7 @@ ergeben $A = 0{,}76$ und 0,7233 AE 229 K, nahe der effektiven Emissionstemperatu
 einem Strahlungsbilanzmodell ([Haus et al. 2016](literatur:haus-2016)). Für Iapetus folgen subsolar
 125,5 K bei $A = 0{,}06$ und 118,6 K bei $A = 0{,}25$; Blackburn et al. geben 125,5 K und 118,4 K an
 ([Blackburn et al. 2011](literatur:blackburn-2011)). Riesenplaneten strahlen mehr ab, als sie
-absorbieren; die Differenz ist ihr innerer Wärmestrom, und jeder Fehler in $A_\mathrm{bol}$ geht in
+absorbieren; die Differenz ist ihr [innerer Wärmestrom](thema:innerer-aufbau), und jeder Fehler in $A_\mathrm{bol}$ geht in
 ihn ein. Mit Jupiters Bond-Albedo von 0,503 statt 0,343 sinkt die absorbierte Leistung um 24 %;
 zusammen mit einer abgestrahlten Leistung von 14,098 W m⁻² ergab sich ein innerer Wärmestrom von
 7,485 statt 5,444 W m⁻² ([Li et al. 2018](literatur:li-2018)).

@@ -38,7 +38,7 @@ $$J_2 = \frac{C - (A + B)/2}{M a_\mathrm{E}^2}, \quad H = \frac{C - (A + B)/2}{C
 Ihr Quotient $C/(M a_\mathrm{E}^2) = J_2/H = 0{,}330698$ hängt nicht von $G$ ab; die
 Tabellenwerte ergeben formal $1 \cdot 10^{-7}$ Unsicherheit. Das absolute $C$ braucht dagegen
 die Masse und damit $G$; seine Genauigkeit begrenzen die Unsicherheiten von $G$ und $H$
-([Chen et al. 2015](literatur:chen-2015)). Für das mittlere Trägheitsmoment $I = (A + B + C)/3$
+([Chen et al. 2015](literatur:chen-2015)). Für das mittlere [Trägheitsmoment](thema:innerer-aufbau) $I = (A + B + C)/3$
 gilt
 
 $$\frac{I}{M a_\mathrm{E}^2} = \frac{C}{M a_\mathrm{E}^2} - \frac{2}{3}\,J_2 = 0{,}329976$$
@@ -46,7 +46,7 @@ $$\frac{I}{M a_\mathrm{E}^2} = \frac{C}{M a_\mathrm{E}^2} - \frac{2}{3}\,J_2 = 0
 bezogen auf den mittleren Radius von 6371,0 km also $I/(M R^2) = 0{,}33072$, deutlich unter
 0,4 für eine homogene Kugel.
 
-Die Rotation zählen die IERS Conventions über den Erdrotationswinkel in UT1
+Die Rotation zählen die IERS Conventions über den [Erdrotationswinkel](thema:bezugssysteme) in UT1
 ([Petit und Luzum 2010](literatur:petit-2010), Gl. 5.14):
 
 $$\theta_\mathrm{ERA} = 2\pi\,(0{,}7790572732640 + 1{,}00273781191135448\,T_\mathrm{u})$$
@@ -110,7 +110,7 @@ das erste Auftreten von Ophiolithen, Blauschiefern und Ultrahochdruckgesteinen
 Trockene Luft besteht nach Volumen aus 78,08 % N₂, 20,95 % O₂, 9340 ppm Ar und 420 ppm CO₂;
 Wasserdampf liegt typisch bei 1 %. Das Faktenblatt nennt 1014 hPa Bodendruck, 288 K mittlere
 Temperatur, eine mittlere molare Masse von 28,97 g/mol und 8,5 km Skalenhöhe; die isotherme
-Näherung $h_\mathrm{s} = k_\mathrm{B} T/(\bar{m}\,g)$ ergibt 8,4 km. Die Bond-Albedo beträgt
+Näherung $h_\mathrm{s} = k_\mathrm{B} T/(\bar{m}\,g)$ ergibt 8,4 km. Die [Bond-Albedo](thema:photometrie) beträgt
 0,294, die geometrische Albedo 0,434 ([NSSDC Earth Fact Sheet](quelle:nssdc-earth)). Nord- und
 Südhalbkugel reflektieren bis auf etwa 0,2 W m⁻² gleich viel Sonnenlicht, weil Wolken im Süden
 die hellere Landfläche im Norden ausgleichen, und das reflektierte Mittel schwankt von Jahr zu
@@ -159,7 +159,7 @@ Bahnlösung La2004 eignet sich zur Kalibrierung paläoklimatischer Daten über 4
 für das Mesozoikum den Exzentrizitätsterm größter Amplitude mit 405 000 Jahren Periode
 ([Laskar et al. 2004](literatur:laskar-2004)).
 
-Gezeitenreibung überträgt Drehimpuls von der Erdrotation auf die Mondbahn. Laserentfernungen
+[Gezeitenreibung](thema:gezeiten) überträgt Drehimpuls von der Erdrotation auf die Mondbahn. Laserentfernungen
 zum Mond, ergänzt um geophysikalische Gezeitenmodelle, ergeben
 $\mathrm{d}a/\mathrm{d}t = 38{,}30 \pm 0{,}08\,\mathrm{mm}$ je Jahr; das geophysikalische Modell
 sagt eine gezeitenbedingte Zunahme der Tageslänge um 2,395 ms je Jahrhundert voraus
@@ -182,7 +182,7 @@ drei Jahre früher ([Agnew 2024](literatur:agnew-2024)).
 
 ## Entstehung und Entwicklung
 
-Kalzium-Aluminium-reiche Einschlüsse in Meteoriten, die ersten Festkörper des Sonnensystems,
+[Kalzium-Aluminium-reiche Einschlüsse](thema:entstehung) in Meteoriten, die ersten Festkörper des Sonnensystems,
 entstanden vor $4567{,}30 \pm 0{,}16$ Millionen Jahren
 ([Connelly et al. 2012](literatur:connelly-2012)). Ihre Entstehung markiert den Nullpunkt für
 Zeitangaben nach Entstehung des Sonnensystems ([Bouvier und Wadhwa 2010](literatur:bouvier-2010));

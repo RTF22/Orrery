@@ -148,8 +148,8 @@ Jupiter pushes Io outwards fastest, the first two two-body angles are captured w
 third, and with it $\varphi_\mathrm{L}$, with about 0.9, and dissipation in Io damps the amplitudes
 ([Yoder and Peale 1981](literatur:yoder-1981)).
 
-For Pluto, Malhotra proposed that Neptune migrated outwards through encounters with residual
-planetesimals, captured Pluto from a nearly circular orbit into 3:2 and then quickly drove its
+For Pluto, Malhotra proposed that Neptune migrated outwards through encounters with
+[residual planetesimals](thema:entstehung), captured Pluto from a nearly circular orbit into 3:2 and then quickly drove its
 eccentricity up to the present Neptune-crossing value ([Malhotra 1993](literatur:malhotra-1993)).
 Pluto's orbit thus implies an outward migration of Neptune by at least about 5 AU
 ([Malhotra 1995](literatur:malhotra-1995)). Models with smooth migration, however, predict resonant

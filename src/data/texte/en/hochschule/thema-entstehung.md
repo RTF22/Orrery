@@ -336,7 +336,7 @@ Times after the formation of the CAIs:
 - **Belts:** The main belt and the Kuiper belt are point clouds with fixed elements drawn from
   prescribed distributions; only the mean anomaly advances. The Kuiper cloud mixes 60 % cold classical
   particles (Rayleigh parameter of the inclination 3°), 25 % hot ones (12°) and 15 % Plutinos. All
-  main-belt particles have the albedo 0.06; there is no division into S and C types. Jupiter Trojans,
+  main-belt particles have the [albedo](thema:photometrie) 0.06; there is no division into S and C types. Jupiter Trojans,
   the scattered disc and the Oort cloud are missing. Further simplifications:
   [Limits of the model](thema:modell).
 

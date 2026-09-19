@@ -150,7 +150,7 @@ die ersten beiden Zweikörperwinkel werden mit Wahrscheinlichkeit 1 eingefangen,
 $\varphi_\mathrm{L}$ mit etwa 0,9, und die Dissipation in Io dämpft die Amplituden
 ([Yoder und Peale 1981](literatur:yoder-1981)).
 
-Für Pluto schlug Malhotra vor, dass Neptun durch Begegnungen mit übrig gebliebenen Planetesimalen nach
+Für Pluto schlug Malhotra vor, dass Neptun durch Begegnungen mit [übrig gebliebenen Planetesimalen](thema:entstehung) nach
 außen wanderte, Pluto aus einer fast kreisförmigen Bahn in 3:2 einfing und seine Exzentrizität danach
 rasch auf den heutigen neptunkreuzenden Wert trieb ([Malhotra 1993](literatur:malhotra-1993)). Aus
 Plutos Bahn folgt so eine Auswanderung Neptuns um mindestens etwa 5 AE

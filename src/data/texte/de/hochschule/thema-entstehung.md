@@ -350,7 +350,7 @@ Zeiten nach der Bildung der CAI:
 - **Gürtel:** Haupt- und Kuipergürtel sind Punktwolken mit festen Elementen aus vorgegebenen
   Verteilungen; nur die mittlere Anomalie läuft. Die Kuiper-Wolke mischt 60 % kalte klassische
   Teilchen (Rayleigh-Parameter der Neigung 3°), 25 % heiße (12°) und 15 % Plutinos. Alle
-  Hauptgürtel-Teilchen haben die Albedo 0,06, eine Trennung in S- und C-Typen gibt es nicht.
+  Hauptgürtel-Teilchen haben die [Albedo](thema:photometrie) 0,06, eine Trennung in S- und C-Typen gibt es nicht.
   Jupiter-Trojaner, gestreute Scheibe und Oortsche Wolke fehlen. Weitere Vereinfachungen:
   [Grenzen des Modells](thema:modell).
 

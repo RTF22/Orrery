@@ -124,7 +124,7 @@ aufgelaufene Präzession und Nutation in Rektaszension
 
 Für Monde ist weder die Ekliptik noch der Äquator des Planeten von vornherein die natürliche
 Bezugsebene. Die Bahnen der meisten Monde bestimmen der Quadrupol des Äquatorwulsts und das
-Gezeitenfeld der Sonne. Auf der klassischen Laplace-Fläche, definiert für kreisförmige Bahnen,
+[Gezeitenfeld der Sonne](thema:gezeiten). Auf der klassischen Laplace-Fläche, definiert für kreisförmige Bahnen,
 verschwindet die langfristige Entwicklung durch beide Kräfte, Lage und Form der Bahn bleiben fest;
 nahe am Planeten fällt die Fläche mit dessen Äquator zusammen, weit draußen mit dessen Bahnebene.
 Eine dissipative Scheibe um den Planeten sollte sich in ihr einstellen, und aus ihr entstandene
@@ -163,7 +163,7 @@ Der Bericht von 2015 strich diese Ausdrücke: Sie waren ungenau, versagten nahe 
 dennoch mitunter als Empfehlung benutzt; für die Erdrotation verweist er auf den IERS. Ebenso entfiel die
 Reihe niedriger Genauigkeit für die Orientierung des Mondes
 ([Archinal et al. 2018](literatur:archinal-2018)). DE440 und DE441 führen die Orientierung des
-Mondmantels als Librationswinkel gegen ICRF3, bezogen auf seine Hauptträgheitsachsen aus Daten der
+Mondmantels als Librationswinkel gegen ICRF3, bezogen auf seine [Hauptträgheitsachsen](thema:innerer-aufbau) aus Daten der
 Mission GRAIL ([Park et al. 2021](literatur:park-2021)).
 
 ## Zeitskalen

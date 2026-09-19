@@ -1,7 +1,8 @@
 # Gezeiten und Roche-Grenze
 
 Gezeiten entstehen, weil das Schwerefeld eines Körpers über die Ausdehnung eines anderen nicht
-gleich stark ist. Wie stark sich ein Körper darunter verformt, hängt auch von seinem inneren Aufbau
+gleich stark ist. Wie stark sich ein Körper darunter verformt, hängt auch von seinem
+[inneren Aufbau](thema:innerer-aufbau)
 ab ([Murray und Dermott 2000](literatur:murray-2000), Kapitel 4); wie viel Energie er dabei
 verliert, bestimmt, wie schnell sich Bahnen und Rotationen verändern. Dieser Text führt vom
 Gezeitenpotential über Love-Zahlen und Dissipation zu Bahnentwicklung, Gezeitenheizung,
@@ -171,7 +172,7 @@ mit jedem Umlauf, und Reibung setzt Wärme frei. Liegen Äquator und Bahn in ein
 $$\dot{E} = -\mathrm{Im}(k_2)\,\frac{21}{2}\,\frac{G M^2 R^5\, n\, e^2}{a^6} = \frac{21}{2}\,\frac{k_2}{Q}\,\frac{(n R)^5\, e^2}{G}$$
 
 mit $k_2$, $Q$ und Radius $R$ des Mondes und der Planetenmasse $M$; die zweite Form folgt mit
-$n^2 a^3 = G M$. Die Energie stammt aus der Bahn, die dadurch kreisförmig würde; Bahnresonanzen
+$n^2 a^3 = G M$. Die Energie stammt aus der Bahn, die dadurch kreisförmig würde; [Bahnresonanzen](thema:resonanzen)
 halten die Exzentrizität aufrecht, bei Io mit Europa und Ganymed, bei
 [Enceladus](objekt:enceladus) mit Dione
 ([Gezeitenheizung (englische Wikipedia)](quelle:wikipedia-en-tidal-heating)).

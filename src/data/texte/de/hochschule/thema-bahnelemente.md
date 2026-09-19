@@ -92,7 +92,7 @@ ab.
 
 ## Bezugsrahmen und Zeitskala
 
-Die Tafeln beziehen sich auf die mittlere Ekliptik und das Äquinoktium J2000. Diese Ebene ist
+Die Tafeln beziehen sich auf die mittlere Ekliptik und das [Äquinoktium J2000](thema:bezugssysteme). Diese Ebene ist
 heute eine Konvention: JPL Horizons erzeugt sie, indem es das ICRF um seine x-Achse um den
 festen Wert 84 381,448″ (IAU 1976/1980) dreht, und weist darauf hin, dass eine mittlere
 Bahnebene wegen der gegenseitigen Bewegung von Erde und Mond bei hoher Genauigkeit mehrdeutig

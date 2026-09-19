@@ -307,7 +307,7 @@ berücksichtigt nicht hydrostatische Anteile
 - **Verdünnter Kern Jupiters:** Wie weit er reicht, hängt an Zustandsgleichung und Annahmen. Neben
   Kernen bis 63 % des Radius ([Militzer et al. 2022](literatur:militzer-2022)) ergeben sich mit
   veränderten Zustandsgleichungen auch kleine verdünnte Kerne, die nur rund 20 % der Masse umfassen
-  und besser zu Modellen von Entstehung und Entwicklung passen; alle diese Modelle verlangen eine
+  und besser zu Modellen von [Entstehung](thema:entstehung) und Entwicklung passen; alle diese Modelle verlangen eine
   höhere innere Entropie, als man aus den Messungen der Galileo-Sonde gewöhnlich annimmt
   ([Howard et al. 2023](literatur:howard-2023)). Zudem verlangt das Schwerefeld zwischen 10 und 100
   GPa eine geringere Dichte, als eine Hülle mit der in der Atmosphäre gemessenen Anreicherung

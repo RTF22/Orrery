@@ -251,7 +251,7 @@ $A = 0.76$ and 0.7233 au give 229 K, close to the effective emission temperature
 radiative balance model ([Haus et al. 2016](literatur:haus-2016)). For Iapetus the subsolar values
 are 125.5 K for $A = 0.06$ and 118.6 K for $A = 0.25$; Blackburn et al. give 125.5 K and 118.4 K
 ([Blackburn et al. 2011](literatur:blackburn-2011)). Giant planets emit more than they absorb; the
-difference is their internal heat flux, and any error in $A_\mathrm{bol}$ enters it. With Jupiter's
+difference is their [internal heat flux](thema:innerer-aufbau), and any error in $A_\mathrm{bol}$ enters it. With Jupiter's
 Bond albedo of 0.503 instead of 0.343 the absorbed power drops by 24%; together with an emitted
 power of 14.098 W m⁻² this gave an internal heat flux of 7.485 instead of 5.444 W m⁻²
 ([Li et al. 2018](literatur:li-2018)).

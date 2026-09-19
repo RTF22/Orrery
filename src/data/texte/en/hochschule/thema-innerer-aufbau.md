@@ -300,7 +300,7 @@ non-hydrostatic contributions ([Gomez Casajus et al. 2022](literatur:gomez-casaj
 - **Jupiter's dilute core:** How far it extends depends on the equation of state and assumptions.
   Besides cores reaching 63 % of the radius ([Militzer et al. 2022](literatur:militzer-2022)),
   modified equations of state also yield small dilute cores comprising only about 20 % of the mass,
-  which agree better with formation and evolution models; all these models require a higher internal
+  which agree better with [formation](thema:entstehung) and evolution models; all these models require a higher internal
   entropy than is usually assumed from the Galileo probe measurements
   ([Howard et al. 2023](literatur:howard-2023)). Moreover, the gravity field requires a lower
   density between 10 and 100 GPa than an envelope with the heavy-element enrichment measured in the
