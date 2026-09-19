@@ -338,9 +338,12 @@ Zeiten nach der Bildung der CAI:
   Wanderung, keine Instabilität und keine gegenseitigen Störungen.
 - **Gültigkeit der Raten:** Die Planetenelemente stammen aus der JPL-Tafel für 1800 bis 2050; sie sind
   an dieses Fenster angepasst und gelten laut JPL außerhalb nicht. Der Datenblock warnt außerhalb von
-  1800 bis 2050. Nur die acht Planeten haben Raten für $a$ und $e$. Linear fortgeschrieben wird die
-  Exzentrizität Saturns im Jahr 12 563 null und danach negativ, rückwärts die Neptuns im Jahr −14 828.
-  Solche Werte weist der Keplerlöser zurück, und die Bildschleife fordert danach kein neues Bild an.
+  1800 bis 2050. Nur die acht Planeten haben Raten für $a$ und $e$. Linear fortgeschrieben würde die
+  Exzentrizität Saturns im Jahr 12 563 null und danach negativ, rückwärts die Neptuns im Jahr
+  −14 828; solche Werte weist der Keplerlöser zurück. Orrery begrenzt die Zeit deshalb auf den
+  Julianischen Tag 0 (4713 v. Chr.) bis zum 31. Dezember 9999, der Zeitraffer hält an diesen Rändern
+  an. Darin bleiben alle fortgeschriebenen Exzentrizitäten zwischen 0 und 1; am kleinsten wird die
+  der Venus mit 0,0035 im Jahr 9999.
   Über 4,5 Milliarden Jahre zurückgeschrieben ergäben die Raten große Halbachsen von 5228 AE
   für Jupiter und −16 AE für Merkur.
 - **Chaos:** Auch eine vollständige Rechnung könnte den Weg nicht eindeutig zurückverfolgen: Die

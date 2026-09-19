@@ -324,9 +324,12 @@ Times after the formation of the CAIs:
   instability and no mutual perturbation.
 - **Validity of the rates:** The planetary elements come from the JPL table for 1800 to 2050; they are
   fitted to this interval and, according to JPL, not valid outside it. The data block warns outside 1800
-  to 2050. Only the eight planets have rates for $a$ and $e$. Propagated linearly, Saturn's eccentricity
-  becomes zero in the year 12,563 and negative thereafter, and going backwards Neptune's does so in the
-  year −14,828. The Kepler solver rejects such values, and the frame loop then requests no further frame.
+  to 2050. Only the eight planets have rates for $a$ and $e$. Propagated linearly, Saturn's
+  eccentricity would become zero in the year 12,563 and negative thereafter, and going backwards
+  Neptune's in the year −14,828; the Kepler solver rejects such values. Orrery therefore limits time
+  to Julian day 0 (4713 BC) through 31 December 9999, and the time-lapse stops at these limits.
+  Within this range all propagated eccentricities stay between 0 and 1; the smallest is Venus's,
+  0.0035 in the year 9999.
   Propagated back over 4.5 billion years, the rates would give semi-major axes of 5228
   AU for Jupiter and −16 AU for Mercury.
 - **Chaos:** Even a complete calculation could not trace the path back uniquely: the motion of the
