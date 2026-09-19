@@ -140,9 +140,10 @@ remains a combination of an exponential decrease and a linear term, and the impa
 smoothly at early times rather than abruptly ([Yue et al. 2026](literatur:yue-2026)). Basalt from
 Chang'e-5 crystallised $2030 \pm 4$ million years ago, the youngest radiometric age of a lunar basalt
 and a key calibration point; volcanism thus lasted 800 to 900 million years longer than known until
-then ([Li et al. 2021](literatur:li-2021)). Among about 3000 glass beads from the same regolith, three
-are of volcanic origin and only $123 \pm 15$ million years old, rich in rare earth elements and
-thorium ([Wang et al. 2024b](literatur:wang-2024b)). On the far side, volcanism occurred $4203 \pm 4$ million years
+then ([Li et al. 2021](literatur:li-2021)). Among about 3000 glass beads from the same regolith,
+Wang et al. interpret three as volcanic from their texture, chemistry and sulfur isotopes; they are
+only $123 \pm 15$ million years old and rich in rare earth elements and thorium
+([Wang et al. 2024b](literatur:wang-2024b)). On the far side, volcanism occurred $4203 \pm 4$ million years
 ago from a KREEP-rich source and $2807 \pm 3$ million years ago from a KREEP-poor one, over more than
 1.4 billion years; because the younger age agrees with crater counts, the near-side chronology also
 applies to the far side ([Zhang et al. 2025a](literatur:zhang-2025a)).
@@ -333,8 +334,9 @@ the Solar System, which also explains why there are fewer large basins than expe
   perturbations are missing: against DE441 the longitude deviates from 1990 to 2030 by up to 2.39°,
   1.03° root mean square, the latitude by up to 0.34° and the distance by up to 7010 km. In longitude
   almost all of this is evection, variation and annual equation, in distance evection and variation
-  (see Orbit); in latitude it is the variation of inclination and node, main term
-  $0.173^\circ \sin(2D - F)$ with the mean argument of latitude $F$
+  (see Orbit); in latitude it is mainly the variation of inclination and node, main term
+  $0.173^\circ \sin(2D - F)$ with the mean argument of latitude $F$, and evection and variation add
+  terms of 0.03° to 0.06° through the inclined orbit
   ([Chapront-Touzé and Chapront 1988](literatur:chapront-touze-1988)). The mean longitude does not
   drift from 1800 to 2100. The [lunar eclipse](szene:mondfinsternis) is thus off
   by up to 3 h. The Earth's centre sits at the Earth-Moon barycentre ([Earth](objekt:earth)); the

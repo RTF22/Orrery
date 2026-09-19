@@ -424,7 +424,7 @@ export const LITERATUR: readonly Publikation[] = [
     etAl: false,
     jahr: 1988,
     titel: 'Lunar Solution ELP 2000-82B',
-    erschienen: 'Datenkatalog VI/79 am CDS Straßburg; Astronomy and Astrophysics 124, 50 (1983) und 190, 342 (1988)',
+    erschienen: 'CDS catalogue VI/79, Strasbourg; Astronomy and Astrophysics 124, 50 (1983) and 190, 342 (1988)',
     url: 'https://cdsarc.cds.unistra.fr/viz-bin/cat/VI/79',
   },
   {

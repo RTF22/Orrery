@@ -146,9 +146,10 @@ Glied, und die Einschlagrate nahm früh gleichmäßig ab statt sprunghaft
 ([Yue et al. 2026](literatur:yue-2026)). Basalt von Chang'e-5 kristallisierte vor
 $2030 \pm 4$ Millionen Jahren, das jüngste radiometrische Alter eines Mondbasalts und ein wichtiger
 Eichpunkt; der Vulkanismus dauerte damit 800 bis 900 Millionen Jahre länger als bis dahin bekannt
-([Li et al. 2021](literatur:li-2021)). Unter rund 3000 Glasperlen aus demselben Regolith sind drei
-vulkanischen Ursprungs und nur $123 \pm 15$ Millionen Jahre alt, reich an Seltenen Erden und
-Thorium ([Wang et al. 2024b](literatur:wang-2024b)). Auf der Rückseite trat Vulkanismus vor
+([Li et al. 2021](literatur:li-2021)). Unter rund 3000 Glasperlen aus demselben Regolith deuten
+Wang et al. drei nach Gefüge, Chemie und Schwefelisotopen als vulkanisch; sie sind nur
+$123 \pm 15$ Millionen Jahre alt und reich an Seltenen Erden und Thorium
+([Wang et al. 2024b](literatur:wang-2024b)). Auf der Rückseite trat Vulkanismus vor
 $4203 \pm 4$ Millionen Jahren aus einer KREEP-reichen Quelle und vor $2807 \pm 3$ Millionen Jahren
 aus einer KREEP-armen auf, über 1,4 Milliarden Jahre hinweg; weil das jüngere Alter zur
 Kraterzählung passt, gilt die Chronologie der Vorderseite auch für die Rückseite
@@ -220,8 +221,8 @@ Elongation $D$. Die ersten beiden Glieder sind die Mittelpunktsgleichung der Kep
 $2e = 6{,}29^\circ$. Es folgen die Evektion mit 31,81 Tagen Periode, die Variation mit 14,77 Tagen
 und die jährliche Gleichung mit 365,26 Tagen; die Perioden folgen aus den Raten der
 Fundamentalargumente ([Petit und Luzum 2010](literatur:petit-2010), Gl. 5.43). Die Punkte stehen
-für kleinere Glieder und die Reduktion der Bahnlänge auf die Ekliptik. Die Amplituden sind die der
-Hauptlösung ELP 2000-82B, 4586,43″, 2369,91″ und −666,44″, dazu 22 639,55″ oder 6,2888° für das
+für kleinere Glieder und die Reduktion der Bahnlänge auf die Ekliptik. Die Amplituden sind die des
+Hauptproblems der Lösung ELP 2000-82B, 4586,43″, 2369,91″ und −666,44″, dazu 22 639,55″ oder 6,2888° für das
 erste Glied der Mittelpunktsgleichung
 ([Chapront-Touzé und Chapront 1988](literatur:chapront-touze-1988)). Eine eigene Gegenprobe ergibt
 dieselben Werte: Die Differenz zwischen der geozentrischen Länge des Mondes in der Ephemeride DE441
@@ -351,8 +352,9 @@ erklärt auch, warum es weniger große Becken gibt als erwartet
   Störungen fehlen: Gegen DE441 weicht die Länge 1990 bis 2030 um bis zu 2,39° ab, im quadratischen
   Mittel um 1,03°, die Breite um bis zu 0,34° und der Abstand um bis zu 7010 km. In der Länge sind
   das fast ganz Evektion, Variation und jährliche Gleichung, im Abstand Evektion und Variation
-  (siehe Bahn); in der Breite ist es die Schwankung von Neigung und Knoten, Hauptglied
-  $0{,}173^\circ \sin(2D - F)$ mit dem mittleren Argument der Breite $F$
+  (siehe Bahn); in der Breite ist es vor allem die Schwankung von Neigung und Knoten, Hauptglied
+  $0{,}173^\circ \sin(2D - F)$ mit dem mittleren Argument der Breite $F$, und Evektion und Variation
+  tragen über die geneigte Bahn Glieder von 0,03° bis 0,06° bei
   ([Chapront-Touzé und Chapront 1988](literatur:chapront-touze-1988)). Die mittlere Länge driftet von
   1800 bis 2100 nicht. Die [Mondfinsternis](szene:mondfinsternis) trifft
   so bis zu 3 h daneben. Der Erdmittelpunkt sitzt im Erde-Mond-Schwerpunkt
