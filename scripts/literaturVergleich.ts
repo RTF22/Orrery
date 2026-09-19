@@ -204,6 +204,18 @@ export function auswahl(argv: readonly string[], katalog: readonly Publikation[]
 /** Vorübergehende Serverfehler, bei denen ein zweiter Versuch lohnt (ADS antwortet gelegentlich 504). */
 export const WIEDERHOLBARE_STATUS: ReadonlySet<number> = new Set([502, 503, 504]);
 
+/**
+ * Pause nach einem Abruf je Dienst. Die arXiv-API erlaubt höchstens eine
+ * Abfrage alle drei Sekunden (Nutzungsbedingungen der arXiv-API); mit 200 ms
+ * antwortete arXiv im Volllauf der Abnahme 4d-2 mit 429 (Schlussprüfung 4d-2,
+ * Befund M5). Ein 429 bleibt ein Fehler und wird nicht wiederholt.
+ */
+export const PAUSE_NACH_MS: Readonly<Record<Befund['pruefung'], number>> = {
+  crossref: 200,
+  arxiv: 3000,
+  url: 200,
+};
+
 const istZeitueberschreitung = (e: unknown): boolean =>
   typeof e === 'object' && e !== null && (e as { name?: unknown }).name === 'TimeoutError';
 

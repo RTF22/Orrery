@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
-  arxivEintragLesen, auswahl, crossrefJahre, jahrUrteil, mitWiederholung, normalisiere, pruefeArxiv, pruefeCrossref,
-  wortanteil, WIEDERHOLBARE_STATUS,
+  arxivEintragLesen, auswahl, crossrefJahre, jahrUrteil, mitWiederholung, normalisiere, PAUSE_NACH_MS, pruefeArxiv,
+  pruefeCrossref, wortanteil, WIEDERHOLBARE_STATUS,
 } from './literaturVergleich.ts';
 import type { Publikation } from '../src/data/literatur.ts';
 
@@ -239,5 +239,13 @@ describe('mitWiederholung', () => {
     const netz = folge([new TypeError('fetch failed')]);
     await expect(mitWiederholung(netz.abruf, async () => {}, [10])).rejects.toThrow('fetch failed');
     expect(netz.aufrufe()).toBe(1);
+  });
+});
+
+describe('PAUSE_NACH_MS', () => {
+  it('wartet nach arXiv mindestens drei Sekunden, nach Crossref und Adressen 200 ms (Schlussprüfung 4d-2, Befund M5)', () => {
+    expect(PAUSE_NACH_MS.arxiv).toBeGreaterThanOrEqual(3000);
+    expect(PAUSE_NACH_MS.crossref).toBe(200);
+    expect(PAUSE_NACH_MS.url).toBe(200);
   });
 });

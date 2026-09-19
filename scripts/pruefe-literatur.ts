@@ -6,7 +6,7 @@
  *   npm run literatur:pruefen -- --nur iess-2019,x     nur diese Einträge
  *
  * Braucht Netz, läuft nur von Hand, nicht in npm test. Abfragen nacheinander
- * mit Pause, ohne E-Mail-Adresse im Abruf. Vorübergehende Serverfehler (502,
+ * mit Pause (nach arXiv drei Sekunden, sonst 200 ms), ohne E-Mail-Adresse im Abruf. Vorübergehende Serverfehler (502,
  * 503, 504) und Zeitüberschreitungen wiederholt es bis zu zweimal nach 2 s
  * und 5 s. Exit-Code 1 bei mindestens einem Fehler; Warnungen allein ergeben
  * 0. Die Vergleiche stehen getestet in literaturVergleich.ts.
@@ -15,11 +15,10 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { LITERATUR } from '../src/data/literatur.ts';
 import type { Publikation } from '../src/data/literatur.ts';
-import { arxivEintragLesen, auswahl, mitWiederholung, pruefeArxiv, pruefeCrossref } from './literaturVergleich.ts';
+import { arxivEintragLesen, auswahl, mitWiederholung, PAUSE_NACH_MS, pruefeArxiv, pruefeCrossref } from './literaturVergleich.ts';
 import type { Befund, CrossrefWerk, Urteil } from './literaturVergleich.ts';
 
 const KOPF = { 'User-Agent': 'Orrery-Literaturpruefung' };
-const PAUSE_MS = 200;
 /** Zeitlimit je Abruf, damit ein hängender Dienst nicht die Standardgrenzen von undici ausreizt. */
 const ZEITLIMIT_MS = 30_000;
 
@@ -40,7 +39,7 @@ async function pruefe(p: Publikation): Promise<Befund[]> {
     } catch (e) {
       befunde.push(fehler('crossref', `nicht erreichbar: ${String(e)}`));
     }
-    await warte(PAUSE_MS);
+    await warte(PAUSE_NACH_MS.crossref);
   }
 
   if (p.arxiv !== undefined) {
@@ -54,7 +53,7 @@ async function pruefe(p: Publikation): Promise<Befund[]> {
     } catch (e) {
       befunde.push(fehler('arxiv', `nicht erreichbar: ${String(e)}`));
     }
-    await warte(PAUSE_MS);
+    await warte(PAUSE_NACH_MS.arxiv);
   }
 
   if (p.doi === undefined && p.arxiv === undefined && p.url !== undefined) {
@@ -72,7 +71,7 @@ async function pruefe(p: Publikation): Promise<Befund[]> {
     } catch (e) {
       befunde.push(fehler('url', `nicht erreichbar: ${String(e)}`));
     }
-    await warte(PAUSE_MS);
+    await warte(PAUSE_NACH_MS.url);
   }
   return befunde;
 }

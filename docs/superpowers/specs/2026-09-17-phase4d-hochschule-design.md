@@ -290,6 +290,11 @@ DOI ein Fehler. Das Jahr wird gegen arXiv nicht geprüft.
 weiter geprüft. Anlass: Beschlüsse und Berichte von Körperschaften (etwa `cgpm-2022`) stehen bei
 Crossref ohne Autorenfeld.
 
+**Nachtrag (4d-3):** Nach einem arXiv-Abruf wartet das Skript drei Sekunden, nach Crossref und
+Adressen weiter 200 ms (`PAUSE_NACH_MS` in `scripts/literaturVergleich.ts`). Anlass: Die
+Nutzungsbedingungen der arXiv-API erlauben höchstens eine Abfrage alle drei Sekunden, und im
+Volllauf der Abnahme 4d-2 antwortete arXiv einmal mit 429. Ein 429 bleibt ein Fehler.
+
 ## 5. Gestalt der Texte
 
 ### 5.1 Gliederung
