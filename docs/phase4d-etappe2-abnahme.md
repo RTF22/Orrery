@@ -402,18 +402,18 @@ des jeweiligen Tasks (siehe Abschnitt 2), Runden/Fehler/Hinweise aus den Fachpr�
 | Text | Wörter de/en | Belegzeilen | Zitate (Vorkommen/verschiedene Werke) | neue Katalogeinträge | Runden | Fehler gefunden/behoben | Hinweise offen (Entscheidung) |
 |---|---|---:|---|---:|---:|---|---|
 | `thema-bezugssysteme` (Task 3) | 3008 / 3335 | 110 | 51 / 20 | 14 | 3 (Fachprüfung, 2 Nachprüfungen) + Gegenprüfung | 4/4 (F1 BCRS-Präsens, F2 „Im Modell"-Rahmen, F-R3-1 JPL-Fehlerbereich, F-R3-2 unmaskiertes `\|`) | Schaltsekunden-Absatz nach der 28. CGPM (13.–15.10.2026) nachführen? (Frage an Jens, §8) |
-| `thema-gezeiten` (Task 4) | 3586 / 3927<sup>†</sup> | 121 | 71 / 31 | 26 (27 eingeführt, `bagheri-2026` in Runde 2 wieder entfernt) | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 2/2 (F1 Titan k_f/k₂-Verwechslung Planet↔gebundener Mond, F2 Gladman-Zitat ungeöffnet) | keine |
+| `thema-gezeiten` (Task 4) | 3253 / 3555 | 121 | 71 / 31 | 26 (27 eingeführt, `bagheri-2026` in Runde 2 wieder entfernt) | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 2/2 (F1 Titan k_f/k₂-Verwechslung Planet↔gebundener Mond, F2 Gladman-Zitat ungeöffnet) | keine |
 | `thema-resonanzen` (Task 5) | 2371 / 2567 | 89 | 46 / 23 | 21 | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 2/2 (2:1-Lücke: erst „nur innere Flanke", dann „von der oberen Grenze angeschnitten") | Streubreite 7:3 bewusst nicht vereinheitlicht — zwei richtige, unterschiedliche Messmethoden nebeneinander in Belegzeile 81 (Ruling, kein Fehler); H6 (neuere Pluto-Integrationen ~82°/23°) bewusst nicht umgesetzt, bräuchte neuen Katalogeintrag |
 | `thema-innerer-aufbau` (Task 6) | 3899 / 4274<sup>†</sup> | 121 | 84 / 28 | 22 | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 1/1 (F1 fluide Love-Zahl gilt nicht für gebunden rotierende Monde wie Titan) | Wortzahl en 4274 über der Obergrenze 4000 (§8) |
-| `thema-photometrie` (Task 7) | 3573 / 3912 | 128 | 76 / 25 | 23 | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 1/1 (F1 Fresnel-Reflexion am Halbvektor statt am Phasenwinkel) | keine |
+| `thema-photometrie` (Task 7) | 3586 / 3927 | 128 | 76 / 25 | 23 | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 1/1 (F1 Fresnel-Reflexion am Halbvektor statt am Phasenwinkel) | keine |
 | `thema-entstehung` (Task 8) | 3677 / 4024<sup>†</sup> | 117 | 89 / 49 | 42 | 3 (Fachprüfung, Nachprüfung) + Gegenprüfung | 2/2 (F1 St=1-Korngröße nur für MMSN gültig gemacht, F2 veraltete gleiche ¹⁸²W/¹⁸⁴W-Anomalie) | Wortzahl en 4024 über der Obergrenze 4000 (§8); Prüfskript scheitert am Titel von Brennecka 2010 (Ursache offen, betrifft nicht diesen Text direkt, da nicht im Katalog) |
 
 <sup>†</sup> Wortzahl: Richtwert für Themen 1500–4000 Wörter je Fassung (Entwurf §5.2 nach Zwischen-Task
-2b, siehe Task-10-Ergänzung); `thema-photometrie` liegt mit 3573/3912 knapp darunter, die drei mit
-† markierten Texte liegen englisch über 4000 (`thema-gezeiten` 3927 knapp darunter, `thema-innerer-aufbau`
-4274 und `thema-entstehung` 4024 darüber). Alle sechs Texte sind länger als der ursprüngliche
-Richtwert 1000–2000, dessen Anhebung Jens am 18.09.2026 ausdrücklich veranlasst hat (Ledger,
-Zwischen-Task 2b).
+2b, siehe Task-10-Ergänzung); `thema-photometrie` liegt mit 3586/3927 englisch am nächsten an der
+Obergrenze, aber noch knapp darunter. Die zwei mit † markierten Texte liegen englisch über 4000
+(`thema-innerer-aufbau` 4274 und `thema-entstehung` 4024). Alle sechs Texte sind länger als der
+ursprüngliche Richtwert 1000–2000, dessen Anhebung Jens am 18.09.2026 ausdrücklich veranlasst hat
+(Ledger, Zwischen-Task 2b).
 
 „Runden" zählt wie in der Abnahme 4d-1 die tatsächlich durchlaufenen Prüfrunden bis zum ersten
 Fehler-freien Zustand plus die abschließende, unabhängige Gegenprüfung (Modellwechsel opus→sonnet).
@@ -439,30 +439,43 @@ Funktionsanwendungs-Operator U+2061 (`funktionsanwendung: 1`), exakt an den vorg
 beides wie erwartet.
 
 Für die Pixelmessung wurde die Formel auf 400 % Schriftgröße vergrößert (`em` = 56 px, `dpr` = 1)
-und in zwei Aufnahmen verglichen (`.playwright-mcp/4d2-sin-mit.png`,
-`.playwright-mcp/4d2-sin-ohne.png`, beide vor dem Commit gelöscht), ausgewertet mit
-`messung_sin.py`:
+und in zwei Aufnahmen verglichen, ausgewertet mit einem Messskript
+(`.playwright-mcp/messung_sin2.py`, Screenshots `.playwright-mcp/4d2-sin-mit2.png`/
+`4d2-sin-ohne2.png`, alle drei vor dem Commit gelöscht).
+
+**Erste Messung (absolute Position von „E"), widerlegt:** Die ursprüngliche Messung verglich nur
+die absolute `x`-Position von „E" mit und ohne die beiden `mspace`-Leerräume und maß dabei nur rund
+die Hälfte der erwarteten Verschiebung (Tinte 10 px, DOM 9,3 px statt erwarteter 18,7 px). Ursache,
+durch Nachmessen bestätigt: `<math display="block">` setzt den Formelinhalt in der unveränderten
+Blockbox zentriert (`block.x` bleibt bei jeder Variante exakt `1921`, `block.w` exakt `599`). Beim
+Nullsetzen beider Leerräume wird der jetzt schmalere Inhalt neu zentriert: „M" wandert um +9,33 px
+nach rechts, „E" um −9,33 px nach links, „sin" bleibt an Ort und Stelle — macht in Summe die volle
+Verschiebung von 18,66 px, aber aufgeteilt auf beide Enden der zentrierten Box. Eine Messung, die
+nur ein Ende (E) absolut abliest, sieht deshalb systembedingt nur die Hälfte, unabhängig vom
+Browser. Die in der ersten Fassung dieses Protokolls daraus gefolgerte Chrome-eigene
+Abstandsregel vor Funktionsnamen entfällt damit als Erklärung; sie war ein Messfehler der Vorlage
+(absolute statt relative Messung in einer zentrierten Box), kein Befund über den Browser.
+
+**Zweite Messung (relativer Abstand M → E), maßgeblich:** In derselben Ladung wurde stattdessen der
+Abstand vom ersten zum letzten `mi`-Knoten der Formel (`M` zu `E`) gemessen, DOM und — soweit über
+die Screenshots möglich — auch in der Tinte:
 
 ```
-Verschiebung Tinte (px): 10   DOM (px): 9.3   erwartet (px): 18.7
+M->E Abstand mit (Tinte px): 340   ohne: 321   Verschiebung: 19
+M->E Abstand mit (DOM px): 339.62   ohne: 320.97   Verschiebung: 18.66
+erwartet (px): 18.67
+Abweichung Tinte (%): 1.8
+Abweichung DOM (%): -0.1
 ```
 
-**Beide Kriterien (Tinte und DOM je innerhalb ±15 % von 18,7 px) sind wie gemessen nicht erfüllt** —
-gemessen wird nur rund die Hälfte. Ursache untersucht, nicht geraten: Drei unabhängige Gegenproben
-(Attribut `width="0"` per `setAttribute` mit erzwungenem Reflow; vollständiges `remove()` beider
-`<mspace>`-Knoten; kompletter Neuaufbau des Formel-Teilbaums über `innerHTML`-Ersetzung mit
-bestätigten zwei Fundstellen) ergaben übereinstimmend: Der Leerraum **vor** „sin" (zwischen `e` und
-`sin`) hat in Chrome keine messbare Wirkung auf die Position von „sin" — dessen `x` bleibt in jeder
-Variante exakt `2285.109375`, mit oder ohne diesen Leerraum. Der Leerraum **nach** dem unsichtbaren
-Operator (zwischen „⁡" und „E") wirkt dagegen voll: „E" wandert exakt um eine Leerraumbreite
-(9,33 px bei 56 px Schriftgröße = 0,1667 em). Deutung: Chrome scheint für als Funktionsname
-erkannte mehrbuchstabige `<mi>`-Knoten („sin") von sich aus einen Mindestabstand
-(„thinmathspace", zufällig ebenfalls 0,1667 em) vor dem Zeichen durchzusetzen, unabhängig vom
-expliziten `mspace` des Übersetzers — die vom Code eingefügte Leerstelle vor „sin" ist für das
-sichtbare Ergebnis in diesem Browser redundant (er liefert sie ohnehin), die Leerstelle danach ist
-es nicht. Strukturell ist der Code exakt wie vorgesehen umgesetzt; das Pixelkriterium der Vorlage
-nimmt eine Additivität beider Leerräume an, die es in Chrome so nicht gibt. Frage an Jens in
-Abschnitt 8.
+**Beide Kriterien (Tinte und DOM je innerhalb ±15 % von 18,7 px) sind damit erfüllt** (Abweichung
+1,8 % bzw. −0,1 %). Rohwerte: `M` `{x: 2025,6875}` → ohne `{x: 2035,015625}` (+9,328125 px), `E`
+`{x: 2365,3125}` → ohne `{x: 2355,984375}` (−9,328125 px), „sin" unverändert — exakt die in der
+ersten Messung beobachtete Aufteilung, hier aber korrekt zur vollen Verschiebung zusammengezählt.
+Strukturell ist der Code ohnehin exakt wie vorgesehen (2 `mspace`, 1 U+2061, siehe oben); jetzt
+bestätigt auch die Pixelmessung den TeX-Abstand. Berichtigung für Abschnitt 7 und 8: Die
+Messvorlage des Plans soll für künftige Etappen relativ (erster zu letztem betroffenen Token)
+statt absolut in einer zentrierten Box messen (Hinweis statt Frage, siehe Abschnitt 8).
 
 ### 5.2 Hinweis „nur Hochschule"
 
@@ -665,12 +678,15 @@ nicht unbemerkt geblieben.
 
 **Aus dieser Abnahme:**
 
-- Formelsatz-Kriterium „Tinten-/DOM-Verschiebung je innerhalb ±15 % von 18,7 px" nicht erfüllt
-  (gemessen rund 9–10 px, die Hälfte) — Ursache mit drei unabhängigen Gegenproben auf einen
-  Chrome-eigenen Mindestabstand vor als Funktionsname erkannten `<mi>`-Knoten zurückgeführt, der die
-  vom Übersetzer eingefügte Leerstelle vor „sin" für das sichtbare Ergebnis redundant macht
-  (Abschnitt 5.1). Struktur des Codes ist exakt wie vorgesehen (2 `mspace`, 1 U+2061). Frage an
-  Jens in Abschnitt 8.
+- Formelsatz-Kriterium „Tinten-/DOM-Verschiebung je innerhalb ±15 % von 18,7 px": Die erste,
+  absolute Messung der Position von „E" erfüllte es nicht (gemessen rund 9–10 px, die Hälfte),
+  weil `<math display="block">` den Inhalt in einer unveränderten, zentrierten Blockbox setzt und
+  eine schmalere Formel beidseitig neu zentriert (M +9,33 px, E −9,33 px). Die relative Messung
+  vom ersten zum letzten `mi`-Knoten (M → E) zeigt die volle Verschiebung (Tinte 19 px, DOM
+  18,66 px, Abweichung 1,8 % bzw. −0,1 % von 18,7 px) und **erfüllt beide Kriterien** (Abschnitt
+  5.1). Die ursprüngliche Deutung einer Chrome-eigenen Abstandsregel vor Funktionsnamen war ein
+  Messfehler der Vorlage (absolute statt relative Messung), kein Browserbefund — für künftige
+  Etappen soll die Messvorlage relativ messen (Hinweis in Abschnitt 8).
 - Konsole der Sitzung zeigt drei Warnungen (`requestFullscreen` ohne Nutzergeste), ursächlich ein
   Artefakt der drei skriptgestützten Szenenstarts dieser Sichtprüfung, durch Gegenprobe mit echtem
   Klick widerlegt als Anwendungsfehler (Abschnitt 5.4), wie bereits in 4d-1 festgestellt.
@@ -722,13 +738,14 @@ nicht unbemerkt geblieben.
 
 ## 8. Halt: Fragen an Jens
 
-1. **Formelsatz-Kriterium Tinten-/DOM-Verschiebung** (Abschnitt 5.1): Bei Originalgröße erfüllt
-   keines der beiden Kriterien die ±15-%-Marke, weil Chrome vor „sin" von sich aus einen
-   Mindestabstand setzt, der die vom Übersetzer eingefügte Leerstelle dort redundant macht (drei
-   Gegenproben bestätigen das). Strukturell ist der Code korrekt (2 `mspace`, 1 U+2061); das
-   sichtbare Ergebnis stimmt. Reicht das als Abnahme, oder soll die Messvorlage für künftige
-   Etappen angepasst werden (z. B. nur die Leerstelle nach dem Operator prüfen, da nur die additiv
-   ist)?
+1. **Hinweis, keine Frage — Formelsatz-Kriterium Tinten-/DOM-Verschiebung** (Abschnitt 5.1): Die
+   relative Messung vom ersten zum letzten `mi`-Knoten (M → E) bestätigt den TeX-Abstand vollständig
+   (Abweichung 1,8 % Tinte / −0,1 % DOM von 18,7 px, beide innerhalb ±15 %). Die zunächst gemessene
+   Abweichung kam von einer absoluten Positionsmessung von „E" allein, die die Zentrierung der
+   `<math display="block">`-Box nicht berücksichtigte (eine schmalere Formel wird beidseitig neu
+   zentriert, nicht nur am rechten Ende verschoben). Für künftige Etappen soll die Messvorlage
+   grundsätzlich den Abstand zwischen erstem und letztem betroffenen Token messen (relativ),
+   nicht die absolute Position eines einzelnen Endes in einer zentrierten Box.
 2. **Schaltsekunden-Absatz in `thema-bezugssysteme`**: Der Text ist nach dem heutigen Stand der
    28. CGPM (13.–15.10.2026 in Versailles) formuliert, die Abstimmung selbst hat noch nicht
    stattgefunden. Nach der Sitzung nachführen?
