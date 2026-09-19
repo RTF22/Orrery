@@ -1,9 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import {
   positionAt, AU_KM, umlaufzeitTage, achsneigungDeg, ellipsenStuetzen, bahnellipseRelativKm,
+  elementsAt,
 } from './orbit';
 import { bodies, bodyIndex, getBody } from '../data/index';
-import { J2000 } from './time';
+import { J2000, JD_MIN, JD_MAX } from './time';
 
 const betrag = (v: { x: number; y: number; z: number }) =>
   Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
@@ -180,5 +181,28 @@ describe('bahnellipseRelativKm (momentane Bahnellipse)', () => {
   it('liefert für die Sonne keine Ellipse', () => {
     const ziel = new Float64Array((N + 1) * 3);
     expect(bahnellipseRelativKm('sun', bodyIndex, J2000, stuetzen, ziel)).toBe(false);
+  });
+});
+
+describe('Zeitbereich', () => {
+  // e, a und i sind linear in der Zeit: Liegen sie an beiden Rändern im
+  // gültigen Bereich, dann überall dazwischen.
+  it('hält jede fortgeschriebene Exzentrizität an beiden Rändern in [0, 1)', () => {
+    for (const body of bodies) {
+      if (body.orbit === null) continue;
+      for (const jd of [JD_MIN, JD_MAX]) {
+        const { e } = elementsAt(body.orbit, jd);
+        expect(e, `${body.id} bei jd ${jd}`).toBeGreaterThanOrEqual(0);
+        expect(e, `${body.id} bei jd ${jd}`).toBeLessThan(1);
+      }
+    }
+  });
+
+  it('rechnet jede Position an beiden Rändern', () => {
+    for (const body of bodies) {
+      for (const jd of [JD_MIN, JD_MAX]) {
+        expect(() => positionAt(body.id, bodyIndex, jd), `${body.id} bei jd ${jd}`).not.toThrow();
+      }
+    }
   });
 });

@@ -1,6 +1,21 @@
 /** Julianisches Datum der Epoche J2000.0 (2000-01-01 12:00 UTC). */
 export const J2000 = 2451545.0;
 
+/**
+ * Zeitbereich, in dem Orrery rechnet: vom Julianischen Tag 0 (4713 v. Chr.)
+ * bis zum 31. Dezember 9999, 0 Uhr UTC. Die linear fortgeschriebenen
+ * Bahnelemente bleiben darin gültig — jenseits davon würde etwa Saturns
+ * Exzentrizität im Jahr 12 563 negativ, und der Kepler-Löser wiese sie zurück.
+ * Store, Prüfer und Bildschleife klemmen auf diesen Bereich.
+ */
+export const JD_MIN = 0;
+export const JD_MAX = 5373483.5;
+
+/** Klemmt einen Julianischen Tag auf den Zeitbereich [JD_MIN, JD_MAX]. */
+export function imZeitbereich(jd: number): number {
+  return Math.min(Math.max(jd, JD_MIN), JD_MAX);
+}
+
 /** Millisekunden pro Tag. */
 const MS_PRO_TAG = 86_400_000;
 

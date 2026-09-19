@@ -3,6 +3,7 @@ import { SCALE_PRESETS } from '../sim/scale';
 import { bodyIndex } from '../data';
 import { istThema, NIVEAUS } from '../data/themen';
 import { INFO_BREITE_MAX_REM, INFO_BREITE_MIN_REM, INFO_TEILUNG_MAX, INFO_TEILUNG_MIN } from './types';
+import { JD_MIN, JD_MAX } from '../sim/time';
 
 export type Plain = Record<string, unknown>;
 
@@ -50,13 +51,13 @@ const BOOLESCHE_RECORDS: ReadonlySet<string> = new Set(['visible', 'ui.panels'])
  * hier noch einmal; wer dort eine Grenze ändert, zieht sie hier nach. Ein
  * Wert außerhalb fällt weg wie jedes andere ungültige Feld — nicht
  * eingeklemmt, damit ein Eintrag aus einer Datei nie stillschweigend einen
- * anderen Wert bekommt als den, der darin steht. Die Obergrenze der
- * Julianischen Tage deckt das Datumsfeld ab (Jahr 275760 liegt bei rund
- * 1,03e8). `camera.azimuth` (Winkel ohne Grenze, wickelt um) und
- * `cinema.seed` (beliebige ganze Zahl) bleiben bewusst ohne Eintrag hier.
+ * anderen Wert bekommt als den, der darin steht. Julianische Tage begrenzt
+ * der Zeitbereich aus sim/time.ts (JD 0 bis 31. Dezember 9999).
+ * `camera.azimuth` (Winkel ohne Grenze, wickelt um) und `cinema.seed`
+ * (beliebige ganze Zahl) bleiben bewusst ohne Eintrag hier.
  */
 const BEREICHE: Readonly<Record<string, readonly [number, number]>> = {
-  'time.jd': [0, 2e8],
+  'time.jd': [JD_MIN, JD_MAX],
   'time.rateDaysPerSec': [-365250, 365250],
   'scale.sizeScale': [1, 1000],
   'scale.distanceExponent': [0.35, 1],
@@ -67,7 +68,7 @@ const BEREICHE: Readonly<Record<string, readonly [number, number]>> = {
   'display.lightCompensation': [0, 1],
   'camera.distance': [1e2, 1e13],
   'camera.elevation': [-Math.PI / 2, Math.PI / 2],
-  'camera.freezeJd': [0, 2e8],
+  'camera.freezeJd': [JD_MIN, JD_MAX],
   'cinema.nummer': [0, 1e6],
   'cinema.elapsedSec': [0, 1e7],
   'cinema.idleResumeSec': [1, 3600],

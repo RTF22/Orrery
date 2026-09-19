@@ -87,6 +87,7 @@ export function TimePanel(): React.JSX.Element {
           <input
             id={datumId}
             type="date"
+            max="9999-12-31"
             className="rounded border border-white/15 bg-transparent px-2 py-1"
             value={jdZuFeldwert(zeit.jd)}
             onChange={(e) => {

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import type { AppState } from './types';
 import { SCALE_PRESETS } from '../sim/scale';
-import { J2000 } from '../sim/time';
+import { J2000, imZeitbereich } from '../sim/time';
 
 export const DEFAULT_STATE: AppState = {
   time: { jd: J2000, rateDaysPerSec: 1, paused: false },
@@ -64,7 +64,11 @@ interface Actions {
  */
 export const useStore = create<AppState & Actions>((set) => ({
   ...structuredClone(DEFAULT_STATE),
-  setTime: (p) => set((s) => ({ time: { ...s.time, ...p } })),
+  // Jede Zeit, die über die Oberfläche hereinkommt (Datumsfeld, „Jetzt",
+  // Kino), bleibt im Zeitbereich (sim/time.ts).
+  setTime: (p) => set((s) => ({
+    time: { ...s.time, ...p, ...(p.jd === undefined ? {} : { jd: imZeitbereich(p.jd) }) },
+  })),
   setScale: (p) => set((s) => ({ scale: { ...s.scale, ...p } })),
   setDisplay: (p) => set((s) => ({ display: { ...s.display, ...p } })),
   setCamera: (p) => set((s) => ({ camera: { ...s.camera, ...p } })),

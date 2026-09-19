@@ -41,4 +41,10 @@ describe('TimePanel', () => {
     render(<TimePanel />);
     expect(screen.getByText(/ungenau/)).toBeTruthy();
   });
+
+  it('begrenzt das Datumsfeld auf das Jahr 9999', () => {
+    render(<TimePanel />);
+    const feld = screen.getByLabelText(/Datum/) as HTMLInputElement;
+    expect(feld.max).toBe('9999-12-31');
+  });
 });

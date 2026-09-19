@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { J2000, dateToJd, jdToDate, centuriesSinceJ2000 } from './time';
+import {
+  J2000, dateToJd, jdToDate, centuriesSinceJ2000, JD_MIN, JD_MAX, imZeitbereich,
+} from './time';
 
 describe('Julianisches Datum', () => {
   it('bildet die Epoche J2000.0 auf 2451545.0 ab', () => {
@@ -35,5 +37,21 @@ describe('Julianisches Datum', () => {
   it('liefert bei J2000 null Jahrhunderte', () => {
     expect(centuriesSinceJ2000(J2000)).toBeCloseTo(0, 12);
     expect(centuriesSinceJ2000(J2000 + 36525)).toBeCloseTo(1, 12);
+  });
+});
+
+describe('Zeitbereich', () => {
+  it('reicht vom Julianischen Tag 0 bis zum 31. Dezember 9999', () => {
+    expect(JD_MIN).toBe(0);
+    expect(JD_MAX).toBe(5373483.5);
+    expect(jdToDate(JD_MAX).toISOString()).toBe('9999-12-31T00:00:00.000Z');
+  });
+
+  it('klemmt auf den Bereich und lässt Werte darin unverändert', () => {
+    expect(imZeitbereich(-1)).toBe(JD_MIN);
+    expect(imZeitbereich(JD_MAX + 1)).toBe(JD_MAX);
+    expect(imZeitbereich(JD_MIN)).toBe(JD_MIN);
+    expect(imZeitbereich(JD_MAX)).toBe(JD_MAX);
+    expect(imZeitbereich(2461300.5)).toBe(2461300.5);
   });
 });
