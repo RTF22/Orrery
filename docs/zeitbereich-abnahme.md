@@ -10,6 +10,8 @@ Branch `zeitbereich` (von `master` b24fc6a). Plan `docs/superpowers/plans/2026-0
 - 65ec67c — Bildschleife hält am Rand des Zeitbereichs an und übersteht Ausnahmen
 - 70a02c2 — Hochschultext Entstehung: Zeitbereich statt Absturz im Modell
 - 9ebba4f — Kino: Zeitsprung zur Mondfinsternis bleibt im Zeitbereich
+- 46c7319 — Datumsfeld: Jahre vor 1 und nach 9999 leer statt ungültig (Fix-Runde 1 zu
+  dieser Abnahme, siehe §5)
 
 Ursache: Die JPL-Bahnelemente werden in `elementsAt` linear über die Zeit fortgeschrieben;
 bei weit entfernten Jahren wird dadurch zum Beispiel Saturns Exzentrizität negativ, `solveKepler`
@@ -20,13 +22,15 @@ und Sitzung werden auf diesen Bereich geprüft, die Bahnrechnung selbst bleibt u
 
 ## 2. Lint, Tests, Build
 
-- `npm run lint`: `eslint .` ohne Ausgabe, kein Befund.
-- `npm test`: Test Files 93 passed (93); Tests 3678 passed (3678).
-- `npm run build`: `✓ built in 643ms`, nur der bekannte Hinweis zu Chunkgrößen über 500 kB.
+- `npm run lint`: `eslint .` ohne Ausgabe, kein Befund (nach 9ebba4f und erneut nach 46c7319).
+- `npm test`: Test Files 93 passed (93); Tests 3682 passed (3682).
+- `npm run build`: `✓ built in 643ms` nach 9ebba4f, `✓ built in 703ms` nach 46c7319 — beide Male
+  nur der bekannte Hinweis zu Chunkgrößen über 500 kB.
 
 Testzahl-Herleitung: Ausgangsstand 3665 → 3673 nach 6566e32 (+8, Task 1) → 3677 nach 65ec67c
 (+4, Task 2) → 3677 nach 70a02c2 (unverändert, Task 3) → 3678 nach 9ebba4f (+1, Fix-Runde 1 zu
-Task 1: Testfall für den Kino-Zeitsprung).
+Task 1: Testfall für den Kino-Zeitsprung) → 3682 nach 46c7319 (+4, Fix-Runde 1 zu dieser Abnahme:
+Testfälle für `jdZuDatumsfeld`).
 
 ## 3. Sichtprüfung
 
@@ -34,15 +38,20 @@ Task 1: Testfall für den Kino-Zeitsprung).
 |---|---|
 | Zeitraffer oben (Start JD_MAX − 3650, 365 250 d/s): `jd` nach Anschlag | 5 373 483,5 |
 | Zeitraffer oben: `paused` | true |
-| Zeitraffer oben: Bilder/s nach dem Anschlag | 1033 (> 30) |
+| Zeitraffer oben: Bilder/s nach dem Anschlag (eigener `requestAnimationFrame`-Zähler, 1 s) | 60 (> 30) |
 | Zeitraffer unten (Start 3650, −365 250 d/s): `jd` nach Anschlag | 0 |
 | Zeitraffer unten: `paused` | true |
-| Zeitraffer unten: Bilder/s nach dem Anschlag | 1016 (> 30) |
+| Zeitraffer unten: Bilder/s nach dem Anschlag (eigener `requestAnimationFrame`-Zähler, 1 s) | 60 (> 30) |
 | Datumsfeld `max` | `9999-12-31` |
-| Konsolenfehler seit dem Navigieren | 0 (4 Warnungen, siehe §5) |
+| Datumsfeld-Wert bei `jd = 0` (nach Fix-Runde 1, siehe §5) | `''` (leer) |
+| Datumsfeld-Wert bei `jd = JD_MAX` | `9999-12-31` |
+| Konsolenfehler seit dem Navigieren | 0 |
+| Neue Konsolenwarnung bei `jd = 0` (nach Fix-Runde 1) | keine |
 
-Die Bildrate stammt aus `window.renderer.info.render.frame`, das in beiden Fällen zuverlässig
-hochzählte; ein eigener `requestAnimationFrame`-Zähler war nicht nötig.
+`window.renderer.info.render.frame` zählt Renderdurchgänge, nicht Bilder — der Composer rendert
+mehrere Durchgänge je Bild (in derselben Ladung gemessen: rund 1020 Durchgänge/s gegenüber 60
+Bildern/s mit dem `requestAnimationFrame`-Zähler, Faktor rund 17). Maßgeblich für das Kriterium
+„über 30" ist die Bildzahl aus dem `requestAnimationFrame`-Zähler.
 
 ## 4. Rulings der Umsetzung
 
@@ -57,8 +66,14 @@ hochzählte; ein eigener `requestAnimationFrame`-Zähler war nicht nötig.
   würde weiterhin das nächste Bild verhindern (so im Plan vorgesehen). Die Unterdrückung
   wiederholter, gleicher Meldungen gilt für die gesamte Lebensdauer der Schleife, auch nach
   einer Erholung.
-- Am unteren Rand (Jahr 4713 v. Chr.) protokolliert der Browser beim Setzen des Datumsfelds eine
-  Formatwarnung für das fünfstellige negative Jahr; das Feld bleibt bedienbar, es handelt sich
-  nicht um einen Fehler (siehe §3, 0 Fehler).
+- Eigener Befund dieser Abnahme, behoben (Commit 46c7319): Die frühere Umrechnung des
+  Datumsfelds schnitt `toISOString()` auf zehn Zeichen zu. Bei negativem Jahr fehlte darin der
+  Tag (z. B. „-004713-11" statt eines vollständigen Datums), der Browser verwarf den Wert, das
+  Feld blieb leer und protokollierte eine Formatwarnung. Der Fehler bestand unabhängig von
+  dieser Etappe, trat aber am unteren Rand des jetzt weiteren Zeitbereichs (4713 v. Chr.) häufiger
+  auf. Die Umrechnung ist jetzt die reine Funktion `jdZuDatumsfeld` in `src/ui/format.ts`: Sie
+  liefert `''` für Jahre (UTC) außerhalb 1 bis 9999 — `<input type="date">` kann Jahre vor 1
+  grundsätzlich nicht darstellen. Nachgeprüft: bei `jd = 0` bleibt das Feld leer, ohne neue
+  Konsolenwarnung.
 
 Trailer- und Wortprüfung nach der lokalen Projektanleitung durchgeführt, Ergebnis 0.
