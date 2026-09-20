@@ -195,6 +195,13 @@ Autoren, von denen der erste eine Körperschaft ist, listet sie als getrennte Ei
 (`['Gaia Collaboration', 'Klioner, S. A.', 'Lindegren, L.']`), nicht als einen Behelfstext mit
 zwei Kommas.
 
+**Nachtrag (4d-4):** Ein Vorabdruck (Eintrag mit `arxiv`, ohne `doi`) trägt im
+sprachunabhängigen Feld `erschienen` nur `'arXiv'`; die Karte hängt „Vorabdruck"
+beziehungsweise „Preprint" in der Sprache der Oberfläche an, die Nummer steht im Feld `arxiv`
+(Test in `literatur.test.ts`). Laufend gepflegte Seiten ohne Erscheinungsdatum (etwa
+`usno-2026`, `silso-2026`) tragen als `jahr` das Zugriffsjahr, die Kennung folgt ihm. Beides
+entschieden nach Abnahme 4d-3 §8.
+
 ### 4.2 Verweis `literatur:`
 
 - `data/verweise.ts`: `Verweis` bekommt `{ art: 'literatur'; publikation: Publikation }`;

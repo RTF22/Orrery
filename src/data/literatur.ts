@@ -462,7 +462,7 @@ export const LITERATUR: readonly Publikation[] = [
     etAl: false,
     jahr: 1988,
     titel: 'Lunar Solution ELP 2000-82B',
-    erschienen: 'CDS catalogue VI/79, Strasbourg; Astronomy and Astrophysics 124, 50 (1983) and 190, 342 (1988)',
+    erschienen: 'CDS catalogue VI/79, Strasbourg; Astronomy and Astrophysics 124, 50 (1983) und 190, 342 (1988)',
     url: 'https://cdsarc.cds.unistra.fr/viz-bin/cat/VI/79',
   },
   {
@@ -1717,7 +1717,7 @@ export const LITERATUR: readonly Publikation[] = [
     etAl: false,
     jahr: 2021,
     titel: 'Lunar Eclipse Phenomena: Modeled and Explained',
-    erschienen: 'arXiv-Vorabdruck 2112.08966',
+    erschienen: 'arXiv',
     arxiv: '2112.08966',
   },
   {
@@ -2199,7 +2199,8 @@ export const LITERATUR: readonly Publikation[] = [
     etAl: true,
     jahr: 2026,
     titel: 'Trans-Neptunian Binary Mutual Events in the 2020s and 2030s',
-    erschienen: 'arXiv-Vorabdruck 2603.05394, angenommen bei The Astrophysical Journal Letters',
+    erschienen: 'The Astrophysical Journal Letters 1001, L4',
+    doi: '10.3847/2041-8213/ae4faf',
     arxiv: '2603.05394',
   },
   {

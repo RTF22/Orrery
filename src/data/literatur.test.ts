@@ -89,6 +89,12 @@ describe('Literaturkatalog (Entwurf 4d §4.4)', () => {
     const abgelehnt = ['muster', 'A', 'AB', 'Müller,A.'];
     for (const autor of abgelehnt) expect(autor).not.toMatch(AUTOR_MUSTER);
   });
+
+  it('nennt bei Vorabdrucken im sprachunabhängigen Feld erschienen nur „arXiv" (Abnahme 4d-3 §8)', () => {
+    for (const p of LITERATUR.filter(istPreprint)) {
+      expect(p.erschienen, p.id).toBe('arXiv');
+    }
+  });
 });
 
 describe('Hilfsfunktionen des Literaturkatalogs', () => {
