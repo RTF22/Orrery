@@ -2501,6 +2501,15 @@ export const LITERATUR: readonly Publikation[] = [
     arxiv: '1307.0136',
   },
   {
+    id: 'nssdc-newhorizons-2026',
+    autoren: ['NSSDC'],
+    etAl: false,
+    jahr: 2026,
+    titel: 'New Horizons (NSSDC Master Catalog, spacecraft details)',
+    erschienen: 'NASA Space Science Data Coordinated Archive, as of September 2026',
+    url: 'https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=2006-001A',
+  },
+  {
     id: 'ohta-2016',
     autoren: ['Ohta, K.', 'Kuwayama, Y.', 'Hirose, K.'],
     etAl: true,
@@ -2887,6 +2896,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.3847/1538-3881/aaae01',
   },
   {
+    id: 'smith-1979',
+    autoren: ['Smith, B. A.', 'Soderblom, L. A.', 'Johnson, T. V.'],
+    etAl: true,
+    jahr: 1979,
+    titel: 'The Jupiter System Through the Eyes of Voyager 1',
+    erschienen: 'Science 204, 951–972',
+    doi: '10.1126/science.204.4396.951',
+  },
+  {
     id: 'smith-2001',
     autoren: ['Smith, D. E.', 'Zuber, M. T.', 'Frey, H. V.'],
     etAl: true,
@@ -2931,6 +2949,15 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'Rotation and Heating of the Planet Mercury',
     erschienen: 'Nature 214, 1315–1316',
     doi: '10.1038/2141315a0',
+  },
+  {
+    id: 'spencer-2007',
+    autoren: ['Spencer, J. R.', 'Stern, S. A.', 'Cheng, A. F.'],
+    etAl: true,
+    jahr: 2007,
+    titel: 'Io Volcanism Seen by New Horizons: A Major Eruption of the Tvashtar Volcano',
+    erschienen: 'Science 318, 240–243',
+    doi: '10.1126/science.1147621',
   },
   {
     id: 'staehler-2021',
