@@ -60,9 +60,10 @@ Pilottexte (Bahnelemente, Erde, Mondfinsternis); Etappe 2 die sechs
 Fachthemen (Bezugssysteme und Zeitskalen, Gezeiten, Bahnresonanzen, innerer
 Aufbau, Albedo und Helligkeit, Entstehung des Sonnensystems); Etappe 3 Sonne,
 Mond, Finsternisse, gebundene Rotation und die Szenen „Der Tanz des Mondes"
-und „Sonnenaufgang über dem Erdrand". Offen sind die übrigen Hochschultexte
-(Etappen 4d-4 bis 4d-11) und Phase 5 (Ambient-Sound, Qualitätsstufen,
-Texturkompression, Veröffentlichung).
+und „Sonnenaufgang über dem Erdrand"; Etappe 4 Merkur, Venus, Mars, Phobos,
+Deimos und die Szenen „Merkur auf der Innenbahn" und „Tiefflug über Phobos".
+Offen sind die übrigen Hochschultexte (Etappen 4d-5 bis 4d-11) und Phase 5
+(Ambient-Sound, Qualitätsstufen, Texturkompression, Veröffentlichung).
 
 ## Entwicklung
 
