@@ -32,6 +32,15 @@ export interface Publikation {
 
 export const LITERATUR: readonly Publikation[] = [
   {
+    id: 'acuna-1999',
+    autoren: ['Acuña, M. H.', 'Connerney, J. E. P.', 'Ness, N. F.'],
+    etAl: true,
+    jahr: 1999,
+    titel: 'Global Distribution of Crustal Magnetization Discovered by the Mars Global Surveyor MAG/ER Experiment',
+    erschienen: 'Science 284, 790–793',
+    doi: '10.1126/science.284.5415.790',
+  },
+  {
     id: 'agnew-2024',
     autoren: ['Agnew, D. C.'],
     etAl: false,
@@ -85,6 +94,15 @@ export const LITERATUR: readonly Publikation[] = [
     erschienen: 'Annual Review of Astronomy and Astrophysics 58, 483–528',
     doi: '10.1146/annurev-astro-031220-010302',
     arxiv: '2001.05007',
+  },
+  {
+    id: 'andrews-hanna-2008',
+    autoren: ['Andrews-Hanna, J. C.', 'Zuber, M. T.', 'Banerdt, W. B.'],
+    etAl: true,
+    jahr: 2008,
+    titel: 'The Borealis basin and the origin of the martian crustal dichotomy',
+    erschienen: 'Nature 453, 1212–1215',
+    doi: '10.1038/nature07011',
   },
   {
     id: 'appel-2022',
@@ -792,6 +810,15 @@ export const LITERATUR: readonly Publikation[] = [
     arxiv: '0709.1995',
   },
   {
+    id: 'ehlmann-2014',
+    autoren: ['Ehlmann, B. L.', 'Edwards, C. S.'],
+    etAl: false,
+    jahr: 2014,
+    titel: 'Mineralogy of the Martian Surface',
+    erschienen: 'Annual Review of Earth and Planetary Sciences 42, 291–315',
+    doi: '10.1146/annurev-earth-060313-055024',
+  },
+  {
     id: 'ehrenreich-2012',
     autoren: ['Ehrenreich, D.', 'Vidal-Madjar, A.', 'Widemann, T.'],
     etAl: true,
@@ -1327,6 +1354,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.3847/1538-3881/ac90c9',
   },
   {
+    id: 'jakosky-2018',
+    autoren: ['Jakosky, B. M.', 'Brain, D.', 'Chaffin, M.'],
+    etAl: true,
+    jahr: 2018,
+    titel: 'Loss of the Martian atmosphere to space: Present-day loss rates determined from MAVEN observations and integrated loss through time',
+    erschienen: 'Icarus 315, 146–157',
+    doi: '10.1016/j.icarus.2018.05.030',
+  },
+  {
     id: 'johansen-2007',
     autoren: ['Johansen, A.', 'Oishi, J. S.', 'Mac Low, M.-M.'],
     etAl: true,
@@ -1401,6 +1437,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1063/1.3099578',
   },
   {
+    id: 'khan-2021',
+    autoren: ['Khan, A.', 'Ceylan, S.', 'van Driel, M.'],
+    etAl: true,
+    jahr: 2021,
+    titel: 'Upper mantle structure of Mars from InSight seismic data',
+    erschienen: 'Science 373, 434–438',
+    doi: '10.1126/science.abf2966',
+  },
+  {
     id: 'khan-2023',
     autoren: ['Khan, A.', 'Huang, D.', 'Durán, C.'],
     etAl: true,
@@ -1445,6 +1490,15 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'The CHAOS-8 geomagnetic field model',
     erschienen: 'Earth, Planets and Space 78, 21',
     doi: '10.1186/s40623-025-02352-0',
+  },
+  {
+    id: 'knapmeyer-endrun-2021',
+    autoren: ['Knapmeyer-Endrun, B.', 'Panning, M. P.', 'Bissig, F.'],
+    etAl: true,
+    jahr: 2021,
+    titel: 'Thickness and structure of the martian crust from InSight seismic data',
+    erschienen: 'Science 373, 438–443',
+    doi: '10.1126/science.abf8966',
   },
   {
     id: 'kokubo-1998',
@@ -1511,6 +1565,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1029/2010GL045777',
   },
   {
+    id: 'korablev-2019',
+    autoren: ['The ACS and NOMAD Science Teams', 'Korablev, O.', 'Vandaele, A. C.'],
+    etAl: true,
+    jahr: 2019,
+    titel: 'No detection of methane on Mars from early ExoMars Trace Gas Orbiter observations',
+    erschienen: 'Nature 568, 517–520',
+    doi: '10.1038/s41586-019-1096-4',
+  },
+  {
     id: 'krasna-2013',
     autoren: ['Krásná, H.', 'Böhm, J.', 'Schuh, H.'],
     etAl: false,
@@ -1545,6 +1608,15 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'Age of Jupiter inferred from the distinct genetics and formation times of meteorites',
     erschienen: 'Proceedings of the National Academy of Sciences 114, 6712–6716',
     doi: '10.1073/pnas.1704461114',
+  },
+  {
+    id: 'kuchynka-2014',
+    autoren: ['Kuchynka, P.', 'Folkner, W. M.', 'Konopliv, A. S.'],
+    etAl: true,
+    jahr: 2014,
+    titel: 'New constraints on Mars rotation determined from radiometric tracking of the Opportunity Mars Exploration Rover',
+    erschienen: 'Icarus 229, 340–347',
+    doi: '10.1016/j.icarus.2013.11.015',
   },
   {
     id: 'kuhn-2012',
@@ -1639,6 +1711,15 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'A long-term numerical solution for the insolation quantities of the Earth',
     erschienen: 'Astronomy & Astrophysics 428, 261–285',
     doi: '10.1051/0004-6361:20041335',
+  },
+  {
+    id: 'laskar-2004a',
+    autoren: ['Laskar, J.', 'Correia, A. C. M.', 'Gastineau, M.'],
+    etAl: true,
+    jahr: 2004,
+    titel: 'Long term evolution and chaotic diffusion of the insolation quantities of Mars',
+    erschienen: 'Icarus 170, 343–364',
+    doi: '10.1016/j.icarus.2004.04.005',
   },
   {
     id: 'lawrence-2013',
@@ -2526,6 +2607,15 @@ export const LITERATUR: readonly Publikation[] = [
     url: 'https://www.sidc.be/SILSO/DATA/SN_ms_tot_V2.0.txt',
   },
   {
+    id: 'smith-2001',
+    autoren: ['Smith, D. E.', 'Zuber, M. T.', 'Frey, H. V.'],
+    etAl: true,
+    jahr: 2001,
+    titel: 'Mars Orbiter Laser Altimeter: Experiment summary after the first year of global mapping of Mars',
+    erschienen: 'Journal of Geophysical Research 106, 23689–23722',
+    doi: '10.1029/2000JE001364',
+  },
+  {
     id: 'smith-2012',
     autoren: ['Smith, D. E.', 'Zuber, M. T.', 'Phillips, R. J.'],
     etAl: true,
@@ -2940,6 +3030,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1126/science.1199375',
   },
   {
+    id: 'webster-2018',
+    autoren: ['Webster, C. R.', 'Mahaffy, P. R.', 'Atreya, S. K.'],
+    etAl: true,
+    jahr: 2018,
+    titel: 'Background levels of methane in Mars’ atmosphere show strong seasonal variations',
+    erschienen: 'Science 360, 1093–1096',
+    doi: '10.1126/science.aaq0131',
+  },
+  {
     id: 'weiss-2014',
     autoren: ['Weiss, B. P.', 'Tikoo, S. M.'],
     etAl: false,
@@ -3049,6 +3148,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1016/0019-1035(84)90032-0',
   },
   {
+    id: 'wordsworth-2016',
+    autoren: ['Wordsworth, R. D.'],
+    etAl: false,
+    jahr: 2016,
+    titel: 'The Climate of Early Mars',
+    erschienen: 'Annual Review of Earth and Planetary Sciences 44, 381–408',
+    doi: '10.1146/annurev-earth-060115-012355',
+  },
+  {
     id: 'yang-2023',
     autoren: ['Yang, Y.', 'Song, X.'],
     etAl: false,
@@ -3129,6 +3237,15 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'Lunar farside volcanism 2.8 billion years ago from Chang’e-6 basalts',
     erschienen: 'Nature 643, 356–360',
     doi: '10.1038/s41586-024-08382-0',
+  },
+  {
+    id: 'zhong-2001',
+    autoren: ['Zhong, S.', 'Zuber, M. T.'],
+    etAl: false,
+    jahr: 2001,
+    titel: 'Degree-1 mantle convection and the crustal dichotomy on Mars',
+    erschienen: 'Earth and Planetary Science Letters 189, 75–84',
+    doi: '10.1016/S0012-821X(01)00345-4',
   },
   {
     id: 'zuber-2013',
