@@ -54,8 +54,8 @@ Mehrere Sonden nutzten Jupiter als Wegstation: Pioneer 10 und 11, Voyager 1 und 
 Cassini flogen zwischen den 1970er- und den 2000er-Jahren vorbei, „auf dem Weg zu anderen Welten"
 ([Jupiter bei NASA Science](quelle:nasa-jupiter)); Voyager 1 lieferte im März 1979 die ersten
 Nahaufnahmen aktiven Vulkanismus auf [Io](objekt:io) ([Smith et al. 1979](literatur:smith-1979)). Am
-genauesten dokumentiert ist New Horizons: Am 28. Februar 2007, 05:43:40 UTC, kam die Sonde Jupiter
-auf rund 32 Jupiterradien (etwa 2,3 Mio. km) bei 21 km/s am nächsten
+genauesten dokumentiert ist New Horizons: Am 28. Februar 2007 kam die Sonde Jupiter auf rund
+32 Jupiterradien (etwa 2,3 Mio. km) bei 21 km/s am nächsten
 ([NSSDC 2026](literatur:nssdc-newhorizons-2026)) und war danach rund 14 000 km/h (4 km/s)
 schneller – das sparte auf dem Weg zu [Pluto](objekt:pluto) drei Jahre
 ([Mission New Horizons](quelle:nasa-new-horizons)); derselbe Vorbeiflug fing eine große Eruption des

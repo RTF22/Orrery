@@ -55,8 +55,8 @@ Several probes have used Jupiter as a waystation: Pioneer 10 and 11, Voyager 1 a
 Cassini flew past between the 1970s and the 2000s, "on their way to other worlds"
 ([Jupiter at NASA Science](quelle:nasa-jupiter)); in March 1979 Voyager 1 delivered the first
 close-up images of active volcanism on [Io](objekt:io) ([Smith et al. 1979](literatur:smith-1979)).
-The best-documented case is New Horizons: on 28 February 2007, at 05:43:40 UTC, the probe came
-closest to Jupiter, at about 32 Jupiter radii (roughly 2.3 million km) and 21 km/s
+The best-documented case is New Horizons: on 28 February 2007 the probe came closest to Jupiter,
+at about 32 Jupiter radii (roughly 2.3 million km) and 21 km/s
 ([NSSDC 2026](literatur:nssdc-newhorizons-2026)), and afterwards was about 14,000 km/h
 (4 km/s) faster – shaving three years off the trip to [Pluto](objekt:pluto)
 ([New Horizons mission](quelle:nasa-new-horizons)); the same flyby captured a major eruption of the
