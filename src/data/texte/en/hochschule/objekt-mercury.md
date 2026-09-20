@@ -60,9 +60,9 @@ Mercury's high density reflects an unusually large iron core: it extends to near
 $2020\,\mathrm{km}$ in radius, while the whole body measures only $2439.7\,\mathrm{km}$
 ([Hauck et al. 2013](literatur:hauck-2013)) – about 57 % of the volume. Combined with the mean
 densities above and below that boundary from the same model (parameters table), this gives a core
-mass fraction of about 73 %; the mean density predicted this way, $5424\,\mathrm{kg\,m^{-3}}$,
+mass fraction of about 73 %; the mean density predicted this way, $5423\,\mathrm{kg\,m^{-3}}$,
 matches the mean density computed from mass and radius, $5427\,\mathrm{kg\,m^{-3}}$ (see above), to
-within $0.06$ %. The outer core is at least partially liquid, as shown by the large libration in
+within $0.07$ %. The outer core is at least partially liquid, as shown by the large libration in
 longitude (see above); the geodetically refined gravity and spin data further require a solid inner
 core, though its radius is only constrained to between 0.3 and 0.7 of the outer core radius
 ([Genova et al. 2019](literatur:genova-2019)). Only a thin silicate mantle lies between core and
@@ -165,8 +165,7 @@ precession axis remain coplanar, and the small but measurable tilt of the spin a
 minutes, see above) is a direct consequence of this equilibrium, not a leftover from formation.
 Because of its orbital geometry, Mercury crosses in front of the solar disk as seen from Earth only
 during the rare passages through the ecliptic plane near inferior conjunction; like
-[eclipses](thema:finsternis), such transits are tied to a shared plane of three bodies and occur on
-average about 13 times per century, mostly in May or November.
+[eclipses](thema:finsternis), such transits are tied to a shared plane of three bodies.
 
 ## Formation and evolution
 
@@ -237,7 +236,7 @@ comprehensively than MESSENGER, using radio science to test general relativity o
   $2.029 \pm 0.085$ arc minutes: the IAU pole already carries the Cassini configuration within it,
   without the model reproducing it separately; the data block rounds the value to one decimal and
   therefore shows 0.0°. `rotationAtEpochDeg` is set to 0, while the IAU report gives
-  $W_0 = 329.5469^\circ$ for the rotation phase at J2000.0 – Mercury's map centre in the model is
+  $W_0 = 329.5988^\circ$ for the rotation phase at J2000.0 – Mercury's map centre in the model is
   therefore not where the IAU report places it, which affects only the orientation of the map
   image, not the motion itself.
 - **Albedo:** the catalogue value 0.142 is the geometric albedo and matches the V-band value from
@@ -250,8 +249,8 @@ comprehensively than MESSENGER, using radio science to test general relativity o
 - **Data block:** mass and volumetric mean radius match the NSSDC fact sheet
   ([NSSDC Mercury Fact Sheet](quelle:nssdc-mercury)); the slightly larger equatorial radius of the
   triaxial shape (2440.5 km) is not used, since Orrery renders every body as a sphere. The model's
-  $GM$, from CODATA $G$ times the catalogue mass, gives $22033.2\,\mathrm{km^3\,s^{-2}}$, only
-  0.005 % above the measured $22032\,\mathrm{km^3\,s^{-2}}$.
+  $GM$, from CODATA $G$ times the catalogue mass, gives $22031.9\,\mathrm{km^3\,s^{-2}}$, only
+  0.0006 % below the measured $22032\,\mathrm{km^3\,s^{-2}}$.
 - **Scale:** as for every body, the displayed radius grows linearly with the `sizeScale` control;
   the heliocentric distance is additionally compressed with the distance exponent, with a fixed
   point at 1 au. Since Mercury's true distance of about 0.39 au lies inside this fixed point, its

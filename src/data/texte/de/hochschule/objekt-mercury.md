@@ -60,8 +60,8 @@ $2020\,\mathrm{km}$ Radius, während der ganze Körper nur $2439{,}7\,\mathrm{km
 ([Hauck et al. 2013](literatur:hauck-2013)) – rund 57 % des Volumens. Mit den vom selben Modell
 genannten mittleren Dichten ober- und unterhalb dieser Grenze (Kenngrößen-Tabelle) folgt daraus ein
 Massenanteil des Kerns von rund 73 %; das so vorhergesagte mittlere Gesamtgewicht,
-$5424\,\mathrm{kg\,m^{-3}}$, trifft die aus Masse und Radius gerechnete mittlere Dichte von
-$5427\,\mathrm{kg\,m^{-3}}$ (siehe oben) auf $0{,}06$ % genau. Der äußere Kern ist mindestens
+$5423\,\mathrm{kg\,m^{-3}}$, trifft die aus Masse und Radius gerechnete mittlere Dichte von
+$5427\,\mathrm{kg\,m^{-3}}$ (siehe oben) auf $0{,}07$ % genau. Der äußere Kern ist mindestens
 teilweise flüssig, wie die große
 Libration in Länge zeigt (siehe oben); die geodätisch verfeinerten Schwere- und Spindaten verlangen
 zusätzlich einen festen inneren Kern, dessen Radius aber nur auf 0,3 bis 0,7 des äußeren
@@ -170,8 +170,7 @@ bleiben koplanar, und die kleine, aber messbare Schiefe der Spinachse (rund zwei
 siehe oben) ist eine unmittelbare Folge dieses Gleichgewichts, nicht etwa ein Überbleibsel der
 Entstehung. Von der Erde aus zieht Merkur wegen seiner Bahnlage nur bei den seltenen Passagen durch
 die Ekliptikebene nahe der unteren Konjunktion vor der Sonnenscheibe vorbei; solche Transits sind,
-wie [Finsternisse](thema:finsternis), an eine gemeinsame Ebene dreier Himmelskörper gebunden und
-treten im Mittel etwa 13-mal je Jahrhundert auf, meist im Mai oder November.
+wie [Finsternisse](thema:finsternis), an eine gemeinsame Ebene dreier Himmelskörper gebunden.
 
 ## Entstehung und Entwicklung
 
@@ -245,7 +244,7 @@ Radiowissenschaft auch die Allgemeine Relativitätstheorie erneut prüfen
   $2{,}029 \pm 0{,}085$ Bogenminuten: Der IAU-Pol trägt die Cassini-Lage bereits in sich, ohne dass
   das Modell sie eigens nachbildete; der Datenblock rundet den Wert auf eine Nachkommastelle und
   zeigt deshalb 0,0°. `rotationAtEpochDeg` steht auf 0, während der IAU-Bericht für die
-  Rotationsphase bei J2000,0 den Wert $W_0 = 329{,}5469^\circ$ nennt – Merkurs Kartenmitte im
+  Rotationsphase bei J2000,0 den Wert $W_0 = 329{,}5988^\circ$ nennt – Merkurs Kartenmitte im
   Modell liegt deshalb nicht dort, wo sie der IAU-Bericht setzt, was aber nur die Ausrichtung des
   Kartenbilds, nicht die Bewegung selbst betrifft.
 - **Albedo:** Der Katalogwert 0,142 ist die geometrische Albedo und stimmt mit dem V-Band-Wert
@@ -258,8 +257,8 @@ Radiowissenschaft auch die Allgemeine Relativitätstheorie erneut prüfen
 - **Datenblock:** Masse und Volumenmittelradius entsprechen dem NSSDC-Faktenblatt
   ([NSSDC Mercury Fact Sheet](quelle:nssdc-mercury)); der etwas größere Äquatorradius der
   dreiachsigen Gestalt (2440,5 km) geht nicht ein, da Orrery jeden Körper als Kugel darstellt. Das
-  Modell-$GM$ aus CODATA-$G$ mal Katalogmasse ergibt $22033{,}2\,\mathrm{km^3\,s^{-2}}$, nur
-  0,005 % über dem gemessenen $22032\,\mathrm{km^3\,s^{-2}}$.
+  Modell-$GM$ aus CODATA-$G$ mal Katalogmasse ergibt $22031{,}9\,\mathrm{km^3\,s^{-2}}$, nur
+  0,0006 % unter dem gemessenen $22032\,\mathrm{km^3\,s^{-2}}$.
 - **Maßstab:** Wie bei jedem Körper wächst der dargestellte Radius linear mit dem Regler
   `sizeScale`; die heliozentrische Entfernung wird zusätzlich mit dem Abstandsexponenten gestaucht,
   mit Fixpunkt bei 1 AE. Da Merkurs wahrer Abstand mit rund 0,39 AE innerhalb dieses Fixpunkts
