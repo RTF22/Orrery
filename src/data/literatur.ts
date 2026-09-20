@@ -483,6 +483,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1016/0083-6656(78)90015-6',
   },
   {
+    id: 'byrne-2009',
+    autoren: ['Byrne, S.'],
+    etAl: false,
+    jahr: 2009,
+    titel: 'The Polar Deposits of Mars',
+    erschienen: 'Annual Review of Earth and Planetary Sciences 37, 535–560',
+    doi: '10.1146/annurev.earth.031208.100101',
+  },
+  {
     id: 'byrne-2014',
     autoren: ['Byrne, P. K.', 'Klimczak, C.', 'Şengör, A. M. C.'],
     etAl: true,
@@ -1178,6 +1187,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1126/science.1241681',
   },
   {
+    id: 'guzewich-2020',
+    autoren: ['Guzewich, S. D.', 'Fedorova, A. A.', 'Kahre, M. A.'],
+    etAl: true,
+    jahr: 2020,
+    titel: 'Studies of the 2018/Mars Year 34 Planet-Encircling Dust Storm',
+    erschienen: 'Journal of Geophysical Research: Planets 125, e2020JE006700',
+    doi: '10.1029/2020JE006700',
+  },
+  {
     id: 'haberreiter-2008',
     autoren: ['Haberreiter, M.', 'Schmutz, W.', 'Kosovichev, A. G.'],
     etAl: false,
@@ -1665,7 +1683,7 @@ export const LITERATUR: readonly Publikation[] = [
   },
   {
     id: 'korablev-2019',
-    autoren: ['The ACS and NOMAD Science Teams', 'Korablev, O.', 'Vandaele, A. C.'],
+    autoren: ['Korablev, O.', 'Vandaele, A. C.', 'Montmessin, F.'],
     etAl: true,
     jahr: 2019,
     titel: 'No detection of methane on Mars from early ExoMars Trace Gas Orbiter observations',
@@ -2573,6 +2591,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1126/science.aba1948',
   },
   {
+    id: 'plescia-2004',
+    autoren: ['Plescia, J. B.'],
+    etAl: false,
+    jahr: 2004,
+    titel: 'Morphometric properties of Martian volcanoes',
+    erschienen: 'Journal of Geophysical Research: Planets 109, E03003',
+    doi: '10.1029/2002JE002031',
+  },
+  {
     id: 'pogossian-2022',
     autoren: ['Pogossian, S. P.'],
     etAl: false,
@@ -3006,6 +3033,15 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'Day–night cloud asymmetry prevents early oceans on Venus but not on Earth',
     erschienen: 'Nature 598, 276–280',
     doi: '10.1038/s41586-021-03873-w',
+  },
+  {
+    id: 'usgs-gazetteer-2026',
+    autoren: ['USGS Astrogeology Science Center'],
+    etAl: false,
+    jahr: 2026,
+    titel: 'Gazetteer of Planetary Nomenclature: Valles Marineris',
+    erschienen: 'U.S. Geological Survey, im Auftrag der IAU Working Group for Planetary System Nomenclature, Online-Datenbank, abgerufen 20. September 2026',
+    url: 'https://planetarynames.wr.usgs.gov/Feature/6288',
   },
   {
     id: 'usno-2026',

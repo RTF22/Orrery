@@ -101,10 +101,11 @@ Schwerpunkt und einem globalen Gitter von 1/64° mal 1/32° Breite und Länge
 ([Smith et al. 2001](literatur:smith-2001)), liegen die Tiefländer im Mittel mehrere Kilometer
 tiefer, und ihre Kruste ist deutlich dünner (siehe „Inneres"); ob ein einzelner Riesenimpakt oder
 mantelinterne Konvektion die Ursache ist, ist unentschieden (siehe „Offene Fragen"). In der
-Tharsis-Vulkanprovinz überragt Olympus Mons mit rund 600 km Basisdurchmesser und etwa 22 km Höhe den
-größten bekannten Vulkan des Sonnensystems; östlich davon zieht sich das mehr als 4000 km lange
-Canyonsystem Valles Marineris über gut ein Sechstel des Marsumfangs
-([Mars bei NASA Science](quelle:nasa-mars)).
+Tharsis-Vulkanprovinz erreicht Olympus Mons nach MOLA-Höhendaten eine Gipfelhöhe von bis zu
+21,1 km und ist damit der höchste bekannte Vulkan des Sonnensystems
+([Plescia 2004](literatur:plescia-2004)); östlich davon zieht sich das nach amtlicher
+IAU-Nomenklatur 3769 km lange Canyonsystem Valles Marineris über gut ein Sechstel des Marsumfangs
+([USGS Astrogeology Science Center 2026](literatur:usgs-gazetteer-2026)).
 
 Orbitale Infrarotspektroskopie und die In-situ-Erkundung durch Rover zeigen eine basaltische
 Oberkruste mit regional wechselnden Anteilen von Plagioklas, Pyroxen und Olivin. Tonminerale in weit
@@ -114,10 +115,11 @@ enthalten zudem Paläoseeablagerungen mit Tonen, Karbonaten, Sulfaten und Chlori
 ([Ehlmann und Edwards 2014](literatur:ehlmann-2014)) – Belege für einstiges flüssiges Wasser, die
 zusammen mit eingeschnittenen Talnetzen die Klimadebatte prägen (siehe „Entstehung und
 Entwicklung"). Die Polkappen bestehen aus einer ganzjährigen Wassereisbasis unter einer
-jahreszeitlich wachsenden und schrumpfenden Kohlendioxidschicht, deren Kondensation und Sublimation
-den globalen Luftdruck steuert (siehe „Atmosphäre und Magnetosphäre"); regional wie gelegentlich
-global auftretende Staubstürme gehören ebenso zum heutigen Oberflächengeschehen
-([Mars Express (ESA)](quelle:esa-mars-express)).
+jahreszeitlich wachsenden und schrumpfenden Kohlendioxidschicht
+([Byrne 2009](literatur:byrne-2009)), deren Kondensation und Sublimation den globalen Luftdruck
+steuert (siehe „Atmosphäre und Magnetosphäre"); neben häufigen regionalen Staubstürmen tritt im
+Mittel alle paar Marsjahre, unregelmäßig wiederkehrend, auch ein den ganzen Planeten einhüllender
+Sturm auf ([Guzewich et al. 2020](literatur:guzewich-2020)).
 
 ## Atmosphäre und Magnetosphäre
 
@@ -234,10 +236,11 @@ seiner Atmosphäre verloren (siehe „Atmosphäre und Magnetosphäre").
 - **Methan:** Der Rover Curiosity misst seit 2012 mit dem Instrument SAM wiederholt Methan im
   Gale-Krater, mit einem jahreszeitlich schwankenden Hintergrund um 0,4 ppbv und einzelnen Spitzen
   bis über 20 ppbv ([Webster et al. 2018](literatur:webster-2018)); der europäisch-russische
-  Orbiter ExoMars Trace Gas Orbiter fand dagegen mit rund tausendfach empfindlicheren Instrumenten
-  in seinen ersten Beobachtungsmonaten keinerlei Methan bis zu einer Nachweisgrenze von 0,05 ppbv
-  ([The ACS and NOMAD Science Teams, Korablev et al. 2019](literatur:korablev-2019)); ob Messfehler, lokale Freisetzung nahe Gale
-  oder ein noch unverstandener schneller Abbaumechanismus den Widerspruch erklären, ist ungeklärt.
+  Orbiter ExoMars Trace Gas Orbiter fand dagegen in seinen ersten Beobachtungsmonaten keinerlei
+  Methan bis zu einer Nachweisgrenze von 0,05 ppbv, rund eine Größenordnung unter dem
+  SAM-Hintergrund ([Korablev et al. 2019](literatur:korablev-2019)); ob Messfehler, lokale
+  Freisetzung nahe Gale oder ein noch unverstandener schneller Abbaumechanismus den Widerspruch
+  erklären, ist ungeklärt.
 
 ## Im Modell
 

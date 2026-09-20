@@ -98,10 +98,11 @@ global grid of 1/64° by 1/32° in latitude and longitude
 ([Smith et al. 2001](literatur:smith-2001)), shows the lowlands lying several kilometres lower on
 average, with a markedly thinner crust beneath them (see "Interior"); whether a single giant impact
 or internal mantle convection is the cause remains unresolved (see "Open questions"). In the Tharsis
-volcanic province, Olympus Mons, with a base about 600 km across and a height of roughly 22 km,
-towers as the largest known volcano in the Solar System; to its east, the more than 4000 km long
-Valles Marineris canyon system stretches across a good sixth of Mars's circumference
-([Mars at NASA Science](quelle:nasa-mars)).
+volcanic province, Olympus Mons reaches, from MOLA elevation data, a summit height of up to
+21.1 km, making it the tallest known volcano in the Solar System
+([Plescia 2004](literatur:plescia-2004)); to its east, the Valles Marineris canyon system, 3769 km
+long by official IAU nomenclature, stretches across a good sixth of Mars's circumference
+([USGS Astrogeology Science Center 2026](literatur:usgs-gazetteer-2026)).
 
 Orbital infrared spectroscopy and in-situ exploration by rovers show a basaltic upper crust with
 regionally varying proportions of plagioclase, pyroxene and olivine. Clay minerals in widespread
@@ -111,9 +112,10 @@ deposits with clays, carbonates, sulfates and chlorides
 ([Ehlmann and Edwards 2014](literatur:ehlmann-2014)) – evidence for past liquid water that, together
 with incised valley networks, shapes the climate debate (see "Formation and evolution"). The polar
 caps consist of a permanent water-ice base beneath a seasonally growing and shrinking layer of
-carbon dioxide, whose condensation and sublimation govern the global surface pressure (see
-"Atmosphere and magnetosphere"); regional and, occasionally, global dust storms are likewise part of
-present-day surface activity ([Mars Express (ESA)](quelle:esa-mars-express)).
+carbon dioxide ([Byrne 2009](literatur:byrne-2009)), whose condensation and sublimation govern the
+global surface pressure (see "Atmosphere and magnetosphere"); besides frequent regional dust
+storms, a storm enveloping the whole planet occurs on average every few Mars years, recurring
+irregularly ([Guzewich et al. 2020](literatur:guzewich-2020)).
 
 ## Atmosphere and magnetosphere
 
@@ -223,9 +225,9 @@ deposits and carved the observed valley networks
 - **Methane:** Since 2012, the Curiosity rover has repeatedly measured methane in Gale crater with
   its SAM instrument, with a seasonally varying background around 0.4 ppbv and individual spikes
   above 20 ppbv ([Webster et al. 2018](literatur:webster-2018)); the European–Russian ExoMars Trace
-  Gas Orbiter, by contrast, found no methane at all during its first months of observation, with
-  instruments roughly a thousand times more sensitive, down to a detection limit of 0.05 ppbv
-  ([The ACS and NOMAD Science Teams, Korablev et al. 2019](literatur:korablev-2019)); whether measurement error, local release near
+  Gas Orbiter, by contrast, found no methane at all during its first months of observation, down to
+  a detection limit of 0.05 ppbv, roughly an order of magnitude below the SAM background
+  ([Korablev et al. 2019](literatur:korablev-2019)); whether measurement error, local release near
   Gale, or a still poorly understood fast removal mechanism explains the discrepancy remains
   unresolved.
 
