@@ -142,16 +142,16 @@ month by +0.2 s, the draconic by +0.4 s and the anomalistic by −0.8 s per mill
 
 ## Besselian elements
 
-The standard method for solar eclipses goes back to Bessel. It places a fundamental plane through
-the Earth's centre, perpendicular to the axis of the lunar shadow, and describes the motion of the
-shadow within it: $l_1$ and $l_2$ are the radii of the penumbral and umbral cones in that plane,
-$f_1$ and $f_2$ their opening angles, and the minimum distance of the axis from the Earth's centre
-in Earth equatorial radii is the gamma introduced above
-([Melati and Hodijah 2016](literatur:melati-2016)). From these
-quantities follow, for any location, the path of the shadow, its width and the duration. According
-to the umbral radius $u$ in the fundamental plane, a central eclipse is total for $u < 0$ and
-annular for $u > 0.0047$, and in between annular or hybrid. The canons of Meeus and Mucke and of
-Meeus, Grosjean and Vanderleen list exactly these elements
+The standard method for solar eclipses goes back to Bessel. The Besselian elements describe the
+motion of the lunar shadow in a fundamental plane that passes through the Earth's centre and stands
+perpendicular to the shadow axis; they include $l_1$ and $l_2$, the radii of the penumbral and
+umbral cones in that plane, and $f_1$ and $f_2$, their opening angles, and the minimum distance of
+the axis from the Earth's centre in Earth equatorial radii is the gamma introduced above. From the
+Besselian elements follow, for any location, the path of the shadow, its width and the duration,
+and according to the umbral radius $u$ in the fundamental plane — the $l_2$ just named — a central
+eclipse is total for $u < 0$ and annular for $u > 0.0047$, and in between annular or hybrid
+([Melati and Hodijah 2016](literatur:melati-2016)). The canons of Meeus and Mucke and of Meeus,
+Grosjean and Vanderleen list exactly these elements
 ([Espenak and Meeus 2009](literatur:espenak-2009)). For lunar eclipses the course does not depend on
 the location: the eclipse runs the same way for the whole night side, and only moonrise and moonset
 limit visibility. Times are given in Terrestrial Time
@@ -195,7 +195,7 @@ Einstein predicted 1.75″, the Newtonian calculation 0.87″. The 4-inch lens a
 0.12″, the astrograph on Principe 1.61 ± 0.30″, both probable errors; the Sobral astrographic plates
 gave 0.93″ or 1.52″ depending on the assumptions and were discarded because of unquantifiable
 systematic errors ([Gilmore and Tausch-Pebody 2022](literatur:gilmore-2022)). A re-measurement of
-the plates in 1979 gave 1.90 ± 0.11″ for the 4-inch lens and 1.55 ± 0.34″ for the astrograph
+the Sobral plates in 1979 gave 1.90 ± 0.11″ for the 4-inch lens and 1.55 ± 0.34″ for the astrograph
 ([Longair 2015](literatur:longair-2015)).
 
 The eclipses of Jupiter's moon [Io](objekt:io) were the first to show that light takes time. The
@@ -306,9 +306,9 @@ around the planet's equinoxes.
 - **Solar eclipses:** they are not searched for and have no scene, but they arise in the picture by
   themselves because the Moon is a shadow caster for the Earth. At the model's maximum of the eclipse
   of 2 August 2027 the visible fraction of the Sun on the Earth's surface drops to zero; the umbra
-  there has a radius of 101 km and the penumbra one of 3381 km. Its diameter of 203 km stays about a
-  fifth below the path width of 258 km in the catalogue. In four checked cases the time was
-  0.0 to 2.1 h away from the NASA catalogue.
+  there has a radius of 101 km and the penumbra one of 3381 km. The umbra is thus a good 200 km
+  across and stays about a fifth below the path width of 258 km in the catalogue. In four checked
+  cases the time was 0.0 to 2.1 h away from the NASA catalogue.
 - **Brightness in the shadow:** the shadow factor is the uncovered area fraction of two discs treated
   as uniformly bright; the antumbra is covered as a separate case. Limb darkening is missing: with
   the Eddington approximation a small body in front of the disc centre would block 25 % more light

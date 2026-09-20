@@ -146,16 +146,16 @@ wandert: der synodische Monat um +0,2 s, der drakonitische um +0,4 s und der ano
 
 ## Besselsche Elemente
 
-Das Standardverfahren für Sonnenfinsternisse geht auf Bessel zurück. Es legt eine Fundamentalebene
-durch den Erdmittelpunkt, senkrecht zur Achse des Mondschattens, und beschreibt darin die Bewegung
-des Schattens: $l_1$ und $l_2$ sind die Radien von Halb- und Kernschattenkegel in dieser Ebene,
-$f_1$ und $f_2$ deren Öffnungswinkel, und der kleinste Abstand der Achse vom Erdmittelpunkt in
-Erdäquatorradien ist das oben genannte Gamma
-([Melati und Hodijah 2016](literatur:melati-2016)). Aus diesen Größen folgen für jeden Ort
-der Weg des Schattens, seine Breite und die Dauer. Nach dem Kernschattenradius $u$ in der
-Fundamentalebene ist eine zentrale Finsternis total für $u < 0$ und ringförmig für $u > 0{,}0047$,
-dazwischen ringförmig oder hybrid. Die Kanons von Meeus und Mucke sowie von Meeus, Grosjean und
-Vanderleen führen genau diese Elemente
+Das Standardverfahren für Sonnenfinsternisse geht auf Bessel zurück. Die Besselschen Elemente
+beschreiben die Bewegung des Mondschattens in einer Fundamentalebene, die durch den Erdmittelpunkt
+geht und senkrecht auf der Schattenachse steht; zu ihnen gehören $l_1$ und $l_2$, die Radien von
+Halb- und Kernschattenkegel in dieser Ebene, und $f_1$ und $f_2$, deren Öffnungswinkel, und der
+kleinste Abstand der Achse vom Erdmittelpunkt in Erdäquatorradien ist das oben genannte Gamma. Aus
+den Besselschen Elementen folgen für jeden Ort der Weg des Schattens, seine Breite und die Dauer,
+und nach dem Kernschattenradius $u$ in der Fundamentalebene — dem eben genannten $l_2$ — ist eine
+zentrale Finsternis total für $u < 0$ und ringförmig für $u > 0{,}0047$, dazwischen ringförmig oder
+hybrid ([Melati und Hodijah 2016](literatur:melati-2016)). Die Kanons von Meeus und Mucke sowie von
+Meeus, Grosjean und Vanderleen führen genau diese Elemente
 ([Espenak und Meeus 2009](literatur:espenak-2009)). Bei Mondfinsternissen hängt der Ablauf nicht vom
 Ort ab: Die Finsternis läuft für die ganze Nachtseite gleich, und nur Auf- und Untergang des Mondes
 begrenzen die Sichtbarkeit. Die Zeiten werden in Terrestrischer Zeit angegeben
@@ -200,8 +200,8 @@ Am 29. Mai 1919 maßen zwei britische Expeditionen die Ablenkung des Sternlichts
 Einstein sagte 1,75″ voraus, die newtonsche Rechnung 0,87″. Der Vierzöller in Sobral ergab 1,98 ±
 0,12″, der Astrograf auf Principe 1,61 ± 0,30″, beides wahrscheinliche Fehler; die Astrografenplatten
 von Sobral lieferten je nach Annahme 0,93″ oder 1,52″ und wurden wegen unbestimmter systematischer
-Fehler verworfen ([Gilmore und Tausch-Pebody 2022](literatur:gilmore-2022)). Eine Nachmessung
-derselben Platten im Jahr 1979 ergab 1,90 ± 0,11″ für den Vierzöller und 1,55 ± 0,34″ für den
+Fehler verworfen ([Gilmore und Tausch-Pebody 2022](literatur:gilmore-2022)). Eine Nachmessung der
+Sobral-Platten im Jahr 1979 ergab 1,90 ± 0,11″ für den Vierzöller und 1,55 ± 0,34″ für den
 Astrografen ([Longair 2015](literatur:longair-2015)).
 
 Die Verfinsterungen des Jupitermondes [Io](objekt:io) zeigten als erste, dass Licht Zeit braucht. Im
@@ -314,8 +314,9 @@ Tagundnachtgleichen häufen.
 - **Sonnenfinsternisse:** Sie werden nicht gesucht und haben keine Szene, entstehen im Bild aber von
   selbst, weil der Mond Schattenwerfer der Erde ist. Zum Modellmaximum der Finsternis vom 2. August
   2027 sinkt der sichtbare Sonnenanteil auf der Erdoberfläche auf null; der Kernschatten hat dort
-  101 km Radius, der Halbschatten 3381 km. Sein Durchmesser von 203 km bleibt rund ein Fünftel unter
-  der Pfadbreite von 258 km im Katalog. Der Zeitpunkt lag in vier geprüften Fällen 0,0 bis 2,1 h
+  101 km Radius, der Halbschatten 3381 km. Der Kernschatten ist damit gut 200 km breit und bleibt
+  rund ein Fünftel unter der Pfadbreite von 258 km im Katalog. Der Zeitpunkt lag in vier geprüften
+  Fällen 0,0 bis 2,1 h
   neben dem NASA-Katalog.
 - **Helligkeit im Schatten:** Der Schattenfaktor ist der unverdeckte Flächenanteil zweier gleichmäßig
   hell gerechneter Scheiben; der Gegenschatten ist als eigener Fall enthalten. Eine Randverdunklung
