@@ -7,19 +7,21 @@ Der [Mond](objekt:moon) umläuft die [Erde](objekt:earth) im Zeitraffer, schräg
 Die Kamera hängt an der Erde, 150 dargestellte Erdradien entfernt und 55° über der Ekliptik, und
 blickt auf den Erdmittelpunkt; ihr Azimut wandert rechtläufig mit 0,5° je Sekunde, in den 45 s der
 Szene also um 22,5°. Bezugsgröße ist der dargestellte Radius, Radius mal Größenfaktor; weil der
-Mondabstand mit demselben Faktor wächst, zeigt die Szene in allen drei Maßstabsstufen dasselbe Bild,
-und das Verhältnis von großer Halbachse zu Erdradius bleibt 60,35.
+Mondabstand mit demselben Faktor wächst, zeigt die Szene in allen drei Maßstabsstufen dieselbe
+Geometrie, und das Verhältnis von großer Halbachse zu Erdradius bleibt 60,35.
 
 Je Abspielen streuen der Azimut über den vollen Kreis, die Höhe zwischen 30° und 85° und der Abstand
 um den Faktor 0,8 bis 1,2, also über 120 bis 180 Erdradien. Die Höhe bestimmt die scheinbare Form
-der Bahn: Bei 30° erscheint die Ellipse auf 0,59 ihrer Breite gestaucht, bei 85° fast kreisrund.
+der Bahn: Bei 30° erscheint die Ellipse je nach Bahnlage auf 0,44 bis 0,62 ihrer Breite gestaucht,
+im Mittel auf 0,54; bei 85° ist sie fast kreisrund.
 
 Bei 50° senkrechtem Bildwinkel misst die Erde $2\arcsin(1/150) = 0{,}76^\circ$, mit Streuung 0,64°
-bis 0,95°; der Mond kommt je nach Bahnstelle auf 0,16° bis 0,26°, mit Streuung auf 0,13° bis 0,44°.
+bis 0,95°; der Mond kommt je nach Bahnstelle auf 0,16° bis 0,26°, mit Streuung auf 0,13° bis 0,46°.
 Beide bleiben Scheibchen; die Bahnlinie dagegen füllt das Bild. Ihr Winkelradius um die Bildmitte
-beträgt ohne Streuung 23,9° bis 24,7° gegen 25° halbe Bildhöhe; beim Abstandsfaktor 0,8 ragt sie
-über den Rand hinaus. Über alle Ziehungen bleiben im Mittel 96 % der Linie im Bild (16:9),
-vollständig in gut zwei Dritteln der Fälle.
+liegt bei Höhe 55° und Faktor 1 je nach Lage von Knoten- und Apsidenlinie zwischen rund 23° und 25°,
+die halbe Bildhöhe bei 25°: Schon ohne Abstandsstreuung tritt sie gelegentlich über den Rand, beim
+Faktor 0,8 immer. Über alle Ziehungen bleiben bei 16:9 im Mittel 96 % der Linie im Bild, vollständig
+in gut zwei Dritteln der Fälle.
 
 45 s zu 0,9 Tagen je Sekunde sind 40,5 Tage, 1,48 siderische Umläufe zu je 30,4 s; weil die Kamera
 in derselben Richtung mitwandert, zieht der Mond gegenüber dem Bildausschnitt nur 1,42-mal herum.
@@ -78,11 +80,12 @@ Erdmittelpunkt deshalb im Monatstakt um bis zu 6,9″.
   laufen linear, die Raten nach Meeus um die allgemeine Präzession vermindert auf +4067,6168° und
   −1935,5333° je Jahrhundert. Kein periodisches Glied ist enthalten: Gegen DE441 weicht die Länge
   1990 bis 2030 um bis zu 2,39° ab (quadratisches Mittel 1,03°), die Breite um 0,34°, der Abstand um
-  rund 7000 km. Der Abstand pendelt starr zwischen 363 359 und 405 574 km; die Schwankung von
-  Perigäum, Apogäum und Monatslänge fehlt ganz.
+  rund 7010 km. Der Abstand pendelt starr zwischen 363 359 und 405 574 km; die Schwankung von
+  Perigäum, Apogäum und Monatslänge fehlt ganz. Der Datenblock zeigt statt der siderischen
+  Umlaufzeit die nach Kepler gerechneten 27,2916 Tage, 0,11 % weniger.
 - **Bahnlinie:** die momentane Ellipse zur Uhrzeit, über die exzentrische Anomalie abgetastet — der
-  Mond sitzt deshalb immer genau auf ihr. Während der Szene dreht sich die Apsidenlinie um 4,5°, die
-  Knotenlinie um −2,1°.
+  Mond sitzt deshalb immer genau auf ihr. Während der Szene dreht sich die Apsidenlinie um 4,5° bis
+  4,9°, die Knotenlinie um −2,1° bis −2,4°.
 - **Ruhende Erde:** Der Erdmittelpunkt sitzt im Erde-Mond-Schwerpunkt der JPL-Tafel, der Mond hängt
   starr an ihm; das Bild zeigt deshalb keinen Umlauf beider Körper um einen gemeinsamen Punkt. Der
   wahre Erdmittelpunkt läge 4415 bis 4928 km daneben.

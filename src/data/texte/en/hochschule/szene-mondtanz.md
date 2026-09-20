@@ -7,21 +7,22 @@ The [Moon](objekt:moon) orbits the [Earth](objekt:earth) in time-lapse, seen obl
 The camera is anchored to the Earth, 150 displayed Earth radii away and 55° above the ecliptic, and
 looks at the Earth's centre; its azimuth drifts prograde at 0.5° per second, hence by 22.5° over the
 45 s of the scene. The reference quantity is the displayed radius, radius times the size factor;
-because the lunar distance grows by the same factor, the scene shows the same picture at all three
+because the lunar distance grows by the same factor, the scene shows the same geometry at all three
 scale settings, and the ratio of semi-major axis to Earth radius stays 60.35.
 
 Each playback varies the azimuth over the full circle, the elevation between 30° and 85° and the
 distance by a factor of 0.8 to 1.2, hence over 120 to 180 Earth radii. The elevation governs the
-apparent shape of the orbit: at 30° the ellipse appears compressed to 0.59 of its width, at 85° it
-is almost circular.
+apparent shape of the orbit: at 30° the ellipse appears compressed to 0.44 to 0.62 of its width
+depending on the orientation of the orbit, on average to 0.54; at 85° it is almost circular.
 
 In a vertical field of view of 50° the Earth subtends $2\arcsin(1/150) = 0.76^\circ$, with the
 variation 0.64° to 0.95°; the Moon reaches 0.16° to 0.26° depending on its place in the orbit, with
-the variation 0.13° to 0.44°. Both stay small discs; the orbit line, by contrast, fills the frame.
-Its angular radius around the centre of the image is 23.9° to 24.7° without the variation, against
-25° for half the image height; at a distance factor of 0.8 it reaches beyond the edge. Over all
-draws an average of 96% of the line stays in frame (16:9), all of it in a good two thirds of the
-cases.
+the variation 0.13° to 0.46°. Both stay small discs; the orbit line, by contrast, fills the frame.
+At an elevation of 55° and a factor of 1 its angular radius around the centre of the image lies
+between about 23° and 25°, depending on where the lines of nodes and apsides lie, and half the image
+height is 25°: even without the distance variation it occasionally passes beyond the edge, and at a
+factor of 0.8 it always does. Over all draws an average of 96% of the line stays in frame at 16:9,
+all of it in a good two thirds of the cases.
 
 45 s at 0.9 days per second are 40.5 days, 1.48 sidereal revolutions of 30.4 s each; because the
 camera drifts in the same direction, the Moon goes around only 1.42 times relative to the frame.
@@ -80,11 +81,12 @@ centre therefore wobbles by up to 6.9″ every month.
   run linearly, the rates after Meeus reduced by the general precession to +4067.6168° and
   −1935.5333° per century. No periodic term is included: against DE441 the longitude from 1990 to
   2030 is off by up to 2.39° (root mean square 1.03°), the latitude by 0.34°, the distance by about
-  7000 km. The distance swings rigidly between 363,359 and 405,574 km; the variation of perigee,
-  apogee and month length is missing entirely.
+  7010 km. The distance swings rigidly between 363,359 and 405,574 km; the variation of perigee,
+  apogee and month length is missing entirely. Instead of the sidereal period, the data panel shows
+  the 27.2916 days computed from Kepler's law, 0.11% less.
 - **Orbit line:** the momentary ellipse for the current time, sampled in eccentric anomaly — the
-  Moon therefore always sits exactly on it. During the scene the line of apsides turns by 4.5°, the
-  line of nodes by −2.1°.
+  Moon therefore always sits exactly on it. During the scene the line of apsides turns by 4.5° to
+  4.9°, the line of nodes by −2.1° to −2.4°.
 - **Earth at rest:** the Earth's centre sits at the Earth–Moon barycentre of the JPL table, and the
   Moon hangs rigidly from it; the view therefore shows no revolution of both bodies about a common
   point. The true centre of the Earth would be 4415 to 4928 km away.
