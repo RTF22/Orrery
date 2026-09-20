@@ -6,14 +6,14 @@ im Streiflicht über die Kante schieben.
 
 ## Was das Bild zeigt
 
-Ohne Streuung steht die Kamera 2,4 dargestellte Erdradien vom Mittelpunkt entfernt (764 520
-km in den Weltkoordinaten des Modells, real 15 290 km – Radius und Abstand tragen denselben
-Maßstabsfaktor, das Bild entspricht also einem Standort auf 2,4 echten Erdradien), 6° über
-der Ekliptik (Elevation gegen die Ekliptikebene, nicht gegen ihre Normale), und dreht ihren
-Azimut mit 1,2° je Sekunde, in den 40 s der Szene also um 48°. Ein eigenes Blickziel fehlt
-(`lookAtId` ist nicht gesetzt); die Kamera blickt deshalb stets auf den Erdmittelpunkt,
-unabhängig von Azimut und Elevation – am Code über 20 000 Ziehungen ohne Ausnahme
-nachgerechnet.
+Ohne Streuung steht die Kamera 2,4 dargestellte Erdradien vom Mittelpunkt entfernt (im
+Maßstab „Schaubild" 764 520 km in den Weltkoordinaten des Modells, real 15 290 km – Radius
+und Abstand tragen denselben Maßstabsfaktor, das Bild der Erde entspricht deshalb dem
+Anblick von 2,4 echten Erdradien), 6° über der Ekliptik (Elevation gegen die Ekliptikebene,
+nicht gegen ihre Normale), und dreht ihren Azimut mit 1,2° je Sekunde, in den 40 s der Szene
+also um 48°. Ein eigenes Blickziel fehlt (`lookAtId` ist nicht gesetzt); die Kamera blickt
+deshalb stets auf den Erdmittelpunkt, unabhängig von Azimut und Elevation – am Code über
+20 000 Ziehungen ohne Ausnahme nachgerechnet.
 
 Je Abspielen streuen Azimut über den vollen Kreis, Elevation zwischen 2° und 16° (Basis 6°
 plus −4° bis 10°) und Abstand um den Faktor 0,9 bis 1,3, also zwischen 2,16 und 3,12
@@ -31,22 +31,28 @@ nicht mit den 240,8° der Oberfläche.
 
 Ob die Sonne selbst im Bild erscheint, hängt von Datum, Azimut, Elevation und Abstand ab:
 Über 200 000 Zufallsziehungen dieser vier Größen und der Szenenzeit (mitlaufende Uhr) ist
-ihr Mittelpunkt nur in rund 14 % überhaupt sichtbar (im Bildfeld und nicht ganz hinter der
-Erde), davon in rund 6 % nur am Erdrand angeschnitten – das Streiflicht des Szenennamens.
-Den Terminator selbst zeigt die Szene dagegen weit häufiger: Er liegt auf der von der Kamera
-aus sichtbaren Kappe der Erde in gut drei Vierteln der Ziehungen (77,5 %). Meist zeigt die
-Szene also den Übergang von Tag zu Nacht, aber ohne die Sonne selbst im Bild.
+ihre Scheibe nur in rund 14 % der Ziehungen überhaupt zu sehen (Mitte im Bildfeld, Scheibe
+nicht ganz hinter der Erde); in rund 6 % aller Ziehungen ist dabei nur ein am Erdrand
+angeschnittener Rest übrig – das Streiflicht des Szenennamens. Den Terminator selbst zeigt
+die Szene dagegen weit häufiger: Er liegt auf der von der Kamera aus sichtbaren Kappe der
+Erde in gut drei Vierteln der Ziehungen (77,5 %). Meist zeigt die Szene also den Übergang
+von Tag zu Nacht, aber ohne die Sonne selbst im Bild.
 
 ## Hintergrund
 
 Sonnenauf- beziehungsweise -untergang gilt als eingetreten, wenn der Mittelpunkt der
 Sonnenscheibe auf eine geometrische Zenitdistanz von 90°50′ sinkt – der Überschuss von 50′
-über 90° ist die Summe aus mittlerer Horizontrefraktion (34′) und Sonnenhalbmesser (16′)
-([U.S. Naval Observatory 2026](literatur:usno-2026)). Die 34′ sind ein Nennwert für
-Normalbedingungen; die tatsächliche Refraktion hängt von Lufttemperatur und -druck vor Ort
-ab, wie Bennetts Formeln zeigen ([Bennett 1982](literatur:bennett-1982)). Weil die Refraktion
-mit sinkender Höhe zunimmt, hebt sie den unteren Sonnenrand stärker als den oberen: Nahe dem
-Horizont wirkt die Scheibe flach gedrückt, ein optischer Effekt, kein realer.
+über 90° ist die Summe aus mittlerer Horizontrefraktion (34′) und Sonnenhalbmesser (16′);
+dieselbe geometrische Zählweise stuft die Dämmerung: Bürgerliche, nautische und
+astronomische Dämmerung beginnen morgens und enden abends, wenn der Sonnenmittelpunkt
+geometrisch 6°, 12° beziehungsweise 18° unter dem Horizont steht
+([U.S. Naval Observatory 2026](literatur:usno-2026)). Die 34′ sind ein Durchschnittswert;
+die tatsächliche Refraktion hängt von Lufttemperatur und -druck vor Ort ab. Bennetts
+Näherungsformeln bleiben über einen weiten Temperatur- und Druckbereich genau und gelten für
+praktische Zwecke als den Refraktionstafeln des Nautical Almanac gleichwertig
+([Bennett 1982](literatur:bennett-1982)). Weil die Refraktion mit sinkender Höhe zunimmt,
+hebt sie den unteren Sonnenrand stärker als den oberen: Nahe dem Horizont wirkt die Scheibe
+flach gedrückt, ein optischer Effekt, kein realer.
 
 Am Erdrand selbst mischen sich Rayleigh-Streuung und die schwache Absorption des Ozons im
 sichtbaren Chappuis-Band: Nach Modellrechnungen zum Zenithimmel der Dämmerung wäre er ohne
@@ -93,12 +99,13 @@ zu den Tagundnachtgleichen geht er durch die Pole.
   wirklichen rund 0,53° – etwa das 17,5-Fache –, in „Kompakt" entsprechend um das 40-Fache;
   nur „Realistisch" zeigt annähernd die wahre Größe.
 - **Belichtung und Tonemapping:** Die Kamera belichtet auf die Erde als Ziel
-  ([Photometrie](thema:photometrie)): Eine weiße Lambert-Fläche am Ziel würde den linearen
-  Bezugswert 1 erreichen; die Tagseite der Erdkarte bleibt mit ihrer Reflexion darunter, die
-  Nachtseite trägt nur das Fülllicht, ein Viertel des Tagniveaus, und liegt nach der
-  ACES-Tonwertkurve entsprechend dunkler im Bild. Von dieser Zielbelichtung bleibt die
-  selbstleuchtende Sonne unberührt, von der ACES-Kurve dagegen nicht; nur ihr Bloom-Schein
-  hängt zusätzlich am dargestellten Radius.
+  ([Photometrie](thema:photometrie)): Eine weiße Lambert-Fläche am Ziel würde unter
+  senkrechtem Licht, ohne Fresnel-Faktor und ohne Fülllicht, den linearen Bezugswert 1
+  erreichen; die Tagseite der Erdkarte bleibt mit ihrer Reflexion darunter, die Nachtseite
+  trägt nur das Fülllicht, ein Viertel des Tagniveaus, und liegt nach der ACES-Tonwertkurve
+  entsprechend dunkler im Bild. Bildhelligkeiten sind deshalb keine Messgrößen. Von dieser
+  Zielbelichtung bleibt die selbstleuchtende Sonne unberührt, von der ACES-Kurve dagegen
+  nicht; nur ihr Bloom-Schein hängt zusätzlich am dargestellten Radius.
 - **Zeitraffer:** Er gleitet beim Szenenbeginn geometrisch über 2 s vom Wert der vorigen
   Szene auf den Sollwert 0,02 Tage je Sekunde. Weil dieser Sollwert selbst zu den niedrigsten
   im Katalog zählt, wirkt sich die Herkunft besonders stark aus: Je nach Vorgänger – der

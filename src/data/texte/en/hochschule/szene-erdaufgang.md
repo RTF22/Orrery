@@ -6,14 +6,14 @@ the edge in grazing light.
 
 ## What the view shows
 
-Without variation the camera stands 2.4 displayed Earth radii from the centre (764,520 km
-in the model's world coordinates, 15,290 km in real terms — the radius and the distance
-carry the same scale factor, so the view corresponds to a position at 2.4 true Earth radii),
-6° above the ecliptic (elevation against the plane of the ecliptic, not against its normal),
-and its azimuth drifts at 1.2° per second, hence by 48° over the 40 s of the scene. There is
-no separate look-at target (`lookAtId` is unset); the camera therefore always looks at the
-Earth's centre, regardless of azimuth and elevation — checked in code across 20,000 draws
-without exception.
+Without variation the camera stands 2.4 displayed Earth radii from the centre (in the
+"Diagram" scale 764,520 km in the model's world coordinates, 15,290 km in real terms — the
+radius and the distance carry the same scale factor, so the view of the Earth corresponds to
+the sight from 2.4 true Earth radii), 6° above the ecliptic (elevation against the plane of
+the ecliptic, not against its normal), and its azimuth drifts at 1.2° per second, hence by
+48° over the 40 s of the scene. There is no separate look-at target (`lookAtId` is unset);
+the camera therefore always looks at the Earth's centre, regardless of azimuth and
+elevation — checked in code across 20,000 draws without exception.
 
 Each playback varies the azimuth over the full circle, the elevation between 2° and 16°
 (base 6° plus −4° to 10°) and the distance by a factor of 0.9 to 1.3, hence between 2.16 and
@@ -31,24 +31,27 @@ the camera's own 48°, not with the surface's 240.8°.
 
 Whether the Sun itself appears in the frame depends on the date, azimuth, elevation and
 distance: across 200,000 random draws of these four quantities and the scene time (with the
-clock running), its centre is visible at all in only about 14% of cases (in frame and not
-entirely behind the Earth), of which about 6% are grazing the Earth's edge — the grazing
-light the scene's name promises. The terminator itself, by contrast, appears far more often:
-it lies on the cap of the Earth visible from the camera in a good three quarters of the
-draws (77.5%). Mostly, then, the scene shows the transition from day to night, but without
-the Sun itself in the frame.
+clock running), its disc can be seen at all in only about 14% of the draws (centre in frame,
+disc not entirely behind the Earth); in about 6% of all draws only a remnant clipped by the
+Earth's edge is left — the grazing light the scene's name promises. The terminator itself,
+by contrast, appears far more often: it lies on the cap of the Earth visible from the camera
+in a good three quarters of the draws (77.5%). Mostly, then, the scene shows the transition
+from day to night, but without the Sun itself in the frame.
 
 ## Background
 
 Sunrise or sunset is defined to occur when the centre of the solar disc reaches a geometric
 zenith distance of 90°50′ — the 50′ excess over 90° is the sum of the mean horizontal
-refraction (34′) and the Sun's semidiameter (16′)
-([U.S. Naval Observatory 2026](literatur:usno-2026)). The 34′ are a nominal value for
-standard conditions; the actual refraction depends on the local air temperature and
-pressure, as Bennett's formulas show ([Bennett 1982](literatur:bennett-1982)). Because
-refraction increases as altitude falls, it lifts the lower edge of the solar disc more than
-the upper one: near the horizon the disc looks flattened, an optical effect and not a real
-one.
+refraction (34′) and the Sun's semidiameter (16′); the same geometric convention grades
+twilight: civil, nautical and astronomical twilight begin in the morning and end in the
+evening when the centre of the Sun is geometrically 6°, 12° and 18° below the horizon
+respectively ([U.S. Naval Observatory 2026](literatur:usno-2026)). The 34′ are an average
+value; the actual refraction depends on the local air temperature and pressure. Bennett's
+approximation formulas stay accurate over a wide range of temperature and pressure and may
+for all practical purposes be considered equivalent to the refraction tables of the Nautical
+Almanac ([Bennett 1982](literatur:bennett-1982)). Because refraction increases as altitude
+falls, it lifts the lower edge of the solar disc more than the upper one: near the horizon
+the disc looks flattened, an optical effect and not a real one.
 
 At the Earth's edge itself, Rayleigh scattering mixes with the weak absorption of ozone in
 the visible Chappuis band: according to model calculations for the zenith sky at twilight,
@@ -98,11 +101,12 @@ course of a year; only at the equinoxes does it run through the poles.
   true size.
 - **Exposure and tone mapping:** the camera exposes for the Earth as its target
   ([Photometry](thema:photometrie)): a white Lambert surface at the target would reach the
-  linear reference value 1; the day side of the Earth map stays below that with its own
-  reflectance, while the night side carries only the fill light, a quarter of the day level,
-  and accordingly sits darker in the image after the ACES tone curve. The self-luminous Sun
-  is unaffected by this target exposure, but not by the ACES curve; only its bloom halo
-  additionally depends on the displayed radius.
+  linear reference value 1 under perpendicular light, without the Fresnel factor and without
+  fill light; the day side of the Earth map stays below that with its own reflectance, while
+  the night side carries only the fill light, a quarter of the day level, and accordingly
+  sits darker in the image after the ACES tone curve. Image brightnesses are therefore not
+  measured quantities. The self-luminous Sun is unaffected by this target exposure, but not
+  by the ACES curve; only its bloom halo additionally depends on the displayed radius.
 - **Time-lapse:** at the start of the scene it glides geometrically over 2 s from the value
   of the previous scene to the nominal rate of 0.02 days per second. Because this nominal
   rate is itself among the lowest in the catalogue, its origin has an outsized effect:
