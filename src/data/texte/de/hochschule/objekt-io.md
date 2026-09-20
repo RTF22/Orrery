@@ -21,7 +21,9 @@ Jupiters anzupassen. Kombiniert mit dem Schwerefeld ergibt das Modelle mit einem
 Kern, je nach angenommener Zusammensetzung 350 bis 650 km Radius für reines Eisen oder 550 bis
 900 km für eine Eisen-Schwefel-Legierung ([Anderson et al. 2001](literatur:anderson-2001)); ein
 solcher Kern verringert den [Trägheitsmomentfaktor](thema:innerer-aufbau) gegenüber dem Wert 0,4
-einer homogenen Kugel. Über 25 Jahre später maßen zwei enge Juno-Vorbeiflüge im Dezember 2023 und
+einer homogenen Kugel. Mit der dort behandelten Radau-Darwin-Näherung und diesem $k_\mathrm{f}$
+folgt $C/(Ma^2) \approx 0{,}377$. Über 25 Jahre später maßen zwei enge Juno-Vorbeiflüge im
+Dezember 2023 und
 Februar 2024 zusammen mit Galileo-Daten und der Astrometrie erstmals auch den Realteil der
 dissipativen Love-Zahl direkt: $k_2 = 0{,}125 \pm 0{,}047$ bei einer Güte
 $Q = 11{,}4 \pm 3{,}6$ (1σ; [Park et al. 2025](literatur:park-2025)). Das Verhältnis

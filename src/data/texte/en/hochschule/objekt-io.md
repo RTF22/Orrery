@@ -21,6 +21,8 @@ field this yields models with a metallic core, 350 to 650 km in radius for pure 
 900 km for an iron–sulphur alloy, depending on the assumed composition
 ([Anderson et al. 2001](literatur:anderson-2001)); such a core lowers the
 [moment-of-inertia factor](thema:innerer-aufbau) below the value 0.4 of a homogeneous sphere.
+With the Radau–Darwin approximation treated there and this $k_\mathrm{f}$,
+$C/(Ma^2) \approx 0.377$ follows.
 More than 25 years later, two close Juno flybys in December 2023 and February 2024, combined
 with Galileo data and astrometry, measured the real part of the dissipative Love number
 directly for the first time: $k_2 = 0.125 \pm 0.047$ at a quality factor $Q = 11.4 \pm 3.6$
