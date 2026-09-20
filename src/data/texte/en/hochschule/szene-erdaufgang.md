@@ -2,17 +2,18 @@
 
 The camera circles close above the [Earth](objekt:earth) and always looks at its centre.
 The comment in the dataset names the intent: the [Sun](objekt:sun) is meant to slide across
-the edge in grazing light – but that holds for only part of the draws (see below).
+the edge in grazing light.
 
 ## What the view shows
 
 Without variation the camera stands 2.4 displayed Earth radii from the centre (764,520 km
-in real terms at the default scale "Diagram", see the model limitation "Solar disc"), 6°
-above the ecliptic (elevation against the plane of the ecliptic, not against its normal or
-an observer's horizon), and its azimuth drifts at 1.2° per second, hence by 48° over the
-40 s of the scene. There is no separate look-at target (`lookAtId` is unset); the camera
-therefore always looks at the Earth's centre, regardless of azimuth and elevation — checked
-in code across 20,000 draws without exception.
+in the model's world coordinates, 15,290 km in real terms — the radius and the distance
+carry the same scale factor, so the view corresponds to a position at 2.4 true Earth radii),
+6° above the ecliptic (elevation against the plane of the ecliptic, not against its normal),
+and its azimuth drifts at 1.2° per second, hence by 48° over the 40 s of the scene. There is
+no separate look-at target (`lookAtId` is unset); the camera therefore always looks at the
+Earth's centre, regardless of azimuth and elevation — checked in code across 20,000 draws
+without exception.
 
 Each playback varies the azimuth over the full circle, the elevation between 2° and 16°
 (base 6° plus −4° to 10°) and the distance by a factor of 0.9 to 1.3, hence between 2.16 and
@@ -22,35 +23,32 @@ distance the globe already extends beyond the edge of the frame vertically (hori
 the field reaches ±39.6° at 16:9, where the globe still stays in frame).
 
 Over the 40 s the globe turns by 288.8° on its own axis (0.8 model days at a rotation
-period of 23.9345 h), while the camera's azimuth moves by only 48°; relative to the camera
-that is 288.8° − 48° = 240.8°, hence 0.67 revolutions. The terminator, where it appears in
-the frame (see below), sweeps noticeably past under the camera during the 40 s instead of
-standing still.
+period of 23.9345 h); relative to the camera, whose azimuth moves by only 48°, that is
+240.8°, hence 0.67 revolutions — the surface sweeps noticeably past under the camera during
+this time. The terminator, by contrast, hangs on the barely-moving direction of the Sun
+(0.8 model days turn it by only about 0.8°) and so moves relative to the camera mainly with
+the camera's own 48°, not with the surface's 240.8°.
 
 Whether the Sun itself appears in the frame depends on the date, azimuth, elevation and
 distance: across 200,000 random draws of these four quantities and the scene time (with the
-clock running, 0.02 days per second), the direction to the Sun lies within the frame in only
-about 22% of cases (50° vertically, ±39.6° horizontally at 16:9); its disc is at least
-partly visible in about 14%, entirely clear and in frame in about 8%, and grazing the
-Earth's edge — the grazing light the scene's name promises — in about 6%. The terminator
-itself, by contrast, appears far more often: it lies on the cap of the Earth visible from
-the camera in about three quarters of the draws (74% to 78%, depending on whether the cap's
-edge is counted as an exact geometric boundary or sampled with 300 points). Mostly, then,
-the scene shows the transition from day to night, but without the Sun itself in the frame.
+clock running), its centre is visible at all in only about 14% of cases (in frame and not
+entirely behind the Earth), of which about 6% are grazing the Earth's edge — the grazing
+light the scene's name promises. The terminator itself, by contrast, appears far more often:
+it lies on the cap of the Earth visible from the camera in a good three quarters of the
+draws (77.5%). Mostly, then, the scene shows the transition from day to night, but without
+the Sun itself in the frame.
 
 ## Background
 
 Sunrise or sunset is defined to occur when the centre of the solar disc reaches a geometric
 zenith distance of 90°50′ — the 50′ excess over 90° is the sum of the mean horizontal
-refraction (34′) and the Sun's semidiameter (16′). Civil, nautical and astronomical twilight
-use the same zenith distance at 96°, 102° and 108° respectively, that is 6°, 12° and 18°
-below the horizon ([U.S. Naval Observatory 2026](literatur:usno-2026)). The 34′ are a
-nominal value for standard conditions; the actual refraction depends on the local air
-temperature and pressure — Bennett's formulas explicitly model this over a wide range of
-temperature and pressure while remaining practically equivalent to the Nautical Almanac's
-tables ([Bennett 1982](literatur:bennett-1982)). Because refraction increases as altitude
-falls, it lifts the lower edge of the solar disc more than the upper one: near the horizon
-the disc looks flattened, an optical effect and not a real one.
+refraction (34′) and the Sun's semidiameter (16′)
+([U.S. Naval Observatory 2026](literatur:usno-2026)). The 34′ are a nominal value for
+standard conditions; the actual refraction depends on the local air temperature and
+pressure, as Bennett's formulas show ([Bennett 1982](literatur:bennett-1982)). Because
+refraction increases as altitude falls, it lifts the lower edge of the solar disc more than
+the upper one: near the horizon the disc looks flattened, an optical effect and not a real
+one.
 
 At the Earth's edge itself, Rayleigh scattering mixes with the weak absorption of ozone in
 the visible Chappuis band: according to model calculations for the zenith sky at twilight,
@@ -64,15 +62,12 @@ of the mean Earth radius, with $r = R_\oplus + 400\,\mathrm{km}$, takes
 
 $$T = 2\pi\sqrt{\frac{r^3}{GM_\oplus}}$$
 
-about 92.4 min ($R_\oplus$ = 6371 km from the dataset,
-[NSSDC Earth Fact Sheet](quelle:nssdc-earth); $GM_\oplus = 3.986004418 \cdot
-10^{14}\,\mathrm{m^3\,s^{-2}}$ from the IERS table,
-[Petit and Luzum 2010](literatur:petit-2010); the simulation itself uses $G_\mathrm{CODATA}$
-times the dataset's Earth mass, about 5 ppm above that, with no consequence for this figure
-in minutes). That is about 15.6 orbits, and just as many sunrises and sunsets, per day —
-close to the 16 of the school-level version, which rounds to 90 minutes and 16. This real
-quantity has nothing to do with the scene's arbitrary camera path (1.2° of azimuth per
-second).
+about 92.4 min ($R_\oplus$ from the dataset,
+[NSSDC Earth Fact Sheet](quelle:nssdc-earth); $GM_\oplus$ from the IERS table,
+[Petit and Luzum 2010](literatur:petit-2010)). That is about 15.6 orbits, and just as many
+sunrises and sunsets, per day — close to the 16 of the school-level version, which rounds to
+90 minutes and 16. This real quantity has nothing to do with the scene's arbitrary camera
+path (1.2° of azimuth per second).
 
 The Earth's [axial tilt](thema:achsneigung) determines the terminator's orientation: it
 stands perpendicular to the direction of the Sun at all times, not to the rotation axis, and
@@ -84,10 +79,10 @@ course of a year; only at the equinoxes does it run through the poles.
 - **No atmosphere, no clouds:** the only Earth texture is an albedo map
   (`public/textures/earth/albedo.jpg`); there is no cloud or atmosphere layer, no refractive
   bending at the edge, no twilight colours, no Chappuis band and no airglow. The terminator
-  follows the Lambertian part of the material times $1-F$ with the Fresnel factor $F$, which
-  grows towards the edge, plus the night-side fill light — by default a quarter of the day
-  level, applied over the whole visible disc and hence on the day side too; the flattened
-  solar disc from the Background section is likewise absent.
+  follows the Lambertian part of the material times $1-F$ (the Fresnel factor) plus the
+  night-side fill light — by default a quarter of the day level, applied over the whole
+  visible disc and hence on the day side too; the flattened solar disc from the Background
+  section is likewise absent.
 - **Fixed rotation:** Orrery rotates the Earth uniformly with the sidereal period 23.9345 h
   from a fixed zero point at right ascension 0°
   ([NSSDC Earth Fact Sheet](quelle:nssdc-earth)), without precession, nutation or polar
@@ -96,29 +91,25 @@ course of a year; only at the equinoxes does it run through the poles.
   the "In the model" section of `objekt-earth`, and unchanged at 75.4° on 20 September 2026
   (drift about 0.0004° per day). Day and night therefore lie over the wrong longitudes.
 - **Solar disc:** how large the Sun appears depends on the display scale, not only on
-  distance: its displayed radius carries the `sunDamping` reduction, but the full
-  `sizeScale` on top of it — a plain radius factor of `50 · 0.35 = 17.5` in "Diagram" and
-  `200 · 0.2 = 40` in "Compact", matching `objekt-sun`. Seen from the camera's actual
-  position (not the Earth's centre), the Sun's angular diameter in "Diagram" varies with
-  date and azimuth between about 9.2° and 9.4° instead of the true roughly 0.53° — about
-  17.5 times too large — and correspondingly about 40 times too large in "Compact"; only
-  "Realistic" shows close to the true size.
+  distance (for the radius factor and its cause see `objekt-sun`): seen from the camera's
+  actual position, its angular diameter in "Diagram" varies with date and azimuth between
+  about 9.2° and 9.5° instead of the true roughly 0.53° — about 17.5 times too large — and
+  correspondingly about 40 times too large in "Compact"; only "Realistic" shows close to the
+  true size.
 - **Exposure and tone mapping:** the camera exposes for the Earth as its target
-  ([Photometry](thema:photometrie)): the day side thereby reaches the linear reference
-  value 1 regardless of the true solar distance, while the night side carries only the fill
-  light, a quarter of that, and accordingly sits darker in the image after the ACES tone
-  curve. Because the scene shows mostly the day side or mostly the night side depending on
-  the draw, this target exposure keeps both comparably bright regardless of date and solar
-  distance, though neither value is a physical measurement. The self-luminous Sun is
-  unaffected by any of this; only its bloom halo depends on the displayed radius.
+  ([Photometry](thema:photometrie)): a white Lambert surface at the target would reach the
+  linear reference value 1; the day side of the Earth map stays below that with its own
+  reflectance, while the night side carries only the fill light, a quarter of the day level,
+  and accordingly sits darker in the image after the ACES tone curve. The self-luminous Sun
+  is unaffected by this target exposure, but not by the ACES curve; only its bloom halo
+  additionally depends on the displayed radius.
 - **Time-lapse:** at the start of the scene it glides geometrically over 2 s from the value
-  of the previous scene to the nominal rate of 0.02 days per second, with each frame
-  continuing to glide from the value it last reached. Because this nominal rate is itself
-  among the lowest in the catalogue, its origin has an outsized effect: depending on the
-  predecessor — the catalogue ranges from 0.0035 to 30 days per second — at 60 frames per
-  second between 0.80 (the nominal rate itself) and about 3.49 days pass in the 40 s, and
-  the globe turns correspondingly between 0.80 and 3.50 times on its own axis; at other
-  frame rates the upper value shifts further (30 frames per second: 4.62 days; 144: 2.54
-  days). Further simplifications: [limits of the model](thema:modell).
+  of the previous scene to the nominal rate of 0.02 days per second. Because this nominal
+  rate is itself among the lowest in the catalogue, its origin has an outsized effect:
+  depending on the predecessor — the catalogue ranges from 0.0035 to 30 days per second — at
+  60 frames per second and with a scene change that falls exactly on a frame, between 0.80
+  (the nominal rate itself) and about 3.49 days pass in the 40 s, and the globe turns
+  correspondingly between 0.80 and 3.50 times on its own axis. Further simplifications:
+  [limits of the model](thema:modell).
 
 *As of September 2026*
