@@ -58,9 +58,11 @@ Quellenkarten für alle Szenen) sind abgeschlossen. Phase 4c ist damit komplett
 Prüfskript für den Literaturkatalog (`npm run literatur:pruefen`) und drei
 Pilottexte (Bahnelemente, Erde, Mondfinsternis); Etappe 2 die sechs
 Fachthemen (Bezugssysteme und Zeitskalen, Gezeiten, Bahnresonanzen, innerer
-Aufbau, Albedo und Helligkeit, Entstehung des Sonnensystems). Offen sind die
-übrigen Hochschultexte (Etappen 4d-3 bis 4d-11) und Phase 5 (Ambient-Sound,
-Qualitätsstufen, Texturkompression, Veröffentlichung).
+Aufbau, Albedo und Helligkeit, Entstehung des Sonnensystems); Etappe 3 Sonne,
+Mond, Finsternisse, gebundene Rotation und die Szenen „Der Tanz des Mondes"
+und „Sonnenaufgang über dem Erdrand". Offen sind die übrigen Hochschultexte
+(Etappen 4d-4 bis 4d-11) und Phase 5 (Ambient-Sound, Qualitätsstufen,
+Texturkompression, Veröffentlichung).
 
 ## Entwicklung
 
