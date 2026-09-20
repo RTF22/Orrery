@@ -18,13 +18,14 @@ several missions independently gives $1465 \pm 51\,\mathrm{kg\,m^{-3}}$ and semi
 $8.04 / 5.89 / 5.11\,\mathrm{km}$ ([Ernst et al. 2023](literatur:ernst-2023)) – both values sit
 well below the density that the catalogue's older mass of $2.4 \cdot 10^{15}\,\mathrm{kg}$
 ([NASA Mars moons](quelle:nasa-marsmonde)) and the same semi-axes would give: about
-$2400\,\mathrm{kg\,m^{-3}}$. The catalogue mass is thus likely too high by about two thirds (see
+$2368\,\mathrm{kg\,m^{-3}}$. The catalogue mass is thus likely too high by about two thirds (see
 "In the model").
 
 ## Interior
 
-At a density around 1.47 rather than the older 2.4 g/cm³, Deimos too is more likely a loose rubble
-pile than a solid body, as already discussed for [Phobos](objekt:phobos)
+At a density around 1.47 g/cm³ rather than the roughly 2.37 g/cm³ derived from the outdated
+catalogue mass (see "Parameters and measurement"), Deimos too is more likely a loose rubble pile
+than a solid body, as already discussed for [Phobos](objekt:phobos)
 ([Rosenblatt 2011](literatur:rosenblatt-2011); [Interior structure](thema:innerer-aufbau)). Whether
 the interior also holds some ice is, for want of a close flyby, more open than for Phobos.
 

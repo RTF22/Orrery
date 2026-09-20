@@ -24,9 +24,9 @@ die Dichte gegenüber älteren Schätzungen senkte ([Willner et al. 2014](litera
 
 Der aktuelle JPL-Katalog führt $GM = (0{,}7087 \pm 0{,}0006) \cdot 10^{-3}\,\mathrm{km^3\,s^{-2}}$
 und $\bar{\rho} = 1872 \pm 76\,\mathrm{kg\,m^{-3}}$ ([JPL SSD Monddaten](quelle:jpl-satelliten)) –
-beides trifft Pätzold et al. auf unter einer Standardabweichung. Mit einer angenommenen Korndichte
-von 2800 bis 3300 kg/m³ (kohlige bis gewöhnliche Chondrite) folgt daraus eine Porosität von rund
-33 bis 44 %.
+beides trifft Pätzold et al. auf unter einer Standardabweichung. Mit Pätzold et al.s Dichte
+$1862\,\mathrm{kg\,m^{-3}}$ und einer angenommenen Korndichte von 2800 bis 3300 kg/m³ (kohlige bis
+gewöhnliche Chondrite) folgt eine Porosität von rund 33 bis 44 %.
 
 ## Inneres
 
@@ -131,9 +131,10 @@ Bruchstücke einander schon binnen 10 000 Jahren wieder träfen
   festen $a = 9375\,\mathrm{km}$, $e = 0{,}015$, $I = 1{,}1^\circ$; Knoten und Periapsislänge laufen
   linear mit −15 652,17° und +17 075,10° je Jahrhundert, macht 2,300 Jahre für den Knotenumlauf
   (wie die Bahnelementtafel selbst angibt) und 2,108 Jahre für den Umlauf der Periapsislänge –
-  kürzer als deren getrennt geführtes Argument allein (1,1 Jahre), weil darin die gegenläufige
-  Knotenbewegung schon steckt. Bahnverfall fehlt; am 19. September 2026 wäre der Unterschied zur
-  gemessenen Gezeitenbeschleunigung bereits 0,9° ([Gezeiten](thema:gezeiten)).
+  länger als deren getrennt geführtes Argument allein (1,1 Jahre), weil die gegenläufige
+  Knotenbewegung die Präzession der Periapsislänge gegenüber dem Argument allein abschwächt.
+  Bahnverfall fehlt; am 19. September 2026 wäre der Unterschied zur gemessenen
+  Gezeitenbeschleunigung bereits 0,9° ([Gezeiten](thema:gezeiten)).
 - **Rotation:** `rotationPeriodH` (7,65384 h) trifft die aus $\dot{L}$ gerechnete siderische
   Umlaufzeit auf unter eine Millionstel Abweichung, exakt 1:1 gekoppelt. Weder die gemessene
   physische Libration (1,14°) noch die optische aus der Exzentrizität ($2e = 1{,}7^\circ$) bildet

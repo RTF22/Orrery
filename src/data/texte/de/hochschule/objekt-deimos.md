@@ -19,13 +19,14 @@ Halbachsen von $8{,}04 / 5{,}89 / 5{,}11\,\mathrm{km}$
 ([Ernst et al. 2023](literatur:ernst-2023)) – beide Werte liegen deutlich unter der Dichte, die aus
 der im Katalog geführten, älteren Masse von $2{,}4 \cdot 10^{15}\,\mathrm{kg}$
 ([NASA-Marsmonde](quelle:nasa-marsmonde)) und denselben Halbachsen folgen würde: rund
-$2400\,\mathrm{kg\,m^{-3}}$. Die Katalogmasse dürfte damit um etwa zwei Drittel zu hoch liegen
+$2368\,\mathrm{kg\,m^{-3}}$. Die Katalogmasse dürfte damit um etwa zwei Drittel zu hoch liegen
 (siehe „Im Modell").
 
 ## Inneres
 
-Bei einer Dichte um 1,47 statt der älteren 2,4 g/cm³ ist auch Deimos eher ein lockerer Schutthaufen
-als ein massiver Körper, wie schon für [Phobos](objekt:phobos) diskutiert
+Bei einer Dichte um 1,47 g/cm³ statt der aus der veralteten Katalogmasse abgeleiteten rund
+2,37 g/cm³ (siehe „Kenngrößen und Messung") ist auch Deimos eher ein lockerer Schutthaufen als ein
+massiver Körper, wie schon für [Phobos](objekt:phobos) diskutiert
 ([Rosenblatt 2011](literatur:rosenblatt-2011); [Innerer Aufbau](thema:innerer-aufbau)). Ob das
 Innere zusätzlich etwas Eis enthält, ist mangels eines nahen Vorbeiflugs offener als bei Phobos.
 

@@ -22,8 +22,9 @@ lowered the density against older estimates ([Willner et al. 2014](literatur:wil
 
 The current JPL catalogue gives $GM = (0.7087 \pm 0.0006) \cdot 10^{-3}\,\mathrm{km^3\,s^{-2}}$ and
 $\bar{\rho} = 1872 \pm 76\,\mathrm{kg\,m^{-3}}$ ([JPL SSD satellite data](quelle:jpl-satelliten)),
-within one standard deviation of Pätzold et al. A grain density of 2800 to 3300 kg/m³ (carbonaceous
-to ordinary chondrites) implies a porosity of about 33 to 44 %.
+within one standard deviation of Pätzold et al. With Pätzold et al.'s density
+$1862\,\mathrm{kg\,m^{-3}}$ and a grain density of 2800 to 3300 kg/m³ (carbonaceous to ordinary
+chondrites), this gives a porosity of about 33 to 44 %.
 
 ## Interior
 
@@ -119,9 +120,10 @@ collide again within 10,000 years ([Hyodo et al. 2022](literatur:hyodo-2022)). C
   [Mars](objekt:mars)) with fixed $a = 9375\,\mathrm{km}$, $e = 0.015$, $I = 1.1^\circ$; node and
   longitude of periapsis advance at −15,652.17° and +17,075.10° per century: 2.300 years for the
   nodal cycle (as the element table itself states) and 2.108 years for the periapsis longitude –
-  shorter than the table's separately listed argument period alone (1.1 years), since the opposite
-  nodal motion is already folded in. Orbital decay is absent; by 19 September 2026 the gap to the
-  measured tidal acceleration would already be 0.9° ([Tides](thema:gezeiten)).
+  longer than the table's separately listed argument period alone (1.1 years), because the
+  opposite nodal motion weakens the precession of the periapsis longitude relative to the argument
+  alone. Orbital decay is absent; by 19 September 2026 the gap to the measured tidal acceleration
+  would already be 0.9° ([Tides](thema:gezeiten)).
 - **Rotation:** `rotationPeriodH` (7.65384 h) matches the sidereal period from $\dot{L}$ to under
   one part per million, exactly 1:1. Neither the physical libration (1.14°) nor the optical one
   from eccentricity ($2e = 1.7^\circ$) is modelled.
