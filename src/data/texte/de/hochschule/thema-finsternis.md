@@ -14,7 +14,7 @@ Hinter einem undurchsichtigen Körper vom Radius $R$ im Abstand $D$ von der [Son
 dem Radius $R_\odot$ begrenzen zwei Kegel den Schatten. Der innere läuft in der Entfernung $L$ spitz
 zu, der äußere öffnet sich:
 
-$$\sin f_2 = \frac{R_\odot - R}{D}, \quad L = \frac{R}{\tan f_2}, \quad \sin f_1 = \frac{R_\odot + R}{D}$$
+$$\sin f_2 = \frac{R_\odot - R}{D}, \quad L = \frac{R\,D}{R_\odot - R}, \quad \sin f_1 = \frac{R_\odot + R}{D}$$
 
 Im Abstand $d$ hinter dem Körper haben Kern- und Halbschatten damit die Radien
 
@@ -37,15 +37,16 @@ Vier Arten werden unterschieden: partiell, wenn nur der Halbschatten des Mondes 
 ringförmig, wenn der Gegenschatten auftrifft; total, wenn der Kernschatten auftrifft; hybrid, wenn
 Kern- und Gegenschatten verschiedene Teile der Erde treffen, die Finsternis also längs ihres Weges
 ringförmig und total erscheint ([Espenak und Meeus 2006](literatur:espenak-2006)). Ob ein Beobachter
-im Abstand $d$ vom Mondmittelpunkt Totalität sieht, entscheidet der Vergleich der Winkelradien
+im Abstand $d$ vom Mondmittelpunkt Totalität sieht, entscheidet der Vergleich der Winkelradien, unter
+denen er Mond und Sonne sieht:
 
-$$\beta = \arcsin\frac{R_\mathrm{M}}{d}, \quad \alpha = \arcsin\frac{R_\odot}{D}$$
+$$\beta = \arcsin\frac{R_\mathrm{M}}{d}, \quad \alpha = \arcsin\frac{R_\odot}{D + d}$$
 
-Totalität herrscht für $\beta \ge \alpha$, gleichbedeutend mit $d \le L$; für $\beta < \alpha$ bleibt
-ein Ring stehen, und es fehlt der Bruchteil $\beta^2/\alpha^2$ der Sonnenfläche. Der Winkelradius der
-Sonne schwankt zwischen 0,262° im Aphel und 0,271° im Perihel, der des Mondes zwischen 0,245° im
-mittleren Apogäum und 0,274° im mittleren Perigäum; beide Bereiche überlappen, und genau deshalb
-gibt es beide Arten.
+Totalität herrscht für $\beta \ge \alpha$, und das ist gleichbedeutend mit $d \le L$; für
+$\beta < \alpha$ bleibt ein Ring stehen, und es fehlt der Bruchteil $\beta^2/\alpha^2$ der
+Sonnenfläche. Von der Erde aus schwankt der Winkelradius der Sonne zwischen 0,262° im Aphel und
+0,271° im Perihel, der des Mondes zwischen 0,245° im mittleren Apogäum und 0,274° im mittleren
+Perigäum; beide Bereiche überlappen, und genau deshalb gibt es beide Arten.
 
 Zwei Kenngrößen beschreiben eine Sonnenfinsternis. Die Größe (Magnitude) ist der verdeckte Bruchteil
 des Sonnendurchmessers; sie ist kleiner als 1 bei partiellen und ringförmigen, mindestens 1 bei
@@ -55,7 +56,6 @@ zwischen −0,997 und +0,997 ist die Finsternis zentral, und die Abweichung von 
 Abplattung der Erde ([Espenak und Meeus 2006](literatur:espenak-2006)). In den 5000 Jahren von −1999
 bis +3000 zählt der Kanon 11 898 Sonnenfinsternisse: 4200 partielle, 3956 ringförmige, 3173 totale
 und 569 hybride. Jedes Kalenderjahr bringt zwei bis fünf davon, in 72,5 % der Jahre genau zwei.
-Karten und Zeiten stehen auf der [NASA Eclipse Web Site](quelle:nasa-eclipse).
 
 ## Mondfinsternisse
 
@@ -66,18 +66,22 @@ nur den Halbschatten durchquert, partiell, wenn er den Kernschatten teilweise er
 wenn er ganz darin steht; liegt bei einer halbschattigen Finsternis die ganze Mondscheibe im
 Halbschatten, heißt sie total halbschattig
 ([Espenak und Meeus 2009](literatur:espenak-2009)). Mit dem kleinsten Abstand $\gamma$ der Mondmitte
-von der Schattenachse in Mondentfernung lauten die Bedingungen
+von der Schattenachse in Mondentfernung lauten die Bedingungen dafür, dass der Mond den Halbschatten
+berührt, dass er den Kernschatten berührt und dass er ganz in ihm steht,
 
 $$\gamma < r_\mathrm{p} + R_\mathrm{M}, \quad \gamma < r_\mathrm{u} + R_\mathrm{M}, \quad \gamma < r_\mathrm{u} - R_\mathrm{M}$$
 
-für halbschattig, partiell und total. Die Größe ist auch hier ein Bruchteil des Monddurchmessers,
+Sie sind ineinander geschachtelt: Halbschattig heißt die Finsternis, wenn nur die erste gilt,
+partiell, wenn die zweite gilt und die dritte nicht, und total, wenn alle drei gelten. Die Größe ist
+auch hier ein Bruchteil des Monddurchmessers,
 nun der Eindringtiefe in den jeweiligen Schatten; im Kanon reicht die Halbschattengröße von 0,0004
 bis 1,0858, die Kernschattengröße von 0,0001 bis 0,9998 bei partiellen und von 1,0001 bis 1,8821 bei
 totalen Finsternissen. Von den 12 064 Mondfinsternissen der fünf Jahrtausende sind 4378
 halbschattig — davon nur 141 total halbschattig —, 4207 partiell und 3479 total, von diesen 2074
 zentral ([Espenak und Meeus 2009](literatur:espenak-2009)). Im 21. Jahrhundert gibt es 228
 Mondfinsternisse, im Mittel 2,28 je Jahr und in jedem Jahr mindestens zwei
-([Lunar eclipse, englische Wikipedia](quelle:wikipedia-en-lunar-eclipse)).
+([Lunar eclipse, englische Wikipedia](quelle:wikipedia-en-lunar-eclipse)). Zeiten und Karten aller
+Mondfinsternisse stehen auf der [NASA Eclipse Web Site](quelle:nasa-eclipse).
 
 Der beobachtete Kernschatten ist größer als der geometrische. Chauvenet vergrößerte beide
 Winkelradien um 1/50, Danjon legte eine undurchsichtige Schicht von 75 km auf den Erdradius, und aus
@@ -143,10 +147,11 @@ wandert: der synodische Monat um +0,2 s, der drakonitische um +0,4 s und der ano
 ## Besselsche Elemente
 
 Das Standardverfahren für Sonnenfinsternisse geht auf Bessel zurück. Es legt eine Fundamentalebene
-durch den Erdmittelpunkt, senkrecht zur Achse des Mondschattens. In ihr beschreiben $x$ und $y$ den
-Durchstoßpunkt der Achse in Erdradien, $l_1$ und $l_2$ die Radien von Halb- und Kernschattenkegel,
-$f_1$ und $f_2$ deren Öffnungswinkel; Deklination $d$ und Stundenwinkel $\mu$ der Achse geben ihre
-Richtung ([Melati und Hodijah 2016](literatur:melati-2016)). Aus diesen Größen folgen für jeden Ort
+durch den Erdmittelpunkt, senkrecht zur Achse des Mondschattens, und beschreibt darin die Bewegung
+des Schattens: $l_1$ und $l_2$ sind die Radien von Halb- und Kernschattenkegel in dieser Ebene,
+$f_1$ und $f_2$ deren Öffnungswinkel, und der kleinste Abstand der Achse vom Erdmittelpunkt in
+Erdäquatorradien ist das oben genannte Gamma
+([Melati und Hodijah 2016](literatur:melati-2016)). Aus diesen Größen folgen für jeden Ort
 der Weg des Schattens, seine Breite und die Dauer. Nach dem Kernschattenradius $u$ in der
 Fundamentalebene ist eine zentrale Finsternis total für $u < 0$ und ringförmig für $u > 0{,}0047$,
 dazwischen ringförmig oder hybrid. Die Kanons von Meeus und Mucke sowie von Meeus, Grosjean und
@@ -195,9 +200,9 @@ Am 29. Mai 1919 maßen zwei britische Expeditionen die Ablenkung des Sternlichts
 Einstein sagte 1,75″ voraus, die newtonsche Rechnung 0,87″. Der Vierzöller in Sobral ergab 1,98 ±
 0,12″, der Astrograf auf Principe 1,61 ± 0,30″, beides wahrscheinliche Fehler; die Astrografenplatten
 von Sobral lieferten je nach Annahme 0,93″ oder 1,52″ und wurden wegen unbestimmter systematischer
-Fehler verworfen ([Gilmore und Tausch-Pebody 2022](literatur:gilmore-2022)). Eine Nachmessung der
-Platten von 1979 ergab 1,90 ± 0,11″ für den Vierzöller und 1,55 ± 0,34″ für den Astrografen
-([Longair 2015](literatur:longair-2015)).
+Fehler verworfen ([Gilmore und Tausch-Pebody 2022](literatur:gilmore-2022)). Eine Nachmessung
+derselben Platten im Jahr 1979 ergab 1,90 ± 0,11″ für den Vierzöller und 1,55 ± 0,34″ für den
+Astrografen ([Longair 2015](literatur:longair-2015)).
 
 Die Verfinsterungen des Jupitermondes [Io](objekt:io) zeigten als erste, dass Licht Zeit braucht. Im
 Protokoll der Pariser Akademie vom 22. August 1676 führt Cassini die beobachtete Ungleichheit
@@ -222,10 +227,11 @@ Pluto liegt, die Entdeckung des Wassereises auf Charon, die ersten brauchbaren R
 [Venus](objekt:venus) vor der Sonne gehören hierher: Im 20. Jahrhundert gab es 15 Merkurtransite, im
 21. sind es 14, und der „schwarze Tropfen", der die historischen Parallaxenmessungen störte, ließ
 sich aus Aufnahmen des Merkurtransits von 1999 in Randverdunklung und instrumentelle
-Punktbildfunktion zerlegen ([Schneider et al. 2005](literatur:schneider-2005)). Der Venustransit von
-2012 diente als Probe für die Untersuchung erdgroßer Exoplaneten: Kohlendioxid erzeugt im
-Ultraviolett ein Signal von rund 20 ppm, die Schwefelsäuretröpfchen des oberen Dunstes eine
-Mie-Streuung von etwa 5 ppm bei 0,8 µm ([Ehrenreich et al. 2012](literatur:ehrenreich-2012)).
+Punktbildfunktion zerlegen ([Schneider et al. 2005](literatur:schneider-2005)). Vor dem Venustransit
+von 2012 wurde berechnet, was er als Probe für die Untersuchung erdgroßer Exoplaneten hergeben
+sollte: Kohlendioxid müsste im Ultraviolett ein Signal von rund 20 ppm erzeugen, die
+Schwefelsäuretröpfchen des oberen Dunstes eine Mie-Streuung von etwa 5 ppm bei 0,8 µm
+([Ehrenreich et al. 2012](literatur:ehrenreich-2012)).
 
 ## Finsternisse bei anderen Planeten
 
@@ -308,7 +314,8 @@ Tagundnachtgleichen häufen.
 - **Sonnenfinsternisse:** Sie werden nicht gesucht und haben keine Szene, entstehen im Bild aber von
   selbst, weil der Mond Schattenwerfer der Erde ist. Zum Modellmaximum der Finsternis vom 2. August
   2027 sinkt der sichtbare Sonnenanteil auf der Erdoberfläche auf null; der Kernschatten hat dort
-  101 km Radius, der Halbschatten 3381 km. Der Zeitpunkt lag in vier geprüften Fällen 0,0 bis 2,1 h
+  101 km Radius, der Halbschatten 3381 km. Sein Durchmesser von 203 km bleibt rund ein Fünftel unter
+  der Pfadbreite von 258 km im Katalog. Der Zeitpunkt lag in vier geprüften Fällen 0,0 bis 2,1 h
   neben dem NASA-Katalog.
 - **Helligkeit im Schatten:** Der Schattenfaktor ist der unverdeckte Flächenanteil zweier gleichmäßig
   hell gerechneter Scheiben; der Gegenschatten ist als eigener Fall enthalten. Eine Randverdunklung

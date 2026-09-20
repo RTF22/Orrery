@@ -13,7 +13,7 @@ enlargement of the Earth's shadow and the course of the scene are described in
 Behind an opaque body of radius $R$ at distance $D$ from the [Sun](objekt:sun) of radius $R_\odot$,
 two cones bound the shadow. The inner one comes to a point at distance $L$, the outer one widens:
 
-$$\sin f_2 = \frac{R_\odot - R}{D}, \quad L = \frac{R}{\tan f_2}, \quad \sin f_1 = \frac{R_\odot + R}{D}$$
+$$\sin f_2 = \frac{R_\odot - R}{D}, \quad L = \frac{R\,D}{R_\odot - R}, \quad \sin f_1 = \frac{R_\odot + R}{D}$$
 
 At distance $d$ behind the body, umbra and penumbra therefore have the radii
 
@@ -36,14 +36,16 @@ Four kinds are distinguished: partial, when only the Moon's penumbra grazes the 
 the antumbra strikes it; total, when the umbra strikes it; and hybrid, when umbra and antumbra reach
 different parts of the Earth, so that the eclipse appears annular along one section of its path and
 total along another ([Espenak and Meeus 2006](literatur:espenak-2006)). Whether an observer at
-distance $d$ from the Moon's centre sees totality follows from comparing the angular radii
+distance $d$ from the Moon's centre sees totality follows from comparing the angular radii under
+which that observer sees the Moon and the Sun:
 
-$$\beta = \arcsin\frac{R_\mathrm{M}}{d}, \quad \alpha = \arcsin\frac{R_\odot}{D}$$
+$$\beta = \arcsin\frac{R_\mathrm{M}}{d}, \quad \alpha = \arcsin\frac{R_\odot}{D + d}$$
 
-Totality occurs for $\beta \ge \alpha$, equivalent to $d \le L$; for $\beta < \alpha$ a ring remains
-and the fraction $\beta^2/\alpha^2$ of the solar disc is missing. The Sun's angular radius varies
-between 0.262° at aphelion and 0.271° at perihelion, that of the Moon between 0.245° at mean apogee
-and 0.274° at mean perigee; the two ranges overlap, and that is precisely why both kinds occur.
+Totality occurs for $\beta \ge \alpha$, and that is equivalent to $d \le L$; for $\beta < \alpha$ a
+ring remains and the fraction $\beta^2/\alpha^2$ of the solar disc is missing. Seen from the Earth,
+the Sun's angular radius varies between 0.262° at aphelion and 0.271° at perihelion, that of the
+Moon between 0.245° at mean apogee and 0.274° at mean perigee; the two ranges overlap, and that is
+precisely why both kinds occur.
 
 Two parameters describe a solar eclipse. The magnitude is the occulted fraction of the Sun's
 diameter; it is less than 1 for partial and annular eclipses and at least 1 for total and hybrid
@@ -52,8 +54,7 @@ Earth's equatorial radius, positive north of it and negative south of it; betwee
 the eclipse is central, and the departure from 1 comes from the Earth's flattening
 ([Espenak and Meeus 2006](literatur:espenak-2006)). Over the 5000 years from −1999 to +3000 the
 canon counts 11,898 solar eclipses: 4200 partial, 3956 annular, 3173 total and 569 hybrid. Every
-calendar year brings two to five of them, in 72.5 % of years exactly two. Maps and times are given
-on the [NASA Eclipse Web Site](quelle:nasa-eclipse).
+calendar year brings two to five of them, in 72.5 % of years exactly two.
 
 ## Lunar eclipses
 
@@ -63,18 +64,22 @@ tangency with the umbra). An eclipse is called penumbral when the Moon only cros
 partial when it partly reaches the umbra, and total when it lies entirely within it; if during a
 penumbral eclipse the whole lunar disc lies inside the penumbra, the event is a total penumbral
 eclipse ([Espenak and Meeus 2009](literatur:espenak-2009)). With the minimum distance $\gamma$ of the
-Moon's centre from the shadow axis at lunar distance, the conditions read
+Moon's centre from the shadow axis at lunar distance, the conditions for the Moon to touch the
+penumbra, to touch the umbra and to lie entirely within it read
 
 $$\gamma < r_\mathrm{p} + R_\mathrm{M}, \quad \gamma < r_\mathrm{u} + R_\mathrm{M}, \quad \gamma < r_\mathrm{u} - R_\mathrm{M}$$
 
-for penumbral, partial and total. Here too the magnitude is a fraction of the Moon's diameter, now
+They are nested: the eclipse is called penumbral when only the first holds, partial when the second
+holds but not the third, and total when all three hold. Here too the magnitude is a fraction of the
+Moon's diameter, now
 of the depth of immersion in the respective shadow; in the canon the penumbral magnitude ranges from
 0.0004 to 1.0858 and the umbral magnitude from 0.0001 to 0.9998 for partial and from 1.0001 to
 1.8821 for total eclipses. Of the 12,064 lunar eclipses of the five millennia, 4378 are penumbral —
 only 141 of them total penumbral — 4207 partial and 3479 total, of which 2074 are central
 ([Espenak and Meeus 2009](literatur:espenak-2009)). The 21st century has 228 lunar eclipses, on
 average 2.28 per year and at least two in every year
-([Lunar eclipse](quelle:wikipedia-en-lunar-eclipse)).
+([Lunar eclipse](quelle:wikipedia-en-lunar-eclipse)). Times and maps of all lunar eclipses are given
+on the [NASA Eclipse Web Site](quelle:nasa-eclipse).
 
 The observed umbra is larger than the geometric one. Chauvenet enlarged both angular radii by 1/50,
 Danjon added an opaque layer of 75 km to the Earth's radius, and more than 20,000 crater timings
@@ -138,10 +143,11 @@ month by +0.2 s, the draconic by +0.4 s and the anomalistic by −0.8 s per mill
 ## Besselian elements
 
 The standard method for solar eclipses goes back to Bessel. It places a fundamental plane through
-the Earth's centre, perpendicular to the axis of the lunar shadow. In it, $x$ and $y$ give the point
-where the axis crosses the plane, in Earth radii, $l_1$ and $l_2$ the radii of the penumbral and
-umbral cones, $f_1$ and $f_2$ their opening angles; the declination $d$ and the hour angle $\mu$ of
-the axis give its direction ([Melati and Hodijah 2016](literatur:melati-2016)). From these
+the Earth's centre, perpendicular to the axis of the lunar shadow, and describes the motion of the
+shadow within it: $l_1$ and $l_2$ are the radii of the penumbral and umbral cones in that plane,
+$f_1$ and $f_2$ their opening angles, and the minimum distance of the axis from the Earth's centre
+in Earth equatorial radii is the gamma introduced above
+([Melati and Hodijah 2016](literatur:melati-2016)). From these
 quantities follow, for any location, the path of the shadow, its width and the duration. According
 to the umbral radius $u$ in the fundamental plane, a central eclipse is total for $u < 0$ and
 annular for $u > 0.0047$, and in between annular or hybrid. The canons of Meeus and Mucke and of
@@ -214,10 +220,11 @@ of [Mercury](objekt:mercury) and [Venus](objekt:venus) across the Sun belong her
 century had 15 transits of Mercury, the 21st has 14, and the "black drop" that spoiled the historical
 parallax measurements could be separated, from images of the 1999 transit of Mercury, into limb
 darkening and the instrumental point spread function
-([Schneider et al. 2005](literatur:schneider-2005)). The 2012 transit of Venus served as a test case
-for studying Earth-sized exoplanets: carbon dioxide produces a signal of about 20 ppm in the
-ultraviolet, and the sulfuric acid droplets of the upper haze a Mie extinction of about 5 ppm at
-0.8 µm ([Ehrenreich et al. 2012](literatur:ehrenreich-2012)).
+([Schneider et al. 2005](literatur:schneider-2005)). Ahead of the 2012 transit of Venus it was
+computed what the event should yield as a test case for studying Earth-sized exoplanets: carbon
+dioxide ought to produce a signal of about 20 ppm in the ultraviolet, and the sulfuric acid droplets
+of the upper haze a Mie extinction of about 5 ppm at 0.8 µm
+([Ehrenreich et al. 2012](literatur:ehrenreich-2012)).
 
 ## Eclipses at other planets
 
@@ -299,7 +306,8 @@ around the planet's equinoxes.
 - **Solar eclipses:** they are not searched for and have no scene, but they arise in the picture by
   themselves because the Moon is a shadow caster for the Earth. At the model's maximum of the eclipse
   of 2 August 2027 the visible fraction of the Sun on the Earth's surface drops to zero; the umbra
-  there has a radius of 101 km and the penumbra one of 3381 km. In four checked cases the time was
+  there has a radius of 101 km and the penumbra one of 3381 km. Its diameter of 203 km stays about a
+  fifth below the path width of 258 km in the catalogue. In four checked cases the time was
   0.0 to 2.1 h away from the NASA catalogue.
 - **Brightness in the shadow:** the shadow factor is the uncovered area fraction of two discs treated
   as uniformly bright; the antumbra is covered as a separate case. Limb darkening is missing: with
