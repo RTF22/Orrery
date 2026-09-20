@@ -120,8 +120,8 @@ greenhouse effect; the unbroken, several-tens-of-kilometres-thick cloud deck of 
 droplets between roughly 45 and 70 km altitude reinforces it further while also reflecting a good
 three-quarters of the incoming sunlight (Bond albedo $0.76$), so that radiative equilibrium at this
 albedo and Venus's solar distance of $0.7233\,\mathrm{AU}$ gives an effective temperature of about
-228.5 K, close to the value from a dedicated radiative-balance model
-([Haus et al. 2016](literatur:haus-2016); figures as in
+229 K, close to the effective emission temperature of 228.5 K from a dedicated radiative-balance
+model ([Haus et al. 2016](literatur:haus-2016); figures as in
 [Albedo and brightness](thema:photometrie)) – the actual surface temperature of 464 °C lies far
 above this, entirely attributable to the greenhouse effect of the dense atmosphere beneath.
 
@@ -152,14 +152,15 @@ phosphine therefore remains open (see "Open questions").
 Venus has no global magnetic field of its own – measurements limit any dipole moment to roughly one
 hundred-thousandth of Earth's. The solar wind nonetheless shapes an induced magnetosphere around
 Venus: the interplanetary magnetic field carried by the wind piles up against the conducting
-ionosphere to form a magnetic barrier, with a subsolar bow-shock distance of about 1.5 Venus
-radii – an order of magnitude smaller than the magnetosphere Earth's true dynamo sustains
+ionosphere to form a magnetic barrier, with a subsolar bow-shock distance of about 1.4 Venus radii
+(1.36 to 1.46 between solar minimum and maximum) – an order of magnitude smaller than the
+magnetosphere Earth's true dynamo sustains
 ([Futaana et al. 2017](literatur:futaana-2017)). Within this induced magnetosphere, ionospheric ions
 continually escape into the tail; the ratio of escaping hydrogen to oxygen ions measured there by
 Venus Express matches the stoichiometric composition of water and shows that Venus is still losing
 water to space today ([Futaana et al. 2017](literatur:futaana-2017)). That Venus once held
 considerably more water is suggested by the ratio of deuterium to hydrogen in today's atmosphere: it
-is about 150 times the terrestrial value, as expected from the preferential loss of the lighter
+is about 120 times the terrestrial value, as expected from the preferential loss of the lighter
 hydrogen during sustained photolysis of water vapour and escape to space
 ([Grinspoon 1993](literatur:grinspoon-1993)).
 
@@ -260,9 +261,13 @@ atmosphere across its entire history far more precisely than previous missions
   negative `rotationPeriodH`; this flips the angle, giving 177.3624°, rounded to 177.4° in the data
   block – the same value as in the NSSDC fact sheet. This inversion is intentional (see the JSDoc in
   `sim/orbit.ts`) and follows the same convention by which fact sheets express retrograde rotation as
-  an obliquity above 90° rather than as a negative value; the comment in `data/bodies/venus.ts`,
-  which states only the 2.64°, thus describes merely an intermediate quantity of the control
-  calculation, not the function's actual output.
+  an obliquity above 90° rather than as a negative value; the comment in `data/bodies/venus.ts` already
+  explains exactly this: with this pole (below 90° from the orbit normal) and the already negative
+  `rotationPeriodH`, it states that 177.36° is the correct result, whereas the earlier combination of
+  the old `axialTiltDeg: 177.36` with the same negative period would have counted the retrograde
+  motion twice. The recalculation above confirms this explanation, already present in the comment,
+  independently – under the project's own rules, though, a comment alone still does not count as
+  evidence.
 - **Rotation phase at J2000:** `rotationAtEpochDeg` is set to 0, while the IAU report gives
   $W_0 = 160.20^\circ$ for the rotation phase at J2000.0
   ([Archinal et al. 2018](literatur:archinal-2018)); Venus's map centre in the model is therefore not

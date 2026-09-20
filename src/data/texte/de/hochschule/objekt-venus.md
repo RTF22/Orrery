@@ -124,8 +124,8 @@ einen starken Treibhauseffekt bei; die durchgehende, mehrere zehn Kilometer dick
 Schwefelsäuretröpfchen zwischen etwa 45 und 70 km Höhe verstärkt ihn zusätzlich und wirft zugleich
 gut drei Viertel des einfallenden Sonnenlichts zurück (Bond-Albedo $0{,}76$), sodass unter dem
 Strahlungsgleichgewicht bei dieser Albedo und Venus' Sonnenabstand von $0{,}7233\,\mathrm{AU}$ eine
-effektive Temperatur von rund 228,5 K folgt, nahe dem Wert eines eigenen
-Strahlungsbilanzmodells ([Haus et al. 2016](literatur:haus-2016); Zahlen wie in
+effektive Temperatur von rund 229 K folgt, nahe der effektiven Emissionstemperatur von 228,5 K aus
+einem eigenen Strahlungsbilanzmodell ([Haus et al. 2016](literatur:haus-2016); Zahlen wie in
 [Albedo und Helligkeit](thema:photometrie)) – die tatsächliche Oberflächentemperatur von 464 °C liegt
 weit darüber, ganz dem Treibhauseffekt der dichten Atmosphäre darunter zuzuschreiben.
 
@@ -156,15 +156,16 @@ tatsächlich Phosphin vorkommt, ist damit weiterhin offen (siehe „Offene Frage
 Venus besitzt kein eigenes globales Magnetfeld – Messungen begrenzen ein etwaiges Dipolmoment auf
 rund ein Hunderttausendstel des irdischen. Der Wind der [Sonne](objekt:sun) formt trotzdem eine
 induzierte Magnetosphäre: Das mitgeführte interplanetare Magnetfeld staut sich an der leitfähigen Ionosphäre zu
-einer magnetischen Barriere, mit einem sonnenwärtigen Bugstoßabstand von rund 1,5 Venusradien –
-eine Größenordnung kleiner als die von einem echten Dynamo getragene Erdmagnetosphäre
+einer magnetischen Barriere, mit einem sonnenwärtigen Bugstoßabstand von rund 1,4 Venusradien
+(1,36 bis 1,46 zwischen solarem Minimum und Maximum) – eine Größenordnung kleiner als die von einem
+echten Dynamo getragene Erdmagnetosphäre
 ([Futaana et al. 2017](literatur:futaana-2017)). In dieser induzierten Magnetosphäre entkommen
 Ionosphärenionen laufend in den Schweif; das dort mit Venus Express gemessene Verhältnis von
 entweichendem Wasserstoff zu Sauerstoff entspricht der stöchiometrischen Zusammensetzung von Wasser
 und zeigt, dass Venus bis heute Wasser in den Weltraum verliert
 ([Futaana et al. 2017](literatur:futaana-2017)). Dass Venus in ihrer Frühzeit erheblich mehr Wasser
 besaß, legt das Verhältnis von Deuterium zu Wasserstoff in der heutigen Atmosphäre nahe: Es liegt
-rund 150-mal über dem irdischen Wert, wie es der bevorzugte Verlust des leichteren Wasserstoffs bei
+rund 120-mal über dem irdischen Wert, wie es der bevorzugte Verlust des leichteren Wasserstoffs bei
 anhaltender Photolyse von Wasserdampf und Entweichen in den Weltraum erwarten lässt
 ([Grinspoon 1993](literatur:grinspoon-1993)).
 
@@ -273,8 +274,12 @@ als die bisherigen Missionen ([Widemann et al. 2023](literatur:widemann-2023)).
   gerundet – derselbe Wert wie im NSSDC-Faktenblatt. Diese Umkehr ist beabsichtigt
   (siehe JSDoc in `sim/orbit.ts`) und folgt derselben Konvention, mit der Faktenblätter retrograde
   Rotation als Schiefe über 90° statt als negativen Wert ausdrücken; der Kommentar in
-  `data/bodies/venus.ts`, der nur die 2,64° nennt, beschreibt also lediglich eine Zwischengröße der
-  Kontrollrechnung, nicht das Funktionsergebnis.
+  `data/bodies/venus.ts` erklärt genau diesen Zusammenhang bereits selbst: Mit diesem Pol (unter 90°
+  zur Bahnnormale) und der schon negativen `rotationPeriodH` sei 177,36° das richtige Ergebnis, während
+  die frühere Kombination aus dem alten `axialTiltDeg: 177.36` und derselben negativen Periode die
+  Rückläufigkeit doppelt gezählt hätte. Die Nachrechnung oben bestätigt diese im Kommentar schon
+  enthaltene Erklärung unabhängig – Kommentare allein zählen nach den Projektregeln trotzdem nicht als
+  Beleg.
 - **Rotationsphase bei J2000:** `rotationAtEpochDeg` steht auf 0, während der IAU-Bericht für die
   Rotationsphase bei J2000,0 den Wert $W_0 = 160{,}20^\circ$ nennt
   ([Archinal et al. 2018](literatur:archinal-2018)); Venus' Kartenmitte im Modell liegt deshalb nicht
