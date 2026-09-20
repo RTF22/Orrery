@@ -107,7 +107,8 @@ during 49 close flybys at typically 25 to 100 km distance instead of remaining p
 Io, Europa and Ganymede satisfy, on average, the Laplace resonance with the mean-motion ratio 4:2:1
 and the librating angle $\varphi_\mathrm{L} = \lambda_1 - 3\lambda_2 + 2\lambda_3 = 180^\circ$; the
 derivation and the two-body angles are presented under [Orbital resonances](thema:resonanzen). The
-resonance forces Europa's orbital eccentricity to a value of about 0.01, more than twice the 0.0041
+resonance forces Europa's orbital eccentricity on average to 0.009 (Showman and Malhotra 1997,
+cited after [Ershkov and Leshchenko 2021](literatur:ershkov-2021)), more than twice the 0.0041
 forced on Io; without this constant drive, tidal friction would circularise the orbit within a short
 time and switch off the heating itself — just as at [Enceladus](objekt:enceladus), whose forced
 eccentricity is sustained by the resonance with Dione. Whether this coupling remains stable over
@@ -202,7 +203,9 @@ way there, with Europa as one of its targets
   `positionInParentFrame` at the epoch shows that the node value (184.0°) genuinely determines the
   orientation — substituting a trial node of 0° shifts the $z$ coordinate alone by about 6172 km,
   instead of cancelling out numerically as it does for Io. The eccentricity is fixed at
-  $e = 0.009$ (`eDot` 0), close to the eccentricity of about 0.01 forced by the resonance.
+  $e = 0.009$ (`eDot` 0), exactly matching the eccentricity of 0.009 forced by the resonance on
+  average (Showman and Malhotra 1997, cited after
+  [Ershkov and Leshchenko 2021](literatur:ershkov-2021)).
 - **Nodal period:** From `nodeDot` ($-1191.9740^\circ$ per century) follows a period of
   $360/1191.974 \times 100 = 30.202$ years, regressing; this matches exactly the "node precession
   period" of the underlying element table (header comment in `jupiter-monde.ts`), so it mainly
@@ -227,7 +230,8 @@ way there, with Europa as one of its targets
   [Bound rotation](thema:gebundene-rotation)).
 - **Pole:** 268.08°/64.51° from the IAU rotation elements (SPICE kernel), fixed at the epoch; close
   both to Jupiter's own pole and to Europa's Laplace pole listed separately in the orbital-element
-  table (268.1°/64.5°, tilt 0.019° as for Io).
+  table (268.1°/64.5°, tilt 0.0°; recomputed deviation from the stored Jupiter pole 0.019°, as for
+  Io).
 - **Albedo and texture:** The albedo 0.68 is the fact sheet's geometric albedo, matched exactly. The
   texture is a Voyager mosaic from Caltech/JPL/USGS (`ASSETS.md`) and is normalised to the catalogue
   albedo like every body's ([Albedo and brightness](thema:photometrie)); neither the lineae and
@@ -238,8 +242,10 @@ way there, with Europa as one of its targets
   Jupiter and the three others. A moon at distance $r$ casts its shadow onto a sphere of radius $R$
   only if the solar elevation above the orbital plane stays below $\arcsin(R/r)$; with Jupiter's
   radius of 69,911 km ($R$) and Europa's orbital radius of 671,100 km ($r$) this gives about
-  $5.98^\circ$ — well above Jupiter's recomputed axial tilt of 3.1200°. Europa therefore
-  always casts a shadow, like Io, unlike Callisto with only 2.1° of permissible solar elevation.
+  $5.98^\circ$ — well above Jupiter's axial tilt, whether recomputed against the orbit normal
+  stored in the data set as 3.1200° or taken from the fact sheet as 3.13° (both figures are meant
+  here). Europa therefore always casts a shadow, like Io, unlike Callisto with only 2.1° of
+  permissible solar elevation.
 - **Scale:** Europa is a satellite (`isSatellite`, its `parent` is Jupiter, not the Sun); its
   orbital radius around Jupiter therefore scales, like its own and Jupiter's radius, with
   `sizeScale` rather than with the distance compression applied to planetary orbits

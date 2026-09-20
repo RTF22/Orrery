@@ -111,7 +111,8 @@ seiner Nähe zu bleiben ([Pappalardo et al. 2024](literatur:pappalardo-2024)).
 Io, Europa und Ganymed erfüllen im Mittel die Laplace-Resonanz mit dem Bewegungsverhältnis 4:2:1 und
 dem librierenden Winkel $\varphi_\mathrm{L} = \lambda_1 - 3\lambda_2 + 2\lambda_3 = 180^\circ$;
 Herleitung und Zweikörperwinkel stehen unter [Bahnresonanzen](thema:resonanzen). Die Resonanz
-erzwingt Europas Bahnexzentrizität auf einen Wert von etwa 0,01, mehr als doppelt so groß wie die
+erzwingt Europas Bahnexzentrizität im Mittel auf 0,009 (Showman und Malhotra 1997, zitiert nach
+[Ershkov und Leshchenko 2021](literatur:ershkov-2021)), mehr als doppelt so groß wie die
 von Io erzwungene 0,0041; ohne diesen ständigen Antrieb würde Gezeitenreibung die Bahn binnen
 kurzer Zeit kreisförmig machen und die Heizung selbst abschalten – ganz wie bei
 [Enceladus](objekt:enceladus), dessen erzwungene Exzentrizität die Resonanz mit Dione
@@ -210,8 +211,9 @@ dorthin charakterisieren, mit Europa als einem ihrer Ziele
   Nachrechnung an `positionInParentFrame` zur Epoche zeigt, dass der Knotenwert (184,0°) die Lage
   tatsächlich bestimmt – mit dem probeweise eingesetzten Knoten 0° verschiebt sich allein die
   $z$-Koordinate um rund 6172 km, statt sich wie bei Io numerisch herauszukürzen. Die Exzentrizität
-  steht mit $e = 0{,}009$ fest (`eDot` 0), nahe an der von der Resonanz erzwungenen Exzentrizität
-  von etwa 0,01.
+  steht mit $e = 0{,}009$ fest (`eDot` 0) und trifft damit genau die von der Resonanz im Mittel
+  erzwungene Exzentrizität 0,009 (Showman und Malhotra 1997, zitiert nach
+  [Ershkov und Leshchenko 2021](literatur:ershkov-2021)).
 - **Knotenperiode:** Aus `nodeDot` ($-1191{,}9740^\circ$ je Jahrhundert) folgt eine Periode von
   $360/1191{,}974 \times 100 = 30{,}202$ Jahren, rückläufig; das trifft genau die „node precession
   period" der zugrundeliegenden Elementtafel (Kopfkommentar `jupiter-monde.ts`), bestätigt also vor
@@ -235,7 +237,8 @@ dorthin charakterisieren, mit Europa als einem ihrer Ziele
   (Zahlen wie [Gebundene Rotation](thema:gebundene-rotation)).
 - **Pol:** 268,08°/64,51° aus den IAU-Rotationselementen (SPICE-Kernel), zur Epoche fest; nahe an
   Jupiters eigenem Pol und an dem separat in der Bahnelementtafel geführten Laplace-Pol Europas
-  (268,1°/64,5°, tilt 0,019° wie bei Io).
+  (268,1°/64,5°, tilt 0,0°; nachgerechnete Abweichung zum hinterlegten Jupiterpol wie bei Io
+  0,019°).
 - **Albedo und Textur:** Die Albedo 0,68 ist die geometrische Albedo des Faktenblatts, exakt
   getroffen. Die Textur ist ein Voyager-Mosaik von Caltech/JPL/USGS (`ASSETS.md`) und wird wie bei
   jedem Körper auf die Katalogalbedo normiert ([Albedo und Helligkeit](thema:photometrie)); weder
@@ -246,7 +249,9 @@ dorthin charakterisieren, mit Europa als einem ihrer Ziele
   den drei übrigen beschattet. Ein Mond im Abstand $r$ wirft seinen Schatten auf eine Kugel vom
   Radius $R$ nur, wenn die Sonnenhöhe über der Bahnebene unter $\arcsin(R/r)$ bleibt; mit Jupiters
   Radius von 69 911 km ($R$) und Europas Bahnradius von 671 100 km ($r$) ergibt das rund
-  $5{,}98^\circ$ – deutlich mehr als Jupiters nachgerechnete Achsneigung von 3,1200°. Europa
+  $5{,}98^\circ$ – deutlich mehr als Jupiters Achsneigung, ob mit 3,1200° gegen die im Datensatz
+  hinterlegte Bahnnormale nachgerechnet oder mit 3,13° nach dem Faktenblatt angesetzt (beide Werte
+  sind hier gemeint). Europa
   wirft also, wie Io, immer einen Schatten, anders als Kallisto mit nur 2,1° zulässiger Sonnenhöhe.
 - **Maßstab:** Europa ist ein Satellit (`isSatellite`, `parent` ist Jupiter, nicht die Sonne); sein
   Bahnradius um Jupiter skaliert deshalb wie sein eigener und Jupiters Radius mit `sizeScale`, nicht
