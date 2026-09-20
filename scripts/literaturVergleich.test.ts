@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
-  arxivEintragLesen, auswahl, crossrefJahre, jahrUrteil, mitWiederholung, normalisiere, PAUSE_NACH_MS, pruefeArxiv,
-  pruefeCrossref, wortanteil, WIEDERHOLBARE_STATUS,
+  arxivEintragLesen, auswahl, crossrefJahre, jahrUrteil, mitWiederholung, normalisiere,
+  PAUSE_NACH_MS, pruefeArxiv, pruefeCrossref, wortanteil, WIEDERHOLBARE_STATUS,
 } from './literaturVergleich.ts';
 import type { Publikation } from '../src/data/literatur.ts';
 
@@ -239,6 +239,14 @@ describe('mitWiederholung', () => {
     const netz = folge([new TypeError('fetch failed')]);
     await expect(mitWiederholung(netz.abruf, async () => {}, [10])).rejects.toThrow('fetch failed');
     expect(netz.aufrufe()).toBe(1);
+  });
+
+  it('unterschreitet ohne eigenes pausenMs nie den Mindestabstand aus PAUSE_NACH_MS.arxiv, weil pruefe-literatur.ts die Funktion für alle drei Dienste ohne eigenes pausenMs aufruft (Schlussprüfung 4d-3, Befund G1: zuvor [2000, 5000] unterschritt ihn bei der ersten Wiederholung)', async () => {
+    const f = folge([504, 503, 200]);
+    const pausen: number[] = [];
+    const antwort = await mitWiederholung(f.abruf, async (ms) => { pausen.push(ms); });
+    expect(antwort.status).toBe(200);
+    for (const pause of pausen) expect(pause).toBeGreaterThanOrEqual(PAUSE_NACH_MS.arxiv);
   });
 });
 

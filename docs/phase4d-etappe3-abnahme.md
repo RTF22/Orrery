@@ -8,7 +8,9 @@ Branch `hochschule-3` (von master `04fe610`, 19.09.2026). Entwurf
 Plan-Rulings). Ledger `.superpowers/sdd/2026-09-19-phase4d-hochschule-etappe3/progress.md`
 (git-ignoriert).
 
-25 Commits über `04fe610` (`git rev-list --count 04fe610..HEAD`), in Reihenfolge:
+25 Commits über `04fe610` bis `bcf095d` (`git rev-list --count 04fe610..bcf095d`);
+mit diesem Protokoll-Commit 26 (`git rev-list --count 04fe610..HEAD` zählt auf dem
+fertigen Branch mit). In Reihenfolge:
 
 | Kurzhash | Titel |
 |---|---|
@@ -504,9 +506,12 @@ zuber-2013                    crossref  ok       Erstautor, Jahr und Titel stimm
 **Laufzeit:** 480 Sekunden (8:00 min; Zeitstempel vor dem Start 1789897131,
 nach Programmende 1789897611, Unix-Sekunden). Keine Zeile mit `429`
 (`grep -c 429` auf der vollständigen Ausgabe: 0 Treffer) — die arXiv-Pause aus
-Task 1 (drei Sekunden statt 200 ms je arXiv-Abruf) wirkt: 81 Katalogeinträge
-tragen ein `arxiv`-Feld (`grep -c "arxiv:" src/data/literatur.ts`), macht
-allein 243 s reine Pausenzeit für arXiv, dazu 200 ms je der übrigen
+Task 1 (drei Sekunden statt 200 ms je arXiv-Abruf) wirkt: **80** Katalogeinträge
+tragen ein `arxiv`-Feld. `grep -c "arxiv:" src/data/literatur.ts` liefert 81;
+der zusätzliche Treffer ist die Parametertypangabe `(arxiv: string)` in der
+Funktion `arxivAdresse` (Zeile 2848), kein Katalogeintrag — ohne diese Zeile
+selbst nachgezählt: 80. Das macht allein **240 s** reine Pausenzeit für
+arXiv, dazu 200 ms je der übrigen
 Crossref-/Adress-Abrufe; die gemessenen 480 s liegen über dieser Summe, wie in
 Task 1 erwartet (Netzlatenz kommt hinzu).
 
@@ -790,7 +795,9 @@ Befund, siehe §7); dort steht hier der vollständige Wortlaut aus
   Ruling 3 des Plans nicht behoben, sondern in „Im Modell" beschrieben; dafür
   wurde der Commit einmal ergänzt statt ein zweiter Commit angelegt, damit der
   Task wie im Brief bei einem Commit mit dem vorgegebenen Text bleibt.
-- **Ruling:** Die Wortzahl über dem Richtwert (de 4403, en 4883) bleibt
+- **Ruling:** Die Wortzahl über dem Richtwert (de 4403, en 4883 — Stand bei
+  Abgabe des Tasks, vor der Nacharbeit; §4 und §8 nennen 4767/5286, den Stand
+  nach der Nacharbeit) bleibt
   stehen; der Brief verlangt elf Pflichtinhalte und zwei Tabellen, und
   Entwurf §5.2 stellt sachliche Vollständigkeit vor die Wortzahl. Die
   Tabellen machen rund 530 Wörter aus.
@@ -1105,7 +1112,58 @@ vs. synodisch, Kandidat für eine Belegzeilen-Ergänzung), Task 3 (Faktenblatt
 p=0,12/A=0,11 vs. Phasenintegral 0,48 ohne Auflösung im Text, möglicher Punkt
 für eine künftige Prüfung), Task 5 (Melati/Hodijah als schwächste Quelle der
 Etappe, Morrison 2021 nur über die Zusammenfassung, Kallisto-Schattenaussage
-ohne volle Nachrechnung).
+ohne volle Nachrechnung), Task 6 (Ledger `progress.md:165`: Die Krümmung der
+Mondbahn um die Sonne steht als eigene Herleitung ohne Literaturstelle —
+Gutzwiller 1998, Brannen 2001 und Rovšek 2024 waren im Task nicht über die
+Zusammenfassung hinaus zu öffnen; Kandidat für eine spätere Beleg-Ergänzung,
+falls eine der drei Arbeiten zugänglich wird), Task 7 (Ledger `progress.md:191`:
+Young 2004 und Urban/Seidelmann 2013 waren ebenfalls nicht über die
+Zusammenfassung hinaus zu öffnen und werden deshalb nicht zitiert, Ersatzbeleg
+usno-2026; Luftleuchten und die Übertragung von Hulburts
+Dämmerungsmechanismus — für die Erdatmosphäre von unten hergeleitet — auf die
+Ansicht aus dem Orbit stehen im Text als Vermutung gekennzeichnet, Rulings C
+und D des Umsetzers; Vorschlag: unverändert lassen, bis eine der beiden
+Arbeiten zugänglich wird oder eine eigene Herleitung möglich ist).
+
+**Katalogform-Frage (Task 7, Ledger `progress.md:196`):** `usno-2026` trägt
+im Feld `jahr` das Zugriffsjahr 2026 statt eines Erscheinungsjahrs, weil die
+Seite laufend gepflegt wird und kein eigenes Erscheinungsdatum nennt — wie
+bereits `silso-2026` und, mit zusätzlichem Dokumentdatum, `bipm-2026`.
+Vorschlag: als Muster für laufend gepflegte Seiten ohne Erscheinungsdatum
+bestätigen, damit spätere Etappen nicht erneut entscheiden müssen.
+
+**Weitere Fragen aus der Schlussprüfung** (geringe Klasse, betreffen die Form
+künftiger Etappen, nicht in dieser Etappe geändert):
+
+- `mallama-2021` und `proudfoot-2026` (erste Vorabdruck-Einträge des
+  Katalogs) tragen im sprachunabhängigen Feld `erschienen` das deutsche Wort
+  „arXiv-Vorabdruck"; `Literaturkarten.tsx:54` hängt bei Vorabdrucken
+  zusätzlich „· Vorabdruck"/„· Preprint" an, die englische Karte liest sich
+  dadurch „arXiv-Vorabdruck 2112.08966 · Preprint" — Wort doppelt und in der
+  falschen Sprache. Die Testvorlage in `literatur.test.ts` nutzt für denselben
+  Fall schlicht `erschienen: 'arXiv'`. Vorschlag: künftige und diese beiden
+  Vorabdruck-Einträge auf `erschienen: 'arXiv'` vereinheitlichen, die Nummer
+  bleibt im Feld `arxiv` und auf der Karte im Link.
+- `chapront-touze-1988` bündelt zwei Arbeiten (A&A 124, 50 von 1983 und
+  A&A 190, 342 von 1988) samt CDS-Katalog in einem `erschienen`-Feld und
+  nutzt dafür als einziger Eintrag des Katalogs das englische „and" als
+  Konjunktion (sonst nur in Zeitschriftennamen). Die Bündelung selbst steht
+  als Ruling bereits in §6; Vorschlag: nur die Konjunktion zu „und" ändern,
+  konsequent zur Sprachregel.
+- `scripts/pruefe-literatur.ts:9`: Die in Task 1 geänderte Kommentarzeile ist
+  117 Zeichen lang und sprengt den Umbruch des übrigen Blocks (rund
+  78 Zeichen je Zeile); kein Lint-Verstoß, da die Konfiguration keine
+  Zeilenlängenregel kennt. Vorschlag: bei nächster Gelegenheit auf die
+  übliche Breite umbrechen, keine Eile.
+- Testlücke `scripts/literaturVergleich.test.ts`: Die Tests zu `PAUSE_NACH_MS`
+  und zum Vorgabewert von `mitWiederholung` (seit der Nacharbeit dieser
+  Schlussprüfung) prüfen nur `literaturVergleich.ts`, nicht die Verdrahtung
+  in `pruefe-literatur.ts` — ein Aufruf mit einem eigenen, zu kleinen
+  `pausenMs` bliebe dort grün, das Skript ist bewusst ungetestet
+  („Die Vergleiche stehen getestet in literaturVergleich.ts"). Vorschlag: so
+  belassen, solange kein Netzmock lohnt; sonst die Testüberschriften
+  präziser fassen, was sie
+  tatsächlich prüfen.
 
 **Gemeldete Fehler in Gymnasialtexten** (Liste siehe §7) — Entscheidung, ob
 und wann die Gymnasialtexte berichtigt werden, steht aus.
@@ -1145,3 +1203,39 @@ in Plan-Reihenfolge):
 Zusätzlich weiterhin unbestätigt: die 13 Plan-Rulings aus Etappe 2 (siehe
 Stand-Abschnitt der lokalen Projektanleitung vom 19.09.2026) — nicht
 Gegenstand dieser Abnahme, nur zur Vollständigkeit erwähnt.
+
+## Nacharbeit nach der Schlussprüfung
+
+Die Schlussprüfung (20.09.2026, Paket `04fe610..2df3430` ohne die
+fachgeprüften Texte und Beleglisten) sah keinen kritischen Befund; Code,
+Literaturkatalog und README waren ohne Befund. Behoben in diesem Commit:
+
+- **§8 ergänzt (Befund W1):** Zwei fehlende Beleglage-Hinweise der
+  Umsetzer aus Task 6 und Task 7 nachgetragen (Krümmungsherleitung ohne
+  Literaturstelle; Young 2004/Urban & Seidelmann 2013 nicht zu öffnen,
+  Luftleuchten und Hulburts Dämmerungsmechanismus als Vermutung), dazu die
+  Katalogform-Frage zu `usno-2026` (Zugriffsjahr statt Erscheinungsjahr).
+- **Vier Zahlen berichtigt:** §3 nennt jetzt 80 statt 81 Katalogeinträge mit
+  `arxiv`-Feld und 240 s statt 243 s reine arXiv-Pausenzeit (der `grep`-Zähler
+  traf zusätzlich die Parametertypangabe `arxiv: string` in `arxivAdresse`,
+  kein Katalogeintrag); §1 nennt jetzt 25 Commits bis `bcf095d` und 26 mit
+  diesem Protokoll-Commit statt einer einzigen, mit dem eigenen Commit nicht
+  mehr stimmenden Zahl; §6 stellt beim Task-4-Ruling klar, dass 4403/4883 der
+  Stand bei Abgabe des Tasks war und §4/§8 mit 4767/5286 den Stand nach der
+  Nacharbeit nennen — kein Widerspruch.
+- **Vier Formfragen als neue Punkte in §8 aufgenommen** (nicht behoben,
+  Entscheidung an Jens): deutsches „arXiv-Vorabdruck" im sprachunabhängigen
+  Feld von `mallama-2021`/`proudfoot-2026`, die zwei in
+  `chapront-touze-1988` gebündelten Arbeiten, die 117 Zeichen lange
+  Kommentarzeile in `scripts/pruefe-literatur.ts:9`, die Testlücke
+  „prüft nur die Konstanten, nicht die Verdrahtung".
+- **Code behoben:** `scripts/literaturVergleich.ts` — `mitWiederholung`
+  wiederholte einen Abruf mit der generischen Vorgabe `[2000, 5000]` schon
+  nach 2 s; da `pruefe-literatur.ts` die Funktion für alle drei Dienste ohne
+  eigenes `pausenMs` aufruft, unterschritt das beim arXiv-Abruf den in
+  `PAUSE_NACH_MS.arxiv` begründeten Mindestabstand von 3 s (Befund G1; 429
+  wird weiterhin korrekt nicht wiederholt). Die Vorgabe beginnt jetzt bei
+  `PAUSE_NACH_MS.arxiv` statt einer eigenen, kleineren Zahl (zweite Pause
+  unverändert bei 5 s), ohne `pruefe-literatur.ts` zu ändern; abgesichert mit
+  einem neuen Test in `scripts/literaturVergleich.test.ts`, der fehlschlägt,
+  sobald eine der Vorgabepausen den Mindestabstand wieder unterschreitet.

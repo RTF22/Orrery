@@ -225,11 +225,18 @@ const istZeitueberschreitung = (e: unknown): boolean =>
  * (Entscheidung Jens, 17.09.2026). Nach der letzten Pause gilt das letzte
  * Ergebnis. `abruf` muss bei jedem Aufruf ein neues Zeitlimit-Signal
  * erzeugen, weil ein abgelaufenes Signal abgelaufen bleibt.
+ *
+ * Die Vorgabe für `pausenMs` beginnt bei PAUSE_NACH_MS.arxiv statt einer
+ * eigenen, kleineren Zahl: `pruefe-literatur.ts` ruft die Funktion für alle
+ * drei Dienste ohne eigenes `pausenMs` auf, und eine erste Wiederholung
+ * unterhalb dieses Werts unterschritte beim arXiv-Abruf den in
+ * PAUSE_NACH_MS begründeten Mindestabstand der arXiv-API (Schlussprüfung
+ * 4d-3, Befund G1; zuvor [2000, 5000] — 2 s statt der geforderten 3 s).
  */
 export async function mitWiederholung<T extends { status: number }>(
   abruf: () => Promise<T>,
   warte: (ms: number) => Promise<void>,
-  pausenMs: readonly number[] = [2000, 5000],
+  pausenMs: readonly number[] = [PAUSE_NACH_MS.arxiv, 5000],
 ): Promise<T> {
   for (let versuch = 0; ; versuch += 1) {
     const pause = pausenMs[versuch];
