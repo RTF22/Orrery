@@ -2446,6 +2446,15 @@ export const LITERATUR: readonly Publikation[] = [
     arxiv: 'astro-ph/0303376',
   },
   {
+    id: 'soter-1967',
+    autoren: ['Soter, S.', 'Ulrichs, J.'],
+    etAl: false,
+    jahr: 1967,
+    titel: 'Rotation and Heating of the Planet Mercury',
+    erschienen: 'Nature 214, 1315–1316',
+    doi: '10.1038/2141315a0',
+  },
+  {
     id: 'staehler-2021',
     autoren: ['Stähler, S. C.', 'Khan, A.', 'Banerdt, W. B.'],
     etAl: true,
