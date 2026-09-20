@@ -329,6 +329,16 @@ git commit -m "Hochschultext Mars mit Belegliste"
 
 ---
 
+### Task 5a: Prüfskript erkennt Konsortial-Bylines (Zwischen-Task, Ruling 17)
+
+**Dateien:** Ändern `scripts/literaturVergleich.ts` (`pruefeCrossref`, Erstautor-Vergleich), `scripts/literaturVergleich.test.ts` (neuer Fall), Entwurf §4.5 (Nachtrag), `docs/belege/hochschule/objekt-mars.md` (Zeile zu `korablev-2019`).
+
+**Anlass:** Nach der Nacharbeit zu Task 5 führt `korablev-2019` (Nature 568, 517) den echten Erstautor „Korablev, O."; Crossref führt die Körperschaft „The ACS and NOMAD Science Teams" (Feld `name`, kein `family`) zuerst. Das Skript meldete einen Fehler, obwohl der Katalog richtig ist; der Volllauf der Abnahme bliebe sonst dauerhaft bei 1 Fehler.
+
+**Regel:** Weicht der Crossref-Erstautor ab, ist aber eine Körperschaft (`family` fehlt, `name` vorhanden) und steht der Katalog-Erstautor unter den weiteren Crossref-Autoren (`family` normalisiert gleich dem Nachnamen), meldet `pruefeCrossref` eine **Warnung** („Crossref führt die Körperschaft „…" zuerst, Erstautor „…" steht unter den weiteren Autoren"); sonst bleibt es ein Fehler. Test (TDD): Crossref-Autoren `[{ name: 'The ACS and NOMAD Science Teams' }, { family: 'Korablev' }, { family: 'Vandaele' }]` mit Katalog-Erstautor „Korablev, O." → genau `['warnung']`; mit Katalog-Erstautor „Vago, J." → Fehler. `npm run literatur:pruefen -- --nur korablev-2019` → 0 Fehler, 1 Warnung. Commit: `Prüfskript: Konsortial-Bylines bei Crossref als Warnung statt Fehler`. Soll-Testzahl der Etappe damit **4125**.
+
+---
+
 ### Task 6: Körper `phobos` und `deimos`
 
 **Dateien:**
@@ -585,3 +595,4 @@ Entscheidungen der Planung (20.09.2026), von Jens noch nicht bestätigt:
 14. **Ruling:** Die Etappe geht nach Abnahme und Schlussprüfung per Fast-Forward auf `master` und wird nach der Prüfung des Diffs auf Zugangsdaten gepusht (wie 4d-2 und 4d-3; das Repository ist öffentlich). Jens gibt danach 4d-5 frei. Änderungswünsche an den Texten kommen als eigene Commits.
 15. **Ruling:** Wortzahl-Obergrenze als weiche Schranke: Kein Text soll den oberen Richtwert um mehr als ein Drittel überschreiten (Körper 4667, kleine Monde 1333, Szenen 1200 Wörter); der Umsetzer straffte vor dem Commit, nicht in der Nacharbeit. Anlass: fünf von sechs Texten in 4d-3 lagen über dem Richtwert (Abnahme 4d-3 §8).
 16. **Ruling:** Deimos hat keine Textur (`textures.albedo` leer, Ausweichfarbe `#7a7067`, Begründung in `ASSETS.md`); der Hochschultext beschreibt das im Abschnitt „Im Modell" und der Gymnasialtext bleibt unverändert. Keine neue Textur in dieser Etappe (kein Code, keine Assets).
+17. **Ruling (Umsetzung, 20.09.2026):** Zwischen-Task 5a lockert den Erstautor-Vergleich des Prüfskripts für Konsortial-Bylines (Körperschaft mit `name` zuerst bei Crossref, Katalog-Erstautor unter den weiteren Autoren → Warnung statt Fehler). Anlass `korablev-2019` nach der Fachprüfung Mars (F3). Kosten bei Fehlurteil: eine gelockerte Prüfung für genau diesen Fall; sonst bliebe jeder Volllauf bei 1 Fehler.
