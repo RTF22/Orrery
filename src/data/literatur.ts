@@ -2551,7 +2551,7 @@ export const LITERATUR: readonly Publikation[] = [
     etAl: false,
     jahr: 2010,
     titel: 'IERS Conventions (2010)',
-    erschienen: 'IERS Technical Note 36, Federal Agency for Cartography and Geodesy, Frankfurt am Main',
+    erschienen: 'IERS Technical Note 36, Verlag des Bundesamts für Kartographie und Geodäsie, Frankfurt am Main',
     url: 'https://iers-conventions.obspm.fr/content/tn36.pdf',
   },
   {

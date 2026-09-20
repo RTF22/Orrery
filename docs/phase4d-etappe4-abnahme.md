@@ -1068,15 +1068,15 @@ Projektanleitung beschrieben (Ergebnis 0), ohne Suchmuster in dieser Datei.
 ## Nacharbeit nach der Schlussprüfung
 
 **Befund:** Beschreibende Zusätze im sprachunabhängigen Katalogfeld `erschienen`
-(Herausgeber, Zugriffs- und Online-Datum, Art einer Seite) standen in sieben
+(Herausgeber, Zugriffs- und Online-Datum, Art einer Seite) standen in sechs
 Einträgen auf Deutsch: `ebel-2018` („Hrsg."), `jaxa-mmx-2026` („Missionsseite",
 „Stand"), `raducan-2026` („seit"), `usgs-gazetteer-2026` („im Auftrag",
 „Online-Datenbank", „abgerufen"), `usno-2026` („Online-FAQ", „abgerufen"),
-`chapront-touze-1988` („und") sowie zusätzlich `petit-2010` („Verlag des
-Bundesamts").
+`chapront-touze-1988` („und").
 
 **Ruling:** Alle beschreibenden Zusätze in `erschienen` stehen einheitlich auf
-Englisch wie die Zeitschriftennamen, ohne Ausnahme (Schlussprüfung 4d-4).
+Englisch wie die Zeitschriftennamen, ohne Ausnahme. Eigennamen von Verlagen und
+Einrichtungen bleiben in der Originalsprache (Schlussprüfung 4d-4).
 Vornahme und Katalogstand:
 
 | Kennung | Alt | Neu |
@@ -1087,7 +1087,6 @@ Vornahme und Katalogstand:
 | `usgs-gazetteer-2026` | `U.S. Geological Survey, im Auftrag der IAU Working Group for Planetary System Nomenclature, Online-Datenbank, abgerufen 20. September 2026` | `U.S. Geological Survey for the IAU Working Group for Planetary System Nomenclature, online database, accessed 20 September 2026` |
 | `usno-2026` | `Astronomical Applications Department, U.S. Naval Observatory, Washington, DC, Online-FAQ, abgerufen 20. September 2026` | `Astronomical Applications Department, U.S. Naval Observatory, Washington, DC, online FAQ, accessed 20 September 2026` |
 | `chapront-touze-1988` | `… (1983) und 190, 342 (1988)` | `… (1983) and 190, 342 (1988)` |
-| `petit-2010` | `Verlag des Bundesamts für Kartographie und Geodäsie, Frankfurt am Main` | `Federal Agency for Cartography and Geodesy, Frankfurt am Main` |
 
 Das Ruling hebt das Task-1-Ruling zur „und"-Schreibweise in `chapront-touze-1988`
 auf und weicht von dem in Abnahme 4d-3 §8 gesammelten Vorschlag ab (damals Frage:
