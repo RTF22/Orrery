@@ -579,7 +579,7 @@ export const LITERATUR: readonly Publikation[] = [
     etAl: false,
     jahr: 1988,
     titel: 'Lunar Solution ELP 2000-82B',
-    erschienen: 'CDS catalogue VI/79, Strasbourg; Astronomy and Astrophysics 124, 50 (1983) und 190, 342 (1988)',
+    erschienen: 'CDS catalogue VI/79, Strasbourg; Astronomy and Astrophysics 124, 50 (1983) and 190, 342 (1988)',
     url: 'https://cdsarc.cds.unistra.fr/viz-bin/cat/VI/79',
   },
   {
@@ -840,7 +840,7 @@ export const LITERATUR: readonly Publikation[] = [
     etAl: false,
     jahr: 2018,
     titel: 'The Elusive Origin of Mercury',
-    erschienen: 'in: Solomon, S. C., Nittler, L. R., Anderson, B. J. (Hrsg.), Mercury: The View after MESSENGER, Cambridge University Press, Cambridge, 497–515',
+    erschienen: 'in: Solomon, S. C., Nittler, L. R., Anderson, B. J. (eds.), Mercury: The View after MESSENGER, Cambridge University Press, Cambridge, 497–515',
     doi: '10.1017/9781316650684.019',
     arxiv: '1712.08234',
   },
@@ -1476,7 +1476,7 @@ export const LITERATUR: readonly Publikation[] = [
     etAl: false,
     jahr: 2026,
     titel: 'Martian Moons eXploration (MMX): Mission Overview',
-    erschienen: 'JAXA-Missionsseite, Stand September 2026',
+    erschienen: 'JAXA mission page, as of September 2026',
     url: 'https://www.mmx.jaxa.jp/en/',
   },
   {
@@ -2551,7 +2551,7 @@ export const LITERATUR: readonly Publikation[] = [
     etAl: false,
     jahr: 2010,
     titel: 'IERS Conventions (2010)',
-    erschienen: 'IERS Technical Note 36, Verlag des Bundesamts für Kartographie und Geodäsie, Frankfurt am Main',
+    erschienen: 'IERS Technical Note 36, Federal Agency for Cartography and Geodesy, Frankfurt am Main',
     url: 'https://iers-conventions.obspm.fr/content/tn36.pdf',
   },
   {
@@ -2653,7 +2653,7 @@ export const LITERATUR: readonly Publikation[] = [
     etAl: true,
     jahr: 2026,
     titel: 'Deimos’s shape and geology explained by a subcatastrophic impact',
-    erschienen: 'Nature Astronomy (online seit 18. August 2026)',
+    erschienen: 'Nature Astronomy, published online 18 August 2026',
     doi: '10.1038/s41550-026-02956-w',
   },
   {
@@ -3040,7 +3040,7 @@ export const LITERATUR: readonly Publikation[] = [
     etAl: false,
     jahr: 2026,
     titel: 'Gazetteer of Planetary Nomenclature: Valles Marineris',
-    erschienen: 'U.S. Geological Survey, im Auftrag der IAU Working Group for Planetary System Nomenclature, Online-Datenbank, abgerufen 20. September 2026',
+    erschienen: 'U.S. Geological Survey for the IAU Working Group for Planetary System Nomenclature, online database, accessed 20 September 2026',
     url: 'https://planetarynames.wr.usgs.gov/Feature/6288',
   },
   {
@@ -3049,7 +3049,7 @@ export const LITERATUR: readonly Publikation[] = [
     etAl: false,
     jahr: 2026,
     titel: 'Rise, Set, and Twilight Definitions',
-    erschienen: 'Astronomical Applications Department, U.S. Naval Observatory, Washington, DC, Online-FAQ, abgerufen 20. September 2026',
+    erschienen: 'Astronomical Applications Department, U.S. Naval Observatory, Washington, DC, online FAQ, accessed 20 September 2026',
     url: 'https://aa.usno.navy.mil/faq/RST_defs',
   },
   {

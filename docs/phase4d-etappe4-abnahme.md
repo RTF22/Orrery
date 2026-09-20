@@ -1064,3 +1064,38 @@ Plan-Reihenfolge):
 
 Die Wort- und Trailerprüfung vor dem Commit erfolgte wie in der lokalen
 Projektanleitung beschrieben (Ergebnis 0), ohne Suchmuster in dieser Datei.
+
+## Nacharbeit nach der Schlussprüfung
+
+**Befund:** Beschreibende Zusätze im sprachunabhängigen Katalogfeld `erschienen`
+(Herausgeber, Zugriffs- und Online-Datum, Art einer Seite) standen in sieben
+Einträgen auf Deutsch: `ebel-2018` („Hrsg."), `jaxa-mmx-2026` („Missionsseite",
+„Stand"), `raducan-2026` („seit"), `usgs-gazetteer-2026` („im Auftrag",
+„Online-Datenbank", „abgerufen"), `usno-2026` („Online-FAQ", „abgerufen"),
+`chapront-touze-1988` („und") sowie zusätzlich `petit-2010` („Verlag des
+Bundesamts").
+
+**Ruling:** Alle beschreibenden Zusätze in `erschienen` stehen einheitlich auf
+Englisch wie die Zeitschriftennamen, ohne Ausnahme (Schlussprüfung 4d-4).
+Vornahme und Katalogstand:
+
+| Kennung | Alt | Neu |
+|---|---|---|
+| `ebel-2018` | `(Hrsg.)` | `(eds.)` |
+| `jaxa-mmx-2026` | `JAXA-Missionsseite, Stand September 2026` | `JAXA mission page, as of September 2026` |
+| `raducan-2026` | `Nature Astronomy (online seit 18. August 2026)` | `Nature Astronomy, published online 18 August 2026` |
+| `usgs-gazetteer-2026` | `U.S. Geological Survey, im Auftrag der IAU Working Group for Planetary System Nomenclature, Online-Datenbank, abgerufen 20. September 2026` | `U.S. Geological Survey for the IAU Working Group for Planetary System Nomenclature, online database, accessed 20 September 2026` |
+| `usno-2026` | `Astronomical Applications Department, U.S. Naval Observatory, Washington, DC, Online-FAQ, abgerufen 20. September 2026` | `Astronomical Applications Department, U.S. Naval Observatory, Washington, DC, online FAQ, accessed 20 September 2026` |
+| `chapront-touze-1988` | `… (1983) und 190, 342 (1988)` | `… (1983) and 190, 342 (1988)` |
+| `petit-2010` | `Verlag des Bundesamts für Kartographie und Geodäsie, Frankfurt am Main` | `Federal Agency for Cartography and Geodesy, Frankfurt am Main` |
+
+Das Ruling hebt das Task-1-Ruling zur „und"-Schreibweise in `chapront-touze-1988`
+auf und weicht von dem in Abnahme 4d-3 §8 gesammelten Vorschlag ab (damals Frage:
+„Deutsch oder Englisch in diesem Feld"). Der nach der Schlussprüfung ermittelte
+Katalogstand ist **372 Einträge** (von 303 aus 4d-3).
+
+**Zurückgestellt:** Ein Minor in `scripts/literaturVergleich.ts` (Behandlung von
+Körperschaften ohne Familienname bei Crossref) — praxisfern, keine neuen Fälle
+seit 4d-2.
+
+Commit: `Nacharbeit nach der Schlussprüfung 4d Etappe 4`.

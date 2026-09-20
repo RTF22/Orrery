@@ -200,7 +200,7 @@ sprachunabhängigen Feld `erschienen` nur `'arXiv'`; die Karte hängt „Vorabdr
 beziehungsweise „Preprint" in der Sprache der Oberfläche an, die Nummer steht im Feld `arxiv`
 (Test in `literatur.test.ts`). Laufend gepflegte Seiten ohne Erscheinungsdatum (etwa
 `usno-2026`, `silso-2026`) tragen als `jahr` das Zugriffsjahr, die Kennung folgt ihm. Beides
-entschieden nach Abnahme 4d-3 §8.
+entschieden nach Abnahme 4d-3 §8. Beschreibende Zusätze im Feld `erschienen` (Herausgeber, Zugriffs- oder Online-Datum, Art einer Seite) stehen wie die Zeitschriftennamen auf Englisch, ohne Ausnahme (Schlussprüfung 4d-4).
 
 ### 4.2 Verweis `literatur:`
 
