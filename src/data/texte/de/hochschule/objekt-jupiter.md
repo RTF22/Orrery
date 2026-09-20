@@ -128,13 +128,13 @@ Gewittertätigkeit ([Brown et al. 2018](literatur:brown-2018)).
 Das Magnetfeld entsteht im metallischen Wasserstoff und ist das stärkste aller Planeten. Das
 aktuelle Modell JRM33 aus 32 Polumläufen zeigt neben dem globalen Dipol einen „Großen Blauen
 Fleck", einen isolierten, intensiven Fleck magnetischen Flusses nahe dem Äquator, der von tiefen
-Zonalwinden mit rund 3500 km Reichweite und rund $0{,}04\,\mathrm{m\,s^{-1}}$ Geschwindigkeit
-ostwärts verfrachtet wird ([Connerney et al. 2022](literatur:connerney-2022)); nach der laufenden
+Zonalwinden mit rund 3500 km Reichweite ostwärts verfrachtet wird
+([Connerney et al. 2022](literatur:connerney-2022)); nach der laufenden
 Drift sollte er den Planeten binnen etwa 350 Jahren einmal umrunden
 ([Juno-Mission (NASA)](quelle:nasa-juno)). Io speist mit seinem vulkanisch ausgestoßenen
 Schwefel- und Sauerstoffplasma einen Ionentorus entlang seiner Bahn, dessen Ströme unter anderem
-Polarlicht-Fußabdrücke aller vier Galileischen Monde erzeugen; zuletzt wies Juno 2023 auch den
-lange gesuchten Fußabdruck von Kallisto nach ([Jupiter bei NASA Science](quelle:nasa-jupiter)).
+Polarlicht-Fußabdrücke aller vier Galileischen Monde erzeugen; zuletzt wies Juno auch den lange
+gesuchten Fußabdruck von Kallisto nach ([Jupiter bei NASA Science](quelle:nasa-jupiter)).
 
 ## Bahn, Rotation und Dynamik
 
@@ -160,7 +160,7 @@ zusammen, weit draußen mit seiner Bahnebene um die Sonne
 Fläche und stehen in einer Kette von Bahnresonanzen, der Laplace-Resonanz von
 [Io](objekt:io), [Europa](objekt:europa) und [Ganymed](objekt:ganymede); weiter draußen, in 60°
 Abstand vor und hinter Jupiter auf seiner eigenen Bahn, halten die Lagrangepunkte $L_4$ und $L_5$
-mehrere zehntausend Jupiter-Trojaner gefangen ([Bahnresonanzen](thema:resonanzen)).
+zahlreiche Jupiter-Trojaner gefangen ([Entstehung](thema:entstehung)).
 
 ## Entstehung und Entwicklung
 
@@ -259,13 +259,14 @@ nahelegten.
   Jupiter werfen, und jeder Mond wird umgekehrt von Jupiter und allen drei übrigen Monden
   beschattet. Bei Jupiters $3{,}13^\circ$ Achsneigung wirft Io wegen seiner Nähe immer einen
   Schatten, Kallisto zeitweise gar nicht (9,5° gegen 2,1° zulässige Sonnenhöhe über der
-  Bahnebene); von Jupiter aus hat die Sonne nur $0{,}051^\circ$ Winkelradius, deutlich weniger als
+  Bahnebene); von Jupiter aus hat die Sonne im Mittel nur $0{,}051^\circ$ Winkelradius, deutlich weniger als
   die Winkelradien der vier Monde selbst, sodass ihre Schatten als scharfe schwarze Flecken
   erscheinen ([Finsternisse](thema:finsternis)). Wie bei Jupiters eigenem Schatten auf Saturn trägt
   auch dieser keine Kernschattenfarbe. Die Mondbahnen sind auf Jupiters Äquatorebene bezogen
   (`frame: 'parentEquator'`, Pol aus diesem Datensatz) statt auf die eigentliche Laplace-Ebene
-  jedes einzelnen Mondes; die dabei entstehende Abweichung ist bei den drei inneren Monden mit
-  0,02° klein, bei Kallisto mit 0,4° am größten (siehe Kommentar in `jupiter-monde.ts`).
+  jedes einzelnen Mondes; die dabei entstehende Abweichung ist bei Io und Europa mit 0,02° klein,
+  bei Ganymed mit 0,12° noch mäßig und bei Kallisto mit 0,4° am größten (siehe Kommentar in
+  `jupiter-monde.ts`).
 - Maßstab: `sizeScale` vergrößert Jupiter wie jeden Körper gleich; `sunDamping` betrifft nur die
   Sonne. Weitere Vereinfachungen: [Grenzen des Modells](thema:modell).
 

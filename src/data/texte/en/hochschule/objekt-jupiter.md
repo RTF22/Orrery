@@ -125,12 +125,12 @@ from optical Voyager and Galileo images, of thunderstorm activity concentrated a
 The magnetic field originates in the metallic hydrogen and is the strongest of any planet. The
 current JRM33 model, from 32 polar orbits, shows, besides the global dipole, a "Great Blue Spot", an
 isolated, intense patch of magnetic flux near the equator that is carried eastward by deep zonal
-winds reaching about 3500 km with a speed of about $0.04\,\mathrm{m\,s^{-1}}$
+winds reaching about 3500 km
 ([Connerney et al. 2022](literatur:connerney-2022)); at its current drift, it should circle the
 planet once in roughly 350 years ([Juno mission (NASA)](quelle:nasa-juno)). Io feeds an ion torus
 along its orbit from its volcanically ejected sulfur and oxygen plasma, whose currents produce,
-among other things, auroral footprints of all four Galilean moons; most recently, in 2023, Juno
-also detected the long-sought footprint of Callisto
+among other things, auroral footprints of all four Galilean moons; most recently, Juno also
+detected the long-sought footprint of Callisto
 ([Jupiter at NASA Science](quelle:nasa-jupiter)).
 
 ## Orbit, rotation and dynamics
@@ -156,8 +156,8 @@ far out with its orbital plane around the Sun
 ([Laplace surface of the moons](thema:bezugssysteme)). The four Galilean moons orbit near this
 surface and sit in a chain of orbital resonances, the Laplace resonance of
 [Io](objekt:io), [Europa](objekt:europa) and [Ganymede](objekt:ganymede); farther out, 60° ahead of
-and behind Jupiter on its own orbit, the Lagrange points $L_4$ and $L_5$ trap several tens of
-thousands of Jupiter trojans ([Orbital resonances](thema:resonanzen)).
+and behind Jupiter on its own orbit, the Lagrange points $L_4$ and $L_5$ trap numerous Jupiter
+trojans ([Formation](thema:entstehung)).
 
 ## Formation and evolution
 
@@ -251,12 +251,13 @@ than older radiation balances suggested.
   conversely each moon is shadowed by Jupiter and all three remaining moons. At Jupiter's
   $3.13^\circ$ obliquity, Io, being close in, always casts a shadow, while Callisto sometimes casts
   none at all (9.5° versus 2.1° permissible solar elevation above the orbital plane); seen from
-  Jupiter, the Sun has an angular radius of only $0.051^\circ$, markedly smaller than the angular
+  Jupiter, the Sun has, on average, an angular radius of only $0.051^\circ$, markedly smaller than the angular
   radii of the four moons themselves, so their shadows appear as sharp black spots
   ([Eclipses](thema:finsternis)). As with Jupiter's own shadow on Saturn, this one carries no umbra
   colour either. The moons' orbits are referred to Jupiter's equatorial plane
   (`frame: 'parentEquator'`, pole from this dataset) rather than each moon's own Laplace plane; the
-  resulting deviation is small, 0.02°, for the three inner moons and largest, 0.4°, for Callisto (see
+  resulting deviation is small, 0.02°, for Io and Europa, still moderate, 0.12°, for Ganymede, and
+  largest, 0.4°, for Callisto (see
   the comment in `jupiter-monde.ts`).
 - Scale: `sizeScale` enlarges Jupiter like any body; `sunDamping` affects only the Sun. Further
   simplifications: [Limits of the model](thema:modell).
