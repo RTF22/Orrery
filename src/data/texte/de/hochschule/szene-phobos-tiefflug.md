@@ -29,9 +29,10 @@ Mars füllt dafür einen Großteil des Bildes: Sein Winkeldurchmesser liegt übe
 und Streuungen zwischen $41{,}8^\circ$ und $43{,}0^\circ$, an den Ausgangswerten der Szene (Elevation
 8°, Faktor 1) bei $41{,}9^\circ$ — nahe den 42° des Gymnasialtexts. Von Phobos selbst aus gesehen
 sind es zum selben Zeitpunkt ebenfalls $41{,}9^\circ$, weil der Kameraversatz von nur rund 44 km
-neben 9375 km Bahnradius kaum ins Gewicht fällt; die Kamera steht damit rund 6087 km über der
-Marsoberfläche (Marsradius 3389,5 km, [NSSDC-Faktenblatt](quelle:nssdc-mars)), wenig mehr als
-Phobos' eigene rund 5986 km.
+neben rund 9488 km Bahnabstand (Mars–Phobos an diesem Tag, nahe dem Apozentrum) kaum ins Gewicht
+fällt; die Kamera steht damit rund 6087 km über der Marsoberfläche (Marsradius 3389,5 km,
+[NSSDC-Faktenblatt](quelle:nssdc-mars)) — geringfügig unterhalb von Phobos' eigener Höhe an diesem
+Tag (rund 6098 km).
 
 Die Szene rafft mit 0,05 Tagen je Sekunde 25 Sekunden lang, macht also 1,25 simulierte Tage: Phobos
 umläuft Mars darin rund 3,9-mal (Umlaufzeit 7,65384 h), während sich Mars um 1,22 Umdrehungen
@@ -48,8 +49,10 @@ zu fallen. Weil Phobos schneller umläuft, als Mars sich dreht, geht er von der 
 Westen auf und im Osten unter, im Mittel alle rund 11,1 Stunden erneut. Seine
 [Rotation ist gebunden](thema:gebundene-rotation); über die Gezeiten zieht Mars ihn zugleich
 langsam nach innen, die Bahn sinkt um rund 3,8 cm je Jahr
-([Brozović et al. 2025](literatur:brozovic-2025); Herleitung unter [Gezeiten](thema:gezeiten)) — in
-20 bis 43 Millionen Jahren zerbricht oder stürzt [Phobos](objekt:phobos) deshalb ab.
+([Brozović et al. 2025](literatur:brozovic-2025); Herleitung unter [Gezeiten](thema:gezeiten)) —
+allein mit dieser Gezeit vergehen bis zum Aufschlag rund 29 bis 43 Millionen Jahre, der wirkliche
+Zerfall an der Roche-Grenze setzt mit 20 bis 40 Millionen Jahren schon früher ein (Einzelheiten bei
+[Phobos](objekt:phobos)).
 
 Von der Marsoberfläche aus zieht Phobos regelmäßig vor der Sonne vorbei, ohne sie je ganz zu
 bedecken: Er misst nur $0{,}106^\circ$ im Winkelradius gegen $0{,}175^\circ$ der Sonne und verdeckt

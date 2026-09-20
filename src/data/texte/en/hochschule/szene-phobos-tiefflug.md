@@ -29,9 +29,10 @@ Mars, in turn, fills much of the frame: its angular diameter, across the same or
 variation, ranges from $41.8^\circ$ to $43.0^\circ$, and is $41.9^\circ$ at the scene's baseline
 values (elevation 8°, factor 1) — close to the 42° given in the secondary-school text. Seen from
 Phobos itself at the same instant it is likewise $41.9^\circ$, because the camera's offset of only
-about 44 km barely matters next to the 9375 km orbital radius; the camera accordingly stands about
-6087 km above the Martian surface (Mars radius 3389.5 km,
-[NSSDC fact sheet](quelle:nssdc-mars)), a little more than Phobos' own roughly 5986 km.
+about 44 km barely matters next to the roughly 9488 km separation between Mars and Phobos on that
+day, near apoapsis; the camera accordingly stands about 6087 km above the Martian surface (Mars
+radius 3389.5 km, [NSSDC fact sheet](quelle:nssdc-mars)) — slightly below Phobos' own height on
+that day (about 6098 km).
 
 The scene runs at 0.05 days per second for 25 seconds, making 1.25 simulated days: within it Phobos
 orbits Mars about 3.9 times (orbital period 7.65384 h), while Mars turns through 1.22 rotations
@@ -47,8 +48,9 @@ Phobos orbits faster than Mars rotates, it rises in the west and sets in the eas
 surface, on average about every 11.1 hours. Its
 [rotation is tidally locked](thema:gebundene-rotation); tides simultaneously pull it slowly inward,
 with the orbit sinking by about 3.8 cm per year
-([Brozović et al. 2025](literatur:brozovic-2025); derivation under [Tides](thema:gezeiten)) — in
-20 to 43 million years Phobos will therefore break apart or crash.
+([Brozović et al. 2025](literatur:brozovic-2025); derivation under [Tides](thema:gezeiten)) — from
+this tide alone, about 29 to 43 million years pass until impact, while the real disruption at the
+Roche limit sets in earlier, at 20 to 40 million years (details at [Phobos](objekt:phobos)).
 
 Seen from the Martian surface, Phobos regularly transits the Sun without ever covering it
 completely: it subtends only $0.106^\circ$ in angular radius against the Sun's $0.175^\circ$ and
