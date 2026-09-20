@@ -19,12 +19,14 @@ Bei 50° senkrechtem Bildwinkel misst die Erde $2\arcsin(1/150) = 0{,}76^\circ$,
 bis 0,95°; der Mond kommt je nach Bahnstelle auf 0,16° bis 0,26°, mit Streuung auf 0,13° bis 0,46°.
 Beide bleiben Scheibchen; die Bahnlinie dagegen füllt das Bild. Ihr Winkelradius um die Bildmitte
 liegt bei Höhe 55° und Faktor 1 je nach Lage von Knoten- und Apsidenlinie zwischen rund 23° und 25°,
-die halbe Bildhöhe bei 25°: Schon ohne Abstandsstreuung tritt sie gelegentlich über den Rand, beim
-Faktor 0,8 immer. Über alle Ziehungen bleiben bei 16:9 im Mittel 96 % der Linie im Bild, vollständig
-in gut zwei Dritteln der Fälle.
+die halbe Bildhöhe bei 25°: Schon ohne Abstandsstreuung tritt sie gelegentlich über den Rand. Beim
+Abstandsfaktor 0,8 bleibt sie nur bei flacher Aufsicht ganz im Bild, wo die gestauchte Ellipse in
+die Bildhöhe passt: bei 30° Höhe in 68 % der Fälle, bei 40° in 9 %, ab 45° nie. Über alle Ziehungen
+bleiben bei 16:9 im Mittel 96 % der Linie im Bild, vollständig in gut zwei Dritteln der Fälle.
 
-45 s zu 0,9 Tagen je Sekunde sind 40,5 Tage, 1,48 siderische Umläufe zu je 30,4 s; weil die Kamera
-in derselben Richtung mitwandert, zieht der Mond gegenüber dem Bildausschnitt nur 1,42-mal herum.
+45 s zum Sollwert von 0,9 Tagen je Sekunde sind 40,5 Tage, 1,48 siderische Umläufe zu je 30,4 s;
+weil die Kamera in derselben Richtung mitwandert, zieht der Mond gegenüber dem Bildausschnitt nur
+1,42-mal herum. Die Blende lässt etwas mehr Zeit vergehen (siehe Zeitraffer unten).
 
 ## Hintergrund
 

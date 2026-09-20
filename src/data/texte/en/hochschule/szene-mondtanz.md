@@ -20,12 +20,15 @@ variation 0.64° to 0.95°; the Moon reaches 0.16° to 0.26° depending on its p
 the variation 0.13° to 0.46°. Both stay small discs; the orbit line, by contrast, fills the frame.
 At an elevation of 55° and a factor of 1 its angular radius around the centre of the image lies
 between about 23° and 25°, depending on where the lines of nodes and apsides lie, and half the image
-height is 25°: even without the distance variation it occasionally passes beyond the edge, and at a
-factor of 0.8 it always does. Over all draws an average of 96% of the line stays in frame at 16:9,
-all of it in a good two thirds of the cases.
+height is 25°: even without the distance variation it occasionally passes beyond the edge. At a
+distance factor of 0.8 it stays fully in frame only at a flat viewing angle, where the compressed
+ellipse fits the image height: at an elevation of 30° in 68% of cases, at 40° in 9%, and from 45°
+never. Over all draws an average of 96% of the line stays in frame at 16:9, all of it in a good two
+thirds of the cases.
 
-45 s at 0.9 days per second are 40.5 days, 1.48 sidereal revolutions of 30.4 s each; because the
-camera drifts in the same direction, the Moon goes around only 1.42 times relative to the frame.
+45 s at the nominal rate of 0.9 days per second are 40.5 days, 1.48 sidereal revolutions of 30.4 s
+each; because the camera drifts in the same direction, the Moon goes around only 1.42 times relative
+to the frame. The blend lets a little more time pass (see time-lapse below).
 
 ## Background
 
