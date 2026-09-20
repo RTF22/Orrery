@@ -190,6 +190,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1002/2015GL064120',
   },
   {
+    id: 'bennett-1982',
+    autoren: ['Bennett, G. G.'],
+    etAl: false,
+    jahr: 1982,
+    titel: 'The Calculation of Astronomical Refraction in Marine Navigation',
+    erschienen: 'Journal of Navigation 35, 255–259',
+    doi: '10.1017/s0373463300022037',
+  },
+  {
     id: 'bi-2025',
     autoren: ['Bi, H.', 'Sun, D.', 'Sun, N.'],
     etAl: true,
@@ -1134,6 +1143,15 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'Thermal inertia and bolometric Bond albedo values for Mimas, Enceladus, Tethys, Dione, Rhea and Iapetus as derived from Cassini/CIRS measurements',
     erschienen: 'Icarus 206, 573–593',
     doi: '10.1016/j.icarus.2009.07.016',
+  },
+  {
+    id: 'hulburt-1953',
+    autoren: ['Hulburt, E. O.'],
+    etAl: false,
+    jahr: 1953,
+    titel: 'Explanation of the Brightness and Color of the Sky, Particularly the Twilight Sky',
+    erschienen: 'Journal of the Optical Society of America 43, 113–118',
+    doi: '10.1364/josa.43.000113',
   },
   {
     id: 'iess-2012',
@@ -2481,6 +2499,15 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'Origin of the orbital architecture of the giant planets of the Solar System',
     erschienen: 'Nature 435, 459–461',
     doi: '10.1038/nature03539',
+  },
+  {
+    id: 'usno-2026',
+    autoren: ['U.S. Naval Observatory'],
+    etAl: false,
+    jahr: 2026,
+    titel: 'Rise, Set, and Twilight Definitions',
+    erschienen: 'Astronomical Applications Department, U.S. Naval Observatory, Washington, DC, Online-FAQ, abgerufen 20. September 2026',
+    url: 'https://aa.usno.navy.mil/faq/RST_defs',
   },
   {
     id: 'valley-2014',
