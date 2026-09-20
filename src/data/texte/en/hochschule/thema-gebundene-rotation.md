@@ -81,9 +81,10 @@ $C_\mathrm{m}/C = 0.421 \pm 0.021$ ([Stark et al. 2015](literatur:stark-2015)), 
 $(B - A)/C = 9.3 \cdot 10^{-5}$, some ten thousand times more than required. That Mercury does not
 rotate synchronously at all was shown in 1965 by the first accurate radar observations of its
 rotation ([Pettengill and Dyce 1965](literatur:pettengill-1965);
-[Stark et al. 2015](literatur:stark-2015), section 1); the reading as a 3:2 coupling and its
-justification through the permanent deformation came only afterwards
-([Goldreich and Peale 1966](literatur:goldreich-1966)).
+[Stark et al. 2015](literatur:stark-2015), section 1); reading the measured period as exactly
+$1.5\,n$ goes back to Colombo, and that a sufficient departure from axial symmetry stabilises that
+state was shown by several works immediately afterwards
+([Goldreich and Peale 1966](literatur:goldreich-1966), introduction).
 
 How Mercury got there is still a matter of modelling. With a realistic tidal model the probability
 of capture into the 3:2 resonance is only about 7 %; capture becomes very likely only once chaotic
@@ -237,9 +238,9 @@ period of the solid planet varies by 61 ppm, about 20 minutes, which requires th
 the atmospheric angular momentum be transferred to the solid body
 ([Margot et al. 2021](literatur:margot-2021)). Exactly this exchange is one reason why Venus is not
 locked: the thermal tide of the dense atmosphere drives the rotation away from synchronisation. A
-global climate model shows that even a comparatively thin atmosphere suffices for this, and yields
-four asynchronous equilibrium spin states, two of them stable, once the amplitude of the thermal
-tide exceeds a threshold ([Leconte et al. 2015](literatur:leconte-2015)).
+global climate model shows that for Earth-like planets in general a comparatively thin atmosphere
+already suffices for this, once the amplitude of the thermal tide exceeds a threshold; Venus serves
+there as the starting example ([Leconte et al. 2015](literatur:leconte-2015)).
 
 Goldreich and Peale already considered a resonance of the second kind for Venus, in which the spin
 would be commensurate with the synodic motion relative to the Earth, but found that this would
@@ -379,10 +380,7 @@ in the middle of the image, therefore the prime meridian — and the direction t
   and orbit normal: for the Moon ±6.7° at epoch, for Miranda ±4.3°, for Triton ±21.4°. For the
   latter two the orbital node does not move in the data set, so the swing stays fixed. For Triton
   and Miranda this also adds a swing in longitude, ±2.1° for Triton, although $2e$ there is only
-  0.02°: it is the reduction to the equator, not the orbital eccentricity. Tethys is an exception:
-  there the rate of the pericentre exceeds that of the mean longitude in the data set, the mean
-  anomaly therefore runs backwards, and the libration in longitude has the right amplitude but a
-  period of 57.8 instead of 1.89 days.
+  0.02°: it is the reduction to the equator, not the orbital eccentricity.
   For Triton and Miranda this swing is an artefact of the data set: the IAU report gives their
   poles as series with large periodic terms — for Triton
   $299.36^\circ - 32.35^\circ \sin N_7 - \ldots$ and
@@ -391,7 +389,10 @@ in the middle of the image, therefore the prime meridian — and the direction t
   $-15.08^\circ + 4.25^\circ \cos U_{11} - \ldots$
   ([Archinal et al. 2011](literatur:archinal-2011)). These terms describe the precession with which
   the spin axis follows the moving orbit normal; the data set keeps only the constant terms, and in
-  the model the pole stays fixed.
+  the model the pole stays fixed. Tethys is an exception of another kind: there the rate of the
+  pericentre exceeds that of the mean longitude in the data set, the mean anomaly therefore runs
+  backwards, and the libration in longitude has the right amplitude but a period of 57.8 instead of
+  1.89 days.
 - **Moon.** Rotation period 655.71984 h $= 360^\circ/\dot{L} = 27.32166$ days, hence no deviation;
   the Keplerian orbital period in the data block is 0.11 % shorter. The angle between the centre of
   the map and the direction to the Earth is 41.7° at epoch, 37.5° on 19 September 2026, 31.2° in

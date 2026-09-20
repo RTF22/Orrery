@@ -83,8 +83,10 @@ $C_\mathrm{m}/C = 0{,}421 \pm 0{,}021$ ([Stark et al. 2015](literatur:stark-2015
 $(B - A)/C = 9{,}3 \cdot 10^{-5}$, rund zehntausendmal mehr als nötig. Dass Merkur überhaupt nicht
 synchron läuft, zeigten 1965 die ersten genauen Radarbeobachtungen seiner Rotation
 ([Pettengill und Dyce 1965](literatur:pettengill-1965); [Stark et al. 2015](literatur:stark-2015),
-Abschnitt 1); die Deutung als 3:2-Kopplung und ihre Begründung über die permanente Deformation
-kamen erst danach ([Goldreich und Peale 1966](literatur:goldreich-1966)).
+Abschnitt 1); die Deutung der gemessenen Periode als genau $1{,}5\,n$ geht auf Colombo zurück, und
+dass eine hinreichende Abweichung von der Achsensymmetrie diesen Zustand stabilisiert, zeigten
+mehrere Arbeiten unmittelbar danach ([Goldreich und Peale 1966](literatur:goldreich-1966),
+Einleitung).
 
 Wie Merkur dorthin kam, ist bis heute Gegenstand der Modellrechnung. Mit einem realistischen
 Gezeitenmodell liegt die Einfangwahrscheinlichkeit in die 3:2-Resonanz bei nur rund 7 %; erst wenn
@@ -244,9 +246,9 @@ Rotationsperiode des festen Planeten schwankt um 61 ppm, rund 20 Minuten, was de
 mindestens 4 % des atmosphärischen Drehimpulses auf den festen Körper verlangt
 ([Margot et al. 2021](literatur:margot-2021)). Genau dieser Austausch ist ein Grund, warum Venus
 nicht gebunden ist: Die thermische Gezeit der dichten Atmosphäre treibt die Drehung von der
-Synchronisation weg. Ein Klimamodell zeigt, dass dafür schon eine vergleichsweise dünne Atmosphäre
-genügt, und liefert vier asynchrone Gleichgewichtszustände, von denen zwei stabil sind, sobald die
-Amplitude der thermischen Gezeit eine Schwelle überschreitet
+Synchronisation weg. Ein globales Klimamodell zeigt, dass dafür bei erdähnlichen Planeten
+allgemein schon eine vergleichsweise dünne Atmosphäre genügt, sobald die Amplitude der thermischen
+Gezeit eine Schwelle überschreitet; Venus dient dort als Ausgangsbeispiel
 ([Leconte et al. 2015](literatur:leconte-2015)).
 
 Schon Goldreich und Peale erwogen für Venus eine Resonanz der zweiten Art, bei der die Drehung mit
@@ -390,10 +392,7 @@ dem Nullmeridian in der Bildmitte also dem Nullmeridian — und der Richtung zum
   letzteren wandert der Bahnknoten im Datensatz nicht, der Ausschlag bleibt also fest. Bei Triton
   und Miranda kommt dadurch auch in Länge
   ein Ausschlag hinzu, bei Triton ±2,1°, obwohl $2e$ dort nur 0,02° beträgt: Es ist die Reduktion
-  auf den Äquator, nicht die Bahnexzentrizität. Eine Ausnahme ist Tethys: Dort ist die Rate des
-  Perizentrums im Datensatz größer als die der mittleren Länge, die mittlere Anomalie läuft
-  deshalb rückwärts, und die Libration in Länge hat zwar die richtige Amplitude, aber eine Periode
-  von 57,8 statt 1,89 Tagen.
+  auf den Äquator, nicht die Bahnexzentrizität.
   Bei Triton und Miranda ist dieser Ausschlag ein Artefakt des Datensatzes: Der IAU-Bericht gibt
   ihre Pole als Reihen mit großen periodischen Gliedern an — für Triton
   $299{,}36^\circ - 32{,}35^\circ \sin N_7 - \ldots$ und
@@ -402,7 +401,10 @@ dem Nullmeridian in der Bildmitte also dem Nullmeridian — und der Richtung zum
   $-15{,}08^\circ + 4{,}25^\circ \cos U_{11} - \ldots$
   ([Archinal et al. 2011](literatur:archinal-2011)). Diese Glieder beschreiben die Präzession, mit
   der die Drehachse der wandernden Bahnnormale folgt; der Datensatz führt nur die konstanten
-  Glieder, und der Pol steht im Modell fest.
+  Glieder, und der Pol steht im Modell fest. Eine Ausnahme anderer Art ist Tethys: Dort ist die
+  Rate des Perizentrums im Datensatz größer als die der mittleren Länge, die mittlere Anomalie
+  läuft deshalb rückwärts, und die Libration in Länge hat zwar die richtige Amplitude, aber eine
+  Periode von 57,8 statt 1,89 Tagen.
 - **Mond.** Rotationsperiode 655,71984 h $= 360^\circ/\dot{L} = 27{,}32166$ Tage, also ohne
   Abweichung; die Kepler-Umlaufzeit des Datenblocks ist 0,11 % kürzer. Der Winkel zwischen
   Kartenmitte und Erdrichtung beträgt zur Epoche 41,7°, am 19. September 2026 37,5°, 1900 31,2°
