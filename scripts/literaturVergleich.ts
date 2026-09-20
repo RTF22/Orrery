@@ -109,8 +109,20 @@ export function pruefeCrossref(p: Publikation, w: CrossrefWerk): Befund[] {
   } else {
     const erster = w.author[0];
     const family = erster?.family ?? erster?.name ?? '';
-    if (normalisiere(family) !== normalisiere(nachnameVon(katalogAutor))) {
-      melde('fehler', `Erstautor bei Crossref „${family}", im Katalog „${katalogAutor}"`);
+    const katalogNachname = normalisiere(nachnameVon(katalogAutor));
+    if (normalisiere(family) !== katalogNachname) {
+      // Konsortial-Bylines: Crossref führt eine Körperschaft (Feld name, kein
+      // family) an erster Stelle, die Zeitschrift den Menschen (etwa
+      // korablev-2019, Nature 568, 517). Steht der Katalog-Erstautor unter den
+      // weiteren Crossref-Autoren, ist das eine Warnung, kein Fehler
+      // (Zwischen-Task 5a, 4d-4).
+      const koerperschaftZuerst = erster?.family === undefined && erster?.name !== undefined;
+      const spaeterGefuehrt = w.author.slice(1).some((a) => normalisiere(a.family ?? '') === katalogNachname);
+      if (koerperschaftZuerst && spaeterGefuehrt) {
+        melde('warnung', `Crossref führt die Körperschaft „${family}" zuerst, Erstautor „${katalogAutor}" steht unter den weiteren Autoren`);
+      } else {
+        melde('fehler', `Erstautor bei Crossref „${family}", im Katalog „${katalogAutor}"`);
+      }
     }
   }
   const jahre = crossrefJahre(w);

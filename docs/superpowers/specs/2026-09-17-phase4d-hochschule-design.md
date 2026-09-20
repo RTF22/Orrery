@@ -302,6 +302,12 @@ Adressen weiter 200 ms (`PAUSE_NACH_MS` in `scripts/literaturVergleich.ts`). Anl
 Nutzungsbedingungen der arXiv-API erlauben höchstens eine Abfrage alle drei Sekunden, und im
 Volllauf der Abnahme 4d-2 antwortete arXiv einmal mit 429. Ein 429 bleibt ein Fehler.
 
+**Nachtrag (4d-4):** Führt Crossref eine Körperschaft (Feld `name` statt `family`) an erster
+Stelle und steht der Katalog-Erstautor unter den weiteren Crossref-Autoren, meldet das Skript
+eine Warnung statt eines Fehlers (Konsortial-Bylines wie `korablev-2019`, Nature 568, 517: die
+Zeitschrift führt den Menschen zuerst, Crossref das Team). Steht er dort nicht, bleibt es ein
+Fehler.
+
 ## 5. Gestalt der Texte
 
 ### 5.1 Gliederung

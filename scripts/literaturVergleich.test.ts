@@ -99,6 +99,21 @@ describe('pruefeCrossref', () => {
     ]);
   });
 
+  it('meldet eine Körperschaft an erster Stelle bei Crossref nur als Warnung, wenn der Katalog-Erstautor unter den weiteren Autoren steht (Nacharbeit 4d-4 Task 5, korablev-2019)', () => {
+    const p = { ...P, autoren: ['Korablev, O.', 'Vandaele, A. C.', 'Montmessin, F.'], etAl: true, jahr: 2019, titel: 'No detection of methane on Mars from early ExoMars Trace Gas Orbiter observations' };
+    const w = {
+      title: ['No detection of methane on Mars from early ExoMars Trace Gas Orbiter observations'],
+      author: [{ name: 'The ACS and NOMAD Science Teams' }, { family: 'Korablev' }, { family: 'Vandaele' }],
+      issued: { 'date-parts': [[2019]] },
+    };
+    const befunde = pruefeCrossref(p, w);
+    expect(befunde.map((b) => b.urteil)).toEqual(['warnung']);
+    expect(befunde[0]?.text).toContain('Körperschaft');
+    // Steht der Katalog-Erstautor nicht unter den Crossref-Autoren, bleibt es ein Fehler.
+    const fremd = pruefeCrossref({ ...p, autoren: ['Vago, J.'] }, w);
+    expect(fremd.some((b) => b.urteil === 'fehler' && b.text.startsWith('Erstautor'))).toBe(true);
+  });
+
   it('vergleicht den Titel auch mit angehängtem Untertitel', () => {
     const werkMitUntertitel = {
       ...WERK,
