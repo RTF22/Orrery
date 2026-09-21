@@ -63,8 +63,11 @@ Mond, Finsternisse, gebundene Rotation und die Szenen „Der Tanz des Mondes"
 und „Sonnenaufgang über dem Erdrand"; Etappe 4 Merkur, Venus, Mars, Phobos,
 Deimos und die Szenen „Merkur auf der Innenbahn" und „Tiefflug über Phobos";
 Etappe 5 Jupiter, Io, Europa, Ganymed, Kallisto und die Szenen „Vorbeiflug an
-Jupiter" und „Das galileische Schattenspiel". Offen sind die übrigen
-Hochschultexte (Etappen 4d-6 bis 4d-11) und Phase 5 (Ambient-Sound,
+Jupiter" und „Das galileische Schattenspiel"; Etappe 6 Saturn, Titan,
+Enceladus, das Thema „Ringsysteme" und die Szenen „Saturn im Streiflicht",
+„Saturns Ringe von der Kante", „Durchflug durch Saturns Ringe", „Titan im
+Dunst vor Saturn" und „Enceladus im hellen Glanz". Offen sind die übrigen
+Hochschultexte (Etappen 4d-7 bis 4d-11) und Phase 5 (Ambient-Sound,
 Qualitätsstufen, Texturkompression, Veröffentlichung).
 
 ## Entwicklung
