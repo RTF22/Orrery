@@ -21,7 +21,7 @@ sits in the middle of the B ring (91,975–117,570 km, [Rings](thema:ringe)), cl
 
 The comment in the source code claims that the sideways motion drifts "increasingly" out of the ring
 plane, which is tilted 28.05° to the ecliptic – a calculation shows instead a **constant** rate of
-7,303 km/s over the whole flight (four times the radius times the sine of the 28.05° tilt, divided by
+7303 km/s over the whole flight (four times the radius times the sine of the 28.05° tilt, divided by
 the scene's 30 seconds): the camera starts about 1.8 Saturn radii below the ring plane, crosses it –
 depending on the drawn elevation – between 10.4 s and 14.8 s, always before mid-scene at 15 s, at a
 point 2.0 to 2.3 Saturn radii from the centre (so in the middle of the B or A ring), and ends about
@@ -39,7 +39,7 @@ the next recurrence near mid-2043) – then this very flyby would show the ring 
 
 Over the nominal 1.5 simulated days, Saturn rotates 3.4 times (10.656 h); [Mimas](objekt:mimas)
 (0.942 d) completes 1.6 orbits in that time, [Enceladus](objekt:enceladus) (1.370 d) 1.1 orbits. The
-ring texture resolves the strip radially to 30.3 km per pixel (62,122 km over 2,048 pixels,
+ring texture resolves the strip radially to 30.3 km per pixel (62,122 km over 2048 pixels,
 `ASSETS.md`).
 
 ## Background
