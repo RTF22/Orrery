@@ -34,8 +34,8 @@ magnitude:
 
 (all values [PDS Ring-Moon Systems Node](quelle:pds-rings)). Within the Cassini Division lie several
 nearly empty gaps (Huygens, Herschel, Russell, Jeffreys, Kuiper, Laplace, Bessel, Barnard), of which
-the Laplace Gap contains a narrow ringlet with an optical depth near 1, markedly denser than the
-other, nearly empty gaps. The E
+Huygens (optical depth 1 to 2) and Laplace (optical depth near 1) carry narrow, markedly denser
+ringlets than the other, nearly empty gaps (optical depth near 0 to 0.1). The E
 ring is continually fed by the ice plumes of [Enceladus](objekt:enceladus), whose particles are what
 turn it into the extended, fine dust veil it forms today
 ([Cassini mission](quelle:nasa-cassini)). A flight through the dense rings at particle scale is shown
@@ -108,8 +108,9 @@ Cassini's ring observations do not just yield the rings' own properties; they al
 interior be heard: stellar occultations in the C ring reveal, at particular radii, faint,
 wave-like density disturbances excited by the planet's own oscillations, visible where the ring
 particles' orbital frequency stands in Lindblad resonance with the given oscillation frequency;
-fundamental modes (f-modes) as well as buoyancy-driven gravity waves (g-modes) leave their signature
-in the ring this way, long before any direct measurement of the planetary interior would be possible
+fundamental modes (f-modes) as well as buoyancy-driven gravity waves (g-modes)
+([Mankovich and Fuller 2021](literatur:mankovich-2021)) leave their signature in the ring this way,
+long before any direct measurement of the planetary interior would be possible
 ([Hedman and Nicholson 2013](literatur:hedman-2013)). What this "kronoseismology" reveals about
 Saturn's dilute core and its moment of inertia is covered under
 [Interior structure](thema:innerer-aufbau).
@@ -207,7 +208,8 @@ from Amalthea and Thebe, along their orbits slightly inclined to Jupiter's equat
 
 ## Rings of small bodies beyond the giant planets
 
-Only in the 2010s did it emerge that small bodies beyond the giant planets can carry rings too. A
+Only since the 2010s has it been known that small bodies beyond the giant planets can carry rings
+too. A
 multiply observed stellar occultation discovered, in 2013, around the Centaur (10199) Chariklo –
 with a radius of about 124 km itself barely larger than a mid-sized moon – two narrow, dense rings at
 391 and 405 km distance, 7 and 3 km wide respectively, with optical depths around 0.4 and 0.06 – the

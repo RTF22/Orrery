@@ -34,8 +34,8 @@ mehrere Größenordnungen:
 
 (alle Werte [PDS Ring-Moon Systems Node](quelle:pds-rings)). Innerhalb der Cassini-Teilung liegen
 mehrere fast leere Lücken (Huygens, Herschel, Russell, Jeffreys, Kuiper, Laplace, Bessel, Barnard),
-von denen die Laplace-Lücke ein schmales Ringlet mit optischer Tiefe nahe 1 trägt, deutlich dichter
-als die übrigen, fast leeren Lücken. Der
+von denen Huygens (optische Tiefe 1 bis 2) und Laplace (optische Tiefe nahe 1) schmale, deutlich
+dichtere Ringlets tragen als die übrigen, fast leeren Lücken (optische Tiefe nahe 0 bis 0,1). Der
 E-Ring wird fortlaufend von den Eisfontänen des [Enceladus](objekt:enceladus) gespeist, dessen
 Teilchen ihn erst zu dem ausgedehnten, feinen Staubschleier machen, den er heute bildet
 ([Cassini-Mission](quelle:nasa-cassini)). Ein Durchflug durch die dichten Ringe bei Teilchengröße
@@ -110,8 +110,9 @@ Cassinis Ringbeobachtungen liefern nicht nur ihre eigenen Eigenschaften, sondern
 Inneres ab: Sternbedeckungen im C-Ring zeigen bei bestimmten Radien schwache, wellenförmige
 Dichtestörungen, angeregt von Eigenschwingungen des Planeten selbst und dort sichtbar, wo die
 Umlauffrequenz der Ringteilchen in Lindblad-Resonanz mit der jeweiligen Schwingungsfrequenz steht;
-Grundschwingungen (f-Moden) ebenso wie vom Auftrieb getragene Schwerewellen (g-Moden) hinterlassen so
-ihre Signatur im Ring, lange bevor eine direkte Messung des Planeteninneren möglich wäre
+Grundschwingungen (f-Moden) ebenso wie vom Auftrieb getragene Schwerewellen (g-Moden)
+([Mankovich und Fuller 2021](literatur:mankovich-2021)) hinterlassen so ihre Signatur im Ring, lange
+bevor eine direkte Messung des Planeteninneren möglich wäre
 ([Hedman und Nicholson 2013](literatur:hedman-2013)). Was diese „Kronoseismologie" über Saturns
 verdünnten Kern und sein Trägheitsmoment verrät, steht unter
 [Innerer Aufbau](thema:innerer-aufbau).
@@ -214,7 +215,7 @@ deren gegen den Jupiteräquator leicht geneigter Bahnen ([Burns et al. 1999](lit
 
 ## Ringe kleiner Körper jenseits der Riesenplaneten
 
-Erst in den 2010er Jahren zeigte sich, dass auch kleine Körper jenseits der Riesenplaneten Ringe
+Erst seit den 2010er Jahren ist bekannt, dass auch kleine Körper jenseits der Riesenplaneten Ringe
 tragen können. Eine mehrfach beobachtete Sternbedeckung entdeckte 2013 um den Centauren
 (10199) Chariklo, mit rund 124 km Radius selbst kaum größer als ein mittelgroßer Mond, zwei
 schmale, dichte Ringe bei 391 und 405 km Abstand, 7 beziehungsweise 3 km breit und mit optischen
