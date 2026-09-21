@@ -131,7 +131,7 @@ plausibel etwas darüber). Keine Zeile mit `429` (`grep -c 429` auf der
 vollständigen Ausgabe: 0 Treffer).
 
 **Drei Warnungen, alle drei bereits aus früheren Etappen bekannt und dort
-begründet (keine davon durch einen der elf neuen Katalogeinträge dieser
+begründet (keine davon durch einen der 70 neuen Katalogeinträge dieser
 Etappe verursacht):**
 
 - `cgpm-2022` — Crossref führt die 28. Generalkonferenz für Maß und Gewicht
@@ -377,6 +377,20 @@ Jede Zeile des Ledgers mit „Ruling:", in Ledger-Reihenfolge.
 - **Ruling:** Fachprüfung Task 7 lief ebenfalls auf haiku statt sonnet
   (Monatslimit weiterhin bis 25.09.) — Kosten bei Fehlurteil: flachere
   Prüfung, für §8 vermerkt.
+
+**Abschluss (Task 8 und Schlussprüfung):**
+
+- **Ruling:** Die Task-Prüfung zu Task 8 wird in die Schlussprüfung
+  eingefaltet: Das Paket der Schlussprüfung enthält Protokoll und README
+  vollständig, eine getrennte Prüfung desselben Diffs wäre ein Duplikat —
+  Kosten bei Fehlurteil: ein Befund am Protokoll erst in der Nacharbeit
+  nach der Schlussprüfung.
+- **Ruling:** Die Modellnamen „sonnet" und „haiku" bleiben im Protokoll:
+  Dieselbe Schreibweise steht seit 4d-2 in den Protokollen 4d-2 bis 4d-4,
+  in den Plänen der Flug-Etappen und im Plan dieser Etappe auf `master`;
+  eine Umbenennung nur hier wäre inkonsistent, die lokale Projektanleitung
+  verbietet allein die Anbieternamen — Kosten bei Fehlurteil: eine
+  Ersetzungsrunde über mehrere Protokolle, falls Jens die Namen nicht will.
 
 ## 7. Bekannte Unschärfen
 
@@ -626,3 +640,22 @@ Plan-Reihenfolge):
 
 Die Wort- und Trailerprüfung vor dem Commit erfolgte wie in der lokalen
 Projektanleitung beschrieben (Ergebnis 0), ohne Suchmuster in dieser Datei.
+
+## Nacharbeit nach der Schlussprüfung
+
+Die Schlussprüfung (mittleres Modell, Paket über alle Commits der Etappe
+ohne Hochschultexte und Beleglisten; Katalog, Protokoll und README) ergab
+„bereit zum Merge mit Korrektionen": ein Critical, zwei Important, keine
+Minor. Katalog (70 neue Einträge, 372 → 442) ohne Befund: keine Dubletten,
+alphabetisch, alle Kennungen zitiert; alle Zahlen des Protokolls unabhängig
+nachgerechnet.
+
+- **Critical, behoben:** Das Ledger-Ruling zur Einfaltung der Task-8-Prüfung
+  in die Schlussprüfung fehlte in §6 (es entstand nach dem Abnahme-Commit).
+  Nachgetragen, zusammen mit dem Ruling zu den Modellnamen.
+- **Important, behoben:** §3 nannte „elf" neue Katalogeinträge der Etappe;
+  richtig sind 70 (elf war die Zahl von Task 1). Berichtigt.
+- **Important, per Ruling belassen:** Modellnamen „sonnet"/„haiku" statt
+  „mittleres/kleinstes Modell" — siehe Ruling in §6 (Hauspraxis seit 4d-2).
+
+Commit: `Abnahme 4d Etappe 5: Nacharbeit nach der Schlussprüfung`.
