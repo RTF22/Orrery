@@ -469,6 +469,15 @@ Jede Zeile des Ledgers mit „Ruling:", in Ledger-Reihenfolge.
   beiden Stellen lückenhaft. §4 dieses Protokolls zählt die Belegzeilen
   deshalb über die Gesamtzahl der Tabellenzeilen (29), nicht über die in
   der ersten Zelle stehende höchste Nummer.
+- **`thema-ringe.md`, Zeile 36 — Querverweis auf die falsche Zeile.** Die
+  Zelle zu A-Ring-Außenkante verweist mit „siehe Zeile 60 unten" auf die
+  Ringseismologie-Aussage (f-/g-Moden, Hedman und Nicholson 2013 /
+  Mankovich und Fuller 2021); die gemeinte Aussage steht tatsächlich in
+  Zeile 61 (selbst nachgezählt), seit dem Ursprungscommit `470bb1a`
+  unverändert. Reiner Beleglisten-Verweisfehler ohne Testabdeckung; die
+  Belegliste bleibt fachgeprüfter Text (eine Prüfrunde je Text) und wird
+  hier nicht angefasst, sondern bei der nächsten inhaltlichen Berührung der
+  Datei mitkorrigiert.
 - **`szene-saturn-ringkante`, Wortzahl im Bericht ungenau.** `task-5-
   report.md` nennt „DE 781, EN 861"; die aktuellen, seit dem
   Ursprungscommit `3ac8ed8` unveränderten Dateien (kein weiterer Commit
@@ -525,6 +534,11 @@ Jede Zeile des Ledgers mit „Ruling:", in Ledger-Reihenfolge.
   als Schattenwerfer, nie einen Mond** (`waehleOkkluder` wird für die
   Ringscheibe nicht aufgerufen) — eigener Befund des Umsetzers, für
   spätere Ringtexte vorgemerkt.
+- **`src/data/texte/dateien.test.ts:116,261`, Wort „Plan-Ruling" in
+  Codekommentaren.** Seit Etappe 4d-1 (`23d55d5c`), unverändert in dieser
+  Etappe (nicht im Diff `c74c4b4..449cada`) — kein veröffentlichter Text,
+  nennt nur eine reale Plandatei im Kommentar einer TS-Testdatei. Kandidat
+  für eine spätere Umformulierung, keine Aktion in dieser Etappe nötig.
 
 **Befunde am Simulationscode** (die Texte beschreiben sie, wie Plan-Ruling 7
 verlangt; nicht behoben, Kandidaten für eigene Tasks):
@@ -571,9 +585,17 @@ verlangt; nicht behoben, Kandidaten für eigene Tasks):
   suggerierte „gute Chance" trifft es nicht ganz (Kreis-Näherung ans
   50°-Sichtfeld als zusätzliche Unschärfe der eigenen Rechnung).
 
-**Keine gemeldeten Fehler in Gymnasialtexten in dieser Etappe** (wie in
-4d-5): Alle Umsetzer prüften den jeweiligen Gymnasialtext gegen die eigene
-Recherche und fanden keinen sachlichen Fehler.
+**Gemeldeter Fehler in Gymnasialtexten** (nicht geändert, Auftrag: melden,
+nicht ändern): Task 3 (Titan) meldete zum Gymnasialtext
+`objekt-titan.md` (de/en) einen Befund zur Aktualität, von der Fachprüfung
+unabhängig bestätigt (H5) — der Satz „Messungen von Cassini zeigen, wie
+stark sich Titan unter Saturns Gezeiten verformt; das spricht für einen
+Ozean aus Wasser tief unter der Eiskruste" stellt die Ozeanfrage als
+entschieden dar, obwohl sie seit Petricca et al. 2025 („these new
+measurements preclude the existence of a subsurface ocean on Titan",
+Original abgerufen) eine offene Streitfrage ist (`task-3-report.md:17–22`,
+`task-3-befunde.md:119–127`). Die übrigen acht Gymnasialtexte dieser Etappe
+ohne gemeldeten Fehler.
 
 ## 8. Halt: Fragen an Jens
 
@@ -591,6 +613,12 @@ venus.md` enthielt Prozesssprache „(Ruling: …)"/„(ruling: …)" im
 veröffentlichten Text, entfernt in `3e35584`. Vorschlag: als erledigt
 betrachten, keine weitere Prüfung nötig (die Suche nach Prozesssprache über
 den gesamten Textbaum ist jetzt leer, siehe §5).
+
+**Voyager-2-Ringebenenabstand (Ledger Task 6, erledigt):** Der im Web
+widersprüchlich angegebene Abstand bei der größten Annäherung 1981 ist
+gelöst — `szene-ringdurchflug.md`, Belegzeile 16 nennt 161 000 km mit
+vorsichtiger Formulierung „nahe" der G-Ringebene, per eigenem WebFetch-Abruf
+geprüft „ok"; keine weitere Aktion nötig.
 
 **Zwei Beleglisten-Formatierungsfehler in `szene-ringdurchflug.md` (§7):**
 eine Zeile mit unmaskierten `|`-Zeichen (Zeile 3, seit dem
@@ -610,6 +638,14 @@ Verfassen des Berichts selbst (ähnlich der in 4d-5 §7 dokumentierten
 Katalogzahl-Ungenauigkeit). Kein Sachfehler; als weiterer Beleg dafür
 vermerkt, dass Berichtszahlen nachzurechnen sind.
 
+**Wortzahlen über dem Richtwert 900 (Szenen, Plan-Ruling 15):**
+`szene-ringdurchflug` EN 983 Wörter (DE 871 innerhalb des Richtwerts),
+`szene-enceladus-hell` DE 913 / EN 1012 Wörter (`wc -w` auf den aktuellen
+Dateien nachgezählt, deckungsgleich mit der Tabelle in §4) — alle drei
+Zahlen liegen unter der Obergrenze 1200 (ein Drittel über dem Richtwert,
+Plan-Ruling 15), keine Regelverletzung. Vorschlag wie in 4d-4 entschieden:
+annehmen (Richtigkeit vor Wortzahl), nicht kürzen.
+
 **Code-Befunde, als Kandidaten für eigene Tasks (siehe §7 für Details):**
 
 - Saturn ohne Abplattung; Rotation 10,656 h (Voyager-Ära) statt einer
@@ -625,7 +661,10 @@ vermerkt, dass Berichtszahlen nachzurechnen sind.
   des Streuungsterms ($0{,}640\,p$ statt $p$), keine Enceladus-spezifische
   Ursache.
 
-**Gymnasialtext-Beobachtungen:** keine in dieser Etappe (siehe §7).
+**Gemeldeter Fehler in Gymnasialtexten** (siehe §7) — Frage: Soll der
+Gymnasialtext `objekt-titan.md` (de/en) in einem eigenen kleinen Task
+nachgeführt werden (Ozean-Satz an den seit Petricca et al. 2025 offenen
+Streitstand anpassen), oder vorerst wie in Etappe 4d-4 unverändert bleiben?
 
 **22 Plan-Rulings** und die in §6 aufgeführten Umsetzungs-Rulings (von Jens
 noch nicht bestätigt, vollständiger Wortlaut in `docs/superpowers/plans/
@@ -649,3 +688,20 @@ sechs Zellen je Zeile und eine Nummer in der ersten Zelle (Skript im
 Scratchpad). Die Berichtsungenauigkeiten (Wortzahl Ringkante, fehlender
 Hauptchunk-Wert Task 6) bleiben als Vermerk in §7. Schlussprüfung und
 Fast-Forward stehen noch aus.
+
+## Nacharbeit nach der Schlussprüfung (21.09.2026)
+
+Fünf Befunde der Schlussprüfung (`schlusspruefung-bericht.md`, drei
+„Wichtig", zwei „Klein") wurden am Protokoll selbst nachgearbeitet, ohne
+Code- oder Textänderung. §7 und §8 nennen jetzt den von Task 3 gemeldeten
+und von der Fachprüfung bestätigten Gymnasialtext-Befund Titan (Ozean-Satz
+seit Petricca et al. 2025 überholt) samt Frage an Jens. §8 nennt die beiden
+bisher fehlenden Wortzahl-Bedenken über dem Richtwert 900
+(`szene-ringdurchflug` EN 983, `szene-enceladus-hell` DE 913/EN 1012) samt
+Frage an Jens. §7 nennt den Querverweisfehler in `thema-ringe.md` Zeile 36
+(„Zeile 60" statt richtig Zeile 61); die Belegliste selbst bleibt
+unverändert (fachgeprüfter Text, eine Prüfrunde je Text). §7 vermerkt das
+Wort „Plan-Ruling" in Codekommentaren von `dateien.test.ts` als
+unkritischen, unveränderten Altbefund aus 4d-1. §8 vermerkt den
+Voyager-2-Ringebenenabstand aus dem Ledger als bereits in der Belegliste
+gelöst.
