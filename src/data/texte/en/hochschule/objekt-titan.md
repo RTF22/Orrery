@@ -12,10 +12,11 @@ magnetosphere, and orbit, rotation and formation, and finally describes what Orr
 ## Parameters and measurement
 
 Ten close flybys of the Cassini spacecraft provided Titan's gravity field through radio Doppler
-tracking. An initial analysis found a $J_2/C_{22}$ ratio of $3.2 \pm 0.6$, consistent with the
-hydrostatic relation $10/3$ but with an error bar large enough that a non-hydrostatic interior
-could not be excluded ([Durante et al. 2019](literatur:durante-2019)). A reanalysis of the same
-ten flybys with improved processing narrowed this to $J_2/C_{22} = 3.316 \pm 0.051$ – a field in
+tracking. An initial analysis found a $J_2/C_{22}$ ratio of $3.186 \pm 0.077$, compatible with the
+hydrostatic relation $10/3$ at the 2σ level; because Titan's actual shape is markedly more
+flattened than this equilibrium would imply, a non-hydrostatic interior remained possible
+([Durante et al. 2019](literatur:durante-2019)). A reanalysis of the same ten flybys with improved
+processing narrowed this to $J_2/C_{22} = 3.316 \pm 0.051$ – a field in
 hydrostatic equilibrium – and from it derived the moment-of-inertia factor
 $C/(MR^2) = 0.343 \pm 0.001$, as well as, for the first time, the imaginary part of the Love number
 $k_2$, i.e. the phase lag of the tidal response
@@ -50,8 +51,10 @@ lies between the high-pressure ice and the crust is the central dispute of this 
 The first Cassini Doppler measurements found a large real part of $k_2$ ($0.589 \pm 0.150$ and
 $0.637 \pm 0.224$, both 2σ, from separate subsets of the flybys), a deformation expected of a thin
 ice shell elastically decoupled from a liquid ocean below
-([Iess et al. 2012](literatur:iess-2012)). A later analysis with different processing instead found
-a substantially smaller $k_2$ and still interpreted it as an ocean, though a thinner or
+([Iess et al. 2012](literatur:iess-2012)). A reanalysis of the same flybys with improved processing
+confirmed this large real part again in 2019, with $k_2 \approx 0.62$ accurate to a few percent
+([Durante et al. 2019](literatur:durante-2019)). A later analysis with different processing instead
+found a substantially smaller $k_2$ and still interpreted it as an ocean, though a thinner or
 less dense one than previously assumed ([Goossens et al. 2024](literatur:goossens-2024)). Petricca
 et al.'s new analysis with improved processing recovers the large real part again, close to the
 original value of Iess et al., and for the first time measures the imaginary part:
@@ -88,9 +91,10 @@ chunks – traces of past, if not necessarily local or contemporaneous, liquid f
 From 2006 onward, Cassini RADAR found extensive dune fields of organic sand material near the
 equator, similar in shape and orientation to terrestrial longitudinal dunes but considerably
 larger ([Lorenz et al. 2006](literatur:lorenz-2006)). Around the north pole lie large areas dark to
-radar, interpreted as lakes and seas of liquid methane and ethane – Kraken Mare, Ligeia Mare and
-Punga Mare are the largest ([Stofan et al. 2007](literatur:stofan-2007)); a later review of their
-depths, composition and shorelines summarizes the entire Cassini mission's findings
+radar, interpreted as the first lakes and seas of liquid methane and ethane
+([Stofan et al. 2007](literatur:stofan-2007)); Kraken Mare, Ligeia Mare and Punga Mare are the
+largest, as shown by a later review of the depths, composition and shorelines of these seas,
+mapped over further Cassini passes, across the entire mission
 ([Hayes 2016](literatur:hayes-2016)). That Titan's methane cycle is active was shown directly in
 2010: following a large equatorial cloud system, more than 500,000 km² of surface darkened, most
 plausibly explained by liquid methane rain that fell and later evaporated again
@@ -173,11 +177,13 @@ around $180^\circ$ with an amplitude of $36.5^\circ$ and a period of about 640 d
 resonance that protects Hyperion, despite its eccentricity of $e = 0.104$, from close encounters
 with Titan ([Duriez 1992](literatur:duriez-1992); derivation and comparison with all orbital
 resonances in the Solar System under [Orbital resonances](thema:resonanzen)). Titan's own, small
-eccentricity of about 0.029 is, however, not the result of this or any other known resonance –
-unlike [Ganymede](objekt:ganymede), [Europa](objekt:europa) and [Enceladus](objekt:enceladus),
-whose forced eccentricities follow directly from their respective resonances – but persists
-without any recognizable ongoing driver, which makes its own damping history an open question in
-itself (see below).
+eccentricity of about 0.029 is – in this text's own assessment, drawn solely from the absence of
+any further resonance affecting Titan itself in that same catalog, not from a literature source
+addressing this specific question – not the result of this or any other known resonance, unlike
+[Ganymede](objekt:ganymede), [Europa](objekt:europa) and [Enceladus](objekt:enceladus), whose
+forced eccentricities follow directly from their respective resonances; it persists without any
+recognizable ongoing driver, which makes its own damping history an open question in itself (see
+below).
 
 ## Formation and evolution
 

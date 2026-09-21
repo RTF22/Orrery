@@ -13,10 +13,11 @@ Orrery davon abbildet.
 ## Kenngrößen und Messung
 
 Zehn nahe Vorbeiflüge der Raumsonde Cassini lieferten über Radiodoppler-Verfolgung Titans
-Schwerefeld. Eine erste Auswertung ergab ein $J_2/C_{22}$-Verhältnis von $3{,}2 \pm 0{,}6$, mit der
-hydrostatischen Beziehung $10/3$ verträglich, aber mit einem so großen Fehlerbalken, dass ein nicht
-hydrostatisches Inneres nicht ausgeschlossen war ([Durante et al. 2019](literatur:durante-2019)).
-Eine Neuauswertung derselben zehn Vorbeiflüge mit verbesserter Verarbeitung verengte dies auf
+Schwerefeld. Eine erste Auswertung ergab ein $J_2/C_{22}$-Verhältnis von $3{,}186 \pm 0{,}077$, das
+mit der hydrostatischen Beziehung $10/3$ auf dem 2σ-Niveau verträglich ist; da Titans tatsächliche
+Form aber deutlich stärker abgeplattet ist, als es diesem Gleichgewicht entspräche, blieb ein nicht
+hydrostatisches Inneres möglich ([Durante et al. 2019](literatur:durante-2019)). Eine Neuauswertung
+derselben zehn Vorbeiflüge mit verbesserter Verarbeitung verengte dies auf
 $J_2/C_{22} = 3{,}316 \pm 0{,}051$ – ein im hydrostatischen Gleichgewicht befindliches Feld – und
 ergab darüber den Trägheitsmomentfaktor $C/(MR^2) = 0{,}343 \pm 0{,}001$ sowie erstmals den
 Imaginärteil der Love-Zahl $k_2$, also die Phasenverzögerung der Gezeitenantwort
@@ -52,8 +53,11 @@ liegt, ist die zentrale Streitfrage dieses Abschnitts.
 Die ersten Cassini-Doppler-Messungen ergaben einen großen Realteil von $k_2$
 ($0{,}589 \pm 0{,}150$ und $0{,}637 \pm 0{,}224$, beide 2σ, aus getrennten Teilmengen der
 Vorbeiflüge), eine Verformung, wie sie eine dünne, elastisch von einem flüssigen Ozean entkoppelte
-Eisschale erwarten lässt ([Iess et al. 2012](literatur:iess-2012)). Eine spätere Auswertung mit
-anderer Verarbeitung fand dagegen einen deutlich kleineren $k_2$ und deutete dies weiterhin als
+Eisschale erwarten lässt ([Iess et al. 2012](literatur:iess-2012)). Eine Neuauswertung derselben
+Vorbeiflüge mit verbesserter Verarbeitung bestätigte 2019 diesen großen Realteil noch einmal, mit
+$k_2 \approx 0{,}62$ auf wenige Prozent genau ([Durante et al. 2019](literatur:durante-2019)). Eine
+spätere Auswertung mit anderer Verarbeitung fand dagegen einen deutlich kleineren $k_2$ und deutete
+dies weiterhin als
 Ozean, allerdings als einen dünneren oder weniger dichten als zuvor angenommen
 ([Goossens et al. 2024](literatur:goossens-2024)). Die neue Auswertung von Petricca et al. mit
 verbesserter Verarbeitung erhält dagegen wieder den großen Realteil, nahe dem ursprünglichen Wert
@@ -92,10 +96,11 @@ Abstieg und Landung bei [Lebreton et al. 2005](literatur:lebreton-2005)).
 Cassini-RADAR fand ab 2006 ausgedehnte Dünenfelder aus organischem Sandmaterial nahe dem Äquator,
 in Form und Ausrichtung terrestrischen Längsdünen ähnlich, aber deutlich größer
 ([Lorenz et al. 2006](literatur:lorenz-2006)). Um den Nordpol liegen große, mit Radar dunkle
-Flächen, als Seen und Meere aus flüssigem Methan und Ethan gedeutet – Kraken Mare, Ligeia Mare und
-Punga Mare sind die größten ([Stofan et al. 2007](literatur:stofan-2007)); eine spätere Übersicht
-über Tiefen, Zusammensetzung und Randformen dieser Gewässer fasst die gesamte
-Cassini-Mission zusammen ([Hayes 2016](literatur:hayes-2016)). Dass Titans Methankreislauf aktiv
+Flächen, als erste Seen und Meere aus flüssigem Methan und Ethan gedeutet
+([Stofan et al. 2007](literatur:stofan-2007)); Kraken Mare, Ligeia Mare und Punga Mare sind die
+größten, wie eine spätere Übersicht über Tiefen, Zusammensetzung und Randformen dieser über
+weitere Cassini-Durchgänge kartierten Gewässer für die gesamte Mission zeigt
+([Hayes 2016](literatur:hayes-2016)). Dass Titans Methankreislauf aktiv
 ist, zeigte sich 2010 direkt: Nach einem großflächigen Wolkensystem nahe dem Äquator verdunkelten
 sich über 500 000 km² der Oberfläche, am ehesten durch abgeregneten und wieder verdunsteten
 flüssigen Methanniederschlag erklärbar ([Turtle et al. 2011](literatur:turtle-2011)).
@@ -181,11 +186,13 @@ liberiert um $180^\circ$ mit einer Amplitude von $36{,}5^\circ$ und einer Period
 Tagen; die Resonanz ist es, die Hyperion trotz seiner Exzentrizität $e = 0{,}104$ vor nahen
 Begegnungen mit Titan schützt ([Duriez 1992](literatur:duriez-1992); Herleitung und Einordnung
 neben allen Bahnresonanzen des Sonnensystems unter [Bahnresonanzen](thema:resonanzen)). Titans
-eigene, geringe Exzentrizität von rund 0,029 ist dabei nicht das Ergebnis dieser oder einer anderen
-bekannten Resonanz – anders als bei [Ganymed](objekt:ganymede), [Europa](objekt:europa) und
-[Enceladus](objekt:enceladus), deren erzwungene Exzentrizitäten unmittelbar aus ihren jeweiligen
-Resonanzen folgen –, sondern bleibt ohne erkennbaren aktuellen Antrieb bestehen, was ihre
-Dämpfungsgeschichte selbst zu einer offenen Frage macht (siehe unten).
+eigene, geringe Exzentrizität von rund 0,029 ist dabei – nach eigener Einschätzung dieses Texts,
+hergeleitet allein aus dem Fehlen einer weiteren, sie selbst betreffenden Resonanz im genannten
+Katalog, nicht durch eine eigene Literaturstelle zu genau dieser Frage belegt – nicht das Ergebnis
+dieser oder einer anderen bekannten Resonanz, anders als bei [Ganymed](objekt:ganymede),
+[Europa](objekt:europa) und [Enceladus](objekt:enceladus), deren erzwungene Exzentrizitäten
+unmittelbar aus ihren jeweiligen Resonanzen folgen; sie bleibt ohne erkennbaren aktuellen Antrieb
+bestehen, was ihre Dämpfungsgeschichte selbst zu einer offenen Frage macht (siehe unten).
 
 ## Entstehung und Entwicklung
 
