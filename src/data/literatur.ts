@@ -3253,7 +3253,7 @@ export const LITERATUR: readonly Publikation[] = [
     etAl: true,
     jahr: 2018,
     titel: 'Geophysics and Tidal-Thermal Evolution of Enceladus',
-    erschienen: 'Enceladus and the Icy Moons of Saturn (University of Arizona Press)',
+    erschienen: 'Enceladus and the Icy Moons of Saturn (University of Arizona Press), 79–94',
     doi: '10.2458/azu_uapress_9780816537075-ch005',
   },
   {
