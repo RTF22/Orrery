@@ -280,7 +280,7 @@ atmosphere across its entire history far more precisely than previous missions
   fluctuation that this same data set does not represent at all.
 - **Solar day in the model:** from the data set's rotation and orbital periods follows a solar day of
   116.75 days and a synodic period relative to Earth of 583.92 days, that is 5.0014 times the solar
-  day – the same figures as in [Tidal locking](thema:gebundene-rotation) (ruling: reused verbatim).
+  day – the same figures as in [Tidal locking](thema:gebundene-rotation).
 - **Albedo:** the catalogue value 0.689 is the geometric albedo following
   [Mallama et al. 2017](literatur:mallama-2017), as shown for all planets in
   [Albedo and brightness](thema:photometrie). Using the scattering model derived there (Lambertian

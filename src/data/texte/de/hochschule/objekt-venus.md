@@ -293,7 +293,7 @@ als die bisherigen Missionen ([Widemann et al. 2023](literatur:widemann-2023)).
 - **Sonnentag im Modell:** Aus Rotations- und Umlaufperiode des Datensatzes folgt ein Sonnentag von
   116,75 Tagen und eine synodische Periode gegenüber der Erde von 583,92 Tagen, also dem
   5,0014-Fachen des Sonnentags – dieselben Zahlen wie in
-  [Gebundene Rotation](thema:gebundene-rotation) (Ruling: gleichlautend übernommen).
+  [Gebundene Rotation](thema:gebundene-rotation).
 - **Albedo:** Der Katalogwert 0,689 ist die geometrische Albedo nach
   [Mallama et al. 2017](literatur:mallama-2017), wie in
   [Albedo und Helligkeit](thema:photometrie) für alle Planeten belegt. Nach dem dort hergeleiteten
