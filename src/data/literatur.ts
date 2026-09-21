@@ -3052,6 +3052,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1126/science.1123783',
   },
   {
+    id: 'mitchell-2018',
+    autoren: ['Mitchell, D. G.', 'Perry, M. E.', 'Hamilton, D. C.'],
+    etAl: true,
+    jahr: 2018,
+    titel: 'Dust grains fall from Saturn’s D-ring into its equatorial upper atmosphere',
+    erschienen: 'Science 362, eaat2236',
+    doi: '10.1126/science.aat2236',
+  },
+  {
     id: 'mohr-2025',
     autoren: ['Mohr, P. J.', 'Newell, D. B.', 'Taylor, B. N.'],
     etAl: true,
@@ -3960,6 +3969,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1126/science.1147621',
   },
   {
+    id: 'spilker-2019',
+    autoren: ['Spilker, L.'],
+    etAl: false,
+    jahr: 2019,
+    titel: 'Cassini-Huygens’ exploration of the Saturn system: 13 years of discovery',
+    erschienen: 'Science 364, 1046–1051',
+    doi: '10.1126/science.aat3760',
+  },
+  {
     id: 'spitale-2010',
     autoren: ['Spitale, J. N.', 'Porco, C. C.'],
     etAl: false,
@@ -4707,6 +4725,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1051/0004-6361/202452534',
   },
   {
+    id: 'ye-2018',
+    autoren: ['Ye, S.-Y.', 'Kurth, W. S.', 'Hospodarsky, G. B.'],
+    etAl: true,
+    jahr: 2018,
+    titel: 'Dust Observations by the Radio and Plasma Wave Science Instrument During Cassini’s Grand Finale',
+    erschienen: 'Geophysical Research Letters 45, 10101–10109',
+    doi: '10.1029/2018GL078059',
+  },
+  {
     id: 'yoder-1981',
     autoren: ['Yoder, C. F.', 'Peale, S. J.'],
     etAl: false,
@@ -4751,6 +4778,15 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'Cratering rates in the outer Solar System',
     erschienen: 'Icarus 163, 263–289',
     doi: '10.1016/S0019-1035(03)00048-4',
+  },
+  {
+    id: 'zebker-1985',
+    autoren: ['Zebker, H. A.', 'Marouf, E. A.', 'Tyler, G. L.'],
+    etAl: false,
+    jahr: 1985,
+    titel: 'Saturn’s rings: Particle size distributions for thin layer models',
+    erschienen: 'Icarus 64, 531–548',
+    doi: '10.1016/0019-1035(85)90074-0',
   },
   {
     id: 'zebker-2009',
