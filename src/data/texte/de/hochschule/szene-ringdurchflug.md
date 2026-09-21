@@ -13,11 +13,11 @@ Streufaktor 0,8/1,0/1,5 legt sie in den 30 Sekunden 372 685/465 856/698 784 km z
 23 293 km/s, also 4,1 bis 7,8 % der Lichtgeschwindigkeit. Wie bei jedem `flyby` liegt der größte
 Abstand an beiden Enden beim $\sqrt5$-Fachen des Radius, der geringste exakt in der Bahnmitte (15 s)
 beim Radius selbst: Dort misst Saturns Winkeldurchmesser 60° (Streuung 39° bis 77°, teils über dem
-50°-Sichtfeld), an Anfang und Ende nur 26° (17° bis 32°). Azimut 169,53° ist – wie bei
-[Saturn im Streiflicht](szene:saturn-streiflicht) – der aus Task 5 übernommene Ringebenenknoten (dort
-aus der Pollänge 79,5275° + 90° hergeleitet; hier nur zur Kontrolle an der eigenen Kamerageometrie
-bestätigt: 169,5275°). Beim nominellen Abstand (2 Radien, 116 464 km) liegt der Bezugspunkt der Bahn
-mitten im B-Ring (91 975–117 570 km, [Ringe](thema:ringe)), nahe dessen Außenrand.
+50°-Sichtfeld), an Anfang und Ende nur 26° (17° bis 32°). Azimut 169,53° ist – wie bei Saturns
+Ringen von der Kante – der Knoten der Ringebene auf der Ekliptik: Saturns Pol steht bei ekliptikaler
+Länge 79,5275°, der Knoten 90° weiter (169,5275°, hier an der eigenen Kamerageometrie bestätigt).
+Beim nominellen Abstand (2 Radien, 116 464 km) liegt der Bezugspunkt der Bahn im äußeren Teil des
+B-Rings (91 975–117 570 km, [Ringe](thema:ringe)), 1106 km vor dessen Außenkante.
 
 Der Kommentar im Quellcode behauptet, die seitliche Bewegung drifte „zunehmend" aus der um 28,05°
 gegen die Ekliptik geneigten Ringebene heraus – eine Nachrechnung zeigt stattdessen eine über die
@@ -51,7 +51,7 @@ Voyager 2 passierte Saturn 1981 in rund 161 000 km Abstand, nahe der schwachen G
 Lücke zwischen F- und G-Ring; am 15. September 2017 endete dieselbe Mission, nachdem sie im Großen
 Finale denselben Spalt zwischen D-Ring und Atmosphäre 22-mal durchflogen hatte
 ([Ye et al. 2018](literatur:ye-2018)), dabei rund 5 kg einfallenden Ringstaub je Sekunde in der oberen
-Atmosphäre maß ([Mitchell et al. 2018](literatur:mitchell-2018)) und ihn in situ auffing
+Atmosphäre maß ([Mitchell et al. 2018](literatur:mitchell-2018)) und größere Staubkörner in situ auffing
 ([Hsu et al. 2018](literatur:hsu-2018)) – ein Rückblick auf 13 Jahre Cassini-Forschung im
 Saturnsystem zieht [Spilker (2019)](literatur:spilker-2019).
 

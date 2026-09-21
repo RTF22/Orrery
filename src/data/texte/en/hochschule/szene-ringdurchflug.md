@@ -13,11 +13,11 @@ scatter factor 0.8/1.0/1.5 it covers 372,685/465,856/698,784 km over the 30 seco
 23,293 km/s, that is 4.1 to 7.8 % of the speed of light. As with every `flyby`, the greatest distance
 occurs at both ends, at $\sqrt5$ times the radius, the smallest exactly at mid-scene (15 s), at the
 radius itself: there Saturn's angular diameter measures 60° (scatter 39° to 77°, at times beyond the
-50° field of view), at the start and end only 26° (17° to 32°). Azimuth 169.53° is – as in
-[Saturn in grazing light](szene:saturn-streiflicht) – the ring-plane node adopted from Task 5 (derived
-there from the pole longitude 79.5275° + 90°; confirmed here only as a check against this scene's own
-camera geometry: 169.5275°). At the nominal distance (2 radii, 116,464 km) the path's reference point
-sits in the middle of the B ring (91,975–117,570 km, [Rings](thema:ringe)), close to its outer edge.
+50° field of view), at the start and end only 26° (17° to 32°). Azimuth 169.53° is – as in Saturn's
+rings edge-on – the node of the ring plane on the ecliptic: Saturn's pole sits at ecliptic longitude
+79.5275°, the node 90° beyond (169.5275°, confirmed here against this scene's own camera geometry).
+At the nominal distance (2 radii, 116,464 km) the path's reference point sits in the outer part of the
+B ring (91,975–117,570 km, [Rings](thema:ringe)), 1,106 km inside its outer edge.
 
 The comment in the source code claims that the sideways motion drifts "increasingly" out of the ring
 plane, which is tilted 28.05° to the ecliptic – a calculation shows instead a **constant** rate of
@@ -51,7 +51,7 @@ in 1981 at a distance of about 161,000 km, close to the faint G-ring plane.
 about 158,500 km in 2004; the same mission ended on 15 September 2017, after diving 22 times through
 the same gap between the D ring and the atmosphere during the Grand Finale
 ([Ye et al. 2018](literatur:ye-2018)), measuring about 5 kg of infalling ring dust per second in the
-upper atmosphere ([Mitchell et al. 2018](literatur:mitchell-2018)) and collecting it in situ
+upper atmosphere ([Mitchell et al. 2018](literatur:mitchell-2018)) and collecting larger dust grains in situ
 ([Hsu et al. 2018](literatur:hsu-2018)) – a review of 13 years of Cassini research at Saturn is drawn
 by [Spilker (2019)](literatur:spilker-2019).
 
