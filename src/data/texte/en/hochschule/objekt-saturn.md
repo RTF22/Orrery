@@ -102,11 +102,13 @@ near the surface ([Cao et al. 2020](literatur:cao-2020)).
 
 The magnetosphere is fed to a large extent by [Enceladus](objekt:enceladus): its plumes supply the
 water vapour and ice that form the E ring and, at the same time, dominate the plasma of the inner
-magnetosphere ([Cassini mission](quelle:nasa-cassini)). Charged particles that plunge along the field
-lines into the upper atmosphere produce auroras at both poles. The magnetic field also modulates a
-radio emission, Saturn kilometric radiation (SKR); because it is tied to the field and hence
-apparently to the rotation of the interior, it long served as its clock – until Cassini showed that
-its period drifted over the course of the mission (see "Orbit, rotation and dynamics").
+magnetosphere ([Dougherty et al. 2006](literatur:dougherty-2006)). Charged particles that plunge
+along the field lines into the upper atmosphere produce auroras at both poles
+([Badman et al. 2015](literatur:badman-2015)). The magnetic field also modulates a radio emission,
+Saturn kilometric radiation (SKR); because it is tied to the field and hence apparently to the
+rotation of the interior, it long served as its clock – until Cassini showed that its period drifted
+over the course of the mission ([Gurnett et al. 2005](literatur:gurnett-2005); see "Orbit, rotation
+and dynamics").
 
 ## Orbit, rotation and dynamics
 
@@ -184,6 +186,16 @@ ten to a hundred million years old – is discussed under [Rings](thema:ringe).
   model predicts, while a model fit to the gravity field with winds gives $0.2181 \pm 0.0002$, a
   difference of 2.4 to 3.3σ depending on which uncertainty is used
   ([Interior structure](thema:innerer-aufbau)).
+- **Equation of state of hydrogen and helium:** ring seismology and the gravity field give two
+  independent pictures of Saturn's interior: a stably stratified transition zone out to
+  $r/R = 0.59 \pm 0.01$ from the ring waves
+  ([Mankovich and Fuller 2021](literatur:mankovich-2021)) versus a wind model fit to $J_2$ through
+  $J_{10}$ giving $C/(Ma^2) = 0.2181 \pm 0.0002$
+  ([Militzer and Hubbard 2023](literatur:militzer-2023)), which misses the value
+  $0.2258 \pm 0.0025$ measured from the pole precession by 2.4 to 3.3σ
+  ([Jacobson 2022](literatur:jacobson-2022)). Both pictures depend sensitively on the chosen
+  hydrogen–helium equation of state; which one is correct, and whether it can explain both findings
+  at once, is open, as with Jupiter.
 - **Cause of the obliquity:** the secular spin–orbit resonance with Neptune explains why Saturn's
   precession lies close to the resonance, not necessarily how it got there
   ([Ward and Hamilton 2004](literatur:ward-2004)). The Chrysalis hypothesis proposes that a now-lost

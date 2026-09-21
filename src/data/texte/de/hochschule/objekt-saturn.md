@@ -104,12 +104,13 @@ für einen flachen zweiten Dynamo im halbleitenden Wasserstoff nahe der Oberflä
 
 Die Magnetosphäre speist sich zu einem großen Teil aus [Enceladus](objekt:enceladus): Dessen
 Fontänen liefern Wasserdampf und -eis, die den E-Ring bilden und zugleich das Plasma der inneren
-Magnetosphäre dominieren ([Cassini-Mission](quelle:nasa-cassini)). Geladene Teilchen, die entlang der
-Feldlinien in die obere Atmosphäre stürzen, erzeugen an beiden Polen Polarlichter. Das Magnetfeld
-moduliert außerdem eine Radiostrahlung, die Saturn-Kilometerstrahlung (SKR); weil sie an das Feld und
-damit scheinbar an die Rotation des Inneren gekoppelt ist, diente sie lange als dessen Uhr – bis
-Cassini zeigte, dass sich ihre Periode über die Missionsdauer änderte (siehe „Bahn, Rotation und
-Dynamik").
+Magnetosphäre dominieren ([Dougherty et al. 2006](literatur:dougherty-2006)). Geladene Teilchen, die
+entlang der Feldlinien in die obere Atmosphäre stürzen, erzeugen an beiden Polen Polarlichter
+([Badman et al. 2015](literatur:badman-2015)). Das Magnetfeld moduliert außerdem eine Radiostrahlung,
+die Saturn-Kilometerstrahlung (SKR); weil sie an das Feld und damit scheinbar an die Rotation des
+Inneren gekoppelt ist, diente sie lange als dessen Uhr – bis Cassini zeigte, dass sich ihre Periode
+über die Missionsdauer änderte ([Gurnett et al. 2005](literatur:gurnett-2005); siehe „Bahn, Rotation
+und Dynamik").
 
 ## Bahn, Rotation und Dynamik
 
@@ -189,6 +190,14 @@ geringe Ringmasse nahelegt, erst zehn bis hundert Millionen Jahre alt – behand
   Innenmodell vorhersagt, während ein an das Schwerefeld angepasstes Modell mit Winden
   $0{,}2181 \pm 0{,}0002$ ergibt, ein Unterschied von 2,4 bis 3,3σ je nach verwendeter Unsicherheit
   ([Innerer Aufbau](thema:innerer-aufbau)).
+- **Zustandsgleichung von Wasserstoff und Helium:** Ringseismologie und Schwerefeld liefern zwei
+  voneinander unabhängige Bilder von Saturns Innerem: eine stabil geschichtete Übergangszone bis
+  $r/R = 0{,}59 \pm 0{,}01$ aus den Ringwellen ([Mankovich und Fuller 2021](literatur:mankovich-2021))
+  gegenüber einem an $J_2$ bis $J_{10}$ angepassten Windmodell mit $C/(Ma^2) = 0{,}2181 \pm 0{,}0002$
+  ([Militzer und Hubbard 2023](literatur:militzer-2023)), das den aus der Polpräzession gemessenen
+  Wert $0{,}2258 \pm 0{,}0025$ um 2,4 bis 3,3σ verfehlt ([Jacobson 2022](literatur:jacobson-2022)).
+  Beide Bilder hängen empfindlich an der gewählten Wasserstoff-Helium-Zustandsgleichung; welche
+  zutrifft und ob sie beide Befunde gleichzeitig erklären kann, ist wie bei Jupiter offen.
 - **Ursache der Achsneigung:** Die säkulare Spin-Bahn-Resonanz mit Neptun erklärt, warum Saturns
   Präzession nahe der Resonanz liegt, nicht zwangsläufig, wie sie dorthin gelangte
   ([Ward und Hamilton 2004](literatur:ward-2004)). Die Chrysalis-Hypothese schlägt vor, dass ein

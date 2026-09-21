@@ -215,6 +215,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1126/science.adg8092',
   },
   {
+    id: 'badman-2015',
+    autoren: ['Badman, S. V.', 'Branduardi-Raymont, G.', 'Galand, M.'],
+    etAl: true,
+    jahr: 2015,
+    titel: 'Auroral Processes at the Giant Planets: Energy Deposition, Emission Mechanisms, Morphology and Spectra',
+    erschienen: 'Space Science Reviews 187, 99–179',
+    doi: '10.1007/s11214-014-0042-x',
+  },
+  {
     id: 'bagenal-2020',
     autoren: ['Bagenal, F.', 'Dols, V.'],
     etAl: false,
@@ -1050,6 +1059,15 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'Voyager measurement of the rotation period of Saturn’s magnetic field',
     erschienen: 'Geophysical Research Letters 8, 253–256',
     doi: '10.1029/GL008i003p00253',
+  },
+  {
+    id: 'dougherty-2006',
+    autoren: ['Dougherty, M. K.', 'Khurana, K. K.', 'Neubauer, F. M.'],
+    etAl: true,
+    jahr: 2006,
+    titel: 'Identification of a Dynamic Atmosphere at Enceladus with the Cassini Magnetometer',
+    erschienen: 'Science 311, 1406–1409',
+    doi: '10.1126/science.1120985',
   },
   {
     id: 'dougherty-2018',
