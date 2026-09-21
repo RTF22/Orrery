@@ -1,6 +1,6 @@
 # Ganymed
 
-Ganymed ist der äußerste und größte der vier Galileischen Monde und mit 2631,2 km Volumenmittelradius
+Ganymed ist der drittinnerste und größte der vier Galileischen Monde und mit 2631,2 km Volumenmittelradius
 der größte Mond des Sonnensystems, größer als der Planet [Merkur](objekt:mercury) (Herleitung unten).
 Zusammen mit [Io](objekt:io) und [Europa](objekt:europa) steht er in der Laplace-Resonanz um
 [Jupiter](objekt:jupiter); als äußerstes Glied der Kette heizt ihn die Resonanz heute kaum noch auf.
@@ -119,8 +119,8 @@ zugleich den Beleg für den Ozean unter der Kruste (siehe oben).
 ## Bahn, Rotation und Dynamik
 
 Io, Europa und Ganymed erfüllen im Mittel die Laplace-Resonanz mit dem Bewegungsverhältnis 4:2:1;
-Herleitung, Zweikörperwinkel und die erzwungenen Bahnexzentrizitäten von Io und Europa stehen unter
-[Bahnresonanzen](thema:resonanzen). Als äußerstes Glied der Kette trägt Ganymed die geringste
+Herleitung, Zweikörperwinkel und die erzwungene Bahnexzentrizität Ios stehen unter
+[Bahnresonanzen](thema:resonanzen), die Europas unter [Gebundene Rotation](thema:gebundene-rotation). Als äußerstes Glied der Kette trägt Ganymed die geringste
 erzwungene Exzentrizität der drei und heizt sich entsprechend kaum noch über Gezeiten auf; anders als
 bei [Io](objekt:io) mit seinem Dauervulkanismus zeigt sich das an Ganymeds Oberfläche nur noch in der
 Vergangenheit (siehe unten). Wie stabil das ganze System langfristig bleibt, ordnet

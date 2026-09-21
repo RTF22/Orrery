@@ -1,6 +1,6 @@
 # Ganymede
 
-Ganymede is the outermost and largest of the four Galilean moons and, at a volumetric mean radius of
+Ganymede is the third of the four Galilean moons by distance and the largest, and, at a volumetric mean radius of
 2631.2 km, the largest moon in the Solar System, larger than the planet [Mercury](objekt:mercury)
 (derivation below). Together with [Io](objekt:io) and [Europa](objekt:europa) it stands in the
 Laplace resonance around [Jupiter](objekt:jupiter); as the outermost link of the chain, the resonance
@@ -114,8 +114,8 @@ same time provide the evidence for the ocean beneath the crust (see above).
 ## Orbit, rotation and dynamics
 
 Io, Europa and Ganymede satisfy, on average, the Laplace resonance with the mean-motion ratio 4:2:1;
-the derivation, the two-body angles and the forced orbital eccentricities of Io and Europa are
-presented under [Orbital resonances](thema:resonanzen). As the outermost link of the chain, Ganymede
+the derivation, the two-body angles and the forced orbital eccentricity of Io are
+presented under [Orbital resonances](thema:resonanzen), that of Europa under [Bound rotation](thema:gebundene-rotation). As the outermost link of the chain, Ganymede
 carries the smallest of the three forced eccentricities and is correspondingly barely heated by tides
 today; unlike [Io](objekt:io) with its ongoing volcanism, this shows up on Ganymede's surface only as
 a past episode (see below). How stable the whole system remains over the long term is presented under
