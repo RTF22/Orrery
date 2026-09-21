@@ -27,7 +27,7 @@ Grundeinstellung von 7,7° (Entwurfswert bei J2000, nahezu Vollicht) auf 35,6° 
 sichtbarer Sichelrand) – siehe „Modellgrenzen".
 
 Saturns eigener Winkeldurchmesser von Enceladus aus beträgt
-$2\arcsin(58232/238420)=28{,}1^\circ$, mehr als die Hälfte der Bildhöhe. Weil Enceladus
+$2\arcsin(58232/238420)=28{,}3^\circ$, mehr als die Hälfte der Bildhöhe. Weil Enceladus
 [gebunden](thema:gebundene-rotation) rotiert und die 30 Sekunden der Szene bei 0,05 Tagen/s 1,5
 simulierte Tage sind, das sind 1,095 Umläufe (1,370218 Tage Umlaufzeit), dreht sich auch seine
 Saturn zugewandte Seite einmal ganz um die feste Kamerarichtung: Der Winkel zwischen der Richtung

@@ -26,7 +26,7 @@ a result the Sun–Enceladus–camera phase angle at the default draw grows from
 at J2000, near full light) to 35.6° (as of 21 September 2026, a visible crescent edge) – see "Model
 limitations".
 
-Saturn's own angular diameter as seen from Enceladus is $2\arcsin(58232/238420)=28.1^\circ$, more
+Saturn's own angular diameter as seen from Enceladus is $2\arcsin(58232/238420)=28.3^\circ$, more
 than half the frame height. Because Enceladus is [tidally locked](thema:gebundene-rotation) and the
 scene's 30 seconds at 0.05 days/s amount to 1.5 simulated days, that is 1.095 orbits (orbital period
 1.370218 days), its Saturn-facing side also turns once all the way around relative to the nearly
