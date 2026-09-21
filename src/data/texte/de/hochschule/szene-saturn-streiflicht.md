@@ -35,10 +35,10 @@ der Grundeinstellung (Stand 21.09.2026) beträgt er 149,9° – schon nahe am Ge
 vollen Azimutkreis reicht er von 1,6° (Vollicht, Azimut 190,5°) bis 173,6° (Azimut 10,5°); mit der
 Elevationsstreuung sind bis zu 176,6° erreichbar. Genau in diesem schmalen Azimutfenster liegt die
 Kamera geometrisch sogar in Saturns eigenem Kernschatten: Bei Faktor 1 reicht dessen Winkelradius
-von Saturn aus gesehen 11,3° (bei Faktor 0,85 13,2°, bei Faktor 1,4 8,1°) – ein reales Raumschiff an
+von Saturn aus gesehen 11,5° (bei Faktor 0,85 13,6°, bei Faktor 1,4 8,2°) – ein reales Raumschiff an
 dieser Stelle bekäme, wie Cassini am 15. September 2006, für einige Stunden keine direkte Sonne mehr
 zu sehen ([Finsternisse](thema:finsternis)). Über den vollen Streubereich betrifft das je nach
-Faktor 2,8 % bis 6,4 % aller Azimut-Ziehungen.
+Faktor 2,8 % bis 6,7 % aller Azimut-Ziehungen.
 
 Die Vorwärtsstreuung $s(\gamma)=0{,}85\max(0,-\cos\gamma)^6$ (`vorwaertsstreuung`,
 [Ringe](thema:ringe)) folgt demselben Winkel: Bei Azimut 40° liegt sie mit 0,356 schon deutlich über

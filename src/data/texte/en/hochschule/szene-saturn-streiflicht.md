@@ -36,10 +36,10 @@ At the default draw (as of 21 September 2026) it is 149.9° – already close to
 the full azimuth circle it ranges from 1.6° (full light, azimuth 190.5°) to 173.6° (azimuth 10.5°);
 with the elevation scatter, values up to 176.6° are reachable. In that same narrow azimuth window the
 camera sits geometrically inside Saturn's own umbra: at factor 1 its angular radius as seen from
-Saturn is 11.3° (13.2° at factor 0.85, 8.1° at factor 1.4) – a real spacecraft there would, like
+Saturn is 11.5° (13.6° at factor 0.85, 8.2° at factor 1.4) – a real spacecraft there would, like
 Cassini on 15 September 2006, lose direct sunlight for several hours
 ([Eclipses](thema:finsternis)). Across the full scatter this affects, depending on factor, 2.8% to
-6.4% of all azimuth draws.
+6.7% of all azimuth draws.
 
 The forward scattering $s(\gamma)=0.85\max(0,-\cos\gamma)^6$ (`vorwaertsstreuung`,
 [Rings](thema:ringe)) follows the same angle: at azimuth 40° it already stands well above zero at
