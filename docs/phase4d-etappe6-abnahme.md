@@ -634,3 +634,18 @@ Protokoll §6).
 
 Die Wort- und Trailerprüfung vor dem Commit erfolgte wie in der lokalen
 Projektanleitung beschrieben (Ergebnis 0), ohne Suchmuster in dieser Datei.
+
+## Nacharbeit nach der Abnahme (21.09.2026)
+
+Drei Befunde aus §7 wurden direkt nach dem Abnahme-Commit behoben (Commit
+„Beleglisten Ringdurchflug und Enceladus-Hell: Zellen berichtigt; Verweis im
+englischen Enceladus-Text"): die unmaskierten senkrechten Striche in Belegzeile 3
+von `szene-ringdurchflug.md`, die zwei Zeilen ohne Zeilennummer (Nr. 6 und 21,
+dort waren bei der Nacharbeit die Zellen verrutscht; dieselbe Verschiebung betraf
+Zeile 7 von `szene-enceladus-hell.md`, jetzt ebenfalls berichtigt), und der
+fehlende Verweis `objekt:saturn` im Abschnitt „In the model" der englischen
+Fassung von `objekt-enceladus.md`. Alle neun Beleglisten der Etappe haben danach
+sechs Zellen je Zeile und eine Nummer in der ersten Zelle (Skript im
+Scratchpad). Die Berichtsungenauigkeiten (Wortzahl Ringkante, fehlender
+Hauptchunk-Wert Task 6) bleiben als Vermerk in §7. Schlussprüfung und
+Fast-Forward stehen noch aus.

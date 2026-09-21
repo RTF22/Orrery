@@ -195,7 +195,7 @@ in the Saturn system.
 ## In the model
 
 - **Orbital reference:** Like the other Saturnian moons, Enceladus moves in the `parentEquator`
-  reference on Saturn's equatorial plane, with osculating Horizons elements at epoch J2000
+  reference on [Saturn's](objekt:saturn) equatorial plane, with osculating Horizons elements at epoch J2000
   ($a = 238420\,\mathrm{km}$, $e = 0.00635$). `nodeDot` is fixed at 0 because the JPL mean-elements
   table gives no precession rate for Enceladus's node (nodal period 0 years) – the same special
   case as for Io among the Jovian moons.
