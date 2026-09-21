@@ -59,6 +59,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1038/s41586-024-07170-0',
   },
   {
+    id: 'aksnes-1978',
+    autoren: ['Aksnes, K.', 'Franklin, F. A.'],
+    etAl: false,
+    jahr: 1978,
+    titel: 'The evidence for faint satellites of Saturn reexamined',
+    erschienen: 'Icarus 36, 107–118',
+    doi: '10.1016/0019-1035(78)90077-5',
+  },
+  {
     id: 'alexander-2012',
     autoren: ['Alexander, C. M. O’D.', 'Bowden, R.', 'Fogel, M. L.'],
     etAl: true,
@@ -3034,6 +3043,15 @@ export const LITERATUR: readonly Publikation[] = [
     arxiv: '2308.04986',
   },
   {
+    id: 'mitchell-2006',
+    autoren: ['Mitchell, C. J.', 'Horányi, M.', 'Havnes, O.'],
+    etAl: true,
+    jahr: 2006,
+    titel: 'Saturn’s Spokes: Lost and Found',
+    erschienen: 'Science 311, 1587–1589',
+    doi: '10.1126/science.1123783',
+  },
+  {
     id: 'mohr-2025',
     autoren: ['Mohr, P. J.', 'Newell, D. B.', 'Taylor, B. N.'],
     etAl: true,
@@ -3940,6 +3958,15 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'Io Volcanism Seen by New Horizons: A Major Eruption of the Tvashtar Volcano',
     erschienen: 'Science 318, 240–243',
     doi: '10.1126/science.1147621',
+  },
+  {
+    id: 'spitale-2010',
+    autoren: ['Spitale, J. N.', 'Porco, C. C.'],
+    etAl: false,
+    jahr: 2010,
+    titel: 'Free Unstable Modes and Massive Bodies in Saturn’s Outer B Ring',
+    erschienen: 'The Astronomical Journal 140, 1747–1757',
+    doi: '10.1088/0004-6256/140/6/1747',
   },
   {
     id: 'staehler-2021',
