@@ -187,6 +187,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1007/s10569-019-9925-1',
   },
   {
+    id: 'arlot-2014',
+    autoren: ['Arlot, J.-E.', 'Emelyanov, N.', 'Varfolomeev, M. I.'],
+    etAl: true,
+    jahr: 2014,
+    titel: 'The PHEMU09 catalogue and astrometric results of the observations of the mutual occultations and eclipses of the Galilean satellites of Jupiter made in 2009',
+    erschienen: 'Astronomy & Astrophysics 572, A120',
+    doi: '10.1051/0004-6361/201423854',
+  },
+  {
     id: 'asplund-2021',
     autoren: ['Asplund, M.', 'Amarsi, A. M.', 'Grevesse, N.'],
     etAl: false,
