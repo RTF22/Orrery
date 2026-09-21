@@ -3593,6 +3593,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1126/science.253.5023.995',
   },
   {
+    id: 'porco-2005',
+    autoren: ['Porco, C. C.', 'Baker, E.', 'Barbara, J.'],
+    etAl: true,
+    jahr: 2005,
+    titel: 'Imaging of Titan from the Cassini spacecraft',
+    erschienen: 'Nature 434, 159–168',
+    doi: '10.1038/nature03436',
+  },
+  {
     id: 'porco-2006',
     autoren: ['Porco, C. C.', 'Helfenstein, P.', 'Thomas, P. C.'],
     etAl: true,
@@ -3894,6 +3903,15 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'The Jupiter System Through the Eyes of Voyager 1',
     erschienen: 'Science 204, 951–972',
     doi: '10.1126/science.204.4396.951',
+  },
+  {
+    id: 'smith-1981',
+    autoren: ['Smith, B. A.', 'Soderblom, L. A.', 'Beebe, R. F.'],
+    etAl: true,
+    jahr: 1981,
+    titel: 'Encounter with Saturn: Voyager 1 Imaging Science Results',
+    erschienen: 'Science 212, 163–191',
+    doi: '10.1126/science.212.4491.163',
   },
   {
     id: 'smith-2001',
@@ -4578,6 +4596,15 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'The lunar dynamo',
     erschienen: 'Science 346, 1246753',
     doi: '10.1126/science.1246753',
+  },
+  {
+    id: 'west-2011',
+    autoren: ['West, R. A.', 'Balloch, J.', 'Dumont, P.'],
+    etAl: true,
+    jahr: 2011,
+    titel: "The evolution of Titan's detached haze layer near equinox in 2009",
+    erschienen: 'Geophysical Research Letters 38, L06204',
+    doi: '10.1029/2011GL046843',
   },
   {
     id: 'widemann-2023',
