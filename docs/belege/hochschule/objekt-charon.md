@@ -16,14 +16,14 @@ arXiv-Abstracts) durchgeführt. Alle zitierten Werke wurden mindestens in ihrer 
 geöffnet, für Titel/Autoren/Jahr/Zeitschrift/DOI zusätzlich über die Crossref-API geprüft (siehe
 Prüfskript-Zeile am Ende).
 
-**Ausgangspunkte des Auftrags, vor Verwendung geprüft:** Stern et al. 2015, Nimmo et al. 2017,
+**Ausgangspunkte der ursprünglichen Planung, vor Verwendung geprüft:** Stern et al. 2015, Nimmo et al. 2017,
 Brozović et al. 2015, Moore et al. 2016, Canup 2005, Denton et al. 2025a, Cheng et al. 2014,
-Proudfoot et al. 2026 (alle acht bereits im Katalog aus Task 4 dieser Etappe, hier wiederverwendet
+Proudfoot et al. 2026 (alle acht bereits im Katalog aus dem Hochschultext Pluto, hier wiederverwendet
 und für die eigenen Aussagen erneut an der jeweiligen Fundstelle geprüft). Grundy et al. 2016 (Nature
-539, 65–68, trifft Titel, Band und Seite aus dem Auftrag genau). Beyer et al. 2017 (Icarus 287,
-161–174, trifft). Desch und Neveu 2017 (Icarus 287, 175–186, trifft; im Auftrag als „Desch und Neveu
-2017" mit genau dieser Fundstelle vorgeschlagen). Für die Ammoniakhydrate nennt der Auftrag „Cook et
-al. 2007 oder Dalle Ore et al. 2018 — prüfen": Beide wurden geöffnet; verwendet wurde
+539, 65–68, trifft Titel, Band und Seite aus der ursprünglichen Liste genau). Beyer et al. 2017 (Icarus 287,
+161–174, trifft). Desch und Neveu 2017 (Icarus 287, 175–186, trifft; wie ursprünglich vorgesehen
+mit genau dieser Fundstelle geprüft). Für die Ammoniakhydrate sah die ursprüngliche Planung „Cook et
+al. 2007 oder Dalle Ore et al. 2018 — prüfen" vor; beide wurden geöffnet; verwendet wurde
 [Dalle Ore et al. 2018](literatur:dalle-ore-2018) (Icarus 300, 21–32), weil diese Arbeit die
 New-Horizons-LEISA-Kartierung selbst auswertet und Verbreitung und Konzentration der
 Ammoniaksignatur (Krater Organa) angibt, während Cook et al. 2007 eine ältere, erdgebundene
@@ -41,7 +41,7 @@ Metadaten des Kapitels sind unvollständig (nur ein Autor, Seite „1–1" statt
 Bereichs), und sämtliche im Text verwendeten Einzelaussagen sind bereits durch die spezifischeren
 Primärarbeiten (Beyer 2017, Desch und Neveu 2017, Dalle Ore 2018, Grundy 2016) gedeckt.
 
-**Wichtiger Befund gegenüber dem Auftrag:** Der Auftrag schlug für „künftige Ereignisse" die Arbeit
+**Wichtiger Befund zur Quellenrecherche:** Die ursprüngliche Planung sah für „künftige Ereignisse" die Arbeit
 Proudfoot et al. 2026 vor. Deren Volltext (Zusammenfassung und Einleitung, arXiv 2603.05394) sagt
 jedoch **keine neue Pluto-Charon-Ereignisserie** voraus; sie liefert Vorhersagen für fünf andere
 transneptunische Doppelsysteme ((38628) Huya, (58534) Logos-Zoe, (148780) Altjira, (469705)
@@ -49,10 +49,9 @@ Kágára und !Hãunu, (524366) 2001 XR₂₅₄) in den 2020er und 2030er Jahren
 Pluto-Charon-Serie 1985–1990 nur als historischen, methodischen Bezugspunkt. Der Text wurde
 entsprechend berichtigt (kein Datum für ein „nächstes Fenster" behauptet); siehe Zeile 32.
 
-Ebenfalls geprüft: Der ursprüngliche Textentwurf behauptete, die für gegenseitige Ereignisse nötige
+Ebenfalls überprüft: Der ursprüngliche Textentwurf behauptete, die für gegenseitige Ereignisse nötige
 Kantenstellung träte „alle rund 124 Jahre" ein — eine plausibel klingende, aber nicht an einer
-geöffneten Quelle geprüfte Zahl (die Hälfte von Plutos 248-jährigem Umlauf). Da weder der Auftrag
-noch eine der geöffneten Arbeiten diese Zahl nennt, wurde sie vor dem Commit aus dem Text entfernt,
+geöffneten Quelle geprüfte Zahl (die Hälfte von Plutos 248-jährigem Umlauf). Da keine der geöffneten Arbeiten diese Zahl nennt, wurde sie vor dem Commit aus dem Text entfernt,
 statt sie unbelegt stehen zu lassen.
 
 | Nr. | Aussage | Wert im Text | Beleg | Fundstelle | Prüfung |
