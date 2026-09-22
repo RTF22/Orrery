@@ -41,7 +41,7 @@ hemisphere, all surface values apply to a good half of the moon.
 In the same simplified two-component model of water ice ($917\,\mathrm{kg\,m^{-3}}$) and silicate
 rock ($3000\,\mathrm{kg\,m^{-3}}$, as for [Miranda](objekt:miranda), [Ariel](objekt:ariel),
 [Umbriel](objekt:umbriel), and [Iapetus](objekt:iapetus)), Oberon's catalogue density corresponds
-to a rock mass fraction of about 59% (derivation) – between Ariel's 60–61% and Umbriel's 54%, well
+to a rock mass fraction of about 59% (derivation) – between Ariel's 60% and Umbriel's 54%, well
 above Miranda's one third and just below Titania's 65%. Whether the body is fully differentiated
 cannot be decided without a dedicated gravity-field measurement (see
 [Interior structure](thema:innerer-aufbau)). Interior-structure models for all five large Uranian
@@ -70,17 +70,18 @@ system, along with Miranda, Umbriel, and Titania, unlike the markedly younger Ar
 ([Kirchoff et al. 2022](literatur:kirchoff-2022)); an earlier analysis of the same Voyager images,
 based only on Umbriel, Titania, and Oberon, reached the same conclusion
 ([Plescia 1987](literatur:plescia-1987)). The largest known crater, Hamlet, just under 206 km
-across, carries on part of its floor an extensive, very dark deposit that probably welled up from
-depth after the impact; whether cryovolcanism was involved or the material stems from the impact
-itself is undecided ([Plescia 1987](literatur:plescia-1987)). A single graben, Mommur
+across, carries on part of its floor an extensive, very dark deposit that may be icy, carbon-rich
+material and probably welled up from depth only after the impact; its exact composition and
+origin remain unknown ([Plescia 1987](literatur:plescia-1987)). A single graben, Mommur
 Chasma, about 537 km long and the longest known fracture on the moon, shows that Oberon's crust
 once stretched too – more isolated than Titania's Messina Chasmata or Ariel's graben system; a
 finer network comparable to Titania's is considered possible but not established
-([Schenk and Moore 2020](literatur:schenk-2020)). On the lower limb of a Voyager 2 image, an
-isolated massif also rises, whose origin is unclear; an early estimate shortly after the flyby put
-its height at about 6 km, while a later photogrammetric reanalysis of large impact features on
-the mid-sized icy moons of Saturn and Uranus instead found about 11 km
-([Moore et al. 2004](literatur:moore-2004)).
+([Schenk and Moore 2020](literatur:schenk-2020)). On the lower limb of a Voyager 2 image, at
+23° S, 140° E, an isolated massif about 45 km wide also rises; an early estimate shortly after
+the flyby put its height at about 6 km, while a limb survey published as part of a study of large
+impact features on the mid-sized icy moons of Saturn and Uranus instead found 11 km – possibly
+the central peak of a heavily viscously relaxed, roughly 375 km impact basin otherwise visible
+only as an indistinct semicircle of dark patches ([Moore et al. 2004](literatur:moore-2004)).
 
 Spectroscopically, Oberon is the only one of the four outer classical moons with no detectable CO2
 ice, while band strength at Ariel, Umbriel, and Titania decreases with distance from Uranus; the

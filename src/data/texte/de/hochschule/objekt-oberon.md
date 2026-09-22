@@ -41,7 +41,7 @@ Voyager 2 nur die Südhalbkugel sah, gelten alle Oberflächenwerte für gut die 
 Im selben vereinfachten Zwei-Komponenten-Modell aus Wassereis ($917\,\mathrm{kg\,m^{-3}}$) und
 Silikatgestein ($3000\,\mathrm{kg\,m^{-3}}$, wie bei [Miranda](objekt:miranda),
 [Ariel](objekt:ariel), [Umbriel](objekt:umbriel) und [Iapetus](objekt:iapetus)) entspricht Oberons
-Katalogdichte einem Gesteinsmassenanteil von rund 59 % (Herleitung) – zwischen Ariels 60–61 % und
+Katalogdichte einem Gesteinsmassenanteil von rund 59 % (Herleitung) – zwischen Ariels 60 % und
 Umbriels 54 %, deutlich über Mirandas einem Drittel und knapp unter Titanias 65 %. Ob der Körper
 vollständig differenziert ist, lässt sich ohne eigene Schwerefeldmessung nicht entscheiden (siehe
 [Innerer Aufbau](thema:innerer-aufbau)). Modellrechnungen zu den Innenstrukturen aller fünf großen
@@ -73,18 +73,21 @@ Oberons Oberfläche gilt nach Kraterzähldichten neben Miranda, Umbriel und Tita
 ([Kirchoff et al. 2022](literatur:kirchoff-2022)); eine frühere, allein auf Umbriel, Titania und
 Oberon gestützte Auswertung derselben Voyager-Bilder kam bereits zu demselben Ergebnis
 ([Plescia 1987](literatur:plescia-1987)). Der mit knapp 206 km Durchmesser größte bekannte Krater,
-Hamlet, trägt auf einem Teil seines Bodens einen ausgedehnten, sehr dunklen Belag, der vermutlich
-nach dem Einschlag aus der Tiefe aufgestiegen ist; ob dabei Kryovulkanismus im Spiel war oder das
-Material aus dem Einschlag selbst stammt, ist unentschieden
+Hamlet, trägt auf einem Teil seines Bodens einen ausgedehnten, sehr dunklen Belag, der möglicherweise
+eisiges, kohlenstoffreiches Material ist und vermutlich erst nach dem Einschlag aus der Tiefe
+aufgestiegen ist; die genaue Zusammensetzung und Herkunft bleiben unbekannt
 ([Plescia 1987](literatur:plescia-1987)). Ein einzelner Grabenbruch, Mommur Chasma, mit rund
 537 km Länge der längste bekannte Bruch des Mondes, zeigt, dass sich auch Oberons Kruste einmal
 gedehnt hat – vereinzelter als Titanias Messina Chasmata oder Ariels Grabensystem; ein feineres,
 mit Titania vergleichbares Bruchnetz hält eine vergleichende Topografiestudie für möglich, aber
 nicht für gesichert ([Schenk und Moore 2020](literatur:schenk-2020)). Am unteren Bildrand einer
-Voyager-2-Aufnahme ragt zudem ein isolierter Berg auf, dessen Ursprung nicht geklärt ist; eine
-erste Schätzung kurz nach dem Vorbeiflug nannte rund 6 km Höhe, eine spätere photogrammetrische
-Neuauswertung großer Einschlagsformen auf den mittelgroßen Eismonden von Saturn und Uranus ergab
-stattdessen rund 11 km ([Moore et al. 2004](literatur:moore-2004)).
+Voyager-2-Aufnahme ragt bei 23° S, 140° O zudem ein isolierter, rund 45 km breiter Berg auf; eine
+erste Schätzung kurz nach dem Vorbeiflug nannte dafür rund 6 km Höhe, eine im Rahmen einer
+Untersuchung großer Einschlagsformen der mittelgroßen Eismonde von Saturn und Uranus veröffentlichte
+Grenzlinienvermessung ergab stattdessen 11 km – möglicherweise der Zentralberg eines durch viskose
+Relaxation stark eingeebneten, rund 375 km großen Einschlagsbeckens, von dem sonst nur ein aus
+dunklen Flecken gebildeter, undeutlicher Halbkreis zu erkennen ist
+([Moore et al. 2004](literatur:moore-2004)).
 
 Spektroskopisch zeigt Oberon als einziger der vier äußeren klassischen Monde kein nachweisbares
 CO2-Eis, während die Bandenstärke bei Ariel, Umbriel und Titania mit dem Abstand von Uranus
