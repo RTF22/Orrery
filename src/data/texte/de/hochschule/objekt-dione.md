@@ -40,8 +40,8 @@ Mit rund $1478\,\mathrm{kg\,m^{-3}}$ ist Dione deutlich dichter als
 deutlichen Gesteinsanteil: Eine homogene Mischung aus Wassereis ($917\,\mathrm{kg\,m^{-3}}$)
 und Silikatgestein (rund $3000\,\mathrm{kg\,m^{-3}}$) ergäbe bei der gemessenen Dichte einen
 Gesteinsmassenanteil von rund 55 % (Herleitung) – gegenüber nur einem Zehntel bei Tethys
-(gleiche Rechnung wie bei Tethys); Einordnung von Trägheitsmomentfaktor und
-Kernbildung bei Monden allgemein unter [Innerer Aufbau](thema:innerer-aufbau).
+(gleiche Rechnung wie bei Tethys); Einordnung des Trägheitsmomentfaktors bei Monden
+allgemein unter [Innerer Aufbau](thema:innerer-aufbau).
 
 ## Inneres
 
@@ -59,17 +59,20 @@ passenden Modelle zu dicken Eisschalen und geringen Ozeandicken neigen
 ([Zannoni et al. 2020](literatur:zannoni-2020)).
 
 Unabhängig davon, allein aus Form und Topografie unter der Annahme minimaler Spannung
-(„minimum stress isostasy"), kommt eine Studie zu Diones und Enceladus' Eisschalen zu einem
-ähnlichen Bild: eine rund 100 km dicke Eisschale über einem mehrere zehn Kilometer tiefen
-Ozean um einen großen Gesteinskern ([Beuthe et al. 2016](literatur:beuthe-2016)). Die
-Ozeanhypothese steht für Dione aber auf deutlich schwächerem Grund als für Enceladus: Während
-Enceladus' erzwungene Libration direkt gemessen wurde ($0{,}120^\circ \pm 0{,}014^\circ$, siehe
-Enceladus), liegt die für Dione nach demselben Modell erwartete Libration
-unterhalb dessen, was Cassinis Kontrollpunktnetz auflösen konnte
-([Beuthe et al. 2016](literatur:beuthe-2016)) – ein Ozean bei Dione ist damit plausibel, aber,
-anders als bei Enceladus, durch keine einzelne Messung direkt erzwungen. Ob eine flüssige
-Schicht heute noch besteht oder das Innere inzwischen vollständig gefroren ist, bleibt offen
-(siehe Offene Fragen); mehr zum Trägheitsmomentfaktor bei Monden allgemein unter
+(„minimum stress isostasy"), findet eine Studie zu Diones und Enceladus' Eisschalen, Dione
+befinde sich in einem ähnlichen Zustand minimaler Spannung wie das resonante Enceladus: Ihr
+Schwerefeld und ihre Form lassen sich mit einer $99 \pm 23\,\mathrm{km}$ dicken Eisschale über
+einem $65 \pm 30\,\mathrm{km}$ tiefen globalen Ozean erklären – nach Einschätzung der Autoren
+selbst der erste klare Beleg für einen heutigen Ozean unter Dione
+([Beuthe et al. 2016](literatur:beuthe-2016)). Anders als bei Enceladus fehlt dafür aber die
+unabhängige Bestätigung durch eine gemessene Libration: Während Enceladus' erzwungene
+Libration direkt gemessen wurde ($0{,}120^\circ \pm 0{,}014^\circ$, siehe Enceladus), liegt die
+für Dione nach demselben Modell erwartete Libration nach Angabe der Autoren unterhalb dessen,
+was Cassinis Kontrollpunktnetz auflösen konnte ([Beuthe et al. 2016](literatur:beuthe-2016)).
+Schwerefeld und Form allein sprechen damit klar für einen Ozean unter Dione, nur eben ohne das
+zusätzliche, von Cassinis Bildern unabhängige Gewicht einer gemessenen Libration. Ob eine
+flüssige Schicht heute noch besteht oder das Innere inzwischen vollständig gefroren ist, bleibt
+offen (siehe Offene Fragen); mehr zum Trägheitsmomentfaktor bei Monden allgemein unter
 [Innerer Aufbau](thema:innerer-aufbau).
 
 ## Oberfläche
@@ -197,9 +200,13 @@ dynamischen Gleichgewicht zu bleiben.
   Bahnradius skaliert deshalb wie ihr eigener und Saturns Radius mit `sizeScale`, nicht mit der
   Abstandskompression der Planetenbahnen.
 - **Datenblock:** Die im Datensatz geführte Masse ($1{,}10 \cdot 10^{21}\,\mathrm{kg}$) ergibt
-  mal $G$ nach CODATA 2018 ein $GM$ von $73{,}4173\,\mathrm{km^3\,s^{-2}}$, rund 4120 ppm
-  (0,41 %) über dem an der Bahnverfolgung gemessenen Wert der obigen Tabelle – deutlich weniger
-  als bei Mimas (1,04 %), mehr als bei Tethys (0,08 %) oder Enceladus (−0,03 %). Weitere
-  Vereinfachungen: [Grenzen des Modells](thema:modell).
+  mit dem Katalogradius $561{,}3\,\mathrm{km}$ eine Dichte von $1485{,}0\,\mathrm{kg\,m^{-3}}$
+  (Nachrechnung am Code) – rund 0,5 % über der oben tabellierten, direkt an der Bahnverfolgung
+  gemessenen JPL-Dichte $1478{,}1\,\mathrm{kg\,m^{-3}}$; denselben Katalogwert nennt
+  `objekt-tethys.md` für Dione mit „1485 kg/m³". Dieselbe Masse ergibt mal $G$ nach CODATA 2018
+  ein $GM$ von $73{,}4173\,\mathrm{km^3\,s^{-2}}$, rund 4120 ppm (0,41 %) über dem an der
+  Bahnverfolgung gemessenen Wert der obigen Tabelle – deutlich weniger als bei Mimas (1,04 %),
+  mehr als bei Tethys (0,08 %) oder Enceladus (−0,03 %). Weitere Vereinfachungen:
+  [Grenzen des Modells](thema:modell).
 
 *Stand: September 2026*

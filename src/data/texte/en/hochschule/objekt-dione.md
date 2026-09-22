@@ -41,7 +41,7 @@ fraction alongside its water ice: a homogeneous mix of water ice ($917\,\mathrm{
 and silicate rock (around $3000\,\mathrm{kg\,m^{-3}}$) would, at the measured density, imply a
 rock mass fraction of around 55 % (worked out from the code) – against only a tenth for Tethys
 (same calculation as for Tethys); classification of the moment-of-inertia
-factor and core formation in moons in general is under
+factor for moons in general is under
 [Interior structure](thema:innerer-aufbau).
 
 ## Interior
@@ -59,17 +59,20 @@ layer, such as an ocean would be –, with the best-fitting models tending towar
 shells and thin oceans ([Zannoni et al. 2020](literatur:zannoni-2020)).
 
 Independently, working from shape and topography alone under the assumption of minimum stress
-("minimum stress isostasy"), a study of Dione's and Enceladus's ice shells arrives at a similar
-picture: an ice shell around 100 km thick over an ocean several tens of kilometres deep,
-surrounding a large rocky core ([Beuthe et al. 2016](literatur:beuthe-2016)). The ocean
-hypothesis stands on markedly weaker ground for Dione than for Enceladus, though: while
-Enceladus's forced libration was measured directly ($0.120^\circ \pm 0.014^\circ$, see
-Enceladus), the libration the same model predicts for Dione falls below
-what Cassini's control-point network could resolve
-([Beuthe et al. 2016](literatur:beuthe-2016)) – an ocean at Dione is plausible but, unlike at
-Enceladus, not directly demanded by any single measurement. Whether a liquid layer still
-exists today or the interior has since frozen completely remains open (see Open questions);
-more on the moment-of-inertia factor for moons in general is under
+("minimum stress isostasy"), a study of Dione's and Enceladus's ice shells finds Dione to be in
+a similar state of minimum-stress isostasy as its resonant partner Enceladus: its gravity and
+shape can be explained by a $99 \pm 23\,\mathrm{km}$-thick ice shell over a
+$65 \pm 30\,\mathrm{km}$-thick global ocean – in the authors' own assessment the first clear
+evidence for a present-day ocean within Dione
+([Beuthe et al. 2016](literatur:beuthe-2016)). Unlike at Enceladus, though, this lacks the
+independent confirmation a measured libration would give: while Enceladus's forced libration
+was measured directly ($0.120^\circ \pm 0.014^\circ$, see Enceladus), the libration the same
+model predicts for Dione, by the authors' own account, falls below what Cassini's control-point
+network could resolve ([Beuthe et al. 2016](literatur:beuthe-2016)). Gravity and shape alone
+thus argue clearly for an ocean beneath Dione, just without the extra weight of a libration
+measurement independent of Cassini's images. Whether a liquid layer still exists today or the
+interior has since frozen completely remains open (see Open questions); more on the
+moment-of-inertia factor for moons in general is under
 [Interior structure](thema:innerer-aufbau).
 
 ## Surface
@@ -192,8 +195,12 @@ the tidal heating – to stay in dynamical equilibrium at the same resonance str
 - **Scale:** Dione is a satellite (`isSatellite`, its `parent` is Saturn, not the Sun); its
   orbital radius therefore scales, like its own and Saturn's radius, with `sizeScale` rather
   than with the distance compression applied to planetary orbits.
-- **Data panel:** The mass carried in the data set ($1.10 \cdot 10^{21}\,\mathrm{kg}$), times
-  $G$ per CODATA 2018, gives a $GM$ of $73.4173\,\mathrm{km^3\,s^{-2}}$, about 4120 ppm
+- **Data panel:** The mass carried in the data set ($1.10 \cdot 10^{21}\,\mathrm{kg}$), combined
+  with the catalog radius of $561.3\,\mathrm{km}$, gives a density of
+  $1485.0\,\mathrm{kg\,m^{-3}}$ (worked out from the code) – about 0.5 % above the JPL density
+  tabulated above, measured directly from radio tracking ($1478.1\,\mathrm{kg\,m^{-3}}$);
+  `objekt-tethys.md` gives the same catalog figure for Dione as "1485 kg/m³". The same mass,
+  times $G$ per CODATA 2018, gives a $GM$ of $73.4173\,\mathrm{km^3\,s^{-2}}$, about 4120 ppm
   (0.41 %) above the value measured by radio tracking in the table above – markedly less than
   for Mimas (1.04 %), more than for Tethys (0.08 %) or Enceladus (−0.03 %). Further
   simplifications: [Limits of the model](thema:modell).
