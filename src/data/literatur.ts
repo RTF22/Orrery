@@ -1142,6 +1142,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1029/2022GL100516',
   },
   {
+    id: 'denton-2025',
+    autoren: ['Denton, C. A.', 'Rhoden, A. R.'],
+    etAl: false,
+    jahr: 2025,
+    titel: 'Herschel impact basin probes the onset of a young ocean on Mimas',
+    erschienen: 'Earth and Planetary Science Letters 671, 119614',
+    doi: '10.1016/j.epsl.2025.119614',
+  },
+  {
     id: 'desch-1981',
     autoren: ['Desch, M. D.', 'Kaiser, M. L.'],
     etAl: false,

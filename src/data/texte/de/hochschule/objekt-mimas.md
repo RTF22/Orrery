@@ -1,6 +1,6 @@
 # Mimas
 
-Mimas ist der innerste und mit 198,5 km Radius kleinste der sechs großen Saturnmonde: ein alter,
+Mimas ist der innerste und mit 198,5 km Radius kleinste der sieben großen Saturnmonde: ein alter,
 dicht verkraterter Eiskörper, dessen Herschel-Krater rund ein Drittel von Mimas' eigenem
 Durchmesser misst und ihm den Beinamen „Todesstern" eingetragen hat. Cassini-Bilder zeigen an
 Mimas eine Librationsschwingung, die doppelt so groß ist wie für einen vollständig gefrorenen,
@@ -31,7 +31,7 @@ beträgt 198,5 km – der auch im Katalog geführte Wert.
 | Librationsamplitude | $0{,}838^\circ$ | $0{,}017^\circ$ (2σ) | Stereophotogrammetrie, Cassini-Kontrollpunktnetz, 7 Jahre | [Tajeddine et al. 2014](literatur:tajeddine-2014) |
 
 Mit rund 1150 kg m⁻³ zählt Mimas zu den am wenigsten dichten mittelgroßen Monden des
-Saturnsystems; Einordnung neben allen Saturnmonden unter [Innerer Aufbau](thema:innerer-aufbau).
+Saturnsystems.
 
 ## Inneres
 
@@ -71,9 +71,11 @@ entdeckte den Krater beim Saturn-Vorbeiflug im November 1980
 ([Smith et al. 1981](literatur:smith-1981)); die seither verbreitete Ähnlichkeit mit der fiktiven
 Raumstation aus einer bekannten Science-Fiction-Filmreihe prägte Mimas' Beinamen „Todesstern". Ein
 Einschlag dieser Größe hätte den Mond beinahe auseinandergerissen (siehe Offene Fragen);
-Simulationen finden eine mit Herschels Form verträgliche Lösung nur, wenn die Eisschale zum
-Einschlagszeitpunkt deutlich dicker war als die heute aus der Libration hergeleitete
-([Denton und Rhoden 2022](literatur:denton-2022)).
+Simulationen der Einschlagsmechanik finden eine mit Herschels Form verträgliche Lösung nur, wenn
+die Eisschale an der Basis bereits nahe am Schmelzpunkt lag – entweder als deutlich dickere Schicht
+über einem Ozean oder, wie eine 2025 veröffentlichte Erweiterung derselben Modellreihe zeigt, auch
+bei einer insgesamt gefrorenen Eisschale mit warmer Basis
+([Denton und Rhoden 2022](literatur:denton-2022); [Denton und Rhoden 2025](literatur:denton-2025)).
 
 Abseits von Herschel zeigt Mimas eine alte, dicht mit kleineren Kratern übersäte Landschaft, wie
 sie für die inneren Saturnmonde typisch ist. Eine V-förmige Temperaturanomalie auf der führenden
@@ -132,10 +134,12 @@ keinen unabhängigen Beleg ([Ćuk et al. 2024](literatur:cuk-2024); Einordnung n
 Ursprungshypothesen der Saturnmonde unter [Entstehung des Sonnensystems](thema:entstehung)).
 
 Wie der beinahe mondzerstörende Herschel-Einschlag in dieses Bild passt, ist ebenfalls offen:
-Modellrechnungen zur Einschlagsmechanik finden nur dann eine mit Herschels Form verträgliche
-Lösung, wenn die Eisschale zum Einschlagszeitpunkt deutlich dicker war als heute – ein Hinweis,
-dass sich Mimas' innere Struktur seither verändert hat, unabhängig davon, wie alt der Mond
-insgesamt ist ([Denton und Rhoden 2022](literatur:denton-2022)).
+Modellrechnungen zur Einschlagsmechanik finden eine mit Herschels Form verträgliche Lösung
+entweder mit einer deutlich dickeren, ozeanbedeckten Eisschale als heute oder – nach einer 2025
+veröffentlichten Erweiterung derselben Modellreihe – mit einer vollständig gefrorenen Eisschale,
+deren Basis bereits nahe am Schmelzpunkt lag; in beiden Fällen war Mimas' Inneres zum
+Einschlagszeitpunkt wärmer als heute, unabhängig davon, wie alt der Mond insgesamt ist
+([Denton und Rhoden 2022](literatur:denton-2022); [Denton und Rhoden 2025](literatur:denton-2025)).
 
 ## Offene Fragen
 
@@ -145,10 +149,11 @@ insgesamt ist ([Denton und Rhoden 2022](literatur:denton-2022)).
   Periapsis-Präzession favorisiert einen jungen Ozean
   ([Lainey et al. 2024](literatur:lainey-2024)), doch weder fehlende Oberflächenspuren aktiver
   Gezeitenreibung noch Mimas' bislang ungedämpfte Exzentrizität sind damit restlos erklärt.
-- **Wie hat Mimas den Herschel-Einschlag überstanden?** Simulationen gelingen nur mit einer
-  deutlich dickeren Eisschale als heute; ob und wie stark der Einschlag den Mond insgesamt
-  erschütterte, bleibt Gegenstand laufender Modellierung
-  ([Denton und Rhoden 2022](literatur:denton-2022)).
+- **Wie hat Mimas den Herschel-Einschlag überstanden?** Simulationen gelingen mit einer deutlich
+  dickeren, ozeanbedeckten Eisschale als heute ebenso wie mit einer vollständig gefrorenen
+  Eisschale, deren Basis bereits nahe am Schmelzpunkt lag; beide Fälle setzen ein wärmeres Inneres
+  zur Einschlagszeit voraus, welcher davon zutrifft, bleibt offen
+  ([Denton und Rhoden 2022](literatur:denton-2022); [Denton und Rhoden 2025](literatur:denton-2025)).
 - **Ursache und Alter der „Pac-Man"-Temperaturanomalie.** Die Zuordnung zu hochenergetischer
   Elektronenbestrahlung erklärt die Lage auf der Vorderseite, nicht aber, warum die Grenze so
   scharf ausfällt oder wie lange sich das Muster schon einstellt

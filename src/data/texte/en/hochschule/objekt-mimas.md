@@ -1,6 +1,6 @@
 # Mimas
 
-Mimas is the innermost and, at 198.5 km in radius, the smallest of Saturn's six large moons: an
+Mimas is the innermost and, at 198.5 km in radius, the smallest of Saturn's seven large moons: an
 ancient, densely cratered ice body whose Herschel crater measures about a third of Mimas's own
 diameter and has earned it the nickname "Death Star". Cassini images show a libration in Mimas
 twice as large as expected for a fully frozen, hydrostatic body – a finding that has left Mimas
@@ -29,8 +29,7 @@ also carries.
 | Geometric albedo | $0.6$ | – | fact sheet | [Saturnian Satellite Fact Sheet](quelle:nssdc-saturnmonde) |
 | Libration amplitude | $0.838^\circ$ | $0.017^\circ$ (2σ) | stereophotogrammetry, Cassini control-point network, 7 years | [Tajeddine et al. 2014](literatur:tajeddine-2014) |
 
-At around 1150 kg m⁻³, Mimas is among the least dense of the mid-sized Saturn moons;
-classification alongside all Saturn moons under [Interior structure](thema:innerer-aufbau).
+At around 1150 kg m⁻³, Mimas is among the least dense of the mid-sized Saturn moons.
 
 ## Interior
 
@@ -68,9 +67,11 @@ Moore et al. 2004). Voyager 1 discovered the crater during its Saturn flyby in N
 ([Smith et al. 1981](literatur:smith-1981)); the resemblance widely noted since then to the
 fictional space station from a well-known science-fiction film series gave Mimas its "Death Star"
 nickname. An impact of this size should have come close to breaking the moon apart (see Open
-questions); simulations only find a solution consistent with Herschel's shape if the ice shell was
-considerably thicker at the time of impact than the one derived today from the libration
-([Denton and Rhoden 2022](literatur:denton-2022)).
+questions); simulations of the impact mechanics only find a solution consistent with Herschel's
+shape if the base of the ice shell already lay near the melting point – either as a considerably
+thicker shell over an ocean or, as a 2025 extension of the same model series shows, even within a
+fully frozen ice shell with a warm base
+([Denton and Rhoden 2022](literatur:denton-2022); [Denton and Rhoden 2025](literatur:denton-2025)).
 
 Away from Herschel, Mimas shows an old landscape densely covered in smaller craters, typical of the
 inner Saturn moons. A V-shaped temperature anomaly on the leading hemisphere, centred near 0°
@@ -127,10 +128,11 @@ is, however, no independent evidence for an age postdating the rings themselves
 the Saturn moons under [Formation of the Solar System](thema:entstehung)).
 
 How the nearly moon-destroying Herschel impact fits into this picture is likewise open: models of
-the impact mechanics find a solution consistent with Herschel's shape only if the ice shell was
-considerably thicker at the time of impact than it is today – evidence that Mimas's internal
-structure has changed since then, regardless of how old the moon is overall
-([Denton and Rhoden 2022](literatur:denton-2022)).
+the impact mechanics find a solution consistent with Herschel's shape either with a considerably
+thicker, ocean-bearing ice shell than today's or – per a 2025 extension of the same work – with a
+fully frozen ice shell whose base already lay near the melting point; either way, Mimas's interior
+was warmer at the time of impact than it is today, regardless of how old the moon is overall
+([Denton and Rhoden 2022](literatur:denton-2022); [Denton and Rhoden 2025](literatur:denton-2025)).
 
 ## Open questions
 
@@ -140,10 +142,11 @@ structure has changed since then, regardless of how old the moon is overall
   pericentre precession favours a young ocean
   ([Lainey et al. 2024](literatur:lainey-2024)), yet neither the absence of surface signs of active
   tidal flexing nor Mimas's still-undamped eccentricity is fully explained by it.
-- **How did Mimas survive the Herschel impact?** Simulations only succeed with an ice shell
-  considerably thicker than today's; whether and how strongly the impact shook the moon as a whole
-  remains the subject of ongoing modelling
-  ([Denton and Rhoden 2022](literatur:denton-2022)).
+- **How did Mimas survive the Herschel impact?** Simulations succeed with a considerably thicker,
+  ocean-bearing ice shell as well as with a fully frozen ice shell whose base already lay near the
+  melting point; both cases require a warmer interior at the time of impact, and which of the two
+  applies remains open
+  ([Denton and Rhoden 2022](literatur:denton-2022); [Denton and Rhoden 2025](literatur:denton-2025)).
 - **Cause and age of the "Pac-Man" temperature anomaly.** Attributing it to high-energy electron
   bombardment explains its location on the leading side, but not why the boundary is so sharp or
   how long the pattern has already persisted
