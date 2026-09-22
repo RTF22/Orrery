@@ -56,9 +56,13 @@ imaged in 2023](quelle:nasa-webb-uranus).
 The cause of Uranus's [axial tilt](thema:achsneigung) of 97.77° (geometric angle between pole and
 orbit normal 82.23°) remains unresolved; one or more giant impacts and a gradual spin–orbit
 resonance both remain candidates, with the arguments for each laid out there. Over an 84-year
-orbit, each pole faces the Sun for about 42 years, then darkness for as long: the southern summer
-solstice, near the Voyager 2 flyby, fell on 30 September 1985, the following equinox on
-6/7 December 2007, and the next northern summer solstice on 11 April 2030. Because the rings lie
+orbit, each pole faces the Sun for about 42 years and then lies in darkness for just as long;
+because the seasonal points do not coincide with the apsides of the slightly eccentric orbit, the
+time intervals between them are not equal, by Kepler's second law: the southern summer solstice,
+near the Voyager 2 flyby, fell on 30 September 1985, the following equinox on 6/7 December 2007 —
+a good 22 years later —, and the next northern summer solstice on 11 April 2030 — another good
+22 years after that, making about 44.5 years rather than the 42 years expected from an even split
+between the two solstices. Because the rings lie
 exactly in this strongly tilted equatorial plane, and Uranus's own orbital plane deviates from
 the ecliptic by only 0.77°, they appear from Earth almost as tilted as the rotation axis itself.
 

@@ -57,10 +57,14 @@ der 2023 vom [James-Webb-Weltraumteleskop gezeigten hellen Nordpolkappe](quelle:
 Die Ursache von Uranus' [Achsneigung](thema:achsneigung) von 97,77° (geometrischer Winkel
 Pol–Bahnnormale 82,23°) ist ungeklärt; infrage kommen eine oder mehrere Riesenkollisionen ebenso
 wie eine allmähliche Spin-Bahn-Resonanz, die Argumente für beide Seiten stehen dort. Über einen
-Umlauf von 84 Jahren zeigt jeder Pol rund 42 Jahre der Sonne, dann ebenso lange der Dunkelheit:
-Die Südsommer-Sonnenwende, nahe der Voyager 2 vorbeiflog, fiel auf den 30. September 1985, die
-folgende Tagundnachtgleiche auf den 6./7. Dezember 2007, die nächste Nordsommer-Sonnenwende auf
-den 11. April 2030. Weil die Ringe genau in dieser stark geneigten Äquatorebene liegen und
+Umlauf von 84 Jahren zeigt jeder Pol rund 42 Jahre der Sonne, dann ebenso lange der Dunkelheit;
+weil die Jahreszeitenpunkte nicht mit den Apsiden der leicht exzentrischen Bahn zusammenfallen,
+sind die Zeitabstände zwischen ihnen nach Keplers zweitem Gesetz aber nicht gleich lang: Die
+Südsommer-Sonnenwende, nahe der Voyager 2 vorbeiflog, fiel auf den 30. September 1985, die
+folgende Tagundnachtgleiche auf den 6./7. Dezember 2007 – gut 22 Jahre später –, und die nächste
+Nordsommer-Sonnenwende auf den 11. April 2030 – noch einmal gut 22 Jahre danach, macht zusammen
+rund 44,5 statt der bei gleichmäßiger Aufteilung erwarteten 42 Jahre zwischen den beiden
+Sonnenwenden. Weil die Ringe genau in dieser stark geneigten Äquatorebene liegen und
 Uranus' eigene Bahnebene nur 0,77° von der Ekliptik abweicht, stehen sie von der Erde aus fast
 ebenso verkippt wie die Rotationsachse selbst.
 
