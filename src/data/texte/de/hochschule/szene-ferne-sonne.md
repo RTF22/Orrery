@@ -9,15 +9,15 @@ Außenbezirken des Sonnensystems.
 Der Bahntyp `static` (`render/camera/cinema.ts`) hält die Kamera fest bei Neptun,
 `lookAtId: 'sun'` richtet den Blick dauerhaft zur Sonne. Radius: 12 dargestellte Neptunradien
 ($R_\mathrm{N}=24\,622\,\mathrm{km}$) mal Streufaktor; bei 0,9/1,0/1,5 sind das 265 918/295 464/
-443 196 km. Elevation ist additiv fest zwischen 5° und 40° (Basis 15° ± 10°), Azimut additiv fest
-zwischen 80° und 160° (Basis 120° ± 40°); die Rate ist 0, das Bild driftet über die 30 s Dauer
-also nicht.
+443 196 km. Elevation ist additiv fest zwischen 5° und 40° (Basis 15°, asymmetrisch −10°/+25°),
+Azimut additiv fest zwischen 80° und 160° (Basis 120°, symmetrisch ± 40°); die Rate ist 0, das
+Bild driftet über die 30 s Dauer also nicht.
 
 Weil die Kamera nur wenige hunderttausend Kilometer von Neptun absteht, gegen 4,5 Milliarden km
 Neptun-Sonne-Abstand, bestimmt allein die Blickrichtung zur Sonne, wo Neptun im Bild landet – und
 das ist nirgends: Eine eigene Rastersuche über den ganzen gezogenen Azimut-/Elevationsbereich
 ergibt für den Winkel zwischen der Blickrichtung (Kamera→Sonne) und der Richtung Kamera→Neptun
-Werte zwischen 123° und 173°. Das liegt in jeder Ziehung weit über 90° und damit auch weit über
+Werte zwischen 123° und rund 175°. Das liegt in jeder Ziehung weit über 90° und damit auch weit über
 dem großzügigeren horizontalen Halbfeld von 39,7° (16:9 bei `KAMERA_FOV_GRAD` 50°, das vertikale
 Halbfeld beträgt nur 25°) – Neptun steht nicht am Bildrand, sondern schlicht hinter der Kamera.
 Die Szene zeigt buchstäblich nur den Blick von Neptuns Standort zur fernen Sonne, nicht Neptun
@@ -42,9 +42,8 @@ km oder 0,047 AE – verschwindend gegen seinen 4,5-Milliarden-km-Bahnradius.
 
 ## Hintergrund
 
-Neptuns Energie- und Lichtbilanz hängt fast vollständig an diesem einen Neunhundertstel
-Sonnenlicht; alles Wärmeempfinden für innere Wärmequellen im Riesenplaneten misst sich gegen genau
-diese schwache äußere Einstrahlung. Bisher hat nur [Voyager 2](quelle:nasa-voyager-2) Neptun aus
+Neptuns Lichtbilanz hängt fast vollständig an diesem einen Neunhundertstel Sonnenlicht. Bisher hat
+nur [Voyager 2](quelle:nasa-voyager-2) Neptun aus
 der Nähe gesehen, am 25. August 1989. Sein Schwesterschiff Voyager 1 blickte, bereits weit
 außerhalb der Planetenbahnen, am 14. Februar 1990 noch einmal zurück: Die Aufnahmesequenz des
 „Familienporträts" begann ausgerechnet bei Neptun, dem lichtschwächsten Ziel, und arbeitete sich
@@ -66,8 +65,9 @@ mehr als sichtbares Licht.
   `exposureTargetId` hier die Sonne; da sie stets im Koordinatenursprung steht, ergibt das den
   Referenzwert für 1 AE (Faktor $\pi$, eigene Rechnung). Anders als bei den meisten übrigen Szenen
   dieser Etappe, wo das angesehene Ziel exakt auf Referenzniveau erscheint, bekäme Neptun bei
-  dieser Belichtung rechnerisch nur rund 41 % davon (eigene Rechnung) – in der Praxis unerheblich,
-  weil Neptun ohnehin außerhalb des Bildfelds liegt (siehe „Was das Bild zeigt").
+  dieser Belichtung rechnerisch nur rund 13 % davon (eigene Rechnung; deckt sich mit der in
+  [Albedo und Helligkeit](thema:photometrie) verwendeten Formel $E^{1-0{,}7}$) – in der Praxis
+  unerheblich, weil Neptun ohnehin außerhalb des Bildfelds liegt (siehe „Was das Bild zeigt").
 - **Keine Streuung, kein Blendeffekt** über den Bloom-Durchgang hinaus (`render/postfx.ts`):
   Nur Objekte auf der Bloom-Ebene erhalten den zusätzlichen Leuchtkranz, ein atmosphärisches oder
   optisches Streumodell fehlt.

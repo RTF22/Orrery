@@ -9,14 +9,14 @@ from the outer reaches of the Solar System.
 The `static` path type (`render/camera/cinema.ts`) keeps the camera fixed at Neptune;
 `lookAtId: 'sun'` points the view permanently at the Sun. Radius: 12 displayed Neptune radii
 ($R_\mathrm{N}=24\,622\,\mathrm{km}$) times a scatter factor; at 0.9/1.0/1.5 that is
-265,918/295,464/443,196 km. Elevation is fixed additively between 5° and 40° (base 15° ± 10°),
-azimuth fixed additively between 80° and 160° (base 120° ± 40°); the rate is 0, so the image does
-not drift over the 30 s duration.
+265,918/295,464/443,196 km. Elevation is fixed additively between 5° and 40° (base 15°,
+asymmetric −10°/+25°), azimuth fixed additively between 80° and 160° (base 120°, symmetric
+± 40°); the rate is 0, so the image does not drift over the 30 s duration.
 
 Because the camera stands only a few hundred thousand kilometres from Neptune, against a
 4.5-billion-km Neptune–Sun distance, the viewing direction toward the Sun alone decides where
 Neptune ends up in the frame — and that is nowhere: an own grid search over the whole drawn
-azimuth/elevation range gives values between 123° and 173° for the angle between the line of
+azimuth/elevation range gives values between 123° and about 175° for the angle between the line of
 sight (camera→Sun) and the direction camera→Neptune. That is well above 90° on every draw, and
 so well above even the more generous horizontal half field of view of 39.7° (16:9 at
 `KAMERA_FOV_GRAD` 50°, the vertical half field is only 25°) — Neptune is not at the edge of the
@@ -43,9 +43,8 @@ period ([Neptune](objekt:neptune)), that is 22.3 rotations; on its orbit, Neptun
 
 ## Background
 
-Neptune's energy and light budget hangs almost entirely on this one nine-hundredth of sunlight;
-any sense of internal heat sources in the giant planet is measured against precisely this faint
-outside illumination. So far only [Voyager 2](quelle:nasa-voyager-2) has seen Neptune up close, on
+Neptune's light budget hangs almost entirely on this one nine-hundredth of sunlight. So far only
+[Voyager 2](quelle:nasa-voyager-2) has seen Neptune up close, on
 25 August 1989. Its sister ship Voyager 1, already far outside the planetary orbits, looked back
 once more on 14 February 1990: the imaging sequence of the "family portrait" began, of all places,
 at Neptune, the faintest target, and worked its way from there toward the Sun
@@ -66,8 +65,9 @@ light.
   returns the Sun here; since it always sits at the coordinate origin, that yields the reference
   value for 1 au (factor $\pi$, own calculation). Unlike most other scenes in this stage, where
   the body the camera looks at appears at exactly the reference level, Neptune would work out to
-  only about 41% of that under this exposure (own calculation) — irrelevant in practice, because
-  Neptune lies outside the frame anyway (see "What the view shows").
+  only about 13% of that under this exposure (own calculation; matches the formula
+  $E^{1-0.7}$ used in [Albedo and brightness](thema:photometrie)) — irrelevant in practice,
+  because Neptune lies outside the frame anyway (see "What the view shows").
 - **No scattering, no glare** beyond the bloom pass (`render/postfx.ts`): only objects on the
   bloom layer get the extra glow; no atmospheric or optical scattering model exists.
 - **Star background without real luminosities:** catalogue magnitude only sets point size and,

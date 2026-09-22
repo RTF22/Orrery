@@ -17,19 +17,24 @@ Triton's orbital radius in the model is 354,766 km (orbital element `a`, epoch J
 Neptune radii. At scatter factor 0.8, the closest draw, the half-frame width at Neptune's
 distance, $d\tan(25^\circ)$ with the half, vertical field of view from `KAMERA_FOV_GRAD` 50°,
 comes to about 413,331 km — a margin of 16.5% over Triton's orbital radius; at scatter factor
-1.5 the margin grows to 118.5%. The full orbit therefore fits in the frame on every draw.
+1.5 the margin grows to 118.5%. With the usual landscape window (aspect ratio at least 1), the
+full orbit therefore fits in the frame on every draw; `KAMERA_FOV_GRAD` is the vertical field of
+view, and `camera.aspect` follows the actual window size without any landscape lock
+(`render/renderer.ts`) — with a window narrower than it is tall, the horizontal field of view,
+and so the margin, would be smaller.
 
 In the 35 s at 0.4 days per second, 14 simulated days pass; Triton's orbit takes 5.877 days in
 the model (from the mean motion; the third Kepler law with Neptune's and Triton's masses matches
 the same value to 0.02%) — the scene shows about 2.4 complete orbits.
 
-That the near-circular orbit ($e\approx0.00015$) appears as an ellipse, rather than a circle or a
-line, is pure projection geometry: the axis ratio of the apparent ellipse is the absolute cosine
-of the angle between the line of sight and the normal of Triton's orbital plane — 0 when looking
-within the orbital plane (a line), 1 when looking perpendicular to it (a circle). Rotating
-Triton's orbital elements into the ecliptic, an own calculation for elevation 30–60° and the
-drawn azimuth range gives an axis ratio between about 0.05 and 0.35 — never a degenerate line,
-never a circle.
+How strongly the near-circular orbit ($e\approx0.00015$) appears as an ellipse is pure projection
+geometry: the axis ratio of the apparent ellipse is the absolute cosine of the angle between the
+line of sight and the normal of Triton's orbital plane — 0 when looking within the orbital plane
+(a line), 1 when looking perpendicular to it (a circle). Rotating Triton's orbital elements into
+the ecliptic, an own fine grid search (0.1° steps) for elevation 30–60° and the drawn azimuth
+range gives an axis ratio from practically 0 (at azimuth around 141°, elevation around 49°) up to
+about 0.35 (at elevation 30°, azimuth around 126°) — on some draws the orbit therefore looks
+almost like a line, though never like a circle.
 
 The retrograde motion itself shows in the sense of revolution: the camera turns with positive
 azimuth, the same sense as Neptune's own spin and as every planetary orbit (counterclockwise seen

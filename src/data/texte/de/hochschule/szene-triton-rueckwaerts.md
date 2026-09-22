@@ -17,18 +17,23 @@ Tritons Bahnradius im Modell beträgt 354 766 km (Bahnelement `a`, Epoche J2000)
 Neptunradien. Bei Streufaktor 0,8, der engsten Ziehung, misst die Halbbildbreite am
 Neptun-Abstand, $d\tan(25^\circ)$ mit dem halben, vertikalen Sichtfeld aus `KAMERA_FOV_GRAD` 50°,
 rund 413 331 km – eine Marge von 16,5 % über Tritons Bahnradius; bei Streufaktor 1,5 wächst sie
-auf 118,5 %. Die volle Bahn passt damit in jeder Ziehung ins Bild.
+auf 118,5 %. Bei üblichem Querformat-Fenster (Seitenverhältnis mindestens 1) passt die volle Bahn
+damit in jeder Ziehung ins Bild; `KAMERA_FOV_GRAD` ist das vertikale Sichtfeld, `camera.aspect`
+folgt ohne Sperre auf Querformat der tatsächlichen Fenstergröße (`render/renderer.ts`) – bei einem
+schmaleren als hohen Fenster wäre das horizontale Sichtfeld und damit die Marge kleiner.
 
 In den 35 s bei 0,4 Tagen je Sekunde vergehen 14 simulierte Tage; Tritons Umlauf dauert im Modell
 5,877 Tage (aus der mittleren Bewegung; das dritte Keplersche Gesetz mit den Massen von Neptun und
 Triton trifft denselben Wert auf 0,02 % genau) – die Szene zeigt also rund 2,4 volle Umläufe.
 
-Dass die kreisnahe Bahn ($e\approx0{,}00015$) als Ellipse erscheint, statt als Kreis oder als Linie,
-ist reine Projektionsgeometrie: Das Achsenverhältnis der scheinbaren Ellipse ist der Betrag des
-Kosinus zwischen Blickrichtung und der Flächennormalen von Tritons Bahnebene – 0 bei Blick in der
+Wie stark die kreisnahe Bahn ($e\approx0{,}00015$) als Ellipse erscheint, ist reine
+Projektionsgeometrie: Das Achsenverhältnis der scheinbaren Ellipse ist der Betrag des Kosinus
+zwischen Blickrichtung und der Flächennormalen von Tritons Bahnebene – 0 bei Blick in der
 Bahnebene (Linie), 1 bei Blick senkrecht dazu (Kreis). Aus Tritons Bahnelementen, in die Ekliptik
-gedreht, ergibt eine eigene Rechnung für Elevation 30–60° und den gezogenen Azimutbereich ein
-Achsenverhältnis zwischen rund 0,05 und 0,35 – nie eine entartete Linie, nie ein Kreis.
+gedreht, ergibt eine eigene, feinmaschige Rastersuche (Schrittweite 0,1°) für Elevation 30–60° und
+den gezogenen Azimutbereich ein Achsenverhältnis von praktisch 0 (bei Azimut rund 141°, Elevation
+rund 49°) bis rund 0,35 (bei Elevation 30°, Azimut rund 126°) – bei manchen Ziehungen wirkt die
+Bahn deshalb fast wie eine Linie, nie aber wie ein Kreis.
 
 Die Rückläufigkeit selbst zeigt sich im Umlaufsinn: Die Kamera dreht mit positivem Azimut, also im
 selben Sinn wie Neptuns eigene Drehung und wie alle Planetenbahnen (gegen den Uhrzeigersinn von
