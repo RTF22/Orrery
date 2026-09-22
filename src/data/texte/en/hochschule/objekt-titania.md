@@ -53,22 +53,21 @@ to a rock mass fraction of about 65% (derivation) – the highest among the five
 decided without a dedicated gravity-field measurement (see
 [Interior structure](thema:innerer-aufbau)). Interior-structure models for all five large Uranian
 moons rank Titania together with Oberon as the two most promising candidates for a residual ocean,
-mainly because of their size and the correspondingly greater heat-retention capacity
-([Castillo-Rogez et al. 2023](literatur:castillo-rogez-2023)); an independent heat budget reaches
-the same conclusion: unlike Ariel and Umbriel, radiogenic heating alone suffices for Titania and
-Oberon to keep enough heat for a long-lived ocean over billions of years
-([Bierson and Nimmo 2022](literatur:bierson-2022)). Both works therefore agree that a present-day
-ocean is more likely at Titania than at the three smaller moons, without being confirmed.
+mainly for their size and correspondingly greater heat-retention capacity
+([Castillo-Rogez et al. 2023](literatur:castillo-rogez-2023)); an independent heat budget agrees:
+unlike Ariel and Umbriel, radiogenic heating alone suffices for Titania and Oberon to keep enough
+heat for a long-lived ocean over billions of years
+([Bierson and Nimmo 2022](literatur:bierson-2022)). A present-day ocean is thus more likely at
+Titania than at the three smaller moons, though unconfirmed.
 
 One possible direct test would be measuring the secondary field induced by Uranus's time-varying
 magnetic field during a flyby, as computed jointly for all five large moons
 ($>2\,\mathrm{S\,m^{-1}}$ conductivity, layer thickness of 0.4 to 6 km, even under an ice shell up
 to 50 km thick, a signal above the roughly 1 nT sensitivity typical of today's magnetometers,
 [Weiss et al. 2021](literatur:weiss-2021)). A newer, independent approach looks for the same
-signal instead in the forced libration and the precession with non-vanishing obliquity of a
-synchronously rotating moon, because both quantities come out measurably larger for a body with a
-liquid interior layer than for a fully rigid one – a method equally applicable to Titania once a
-spacecraft measures its rotation at close range
+signal instead in libration and precession with non-vanishing obliquity of a synchronously
+rotating moon, both measurably larger for a liquid interior layer than for a fully rigid body –
+equally applicable to Titania once a spacecraft measures its rotation at close range
 ([Baland et al. 2025](literatur:baland-2025)). Direct evidence of past interior heat comes from the
 surface itself: flexure at the margins of Messina Chasmata (see Surface) implies a heat flux of
 5 to 12 mW/m², assuming a lithosphere of pure, pore-free water ice – lower than comparable
@@ -93,8 +92,8 @@ planetocentric debris, without requiring cryovolcanism
 Miranda, Umbriel, and Oberon among the older surfaces in the system, markedly older than
 neighbouring Ariel ([Kirchoff et al. 2022](literatur:kirchoff-2022)); an earlier analysis of the
 same Voyager images, based on Umbriel, Titania, and Oberon alone, already reached the same
-conclusion ([Plescia 1987](literatur:plescia-1987)) – the tectonic overprinting described by
-Nathan et al. (2024) thus affects only part of the surface, not its overall age.
+conclusion ([Plescia 1987](literatur:plescia-1987)) – the tectonic overprinting above thus affects
+only part of the surface, not its overall age.
 
 Spectroscopically, Titania carries less CO2 ice than Umbriel and markedly less than Ariel, while
 Oberon shows none ([Cartwright et al. 2015](literatur:cartwright-2015)); as with Ariel and Umbriel,
@@ -110,16 +109,15 @@ related gases – roughly a billionth of Earth's atmospheric pressure
 and surface temperature are insufficient to retain even CO2 as a gas over the long term.
 
 With a mean orbital radius of 436,293 km, Titania orbits close to the edge of Uranus's
-magnetosphere – but how close depends strongly on the solar-wind pressure. The only measurement
-comes from Voyager 2 in January 1986; a more recent reanalysis of the same data shows that the
-probe happened to encounter Uranus during an unusually compressed state, which shrank the dayside
-of the magnetosphere by about 78% relative to typical conditions and occurs only about 4% of the
-time; the magnetopause distance measured at that time, about 17 Uranus radii (roughly 435,000 km),
-sat almost exactly at Titania's own orbital radius, whereas the typical distance averaged over many
-solar-wind models, about 22 Uranus radii (568,000 km), lies considerably farther out
-([Jasinski et al. 2024](literatur:jasinski-2024)). Under average conditions, Titania therefore
-orbits comfortably inside the magnetosphere; during the only flyby to date, it may have been near
-the boundary or, at times, even outside it.
+magnetosphere, but how close depends strongly on the solar-wind pressure. The only measurement
+comes from Voyager 2 in January 1986; a more recent reanalysis shows the probe happened to
+encounter Uranus during an unusually compressed state (dayside shrunk by about 78%, occurring only
+about 4% of the time) – the magnetopause distance measured then, about 17 Uranus radii (roughly
+435,000 km), sat almost exactly at Titania's own orbital radius, whereas the typical distance
+averaged over many solar-wind models, about 22 Uranus radii (568,000 km), lies considerably
+farther out ([Jasinski et al. 2024](literatur:jasinski-2024)). Under typical conditions, Titania
+therefore orbits comfortably inside the magnetosphere; in 1986, it may have been near the boundary
+or, at times, even outside it.
 
 ## Orbit, rotation and dynamics
 
@@ -141,12 +139,12 @@ Miranda–Umbriel, Miranda–Ariel, and Ariel–Umbriel
 ([Tittemore and Wisdom 1990](literatur:tittemore-1990)) and the newer, system-wide modelling that
 places the Ariel–Umbriel 5:3 resonance at the centre of events
 ([Ćuk et al. 2020](literatur:cuk-2020)) confine the actual resonance crossings to the four inner
-moons; only Oberon's spin axis, under the newer modelling, lies close to a spin–orbit resonance of
-its own with Umbriel's orbital plane, without Titania featuring in it
+moons; only Oberon's spin axis, under the newer modelling, lies close to its own spin–orbit
+resonance with Umbriel's orbital plane, with no role for Titania
 ([Ćuk et al. 2020](literatur:cuk-2020); basics under
-[Orbital resonances](thema:resonanzen)). Titania's own, geologically younger surface features
-(see Surface), if indeed due to tidal heating, would therefore have to be explained by a different
-or additional episode than the one reconstructed for Ariel and Umbriel (see
+[Orbital resonances](thema:resonanzen)). If Titania's own, geologically younger surface features
+(see Surface) are indeed due to tidal heating, they would need a different or additional episode
+than the one reconstructed for Ariel and Umbriel (see
 [Tides and the Roche limit](thema:gezeiten)).
 
 ## Formation and evolution
@@ -156,12 +154,12 @@ Uranus, whether after a giant impact that could also explain the planet's extrem
 through orderly co-accretion with the planet itself (numbers and discussion under
 [Uranus](objekt:uranus) and [Axial tilt](thema:achsneigung)). The resonance crossings reconstructed
 for the inner moons (see Orbit, rotation and dynamics) do not directly explain Titania's present
-state; but its size, and the correspondingly higher rock fraction compared with Ariel and Umbriel
-(see Interior), suggest that radiogenic heat alone could have sufficed for early interior activity
-and the later tectonic overprinting by Messina Chasmata, without requiring a resonance
-([Bierson and Nimmo 2022](literatur:bierson-2022)). Uranus and its moon system formed within the
-broader formation history of the outer Solar System, in which Neptune also migrated outward
-(context under [Formation of the Solar System](thema:entstehung)).
+state; but its size and higher rock fraction (see Interior) suggest radiogenic heat alone could
+have sufficed for early interior activity and the later tectonic overprinting by Messina Chasmata,
+without requiring a resonance ([Bierson and Nimmo 2022](literatur:bierson-2022)). Uranus and its
+moon system formed within the broader formation history of the outer Solar System, in which
+Neptune also migrated outward (context under
+[Formation of the Solar System](thema:entstehung)).
 
 ## Open questions
 
@@ -183,6 +181,11 @@ broader formation history of the outer Solar System, in which Neptune also migra
 
 ## In the model
 
+- **Radius:** The data panel shows `radiusKm: 788.9`, the photogrammetric Voyager 2 value
+  ([Thomas 1988](literatur:thomas-1988), also carried in the NSSDC fact sheet), not the smaller,
+  more precise occultation value (788.4 km, [Widemann et al. 2009](literatur:widemann-2009), see
+  Parameters and measurement) – kept so that all five large Uranian moons share the same source;
+  the two values agree within their combined uncertainty, so volume and density barely change.
 - **Orbital reference:** Like the other four large Uranian moons, Titania orbits in the
   `parentEquator` reference on [Uranus's](objekt:uranus) equatorial plane, with osculating Horizons
   elements at epoch J2000 ($a = 436292.68\,\mathrm{km}$, $e = 0.00248$, $i = 179.899^\circ$). The

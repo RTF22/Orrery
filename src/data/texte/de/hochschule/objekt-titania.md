@@ -67,11 +67,10 @@ induzierten Sekundärfelds bei einem Vorbeiflug, wie für alle fünf großen Mon
 ($>2\,\mathrm{S\,m^{-1}}$ Leitfähigkeit, 0,4 bis 6 km Schichtdicke, auch unter einer bis zu 50 km
 dicken Eiskruste, Signal über der typischen Empfindlichkeit heutiger Magnetometer von rund 1 nT,
 [Weiss et al. 2021](literatur:weiss-2021)). Ein neuerer, unabhängiger Ansatz sucht dasselbe Signal
-stattdessen in der erzwungenen Libration und der Präzession mit nicht verschwindender Obliquität
-eines synchron rotierenden Mondes, weil beide Größen für einen Körper mit flüssiger Zwischenschicht
-messbar größer ausfallen als für einen vollständig starren – eine Methode, die ebenso auf Titania
-anwendbar wäre, sobald eine Sonde ihre Rotation aus der Nähe vermisst
-([Baland et al. 2025](literatur:baland-2025)). Direkte Belege für frühere innere Wärme liefert die
+stattdessen in Libration und Präzession mit nicht verschwindender Obliquität eines synchron
+rotierenden Mondes, beide messbar größer bei flüssiger Zwischenschicht als bei vollständig
+starrem Körper – ebenso auf Titania anwendbar, sobald eine Sonde ihre Rotation aus der Nähe
+vermisst ([Baland et al. 2025](literatur:baland-2025)). Direkte Belege für frühere innere Wärme liefert die
 Oberfläche selbst: Aus der Krustenbiegung an den Rändern von Messina Chasmata (siehe Oberfläche)
 ergibt sich eine Wärmestromdichte von 5 bis 12 mW/m², unter der Annahme reinen, porenfreien
 Wassereises als Lithosphäre – niedriger als vergleichbare, aus Grabenzügen abgeleitete Werte bei
@@ -115,16 +114,15 @@ Nanobar für CO2 und verwandte Gase – etwa ein Milliardstel des Erdatmosphäre
 reichen Masse und Oberflächentemperatur nicht, um selbst CO2 auf Dauer gasförmig zu binden.
 
 Mit einem mittleren Bahnradius von 436 293 km liegt Titania nahe am Rand von Uranus'
-Magnetosphäre – wie nahe, hängt aber stark vom Sonnenwinddruck ab. Die einzige Messung stammt von
-Voyager 2 im Januar 1986; eine neuere Auswertung derselben Daten zeigt, dass die Sonde Uranus
-ausgerechnet während eines ungewöhnlich komprimierten Zustands traf, der die Tagseite der
-Magnetosphäre um rund 78 % gegenüber typischen Bedingungen schrumpfen ließ und nur etwa 4 % der
-Zeit auftritt; der dabei gemessene Magnetopausenabstand von rund 17 Uranusradien (etwa 435 000 km)
-lag damit fast genau bei Titanias eigenem Bahnradius, während der aus vielen Sonnenwindmodellen
-gemittelte typische Abstand mit rund 22 Uranusradien (568 000 km) deutlich weiter außen liegt
-([Jasinski et al. 2024](literatur:jasinski-2024)). Unter durchschnittlichen Bedingungen umkreist
-Titania Uranus also komfortabel innerhalb der Magnetosphäre; während des einzigen bisherigen
-Vorbeiflugs lag sie möglicherweise nahe der Grenze oder zeitweise sogar außerhalb.
+Magnetosphäre, wie nahe hängt aber stark vom Sonnenwinddruck ab. Die einzige Messung stammt von
+Voyager 2 im Januar 1986; eine neuere Auswertung zeigt, dass die Sonde Uranus ausgerechnet während
+eines ungewöhnlich komprimierten Zustands traf (Tagseite um rund 78 % geschrumpft, nur rund 4 % der
+Zeit) – der dabei gemessene Magnetopausenabstand von rund 17 Uranusradien (etwa 435 000 km) lag
+fast genau bei Titanias eigenem Bahnradius, während der typische, über viele Sonnenwindmodelle
+gemittelte Abstand mit rund 22 Uranusradien (568 000 km) deutlich weiter außen liegt
+([Jasinski et al. 2024](literatur:jasinski-2024)). Unter typischen Bedingungen umkreist Titania
+Uranus also komfortabel innerhalb der Magnetosphäre; 1986 lag sie möglicherweise nahe der Grenze
+oder zeitweise sogar außerhalb.
 
 ## Bahn, Rotation und Dynamik
 
@@ -190,6 +188,12 @@ auch Neptun nach außen wanderte (Einordnung unter
 
 ## Im Modell
 
+- **Radius:** Der Datenblock zeigt `radiusKm: 788.9`, den photogrammetrischen Voyager-2-Wert
+  ([Thomas 1988](literatur:thomas-1988), auch im NSSDC-Faktenblatt geführt), nicht den kleineren,
+  genaueren Bedeckungswert (788,4 km, [Widemann et al. 2009](literatur:widemann-2009), siehe
+  Kenngrößen und Messung) – so bleiben alle fünf großen Uranusmonde bei derselben Quelle; beide
+  Werte stimmen innerhalb ihrer kombinierten Unsicherheit überein, Volumen und Dichte ändern sich
+  kaum.
 - **Bahnbezug:** Titania läuft wie die übrigen vier großen Uranusmonde im Bezug `parentEquator`
   auf [Uranus'](objekt:uranus) Äquatorebene, mit oskulierenden Horizons-Elementen zur Epoche J2000
   ($a = 436292{,}68\,\mathrm{km}$, $e = 0{,}00248$, $i = 179{,}899^\circ$). Der daraus folgende
