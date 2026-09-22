@@ -31,11 +31,12 @@ Because the camera's distance from Saturn (40 $R_\mathrm{p}$) is smaller than Ia
 own orbital radius (about 61 $R_\mathrm{p}$), this axis-ratio calculation only describes
 the ellipse's orientation, not its full visibility: an actual cone test along the camera
 basis (half field of view 25° vertical, about 39.7° horizontal at 16:9) shows that in the
-base setting only about a third to just under half of the momentary orbital ellipse lies
-within the frame – the rest lies behind the camera or outside the horizontal field of
-view. What remains visible on every draw is a clearly curved, distinctly tilted arc near
-Saturn, not a fully closed loop; this is genuine perspective, not a simplified orthographic
-projection.
+base setting (azimuth 225.58°, elevation 45°, factor 1) 25 of 72 sample points of the
+momentary orbital ellipse lie within the frame; across the full spread of draw parameters
+this ranges from 5 to 31 of 72 (about 7 to 43 %) – the rest lies behind the camera or
+outside the horizontal field of view. What remains visible is a clearly curved arc of
+varying length near Saturn, never the complete, closed ellipse; this is genuine
+perspective, not a simplified orthographic projection.
 
 Iapetus itself stays inconspicuous: its own apparent radius reaches at most about 1 pixel
 over the scene's 90 simulated days (30 s at 3 days/s, orbital period 79.331 days, about
@@ -46,7 +47,7 @@ too: no label, barely a dot, only the orbital line shows it.
 Of the other moons, [Rhea](objekt:rhea) (9.05 $R_\mathrm{p}$), [Dione](objekt:dione)
 (6.49), [Tethys](objekt:tethys) (5.07), Enceladus (4.09) and Mimas (3.19) stay fully
 within the frame on every draw, because their orbital radii lie well within half the frame
-width even at the closest camera distance; [Titan](objekt:titan) (20.99 $R_\mathrm{p}$)
+width even at the closest camera distance; [Titan](objekt:titan) (20.98 $R_\mathrm{p}$)
 sits close to the frame edge and can partly leave the picture at shallow elevation and a
 small draw factor.
 
@@ -56,11 +57,13 @@ Saturn's Laplace radius lies at $48.4\,R_\mathrm{p}$
 ([Orbital elements](thema:bahnelemente)); beyond it the Sun dominates precession more than
 Saturn's equatorial bulge, and the plane about which an orbit precesses tips from Saturn's
 equator towards its own orbital plane. By the mean orbital elements Iapetus orbits at
-$59\,R_\mathrm{p}$, well beyond this threshold – the osculating value actually used in the
-model, about 61 $R_\mathrm{p}$, lies in the same order of magnitude. Its Laplace plane is
-therefore only 14.8° from Saturn's equator, and its actual orbit a further 7.6° from that
-plane ([Tremaine et al. 2009](literatur:tremaine-2009)); measured directly against
-Saturn's equator this comes to 15.47° – the largest inclination among the classical
+$59\,R_\mathrm{p}$, well beyond this threshold ([Tremaine et al. 2009](literatur:tremaine-2009))
+– the osculating value actually used in the model, about 61 $R_\mathrm{p}$, lies in the same
+order of magnitude. Its Laplace plane is therefore only 14.8° from Saturn's equator, and its
+actual orbit a further 7.6° from that plane
+([Planetary Satellite Mean Elements](quelle:jpl-satelliten-bahnen); Tremaine et al. 2009
+themselves give 7.5° for the orbit's inclination to the Laplace surface); measured directly
+against Saturn's equator this comes to 15.47° – the largest inclination among the classical
 Saturnian moons.
 
 Giovanni Domenico Cassini discovered Iapetus on 25 October 1671 and already noticed then
@@ -69,8 +72,9 @@ asymmetry he correctly concluded that one hemisphere of the moon was much darker
 other ([Iapetus at NASA Science](quelle:nasa-iapetus)). Only the single close Cassini flyby on
 10 September 2007, at an altitude of $1644\,\mathrm{km}$
 ([Cassini flyby of Iapetus](quelle:nasa-iapetus-vorbeiflug)), resolved the anomaly at
-close range: the global colour dichotomy is geometrically sharp-edged
-([Denk et al. 2010](literatur:denk-2010)), best explained by primordial dark material,
+close range: the darker leading hemisphere is markedly redder than the bright trailing one
+([Denk et al. 2010](literatur:denk-2010)), and the transition between the two albedo
+regions shows a strikingly sharp, complex shape – best explained by primordial dark material,
 captured from the Phoebe ring, on the leading hemisphere, amplified by a thermal feedback
 ([Spencer and Denk 2010](literatur:spencer-2010)) – details on origin and equatorial ridge
 are in [Iapetus](objekt:iapetus).
@@ -92,7 +96,11 @@ are in [Iapetus](objekt:iapetus).
   light](szene:enceladus-hell), the direction from Saturn to the Sun at epoch J2000.
   Saturn's mean motion ($1222.49362201^\circ$ per century, `LDot`) equals $12.22^\circ$ per year;
   by today (22 September 2026, 26.72 years since J2000) this has accumulated an offset of
-  about 35°, closing full circle after $29.45$ years (one Saturn year). Further
-  simplifications: [Model limitations](thema:modell).
+  about 35°, closing full circle after $29.45$ years (one Saturn year).
+- **Ring shadow, season:** the Sun stands at only about −7.5° above Saturn's ring plane
+  on the reference date (22 September 2026) ([Rings](thema:ringe)), close to equinox; the
+  ring therefore casts only a narrow shadow band near Saturn's equator, barely noticeable
+  at this camera distance. Further simplifications:
+  [Model limitations](thema:modell).
 
 *As of September 2026*

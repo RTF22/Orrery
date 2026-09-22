@@ -32,10 +32,11 @@ Weil Saturns Kameraabstand (40 $R_\mathrm{p}$) kleiner ist als Iapetus' eigener 
 (rund 61 $R_\mathrm{p}$), gilt diese Achsenverhältnis-Rechnung nur für die Orientierung der
 Ellipse, nicht für ihre vollständige Sichtbarkeit: Eine echte Kegelprüfung entlang der
 Kamerabasis (halbes Sichtfeld 25° vertikal, bei 16:9 rund 39,7° horizontal) zeigt, dass in
-der Grundeinstellung nur rund ein Drittel bis knapp die Hälfte der momentanen Bahnellipse
-im Bildausschnitt liegt – der Rest liegt hinter der Kamera oder außerhalb des horizontalen
-Sichtfelds. Sichtbar bleibt in jeder Ziehung ein klar gekrümmter, deutlich geneigter Bogen
-nahe Saturn, kein vollständig geschlossener Ring; das ist echte Perspektive, keine
+der Grundeinstellung (Azimut 225,58°, Elevation 45°, Faktor 1) 25 von 72 Stützpunkten der
+momentanen Bahnellipse im Bild liegen; über den ganzen Streuungsbereich reicht das von 5 bis
+31 von 72 (rund 7 bis 43 %) – der Rest liegt hinter der Kamera oder außerhalb des
+horizontalen Sichtfelds. Sichtbar bleibt so ein klar gekrümmter, unterschiedlich langer Bogen
+nahe Saturn, nie die vollständige, geschlossene Ellipse; das ist echte Perspektive, keine
 vereinfachte Orthogonalprojektion.
 
 Iapetus selbst bleibt dabei unauffällig: Sein eigener scheinbarer Radius erreicht über die
@@ -48,7 +49,7 @@ Bahnlinie zeigt ihn. Von den übrigen Monden bleiben [Rhea](objekt:rhea) (9,05
 $R_\mathrm{p}$), [Dione](objekt:dione) (6,49), [Tethys](objekt:tethys) (5,07), Enceladus
 (4,09) und Mimas (3,19) in jeder Ziehung vollständig im Bild, weil ihre Bahnradien selbst
 beim engsten Kameraabstand weit innerhalb der halben Bildbreite liegen; [Titan](objekt:titan)
-(20,99 $R_\mathrm{p}$) liegt nahe der Bildkante und kann bei flacher Elevation und kleinem
+(20,98 $R_\mathrm{p}$) liegt nahe der Bildkante und kann bei flacher Elevation und kleinem
 Streufaktor teilweise aus dem Bild wandern.
 
 ## Hintergrund
@@ -57,12 +58,13 @@ Saturns Laplace-Radius liegt bei $48{,}4\,R_\mathrm{p}$
 ([Bahnelemente](thema:bahnelemente)); jenseits davon bestimmt die Sonne die Präzession
 stärker als Saturns Äquatorwulst, und die Ebene, um die eine Bahn kreiselt, kippt von
 Saturns Äquator zu seiner eigenen Bahnebene. Nach den mittleren Bahnelementen läuft Iapetus
-bei $59\,R_\mathrm{p}$, deutlich jenseits dieser Schwelle – der im Modell tatsächlich
-verwendete, osculierende Wert liegt mit rund 61 $R_\mathrm{p}$ in derselben Größenordnung.
-Seine Laplace-Ebene ist deshalb nur noch 14,8° gegen Saturns Äquator geneigt, seine
-tatsächliche Bahn weitere 7,6° gegen diese Ebene ([Tremaine et al.
-2009](literatur:tremaine-2009)); direkt gegen Saturns Äquator gemessen ergibt das 15,47° –
-die größte Neigung unter den klassischen Saturnmonden.
+bei $59\,R_\mathrm{p}$, deutlich jenseits dieser Schwelle ([Tremaine et al.
+2009](literatur:tremaine-2009)) – der im Modell tatsächlich verwendete, osculierende Wert
+liegt mit rund 61 $R_\mathrm{p}$ in derselben Größenordnung. Seine Laplace-Ebene ist deshalb
+nur noch 14,8° gegen Saturns Äquator geneigt, seine tatsächliche Bahn weitere 7,6° gegen
+diese Ebene ([Mittlere Bahnelemente der Monde](quelle:jpl-satelliten-bahnen); Tremaine et al.
+2009 selbst nennen für die Bahnneigung zur Laplace-Fläche 7,5°); direkt gegen Saturns
+Äquator gemessen ergibt das 15,47° – die größte Neigung unter den klassischen Saturnmonden.
 
 Giovanni Domenico Cassini entdeckte Iapetus am 25. Oktober 1671 und bemerkte dabei bereits,
 dass er nur westlich von Saturn gut zu sehen war, östlich dagegen kaum. Aus dieser
@@ -70,11 +72,13 @@ Asymmetrie schloss er richtig, dass eine Hälfte des Mondes viel dunkler ist als
 ([Iapetus bei NASA Science](quelle:nasa-iapetus)). Erst der einzige nahe
 Cassini-Vorbeiflug am 10. September 2007, in $1644\,\mathrm{km}$ Höhe
 ([Cassini-Vorbeiflug an Iapetus](quelle:nasa-iapetus-vorbeiflug)), löste die Anomalie aus
-der Nähe auf: Die globale Farbdichotomie ist geometrisch scharf begrenzt
-([Denk et al. 2010](literatur:denk-2010)), am ehesten durch primordiales, aus dem
-Phoebe-Ring eingefangenes dunkles Material auf der führenden Halbkugel erklärt, das eine
-thermische Rückkopplung verstärkt ([Spencer und Denk 2010](literatur:spencer-2010)) – Details
-zu Ursprung und Äquatorwulst stehen bei [Iapetus](objekt:iapetus).
+der Nähe auf: Die dunklere Vorderseite ist deutlich röter als die helle Rückseite
+([Denk et al. 2010](literatur:denk-2010)), und der Übergang zwischen beiden
+Albedo-Bereichen zeigt eine auffällig scharfe, komplexe Form – am ehesten durch
+primordiales, aus dem Phoebe-Ring eingefangenes dunkles Material auf der führenden
+Halbkugel erklärt, das eine thermische Rückkopplung verstärkt
+([Spencer und Denk 2010](literatur:spencer-2010)) – Details zu Ursprung und Äquatorwulst
+stehen bei [Iapetus](objekt:iapetus).
 
 ## Modellgrenzen
 
@@ -91,7 +95,11 @@ zu Ursprung und Äquatorwulst stehen bei [Iapetus](objekt:iapetus).
   Glanz](szene:enceladus-hell), die Richtung Saturn→Sonne zur Epoche J2000. Saturns mittlere
   Bewegung ($1222{,}49362201^\circ$ je Jahrhundert, `LDot`) entspricht $12{,}22^\circ$ je Jahr; bis
   heute (22.09.2026, 26,72 Jahre seit J2000) sind daraus rund 35° Versatz aufgelaufen, nach
-  vollen $29{,}45$ Jahren (ein Saturnjahr) schließt sich der Kreis wieder. Weitere
-  Vereinfachungen: [Grenzen des Modells](thema:modell).
+  vollen $29{,}45$ Jahren (ein Saturnjahr) schließt sich der Kreis wieder.
+- **Ringschatten, Jahreszeit:** Die Sonne steht am Referenzdatum (22.09.2026) mit nur rund
+  −7,5° über Saturns Ringebene ([Ringe](thema:ringe)) nahe der Tagundnachtgleiche; der Ring
+  wirft deshalb nur ein schmales Schattenband nahe Saturns Äquator, bei dieser
+  Kameraentfernung kaum wahrnehmbar. Weitere Vereinfachungen:
+  [Grenzen des Modells](thema:modell).
 
 *Stand: September 2026*
