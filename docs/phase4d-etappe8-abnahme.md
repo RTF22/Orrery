@@ -484,7 +484,7 @@ Jede Zeile des Ledgers mit „Ruling:", in Ledger-Reihenfolge.
   und 8 verlangen ausdrücklich eine leere Prüfspalte — für Task 7 und 8 laut
   den Selbstprüfungs-Abschnitten der jeweiligen Berichte eingehalten.
 
-**Vor Task 9 (Controller):**
+**Vor Task 9 (Controller, Kontrollbefund ohne Ruling-Charakter):**
 
 - Katalog am Diff nachgezählt: 559 → 628 (Umsetzer Task 8 meldete 630 —
   Berichtszahl falsch, Lehre bestätigt) → §2.
@@ -730,3 +730,14 @@ Messwert genannt (23).
 
 Die Wort- und Trailerprüfung vor dem Commit erfolgte wie in der lokalen
 Projektanleitung beschrieben (Ergebnis 0), ohne Suchmuster in dieser Datei.
+
+## Nacharbeit nach der Schlussprüfung (22.09.2026)
+
+Schlussprüfung „Bereit zum Fast-Forward: Ja", Befunde: 0 kritisch, 0 wichtig,
+1 klein. Klein 1 (§6 führte den Kontrollbefund „Katalog am Diff nachgezählt"
+unter den Rulings der Umsetzung, obwohl die Ledger-Zeile keine
+Ruling-Markierung trägt) behoben: der Eintrag ist jetzt als Kontrollbefund
+gekennzeichnet. Die Prüfung ging alle 69 neuen Katalogeinträge, die neue
+Quellenkarte, das Protokoll, die README-Änderung und alle 19 Commit-Texte
+durch und bestätigte Katalogzahlen (559 → 628 je Commit), Testsumme 4781 und
+die Einordnung des transienten Prüfskript-Fehlers `bobis-2008`.
