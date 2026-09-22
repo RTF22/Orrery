@@ -104,7 +104,7 @@ seinen Ozean erst über Jahrmillionen radiogener Aufheizung entwickeln würde
 ## Oberfläche
 
 New Horizons zeigte eine überraschend vielfältige, geologisch junge Welt. Sputnik Planitia, das
-namensgebende „Herz" Plutos, ist ein rund 800 000 km² großes, mit Stickstoffeis gefülltes Becken
+namensgebende „Herz" Plutos, ist ein rund 870 000 km² großes, mit Stickstoffeis gefülltes Becken
 ohne einen einzigen erkennbaren Einschlagkrater; die Oberfläche gliedert sich in polygonale Zellen
 von einigen zehn Kilometern Durchmesser, deren Ränder Konvektionszellen im mehrere Kilometer
 dicken Eis nachzeichnen. Solche Zellen können ihre Oberfläche binnen 500 000 bis einer Million
@@ -149,8 +149,10 @@ oberen Atmosphäre.
 Der Bodendruck folgt Plutos Jahreszeiten: Weil die Bahn mit $e \approx 0{,}25$ stark exzentrisch
 ist (siehe Bahn, Rotation und Dynamik), variiert die Einstrahlung über einen Umlauf erheblich, und
 der Druck reagiert auf das Gleichgewicht zwischen sublimierendem und gefrierendem Stickstoffeis in
-Tombaugh Regio. Nach dem in Kenngrößen genannten Anstieg bis rund 2015 zeigen spätere
-Sternbedeckungen einen Rückgang und danach ein Plateau; ob und wann die Atmosphäre auf dem Weg zum
+Tombaugh Regio. Nach dem in Kenngrößen genannten Anstieg bis rund 2015 zeigen Sternbedeckungen bis
+mindestens 2020 ein Plateau — entgegen einzelnen, unabhängigen Berichten über einen bereits 2018/2019
+einsetzenden Rückgang, die eine erneute Auswertung nicht bestätigte
+([Sicardy et al. 2021](literatur:sicardy-2021)); ob und wann die Atmosphäre auf dem Weg zum
 Aphel 2114 so weit auskühlt, dass sie nahezu vollständig auf der Oberfläche ausfriert (ein
 „Kollaps", wie er für einen so dünnen, sublimationsgetriebenen Stickstoffmantel grundsätzlich
 möglich ist), ist offen (siehe Offene Fragen). Ein eigenes, durch einen inneren Dynamo erzeugtes
@@ -175,9 +177,13 @@ Sonnensystem, die Pluto aus einer ursprünglich weniger exzentrischen Bahn einge
 Entstehung und Entwicklung).
 
 Plutos Rotationsachse ist mit rund 120° gegen die eigene Bahnnormale geneigt — mehr als 90°, Pluto
-rotiert also rückläufig —, und diese Schiefe schwankt über Jahrmillionen chaotisch, getrieben von
-der Nähe zu Spin-Bahn-Resonanzen ([Dobrovolskis und Harris 1983](literatur:dobrovolskis-1983); Zahlen
-wie [Achsneigung](thema:achsneigung)). Aus dieser hohen, wechselnden Schiefe folgen extreme
+rotiert also rückläufig —, und diese Schiefe schwankt, getrieben vom Drehmoment der Sonne auf das
+präzedierende Pluto-Charon-System, über rund drei Millionen Jahre nahezu sinusförmig und stabil
+zwischen etwa 102° und 126°
+([Dobrovolskis und Harris 1983](literatur:dobrovolskis-1983); Zahlen wie
+[Achsneigung](thema:achsneigung), das dieselbe Schwankung abweichend als „chaotisch" bezeichnet —
+die Zusammenfassung der zitierten Arbeit beschreibt dagegen ausdrücklich eine stabile, quasi-
+periodische Oszillation, nicht chaotisches Verhalten). Aus dieser hohen, wechselnden Schiefe folgen extreme
 Jahreszeiten: Über weite Strecken des 248-jährigen Umlaufs liegt jeweils ein Pol fast durchgehend im
 Dunkeln, während der andere fast durchgehend beschienen wird — ein Rhythmus, der über die
 Stickstoffsublimation direkt in den oben beschriebenen Druckverlauf eingreift.

@@ -101,7 +101,7 @@ only develop its ocean over millions of years of radiogenic heating
 ## Surface
 
 New Horizons revealed a surprisingly diverse, geologically young world. Sputnik Planitia, the
-heart-shaped feature that gives Pluto its nickname, is a roughly 800,000 km² basin filled with
+heart-shaped feature that gives Pluto its nickname, is a roughly 870,000 km² basin filled with
 nitrogen ice and showing not a single recognizable impact crater; its surface is divided into
 polygonal cells tens of kilometers across, whose margins trace convection cells within an ice
 layer several kilometers thick. Such cells can renew their surface within 500,000 to a million
@@ -143,7 +143,9 @@ Surface pressure follows Pluto's seasons: because the orbit is strongly eccentri
 $e \approx 0.25$ (see Orbit, rotation and dynamics), insolation varies substantially over an
 orbit, and pressure responds to the balance between sublimating and freezing nitrogen ice in
 Tombaugh Regio. After the rise described in Parameters and measurement, which lasted until about
-2015, later stellar occultations show a decline followed by a plateau; whether and when the
+2015, stellar occultations through at least 2020 show a plateau — contrary to a few independent
+reports of a decline setting in already in 2018/2019, which a renewed analysis did not confirm
+([Sicardy et al. 2021](literatur:sicardy-2021)); whether and when the
 atmosphere, on its way to aphelion in 2114, will cool enough to freeze out almost entirely onto
 the surface (a "collapse", which is in principle possible for such a thin, sublimation-driven
 nitrogen envelope) remains open (see Open questions). Pluto has no magnetic field of its own
@@ -167,9 +169,13 @@ but the result of Neptune's migration in the early Solar System, which captured 
 originally less eccentric orbit (see Formation and evolution).
 
 Pluto's rotation axis is tilted by about 120° against its own orbit normal — more than 90°, so
-Pluto rotates retrograde — and this obliquity varies chaotically over millions of years, driven by
-proximity to spin-orbit resonances ([Dobrovolskis and Harris 1983](literatur:dobrovolskis-1983);
-values as in [Axial tilt](thema:achsneigung)). This high, shifting obliquity produces extreme
+Pluto rotates retrograde — and this obliquity oscillates, driven by the Sun's torque on the
+precessing Pluto-Charon system, over about three million years in a nearly sinusoidal, stable
+pattern between about 102° and 126°
+([Dobrovolskis and Harris 1983](literatur:dobrovolskis-1983); values as in
+[Axial tilt](thema:achsneigung), which labels the same variation "chaotic" instead — the abstract
+of the cited work explicitly describes a stable, quasi-periodic oscillation, not chaotic
+behavior). This high, shifting obliquity produces extreme
 seasons: for long stretches of the 248-year orbit, one pole lies almost continuously in darkness
 while the other is almost continuously lit — a rhythm that feeds directly, via nitrogen
 sublimation, into the pressure history described above.

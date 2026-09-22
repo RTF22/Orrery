@@ -499,7 +499,7 @@ export const QUELLEN: readonly Quelle[] = [
     titel: { de: 'Kleinkörper-Datenbank (JPL SBDB)', en: 'Small-Body Database (JPL SBDB)' },
     herausgeber: 'JPL', sprache: 'en', art: 'werkzeug',
     url: 'https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html',
-    fuer: ['objekt:ceres', 'objekt:eris', 'objekt:haumea', 'objekt:makemake'],
+    fuer: ['objekt:ceres', 'objekt:eris', 'objekt:haumea', 'objekt:makemake', 'objekt:pluto'],
   },
   // --- Fachliches ---
   {

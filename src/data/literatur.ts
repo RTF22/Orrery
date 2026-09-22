@@ -4893,6 +4893,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1006/icar.1996.5669',
   },
   {
+    id: 'sicardy-2021',
+    autoren: ['Sicardy, B.', 'Ashok, N. M.', 'Tej, A.'],
+    etAl: true,
+    jahr: 2021,
+    titel: 'Pluto’s Atmosphere in Plateau Phase Since 2015 from a Stellar Occultation at Devasthal',
+    erschienen: 'The Astrophysical Journal Letters 923, L31',
+    doi: '10.3847/2041-8213/ac4249',
+  },
+  {
     id: 'sicardy-2024',
     autoren: ['Sicardy, B.', 'Tej, A.', 'Gomes-Júnior, A. R.'],
     etAl: true,
