@@ -2720,6 +2720,16 @@ export const LITERATUR: readonly Publikation[] = [
     url: 'https://www.mmx.jaxa.jp/en/',
   },
   {
+    id: 'jewitt-2007',
+    autoren: ['Jewitt, D.', 'Haghighipour, N.'],
+    etAl: false,
+    jahr: 2007,
+    titel: 'Irregular Satellites of the Planets: Products of Capture in the Early Solar System',
+    erschienen: 'Annual Review of Astronomy and Astrophysics 45, 261–295',
+    doi: '10.1146/annurev.astro.44.051905.092459',
+    arxiv: 'astro-ph/0703059',
+  },
+  {
     id: 'jia-2018',
     autoren: ['Jia, X.', 'Kivelson, M. G.', 'Khurana, K. K.'],
     etAl: true,
