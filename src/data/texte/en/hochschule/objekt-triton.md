@@ -30,14 +30,14 @@ total mass carried in the catalogue and Neptune's mass alone.
 | Geometric albedo (literature) | $0.59$ to $0.81$ (filters), Bond albedo $0.82 \pm 0.05$ | – | Voyager photometry, Hapke model | [Nelson et al. 1990](literatur:nelson-1990) |
 | Surface temperature | about $38\,\mathrm{K}$ | – | Voyager radio occultation | [Tyler et al. 1989](literatur:tyler-1989) |
 | Surface pressure (1989) | about 14 µbar | – | Voyager radio occultation | [Tyler et al. 1989](literatur:tyler-1989) |
-| Surface pressure (2022) | 14.07 µbar (extrapolated to $1353\,\mathrm{km}$); $p_{1400} = 1.211 \pm 0.039$ µbar | – | Stellar occultation, 33-year series since 1989 | [Sicardy et al. 2024](literatur:sicardy-2024) |
+| Surface pressure (2022) | $14.54 \pm 0.47$ µbar (from $p_{1400}$); $p_{1400} = 1.211 \pm 0.039$ µbar | – | Stellar occultation, 33-year series since 1989 | [Sicardy et al. 2024](literatur:sicardy-2024) |
 
 The mean density derived from catalogue mass and radius,
 $\bar\rho = 3\,M / (4\pi R^3) = 2.061\,\mathrm{g\,cm^{-3}}$, matches the round value of about
-2.06 g/cm³ often quoted in the literature and lies between the density of the large icy moons –
-Titan at 1.881 g/cm³ – and that of Pluto, which for both Triton and Pluto suggests a markedly
-higher rock fraction than for most other large icy moons (placement alongside all measured values
-under [Interior Structure](thema:innerer-aufbau)). The real scatter lies in the albedo: the
+2.06 g/cm³ often quoted in the literature and exceeds the density of the large icy moons – Titan
+at 1.881 g/cm³ – as well as that of Pluto (about $1.854 \pm 0.011\,\mathrm{g\,cm^{-3}}$
+([Nimmo et al. 2017](literatur:nimmo-2017))), which for both Triton and Pluto suggests a markedly
+higher rock fraction than for most other large icy moons. The real scatter lies in the albedo: the
 fact-sheet value 0.72 is an integral round number; Nelson et al. find values between 0.59 (UV) and
 0.81 (green) depending on the filter, plus a Bond albedo of $0.82 \pm 0.05$ – the differences
 mostly reflect Triton's strongly wavelength-dependent reflectance spectrum, not a measurement
@@ -130,10 +130,9 @@ combined gives $5.877084$ days, the dataset's own sidereal motion gives $5.87699
 NSSDC fact sheet gives $5.876854$ days, all three agreeing to under 0.02 %. Against Neptune's equator
 in the reference frame used here, Horizons gives an orbital inclination of $i = 156.828^\circ$ – over
 90°, hence by definition a retrograde orbit: the orbital angular momentum points opposite to
-Neptune's rotation pole. Against the more distant Laplace plane, which for most moons lies between a
-planet's equatorial and orbital plane, older literature values give about 157°; which reference plane
-is meant changes the value by less than a degree, because Triton's orbit lies so close to the planet
-that the Laplace plane there practically coincides with the equator
+Neptune's rotation pole. Against the Laplace plane, which for most moons lies between a planet's
+equatorial and orbital plane, this value changes by less than a degree, because Triton's orbit lies
+so close to the planet that the Laplace plane there practically coincides with the equator
 ([Moons and the Laplace plane](thema:bahnelemente)). Triton rotates in a bound state; figures on
 libration and on the angle between the map centre and the direction to Neptune are given under
 [Bound Rotation](thema:gebundene-rotation).
@@ -181,7 +180,7 @@ original, presumably coplanar and prograde moon system: an initially strongly ec
 crossed, on its way to today's orbit, the region between 5 and 23 Neptune radii, where regular
 moons similar to today's Uranian moons probably once orbited – with the total mass of this original
 system only about 40 % of Triton's own mass, a model calculation finds these moons colliding with
-one another within a few centuries into a debris ring around Neptune, which Triton subsequently
+one another within about 1000 years into a debris ring around Neptune, which Triton subsequently
 swept up; individual debris pieces flung far outward could account for Nereid and the small, outer
 moon Halimede ([Ćuk and Gladman 2005](literatur:cuk-2005)). Because of this shared origin and the
 comparable size and density, Triton is considered a close dynamical and compositional relative of

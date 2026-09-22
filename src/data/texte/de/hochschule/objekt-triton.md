@@ -31,14 +31,15 @@ Katalog geführten Gesamtmasse des Systems und Neptuns Masse allein.
 | Geometrische Albedo (Literatur) | $0{,}59$ bis $0{,}81$ (Filter), Bond-Albedo $0{,}82 \pm 0{,}05$ | – | Voyager-Photometrie, Hapke-Modell | [Nelson et al. 1990](literatur:nelson-1990) |
 | Oberflächentemperatur | rund $38\,\mathrm{K}$ | – | Voyager-Funkbedeckung | [Tyler et al. 1989](literatur:tyler-1989) |
 | Bodendruck (1989) | rund 14 µbar | – | Voyager-Funkbedeckung | [Tyler et al. 1989](literatur:tyler-1989) |
-| Bodendruck (2022) | 14,07 µbar (extrapoliert auf $1353\,\mathrm{km}$); $p_{1400} = 1{,}211 \pm 0{,}039$ µbar | – | Sternbedeckung, 33-Jahres-Reihe seit 1989 | [Sicardy et al. 2024](literatur:sicardy-2024) |
+| Bodendruck (2022) | $14{,}54 \pm 0{,}47$ µbar (aus $p_{1400}$); $p_{1400} = 1{,}211 \pm 0{,}039$ µbar | – | Sternbedeckung, 33-Jahres-Reihe seit 1989 | [Sicardy et al. 2024](literatur:sicardy-2024) |
 
 Die aus Katalogmasse und -radius hergeleitete mittlere Dichte
 $\bar\rho = 3\,M / (4\pi R^3) = 2{,}061\,\mathrm{g\,cm^{-3}}$ trifft den in der Literatur oft
-genannten Rundwert von rund 2,06 g/cm³ und liegt zwischen der Dichte der großen Eismonde – Titan mit
-1,881 g/cm³ – und der Plutos, was für Triton wie für Pluto einen deutlich höheren Gesteinsanteil als
-bei den meisten übrigen großen Eismonden nahelegt (Einordnung neben allen gemessenen Werten unter
-[Innerer Aufbau](thema:innerer-aufbau)). Die eigentliche Streuung liegt bei der Albedo: Der
+genannten Rundwert von rund 2,06 g/cm³ und übertrifft die Dichte der großen Eismonde – Titan mit
+1,881 g/cm³ – ebenso wie die Plutos (rund $1{,}854 \pm 0{,}011\,\mathrm{g\,cm^{-3}}$
+([Nimmo et al. 2017](literatur:nimmo-2017))), was für Triton wie für Pluto einen deutlich höheren
+Gesteinsanteil als bei den meisten übrigen großen Eismonden nahelegt. Die eigentliche Streuung
+liegt bei der Albedo: Der
 Faktenblattwert 0,72 ist ein integraler Rundwert; Nelson et al. finden je nach Filter zwischen 0,59
 (UV) und 0,81 (grün), dazu eine Bond-Albedo von $0{,}82 \pm 0{,}05$ – die Unterschiede spiegeln vor
 allem Tritons stark wellenlängenabhängiges Reflexionsspektrum, nicht eine Messungenauigkeit.
@@ -135,10 +136,9 @@ Neptuns und Tritons Massen zusammen folgen $5{,}877084$ Tage, aus der siderische
 Datensatzes $5{,}876994$ Tage und aus dem NSSDC-Faktenblatt $5{,}876854$ Tage, alle drei auf unter
 0,02 % übereinstimmend. Gegen Neptuns Äquator im hier verwendeten Bezugsrahmen misst Horizons eine
 Bahnneigung von $i = 156{,}828^\circ$ – über 90°, also per Definition ein rückläufiger Umlauf: Der
-Bahndrehimpuls zeigt Neptuns Rotationspol entgegen. Gegen die weiter außen liegende Laplace-Ebene,
-die für die meisten Monde zwischen Äquator- und Bahnebene des Planeten liegt, geben ältere
-Literaturwerte rund 157° an; welche Bezugsebene gemeint ist, ändert den Wert um weniger als ein
-Grad, weil Tritons Bahn so nah am Planeten liegt, dass die Laplace-Ebene dort praktisch mit dem
+Bahndrehimpuls zeigt Neptuns Rotationspol entgegen. Gegen die für die meisten Monde zwischen
+Äquator- und Bahnebene des Planeten liegende Laplace-Ebene ändert sich dieser Wert um weniger als
+ein Grad, weil Tritons Bahn so nah am Planeten liegt, dass die Laplace-Ebene dort praktisch mit dem
 Äquator zusammenfällt ([Monde und die Laplace-Ebene](thema:bahnelemente)). Triton rotiert gebunden;
 Zahlen zur Libration und zum Winkel zwischen Kartenmitte und Neptunrichtung stehen unter
 [Gebundene Rotation](thema:gebundene-rotation).
@@ -188,7 +188,7 @@ koplanare und prograd umlaufende Mondsystem Neptuns fast vollständig zerstört 
 stark exzentrischer Triton kreuzte auf seinem Weg zur heutigen Bahn den Bereich zwischen 5 und 23
 Neptunradien, in dem reguläre Monde ähnlich den heutigen Uranusmonden gelegen haben dürften – bei
 einer Gesamtmasse dieses ursprünglichen Systems von nur rund 40 % von Tritons eigener Masse
-kollidierten diese Monde nach einer Modellrechnung binnen weniger Jahrhunderte untereinander zu
+kollidierten diese Monde nach einer Modellrechnung binnen rund 1000 Jahren untereinander zu
 einem Trümmerring um Neptun, den Triton anschließend aufsammelte; einzelne, weit hinausgeschleuderte
 Trümmerstücke könnten Nereid und den kleinen, äußeren Mond Halimede erklären
 ([Ćuk und Gladman 2005](literatur:cuk-2005)). Wegen dieser gemeinsamen Herkunftsgeschichte, der
