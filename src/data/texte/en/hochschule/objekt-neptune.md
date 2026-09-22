@@ -49,10 +49,10 @@ refer to a historically fixed reference radius of 25,225 km, different from the 
 | Internal heat flux | $0.43\,\mathrm{W\,m^{-2}}$ | $0.09\,\mathrm{W\,m^{-2}}$ | from energy balance and Bond albedo | [Pearl and Conrath 1991](literatur:pearl-1991) |
 
 The product of $G$ and the catalogue mass gives $6835083.9\,\mathrm{km^3\,s^{-2}}$: about 2 ppm below
-the dynamically determined $GM$ of the planet alone, but about 211 ppm below the $GM$ of the system —
-the difference of about $1427\,\mathrm{km^3\,s^{-2}}$ is of the same order as Triton's own $GM$ (about
-$1428\,\mathrm{km^3\,s^{-2}}$ in more recent solutions), which accounts for almost all of the
-difference between the system and planet $GM$. Equatorial and polar radius deviate from the
+the dynamically determined $GM$ of the planet alone, but about 211 ppm below the $GM$ of the system.
+The difference between the system and planet $GM$, about $1427\,\mathrm{km^3\,s^{-2}}$, is of the same
+order as Triton's own $GM$ (about $1428\,\mathrm{km^3\,s^{-2}}$ in more recent solutions), which
+accounts for almost all of it. Equatorial and polar radius deviate from the
 volume-equivalent mean by $0.0171$ because of rotation ([Lindal 1992](literatur:lindal-1992)); the
 equatorial radius is thus about 0.6 % above the volumetric mean radius the data set carries as
 `radiusKm` (see "In the model").
@@ -83,7 +83,7 @@ only mass, radius, rotation and the even moments of the gravity field constrain 
 direct measurement ([Interior structure](thema:innerer-aufbau)). Despite their similar size and
 composition, Uranus and Neptune differ in two central respects: the outer envelope may hold at most
 about 8 % heavy elements at Uranus but up to 65 % at Neptune
-([Nettelmann et al. 2013](literatur:nettelmann-2013); [Uranus](objekt:uranus)), and Neptune's markedly
+([Nettelmann et al. 2013](literatur:nettelmann-2013)), and Neptune's markedly
 higher heat flux (see "Parameters"), more consistent with an adiabatic model, fits a more homogeneously
 mixed interior, while Uranus' flux, measured near zero, points to a more strongly layered,
 non-adiabatic structure ([Nettelmann et al. 2013](literatur:nettelmann-2013)). Reviews nonetheless place
@@ -104,10 +104,10 @@ electrically conductive shell around a stably stratified, non-convecting core re
 pervading the whole mantle ([Stanley and Bloxham 2004](literatur:stanley-2004)). A possible
 microphysical basis for this lies in the water itself: at the pressures and temperatures expected in
 the mantle, a superionic phase is expected in which the oxygen lattice stays solid while the hydrogen
-ions move freely through it, carrying a high protonic conductivity (see
-[Interior structure](thema:innerer-aufbau) for the details of this mechanism, which also applies to
-Uranus). How deep this conductive shell reaches at Neptune, and what fraction of rock and ice make up
-the whole structure, remains open (see "Open questions").
+ions move freely through it, carrying a high protonic conductivity (details of this mechanism, also
+assumed for [Uranus](objekt:uranus), are given there). How deep this conductive shell reaches at
+Neptune, and what fraction of rock and ice make up the whole structure, remains open (see "Open
+questions").
 
 ## Atmosphere and magnetosphere
 
@@ -160,9 +160,13 @@ their crossing orbits, never come closer than 18 AU
 ([Cohen and Hubbard 1965](literatur:cohen-1965); [Orbital resonances](thema:resonanzen)). Neptune also
 carries several faint, partly arc-shaped rings, of which the outermost, the Adams ring, concentrates
 its material into a few dense arcs ([Rings](thema:ringe)). Its moon system consists mostly of small,
-irregular bodies and the by far largest moon, [Triton](objekt:triton), which alone orbits Neptune
-retrograde, just inside the Roche limit — unlike any other large moon in the solar system; also
-present are the highly eccentric Nereid and the small, inner Proteus. How extreme Triton's retrograde
+irregular bodies and the by far largest moon, [Triton](objekt:triton), the only large moon in the
+solar system that orbits retrograde. Because tidal friction removes orbital angular momentum from a
+retrograde moon instead of adding it, Triton is slowly spiralling inward; a model calculation finds
+that it would reach Neptune's Roche limit only in about 3.6 billion years, and its present orbit still
+lies about six to twelve times farther out than that limit
+([Chyba et al. 1989](literatur:chyba-1989); [Correia 2009a](literatur:correia-2009a)). Also present
+are the highly eccentric Nereid and the small, inner Proteus. How extreme Triton's retrograde
 orbit appears from Earth is shown by the scene
 [Triton's retrograde orbit](szene:triton-rueckwaerts); details on Triton itself are given there.
 
@@ -251,7 +255,7 @@ recommended with the highest priority, without giving it the same top priority
   Spot and its successors are not depicted.
 - **Exposure:** on 17 September 2026 Neptune receives only $1/883$ of Earth's irradiance, yet appears
   in the image just as bright as any other target; with Earth in the target at the same time, it looks
-  261 times too bright in the default "Schaubild" display, 115 times in "Realistic"
+  261 times too bright in the default "Diagram" display, 115 times in "Realistic"
   ([Albedo and brightness](thema:photometrie)). In the scene
   [From Neptune to the distant Sun](szene:ferne-sonne) the Sun accordingly appears exaggerated, 1.2°
   instead of the actual 64″ ([Sun](objekt:sun)).

@@ -49,10 +49,10 @@ verschiedenen Bezugsradius von 25 225 km.
 | Innerer Wärmefluss | $0{,}43\,\mathrm{W\,m^{-2}}$ | $0{,}09\,\mathrm{W\,m^{-2}}$ | aus Energiebilanz und Bond-Albedo | [Pearl und Conrath 1991](literatur:pearl-1991) |
 
 Das Produkt aus $G$ und der Katalogmasse ergibt $6835083{,}9\,\mathrm{km^3\,s^{-2}}$: rund 2 ppm unter
-dem dynamisch bestimmten $GM$ des Planeten allein, aber rund 211 ppm unter dem $GM$ des Systems – die
-Differenz von rund $1427\,\mathrm{km^3\,s^{-2}}$ liegt in der Größenordnung von Tritons eigenem $GM$
-(rund $1428\,\mathrm{km^3\,s^{-2}}$ nach neueren Lösungen), das ganz überwiegend die Differenz zwischen
-System- und Planeten-$GM$ trägt. Äquator- und Polradius weichen wegen der Rotation um $0{,}0171$ vom
+dem dynamisch bestimmten $GM$ des Planeten allein, aber rund 211 ppm unter dem $GM$ des Systems. Die
+Differenz zwischen System- und Planeten-$GM$, rund $1427\,\mathrm{km^3\,s^{-2}}$, liegt in der
+Größenordnung von Tritons eigenem $GM$ (rund $1428\,\mathrm{km^3\,s^{-2}}$ nach neueren Lösungen) und
+trägt sie ganz überwiegend. Äquator- und Polradius weichen wegen der Rotation um $0{,}0171$ vom
 volumengleichen Mittel ab ([Lindal 1992](literatur:lindal-1992)); der Äquatorradius liegt damit rund
 0,6 % über dem Volumenmittelradius, den der Datensatz als `radiusKm` führt (siehe „Im Modell").
 
@@ -84,7 +84,7 @@ Riesenplaneten liefern nur Masse, Radius, Rotation und die geraden Momente des S
 solche Modelle, nicht eine direkte Messung ([Innerer Aufbau](thema:innerer-aufbau)). Trotz ihrer
 ähnlichen Größe und Zusammensetzung unterscheiden sich Uranus und Neptun in zwei zentralen Punkten:
 Die äußere Hülle darf bei Uranus höchstens rund 8 % schwere Elemente enthalten, bei Neptun dagegen bis
-zu 65 % ([Nettelmann et al. 2013](literatur:nettelmann-2013); [Uranus](objekt:uranus)), und Neptuns
+zu 65 % ([Nettelmann et al. 2013](literatur:nettelmann-2013)), und Neptuns
 deutlich höherer, mit einem adiabatischen Modell eher verträglicher Wärmefluss (siehe „Kenngrößen")
 passt zu einem homogener durchmischten Inneren, während Uranus' nahe null gemessener Fluss für einen
 stärker geschichteten, nicht-adiabatischen Aufbau spricht ([Nettelmann et al. 2013](literatur:nettelmann-2013)).
@@ -106,8 +106,8 @@ Kernbereich beschränkt ist, statt den gesamten Mantel zu durchziehen
 ([Stanley und Bloxham 2004](literatur:stanley-2004)). Eine mögliche mikrophysikalische Grundlage dafür
 liegt im Wasser selbst: Unter den im Mantel erwarteten Drücken und Temperaturen wird eine überionische
 Phase erwartet, in der das Sauerstoffgitter fest bleibt, während die Wasserstoffionen frei durch das
-Gitter wandern und eine hohe protonische Leitfähigkeit tragen ([Innerer Aufbau](thema:innerer-aufbau)
-für die Einzelheiten dieses auch für Uranus geltenden Mechanismus). Wie tief diese leitfähige Schale
+Gitter wandern und eine hohe protonische Leitfähigkeit tragen (Einzelheiten dieses auch bei
+[Uranus](objekt:uranus) angenommenen Mechanismus stehen dort). Wie tief diese leitfähige Schale
 bei Neptun reicht und welchen Anteil Gestein und Eis am Gesamtaufbau haben, bleibt offen (siehe
 „Offene Fragen").
 
@@ -167,9 +167,13 @@ Körper trotz sich kreuzender Bahnen nie näher als 18 AE kommen
 außerdem mehrere schwache, teils bogenförmige Ringe, von denen der äußerste, der Adams-Ring, sein
 Material in wenigen dichten Bögen konzentriert ([Ringe](thema:ringe)). Sein Mondsystem besteht
 überwiegend aus kleinen, unregelmäßigen Körpern und dem mit Abstand größten Mond
-[Triton](objekt:triton), der einzig und rückläufig knapp innerhalb der Roche-Grenze um Neptun
-umläuft – anders als jeder andere große Mond des Sonnensystems; hinzu kommen die stark exzentrische
-Nereid und der kleine, innere Proteus. Wie extrem Tritons rückläufige Bahn von der Erde aus erscheint,
+[Triton](objekt:triton), der als einziger großer Mond des Sonnensystems rückläufig umläuft. Weil
+Gezeitenreibung einem rückläufigen Mond Bahndrehimpuls entzieht statt ihm welchen zuzuführen, spiralt
+Triton langsam nach innen; eine Modellrechnung ergibt, dass er Neptuns Roche-Grenze erst in rund
+3,6 Milliarden Jahren erreichen würde, seine heutige Bahn liegt noch rund sechs- bis zwölfmal weiter
+draußen als diese Grenze ([Chyba et al. 1989](literatur:chyba-1989);
+[Correia 2009a](literatur:correia-2009a)). Hinzu kommen die stark exzentrische Nereid und der kleine,
+innere Proteus. Wie extrem Tritons rückläufige Bahn von der Erde aus erscheint,
 zeigt die Szene [Tritons rückläufige Bahn](szene:triton-rueckwaerts); Einzelheiten zu Triton selbst
 stehen dort.
 
