@@ -29,38 +29,38 @@ gravity field and pole direction ([Jacobson and Park 2025](literatur:jacobson-20
 
 | Quantity | Value | Uncertainty | Determination | Source |
 |---|---|---|---|---|
-| Mass | $8{,}6811 \cdot 10^{25}\,\mathrm{kg}$ | – | Orbit tracking, moon orbits | [NSSDC Uranus Fact Sheet](quelle:nssdc-uranus) |
-| $GM$ (system) | $5794548{,}6\,\mathrm{km^3\,s^{-2}}$ | $1{,}5\,\mathrm{km^3\,s^{-2}}$ | Voyager 2 tracking, moon orbits | [Jacobson 2014](literatur:jacobson-2014) |
-| $GM$ (Uranus alone) | $5793951{,}3\,\mathrm{km^3\,s^{-2}}$ | – | as above, system minus moon masses | [Jacobson 2014](literatur:jacobson-2014) |
+| Mass | $8.6811 \cdot 10^{25}\,\mathrm{kg}$ | – | Orbit tracking, moon orbits | [NSSDC Uranus Fact Sheet](quelle:nssdc-uranus) |
+| $GM$ (system) | $5794548.6\,\mathrm{km^3\,s^{-2}}$ | $1.5\,\mathrm{km^3\,s^{-2}}$ | Voyager 2 tracking, moon orbits | [Jacobson 2014](literatur:jacobson-2014) |
+| $GM$ (Uranus alone) | $5793951.3\,\mathrm{km^3\,s^{-2}}$ | – | as above, system minus moon masses | [Jacobson 2014](literatur:jacobson-2014) |
 | Equatorial radius (1 bar) | $25559\,\mathrm{km}$ | – | Radio occultation | [NSSDC Uranus Fact Sheet](quelle:nssdc-uranus) |
 | Polar radius (1 bar) | $24973\,\mathrm{km}$ | – | Radio occultation | [NSSDC Uranus Fact Sheet](quelle:nssdc-uranus) |
 | Volumetric mean radius | $25362\,\mathrm{km}$ | – | from equatorial and polar radius | [NSSDC Uranus Fact Sheet](quelle:nssdc-uranus) |
-| Flattening | $0{,}02293$ | – | (equatorial minus polar radius)/equatorial radius | [NSSDC Uranus Fact Sheet](quelle:nssdc-uranus) |
+| Flattening | $0.02293$ | – | (equatorial minus polar radius)/equatorial radius | [NSSDC Uranus Fact Sheet](quelle:nssdc-uranus) |
 | Mean density | $1270\,\mathrm{kg\,m^{-3}}$ | – | from mass and volume | [NSSDC Uranus Fact Sheet](quelle:nssdc-uranus) |
-| $J_2$ | $3510{,}7 \cdot 10^{-6}$ | $0{,}7 \cdot 10^{-6}$ | Orbit tracking, reference radius $25559\,\mathrm{km}$ | [Jacobson 2014](literatur:jacobson-2014) |
-| $J_4$ | $-34{,}2 \cdot 10^{-6}$ | $1{,}3 \cdot 10^{-6}$ | Orbit tracking, reference radius $25559\,\mathrm{km}$ | [Jacobson 2014](literatur:jacobson-2014) |
-| Rotation period (radio modulation) | $-17{,}24\,\mathrm{h}$ | $0{,}01\,\mathrm{h}$ | Voyager 2 radio emission | [Desch et al. 1986](literatur:desch-1986) |
-| Rotation period (aurora) | $17{,}247864\,\mathrm{h}$ | $0{,}000010\,\mathrm{h}$ | 40 years of Hubble UV images of the aurorae | [Lamy et al. 2025](literatur:lamy-2025) |
-| Pole | $257{,}311^\circ / -15{,}175^\circ$ | – | IAU report, fixed in the data set | [Archinal et al. 2018](literatur:archinal-2018) |
-| Geometric albedo (V band) | $0{,}488$ | – | Photometric | [Mallama et al. 2017](literatur:mallama-2017) |
-| Bond albedo (orbital mean) | $0{,}349$ | $0{,}016$ | Holistic atmosphere model | [Irwin et al. 2025](literatur:irwin-2025) |
-| Absorbed solar flux (orbital mean) | $0{,}604\,\mathrm{W\,m^{-2}}$ | $0{,}027\,\mathrm{W\,m^{-2}}$ | from Bond albedo and solar distance | [Irwin et al. 2025](literatur:irwin-2025) |
-| Emitted flux (orbital mean) | $0{,}693\,\mathrm{W\,m^{-2}}$ | $0{,}013\,\mathrm{W\,m^{-2}}$ | Infrared photometry | [Irwin et al. 2025](literatur:irwin-2025) |
-| Internal heat flux | $0{,}078\,\mathrm{W\,m^{-2}}$ | $0{,}018\,\mathrm{W\,m^{-2}}$ | Energy balance over one orbit | [Wang et al. 2025](literatur:wang-2025) |
+| $J_2$ | $3510.7 \cdot 10^{-6}$ | $0.7 \cdot 10^{-6}$ | Orbit tracking, reference radius $25559\,\mathrm{km}$ | [Jacobson 2014](literatur:jacobson-2014) |
+| $J_4$ | $-34.2 \cdot 10^{-6}$ | $1.3 \cdot 10^{-6}$ | Orbit tracking, reference radius $25559\,\mathrm{km}$ | [Jacobson 2014](literatur:jacobson-2014) |
+| Rotation period (radio modulation) | $-17.24\,\mathrm{h}$ | $0.01\,\mathrm{h}$ | Voyager 2 radio emission | [Desch et al. 1986](literatur:desch-1986) |
+| Rotation period (aurora) | $17.247864\,\mathrm{h}$ | $0.000010\,\mathrm{h}$ | Hubble UV images of the aurorae, 2011–2022 | [Lamy et al. 2025](literatur:lamy-2025) |
+| Pole | $257.311^\circ / -15.175^\circ$ | – | IAU report, fixed in the data set | [Archinal et al. 2018](literatur:archinal-2018) |
+| Geometric albedo (V band) | $0.488$ | – | Photometric | [Mallama et al. 2017](literatur:mallama-2017) |
+| Bond albedo (orbital mean) | $0.349$ | $0.016$ | Holistic atmosphere model | [Irwin et al. 2025](literatur:irwin-2025) |
+| Absorbed solar flux (orbital mean) | $0.604\,\mathrm{W\,m^{-2}}$ | $0.027\,\mathrm{W\,m^{-2}}$ | from Bond albedo and solar distance | [Irwin et al. 2025](literatur:irwin-2025) |
+| Emitted flux (orbital mean) | $0.693\,\mathrm{W\,m^{-2}}$ | $0.013\,\mathrm{W\,m^{-2}}$ | Infrared photometry | [Irwin et al. 2025](literatur:irwin-2025) |
+| Internal heat flux | $0.078\,\mathrm{W\,m^{-2}}$ | $0.018\,\mathrm{W\,m^{-2}}$ | Energy balance over one orbit | [Wang et al. 2025](literatur:wang-2025) |
 
-The product of $G$ and the catalogue mass gives $5794026{,}6\,\mathrm{km^3\,s^{-2}}$: about 13 ppm above
+The product of $G$ and the catalogue mass gives $5794026.6\,\mathrm{km^3\,s^{-2}}$: about 13 ppm above
 the dynamically determined $GM$ of the planet alone, but about 90 ppm below the $GM$ of the system —
 the difference of about $600\,\mathrm{km^3\,s^{-2}}$ roughly matches the sum of the gravitational
 parameters of the five large moons. Equatorial and polar radius deviate from the volume-equivalent
-mean by $0{,}02293$ because of rotation ([NSSDC Uranus Fact Sheet](quelle:nssdc-uranus)); the equatorial
+mean by $0.02293$ because of rotation ([NSSDC Uranus Fact Sheet](quelle:nssdc-uranus)); the equatorial
 radius is thus about 0.8 % above the volumetric mean radius the data set carries as `radiusKm` (see
 "In the model"). Like [Neptune](objekt:neptune), Uranus has no solid surface from which a rotation
 period could be read off; unlike [Saturn](objekt:saturn), where four independent methods disagree by
 up to 13 minutes, for Uranus only the period derived from the magnetic field has existed so far.
 Voyager determined it in 1986 from the modulation of the radio emission as
-$17{,}24 \pm 0{,}01\,\mathrm{h}$ ([Desch et al. 1986](literatur:desch-1986)); a 2025 analysis of
-40 years of Hubble ultraviolet images of the aurorae tracked the rotation of the auroral spots instead
-and gave $17{,}247864 \pm 0{,}000010\,\mathrm{h}$ — about 28 s longer per rotation, but with a
+$17.24 \pm 0.01\,\mathrm{h}$ ([Desch et al. 1986](literatur:desch-1986)); a 2025 analysis of
+Hubble ultraviolet images of the aurorae from 2011 to 2022 tracked the rotation of the auroral spots instead
+and gave $17.247864 \pm 0.000010\,\mathrm{h}$ — about 28 s longer per rotation, but with a
 thousandfold smaller uncertainty ([Lamy et al. 2025](literatur:lamy-2025)); details on the model value
 and the resulting phase drift are given under "In the model". The geometric albedo in the V band is
 comparable with the other giant planets
@@ -68,7 +68,7 @@ comparable with the other giant planets
 bolometric Bond albedo, by contrast, was only redetermined in 2025 from a model that for the first time
 fits observations from the ultraviolet to the near infrared jointly
 ([Irwin et al. 2025](literatur:irwin-2025)) and came out higher than the older value
-$0{,}300 \pm 0{,}049$ obtained from Voyager infrared data
+$0.300 \pm 0.049$ obtained from Voyager infrared data
 ([Pearl et al. 1990](literatur:pearl-1990)) — more on this under "Open questions".
 
 ## Interior
@@ -81,9 +81,10 @@ not a direct measurement ([Interior structure](thema:innerer-aufbau)). Whether t
 arranged in sharply separated layers, or whether composition and density vary continuously with depth,
 remains undecided: reviews place three-layer models explicitly alongside models with non-adiabatic,
 inhomogeneous transitions ([Helled et al. 2020](literatur:helled-2020)). An early study found evidence
-for a dichotomy between the two otherwise similar ice giants: three-layer models yield a more
-pronounced, more strongly layered structure for Neptune than for Uranus, whose gravity field fits
-better with a more homogeneously mixed interior
+for a dichotomy between the two otherwise similar ice giants: the outer envelope may hold at most about
+8 % heavy elements at Uranus but up to 65 % at Neptune — a finding that points to a more pronounced,
+more strongly layered (non-adiabatic) structure for Uranus, while Neptune's higher heat flux, more
+consistent with an adiabatic model, fits better with a more homogeneously mixed interior
 ([Nettelmann et al. 2013](literatur:nettelmann-2013)). Empirical density profiles, fitted to mass,
 radius, rotation and the even moments $J_2$ and $J_4$ without assuming fixed layers, confirm this
 freedom: many different density profiles that fit equally well already follow from today's data
@@ -94,11 +95,13 @@ models, even though it would make high-order moments such as $J_6$ and $J_8$ acc
 time ([Movshovitz and Fortney 2022](literatur:movshovitz-2022)) — a central argument for the
 recommendation of a dedicated orbiter mission (see "Formation and evolution").
 
-One possible explanation for the unusual magnetic field lies in the water itself: laser-shock
-experiments directly demonstrated a superionic phase of water ice for the first time in 2019 — at
-temperatures around $5000\,\mathrm{K}$ the oxygen lattice stays solid while the hydrogen ions move
-freely through it, raising the electrical conductivity about a hundredfold above that of other
-superionic solids ([Millot et al. 2019](literatur:millot-2019)). Exactly such conditions are expected
+One possible explanation for the unusual magnetic field lies in the water itself: shock-compression
+experiments in 2018 found a melting point of about $5000\,\mathrm{K}$ at $200\,\mathrm{GPa}$ — about
+$4000\,\mathrm{K}$ higher than at $0.5\,\mathrm{Mbar}$ —, a thermodynamic sign of a superionic phase in
+which the oxygen lattice stays solid while the hydrogen ions move freely through it, carrying a high
+protonic conductivity ([Millot et al. 2018](literatur:millot-2018)); X-ray diffraction on
+laser-shocked samples directly confirmed the underlying crystal structure for the first time in 2019
+([Millot et al. 2019](literatur:millot-2019)). Exactly such conditions are expected
 in the mantle of Uranus and Neptune; they provide a conductive layer without requiring the whole mantle
 to be metallic. Numerical dynamo models show that a dynamo confined to a thin, convecting,
 electrically conductive shell around a stably stratified, non-convecting core region produces fields
@@ -124,10 +127,10 @@ change: Uranus appears brighter when a more methane-poor polar region faces Eart
 ([Albedo and brightness](thema:photometrie)).
 
 Voyager 2 discovered in 1986 a magnetic field whose dipole axis is tilted by about 60° to the rotation
-axis and offset from the centre by about $0{,}3$ Uranus radii
+axis and offset from the centre by about $0.3$ Uranus radii
 ([Ness et al. 1986](literatur:ness-1986)). A spherical-harmonic model derived from this (Q3) refined
-the tilt to $58{,}6^\circ$, confirmed the offset and gave a dipole moment of
-$0{,}228\,\mathrm{G}\,R_\mathrm{U}^3$ with an unusually large quadrupole component
+the tilt to $58.6^\circ$, confirmed the offset and gave a dipole moment of
+$0.228\,\mathrm{G}\,R_\mathrm{U}^3$ with an unusually large quadrupole component
 ([Connerney et al. 1987](literatur:connerney-1987)). Because the field geometry is independent of the
 viewing geometry to the Sun, the 97.77°-tilted rotation axis, combined with the skewed dipole, sweeps
 out a magnetosphere whose field lines twist corkscrew-like with every rotation. A 2024 reanalysis of
@@ -193,13 +196,13 @@ large NASA flagship missions of the coming decade
 ## Open questions
 
 - **Heat flux and energy balance:** Voyager infrared data gave a ratio of emitted to absorbed power of
-  $1{,}06 \pm 0{,}08$, consistent with an internal heat flux near zero
+  $1.06 \pm 0.08$, consistent with an internal heat flux near zero
   ([Pearl et al. 1990](literatur:pearl-1990)). Two independent reanalyses reached the opposite
   conclusion in 2025: a new atmosphere model gave an emitted flux of
-  $0{,}693 \pm 0{,}013\,\mathrm{W\,m^{-2}}$ against an absorbed flux of
-  $0{,}604 \pm 0{,}027\,\mathrm{W\,m^{-2}}$ ([Irwin et al. 2025](literatur:irwin-2025)), while an
+  $0.693 \pm 0.013\,\mathrm{W\,m^{-2}}$ against an absorbed flux of
+  $0.604 \pm 0.027\,\mathrm{W\,m^{-2}}$ ([Irwin et al. 2025](literatur:irwin-2025)), while an
   energy-balance calculation over a full orbit gave an internal flux of
-  $0{,}078 \pm 0{,}018\,\mathrm{W\,m^{-2}}$, only about 12.5 % of the absorbed flux and thus markedly
+  $0.078 \pm 0.018\,\mathrm{W\,m^{-2}}$, only about 12.5 % of the absorbed flux and thus markedly
   less than for any other giant planet ([Wang et al. 2025](literatur:wang-2025)). Why Uranus, despite
   now having a measured positive heat flux, shows so much less of it than Jupiter, Saturn and Neptune
   is open.
@@ -212,7 +215,7 @@ large NASA flagship missions of the coming decade
 - **Cause of the tilt:** Giant collision versus gradual spin-orbit resonance — both explanations have
   proponents and open problems; the decision is pending under
   [Axial tilt](thema:achsneigung).
-- **Rotation period:** The redetermination from 40 years of Hubble auroral observations is a thousand
+- **Rotation period:** The redetermination from Hubble auroral observations from 2011 to 2022 is a thousand
   times more precise than the old Voyager radio measurement
   ([Lamy et al. 2025](literatur:lamy-2025)), but like that measurement it tracks the rotation of the
   magnetic field. Whether this period also matches the rotation of the body as a whole remains open
@@ -229,22 +232,22 @@ large NASA flagship missions of the coming decade
 
 - **Shape:** `radiusKm` is set to $25362\,\mathrm{km}$, the NSSDC volumetric mean, not the equatorial
   radius $25559\,\mathrm{km}$; the sphere thus sits about 0.8 % below the true 1-bar surface at the
-  equator (flattening $0{,}02293$). `render/bodies.ts` scales every sphere with a single factor, so the
+  equator (flattening $0.02293$). `render/bodies.ts` scales every sphere with a single factor, so the
   visible flattening is missing entirely.
-- **Rotation:** `rotationPeriodH` is set to $-17{,}24$, the Voyager radio measurement
+- **Rotation:** `rotationPeriodH` is set to $-17.24$, the Voyager radio measurement
   ([Desch et al. 1986](literatur:desch-1986)); the negative sign carries the retrograde sense. Against
-  the period determined in 2025, $17{,}247864\,\mathrm{h}$
+  the period determined in 2025, $17.247864\,\mathrm{h}$
   ([Lamy et al. 2025](literatur:lamy-2025)), that is about 28.3 s too short per rotation. Since J2000
   that amounts (as of September 2026, about 26.7 years) to about 13,588 rotations with the old period
   versus about 13,582 with the new one — a marker fixed on the texture in the model would drift from
   the true rotational phase by about 6.2 rotations, or roughly 70° (own calculation).
-- **Pole:** $257{,}311^\circ / -15{,}175^\circ$ ([Archinal et al. 2018](literatur:archinal-2018)) is
+- **Pole:** $257.311^\circ / -15.175^\circ$ ([Archinal et al. 2018](literatur:archinal-2018)) is
   fixed in space; the small precession of the Uranus pole documented in the report is not taken into
   account ([Reference systems and time scales](thema:bezugssysteme)).
 - **Axial tilt:** `achsneigungDeg` forms the angle between the pole and the orbit normal built from
   position and velocity at epoch J2000, and flips it by 180° for a negative rotation period. The
-  geometric angle between pole and orbit normal is $82{,}23^\circ$; with the flip, the data-sheet
-  axial tilt comes out as $97{,}77^\circ$ — exactly the value also given in the NSSDC fact sheet (own
+  geometric angle between pole and orbit normal is $82.23^\circ$; with the flip, the data-sheet
+  axial tilt comes out as $97.77^\circ$ — exactly the value also given in the NSSDC fact sheet (own
   recalculation using the orbital elements from `uranus.ts` and the pole of the data set; the
   derivation of the convention is given there as well).
 - **Orbit and seasons:** The elements come from the JPL approximation table 1800 to 2050, linearly

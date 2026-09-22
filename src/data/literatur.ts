@@ -3341,6 +3341,15 @@ export const LITERATUR: readonly Publikation[] = [
     arxiv: '2308.04986',
   },
   {
+    id: 'millot-2018',
+    autoren: ['Millot, M.', 'Hamel, S.', 'Rygg, J. R.'],
+    etAl: true,
+    jahr: 2018,
+    titel: 'Experimental evidence for superionic water ice using shock compression',
+    erschienen: 'Nature Physics 14, 297–302',
+    doi: '10.1038/s41567-017-0017-4',
+  },
+  {
     id: 'millot-2019',
     autoren: ['Millot, M.', 'Coppari, F.', 'Rygg, J. R.'],
     etAl: true,

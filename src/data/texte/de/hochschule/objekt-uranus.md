@@ -41,7 +41,7 @@ relativistischen Korrekturen verfeinert Schwerefeld und Polrichtung weiter
 | $J_2$ | $3510{,}7 \cdot 10^{-6}$ | $0{,}7 \cdot 10^{-6}$ | Bahnverfolgung, Bezugsradius $25559\,\mathrm{km}$ | [Jacobson 2014](literatur:jacobson-2014) |
 | $J_4$ | $-34{,}2 \cdot 10^{-6}$ | $1{,}3 \cdot 10^{-6}$ | Bahnverfolgung, Bezugsradius $25559\,\mathrm{km}$ | [Jacobson 2014](literatur:jacobson-2014) |
 | Rotationsperiode (Radiomodulation) | $-17{,}24\,\mathrm{h}$ | $0{,}01\,\mathrm{h}$ | Voyager-2-Radiostrahlung | [Desch et al. 1986](literatur:desch-1986) |
-| Rotationsperiode (Aurora) | $17{,}247864\,\mathrm{h}$ | $0{,}000010\,\mathrm{h}$ | 40 Jahre Hubble-UV-Bilder der Aurorae | [Lamy et al. 2025](literatur:lamy-2025) |
+| Rotationsperiode (Aurora) | $17{,}247864\,\mathrm{h}$ | $0{,}000010\,\mathrm{h}$ | Hubble-UV-Bilder der Aurorae, 2011–2022 | [Lamy et al. 2025](literatur:lamy-2025) |
 | Pol | $257{,}311^\circ / -15{,}175^\circ$ | – | IAU-Bericht, im Datensatz fest | [Archinal et al. 2018](literatur:archinal-2018) |
 | Geometrische Albedo (V-Band) | $0{,}488$ | – | photometrisch | [Mallama et al. 2017](literatur:mallama-2017) |
 | Bond-Albedo (Bahnmittel) | $0{,}349$ | $0{,}016$ | Holistisches Atmosphärenmodell | [Irwin et al. 2025](literatur:irwin-2025) |
@@ -61,7 +61,7 @@ Verfahren um bis zu 13 Minuten auseinanderliegen, existiert für Uranus bislang 
 Magnetfeld gewonnene Periode.
 Voyager bestimmte sie 1986 aus der Modulation der Radiostrahlung zu
 $17{,}24 \pm 0{,}01\,\mathrm{h}$ ([Desch et al. 1986](literatur:desch-1986)); eine 2025 veröffentlichte
-Auswertung von 40 Jahren Hubble-Ultraviolettbildern der Aurorae verfolgte stattdessen die Rotation der
+Auswertung von Hubble-Ultraviolettbildern der Aurorae aus den Jahren 2011 bis 2022 verfolgte stattdessen die Rotation der
 Polarlichtflecken und ergab $17{,}247864 \pm 0{,}000010\,\mathrm{h}$ – rund 28 s je Umdrehung länger,
 aber mit tausendfach kleinerer Unsicherheit ([Lamy et al. 2025](literatur:lamy-2025)); Einzelheiten
 zum Modellwert und zur daraus folgenden Phasenabweichung stehen unter „Im Modell". Die geometrische
@@ -84,10 +84,11 @@ Schwerefelds Zwänge für solche Modelle, nicht eine direkte Messung
 mit der Tiefe stetig ineinander übergehen, ist unentschieden: Übersichten stellen Drei-Schichten-Modelle
 ausdrücklich neben Modelle mit nicht-adiabatischen, inhomogenen Übergängen
 ([Helled et al. 2020](literatur:helled-2020)). Eine frühe Untersuchung fand dabei Hinweise auf eine
-Dichotomie zwischen den beiden sonst ähnlichen Eisriesen: Drei-Schichten-Modelle liefern für Neptun
-einen ausgeprägteren, stärker geschichteten Aufbau als für Uranus, dessen Schwerefeld eher zu einem
-homogener durchmischten Inneren passt
-([Nettelmann et al. 2013](literatur:nettelmann-2013)). Empirische Dichteprofile, die ohne feste
+Dichotomie zwischen den beiden sonst ähnlichen Eisriesen: Die äußere Hülle darf bei Uranus höchstens
+rund 8 % schwere Elemente enthalten, bei Neptun dagegen bis zu 65 % – ein Befund, der für Uranus einen
+ausgeprägteren, stärker geschichteten (nicht-adiabatischen) Aufbau nahelegt, während Neptuns höherer,
+mit einem adiabatischen Modell verträglicher Wärmefluss eher zu einem homogener durchmischten Inneren
+passt ([Nettelmann et al. 2013](literatur:nettelmann-2013)). Empirische Dichteprofile, die ohne feste
 Schichtannahme allein an Masse, Radius, Rotation und die geraden Momente $J_2$ und $J_4$ angepasst
 werden, bestätigen diese Freiheit: Schon aus den heutigen Daten folgen viele unterschiedliche, gleich
 gut passende Dichteverläufe ([Neuenschwander und Helled 2022](literatur:neuenschwander-2022)). Selbst
@@ -98,11 +99,14 @@ zugänglich machte
 ([Movshovitz und Fortney 2022](literatur:movshovitz-2022)) – ein zentrales Argument für die
 Empfehlung einer eigenen Orbitermission (siehe „Entstehung und Entwicklung").
 
-Eine mögliche Erklärung für das ungewöhnliche Magnetfeld liegt im Wasser selbst: Laserschock-Experimente
-wiesen 2019 erstmals unmittelbar eine überionische Phase des Wassereises nach – bei Temperaturen um
-$5000\,\mathrm{K}$ bleibt das Sauerstoffgitter fest, während die Wasserstoffionen frei durch das Gitter
-wandern und die elektrische Leitfähigkeit dadurch etwa hundertfach über der anderer überionischer
-Festkörper liegt ([Millot et al. 2019](literatur:millot-2019)). Genau solche Bedingungen werden im
+Eine mögliche Erklärung für das ungewöhnliche Magnetfeld liegt im Wasser selbst: Schockkompressions-
+Experimente ergaben 2018 einen Schmelzpunkt von rund $5000\,\mathrm{K}$ bei $200\,\mathrm{GPa}$ – rund
+$4000\,\mathrm{K}$ höher als bei $0{,}5\,\mathrm{Mbar}$ –, ein thermodynamisches Indiz für eine
+überionische Phase, in der das Sauerstoffgitter fest bleibt, während die Wasserstoffionen frei durch
+das Gitter wandern und eine hohe protonische Leitfähigkeit tragen
+([Millot et al. 2018](literatur:millot-2018)); Röntgenbeugung an lasergeschockten Proben bestätigte
+2019 erstmals unmittelbar die zugrundeliegende Kristallstruktur
+([Millot et al. 2019](literatur:millot-2019)). Genau solche Bedingungen werden im
 Mantel von Uranus und Neptun erwartet; sie liefern eine leitfähige Schicht, ohne dass der gesamte
 Mantel metallisch sein müsste. Numerische Dynamomodelle zeigen, dass ein Dynamo, der auf eine dünne,
 konvektierende, elektrisch leitfähige Schale um einen stabil geschichteten, nicht konvektierenden
@@ -219,7 +223,7 @@ großen NASA-Flaggschiffmissionen des kommenden Jahrzehnts
 - **Ursache der Kippung:** Riesenkollision gegen allmähliche Spin-Bahn-Resonanz – beide Erklärungen
   haben Anhänger und offene Probleme; die Entscheidung steht unter
   [Achsneigung](thema:achsneigung) an.
-- **Rotationsperiode:** Die Neubestimmung aus 40 Jahren Hubble-Aurorabeobachtungen ist tausendfach
+- **Rotationsperiode:** Die Neubestimmung aus Hubble-Aurorabeobachtungen von 2011 bis 2022 ist tausendfach
   genauer als die alte Voyager-Radiomessung ([Lamy et al. 2025](literatur:lamy-2025)), misst aber
   wie diese die Rotation des Magnetfelds. Ob diese Periode auch die Rotation des Körpers als Ganzes
   trifft, bleibt unabhängig von der Präzisionssteigerung offen: Anders als bei Saturn, wo Schwerefeld
