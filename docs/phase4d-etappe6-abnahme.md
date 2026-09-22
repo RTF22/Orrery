@@ -671,6 +671,16 @@ noch nicht bestätigt, vollständiger Wortlaut in `docs/superpowers/plans/
 2026-09-21-phase4d-hochschule-etappe6.md` Abschnitt „Rulings" und in diesem
 Protokoll §6).
 
+**Entscheidungen von Jens (22.09.2026, „Push und alles bestätigt"):** Die
+22 Plan-Rulings und die Umsetzungs-Rulings in §6 sind bestätigt. Die
+Wortzahlen über dem Richtwert bleiben (Richtigkeit vor Wortzahl, wie in 4d-4).
+Die Code-Befunde bleiben als Kandidaten für eigene Tasks zurückgestellt; der
+Querverweis in `docs/belege/hochschule/thema-ringe.md` Zeile 36 wird bei der
+nächsten inhaltlichen Änderung an dieser Liste berichtigt. Der Gymnasialtext
+`objekt-titan.md` (de/en) wird als kleiner Vorab-Task in Etappe 4d-7
+nachgeführt (Ozean-Satz an den offenen Streitstand seit Petricca et al. 2025
+anpassen). master wurde nach dieser Freigabe gepusht.
+
 Die Wort- und Trailerprüfung vor dem Commit erfolgte wie in der lokalen
 Projektanleitung beschrieben (Ergebnis 0), ohne Suchmuster in dieser Datei.
 
