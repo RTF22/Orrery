@@ -641,6 +641,16 @@ Test-/Belegliste-Zuwachs (22).
 - Iapetus' Knotenpräzession um Saturns Pol statt um den Laplace-Pol.
 - Mimas' 20-%-Positionsschranke im Fixture-Test (4:2-Libration).
 
+**Entscheidungen von Jens (22.09.2026, „push nach github, Gymnasialtext nachführen,
+wortzahlen sind ok, Rest bestätigt"):** master wurde nach dieser Freigabe gepusht. Der
+Gymnasialtext `objekt-iapetus.md` (de/en) nennt die Höhe des Äquatorwulsts jetzt mit
+bis zu 20 km (Commit „Gymnasialtext Iapetus: Höhe des Äquatorwulsts auf 20 km
+berichtigt"). Die Wortzahlen über dem Richtwert bleiben. Die zwei neuen Quellenkarten,
+die 22 Plan-Rulings und die Umsetzungs-Rulings in §6 sind bestätigt; die Code- und
+Datensatz-Befunde bleiben als Kandidaten für eigene Tasks zurückgestellt, der
+Sammelbefund zur Prozesssprache in Beleglisten früherer Etappen ist für 4d-11
+vorgemerkt.
+
 Die Wort- und Trailerprüfung vor dem Commit erfolgte wie in der lokalen
 Projektanleitung beschrieben (Ergebnis 0), ohne Suchmuster in dieser
 Datei.
