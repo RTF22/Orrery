@@ -373,6 +373,17 @@ Jede Zeile des Ledgers mit „Ruling:", in Ledger-Reihenfolge.
   (Katalog 1485 aus `massKg`/`radiusKm`, Messung 1478,1 aus JPL SSD) und
   belegt sie — Kosten bei Fehlurteil: ein Satz.
 
+**Nach Task 4/Task 5 (Katalogfragen):**
+
+- Der Rhea-CO₂-Vergleichssatz im Dione-Text (Belegzeile 20) hat keinen eigenen
+  Katalogeintrag — die Details gehören laut Umsetzer-Ruling in den Rhea-Text,
+  dort als eigener Katalogeintrag (`teolis-2010`) vorhanden. Kosten bei
+  Fehlurteil: eine Belegzeile ohne Katalogverweis.
+- Tirawa-/Inktomi-Kraterdaten im Rhea-Text stammen aus der Wikipedia ohne
+  eigenen Katalogeintrag — als „eigene Recherche, nicht katalogisiert"
+  ausgewiesen und durch die Quellenkarte Wikipedia gedeckt. Kosten bei
+  Fehlurteil: eine Belegzeile.
+
 **Zu Task 7 (Quellenkarten):**
 
 - Zwei neue Quellenkarten (`nasa-iapetus`, `nasa-iapetus-vorbeiflug`)
@@ -633,3 +644,11 @@ Test-/Belegliste-Zuwachs (22).
 Die Wort- und Trailerprüfung vor dem Commit erfolgte wie in der lokalen
 Projektanleitung beschrieben (Ergebnis 0), ohne Suchmuster in dieser
 Datei.
+
+## Nacharbeit nach der Schlussprüfung (22.09.2026)
+
+Schlussprüfung „Bereit zum Merge: Ja", Befunde: 0 kritisch, 0 wichtig, 2
+klein. Klein 1 (§6 um zwei Rulings zu Katalogfragen Task 4/Task 5 ergänzt)
+behoben. Klein 2 (`src/data/literatur.ts:1753`, Titel `gyalay-2023` mit
+geradem Apostroph und Unicode-Bindestrich U+2010 — Titel so von Crossref
+geliefert, Prüfskript vergleicht Titel) bewusst belassen.
