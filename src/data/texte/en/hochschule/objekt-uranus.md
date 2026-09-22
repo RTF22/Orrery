@@ -191,7 +191,7 @@ orbits and compositions of the five moons is a matter of ongoing research. Becau
 questions about the interior noted above, the planetary science decadal survey of the National
 Academies recommends an orbiter and probe mission to the Uranus system as the top priority among the
 large NASA flagship missions of the coming decade
-([National Academies of Sciences 2023](literatur:national-academies-2023)).
+([National Academies of Sciences 2022](literatur:national-academies-2022)).
 
 ## Open questions
 
@@ -222,7 +222,7 @@ large NASA flagship missions of the coming decade
   independently of the gain in precision: unlike Saturn, where gravity field and ring seismology
   provide a second method independent of the radio emission, Uranus so far lacks such a second,
   mechanical determination — one of the goals of a future orbiter mission
-  ([National Academies of Sciences 2023](literatur:national-academies-2023)).
+  ([National Academies of Sciences 2022](literatur:national-academies-2022)).
 - **Atypical flyby:** The only in-situ measurement of the Uranus magnetosphere, according to a
   reanalysis, caught a state that the solar wind produces only about 4 % of the time
   ([Jasinski et al. 2024](literatur:jasinski-2024)); how much the previous picture of the magnetic

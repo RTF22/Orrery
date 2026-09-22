@@ -3743,10 +3743,10 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.3847/PSJ/ad04d6',
   },
   {
-    id: 'national-academies-2023',
+    id: 'national-academies-2022',
     autoren: ['National Academies of Sciences, Engineering, and Medicine'],
     etAl: false,
-    jahr: 2023,
+    jahr: 2022,
     titel: 'Origins, Worlds, and Life',
     erschienen: 'National Academies Press, Washington, DC',
     url: 'https://nap.nationalacademies.org/catalog/27209',

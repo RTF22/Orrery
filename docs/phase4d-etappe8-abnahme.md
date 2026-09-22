@@ -741,3 +741,15 @@ gekennzeichnet. Die Prüfung ging alle 69 neuen Katalogeinträge, die neue
 Quellenkarte, das Protokoll, die README-Änderung und alle 19 Commit-Texte
 durch und bestätigte Katalogzahlen (559 → 628 je Commit), Testsumme 4781 und
 die Einordnung des transienten Prüfskript-Fehlers `bobis-2008`.
+
+## Entscheidungen von Jens (22.09.2026)
+
+Zu §8 („push und Vorschläge freigegeben"): Push von master nach origin
+freigegeben. Katalogeintrag auf `national-academies-2022` umgestellt (Kennung,
+Jahr, beide Zitate in `objekt-uranus.md` de/en, Belegzeile 55; Adresse bleibt
+der bei nap.nationalacademies.org geführte Katalogeintrag). Wortzahlen über der
+Obergrenze (Titania EN 2442, Oberon EN 2430, Szene EN 1259) angenommen.
+Miranda-EN-Kürzung und vorbefüllte Prüfspalten (Task 5/6) zur Kenntnis
+genommen, keine Maßnahme. Die vier Gymnasialbefunde bleiben vorgemerkt und
+werden vor oder mit Etappe 4d-9 in einem eigenen Nachführungs-Task behandelt.
+Die 23 Plan-Rulings und die Rulings in §6 gelten als bestätigt.

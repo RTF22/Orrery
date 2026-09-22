@@ -199,7 +199,7 @@ Massen, Bahnen und Zusammensetzungen der fünf Monde ist Gegenstand laufender Fo
 und der oben genannten offenen Fragen zum Inneren empfiehlt die Planetenforschungs-Decadal-Survey der
 National Academies eine Orbiter- und Sondenmission zum Uranussystem als höchste Priorität unter den
 großen NASA-Flaggschiffmissionen des kommenden Jahrzehnts
-([National Academies of Sciences 2023](literatur:national-academies-2023)).
+([National Academies of Sciences 2022](literatur:national-academies-2022)).
 
 ## Offene Fragen
 
@@ -229,7 +229,7 @@ großen NASA-Flaggschiffmissionen des kommenden Jahrzehnts
   trifft, bleibt unabhängig von der Präzisionssteigerung offen: Anders als bei Saturn, wo Schwerefeld
   und Ringseismologie ein von der Radiostrahlung unabhängiges zweites Verfahren liefern, fehlt für
   Uranus bislang eine solche zweite, mechanische Bestimmung – eines der Ziele einer künftigen
-  Orbitermission ([National Academies of Sciences 2023](literatur:national-academies-2023)).
+  Orbitermission ([National Academies of Sciences 2022](literatur:national-academies-2022)).
 - **Untypischer Vorbeiflug:** Die einzige In-situ-Messung der Uranus-Magnetosphäre traf nach einer
   Neuauswertung einen Zustand, den der Sonnenwind nur in rund 4 % der Zeit erzeugt
   ([Jasinski et al. 2024](literatur:jasinski-2024)); wie sehr das bisherige Bild von Magnetfeld und
