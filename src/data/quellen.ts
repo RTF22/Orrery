@@ -363,7 +363,7 @@ export const QUELLEN: readonly Quelle[] = [
     titel: { de: 'Iapetus bei NASA Science', en: 'Iapetus at NASA Science' },
     herausgeber: 'NASA', sprache: 'en', art: 'uebersicht',
     url: 'https://science.nasa.gov/saturn/moons/iapetus/',
-    fuer: ['szene:iapetus-schief'],
+    fuer: ['objekt:iapetus', 'szene:iapetus-schief'],
   },
   {
     id: 'nasa-iapetus-vorbeiflug',
@@ -373,7 +373,7 @@ export const QUELLEN: readonly Quelle[] = [
     },
     herausgeber: 'NASA', sprache: 'en', art: 'uebersicht',
     url: 'https://science.nasa.gov/missions/cassini/iapetus-flyby-sept-10-2007/',
-    fuer: ['szene:iapetus-schief'],
+    fuer: ['objekt:iapetus', 'szene:iapetus-schief'],
   },
   {
     id: 'nasa-gebundene-rotation',

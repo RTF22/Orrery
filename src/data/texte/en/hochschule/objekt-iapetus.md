@@ -3,9 +3,9 @@
 Iapetus is the outermost of the large, roughly spherical moons of [Saturn](objekt:saturn) and,
 at 734.5 km in radius, markedly smaller than [Titan](objekt:titan) (2575 km) and somewhat
 smaller than Rhea (763.3 km), but larger than Dione, Tethys, Enceladus and Mimas. Two features
-make it unique among Saturn's moons: by far the most extreme brightness
-contrast of any single body in the Solar System, between its dark, leading hemisphere (Cassini
-Regio) and its bright trailing hemisphere, and a mountain ridge up to about 20 km high that runs
+make it unique among Saturn's moons: one of the strongest known brightness contrasts between the
+two hemispheres of a single body in the Solar System, between its dark, leading hemisphere
+(Cassini Regio) and its bright trailing hemisphere, and a mountain ridge up to about 20 km high that runs
 for just over 110° of longitude almost exactly along the equator, giving Iapetus its
 walnut-like shape. Both features are tied to its large orbital distance of about 3.56 million
 km, just over 61 times Saturn's radius: that distance permits a rotation slow enough to produce large
@@ -56,9 +56,10 @@ and dynamics), yet its shape matches the hydrostatic equilibrium figure of a bod
 period of about 16 hours – nearly 120 times faster than today. This "frozen-in" shape can only be
 preserved if a sufficiently thick, rigid lithosphere formed early, before tidal friction slowed
 the rotation to today's value over several hundred million years; short-lived radioactive
-isotopes (Iapetus accordingly accreted 2.5 to 5.0 million years after the formation of the
-calcium–aluminum inclusions, early enough for significant Al-26 heating) supply the necessary
-early heat without warming the body enough to fully separate into ice and rock
+isotopes — mainly ²⁶Al, to a lesser extent ⁶⁰Fe — supply the necessary early heat (Iapetus
+accordingly accreted 2.5 to 5.0 million years after the formation of the calcium–aluminum
+inclusions, early enough for significant ²⁶Al heating), without warming the body enough to fully
+separate into ice and rock
 ([Castillo-Rogez et al. 2007](literatur:castillo-rogez-2007)). That fits the overall very low
 density, barely above that of pure water ice (see Parameters and measurement): a largely
 undifferentiated, ice-rich body without pronounced core–mantle separation is consistent with this
@@ -70,11 +71,15 @@ future gravity-field measurement.
 The most striking feature is the two-tone coloring: the leading hemisphere, Cassini Regio, has a
 bolometric Bond albedo of only $0.06 \pm 0.01$, the trailing hemisphere $0.25 \pm 0.03$
 ([Blackburn et al. 2011](literatur:blackburn-2011); figures as in
-[Albedo and brightness](thema:photometrie)) – the most extreme albedo contrast of any single body
-in the Solar System. In high-resolution images, the brightest material reaches up to
+[Albedo and brightness](thema:photometrie)) – one of the strongest known albedo contrasts of a
+single body in the Solar System
+([Spencer and Denk 2010](literatur:spencer-2010); [Iapetus at NASA Science](quelle:nasa-iapetus)).
+In high-resolution images, the brightest material reaches up to
 $0.38 \pm 0.04$, because the coarse hemispheric averages include darker individual patches
 ([Blackburn et al. 2011](literatur:blackburn-2011)). Repeated imaging since 2004 and the single
-close flyby on September 10, 2007, additionally revealed a global color dichotomy: both the dark
+close flyby on September 10, 2007
+([Cassini flyby of Iapetus](quelle:nasa-iapetus-vorbeiflug)), additionally revealed a global
+color dichotomy: both the dark
 and the bright material of the leading side are noticeably redder than the corresponding material
 of the trailing side, and individual craters show darker equator-facing and brighter pole-facing
 walls – evidence that the same temperature-controlled water-ice sublimation that shapes the
@@ -156,8 +161,8 @@ the Solar System's history – how large the original share was remains open (se
 
 - **How much of today's contrast is primordial deposition, and how much is thermally amplified?**
   Tosi et al. find that the amount of water ice increases with distance from the center of the
-  dark region – consistent with thermal segregation, but equally with ongoing or only recently
-  completed deposition; their own analysis does not settle the question
+  dark region – consistent with thermal segregation, but in their own reading also a possible
+  sign of ongoing or only recently completed deposition; the question is not settled either way
   ([Tosi et al. 2010](literatur:tosi-2010)). Spencer and Denk, by contrast, show that a
   comparatively small primordial trigger suffices once the feedback operates over billions of
   years ([Spencer and Denk 2010](literatur:spencer-2010)); how large the original share was

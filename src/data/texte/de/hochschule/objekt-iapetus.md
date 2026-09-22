@@ -3,9 +3,10 @@
 Iapetus ist der äußerste der großen, annähernd kugelförmigen Monde [Saturns](objekt:saturn) und
 mit 734,5 km Radius deutlich kleiner als [Titan](objekt:titan) (2575 km) und etwas kleiner als
 Rhea (763,3 km), aber größer als Dione, Tethys, Enceladus und Mimas.
-Zwei Eigenschaften machen ihn unter den Saturnmonden einzigartig: der mit Abstand extremste
-Helligkeitskontrast eines einzelnen Körpers im Sonnensystem zwischen seiner dunklen, in
-Umlaufrichtung vorderen Hemisphäre (Cassini Regio) und seiner hellen hinteren Hemisphäre, und ein
+Zwei Eigenschaften machen ihn unter den Saturnmonden einzigartig: einer der stärksten bekannten
+Helligkeitskontraste zwischen den beiden Hemisphären eines einzelnen Körpers im Sonnensystem,
+zwischen seiner dunklen, in Umlaufrichtung vorderen Hemisphäre (Cassini Regio) und seiner hellen
+hinteren Hemisphäre, und ein
 bis zu rund 20 km hoher Gebirgszug, der sich über gut 110° Länge fast exakt auf dem Äquator
 zieht und Iapetus seine walnussartige Form gibt. Beide Merkmale hängen mit seiner großen
 Bahnentfernung von rund 3,56 Millionen km zusammen, gut dem 61-Fachen des Saturnradius: Sie erlaubt
@@ -57,10 +58,10 @@ Rotation und Dynamik), doch seine Gestalt entspricht der hydrostatischen Gleichg
 mit rund 16 Stunden Periode rotierenden Körpers – fast 120-mal schneller als heute. Diese „eingefrorene"
 Form lässt sich nur halten, wenn früh eine hinreichend dicke, feste Lithosphäre entstand, bevor
 Gezeitenreibung die Rotation über mehrere hundert Millionen Jahre auf den heutigen Wert
-abbremste; kurzlebige radioaktive Isotope (Iapetus akkretierte demnach 2,5 bis 5,0 Millionen
-Jahre nach der Bildung der Kalzium-Aluminium-Einschlüsse, früh genug für nennenswerte
-Al-26-Wärme) liefern dafür die nötige frühe Wärme, ohne den Körper so weit aufzuheizen, dass er
-sich vollständig in Eis und Gestein trennt
+abbremste; kurzlebige radioaktive Isotope — vor allem ²⁶Al, in geringerem Maß ⁶⁰Fe — liefern
+dafür die nötige frühe Wärme (Iapetus akkretierte demnach 2,5 bis 5,0 Millionen Jahre nach der
+Bildung der Kalzium-Aluminium-Einschlüsse, früh genug für nennenswerte ²⁶Al-Wärme), ohne den
+Körper so weit aufzuheizen, dass er sich vollständig in Eis und Gestein trennt
 ([Castillo-Rogez et al. 2007](literatur:castillo-rogez-2007)). Das passt zur insgesamt sehr
 geringen, kaum über reinem Wassereis liegenden Dichte (siehe Kenngrößen und Messung): Ein
 weitgehend undifferenzierter, eisreicher Körper ohne ausgeprägte Kern-Mantel-Trennung ist mit
@@ -73,11 +74,15 @@ Das auffälligste Merkmal ist die Zweifarbigkeit: Die in Umlaufrichtung vordere 
 Cassini Regio, hat eine bolometrische Bond-Albedo von nur $0{,}06 \pm 0{,}01$, die hintere
 Hemisphäre $0{,}25 \pm 0{,}03$
 ([Blackburn et al. 2011](literatur:blackburn-2011); Zahlen wie
-[Albedo und Helligkeit](thema:photometrie)) – der extremste Albedokontrast eines einzelnen
-Körpers im Sonnensystem. In hoch aufgelösten Bildern erreicht besonders helles Material bis zu
+[Albedo und Helligkeit](thema:photometrie)) – einer der stärksten bekannten Albedokontraste
+eines einzelnen Körpers im Sonnensystem
+([Spencer und Denk 2010](literatur:spencer-2010); [Iapetus bei NASA Science](quelle:nasa-iapetus)).
+In hoch aufgelösten Bildern erreicht besonders helles Material bis zu
 $0{,}38 \pm 0{,}04$, weil die groben Hemisphärenmittel dunklere Einzelflecken einschließen
 ([Blackburn et al. 2011](literatur:blackburn-2011)). Wiederholte Aufnahmen seit 2004 und der
-einzige nahe Vorbeiflug am 10. September 2007 zeigten zusätzlich eine globale Farbdichotomie:
+einzige nahe Vorbeiflug am 10. September 2007
+([Cassini-Vorbeiflug an Iapetus](quelle:nasa-iapetus-vorbeiflug)) zeigten zusätzlich eine globale
+Farbdichotomie:
 Sowohl dunkles als auch helles Material der Vorderseite ist merklich röter als das entsprechende
 Material der Rückseite, und einzelne Krater zeigen dunklere äquatorwärts und hellere polwärts
 ausgerichtete Wände – ein Indiz dafür, dass dieselbe temperaturgesteuerte
@@ -161,9 +166,9 @@ bleibt offen (siehe Offene Fragen)
 
 - **Wie viel des heutigen Kontrasts ist primordiale Ablagerung, wie viel thermisch verstärkt?**
   Tosi et al. finden, dass die Wassereismenge mit dem Abstand vom Zentrum der dunklen Region
-  zunimmt – vereinbar mit thermischer Segregation, aber ebenso mit einer noch andauernden oder
-  erst kürzlich erfolgten Ablagerung; ihre eigene Auswertung entscheidet das nicht
-  ([Tosi et al. 2010](literatur:tosi-2010)). Spencer und Denk zeigen dagegen, dass schon ein
+  zunimmt – vereinbar mit thermischer Segregation, aber nach eigener Lesart auch ein Hinweis auf
+  eine noch andauernde oder erst kürzlich erfolgte Ablagerung; entschieden ist die Frage damit
+  nicht ([Tosi et al. 2010](literatur:tosi-2010)). Spencer und Denk zeigen dagegen, dass schon ein
   vergleichsweise kleiner primordialer Anstoß genügt, wenn die Rückkopplung über Jahrmilliarden
   wirkt ([Spencer und Denk 2010](literatur:spencer-2010)); wie groß der ursprüngliche gegenüber
   dem verstärkten Anteil tatsächlich war, ist damit nicht getrennt messbar.
