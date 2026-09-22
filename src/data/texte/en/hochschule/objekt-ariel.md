@@ -103,8 +103,8 @@ than forming solely through surface radiation chemistry
 ## Atmosphere and magnetosphere
 
 Ariel carries no atmosphere; its mass and surface temperature are insufficient to bind CO2
-permanently – even in the comparatively cold orbit around Uranus, more than twenty times farther
-from the Sun than Earth, carbon dioxide readily turns to gas and is lost. The moon lies within
+permanently – even in the comparatively cold orbit around Uranus, some twenty times farther from
+the Sun than Earth, carbon dioxide readily turns to gas and is lost. The moon lies within
 Uranus' magnetosphere, whose charged particles continually irradiate its surface. Two positions
 compete to explain the origin of the CO2: one holds that it forms through radiation chemistry from
 water ice and carbon trapped within it, driven by magnetospheric particles

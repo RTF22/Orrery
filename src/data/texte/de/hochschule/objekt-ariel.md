@@ -92,8 +92,8 @@ geologisch junger Zeit ausgedehnte, von innen angetriebene Umgestaltung erfahren
 Spektroskopisch ist Ariel der Mond mit dem meisten nachgewiesenen CO₂-Eis im Uranussystem, mit
 abnehmender Menge nach außen zu Umbriel und Titania, während Oberon keines zeigt
 ([Cartwright et al. 2015](literatur:cartwright-2015)). Das CO₂ konzentriert sich auf der
-bahnabgewandten (nachlaufenden) Halbkugel, wo es 2002 erstmals im Uranussystem nachgewiesen wurde,
-während die bahnzugewandte Halbkugel tiefere Wassereis-Absorptionsbanden zeigt
+nachlaufenden Halbkugel, wo es 2002 erstmals im Uranussystem nachgewiesen wurde, während die
+vorlaufende Halbkugel tiefere Wassereis-Absorptionsbanden zeigt
 ([Grundy 2003](literatur:grundy-2003); [Grundy et al. 2006](literatur:grundy-2006)). Nahinfrarot-
 Spektren zeigen zusätzlich eine 2,2-µm-Bande, die am besten zu Ammoniak-Hydraten oder gefroren
 eingeschlossenen Ammoniak-Wasser-Lösungen passt und über beide Halbkugeln verteilt ist; weil solche
@@ -110,8 +110,8 @@ durch Strahlungschemie an der Oberfläche zu entstehen
 ## Atmosphäre und Magnetosphäre
 
 Ariel trägt keine Atmosphäre; seine Masse und Oberflächentemperatur reichen nicht, um selbst CO₂ auf
-Dauer zu binden – noch in der vergleichsweise kalten Umlaufbahn um Uranus, mehr als zwanzigmal
-weiter von der Sonne entfernt als die Erde, geht Kohlendioxid leicht in die Gasphase über und damit
+Dauer zu binden – noch in der vergleichsweise kalten Umlaufbahn um Uranus, rund zwanzigmal weiter
+von der Sonne entfernt als die Erde, geht Kohlendioxid leicht in die Gasphase über und damit
 verloren. Der Mond liegt innerhalb von Uranus' Magnetosphäre, deren geladene Teilchen seine
 Oberfläche fortlaufend bestrahlen. Für den Ursprung des CO₂ konkurrieren zwei Positionen: Nach der
 einen entsteht es durch Strahlungschemie aus Wassereis und im Eis eingeschlossenem Kohlenstoff,
