@@ -16,7 +16,7 @@ from the distant moon Phoebe and its huge dust ring, which Iapetus sweeps up on 
 leading side. The dark areas warm up more; ice evaporates there and condenses on the
 colder, bright regions. In this way the difference reinforces itself.
 
-Along the equator runs a mountain ridge up to 13 km high and about 1,300 km long, which
+Along the equator runs a mountain ridge up to 20 km high and about 1,300 km long, which
 gives Iapetus the shape of a walnut. Its flattened shape fits an earlier, faster
 rotation frozen into the crust. Scene:
 [The tilted orbit of Iapetus](szene:iapetus-schief); key figures:

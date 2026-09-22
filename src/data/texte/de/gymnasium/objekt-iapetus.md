@@ -16,7 +16,7 @@ Phoebe und dessen riesigem Staubring, den Iapetus auf seiner Vorderseite aufsamm
 dunklen Flächen erwärmen sich stärker; Eis verdampft dort und schlägt sich auf den
 kälteren, hellen Gebieten nieder. So verstärkt sich der Unterschied von selbst.
 
-Längs des Äquators zieht sich ein bis zu 13 km hoher Gebirgsrücken über rund 1 300 km,
+Längs des Äquators zieht sich ein bis zu 20 km hoher Gebirgsrücken über rund 1 300 km,
 der Iapetus die Form einer Walnuss gibt. Seine abgeplattete Gestalt passt zu einer
 früheren, schnelleren Rotation, die in der Kruste eingefroren ist. Szene:
 [Die geneigte Bahn des Iapetus](szene:iapetus-schief); Kennzahlen:
