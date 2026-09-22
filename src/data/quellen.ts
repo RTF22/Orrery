@@ -504,7 +504,7 @@ export const QUELLEN: readonly Quelle[] = [
     titel: { de: 'Mittlere Bahnelemente der Monde (JPL SSD)', en: 'Planetary Satellite Mean Elements (JPL SSD)' },
     herausgeber: 'JPL', sprache: 'en', art: 'fachartikel',
     url: 'https://ssd.jpl.nasa.gov/sats/elem/',
-    fuer: ['thema:bahnelemente', 'thema:modell', 'szene:triton-rueckwaerts', 'szene:iapetus-schief'],
+    fuer: ['thema:bahnelemente', 'thema:modell', 'objekt:iapetus', 'szene:triton-rueckwaerts', 'szene:iapetus-schief'],
   },
   {
     id: 'jpl-hauptguertel',
