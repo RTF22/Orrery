@@ -90,8 +90,9 @@ Südhalbkugel, die Voyager 2 am 24. Januar 1986 sah – fiel auf den 30. Septemb
 Tagundnachtgleiche auf den 6./7. Dezember 2007 und die nächste Nordsommer-Sonnenwende auf den
 11. April 2030. Auch [Pluto](objekt:pluto) mit seiner Schiefe von rund 120° erlebt wegen der noch
 stärkeren Kippung ausgedehnte Polartag- und Polarnachtzonen, die selbst mittlere Breiten erfassen –
-verstärkt durch die hohe Bahnexzentrizität, die den Sonnenabstand über einen Umlauf um mehr als das
-Doppelte schwanken lässt.
+verstärkt durch die hohe Bahnexzentrizität, die den Sonnenabstand über einen Umlauf um rund das
+1,67-Fache schwanken lässt und damit die eingestrahlte Sonnenenergie um fast das Dreifache (rund das
+2,80-Fache).
 
 ## Präzession der Spinachse
 
@@ -263,8 +264,11 @@ Triton behalten trotzdem einen im Datensatz festen Pol, obwohl der IAU-Bericht i
 Reihenentwicklung mit großen periodischen Gliedern angibt, die die Präzession der Drehachse mit der
 wandernden Bahnnormale beschreiben – der Datensatz führt nur die konstanten Glieder
 ([Archinal et al. 2011](literatur:archinal-2011)). Eris und Makemake tragen im Datensatz einen Pol
-senkrecht auf der eigenen Bahn, mangels einer gemessenen Alternative. Jahreszeiten entstehen im Bild
-allein aus Pol und Sonnenrichtung in der Beleuchtungsrechnung, ohne eigenen Jahreszeiten-Code – wie
+senkrecht auf der eigenen Bahn, weil kein vollständiger Pol gemessen ist (für Eris ist immerhin ein
+Kippwinkel von rund 78,3° gegen die eigene Bahn aus der Dysnomia-Bahn abgeleitet, aber keine
+Rektaszension und Deklination). Jahreszeiten entstehen im Bild allein aus Pol und Sonnenrichtung in der
+Beleuchtungsrechnung (Ausrichtung des Körpernetzes in `render/bodies.ts`, Belichtung in
+`render/lighting.ts`), ohne eigenen Jahreszeiten-Code – wie
 jede Vereinfachung dieser Art gehört auch diese zu den [Grenzen des Modells](thema:modell).
 
 *Stand: September 2026*

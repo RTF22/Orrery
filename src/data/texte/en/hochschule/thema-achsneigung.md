@@ -91,8 +91,8 @@ near the sunlit southern hemisphere that Voyager 2 saw on 24 January 1986 – fe
 1985, the following equinox on 6/7 December 2007, and the next northern summer solstice on 11 April
 2030. [Pluto](objekt:pluto) too, with its obliquity of about 120°, experiences extended polar-day and
 polar-night zones that reach into even middle latitudes because of its still stronger tilt – amplified
-by its high orbital eccentricity, which lets the solar distance vary by more than a factor of two over
-one orbit.
+by its high orbital eccentricity, which lets the solar distance vary by about a factor of 1.67 over
+one orbit and therefore the incident solar energy by nearly a factor of three (about 2.80).
 
 ## Precession of the spin axis
 
@@ -258,9 +258,13 @@ pole in the dataset, even though the IAU report gives their poles as series expa
 periodic terms that describe the precession of the spin axis following the drifting orbit normal –
 the dataset carries only the constant terms
 ([Archinal et al. 2011](literatur:archinal-2011)). Eris and Makemake carry a pole perpendicular to
-their own orbit in the dataset, for want of a measured alternative. Seasons emerge in the rendered
-image purely from the pole and the direction to the Sun in the lighting calculation, with no
-dedicated seasons code – like every simplification of this kind, this too belongs to the
+their own orbit in the dataset because no complete pole has been measured (for Eris a tilt of about
+78.3° against its own orbit has at least been derived from Dysnomia's orbit, but no right ascension
+and declination). Seasons emerge in the rendered image purely from the pole and the direction to the
+Sun in the lighting
+calculation (the body mesh's orientation comes from `render/bodies.ts`, its exposure from
+`render/lighting.ts`), with no dedicated seasons code – like every simplification of this kind, this
+too belongs to the
 [limits of the model](thema:modell).
 
 *As of September 2026*
