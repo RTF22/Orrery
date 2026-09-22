@@ -15,7 +15,8 @@ consist of organic grains.
 
 On 14 January 2005 the European probe [Huygens](quelle:esa-cassini-huygens) landed on
 Titan, still the most distant landing ever made. Cassini's measurements show how
-strongly Titan deforms under Saturn's tides; this points to an ocean of water deep
-beneath the ice crust. Scene: [Hazy Titan in front of Saturn](szene:titan-dunst); key
+strongly Titan deforms under Saturn's tides. Whether that points to an ocean of water
+deep beneath the ice crust or just a warm, viscous layer of ice is still open. Scene:
+[Hazy Titan in front of Saturn](szene:titan-dunst); key
 figures: [Saturnian Satellite Fact Sheet](quelle:nssdc-saturnmonde); mission:
 [Cassini](quelle:nasa-cassini).

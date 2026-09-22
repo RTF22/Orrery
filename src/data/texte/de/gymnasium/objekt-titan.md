@@ -15,7 +15,8 @@ am Äquator bestehen aus organischen Körnern.
 
 Am 14. Januar 2005 landete die europäische Sonde [Huygens](quelle:esa-cassini-huygens)
 auf Titan, die bis heute fernste Landung. Messungen von Cassini zeigen, wie stark sich
-Titan unter Saturns Gezeiten verformt; das spricht für einen Ozean aus Wasser tief unter
-der Eiskruste. Szene: [Titan im Dunst vor Saturn](szene:titan-dunst); Kennzahlen:
+Titan unter Saturns Gezeiten verformt. Ob tief unter der Eiskruste ein Ozean aus Wasser
+liegt oder nur eine warme, zähe Eisschicht, ist noch offen. Szene:
+[Titan im Dunst vor Saturn](szene:titan-dunst); Kennzahlen:
 [Faktenblatt der Saturnmonde](quelle:nssdc-saturnmonde); Mission:
 [Cassini](quelle:nasa-cassini).
