@@ -22,8 +22,8 @@ Rotation und Entstehung dar und beschreibt zuletzt, was Orrery davon abbildet.
 
 Cassinis Bahnverfolgung (Ephemeride SAT441) liefert Rheas Massenparameter direkt aus dem
 Doppler-Effekt am Raumsonden-Funksignal; kombiniert mit dem aus Cassini-Bildern hergeleiteten
-Volumen ergibt sich eine mittlere Dichte von $1{,}2372 \pm 0{,}0029\,\mathrm{g\,cm^{-3}}$ – kaum
-mehr als reines Wassereis ($0{,}917\,\mathrm{g\,cm^{-3}}$)
+Volumen ergibt sich eine mittlere Dichte von $1{,}2372 \pm 0{,}0029\,\mathrm{g\,cm^{-3}}$ – rund
+35 % mehr als reines Wassereis ($0{,}917\,\mathrm{g\,cm^{-3}}$)
 ([JPL SSD Monddaten](quelle:jpl-satelliten)). Rhea ist leicht dreiachsig geformt:
 $765 \times 763 \times 762\,\mathrm{km}$, aus demselben photogrammetrischen
 Kontrollpunktnetz über Cassini-Bilder der nominellen Mission wie bei den übrigen mittelgroßen
@@ -46,8 +46,8 @@ einer angenommenen Mischung aus Wassereis ($917\,\mathrm{kg\,m^{-3}}$) und Silik
 Tethys). Anderson und Schubert (2007) kommen mit eigenen Materialdichten (Eis $930$, Gestein
 $3250\,\mathrm{kg\,m^{-3}}$) und zusätzlich berücksichtigter Kompression des Eises mit der Tiefe
 stattdessen auf rund ein Viertel Gestein – ein Unterschied in den Annahmen, kein Widerspruch in
-der gemessenen Dichte. Einordnung von Trägheitsmomentfaktor und Kernbildung bei Monden allgemein
-unter [Innerer Aufbau](thema:innerer-aufbau).
+der gemessenen Dichte. Einordnung von Trägheitsmomentfaktor bei Monden allgemein unter
+[Innerer Aufbau](thema:innerer-aufbau).
 
 ## Inneres
 

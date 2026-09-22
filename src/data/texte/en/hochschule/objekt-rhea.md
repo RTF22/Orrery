@@ -22,7 +22,7 @@ rotation and dynamics, and formation and evolution, and closes with what Orrery 
 
 Cassini's radio tracking (ephemeris SAT441) yields Rhea's mass parameter directly from the
 Doppler shift of the spacecraft's radio signal; combined with the volume derived from Cassini
-images, this gives a mean density of $1.2372 \pm 0.0029\,\mathrm{g\,cm^{-3}}$ – barely more
+images, this gives a mean density of $1.2372 \pm 0.0029\,\mathrm{g\,cm^{-3}}$ – around 35% more
 than pure water ice ($0.917\,\mathrm{g\,cm^{-3}}$) ([JPL SSD satellite
 data](quelle:jpl-satelliten)). Rhea is slightly triaxial: $765 \times 763 \times
 762\,\mathrm{km}$, from the same photogrammetric control-point network over Cassini images of the
@@ -46,7 +46,7 @@ two-component model as for [Dione](objekt:dione) and Tethys). Anderson and Schub
 their own material densities (ice $930$, rock $3250\,\mathrm{kg\,m^{-3}}$) and additionally
 accounting for compression of the ice with depth, instead arrive at about one quarter rock – a
 difference in assumptions, not a contradiction in the measured density itself. For the moment of
-inertia factor and core formation in moons generally, see [Interior structure](thema:innerer-aufbau).
+inertia factor in moons generally, see [Interior structure](thema:innerer-aufbau).
 
 ## Interior
 
