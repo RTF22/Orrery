@@ -17,7 +17,8 @@ Voyager 2 limb-coordinate surveys ([Thomas 1988](literatur:thomas-1988)); a sing
 suffices. The catalogue value of 788.9 km comes from this photogrammetric analysis and was later
 checked independently by the only stellar occultation by Titania observed to date: on
 8 September 2001, the moon occulted the Hipparcos star SAO 164538, observed from more than a
-hundred stations on three continents; 57 analysed chords yielded a radius of 788.4 ± 0.6 km
+hundred stations on three continents; of the 57 chords observed, the best 27 were used to derive
+the radius, yielding 788.4 ± 0.6 km
 ([Widemann et al. 2009](literatur:widemann-2009)) – 0.5 km smaller than the catalogue value, but
 not statistically significant given the combined uncertainties of 1.8 km (Voyager) and 0.6 km
 (occultation). As with the other moons, Titania's mass parameter comes from a single flyby
@@ -49,7 +50,7 @@ In the same simplified two-component model of water ice ($917\,\mathrm{kg\,m^{-3
 rock ($3000\,\mathrm{kg\,m^{-3}}$, as for [Miranda](objekt:miranda), [Ariel](objekt:ariel),
 [Umbriel](objekt:umbriel), and [Iapetus](objekt:iapetus)), Titania's catalogue density corresponds
 to a rock mass fraction of about 65% (derivation) – the highest among the five large Uranian moons
-(Miranda one third, Umbriel 54%, Ariel 60–61%). Whether the body is fully differentiated cannot be
+(Miranda one third, Umbriel 54%, Ariel about 60%). Whether the body is fully differentiated cannot be
 decided without a dedicated gravity-field measurement (see
 [Interior structure](thema:innerer-aufbau)). Interior-structure models for all five large Uranian
 moons rank Titania together with Oberon as the two most promising candidates for a residual ocean,
@@ -104,20 +105,23 @@ bands ([Grundy et al. 2006](literatur:grundy-2006)).
 
 There is no evidence for an atmosphere on Titania: the same 2001 stellar occultation that yielded
 the radius sets an upper limit on the surface pressure of about 10 to 20 nanobar for CO2 and
-related gases – roughly a billionth of Earth's atmospheric pressure
+related gases – roughly a hundred-millionth of Earth's atmospheric pressure
 ([Widemann et al. 2009](literatur:widemann-2009)); as for the other four large Uranian moons, mass
 and surface temperature are insufficient to retain even CO2 as a gas over the long term.
 
-With a mean orbital radius of 436,293 km, Titania orbits close to the edge of Uranus's
-magnetosphere, but how close depends strongly on the solar-wind pressure. The only measurement
-comes from Voyager 2 in January 1986; a more recent reanalysis shows the probe happened to
-encounter Uranus during an unusually compressed state (dayside shrunk by about 78%, occurring only
-about 4% of the time) – the magnetopause distance measured then, about 17 Uranus radii (roughly
-435,000 km), sat almost exactly at Titania's own orbital radius, whereas the typical distance
-averaged over many solar-wind models, about 22 Uranus radii (568,000 km), lies considerably
-farther out ([Jasinski et al. 2024](literatur:jasinski-2024)). Under typical conditions, Titania
-therefore orbits comfortably inside the magnetosphere; in 1986, it may have been near the boundary
-or, at times, even outside it.
+With a mean orbital radius of 436,293 km, Titania orbits relatively close to Uranus's magnetopause,
+but how close depends strongly on the solar-wind pressure. The only measurement comes from
+Voyager 2 in January 1986; a more recent reanalysis shows the probe happened to encounter Uranus
+during an unusually compressed state (dayside shrunk by about 78%, occurring only about 4% of the
+time): the subsolar magnetopause distance measured then was about 17.3 Uranus radii (roughly
+442,000 km, precision range 17.17 to 17.51 Uranus radii, or roughly 439,000 to 448,000 km) –
+leaving only about 2,600 km of margin over Titania's own orbital radius at the low end of that
+range, and about 5,900 km at the midpoint. Under typical
+conditions, the magnetopause distance instead averages 22.2 Uranus radii (roughly 567,000 km,
+middle range 20 to 25 Uranus radii) – considerably farther out
+([Jasinski et al. 2024](literatur:jasinski-2024)). Titania therefore orbits inside the
+magnetosphere even during the unusual Voyager encounter, though with a much narrower safety margin
+than under typical conditions.
 
 ## Orbit, rotation and dynamics
 

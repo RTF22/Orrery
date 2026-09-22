@@ -17,8 +17,9 @@ innerhalb der Messgenauigkeit ([Thomas 1988](literatur:thomas-1988)); ein einzel
 genügt. Der im Katalog geführte Wert 788,9 km stammt aus dieser photogrammetrischen Auswertung und
 wurde später durch die bislang einzige beobachtete Sternbedeckung durch Titania unabhängig geprüft:
 Am 8. September 2001 bedeckte der Mond den Hipparcos-Stern SAO 164538, beobachtet von mehr als
-hundert Stationen auf drei Kontinenten; aus 57 ausgewerteten Sehnen ergab sich ein Radius von
-788,4 ± 0,6 km ([Widemann et al. 2009](literatur:widemann-2009)) – 0,5 km kleiner als der
+hundert Stationen auf drei Kontinenten; von den 57 beobachteten Sehnen wurden die besten 27 zur
+Radiusbestimmung verwendet, was einen Radius von 788,4 ± 0,6 km ergab
+([Widemann et al. 2009](literatur:widemann-2009)) – 0,5 km kleiner als der
 Katalogwert, aber innerhalb der kombinierten Unsicherheiten von 1,8 km (Voyager) und 0,6 km
 (Bedeckung) statistisch nicht signifikant verschieden. Wie bei den übrigen Monden stammt Titanias
 Massenparameter aus einer einzigen Vorbeiflugbahn plus jahrzehntelanger erdgebundener Astrometrie
@@ -50,7 +51,7 @@ Im selben vereinfachten Zwei-Komponenten-Modell aus Wassereis ($917\,\mathrm{kg\
 Silikatgestein ($3000\,\mathrm{kg\,m^{-3}}$, wie bei [Miranda](objekt:miranda),
 [Ariel](objekt:ariel), [Umbriel](objekt:umbriel) und [Iapetus](objekt:iapetus)) entspricht Titanias
 Katalogdichte einem Gesteinsmassenanteil von rund 65 % (Herleitung) – dem höchsten unter den fünf
-großen Uranusmonden (Miranda ein Drittel, Umbriel 54 %, Ariel 60–61 %). Ob der Körper vollständig
+großen Uranusmonden (Miranda ein Drittel, Umbriel 54 %, Ariel rund 60 %). Ob der Körper vollständig
 differenziert ist, lässt sich ohne eigene Schwerefeldmessung nicht entscheiden (siehe
 [Innerer Aufbau](thema:innerer-aufbau)). Modellrechnungen zu den Innenstrukturen aller fünf großen
 Uranusmonde stufen Titania zusammen mit Oberon als die beiden aussichtsreichsten Kandidaten für
@@ -109,20 +110,23 @@ bahnzugewandte (vorlaufende) Seite tiefere Wassereis-Banden zeigt
 
 Für eine Atmosphäre um Titania gibt es keinen Nachweis: Aus derselben Sternbedeckung von 2001, die
 den Radius lieferte, ergibt sich eine obere Grenze des Oberflächendrucks von rund 10 bis 20
-Nanobar für CO2 und verwandte Gase – etwa ein Milliardstel des Erdatmosphärendrucks
+Nanobar für CO2 und verwandte Gase – rund ein Hundertmillionstel des Erdatmosphärendrucks
 ([Widemann et al. 2009](literatur:widemann-2009)); wie bei den anderen vier großen Uranusmonden
 reichen Masse und Oberflächentemperatur nicht, um selbst CO2 auf Dauer gasförmig zu binden.
 
-Mit einem mittleren Bahnradius von 436 293 km liegt Titania nahe am Rand von Uranus'
-Magnetosphäre, wie nahe hängt aber stark vom Sonnenwinddruck ab. Die einzige Messung stammt von
-Voyager 2 im Januar 1986; eine neuere Auswertung zeigt, dass die Sonde Uranus ausgerechnet während
-eines ungewöhnlich komprimierten Zustands traf (Tagseite um rund 78 % geschrumpft, nur rund 4 % der
-Zeit) – der dabei gemessene Magnetopausenabstand von rund 17 Uranusradien (etwa 435 000 km) lag
-fast genau bei Titanias eigenem Bahnradius, während der typische, über viele Sonnenwindmodelle
-gemittelte Abstand mit rund 22 Uranusradien (568 000 km) deutlich weiter außen liegt
-([Jasinski et al. 2024](literatur:jasinski-2024)). Unter typischen Bedingungen umkreist Titania
-Uranus also komfortabel innerhalb der Magnetosphäre; 1986 lag sie möglicherweise nahe der Grenze
-oder zeitweise sogar außerhalb.
+Mit einem mittleren Bahnradius von 436 293 km liegt Titania relativ nah an Uranus' Magnetopause,
+wie nah hängt aber stark vom Sonnenwinddruck ab. Die einzige Messung stammt von Voyager 2 im
+Januar 1986; eine neuere Auswertung zeigt, dass die Sonde Uranus ausgerechnet während eines
+ungewöhnlich komprimierten Zustands traf (Tagseite um rund 78 % geschrumpft, nur rund 4 % der
+Zeit): Der dabei gemessene subsolare Magnetopausenabstand lag bei rund 17,3 Uranusradien (etwa
+442 000 km, Präzisionsspanne 17,17 bis 17,51 Uranusradien bzw. rund 439 000 bis 448 000 km) –
+selbst am unteren Rand dieser Spanne bleiben nur rund 2 600 km Abstand zu Titanias eigenem
+Bahnradius, am Mittelwert rund 5 900 km. Unter typischen
+Bedingungen liegt der Magnetopausenabstand dagegen im Mittel bei 22,2 Uranusradien (rund 567 000 km,
+mittlerer Bereich 20 bis 25 Uranusradien) – deutlich weiter außen
+([Jasinski et al. 2024](literatur:jasinski-2024)). Titania umkreist Uranus also auch während der
+ungewöhnlichen Voyager-Beobachtung innerhalb der Magnetosphäre, allerdings mit einer deutlich
+schmaleren Sicherheitsmarge als unter typischen Bedingungen.
 
 ## Bahn, Rotation und Dynamik
 
