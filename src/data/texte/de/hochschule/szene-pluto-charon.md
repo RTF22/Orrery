@@ -54,12 +54,12 @@ Endzustand, den Gezeitenrechnungen aus einem exzentrischen Ausgangszustand nach 
 nachvollziehen ([Cheng et al. 2014](literatur:cheng-2014)). Der gemeinsame Schwerpunkt liegt rund
 $2126\,\mathrm{km}$ (das 1,79-Fache von Plutos Radius) von Plutos Mitte entfernt, außerhalb seiner
 Oberfläche ([Kenngrößen von Pluto](objekt:pluto)). Charon entstand vermutlich bei einem schrägen
-Einschlag eines annähernd plutogroßen Körpers — nach älterer Deutung ein zirkularisierender,
-intakter Trümmerkörper ([Canup 2005](literatur:canup-2005)), nach neuerer ein kurzzeitig
-verhaktes, sich wieder lösendes Paar („kiss and capture",
-[Denton et al. 2025a](literatur:denton-2025a)). Charons auffällige rote Nordpolkappe, Mordor
-Macula, entsteht aus Methan, das Plutos dünner Atmosphäre entweicht, sich am kalten Pol als Eis
-niederschlägt und dort zu rötlichen Tholinen photolysiert wird
+Einschlag eines annähernd plutogroßen Körpers — nach älterer Deutung ein intakter, wasserreicher
+Trümmerkörper, der zirkularisiert und auswandert ([Canup 2005](literatur:canup-2005)), nach neuerer
+ein kurzzeitig verhaktes Paar, das sich wieder löst, bevor es vollständig verschmilzt
+(„kiss and capture", [Denton et al. 2025a](literatur:denton-2025a)). Charons auffällige rote
+Nordpolkappe, Mordor Macula, entsteht aus Methan, das Plutos dünner Atmosphäre entweicht, sich am
+kalten Pol als Eis niederschlägt und dort zu rötlichen Tholinen photolysiert wird
 ([Grundy et al. 2016](literatur:grundy-2016)). Von 1985 bis 1990 verdeckten und verfinsterten sich
 beide Körper von der Erde aus gesehen ([Finsternisse](thema:finsternis)) — bislang die einzige
 beobachtete Serie dieser Art bei diesem Paar; ein neues Fenster ist für dieses System nicht
