@@ -873,6 +873,15 @@ export const LITERATUR: readonly Publikation[] = [
     arxiv: '2307.08157',
   },
   {
+    id: 'chen-2008',
+    autoren: ['Chen, E. M. A.', 'Nimmo, F.'],
+    etAl: false,
+    jahr: 2008,
+    titel: 'Implications from Ithaca Chasma for the thermal and orbital history of Tethys',
+    erschienen: 'Geophysical Research Letters 35, L19203',
+    doi: '10.1029/2008GL035402',
+  },
+  {
     id: 'chen-2015',
     autoren: ['Chen, W.', 'Li, J. C.', 'Ray, J.'],
     etAl: true,
@@ -1500,6 +1509,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1029/2018GL081135',
   },
   {
+    id: 'giese-2007',
+    autoren: ['Giese, B.', 'Wagner, R.', 'Neukum, G.'],
+    etAl: true,
+    jahr: 2007,
+    titel: 'Tethys: Lithospheric thickness and heat flux from flexurally supported topography at Ithaca Chasma',
+    erschienen: 'Geophysical Research Letters 34, L21203',
+    doi: '10.1029/2007GL031467',
+  },
+  {
     id: 'gilmore-2022',
     autoren: ['Gilmore, G.', 'Tausch-Pebody, G.'],
     etAl: false,
@@ -1672,6 +1690,15 @@ export const LITERATUR: readonly Publikation[] = [
     titel: 'Studies of the 2018/Mars Year 34 Planet-Encircling Dust Storm',
     erschienen: 'Journal of Geophysical Research: Planets 125, e2020JE006700',
     doi: '10.1029/2020JE006700',
+  },
+  {
+    id: 'gyalay-2023',
+    autoren: ['Gyalay, S.', 'Nimmo, F.'],
+    etAl: false,
+    jahr: 2023,
+    titel: "Estimates for Tethys' Moment of Inertia, Heat Flux Distribution, and Interior Structure From Its Long‐Wavelength Topography",
+    erschienen: 'Journal of Geophysical Research: Planets 128, e2022JE007550',
+    doi: '10.1029/2022JE007550',
   },
   {
     id: 'haberreiter-2008',
@@ -3105,6 +3132,15 @@ export const LITERATUR: readonly Publikation[] = [
     erschienen: 'Reviews of Modern Physics 97, 025002',
     doi: '10.1103/RevModPhys.97.025002',
     arxiv: '2409.03787',
+  },
+  {
+    id: 'moore-2004',
+    autoren: ['Moore, J. M.', 'Schenk, P. M.', 'Bruesch, L. S.'],
+    etAl: true,
+    jahr: 2004,
+    titel: 'Large impact features on middle-sized icy satellites',
+    erschienen: 'Icarus 171, 421–443',
+    doi: '10.1016/j.icarus.2004.05.009',
   },
   {
     id: 'moore-2011',
