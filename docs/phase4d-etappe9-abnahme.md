@@ -390,6 +390,17 @@ Jede Zeile des Ledgers mit „Ruling:", in Ledger-Reihenfolge.
   Vorbefüllung ungeprüft; Gegenmaßnahme: Controller prüft nach der Prüfung, dass keine Zelle
   mehr aus der Umsetzung übernommen ist.
 
+**Umsetzung Task 6 (Szene „Von Neptun zur fernen Sonne"):**
+
+- Stone et al. 2019 beschreibt die Heliopause-Überschreitung Voyager 2s (5.11.2018, 119 AE),
+  nicht den Termination Shock, wie der Ausgangspunkt der Recherche nahelegte; der Text nennt
+  korrekt die Heliopause. Kosten bei Fehlurteil: eine falsch benannte Grenze im Text.
+- Die Szene belichtet entgegen der ursprünglichen Annahme nicht auf Neptun, sondern über
+  `lookAtId` auf die Sonne; Neptun liegt in jeder Ziehung außerhalb des Bildfelds. Beide
+  Befunde stehen in „Was das Bild zeigt" und „Modellgrenzen" statt der ursprünglich
+  angenommenen Beschreibung. Kosten bei Fehlurteil: eine Szene, deren Text die eigentliche
+  Kameraszene nicht trifft.
+
 **Kontrollbefunde ohne Ruling-Charakter (zur Einordnung in §7/§8, kein eigenes Ruling):**
 
 - Beleglisten `objekt-pluto` (Z. 12, 44, 50, 88, 91, 102–105) und `objekt-charon` (Z. 21)
@@ -582,6 +593,17 @@ Task-Prüfung der Abnahme (19); Ersatz entfällt über `resonanzen`→`pluto`, `
 Chasma-Satz bleibt) (21); Prüfskript-Befunde der Abnahme 4d-8 §7 nicht behoben, Netzfehler-
 Nachprüfung mit `--nur` (22); Neptun-Rotationsperiode bleibt bei 16,11 h (23); Plutos
 Einstufung folgt der IAU-Resolution von 2006, keine eigene geophysikalische Debatte (24).
+
+## Nacharbeit nach der Schlussprüfung (23.09.2026)
+
+Schlussprüfung „Bereit zum Fast-Forward: Ja", Befunde: 0 kritisch, 0 wichtig,
+0 klein. Die Prüfung ging den Diff der Nachführung (Task 1), alle 52 neuen
+Katalogeinträge (628 → 680 je Commit, drei DOIs per Crossref nachgeschlagen),
+die neue Quellenkarte `nasa-family-portrait`, die erweiterten `fuer`-Felder,
+die README-Änderung, das Protokoll und alle Commit-Texte durch. Nachgetragen
+wurden danach in §6 die zwei Rulings aus der Umsetzung der Szene „Von Neptun
+zur fernen Sonne" (`stone-2019`, Belichtung und Bildausschnitt), die dort
+fehlten; inhaltlich standen beide bereits in §7 und §8.
 
 Die Wort- und Trailerprüfung vor dem Commit erfolgte wie in der lokalen Projektanleitung
 beschrieben (Ergebnis 0), ohne Suchmuster in dieser Datei.
