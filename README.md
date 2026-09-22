@@ -69,8 +69,10 @@ Enceladus, das Thema „Ringsysteme" und die Szenen „Saturn im Streiflicht",
 Dunst vor Saturn" und „Enceladus im hellen Glanz"; Etappe 7 Mimas, Tethys,
 Dione, Rhea, Iapetus und die Szene „Die geneigte Bahn des Iapetus"; Etappe 8
 Uranus, Miranda, Ariel, Umbriel, Titania, Oberon, das Thema „Achsneigung" und
-die Szene „Der liegende Uranus". Offen sind die übrigen Hochschultexte
-(Etappen 4d-9 bis 4d-11) und Phase 5 (Ambient-Sound, Qualitätsstufen,
+die Szene „Der liegende Uranus"; Etappe 9 Neptun, Triton, Pluto, Charon und
+die Szenen „Tritons rückläufige Bahn", „Von Neptun zur fernen Sonne" und
+„Pluto und Charon im Doppel". Offen sind die übrigen Hochschultexte (Etappen
+4d-10 und 4d-11) und Phase 5 (Ambient-Sound, Qualitätsstufen,
 Texturkompression, Veröffentlichung).
 
 ## Entwicklung
