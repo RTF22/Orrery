@@ -68,7 +68,7 @@ floors as on Ariel is absent; apart from one striking feature, the known hemisph
 evidence of later geological activity.
 
 That feature is the 131 km diameter crater Wunda near the equator (about 8° south), on whose
-floor Voyager 2 discovered a bright, ring-shaped deposit tens of kilometers in radial width
+floor Voyager 2 discovered a bright, ring-shaped deposit at least 10 km in radial width
 ([Smith et al. 1986](literatur:smith-1986)). Thermal and ballistic transport modeling shows that,
 because of Uranus' extreme axial tilt (see Orbit, rotation and dynamics), carbon dioxide ice on
 Umbriel migrates preferentially to low latitudes and accumulates there on geologically short

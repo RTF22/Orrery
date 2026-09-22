@@ -71,7 +71,7 @@ aufgefüllten Böden wie bei Ariel fehlt; abgesehen von einer einzigen auffälli
 die bekannte Hälfte kaum Hinweise auf spätere geologische Aktivität.
 
 Diese Struktur ist der 131 km durchmessende Krater Wunda nahe dem Äquator (rund 8° südlicher
-Breite), auf dessen Boden Voyager 2 einen hellen, ringförmigen Belag von einigen Zehnerkilometern
+Breite), auf dessen Boden Voyager 2 einen hellen, ringförmigen Belag von mindestens 10 km
 radialer Breite entdeckte ([Smith et al. 1986](literatur:smith-1986)). Thermisches und
 ballistisches Transportmodellieren zeigt, dass Kohlendioxid-Eis auf Umbriel wegen Uranus' extremer
 Achsneigung (siehe Bahn, Rotation und Dynamik) bevorzugt zu niedrigen Breiten wandert und sich
