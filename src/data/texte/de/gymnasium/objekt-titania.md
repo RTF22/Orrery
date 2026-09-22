@@ -2,8 +2,8 @@
 
 Titania ist mit 1 578 km Durchmesser der größte Uranusmond, knapp halb so groß wie der
 Erdmond. Sie umläuft [Uranus](objekt:uranus) in 436 000 km Abstand in 8,7 Tagen. Ihre
-Dichte von 1,7 g/cm³ spricht für etwa gleiche Anteile Eis und Gestein; vermutlich hat
-sich ein Gesteinskern von einem Eismantel getrennt.
+Dichte von 1,7 g/cm³ zeigt: Der Masse nach überwiegt das Gestein, dem Raum nach das
+Eis; vermutlich hat sich ein Gesteinskern von einem Eismantel getrennt.
 
 Über die Oberfläche ziehen sich gewaltige Grabenbrüche, allen voran Messina Chasma mit
 rund 1 500 km Länge. Sie entstanden wohl, als das Innere gefror und sich ausdehnte, so

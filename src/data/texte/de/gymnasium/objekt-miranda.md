@@ -8,9 +8,9 @@ großen Monde.
 Voyager 2 fotografierte 1986 nur die Südhalbkugel, doch die Bilder zeigten eine der
 seltsamsten Oberflächen im Sonnensystem. Alte, verkraterte Ebenen grenzen unvermittelt
 an drei große Coronae, ovale bis eckige Gebiete mit parallelen Rillen und Rücken. Die
-Steilwand Verona Rupes ist rund 20 km hoch, die höchste bekannte Klippe im
-Sonnensystem. Bei Mirandas geringer Schwerkraft dauerte ein Sturz von ihrer Kante rund
-zwölf Minuten.
+Steilwand Verona Rupes ist nach den Voyager-2-Bildern rund 5 bis 10 km hoch, eine der
+höchsten bekannten Steilwände im Sonnensystem. Bei Mirandas geringer Schwerkraft
+dauerte ein Sturz von ihrer Kante rund sechs bis acht Minuten.
 
 Früher hielt man Miranda für einen Mond, der bei einem Zusammenstoß zerbrach und sich
 neu zusammenfügte. Heute erklären die meisten Modelle die Coronae mit wärmerem Eis, das

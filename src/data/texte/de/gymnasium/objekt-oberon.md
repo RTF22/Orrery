@@ -13,7 +13,8 @@ Auswertung auf 6 bis 11 km geschätzt wird.
 
 Die Kenntnisse über Oberon stammen fast vollständig von einem einzigen Vorbeiflug:
 Voyager 2 passierte das Uranussystem im Januar 1986 und sah dabei nur die Südhalbkugeln
-der Monde, auf denen gerade Sommer herrschte. Wie bei [Titania](objekt:titania) lässt
-die Dichte von 1,6 g/cm³ auf etwa gleiche Teile Eis und Gestein schließen. Kennzahlen:
+der Monde, auf denen gerade Sommer herrschte. Wie bei [Titania](objekt:titania) zeigt
+die Dichte von 1,6 g/cm³: Der Masse nach überwiegt auch hier das Gestein, dem Raum
+nach das Eis. Kennzahlen:
 [Faktenblatt der Uranusmonde](quelle:nssdc-uranusmonde); Mission:
 [Voyager 2](quelle:nasa-voyager-2).

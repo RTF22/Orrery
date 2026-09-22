@@ -13,6 +13,7 @@ a mountain rises whose height is estimated at 6 to 11 km, depending on the analy
 What we know about Oberon comes almost entirely from a single flyby: Voyager 2 passed
 through the Uranian system in January 1986 and saw only the southern hemispheres of the
 moons, where it was summer at the time. As with [Titania](objekt:titania), a density of
-1.6 g/cm³ indicates roughly equal parts ice and rock. Key figures:
+1.6 g/cm³ shows that rock dominates by mass here too, while ice dominates by volume.
+Key figures:
 [Uranian Satellite Fact Sheet](quelle:nssdc-uranusmonde); mission:
 [Voyager 2](quelle:nasa-voyager-2).

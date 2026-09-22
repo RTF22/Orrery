@@ -11,7 +11,7 @@ rund 15-mal.
 Die Folge der [Achsneigung](thema:achsneigung) sind extreme Jahreszeiten. In einem Umlauf
 von 84 Jahren zeigt jeder Pol rund 42 Jahre lang mehr oder weniger zur Sonne. Als
 Voyager 2 im Jahr 1986 vorbeiflog, wies der Südpol fast genau zur Sonne; zur
-Tagundnachtgleiche 2007 stand sie über dem Äquator, 2028 zeigt der Nordpol zu ihr. Wie
+Tagundnachtgleiche 2007 stand sie über dem Äquator, 2030 zeigt der Nordpol zu ihr. Wie
 Uranus so gekippt wurde, ist ungeklärt; diskutiert werden ein oder mehrere große
 Zusammenstöße in seiner Frühzeit. Die schmalen, dunklen Ringe wurden 1977 entdeckt, als
 Uranus vor einem Stern vorbeizog und dessen Licht mehrmals kurz erlosch. Mission:
