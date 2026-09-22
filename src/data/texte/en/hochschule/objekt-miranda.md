@@ -2,13 +2,13 @@
 
 Miranda is the innermost and, at about 236 km in radius, the smallest of [Uranus'](objekt:uranus)
 five large moons: a small, densely fractured ice body with perhaps the most varied surface ever
-photographed by a spacecraft on so small a moon. Unlike its four larger siblings,
-Miranda orbits on a markedly inclined path against Uranus' equator – an anomaly attributed to a
-past resonance that is also the likely heat source behind its young, heavily deformed regions.
-Voyager 2 saw only its sunlit southern hemisphere during its single flyby
-on 24 January 1986 ([Smith et al. 1986](literatur:smith-1986)); it has not been observed at close
-range since. This text presents parameters and measurement, interior, surface, atmosphere and
-magnetosphere, and orbit, rotation and formation, and finally describes what Orrery renders of it.
+photographed on so small a moon. Unlike its four larger siblings, Miranda orbits on a markedly
+inclined path against Uranus' equator – an anomaly attributed to a past resonance that is also the
+likely heat source behind its young, heavily deformed regions. Voyager 2 saw only its sunlit
+southern hemisphere during its single flyby on 24 January 1986
+([Smith et al. 1986](literatur:smith-1986)); it has not been observed at close range since. This
+text presents parameters and measurement, interior, surface, atmosphere and magnetosphere, and
+orbit, rotation and formation, and finally describes what Orrery renders of it.
 
 ## Parameters and measurement
 
@@ -35,9 +35,9 @@ With the catalog mass ($6.6 \cdot 10^{19}\,\mathrm{kg}$, from the same Voyager-e
 the geometric mean of the three semi-axes, the resulting density is about
 $1.20\,\mathrm{g\,cm^{-3}}$ (derivation) – close to the NSSDC fact sheet's $1200\,\mathrm{kg\,m^{-3}}$
 and to the table row above. That makes Miranda the least dense of the five large Uranian moons (see Interior). $GM$'s
-relative uncertainty of around 5 % – against Saturn moon masses pinned down to a few parts in a
-thousand by thirteen years of Cassini tracking (see [Mimas](objekt:mimas)) – shows how much less
-is known about the Uranian system. Geometric albedo also depends on wavelength: Karkoschka's (2001)
+relative uncertainty of around 5 % – against Saturn moon masses pinned to a few parts in a
+thousand by Cassini's thirteen years of tracking (see [Mimas](objekt:mimas)) – shows how much
+less is known about the Uranian system. Albedo also depends on wavelength: Karkoschka's (2001)
 Hubble photometry gives only $0.25 \pm 0.03$ in the K band against the fact sheet's visual $0.32$
 – not a contradiction but the photometric signature of water ice, which absorbs more in the near
 infrared. Because Voyager 2 saw only the southern hemisphere, every surface value applies to
@@ -58,9 +58,9 @@ gradient of 6 to 25 K/km, and a surface heat flux of 31 to 112 mW/m² – compar
 tidal heating of Jupiter's moon [Europa](objekt:europa)
 ([Beddingfield et al. 2015](literatur:beddingfield-2015)). This order of magnitude matches an
 independent budget: radiogenic heating alone cannot sustain a long-lived ocean at Miranda, Ariel
-or Umbriel, whereas it might suffice over billions of years at the larger Titania and Oberon; the
-heat flux of over 31 mW/m² inferred from the coronae exceeds the radiogenic contribution alone by
-a wide margin, pointing to a significant role for tidal heating in Miranda's past
+or Umbriel, though it might suffice over billions of years at the larger Titania and Oberon; the
+coronae's heat flux of over 31 mW/m² far exceeds the radiogenic contribution alone, pointing to a
+significant role for tidal heating in Miranda's past
 ([Bierson and Nimmo 2022](literatur:bierson-2022)). The engine is thought to have been a past
 orbital resonance (see Orbit, rotation and dynamics); during that episode, classical modelling
 raises Miranda's orbital eccentricity to about 0.05
@@ -70,10 +70,9 @@ heat flows exceeding 100 mW/m² during the same episode, sufficient to produce t
 [Tides and the Roche limit](thema:gezeiten)).
 
 Sluggish-lid convection in the ice shell is one plausible way to carry that heat away: given a
-mechanically weak surface, such a model explains the location of the three coronae, their
-concentric deformation patterns, and the heat flux inferred from crustal flexure; stable,
-long-wavelength convection patterns like the ones observed require a rocky core smaller than half
-of Miranda's own radius
+weak surface, such a model explains the location of the three coronae, their concentric
+deformation patterns, and the heat flux inferred from crustal flexure; stable, long-wavelength
+convection like the pattern observed needs a rocky core smaller than half of Miranda's own radius
 ([Hammond and Barr 2014](literatur:hammond-2014)). A present-day ocean is thought unlikely:
 interior-structure modelling of all five large Uranian moons concludes that Miranda is too small
 to retain enough heat for a liquid layer today, while Ariel, Umbriel, Titania and Oberon may hold
@@ -85,8 +84,8 @@ open question (see Open questions).
 
 Miranda's most striking feature is three oval to rectangular, heavily deformed regions – Arden,
 Elsinore and Inverness Corona – sharply set off against the older, densely cratered terrain around
-them. At Arden Corona, the fault systems show a listric geometry that shallows with depth,
-pointing to a detachment surface near the brittle–ductile boundary (see Interior;
+them. At Arden Corona, the faults show a listric geometry that shallows with depth, pointing to a
+detachment surface near the brittle–ductile boundary (see Interior;
 [Beddingfield et al. 2015](literatur:beddingfield-2015)); at Elsinore Corona, polygonal impact
 craters reveal hidden fault structures buried beneath younger material and no longer visible at
 the surface itself ([Beddingfield and Cartwright 2020](literatur:beddingfield-2020)). At the edge
@@ -95,25 +94,27 @@ of the Elsinore region lies Verona Rupes, a scarp several kilometres high, estim
 certain estimates place it considerably higher.
 
 Crater counts rank the densely cratered plains as the oldest terrain, followed by the coronae:
-among these, Elsinore is the oldest and Inverness the youngest, with an estimated age of 0.1 to 1
-billion years for Arden Corona ([Kirchoff et al. 2022](literatur:kirchoff-2022)); the same study
-finds that, despite the overall younger surface of neighbouring [Ariel](objekt:ariel), Miranda's
-coronae could be the youngest individual terrains among the mid-sized Uranian moons. The surface
-consists mostly of water ice; whether ammonia hydrates are also mixed in, as near-infrared spectra
-of some Uranian moons suggest, is not confirmed for Miranda itself and remains a cautiously stated
-possibility ([Cartwright et al. 2018](literatur:cartwright-2018)).
+Elsinore has a model age of about 1.2 billion years (+1.9/−0.8), Inverness about 0.1 billion years
+(+0.4/−0.1); Arden Corona gets no value for lack of sufficient image coverage, and large model
+uncertainties leave even the Elsinore-before-Inverness order unsettled
+([Kirchoff et al. 2022](literatur:kirchoff-2022)); the same study finds that, despite the overall
+younger surface of neighbouring [Ariel](objekt:ariel), Miranda's coronae could be the youngest
+individual terrains among the mid-sized Uranian moons. Available spectra show a surface dominated
+by water ice; studies of further constituents such as complex organics or amorphous pyroxene as
+the cause of the reddish material exist so far only for Titania and Oberon, not Miranda
+([Cartwright et al. 2018](literatur:cartwright-2018)).
 
 ## Atmosphere and magnetosphere
 
 Miranda carries no atmosphere; its small mass and low surface temperature rule out a bound gas
 envelope. The moon lies deep within Uranus' magnetosphere, whose charged particles continually
 irradiate and weather its icy surface – true of all the inner Uranian moons, though no dedicated
-study of the effect exists for Miranda itself.
+study of the effect exists for Miranda.
 
 ## Orbit, rotation and dynamics
 
-At 4.34°, Miranda has by far the most inclined orbit against Uranus' equator among the five large
-moons; Ariel, Umbriel, Titania and Oberon all stay below 0.2°. The classical explanation invokes a
+At 4.34°, Miranda has by far the most inclined orbit against Uranus' equator of the five moons;
+Ariel, Umbriel, Titania and Oberon all stay below 0.2°. The classical explanation invokes a
 past passage through the 3:1 mean-motion resonance (basics under
 [Orbital resonances](thema:resonanzen)) with [Umbriel](objekt:umbriel), during which
 temporary capture into inclination resonances produced Miranda's present-day inclination while the
@@ -134,17 +135,19 @@ those, fixed in the data set because the orbital node does not precess (figures 
 
 ## Formation and evolution
 
-Like the other regular moons of the giant planets, Miranda most likely formed in a debris disc
-around Uranus, whether after a giant impact that could also explain the planet's extreme axial
-tilt, or through orderly co-accretion alongside the planet itself (figures and discussion under
-[Uranus](objekt:uranus) and [Axial tilt](thema:achsneigung)). For the further evolution of the
-moon system, resonance passages – such as the 3:1 passage of Miranda and Umbriel described above,
-or the 5:3 passage of Ariel and Umbriel – are considered the central engine that heated orbits,
-raised inclinations, and released the moons into their present, non-resonant configuration
+Like the other regular giant-planet moons, Miranda most likely formed in a debris disc around
+Uranus, whether after a giant impact that could also explain the planet's extreme axial tilt, or
+through orderly co-accretion with the planet itself (figures and discussion under
+[Uranus](objekt:uranus) and [Axial tilt](thema:achsneigung)). For the moon system's further
+evolution, resonance passages – the 3:1 passage of Miranda and Umbriel above, or the 5:3 passage of
+Ariel and Umbriel – are considered the central engine that heated orbits, raised inclinations, and
+released the moons into their present, non-resonant configuration
 ([Ćuk et al. 2020](literatur:cuk-2020)). From the strength of tidal friction inside Uranus needed
-to drive this, its tidal quality factor $Q$ can be bounded; different approaches give values
-between roughly 15,000 and 39,000
-([Tittemore and Wisdom 1989](literatur:tittemore-1989); [Ćuk et al. 2020](literatur:cuk-2020)) –
+to drive this, its tidal quality factor $Q$ can be bounded: Tittemore and Wisdom already bound it
+in 1990 to 11,000 to 39,000, assuming a 4.5-billion-year-old system that crossed the 3:1
+Miranda-Umbriel resonance but not the Ariel-Umbriel 2:1 resonance; a more recent estimate from
+Miranda's surface ages narrows this to about 15,000 to 20,000
+([Tittemore and Wisdom 1990](literatur:tittemore-1990); [Ćuk et al. 2020](literatur:cuk-2020)) –
 a hint that the Uranian satellite system as a whole could be younger than the planet's own age
 suggests, even though a precise age remains open. Uranus and its moons formed within the outer Solar
 System's broader history, in which Neptune also migrated outward (context under
@@ -167,10 +170,9 @@ System's broader history, in which Neptune also migrated outward (context under
 - **Does or did Miranda have an ocean?** Two independent models consider a present-day ocean
   unlikely because Miranda is too small to retain the necessary heat
   ([Castillo-Rogez et al. 2023](literatur:castillo-rogez-2023);
-  [Bierson and Nimmo 2022](literatur:bierson-2022)), while the heat fluxes inferred from the
-  coronae do not rule out an earlier, since-refrozen ocean; a future orbiter mission is seen as the
-  most promising way to settle the question
-  ([Cartwright et al. 2021](literatur:cartwright-2021)).
+  [Bierson and Nimmo 2022](literatur:bierson-2022)), while the coronae's heat fluxes do not rule
+  out an earlier, since-refrozen ocean; a future orbiter mission is seen as the most promising way
+  to settle the question ([Cartwright et al. 2021](literatur:cartwright-2021)).
 - **Northern hemisphere unknown.** Voyager 2 saw only the sunlit southern hemisphere in 1986; no
   close-up imagery exists of the composition, crater density or possible further coronae of the
   northern hemisphere.
@@ -187,11 +189,9 @@ System's broader history, in which Neptune also migrated outward (context under
 - **Node rate:** `nodeDot` stands at zero, even though Miranda, roughly 4.4° from the degeneracy
   at $i = 180^\circ$, is far enough away for the other four moons' table formula to yield a rate;
   a parameter search against the fixture nonetheless finds its optimum at zero too (empirical, not
-  an error). The residual error against five
-  independent Horizons reference dates (worked out from the `monde-horizons.json` fixture) ranges
-  from 53 km (epoch J2000 itself) to 15,359 km (2026 reference date), or up to 1.9 % of the
-  roughly 816,000 km orbital circumference – about eight times the average of the other four
-  Uranian moons.
+  an error). The residual error against five Horizons dates (from the `monde-horizons.json`
+  fixture) ranges from 53 km (epoch J2000) to 15,359 km (2026), up to 1.9 % of the ~816,000 km
+  orbital circumference – about eight times the other four moons' average.
 - **Apsidal rate:** `lpDot` ($2003.3460^\circ$ per century) follows the project's two-term
   formula $(360/P_\mathrm{apsis} - 360/P_\mathrm{node}) \cdot 100$ with the JPL table values
   $P_\mathrm{apsis} = 8.939\,\mathrm{a}$ and $P_\mathrm{node} = 17.787\,\mathrm{a}$ (this
@@ -206,10 +206,10 @@ System's broader history, in which Neptune also migrated outward (context under
   carries periodic terms of $4.41^\circ \sin U_{11}$ and $4.25^\circ \cos U_{11}$
   ([Archinal et al. 2011](literatur:archinal-2011)) – the same libration-in-longitude artefact
   described in [Bound rotation](thema:gebundene-rotation). The data panel's axial tilt
-  (`achsneigungDeg`, the angle between this pole and the orbital normal built from position and
-  velocity at epoch, flipped for a negative rotation period) is $4.334^\circ$ (derivation) – close
-  to, but not identical with, either inclination figure above, because it uses Miranda's own
-  rotation pole rather than Uranus' pole as the reference.
+  (`achsneigungDeg`, the angle between this pole and the orbital normal from position and velocity
+  at epoch, flipped for a negative rotation period) is $4.334^\circ$ (derivation) – close to, but
+  not identical with, either figure above, since it uses Miranda's own pole, not Uranus', as the
+  reference.
 - **Texture:** Miranda carries no texture, only a placeholder colour approximating the fact
   sheet's albedo: the only available USGS/JPL map mosaic is 57–62 % unlit area because of
   Voyager's one-sided lighting (`ASSETS.md`).

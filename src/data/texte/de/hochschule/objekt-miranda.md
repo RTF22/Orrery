@@ -105,14 +105,16 @@ selbst auf 5 bis 10 km Höhe geschätzt wird ([Thomas 1988](literatur:thomas-198
 späteren, weniger gesicherten Schätzungen deutlich mehr.
 
 Kraterzählungen ordnen die dicht verkraterten Ebenen als ältestes Terrain ein, gefolgt von den
-Coronae: Unter diesen ist Elsinore die älteste und Inverness die jüngste, mit einem für Arden
-Corona geschätzten Alter von 0,1 bis 1 Milliarde Jahren
+Coronae: Elsinore erreicht ein Modellalter von rund 1,2 Milliarden Jahren (+1,9/−0,8), Inverness
+von rund 0,1 Milliarden Jahren (+0,4/−0,1); für Arden Corona liefert dieselbe Untersuchung mangels
+ausreichender Bildabdeckung keinen Wert, und wegen der großen Modellunsicherheiten bleibt auch die
+Reihenfolge Elsinore vor Inverness nicht gesichert
 ([Kirchoff et al. 2022](literatur:kirchoff-2022)); dieselbe Untersuchung findet, dass Mirandas
 Coronae trotz insgesamt jüngerer Oberfläche des Nachbarmonds [Ariel](objekt:ariel) die jüngsten
-Einzelterrains unter den mittelgroßen Uranusmonden sein könnten. Die Oberfläche besteht
-überwiegend aus Wassereis; ob zusätzlich Ammoniak-Hydrate beigemischt sind, wie es
-Nahinfrarot-Spektren einzelner Uranusmonde nahelegen, ist für Miranda selbst nicht gesichert,
-sondern bleibt eine vorsichtig formulierte Möglichkeit
+Einzelterrains unter den mittelgroßen Uranusmonden sein könnten. Die Oberfläche besteht nach den
+vorliegenden Spektren überwiegend aus Wassereis; Untersuchungen zu weiteren möglichen
+Bestandteilen wie komplexer Organik oder amorphem Pyroxen als Ursache des rötlichen Materials
+liegen bislang nur für die äußeren Monde Titania und Oberon vor, nicht für Miranda selbst
 ([Cartwright et al. 2018](literatur:cartwright-2018)).
 
 ## Atmosphäre und Magnetosphäre
@@ -158,9 +160,12 @@ Resonanzdurchgänge – wie die oben beschriebene 3:1-Passage von Miranda und Um
 5:3-Passage von Ariel und Umbriel – als der zentrale Motor, der Bahnen aufheizte, Neigungen anhob
 und die Monde in ihre heutige, nicht mehr resonante Konfiguration entließ
 ([Ćuk et al. 2020](literatur:cuk-2020)). Aus der Stärke der dafür nötigen Gezeitenreibung in
-Uranus lässt sich dessen Gütefaktor $Q$ eingrenzen; unterschiedliche Ansätze kommen auf Werte
-zwischen etwa 15 000 und 39 000
-([Tittemore und Wisdom 1989](literatur:tittemore-1989); [Ćuk et al. 2020](literatur:cuk-2020)) –
+Uranus lässt sich dessen Gütefaktor $Q$ eingrenzen: Tittemore und Wisdom grenzen ihn bereits 1990
+unter der Annahme eines 4,5 Milliarden Jahre alten Systems, das die 3:1-Miranda-Umbriel-Resonanz
+durchlaufen, die 2:1-Resonanz zwischen Ariel und Umbriel aber nicht erreicht hat, auf Werte
+zwischen 11 000 und 39 000 ein; eine neuere, aus Mirandas Oberflächenaltern gewonnene Abschätzung
+kommt auf einen engeren Bereich von etwa 15 000 bis 20 000
+([Tittemore und Wisdom 1990](literatur:tittemore-1990); [Ćuk et al. 2020](literatur:cuk-2020)) –
 ein Hinweis darauf, dass das Uranussystem insgesamt jünger sein könnte, als es das Alter des
 Planeten selbst nahelegt, auch wenn ein genaues Alter offenbleibt. Uranus und sein Mondsystem
 entstanden dabei innerhalb der weiteren Entstehungsgeschichte des äußeren Sonnensystems, in der
