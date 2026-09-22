@@ -41,7 +41,7 @@ export const QUELLEN: readonly Quelle[] = [
     titel: { de: 'Mond: Faktenblatt (NSSDC)', en: 'Moon Fact Sheet (NSSDC)' },
     herausgeber: 'NASA', sprache: 'en', art: 'faktenblatt',
     url: 'https://nssdc.gsfc.nasa.gov/planetary/factsheet/moonfact.html',
-    fuer: ['objekt:moon', 'szene:mondfinsternis', 'szene:mondtanz'],
+    fuer: ['objekt:moon', 'szene:mondfinsternis', 'szene:mondtanz', 'szene:ferne-sonne'],
   },
   {
     id: 'nssdc-saturn',
@@ -466,6 +466,16 @@ export const QUELLEN: readonly Quelle[] = [
     herausgeber: 'NASA', sprache: 'en', art: 'bildarchiv',
     url: 'https://science.nasa.gov/missions/webb/nasas-webb-scores-another-ringed-world-with-new-image-of-uranus',
     fuer: ['szene:uranus-gekippt'],
+  },
+  {
+    id: 'nasa-family-portrait',
+    titel: {
+      de: 'Das erste Familienporträt des Sonnensystems (1990, NASA)',
+      en: 'First-Ever Solar System Family Portrait (1990, NASA)',
+    },
+    herausgeber: 'NASA', sprache: 'en', art: 'bildarchiv',
+    url: 'https://science.nasa.gov/resource/first-ever-solar-system-family-portrait-1990/',
+    fuer: ['szene:ferne-sonne'],
   },
   {
     // Sammlungsobjekt 1952-73; die Seite weist Skripte ohne Browserkennung
