@@ -359,6 +359,23 @@ export const QUELLEN: readonly Quelle[] = [
     fuer: ['objekt:triton', 'szene:triton-rueckwaerts'],
   },
   {
+    id: 'nasa-iapetus',
+    titel: { de: 'Iapetus bei NASA Science', en: 'Iapetus at NASA Science' },
+    herausgeber: 'NASA', sprache: 'en', art: 'uebersicht',
+    url: 'https://science.nasa.gov/saturn/moons/iapetus/',
+    fuer: ['szene:iapetus-schief'],
+  },
+  {
+    id: 'nasa-iapetus-vorbeiflug',
+    titel: {
+      de: 'Cassini-Vorbeiflug an Iapetus, 10. September 2007 (NASA)',
+      en: 'Cassini flyby of Iapetus, Sept. 10, 2007 (NASA)',
+    },
+    herausgeber: 'NASA', sprache: 'en', art: 'uebersicht',
+    url: 'https://science.nasa.gov/missions/cassini/iapetus-flyby-sept-10-2007/',
+    fuer: ['szene:iapetus-schief'],
+  },
+  {
     id: 'nasa-gebundene-rotation',
     titel: { de: 'Gebundene Rotation bei NASA Science', en: 'Tidal locking at NASA Science' },
     herausgeber: 'NASA', sprache: 'en', art: 'uebersicht',
