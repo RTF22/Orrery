@@ -458,6 +458,16 @@ export const QUELLEN: readonly Quelle[] = [
     fuer: ['objekt:saturn', 'thema:ringe', 'szene:saturn-streiflicht', 'szene:saturn-ringkante', 'szene:ringdurchflug'],
   },
   {
+    id: 'nasa-webb-uranus',
+    titel: {
+      de: 'Webb-Aufnahme des Uranus (NASA)',
+      en: "Webb's image of Uranus (NASA)",
+    },
+    herausgeber: 'NASA', sprache: 'en', art: 'bildarchiv',
+    url: 'https://science.nasa.gov/missions/webb/nasas-webb-scores-another-ringed-world-with-new-image-of-uranus',
+    fuer: ['szene:uranus-gekippt'],
+  },
+  {
     // Sammlungsobjekt 1952-73; die Seite weist Skripte ohne Browserkennung
     // mit 403 ab, im Browser öffnet sie normal (geprüft 16.09.2026).
     id: 'sciencemuseum-orrery',
