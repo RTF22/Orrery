@@ -59,8 +59,12 @@ Zentraltemperatur von rund 875 K bliebe deutlich unter dem Schmelzpunkt von Gest
 solcher Körper wäre kaum dissipativ. Die doppelt gebundene Rotation von Eris und Dysnomia
 (siehe Bahn, Rotation und Dynamik) verlangt aber gerade das Gegenteil: Damit sich Eris'
 Drehung innerhalb von 4,5 Milliarden Jahren auf Dysnomias Umlaufperiode abgebremst hat, muss
-der Körper deutlich dissipativer sein, als die homogene Mischung erlaubt – bei frequenz-
-abhängiger Dämpfung entspricht das einem Verhältnis $Q/k_2$ von rund 3200. Die geringe, von
+der Körper deutlich dissipativer sein, als die homogene Mischung erlaubt – bei einem
+vereinfachten Modell mit konstantem $Q$ entspricht das einem Verhältnis $Q/k_2$ von rund
+3200; ein realistischeres, frequenzabhängiges (viskoelastisches) Dämpfungsgesetz verlangt
+einen anfänglichen Wert von 6300 und, über die Entwicklung gemittelt, rund 5500 – weniger
+als einen Faktor 2 vom Wert des konstanten Modells entfernt, aber in beiden Fällen weit über
+dem, was eine homogene Mischung liefern könnte. Die geringe, von
 [Brown und Butler (2023)](literatur:brown-butler-2023) über ALMA gemessene Obergrenze für
 Dysnomias Masse macht diesen Widerspruch besonders aussagekräftig: Ein derart kleiner
 Trabant kann den vergleichsweise großen Eris nur abgebremst haben, wenn dessen Inneres
@@ -153,10 +157,14 @@ Mittelbewegungsresonanz eingefangen zu werden
 - **Wohin zeigt Eris' Drehachse?** Bekannt ist nur ein Kippwinkel von $78{,}29^\circ$ gegen die
   eigene Bahn aus Dysnomias Bahnpol, keine Rektaszension und Deklination
   ([Holler et al. 2021](literatur:holler-2021); siehe Im Modell).
-- **Wie groß ist Dysnomia, und welche Albedo hat sie?** Ihr angenommener Radius von rund
-  $350\,\mathrm{km}$ und ihre Dichte von $0{,}7 \pm 0{,}5\,\mathrm{g\,cm^{-3}}$ (Obergrenze
-  $1{,}2\,\mathrm{g\,cm^{-3}}$) sind deutlich unsicherer als die entsprechenden Werte für Eris
-  selbst ([Brown und Butler 2023](literatur:brown-butler-2023)).
+- **Wie groß ist Dysnomia, und welche Albedo hat sie?** Eine erste ALMA-Messung ergab einen
+  angenommenen Radius von rund $350\,\mathrm{km}$
+  ([Brown und Butler 2018](literatur:brown-butler-2018)); eine neuere Nachbeobachtung im
+  ALMA-Band 6 revidiert die Größe auf einen Durchmesser von $615^{+60}_{-50}\,\mathrm{km}$,
+  also einen Radius von rund $308\,\mathrm{km}$, mit dem auch die Dichte von
+  $0{,}7 \pm 0{,}5\,\mathrm{g\,cm^{-3}}$ (Obergrenze $1{,}2\,\mathrm{g\,cm^{-3}}$) gerechnet
+  ist ([Brown und Butler 2023](literatur:brown-butler-2023)) – beide Werte deutlich
+  unsicherer als die entsprechenden Werte für Eris selbst.
 - **Stammt das erhöhte D/H-Verhältnis im Methaneis aus innerer Aktivität oder aus der
   protosolaren Scheibe?** Beide Deutungen sind mit derselben Messung vereinbar
   ([Grundy et al. 2024](literatur:grundy-2024); [Mousis et al. 2025](literatur:mousis-2025)),

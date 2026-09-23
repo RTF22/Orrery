@@ -56,8 +56,11 @@ temperature of around 875 K would stay well below the melting point of rock — 
 would hardly be dissipative. Eris and Dysnomia's doubly synchronous rotation (see Orbit,
 rotation and dynamics) demands the opposite: for Eris' spin to have slowed to Dysnomia's
 orbital period within 4.5 billion years, the body must be considerably more dissipative than
-the homogeneous mixture allows — for a frequency-dependent damping law that corresponds to a
-ratio $Q/k_2$ of about 3200. The small upper limit on Dysnomia's mass measured by
+the homogeneous mixture allows — for a simplified model with constant $Q$, that corresponds
+to a ratio $Q/k_2$ of about 3200; a more realistic, frequency-dependent (viscoelastic)
+damping law requires an initial value of 6300 and, averaged over the evolution, about
+5500 — less than a factor of 2 from the constant-Q value, but in both cases far beyond
+what a homogeneous mixture could supply. The small upper limit on Dysnomia's mass measured by
 [Brown and Butler (2023)](literatur:brown-butler-2023) with ALMA makes this contradiction
 particularly telling: so small a companion can only have slowed the comparatively large Eris
 if its interior is unusually compliant. That points to a differentiated structure — a rigid
@@ -144,10 +147,14 @@ Pluto ([Brown et al. 2005](literatur:brown-trujillo-rabinowitz-2005); context un
 - **Where does Eris' spin axis point?** The only known value is a tilt of $78.29^\circ$
   against its own orbit, derived from Dysnomia's orbit pole, with no right ascension or
   declination ([Holler et al. 2021](literatur:holler-2021); see In the model).
-- **How large is Dysnomia, and what is its albedo?** Its assumed radius of about
-  $350\,\mathrm{km}$ and its density of $0.7 \pm 0.5\,\mathrm{g\,cm^{-3}}$ (upper limit
-  $1.2\,\mathrm{g\,cm^{-3}}$) are considerably less certain than the corresponding values for
-  Eris itself ([Brown and Butler 2023](literatur:brown-butler-2023)).
+- **How large is Dysnomia, and what is its albedo?** An initial ALMA measurement gave an
+  assumed radius of about $350\,\mathrm{km}$
+  ([Brown and Butler 2018](literatur:brown-butler-2018)); a more recent ALMA Band 6
+  follow-up observation revises the size to a diameter of $615^{+60}_{-50}\,\mathrm{km}$,
+  that is a radius of about $308\,\mathrm{km}$, which is also the radius used to compute the
+  density of $0.7 \pm 0.5\,\mathrm{g\,cm^{-3}}$ (upper limit $1.2\,\mathrm{g\,cm^{-3}}$)
+  ([Brown and Butler 2023](literatur:brown-butler-2023)) — both values considerably less
+  certain than the corresponding ones for Eris itself.
 - **Does the elevated D/H ratio in the methane ice come from internal activity or from the
   protosolar disc?** Both readings fit the same measurement
   ([Grundy et al. 2024](literatur:grundy-2024); [Mousis et al. 2025](literatur:mousis-2025)),

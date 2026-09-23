@@ -733,6 +733,15 @@ export const LITERATUR: readonly Publikation[] = [
     doi: '10.1038/s41586-018-0156-5',
   },
   {
+    id: 'brown-butler-2018',
+    autoren: ['Brown, M. E.', 'Butler, B. J.'],
+    etAl: false,
+    jahr: 2018,
+    titel: 'Medium-sized Satellites of Large Kuiper Belt Objects',
+    erschienen: 'The Astronomical Journal 156, 164',
+    doi: '10.3847/1538-3881/aad9f2',
+  },
+  {
     id: 'brown-butler-2023',
     autoren: ['Brown, M. E.', 'Butler, B. J.'],
     etAl: false,
