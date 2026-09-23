@@ -58,30 +58,22 @@ Messung mindestens 200 ms stehen gelassen. Konsole seit dem Laden: 0 Fehler, 0 W
 
 | Nr. | Kriterium | Soll | Ist | erfüllt |
 |---|---|---|---|---|
-| 1 | Eingeklappt/versteckt: abweichende Pixel außerhalb des Reiter-Rechtecks (`getBoundingClientRect()` × dpr, 2 px Rand) | 0 | 226 907 von 229 213 abweichenden Pixeln liegen außerhalb | **nein**, siehe unten |
+| 1 | Eingeklappt/versteckt: abweichende Pixel außerhalb der Reiter-Rechtecke (`getBoundingClientRect()` × dpr, 2 px Rand) | 0 | 0 von 3354 abweichenden Pixeln liegen außerhalb (alle in den beiden Reiter-Rechtecken); Kontrollaufnahme A gegen A: 0 | ja |
 | 2a | Griff ziehen (+80 px, echte Maus): Store-Wert / gemessene Breite | 23 rem / 368 px | 23 rem / 368 px | ja |
 | 2b | Griff per Tab fokussiert, Pfeil rechts: Breite / `time.rateDaysPerSec` | 24 rem / unverändert | 24 rem / 1 (unverändert, Griff schluckt die Pfeiltaste) | ja |
 | 3 | Sitzung: Leiste 24 rem und eingeklappt, neu laden → nur Reiter; nach Öffnen 24 rem | erfüllt | erfüllt (siehe Anmerkung) | ja |
 | 4 | Kontrast (vier Werte aus Task 3, ein Wert nachgemessen) | ≥ 4,5 : 1 | 11,56 / 12,01 / 6,91 / 8,07 (Task 3); Nachmessung Panel „Zeit“, Startansicht: 11,56 — exakt reproduziert | ja |
 | 5 | Szenenliste: echter Klick startet Szene, `sceneIndexFor` bestätigt, Markierung ● an geklickter Zeile, Infopanel-Kopf mit Szenentitel | erfüllt | `cinema.running` true, `cinema.nummer` 3, `sceneIndexFor(3, 19, seed, shuffle)` = 8 = Index der geklickten Szene „Tiefflug über Phobos“; Marker „●“ und `aria-current="true"` an dieser Zeile; Infopanel-Kopf „Szene: Tiefflug über Phobos“ | ja |
 
-**Zu Messung 1 (Soll verfehlt):** Zwei Aufnahmen in derselben Ladung — A: Leiste eingeklappt
-(Reiter sichtbar, `ui.hidden` false), B: `setUi({ hidden: true })` (ganze Oberfläche weg,
-`ui/App.tsx` gibt `null` zurück). Kontrollmessungen (zwei Aufnahmen desselben Zustands ohne
-Zustandsänderung dazwischen, je zweimal für A und B) ergaben 0 abweichende Pixel — der
-Unterschied ist also kein Bildrauschen, sondern reproduzierbar und nach Zurückschalten
-umkehrbar. Der tatsächliche Unterschied liegt nicht an den Kanten des Reiter-Rechtecks
-(x=10–48, y=10–83 mit 2-px-Rand), sondern **gleichmäßig über praktisch das ganze Bild**: Bei
-sichtbarer Oberfläche (`ui.hidden` false) hat der leere Himmel abseits von Körpern und
-Sternen einen einheitlichen dunkelblauen Grundton (z. B. RGB 10/16/30), bei ausgeblendeter
-Oberfläche (`ui.hidden` true) denselben Bereich als reines Schwarz (0/0/0); Sterne,
-Himmelskörper und Bahnlinien selbst sehen in beiden Aufnahmen an den geprüften Stellen
-gleich aus. Renderer-Bildzähler, Canvas-Größe, Pixeldichte, `quality.tier` und
-Tonemapping-Belichtung sind in beiden Zuständen gleich; eine Ursache im Code wurde in dieser
-Abnahme nicht gefunden (siehe §8, Frage 4). Das Plankriterium „0 Pixel außerhalb des
-Rechtecks“ ist damit nicht erfüllt — nicht wegen der neuen Seitenleiste selbst (die
-Differenz im Rechteck des Reiters, rund 2306 Pixel, entspricht der Erwartung), sondern wegen
-dieses bislang unbekannten Helligkeitsunterschieds zwischen den beiden Oberflächenzuständen.
+**Zu Messung 1:** Der erste Versuch ließ das Infopanel offen und hielt dessen
+halbdurchsichtigen Grund (`bg-slate-900/70`) fälschlich für einen Helligkeitsunterschied im
+Himmel selbst — der Plan hatte vergessen, neben der Seitenleiste auch das Infopanel zu
+schließen. Wiederholt mit beiden Spalten eingeklappt: A = `setUi({ panels: { ...panels,
+leiste: false, info: false } })` (beide Reiter sichtbar, `ui.hidden` false), B =
+`setUi({ hidden: true })`, dieselbe Ladung. Kontrollaufnahme (A gegen A ohne
+Zustandsänderung): 0 abweichende Pixel. A gegen B: 3354 abweichende Pixel, ausnahmslos
+innerhalb der beiden Reiter-Rechtecke (Leiste x=10–48/y=10–83, Infopanel x=960–998/y=10–46,
+je 2-px-Rand) — außerhalb 0. Eine Renderer-Ursache gibt es damit nicht.
 
 **Zu Messung 3:** Der erste Versuch scheiterte, weil die Einstellung „Sitzung merken“
 (`localStorage`-Schlüssel `orrery.sitzungMerken`) auf diesem Arbeitsrechner von einer
@@ -146,6 +138,10 @@ Rulings dieser Abnahme:
 - **Ruling:** Die Kontrast-Nachmessung (4) verwendet probeweise wieder 18 rem Leistenbreite
   (Standardbreite aus Task 3), damit das Messrechteck exakt mit dem Ledger-Wert
   deckungsgleich bleibt und die beiden Zahlen unmittelbar vergleichbar sind.
+- **Ruling:** Messung 1 mit geschlossenem Infopanel wiederholt — der Plan hatte es
+  vergessen. Der erste Versuch schloss nur die Seitenleiste; der scheinbare
+  Helligkeitsunterschied war der halbdurchsichtige Grund des offen gebliebenen Infopanels,
+  keine Eigenschaft des Renderers.
 
 ## 7. Bekannte Unschärfen
 
@@ -162,13 +158,6 @@ Aus dem Ledger (zurückgestellt, kein Merge-Hindernis):
   Seite des Künstlers bzw. bei Bandcamp bestätigt (siehe §8 Frage 1).
 - Task 5: Die Formatspalte zu Stück 1 nennt keine OGG-Bitrate des Originals bei Wikimedia
   Commons (dort ohnehin nur die verlustbehaftete Fassung).
-
-Aus dieser Abnahme (neu):
-
-- **Messung 1:** Zwischen sichtbarer und per `ui.hidden` ausgeblendeter Oberfläche
-  unterscheidet sich die Helligkeit des leeren Himmels gleichmäßig über das ganze Bild
-  (dunkles Navy gegenüber reinem Schwarz), reproduzierbar und umkehrbar, Ursache in dieser
-  Abnahme nicht geklärt. Siehe §3 und §8 Frage 4.
 
 ## 8. Fragen an Jens
 
@@ -191,11 +180,3 @@ Aus dieser Abnahme (neu):
    unterscheiden „läuft“ und „nächster Start“ nicht, nur `aria-current` markiert überhaupt
    eine Zeile. Jetzt nachbessern (eigener kleiner Task) oder in Etappe 5-2 mitnehmen, die
    sich ohnehin mit Bedienzielen und Zugänglichkeit befasst?
-4. **Helligkeitsunterschied bei ausgeblendeter Oberfläche (Messung 1, §3):** Mit `ui.hidden`
-   wird der leere Himmel gleichmäßig dunkler (Navy statt Schwarz bei sichtbarer
-   Oberfläche), reproduzierbar und umkehrbar, aber ohne erkennbare Ursache im
-   Renderer-Code, den diese Abnahme durchsucht hat (Bloom, Belichtung, Canvas-Größe,
-   Pixeldichte — alle in beiden Zuständen gleich). Das macht das Plankriterium „0 abweichende
-   Pixel außerhalb des Reiter-Rechtecks“ formal nicht erfüllbar, solange die Ursache offen
-   ist. Soll dem in einem eigenen kleinen Task nachgegangen werden, oder reicht die
-   Feststellung fürs Protokoll?
