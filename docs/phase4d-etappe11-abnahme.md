@@ -441,6 +441,14 @@ inhaltlich in §1 (Freigabe, Reihenfolge, eine Prüfrunde), §2 (Richtwerte), §
 Modellzahlen-Übernahme), §5 (Ersatz entfällt) dieses Protokolls eingearbeitet; als Themenliste in
 §8.
 
+## Nacharbeit nach der Schlussprüfung
+
+- Gesamtabnahme §1: Endcommit der Etappe 4d-11 auf `33d2812` angeglichen (wie §3.1).
+- Gesamtabnahme §7 Punkt 1: Nachprüfung der Driftrate an der Crossref-Zusammenfassung ergänzt.
+- Zurückgestellte Kleinigkeiten, vor dem Merge nicht nötig: zwei getrennte Importzeilen aus
+  `../themen` im Dateitest; im Parser bliebe eine Datumszeile als allererste Zeile eines Texts
+  eine Liste (Grenzfall, kein Fall in der Sammlung).
+
 ## 7. Bekannte Unschärfen
 
 **DE-Randbefund in `thema-modell.md` (§5.1):** Der Verweis `quelle:jpl-satelliten-entdeckung`

@@ -20,7 +20,7 @@ Plan, eigenen Commits und eigenem Abnahmeprotokoll:
 | 4d-8 | Uranus, Achsneigung, fünf Uranusmonde, Szene | `0a8b584` | `docs/phase4d-etappe8-abnahme.md` |
 | 4d-9 | Neptun, Triton, Pluto, Charon, drei Szenen | `4e39a04` | `docs/phase4d-etappe9-abnahme.md` |
 | 4d-10 | Ceres, Eris, Haumea, Makemake, Zwergplaneten, Kirkwood-Lücken, Ceres-Gürtel | `5bed033` | `docs/phase4d-etappe10-abnahme.md` |
-| 4d-11 | Modell, Sonnensystem, Systemblick, strenger Dateitest, Gesamtabnahme | `3d2b0a1`/`3f09b21` | `docs/phase4d-etappe11-abnahme.md` |
+| 4d-11 | Modell, Sonnensystem, Systemblick, strenger Dateitest, Gesamtabnahme | `33d2812` | `docs/phase4d-etappe11-abnahme.md` |
 
 Endcommit je Etappe ist der letzte Commit vor dem Plan-Commit der nächsten Etappe (über
 `git log <Bereich>` ermittelt; er liegt bei mehreren Etappen nach dem eigentlichen
@@ -381,7 +381,13 @@ Jens' eigenem Ja, unabhängig von der Freigabe der Etappe 4d-11 selbst.
    IOP/PSJ-Originaltext (bei dieser Abnahme weiterhin per Bot-Sperre nicht einsehbar) in einem
    eigenen kleinen Nachführungs-Task noch einmal geprüft und die Zahl gegebenenfalls auf
    0,26°/Tag berichtigt werden, oder bleibt es bei „so lassen" von 4d-5, und die Prüfspalte wird
-   nur auf „ok" nachgeführt?
+   nur auf „ok" nachgeführt? Nachprüfung nach der Gesamtabnahme: Die Crossref-Zusammenfassung von
+   Simon et al. 2018 (DOI 10.3847/1538-3881/aaae01) lautet „∼0.°26/day in the 1980s to ∼0.°36/day
+   currently"; in astronomischer Schreibweise steht 0.°26 für 0,26°. Plausibel ist das auch aus
+   den Rotationssystemen: System II läuft gegen System III um rund 0,27° je Tag zurück. Der Text
+   mit 0,026°/Tag ist damit um den Faktor 10 zu klein; die Einordnung „so lassen" in der Abnahme
+   4d-5 §8 beruhte auf einer Fehllesung. Vorschlag: kleiner Nachführungs-Task für `objekt-jupiter`
+   (DE und EN) samt Belegzeile.
 2. **Vier Gymnasialbefunde aus 4d-8 weiterhin offen** (§6, Gruppe Gymnasialtexte): Uranus-
    Sonnenwende „2028" statt 2030, Miranda-Verona-Rupes-Höhe, Titania/Oberon-„etwa gleiche
    Anteile". Jens hatte nach 4d-8 „vor oder mit Etappe 4d-9" zugesagt; das ist nicht geschehen.
@@ -407,3 +413,11 @@ Jens' eigenem Ja, unabhängig von der Freigabe der Etappe 4d-11 selbst.
 
 Die Wort- und Trailerprüfung vor dem Commit erfolgte wie in der lokalen Projektanleitung
 beschrieben (Ergebnis 0), ohne Suchmuster in dieser Datei.
+
+## Nacharbeit nach der Schlussprüfung
+
+- Gesamtabnahme §1: Endcommit der Etappe 4d-11 auf `33d2812` angeglichen (wie §3.1).
+- Gesamtabnahme §7 Punkt 1: Nachprüfung der Driftrate an der Crossref-Zusammenfassung ergänzt.
+- Zurückgestellte Kleinigkeiten, vor dem Merge nicht nötig: zwei getrennte Importzeilen aus
+  `../themen` im Dateitest; im Parser bliebe eine Datumszeile als allererste Zeile eines Texts
+  eine Liste (Grenzfall, kein Fall in der Sammlung).
