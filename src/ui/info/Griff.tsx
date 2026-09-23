@@ -4,6 +4,12 @@ import type { KeyboardEvent, PointerEvent } from 'react';
 interface Props {
   /** senkrecht: stehender Balken (Breite, dx); waagerecht: liegender Balken (Teilung, dy). */
   richtung: 'senkrecht' | 'waagerecht';
+  /**
+   * Nur senkrecht: An welcher Kante des Panels sitzt der Griff? Links
+   * (Infopanel, Standard) vergrößert Pfeil links, rechts (Seitenleiste)
+   * Pfeil rechts — die Kante wandert jeweils nach außen.
+   */
+  kante?: 'links' | 'rechts';
   wert: number;
   min: number;
   max: number;
@@ -18,10 +24,10 @@ interface Props {
 /**
  * Trenn- und Breitengriff (Entwurf 4c §3.2): role="separator" mit Wert und
  * Grenzen, Ziehen per Pointer-Capture, Pfeiltasten in Schritten, Pos1/Ende
- * an die Grenzen. Beim Breitengriff vergrößert Pfeil links (die Kante
- * wandert nach links), beim Teilungsgriff vergrößert Pfeil runter.
- * Pointer-Ereignisse kommen im Browser ohnehin höchstens einmal je Bild,
- * deshalb keine eigene Drosselung (Ruling 6).
+ * an die Grenzen. Beim Breitengriff vergrößert der Pfeil nach außen
+ * (Infopanel links, Seitenleiste rechts, siehe `kante`), beim Teilungsgriff
+ * vergrößert Pfeil runter. Pointer-Ereignisse kommen im Browser ohnehin
+ * höchstens einmal je Bild, deshalb keine eigene Drosselung (Ruling 6).
  */
 export function Griff(p: Props): React.JSX.Element {
   const start = useRef<{ pos: number; wert: number } | null>(null);
@@ -54,8 +60,9 @@ export function Griff(p: Props): React.JSX.Element {
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>): void => {
-    const groesser = senkrecht ? 'ArrowLeft' : 'ArrowDown';
-    const kleiner = senkrecht ? 'ArrowRight' : 'ArrowUp';
+    const rechts = p.kante === 'rechts';
+    const groesser = senkrecht ? (rechts ? 'ArrowRight' : 'ArrowLeft') : 'ArrowDown';
+    const kleiner = senkrecht ? (rechts ? 'ArrowLeft' : 'ArrowRight') : 'ArrowUp';
     let neu: number | null = null;
     if (e.key === groesser) neu = p.wert + p.schritt;
     else if (e.key === kleiner) neu = p.wert - p.schritt;

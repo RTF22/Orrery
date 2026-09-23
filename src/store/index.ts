@@ -53,6 +53,7 @@ export const DEFAULT_STATE: AppState = {
     panels: { time: true, scale: true, camera: true, tree: true },
     language: 'de',
     info: { niveau: 'gymnasium', breiteRem: 24, teilung: 0.65, thema: null },
+    leiste: { breiteRem: 18 },
   },
 };
 

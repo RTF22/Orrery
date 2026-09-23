@@ -2,7 +2,7 @@ import { DEFAULT_STATE } from './index';
 import { SCALE_PRESETS } from '../sim/scale';
 import { bodyIndex } from '../data';
 import { istThema, NIVEAUS } from '../data/themen';
-import { INFO_BREITE_MAX_REM, INFO_BREITE_MIN_REM, INFO_TEILUNG_MAX, INFO_TEILUNG_MIN } from './types';
+import { INFO_BREITE_MAX_REM, INFO_BREITE_MIN_REM, INFO_TEILUNG_MAX, INFO_TEILUNG_MIN, LEISTE_BREITE_MAX_REM, LEISTE_BREITE_MIN_REM } from './types';
 import { JD_MIN, JD_MAX } from '../sim/time';
 
 export type Plain = Record<string, unknown>;
@@ -79,6 +79,7 @@ const BEREICHE: Readonly<Record<string, readonly [number, number]>> = {
   'cinema.idleResumeSec': [1, 3600],
   'ui.info.breiteRem': [INFO_BREITE_MIN_REM, INFO_BREITE_MAX_REM],
   'ui.info.teilung': [INFO_TEILUNG_MIN, INFO_TEILUNG_MAX],
+  'ui.leiste.breiteRem': [LEISTE_BREITE_MIN_REM, LEISTE_BREITE_MAX_REM],
 };
 
 /** Markierung für „dieses Feld fällt weg" — undefined wäre als Wert mehrdeutig. */

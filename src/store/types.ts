@@ -15,6 +15,14 @@ export const INFO_TEILUNG_MIN = 0.2;
 export const INFO_TEILUNG_MAX = 0.9;
 
 /**
+ * Grenzen der linken Seitenleiste (Entwurf Phase 5 §3.1). Zwillinge des
+ * Bereichs in store/pruefer.ts. Die wirksame Obergrenze (40 % der
+ * Fensterbreite) rechnet die Leiste selbst aus (ui/Seitenleiste.tsx).
+ */
+export const LEISTE_BREITE_MIN_REM = 14;
+export const LEISTE_BREITE_MAX_REM = 32;
+
+/**
  * Der gesamte einstellbare Zustand der Anwendung — eine einzige serialisierbare
  * Wahrheitsquelle. Presets, geteilte URLs und die Sitzungswiederherstellung sind
  * deshalb keine drei Funktionen, sondern dreimal dieselbe Serialisierung.
@@ -86,5 +94,7 @@ export interface AppState {
      * Szenenwechsel den Text stellt.
      */
     info: { niveau: Niveau; breiteRem: number; teilung: number; thema: string | null };
+    /** Linke Seitenleiste (Entwurf Phase 5 §3.1): Breite in rem. Offen/zu steht in `panels.leiste`. */
+    leiste: { breiteRem: number };
   };
 }

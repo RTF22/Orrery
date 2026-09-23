@@ -79,4 +79,19 @@ describe('Griff', () => {
     fireEvent.pointerMove(griff, { clientY: 340, pointerId: 2 });
     expect(onWert).toHaveBeenLastCalledWith(0.6);
   });
+
+  it('an der rechten Kante vergrößert Pfeil rechts und verkleinert Pfeil links', () => {
+    const onWert = vi.fn();
+    render(
+      <Griff
+        richtung="senkrecht" kante="rechts" wert={20} min={14} max={32} schritt={1} label="Leiste"
+        ausVersatz={(start, dx) => start + dx / 16} onWert={onWert}
+      />,
+    );
+    const griff = screen.getByRole('separator', { name: 'Leiste' });
+    fireEvent.keyDown(griff, { key: 'ArrowRight' });
+    expect(onWert).toHaveBeenLastCalledWith(21);
+    fireEvent.keyDown(griff, { key: 'ArrowLeft' });
+    expect(onWert).toHaveBeenLastCalledWith(19);
+  });
 });

@@ -364,3 +364,18 @@ describe('ui.info in den Profilen', () => {
     expect(s.scale.sizeScale).toBe(DEFAULT_STATE.scale.sizeScale);
   });
 });
+
+describe('ui.leiste in den Profilen', () => {
+  it('Sitzung behält die Breite der Seitenleiste, Link und Ansicht streichen sie', () => {
+    const patch = { ui: { leiste: { breiteRem: 24 } } };
+    expect(filtereProfil(patch, 'sitzung')).toEqual(patch);
+    expect(filtereProfil(patch, 'link')).toEqual({});
+    expect(filtereProfil(patch, 'ansicht')).toEqual({});
+  });
+
+  it('zurueckgesetzt behält die Breite der Seitenleiste', () => {
+    const aktuell = structuredClone(DEFAULT_STATE);
+    aktuell.ui.leiste = { breiteRem: 26 };
+    expect(zurueckgesetzt(aktuell).ui.leiste).toEqual({ breiteRem: 26 });
+  });
+});

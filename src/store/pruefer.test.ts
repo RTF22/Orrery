@@ -123,6 +123,13 @@ describe('pruefeZustand: ui.info', () => {
       .toEqual({ ui: { info: { thema: null, breiteRem: 18 } } });
     expect(pruefeZustand({ ui: { info: { thema: 7 } } })).toEqual({});
   });
+
+  it('prüft die Breite der Seitenleiste gegen 14 bis 32 rem', () => {
+    expect(pruefeZustand({ ui: { leiste: { breiteRem: 20 } } })).toEqual({ ui: { leiste: { breiteRem: 20 } } });
+    expect(pruefeZustand({ ui: { leiste: { breiteRem: 13 } } })).toEqual({});
+    expect(pruefeZustand({ ui: { leiste: { breiteRem: 33 } } })).toEqual({});
+    expect(pruefeZustand({ ui: { leiste: { breiteRem: '20' } } })).toEqual({});
+  });
 });
 
 describe('pruefeZustand: Flug', () => {
