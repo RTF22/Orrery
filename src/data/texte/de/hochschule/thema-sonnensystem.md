@@ -47,8 +47,8 @@ $GM_\odot = 1{,}327 \cdot 10^{20}\,\mathrm{m}^3\,\mathrm{s}^{-2}$, selbst aus de
 $G = 6{,}674 \cdot 10^{-11}\,\mathrm{m}^3\,\mathrm{kg}^{-1}\,\mathrm{s}^{-2}$ gerechnet (Rechenweg
 in der Belegliste). Das Ergebnis ist das eigentliche Drehimpulsproblem der
 Sonnensystementstehung: Obwohl die Sonne praktisch die gesamte Masse trägt, liegt praktisch ihr
-gesamter Bahndrehimpuls bei den Planeten, mit Jupiter und Saturn allein für 85,9 %
-([Ray 2012](literatur:ray-2012)). Die Eigenrotation der Sonne trägt dazu nur
+gesamter Bahndrehimpuls bei den Planeten ([Ray 2012](literatur:ray-2012)), mit Jupiter und
+Saturn allein für 85,9 % (eigene Rechnung). Die Eigenrotation der Sonne trägt dazu nur
 $1{,}92 \cdot 10^{41}\,\mathrm{kg}\,\mathrm{m}^2\,\mathrm{s}^{-1}$ bei, ein aus Helioseismologie
 gemessener Wert ([Iorio 2012](literatur:iorio-2012)); eine naive Abschätzung mit einer
 gleichmäßigen Vollkugel,
@@ -179,9 +179,10 @@ laufend aus Bahnelementen statt sie über feste Zahnradverhältnisse anzunähern
   akzeptierte Zahlen zu Ausdehnung, Population und Gesamtmasse
   ([Oortsche Wolke](quelle:nasa-oortwolke)).
 - **Ursprung der Neigung der Sonnenachse.** Der Sonnenäquator steht um rund 6° gegen die
-  invariable Ebene geneigt; als mögliche, ausdrücklich noch ungeprüfte Erklärung nennen Bailey,
-  Batygin und Brown dieselbe hypothetische ferne Planetenbahn, die auch die Häufung der
-  transneptunischen Objekte erklären soll ([Bailey et al. 2016](literatur:bailey-2016)).
+  invariable Ebene geneigt; als mögliche, von den Autoren selbst als prüfbar bezeichnete
+  Erklärung nennen Bailey, Batygin und Brown dieselbe hypothetische ferne Planetenbahn, die auch
+  die Häufung der transneptunischen Objekte erklären soll
+  ([Bailey et al. 2016](literatur:bailey-2016)).
 
 ## Im Modell
 
@@ -207,8 +208,9 @@ rund 38,2 zu 1 beziehungsweise 21,8 zu 1 sinkt (eigene Nachrechnung mit der Form
 Dieser Text ist zugleich der Starttext des Hochschul-Tabs: Ohne einen Link und ohne eine
 gemerkte Sitzung, nach einem Klick auf „Zurücksetzen" und nach einem Klick auf die Wurzel des
 Objektbaums setzt der Code das Thema ausdrücklich auf `sonnensystem` (`SYSTEM_THEMA` in
-`src/data/themen.ts`, verwendet in `src/app/persistenz.ts` und `src/store/persist.ts`) — wer das
-Programm öffnet, ohne ein bestimmtes Ziel mitzubringen, liest zuerst diesen Text. Eine Draufsicht
+`src/data/themen.ts`, verwendet für Start und Zurücksetzen in `src/app/persistenz.ts` und
+`src/store/persist.ts`, für den Wurzelklick in `src/ui/kamerafahrt.ts`) — wer das Programm
+öffnet, ohne ein bestimmtes Ziel mitzubringen, liest zuerst diesen Text. Eine Draufsicht
 in Bewegung zeigt [Das System von oben](szene:systemblick).
 
 *Stand: September 2026*

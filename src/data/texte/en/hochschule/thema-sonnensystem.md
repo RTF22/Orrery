@@ -47,8 +47,8 @@ $GM_\odot = 1.327 \cdot 10^{20}\,\mathrm{m}^3\,\mathrm{s}^{-2}$, computed from t
 $G = 6.674 \cdot 10^{-11}\,\mathrm{m}^3\,\mathrm{kg}^{-1}\,\mathrm{s}^{-2}$ (working shown in the
 source list). The result is the actual angular momentum problem of Solar System formation:
 although the Sun carries practically the entire mass, practically all of the orbital angular
-momentum sits with the planets, with Jupiter and Saturn alone accounting for 85.9 %
-([Ray 2012](literatur:ray-2012)). The Sun's own rotation contributes only
+momentum sits with the planets ([Ray 2012](literatur:ray-2012)), with Jupiter and Saturn alone
+accounting for 85.9 % (own calculation). The Sun's own rotation contributes only
 $1.92 \cdot 10^{41}\,\mathrm{kg}\,\mathrm{m}^2\,\mathrm{s}^{-1}$ to this, a value measured from
 helioseismology ([Iorio 2012](literatur:iorio-2012)); a naive estimate treating the Sun as a
 uniform sphere,
@@ -175,9 +175,9 @@ orbital elements instead of approximating them through fixed gear ratios.
   for its extent, population and total mass are still missing
   ([Oort Cloud](quelle:nasa-oortwolke)).
 - **Origin of the Sun's axial tilt.** The solar equator is inclined by about 6° to the
-  invariable plane; as a possible, explicitly untested explanation, Bailey, Batygin and Brown
-  propose the same hypothetical distant planetary orbit that is also meant to explain the
-  clustering of the trans-Neptunian objects
+  invariable plane; as a possible explanation the authors themselves call testable, Bailey,
+  Batygin and Brown propose the same hypothetical distant planetary orbit that is also meant to
+  explain the clustering of the trans-Neptunian objects
   ([Bailey et al. 2016](literatur:bailey-2016)).
 
 ## In the Model
@@ -204,8 +204,9 @@ while the real size ratio of the solar to the Earth's radius (about 109.2 to 1) 
 This text is also the starting text of the university tab: without a link and without a
 remembered session, after a click on "Reset", and after a click on the root of the object tree,
 the code explicitly sets the topic to `sonnensystem` (`SYSTEM_THEMA` in `src/data/themen.ts`,
-used in `src/app/persistenz.ts` and `src/store/persist.ts`) — whoever opens the program without
-bringing a specific target reads this text first. A moving overview is shown by
+used for the start and the reset in `src/app/persistenz.ts` and `src/store/persist.ts`, and for
+the click on the root in `src/ui/kamerafahrt.ts`) — whoever opens the program without bringing a
+specific target reads this text first. A moving overview is shown by
 [The Solar System from above](szene:systemblick).
 
 *As of September 2026*
