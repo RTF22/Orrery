@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import { useStore } from '../../store';
-import { remPx, useFensterbreite, useSchmal } from '../fenster';
+import { remPx, spaltenBreite, useFensterbreite, useSchmal } from '../fenster';
 import {
   INFO_BREITE_MAX_REM, INFO_BREITE_MIN_REM, INFO_TEILUNG_MAX, INFO_TEILUNG_MIN,
 } from '../../store/types';
@@ -175,18 +175,10 @@ export function InfoPanel(): React.JSX.Element {
   };
 
   const fensterbreite = useFensterbreite();
-  const breiteMax = Math.min(
-    INFO_BREITE_MAX_REM,
-    fensterbreite === null ? INFO_BREITE_MAX_REM : Math.floor((fensterbreite * BREITE_MAX_ANTEIL) / remPx()),
+  // Klemmung: siehe spaltenBreite in ../fenster.
+  const { breite, obergrenze } = spaltenBreite(
+    info.breiteRem, INFO_BREITE_MIN_REM, INFO_BREITE_MAX_REM, BREITE_MAX_ANTEIL, fensterbreite,
   );
-  /**
-   * Tatsächlich dargestellte Breite: nie über die Höchstbreite hinaus, auch
-   * wenn ein aus Sitzung oder Link wiederhergestellter Store-Wert größer ist
-   * als in einem inzwischen schmaleren Fenster erlaubt. Der Store-Wert
-   * selbst bleibt unangetastet — hier wird nichts zurückgeschrieben, nur
-   * die Darstellung geklemmt.
-   */
-  const breite = Math.min(info.breiteRem, Math.max(INFO_BREITE_MIN_REM, breiteMax));
 
   if (!offen) {
     return (
@@ -213,7 +205,7 @@ export function InfoPanel(): React.JSX.Element {
           richtung="senkrecht"
           wert={breite}
           min={INFO_BREITE_MIN_REM}
-          max={Math.max(INFO_BREITE_MIN_REM, breiteMax)}
+          max={obergrenze}
           schritt={1}
           label={t('info.griff.breite')}
           ausVersatz={(start, dx) => start - dx / remPx()}

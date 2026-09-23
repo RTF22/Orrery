@@ -3,7 +3,7 @@ import { useStore } from '../store';
 import { LEISTE_BREITE_MAX_REM, LEISTE_BREITE_MIN_REM } from '../store/types';
 import { t } from './i18n';
 import { Griff } from './info/Griff';
-import { remPx, useFensterbreite, useSchmal } from './fenster';
+import { remPx, spaltenBreite, useFensterbreite, useSchmal } from './fenster';
 
 /** Schlüssel in ui.panels; ohne Eintrag gilt die Leiste als offen. */
 export const LEISTE_PANEL = 'leiste';
@@ -41,12 +41,10 @@ export function Seitenleiste({ kopf, children }: { kopf: ReactNode; children: Re
     );
   }
 
-  const breiteMax = Math.min(
-    LEISTE_BREITE_MAX_REM,
-    fensterbreite === null ? LEISTE_BREITE_MAX_REM : Math.floor((fensterbreite * BREITE_MAX_ANTEIL) / remPx()),
+  // Klemmung: siehe spaltenBreite in ./fenster.
+  const { breite, obergrenze } = spaltenBreite(
+    breiteRem, LEISTE_BREITE_MIN_REM, LEISTE_BREITE_MAX_REM, BREITE_MAX_ANTEIL, fensterbreite,
   );
-  const obergrenze = Math.max(LEISTE_BREITE_MIN_REM, breiteMax);
-  const breite = Math.min(breiteRem, obergrenze);
 
   return (
     <div className="relative flex max-h-full max-w-full shrink-0 flex-col" style={{ width: `${breite}rem` }}>

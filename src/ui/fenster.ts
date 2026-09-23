@@ -41,3 +41,20 @@ export function useSchmal(): boolean {
   }, []);
   return schmal;
 }
+
+/**
+ * Wirksame Breite einer Spalte in rem: Die Obergrenze ist der kleinere Wert
+ * aus Höchstbreite und Anteil der Fensterbreite, nie unter der Mindestbreite.
+ * Der gespeicherte Wert wird nur für die Darstellung geklemmt, nie
+ * zurückgeschrieben (Seitenleiste 40 %, Infopanel 60 %).
+ */
+export function spaltenBreite(
+  gespeichert: number, minRem: number, maxRem: number, anteil: number, fensterbreite: number | null,
+): { breite: number; obergrenze: number } {
+  const breiteMax = Math.min(
+    maxRem,
+    fensterbreite === null ? maxRem : Math.floor((fensterbreite * anteil) / remPx()),
+  );
+  const obergrenze = Math.max(minRem, breiteMax);
+  return { breite: Math.min(gespeichert, obergrenze), obergrenze };
+}
