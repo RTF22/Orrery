@@ -180,10 +180,8 @@ Plutos Rotationsachse ist mit rund 120° gegen die eigene Bahnnormale geneigt �
 rotiert also rückläufig —, und diese Schiefe schwankt, getrieben vom Drehmoment der Sonne auf das
 präzedierende Pluto-Charon-System, über rund drei Millionen Jahre nahezu sinusförmig und stabil
 zwischen etwa 102° und 126°
-([Dobrovolskis und Harris 1983](literatur:dobrovolskis-1983); Zahlen wie
-[Achsneigung](thema:achsneigung), das dieselbe Schwankung abweichend als „chaotisch" bezeichnet —
-die Zusammenfassung der zitierten Arbeit beschreibt dagegen ausdrücklich eine stabile, quasi-
-periodische Oszillation, nicht chaotisches Verhalten). Aus dieser hohen, wechselnden Schiefe folgen extreme
+([Dobrovolskis und Harris 1983](literatur:dobrovolskis-1983); wie in
+[Achsneigung](thema:achsneigung)). Aus dieser hohen, wechselnden Schiefe folgen extreme
 Jahreszeiten: Über weite Strecken des 248-jährigen Umlaufs liegt jeweils ein Pol fast durchgehend im
 Dunkeln, während der andere fast durchgehend beschienen wird — ein Rhythmus, der über die
 Stickstoffsublimation direkt in den oben beschriebenen Druckverlauf eingreift.

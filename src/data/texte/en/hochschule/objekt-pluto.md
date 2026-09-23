@@ -172,10 +172,8 @@ Pluto's rotation axis is tilted by about 120° against its own orbit normal — 
 Pluto rotates retrograde — and this obliquity oscillates, driven by the Sun's torque on the
 precessing Pluto-Charon system, over about three million years in a nearly sinusoidal, stable
 pattern between about 102° and 126°
-([Dobrovolskis and Harris 1983](literatur:dobrovolskis-1983); values as in
-[Axial tilt](thema:achsneigung), which labels the same variation "chaotic" instead — the abstract
-of the cited work explicitly describes a stable, quasi-periodic oscillation, not chaotic
-behavior). This high, shifting obliquity produces extreme
+([Dobrovolskis and Harris 1983](literatur:dobrovolskis-1983); as in
+[Axial tilt](thema:achsneigung)). This high, shifting obliquity produces extreme
 seasons: for long stretches of the 248-year orbit, one pole lies almost continuously in darkness
 while the other is almost continuously lit — a rhythm that feeds directly, via nitrogen
 sublimation, into the pressure history described above.

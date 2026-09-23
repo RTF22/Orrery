@@ -212,11 +212,11 @@ deciding between them. For comparison: [Neptune](objekt:neptune), of similar siz
 Uranus, has only 28.3° of obliquity, was not struck by any of these mechanisms to the same degree, and
 stayed close to its original orientation.
 
-The distant dwarf planet [Pluto](objekt:pluto) also carries an extreme obliquity of about 120°;
-unlike for Uranus, here it is stability rather than cause that is disputed. Dobrovolskis and Harris
-already showed that Pluto's obliquity varies chaotically on timescales of millions of years
-([Dobrovolskis and Harris 1983](literatur:dobrovolskis-1983)) – a finding later confirmed by refined
-calculations without changing the fundamental restlessness of the Pluto–Charon orbit coupling.
+The distant dwarf planet [Pluto](objekt:pluto) also carries an extreme obliquity of about 120°.
+According to Dobrovolskis and Harris, driven by the Sun's torque on the precessing Pluto–Charon
+system, it oscillates nearly sinusoidally and stably between about 102° and 126° over roughly three
+million years ([Dobrovolskis and Harris 1983](literatur:dobrovolskis-1983)) – unlike the chaotic
+obliquity zones of the Earth-like planets.
 
 ## Open questions
 

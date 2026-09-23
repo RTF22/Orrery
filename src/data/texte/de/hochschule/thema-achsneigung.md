@@ -217,12 +217,11 @@ zwischen ihnen zu entscheiden. Zum Vergleich: [Neptun](objekt:neptune) mit ähnl
 Zusammensetzung wie Uranus hat nur 28,3° Schiefe, wurde von keinem der genannten Mechanismen in
 gleichem Maß getroffen und blieb nahe seiner ursprünglichen Lage.
 
-Auch der ferne Zwergplanet [Pluto](objekt:pluto) trägt mit rund 120° eine extreme Schiefe; anders als
-bei Uranus ist hier weniger die Ursache als die Stabilität umstritten. Schon Dobrovolskis und Harris
-zeigten, dass Plutos Schiefe über Zeitskalen von Jahrmillionen chaotisch schwankt
-([Dobrovolskis und Harris 1983](literatur:dobrovolskis-1983)) – ein Befund, der seither in
-verfeinerten Rechnungen bestätigt wurde, ohne dass sich an der grundsätzlichen Unruhe der
-Plutobahn-Bahn-Kopplung etwas geändert hätte.
+Auch der ferne Zwergplanet [Pluto](objekt:pluto) trägt mit rund 120° eine extreme Schiefe. Nach
+Dobrovolskis und Harris schwingt sie, getrieben vom Drehmoment der Sonne auf das präzedierende
+Pluto-Charon-System, über rund drei Millionen Jahre nahezu sinusförmig und stabil zwischen etwa 102°
+und 126° ([Dobrovolskis und Harris 1983](literatur:dobrovolskis-1983)) – anders als die chaotischen
+Schiefezonen der erdähnlichen Planeten.
 
 ## Offene Fragen
 
