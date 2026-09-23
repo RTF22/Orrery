@@ -1,9 +1,10 @@
 # Szene: Von Neptun zur fernen Sonne
 
 Die Kamera steht hinter [Neptun](objekt:neptune), auf dessen sonnenabgewandter Seite, und blickt
-auf ihn zurück; die [Sonne](objekt:sun) steht daneben im Bild – die Szene zeigt Neptun als
-überwiegend dunkle Scheibe mit einer schmalen, zur Sonne hin beleuchteten Sichel, während sein
-eigener Stern von hier aus nur noch wie ein ferner Lichtpunkt erscheint.
+auf ihn zurück; die [Sonne](objekt:sun) steht daneben im Bild. In Wirklichkeit ist Neptun von hier
+fast vollständig dunkel, nur eine schmale Sichel liegt im Sonnenlicht, und die Sonne selbst ist
+nur ein Lichtpunkt von rund 64″ – im Bild hellt das Fülllicht der Darstellung Neptuns Nachtseite
+grau auf, und in „Schaubild" erscheint auch die Sonne als deutliche Scheibe.
 
 ## Was das Bild zeigt
 
@@ -65,13 +66,14 @@ mehr als sichtbares Licht.
   ([Sonne](objekt:sun)) – rund 68-fach überhöht (eigene Rechnung).
 - **Belichtung jetzt auf Neptun:** `blickzielVon` liefert bei `path: 'sichtlinie'` den
   Standortkörper, hier Neptun, statt der Sonne; `exposureTargetId` belichtet damit wie bei
-  praktisch jeder anderen Szene auf den tatsächlich angesehenen Körper. Der dafür nötige
-  Verstärkungsfaktor (`targetExposure`, Bezugswert 1 bei 1 AE) liegt bei rund 24 in „Realistisch"
-  (Neptuns wahrem Abstand von 30,12 AE) und bei rund 11 in „Schaubild" (auf 7,7 AE komprimiert,
-  $r^{0{,}6}$; eigene Rechnung) – Neptuns beleuchtete Seite landet dadurch, anders als früher,
-  unabhängig vom Maßstab exakt auf dem Referenzwert (`EXPOSURE_REFERENCE=1`). Auf die im selben
-  Bild sichtbare Sonne wirkt dieser Faktor nicht, weil ihr Material unbeleuchtet ist und
-  Belichtung ignoriert ([Sonne](objekt:sun)). Das vom Maßstab unabhängige Fülllicht der
+  praktisch jeder anderen Szene auf den tatsächlich angesehenen Körper. `targetExposure`
+  (`render/lighting.ts`) ergibt rund 24 in „Realistisch" (Neptuns wahrem Abstand von 30,12 AE)
+  und rund 11 in „Schaubild" (auf 7,7 AE komprimiert, $r^{0{,}6}$) – gegenüber dem Wert π bei
+  1 AE also rund das 7,7- beziehungsweise 3,4-Fache (eigene Rechnung: $30{,}12^{0{,}6}=7{,}7$,
+  $7{,}7^{0{,}6}=3{,}4$). Neptuns beleuchtete Seite landet dadurch, anders als früher, unabhängig
+  vom Maßstab exakt auf dem Referenzwert (`dayLevel`/π gleich `EXPOSURE_REFERENCE`·`brightness`).
+  Auf die im selben Bild sichtbare Sonne wirkt dieser Faktor nicht, weil ihr Material unbeleuchtet
+  ist und Belichtung ignoriert ([Sonne](objekt:sun)). Das vom Maßstab unabhängige Fülllicht der
   Nachtseite ($\mathrm{nightFill}=0{,}25$, `store/index.ts`; Emissiv gleich
   $\mathrm{nightFill}\cdot\mathrm{dayLevel}/\pi$, `render/lighting.ts`) hebt Neptuns physikalisch
   fast schwarze Nachtseite dabei auf ein Viertel des jetzt korrekt eingestellten Tagniveaus an –

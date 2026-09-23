@@ -1,9 +1,10 @@
 # Scene: From Neptune to the distant Sun
 
 The camera stands behind [Neptune](objekt:neptune), on its side facing away from the Sun, and
-looks back at it; the [Sun](objekt:sun) stands next to it in the frame — the scene shows Neptune
-as a mostly dark disc with a narrow crescent lit toward the Sun, while its own star appears from
-here only as a distant point of light.
+looks back at it; the [Sun](objekt:sun) stands next to it in the frame. In reality Neptune is
+almost entirely dark from here, with only a narrow crescent lit by the Sun, and the Sun itself is
+just a point of light about 64″ across — in the image, the display's fill light brightens
+Neptune's night side to grey, and in "Diagram" the Sun itself appears as a clear disc.
 
 ## What the view shows
 
@@ -64,12 +65,14 @@ light.
   ([the Sun](objekt:sun)) — about 68 times too large (own calculation).
 - **Exposure now on Neptune:** for `path: 'sichtlinie'`, `blickzielVon` returns the standing
   body, here Neptune, instead of the Sun; `exposureTargetId` therefore exposes on the body actually
-  looked at, as in practically every other scene. The gain this needs (`targetExposure`, reference
-  value 1 at 1 au) comes out to about 24 in "Realistic" (Neptune's true distance of 30.12 au) and
-  about 11 in "Diagram" (compressed to 7.7 au, $r^{0.6}$; own calculation) — Neptune's lit side
-  therefore lands, unlike before, exactly on the reference value (`EXPOSURE_REFERENCE=1`)
-  regardless of scale. This factor has no effect on the Sun visible in the same frame, because its
-  material is unlit and ignores exposure ([the Sun](objekt:sun)). The night-side fill light, which
+  looked at, as in practically every other scene. `targetExposure` (`render/lighting.ts`) comes out
+  to about 24 in "Realistic" (Neptune's true distance of 30.12 au) and about 11 in "Diagram"
+  (compressed to 7.7 au, $r^{0.6}$) — against the value π at 1 au, that is about 7.7 and 3.4 times,
+  respectively (own calculation: $30.12^{0.6}=7.7$, $7.7^{0.6}=3.4$). Neptune's lit side therefore
+  lands, unlike before, exactly on the reference value (`dayLevel`/π equal to
+  `EXPOSURE_REFERENCE`·`brightness`) regardless of scale. This factor has no effect on the Sun
+  visible in the same frame, because its material is unlit and ignores exposure
+  ([the Sun](objekt:sun)). The night-side fill light, which
   is independent of scale ($\mathrm{nightFill}=0.25$, `store/index.ts`; emissive equal to
   $\mathrm{nightFill}\cdot\mathrm{dayLevel}/\pi$, `render/lighting.ts`), raises Neptune's
   physically near-black night side to a quarter of the now correctly set day level — in the image
