@@ -37,7 +37,7 @@ from draw to draw.
 Whether belt particles appear in the frame depends strongly on the drawn direction: because
 Ceres itself sits inside the thin belt disc, a viewing cone with a $25^\circ$ half-angle (half
 the vertical field of view) captures, depending on the drawn azimuth and elevation, between
-roughly 130 and roughly 14,000 of the 50,000 "high"-quality particles (own calculation from
+roughly 140 and roughly 14,000 of the 50,000 "high"-quality particles (own calculation from
 `sim/belts.ts` and `render/belts.ts`, a sample over eight azimuths and three elevations);
 directions close to the belt plane (elevation $5^\circ$) capture markedly more than those near
 the edge of the scatter range ($25^\circ$). Almost all captured particles are not close
@@ -75,8 +75,9 @@ neighbouring asteroids, out of an estimated 700,000 to 1.7 million bodies larger
 across the whole belt; probes have crossed it without deliberate avoidance manoeuvres since the
 Pioneer and Voyager missions, with an estimated collision probability of less than one in a
 billion ([Asteroid belt](quelle:wikipedia-en-asteroid-belt)). The only close-up observation of a
-main-belt body remains NASA's Dawn spacecraft, which orbited Ceres from March 2015 until it ran
-out of fuel in October 2018 ([Russell et al. 2016](literatur:russell-2016)).
+main-belt body remains NASA's Dawn spacecraft, which orbited Ceres from March 2015
+([Russell et al. 2016](literatur:russell-2016)) until it lost control after running out of
+fuel on 1 November 2018 ([JPL mission-end announcement](quelle:jpl-dawn-missionsende)).
 
 ## Model limitations
 

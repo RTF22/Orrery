@@ -8,10 +8,11 @@ zwischen Mars und Jupiter gehalten; mit der Entdeckung weiterer, kleinerer Körp
 selben Ort wurde Ceres binnen weniger Jahrzehnte zum Asteroiden herabgestuft, bevor die
 Internationale Astronomische Union sie 2006 zusammen mit Pluto und dem neu entdeckten Eris
 als [Zwergplaneten](thema:zwergplaneten) neu einordnete ([IAU 2006](literatur:iau-2006)) —
-dieselbe Definition, die auch [Plutos](objekt:pluto) Einstufung begründet. Von März 2015 bis
-zum Treibstoffende im Oktober 2018 umkreiste die NASA-Sonde Dawn Ceres aus zuletzt weniger
-als 400 km Höhe und lieferte Schwerefeld, Form, Zusammensetzung und eine globale Kartierung
-([Russell et al. 2016](literatur:russell-2016)) — die einzige Nahaufnahme eines
+dieselbe Definition, die auch [Plutos](objekt:pluto) Einstufung begründet. Von März 2015
+([Russell et al. 2016](literatur:russell-2016)) bis zum endgültigen Kontrollverlust durch
+Treibstoffmangel am 1. November 2018 ([JPL-Missionsmeldung](quelle:jpl-dawn-missionsende))
+umkreiste die NASA-Sonde Dawn Ceres aus zuletzt weniger als 400 km Höhe und lieferte
+Schwerefeld, Form, Zusammensetzung und eine globale Kartierung — die einzige Nahaufnahme eines
 Zwergplaneten des Hauptgürtels, während die transneptunischen Zwergplaneten bislang nur aus
 der Ferne bekannt sind. Dieser Text stellt Kenngrößen, Inneres, Oberfläche, die
 vorübergehende Exosphäre, Bahn und Entstehung dar und beschreibt zuletzt, was Orrery davon

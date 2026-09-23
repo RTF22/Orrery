@@ -8,10 +8,11 @@ that Bode's law had postulated; once further, smaller bodies turned up at the sa
 Ceres was demoted to an asteroid within a few decades, until the International Astronomical
 Union reclassified it in 2006, together with Pluto and the newly discovered Eris, as a
 [dwarf planet](thema:zwergplaneten) ([IAU 2006](literatur:iau-2006)) — the same definition
-that also underlies [Pluto's](objekt:pluto) classification. From March 2015 until it ran out
-of fuel in October 2018, NASA's Dawn spacecraft orbited Ceres, in its final phase from less
-than 400 km altitude, and returned its gravity field, shape, composition and a global map
-([Russell et al. 2016](literatur:russell-2016)) — the only close-up view of a main-belt
+that also underlies [Pluto's](objekt:pluto) classification. From March 2015
+([Russell et al. 2016](literatur:russell-2016)) until it lost control after running out of
+fuel on 1 November 2018 ([JPL mission-end announcement](quelle:jpl-dawn-missionsende)), NASA's
+Dawn spacecraft orbited Ceres, in its final phase from less than 400 km altitude, and returned
+its gravity field, shape, composition and a global map — the only close-up view of a main-belt
 dwarf planet to date, while the trans-Neptunian dwarf planets remain known only from afar.
 This text presents parameters, interior, surface, the transient exosphere, orbit and
 formation, and describes last what Orrery renders of it; the scene

@@ -443,6 +443,13 @@ export const QUELLEN: readonly Quelle[] = [
     fuer: ['objekt:ceres', 'szene:ceres-guertel'],
   },
   {
+    id: 'jpl-dawn-missionsende',
+    titel: { de: 'Ende der Dawn-Mission (JPL)', en: 'End of the Dawn mission (JPL)' },
+    herausgeber: 'JPL', sprache: 'en', art: 'uebersicht',
+    url: 'https://www.jpl.nasa.gov/news/nasas-dawn-mission-to-asteroid-belt-comes-to-end',
+    fuer: ['objekt:ceres', 'szene:ceres-guertel'],
+  },
+  {
     id: 'nasa-sonnensystem',
     titel: { de: 'Sonnensystem bei NASA Science', en: 'Solar System at NASA Science' },
     herausgeber: 'NASA', sprache: 'en', art: 'uebersicht',

@@ -37,7 +37,7 @@ Blickwinkel unterscheiden sich also von Ziehung zu Ziehung deutlich.
 Ob Gürtelteilchen im Bild erscheinen, hängt stark von der gezogenen Richtung ab: Weil Ceres
 selbst inmitten der dünnen Gürtelscheibe steht, erfasst ein Sichtkegel von $25^\circ$
 Halböffnungswinkel (die Hälfte des vertikalen Sichtfelds) je nach Azimut und Elevation der
-Ziehung zwischen rund 130 und rund 14 000 der 50 000 Teilchen der Qualitätsstufe „hoch" (eigene
+Ziehung zwischen rund 140 und rund 14 000 der 50 000 Teilchen der Qualitätsstufe „hoch" (eigene
 Nachrechnung an `sim/belts.ts` und `render/belts.ts`, Stichprobe über acht Azimute und drei
 Elevationen); Blickrichtungen nahe der Gürtelebene (Elevation $5^\circ$) erfassen deutlich mehr
 als solche nahe der Streuungsgrenze ($25^\circ$). Fast alle erfassten Teilchen liegen dabei
@@ -76,8 +76,10 @@ zwischen benachbarten Asteroiden, bei geschätzten 700 000 bis 1,7 Millionen Kö
 Durchmesser im ganzen Gürtel; Sonden durchqueren ihn seit den Pioneer- und Voyager-Sonden ohne
 gezieltes Ausweichen, mit einer geschätzten Kollisionswahrscheinlichkeit von weniger als eins zu
 einer Milliarde ([Asteroidengürtel](quelle:wikipedia-en-asteroid-belt)). Die einzige
-Nahbeobachtung eines Hauptgürtelkörpers bleibt die NASA-Sonde Dawn, die Ceres von März 2015 bis
-zum Treibstoffende im Oktober 2018 umkreiste ([Russell et al. 2016](literatur:russell-2016)).
+Nahbeobachtung eines Hauptgürtelkörpers bleibt die NASA-Sonde Dawn, die Ceres von März 2015
+([Russell et al. 2016](literatur:russell-2016)) bis zum endgültigen Kontrollverlust durch
+Treibstoffmangel am 1. November 2018 ([JPL-Missionsmeldung](quelle:jpl-dawn-missionsende))
+umkreiste.
 
 ## Modellgrenzen
 
@@ -91,7 +93,7 @@ Vierfache vergrößert; die Ausdehnung realer Asteroiden, Kollisionen zwischen T
 Bahnresonanzdynamik fehlen vollständig. Ceres selbst trägt keine Exosphäre im Modell. Die
 Distanzkompression der Darstellung ändert die absoluten Kilometerwerte des Kameraabstands
 zwischen den Presets, aber weder Ceres' Winkeldurchmesser noch die Zahl der im Sichtkegel
-erfassten Gürtelteilchen merklich (eigene Nachrechnung: Streuungsfaktor $k=1$ gegen $k=0{,}6$
+erfassten Gürtelteilchen merklich (eigene Nachrechnung: Kompressionsexponent $k=1$ gegen $k=0{,}6$
 ergab vergleichbare Teilchenzahlen in derselben Blickrichtung). Weitere Vereinfachungen:
 [Grenzen des Modells](thema:modell).
 
