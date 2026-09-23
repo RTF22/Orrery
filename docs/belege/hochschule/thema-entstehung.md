@@ -6,7 +6,7 @@ die Crossref-API, die arXiv-API, PubMed (E-utilities) und über Textauszüge der
 Volltexte über ar5iv für andrews-2020, chiang-2010, lambrechts-2014, nesvorny-2018 und raymond-2022.
 Die Fundstelle nennt, was gelesen wurde; bei andrews-2020 stehen Abschnittstitel, weil die Nummern der
 arXiv-Fassung von der Zeitschrift abweichen. Nachrechnungen am Code liefen mit Vite-SSR gegen die
-Datensätze; die Skripte heißen `raten.mjs`, `schleife.mjs`, `isolation.py` und `isolation2.py` (Arbeitsordner des Tasks,
+Datensätze; die Skripte heißen `raten.mjs`, `schleife.mjs`, `isolation.py` und `isolation2.py` (Arbeitsordner der Recherche,
 nicht versioniert).
 
 | Nr. | Aussage | Wert im Text | Beleg | Fundstelle | Prüfung |

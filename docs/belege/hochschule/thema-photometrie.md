@@ -3,7 +3,7 @@
 Abrufe und Nachrechnungen vom 18.09.2026. „Herleitung" heißt: folgt rechnerisch aus den
 Definitionen oder aus den Nachbarzeilen, ohne eigene Literaturstelle. Nachrechnungen am Code liefen
 als Python-Nachbau (`photometrie.py`, `texturen.py`, `zahlen.py`) und mit Vite-SSR gegen die
-Module (`belichtung.mjs`, `neptun.mjs`); die Skripte liegen im Arbeitsordner des Tasks und sind
+Module (`belichtung.mjs`, `neptun.mjs`); die Skripte liegen im Arbeitsordner der Recherche und sind
 nicht versioniert. Die three.js-Formeln stammen aus den Shaderbausteinen der installierten Fassung
 0.186 (`node_modules/three/src/renderers/shaders/ShaderChunk/`). Verlagsseiten, die Skripte nicht
 direkt abrufen konnten, wurden über einen Textauszug gelesen; die Fundstelle nennt, was gelesen

@@ -3,7 +3,7 @@
 Abrufe und Nachrechnungen vom 18.09.2026. „Herleitung" heißt: folgt rechnerisch aus den
 Definitionen oder aus den Nachbarzeilen, ohne eigene Literaturstelle. Nachrechnungen am Code liefen
 mit Vite-SSR gegen die Datensätze (Skript `aufbau.mjs`), reine Zahlenrechnungen mit `herleitungen.py`
-(beide im Arbeitsordner des Tasks, nicht versioniert). Volltexte lagen für `militzer-2023`,
+(beide im Arbeitsordner der Recherche, nicht versioniert). Volltexte lagen für `militzer-2023`,
 `mankovich-2021`, `wahl-2017`, `viswanathan-2019` (arXiv), `le-maistre-2023` (Haupttext und
 Supplement, Autorenkopie publi2-as.oma.be), `margot-2012` (Autorenkopie mel.epss.ucla.edu),
 `durante-2019` (Autorenkopie douglashemingway.com), `jacobson-2022` und `petricca-2025` (open
@@ -147,7 +147,7 @@ Anmerkungen:
   Crossref „The Gravity Field and Interior Structure of Enceladus". Für Titan stehen deshalb
   `durante-2019` und das vorhandene `petricca-2025`; Iess et al. 2010 (Science 327, 1367, Titan) war
   nur mit der Herausgeberzusammenfassung erreichbar und wird nicht zitiert.
-- `chen-2015` (im Auftrag genannt) wird nicht verwendet: C/(M a²) der Erde folgt aus J₂/H der IERS
+- `chen-2015` (als Ausgangspunkt der Recherche genannt) wird nicht verwendet: C/(M a²) der Erde folgt aus J₂/H der IERS
   (Nr. 22); die Springer-Seite war für Abrufe gesperrt, Crossref führt keine Zusammenfassung.
 - Ganymed: 0,3105 ± 0,0028 (Anderson et al. 1996) ist nur über `gomez-casajus-2022` gelesen und im
   Text ohne eigenes Zitat als frühere Galileo-Auswertung genannt. Ebenso Garcia et al. 2011 (Nr. 63)

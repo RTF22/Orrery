@@ -18,7 +18,7 @@ Kraterretentionsalter, Wright-/Piccard-Mons-Maße) zum Einsatz. Alle zitierten W
 mindestens in ihrer Zusammenfassung geöffnet, für Titel/Autoren/Jahr/Zeitschrift/DOI zusätzlich
 über die Crossref-API geprüft (siehe Prüfskript-Zeile am Ende).
 
-**Ausgangspunkte des Briefs, vor Verwendung geprüft:** Stern et al. 2015 (Science 350, aad1815,
+**Ausgangspunkte der Recherche, vor Verwendung geprüft:** Stern et al. 2015 (Science 350, aad1815,
 mit korrektem Titel „The Pluto system: Initial results…"), Stern et al. 2018a (bereits im Katalog, wiederverwendet),
 Nimmo et al. 2017 (Icarus 287, 12–29, trifft Titel/Seite/DOI aus der ursprünglichen Liste), Brozović et al. 2015
 (Icarus 246, 317–329, trifft), Nimmo et al. 2016 (Nature 540, 94–96, trifft), Keane et al. 2016

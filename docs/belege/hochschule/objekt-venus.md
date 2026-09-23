@@ -19,7 +19,7 @@ widemann-2023, marcq-2018, futaana-2017 (Abstract über Semantic Scholar). Das F
 `quelle:nssdc-venus` und die Übersichtsseite `quelle:nasa-venus` sind direkt abgerufen (Stand bei
 Abruf 20.09.2026). Modellzahlen, die schon in `thema-gebundene-rotation` (Venus-Absatz „Im Modell")
 und `thema-photometrie` (Venus-Zeile der Albedo-Tabelle, Streumodell-Faktoren) stehen, sind
-gleichlautend übernommen (Ruling 8 aus 4d-2) und dort bereits fachgeprüft.
+gleichlautend übernommen und dort bereits fachgeprüft.
 
 | Nr. | Aussage | Wert im Text | Beleg | Fundstelle | Prüfung |
 |---|---|---|---|---|---|

@@ -3,7 +3,7 @@
 Abrufe und Nachrechnungen vom 17.09.2026. „Herleitung" heißt: folgt rechnerisch aus den
 Definitionen oder aus den Nachbarzeilen, ohne eigene Literaturstelle. Nachrechnungen am Code liefen
 mit Vite-SSR gegen die Datensätze; die Skripte heißen `gebunden.mjs`, `mondseite.mjs` und
-`zahlen.mjs` (Arbeitsordner des Tasks, nicht versioniert). Zusammenfassungen von Verlagsseiten, die
+`zahlen.mjs` (Arbeitsordner der Recherche, nicht versioniert). Zusammenfassungen von Verlagsseiten, die
 Skripte nicht direkt abrufen konnten, wurden über einen Textauszug der Seite gelesen; die Fundstelle
 nennt, was gelesen wurde.
 

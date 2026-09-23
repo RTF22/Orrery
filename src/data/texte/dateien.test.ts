@@ -113,8 +113,8 @@ function zitate(bloecke: readonly Block[]): { id: string; linktext: string }[] {
 }
 
 /**
- * Formelquelle für den Zwillingsvergleich normiert (Nachtrag Entwurf §5.5,
- * Plan-Ruling 3): Dezimalkomma-Trick `{,}` zu `.`, danach jeglicher
+ * Formelquelle für den Zwillingsvergleich normiert (Nachtrag Entwurf §5.5):
+ * Dezimalkomma-Trick `{,}` zu `.`, danach jeglicher
  * Leerraum entfernt statt nur zusammengefasst — `T^2 = a^3` und `T^2=a^3`
  * gelten damit als gleich. Wirkt nur auf Formeltext, nie auf Fließtext —
  * der Zwillingsvergleich prüft nur Zitate und Formeln, keinen Absatztext.
@@ -281,7 +281,7 @@ describe('Textdateien', () => {
 
   it('normiertesTex behandelt nur den Leerraum innerhalb einer Formel als gleichwertig (Schlussprüfung 4d-1, Befund M1)', () => {
     // T^2 = a^3 und T^2=a^3 sind dieselbe Formel mit anderem Leerraum um die
-    // Operatoren — Entwurf §5.5 und Plan-Ruling 3 fordern, dass der
+    // Operatoren — Entwurf §5.5 fordert, dass der
     // Zwillingsvergleich das als gleich behandelt.
     expect(normiertesTex('T^2 = a^3')).toBe(normiertesTex('T^2=a^3'));
     // Weiterhin verschieden, wenn sich mehr als nur Leerraum unterscheidet.
