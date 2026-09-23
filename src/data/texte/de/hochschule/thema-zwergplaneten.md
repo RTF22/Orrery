@@ -50,10 +50,10 @@ gravitative und Strahlungskräfte Asteroiden und Kometen fortlaufend auf bahnkre
 quantitativ zu fassen.
 
 Bereits [Stern und Levison (2002)](literatur:stern-levison-2002) untersuchten einen rein
-dynamischen Maßstab der Form $\lambda \propto M_p^2/P$ (Planetenmasse $M_p$, Umlaufzeit $P$) für
+dynamischen Maßstab der Form $\Lambda \propto M_p^2/P$ (Planetenmasse $M_p$, Umlaufzeit $P$) für
 die Fähigkeit eines Körpers, seine Bahnumgebung über eine charakteristische Zeitspanne hinweg zu
 dominieren; [Soter (2006)](literatur:soter-2006) griff diesen theoretischen
-„Streuparameter" $\lambda$ wieder auf, stellte ihm aber einen zweiten, rein beobachtungsbasierten
+„Streuparameter" $\Lambda$ wieder auf, stellte ihm aber einen zweiten, rein beobachtungsbasierten
 Maßstab gegenüber: die Diskriminante $\mu = M/m$, mit $M$ der Masse des Zielkörpers und $m$ der
 gemeinsamen Masse aller übrigen Körper, die dessen Bahnzone teilen. Für Mars ($\mu \approx 5100$,
 gegen die erdnahen Objekte) und Ceres ($\mu = (1/4)/(3/4) \approx 1/3$, gegen den übrigen
@@ -62,7 +62,7 @@ Größenordnungen; Pluto liegt mit rund 7 Prozent der Kuipergürtelmasse bei $\m
 Soter schlägt $\mu = 100$ als Grenze zwischen Planeten und Nichtplaneten vor, mittig in der
 beobachteten Lücke, mit einem vertretbaren Spielraum von etwa 10 bis 1000.
 
-[Margot (2015)](literatur:margot-2015) formalisierte den Streuparameter $\lambda$ zu einer
+[Margot (2015)](literatur:margot-2015) formalisierte den Streuparameter $\Lambda$ zu einer
 Räumungszeit $t_\mathrm{clear}$, ab der ein Körper der Masse $M_p$ im Abstand $a_p$ um einen Stern
 der Masse $M_\mathrm{star}$ sein Umfeld bis zum $C$-Fachen des eigenen Hill-Radius (üblich $C = 2\sqrt{3}$)
 frei geräumt hat. Daraus folgt eine Mindestmasse $M_\mathrm{clear}$ für die Räumung innerhalb einer
@@ -146,9 +146,10 @@ das bislang höchste bekannte Mond-Hauptkörper-Masseverhältnis unter Planeten 
 ## Vergleich der fünf anerkannten Zwergplaneten
 
 Die folgende Tabelle stellt die Kenngrößen der fünf Körper aus ihren eigenen Texten und dem
-Datensatz gegenüber; Radius, Masse und Rotationsperiode sind gemessene Werte, die Dichte folgt
-daraus über $\bar\rho = 3M/(4\pi R^3)$ (Herleitung), $a$, $e$ und $i$ sind die heliozentrischen
-Bahnelemente des Datensatzes zur jeweiligen Epoche.
+Datensatz gegenüber; Radius, Masse und Rotationsperiode sind gemessene Werte, die Dichte folgt bei
+Ceres, Pluto, Eris und Makemake daraus über $\bar\rho = 3M/(4\pi R^3)$ (Herleitung), bei Haumea aus
+der Spanne zweier unabhängiger Formlösungen (siehe unten); $a$, $e$ und $i$ sind die
+heliozentrischen Bahnelemente des Datensatzes zur jeweiligen Epoche.
 
 | Körper | Radius (km) | Masse (kg) | Dichte ($\mathrm{g\,cm^{-3}}$) | Albedo | Rotation (h) | $a$ (AU) | $e$ | $i$ (°) | Monde |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -162,9 +163,9 @@ Die Reihe zeigt eine Spanne von fast einer Größenordnung in der Masse und dem 
 Dichten, die alle zwischen der von Wassereis und der von Gestein liegen: Ceres und Eris, die beiden
 massereichsten, sind auch die dichtesten, während Haumea und Makemake trotz vergleichbarer
 Masse zu Pluto deutlich weniger dicht sind — ein erster Hinweis auf die im nächsten Abschnitt
-behandelte Größen-Dichte-Beziehung. Bei Pluto und Ceres weicht die hier gezeigte, photometrisch
-gemessene Albedo vom Datensatzwert ab (Pluto 0,52, Ceres NSSDC-Vollkugelmittel ähnlich dem
-Katalogwert); die Gründe stehen in den jeweiligen Objekttexten unter „Im Modell". Haumeas Dichte
+behandelte Größen-Dichte-Beziehung. Bei [Pluto](objekt:pluto) weicht die hier gezeigte,
+photometrisch gemessene Albedo vom Datensatzwert ab (0,52 Katalog gegen 0,62 gemessen); der Grund
+steht dort unter „Im Modell". Haumeas Dichte
 und Radius hängen von der verwendeten Formlösung ab (Einzelheiten unten und unter
 [Haumea](objekt:haumea)), Makemakes Rotationsperiode ist mit Stand September 2026 nicht
 eindeutig geklärt ([Makemake](objekt:makemake)), und seine Masse beruht auf einem
@@ -175,7 +176,7 @@ unbegutachteten Vorabdruck (siehe unten).
 Über die transneptunischen Objekte hinweg steigt die mittlere Dichte tendenziell mit der Größe:
 Bierson und Nimmo deuten das als Folge sinkender Porosität, weil größere Körper unter höherem
 Innendruck und, bei ausreichender Größe, höherer radiogener Temperatur ihren anfänglich lockeren,
-porösen Gesteinsanteil stärker verdichten. Für 15 von 18 Objekten mit gemessener Dichte trifft ein
+porösen Gesteinsanteil stärker verdichten. Für 14 von 17 Objekten mit gemessener Dichte trifft ein
 gemeinsamer, über alle Körper konstanter Gesteinsmassenanteil von rund 70 Prozent die beobachteten
 Werte innerhalb der doppelten Messunsicherheit; aus der für eine solche Verdichtung nötigen
 radiogenen Aufheizung durch das kurzlebige Isotop ${}^{26}\mathrm{Al}$ folgt eine Mindestbildungszeit von rund
@@ -261,8 +262,9 @@ Die Pole folgen je nach Datenlage unterschiedlichen Verfahren: Ceres und Pluto t
 Raumsonden- beziehungsweise Kernel-Daten gemessenen IAU-Pol, Haumeas Pol stammt aus einer von zwei
 nahezu gleichwertigen Lichtkurven-Inversionslösungen, und Eris sowie Makemake tragen mangels
 gemessenen Pols ersatzweise die eigene Bahnnormale — eine ausdrückliche Behelfsannahme, die dem
-publizierten Kippwinkel (bei Eris rund 78°, bei Makemake 46° bis 78°) sogar widerspricht, wie
-unter [Achsneigung](thema:achsneigung) hergeleitet. Alle fünf Körper sind im Modell Kugeln ohne
+publizierten Kippwinkel sogar widerspricht: bei Eris rund 78°, wie unter
+[Achsneigung](thema:achsneigung) hergeleitet, bei Makemake 46° bis 78°
+([Parker et al. 2016](literatur:parker-2016)). Alle fünf Körper sind im Modell Kugeln ohne
 Abplattung, auch Haumea: Ihr stark dreiachsiger Umriss (Halbachsen rund 1061, 844 und 514 km)
 weicht von der Modellkugel (Radius 774,1 km) entlang der langen Achse um rund −27 Prozent und
 entlang der kurzen Achse um rund +51 Prozent ab (Einzelheiten unter [Haumea](objekt:haumea)); ihr

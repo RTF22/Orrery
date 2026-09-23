@@ -47,9 +47,9 @@ radiative forces continually scatter asteroids and comets onto orbit-crossing pa
 quantitative terms.
 
 Already [Stern and Levison (2002)](literatur:stern-levison-2002) examined a purely dynamical
-measure of the form $\lambda \propto M_p^2/P$ (planet mass $M_p$, orbital period $P$) for a body's
+measure of the form $\Lambda \propto M_p^2/P$ (planet mass $M_p$, orbital period $P$) for a body's
 ability to dominate its orbital zone over a characteristic time span;
-[Soter (2006)](literatur:soter-2006) took up this theoretical "scattering parameter" $\lambda$
+[Soter (2006)](literatur:soter-2006) took up this theoretical "scattering parameter" $\Lambda$
 again but set alongside it a second, purely observation-based measure: the discriminant
 $\mu = M/m$, with $M$ the mass of the target body and $m$ the combined mass of all other bodies
 sharing its orbital zone. For Mars ($\mu \approx 5100$, against the near-Earth objects) and Ceres
@@ -59,7 +59,7 @@ Kuiper belt's mass, sits at $\mu \approx 0.07$. Soter proposes $\mu = 100$ as th
 between planets and non-planets, near the middle of the observed gap, with a defensible margin of
 roughly 10 to 1000.
 
-[Margot (2015)](literatur:margot-2015) formalized the scattering parameter $\lambda$ into a
+[Margot (2015)](literatur:margot-2015) formalized the scattering parameter $\Lambda$ into a
 clearing time $t_\mathrm{clear}$, after which a body of mass $M_p$ at distance $a_p$ around a star
 of mass $M_\mathrm{star}$ has cleared its surroundings out to $C$ times its own Hill radius (commonly
 $C = 2\sqrt{3}$). From this follows a minimum clearing mass $M_\mathrm{clear}$ for clearing within
@@ -138,9 +138,10 @@ dwarf planets (figures under [Charon](objekt:charon)).
 ## Comparing the five recognized dwarf planets
 
 The following table sets the parameters of the five bodies from their own texts and the dataset
-side by side; radius, mass and rotation period are measured values, the density follows from them
-via $\bar\rho = 3M/(4\pi R^3)$ (derivation), and $a$, $e$ and $i$ are the dataset's heliocentric
-orbital elements at the respective epoch.
+side by side; radius, mass and rotation period are measured values. For Ceres, Pluto, Eris and
+Makemake the density follows from them via $\bar\rho = 3M/(4\pi R^3)$ (derivation); for Haumea it
+is the span of two independent shape solutions (see below). $a$, $e$ and $i$ are the dataset's
+heliocentric orbital elements at the respective epoch.
 
 | Body | Radius (km) | Mass (kg) | Density ($\mathrm{g\,cm^{-3}}$) | Albedo | Rotation (h) | $a$ (AU) | $e$ | $i$ (°) | Moons |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -153,10 +154,9 @@ orbital elements at the respective epoch.
 The row shows a span of almost an order of magnitude in mass and radius, but densities that all lie
 between those of water ice and rock: Ceres and Eris, the two most massive, are also the densest,
 while Haumea and Makemake, despite mass comparable to Pluto, are noticeably less dense — a first
-hint of the size-density relation discussed in the next section. For Pluto and Ceres the
-photometrically measured albedo shown here differs from the dataset value (Pluto 0.52, Ceres an
-NSSDC whole-disk mean similar to the catalogue value); the reasons are given in the respective
-object texts under "In the model". Haumea's density and radius depend on the shape solution used
+hint of the size-density relation discussed in the next section. For [Pluto](objekt:pluto) the
+photometrically measured albedo shown here differs from the dataset value (0.52 catalogue against
+0.62 measured); the reason is given there under "In the model". Haumea's density and radius depend on the shape solution used
 (details below and under [Haumea](objekt:haumea)), Makemake's rotation period is not settled as of
 September 2026 ([Makemake](objekt:makemake)), and its mass rests on an unrefereed preprint (see
 below).
@@ -166,7 +166,7 @@ below).
 Across trans-Neptunian objects, mean density tends to rise with size: Bierson and Nimmo interpret
 this as a consequence of falling porosity, because larger bodies compact their initially loose,
 porous rock fraction more strongly under higher internal pressure and, given sufficient size,
-higher radiogenic temperature. For 15 of 18 objects with a measured density, a common rock mass
+higher radiogenic temperature. For 14 of 17 objects with a measured density, a common rock mass
 fraction of about 70 percent, held constant across all bodies, matches the observed values within
 twice the measurement uncertainty; the radiogenic heating needed for such compaction, driven by the
 short-lived isotope ${}^{26}\mathrm{Al}$, implies a minimum formation time of about 4 million years after the
@@ -249,8 +249,9 @@ The poles follow different procedures depending on the available data: Ceres and
 IAU pole measured from spacecraft and kernel data respectively, Haumea's pole comes from one of two
 nearly equivalent light-curve inversion solutions, and Eris and Makemake, for lack of a measured
 pole, carry their own orbit normal instead — an explicit stopgap assumption that actually
-contradicts the published tilt angle (roughly 78° for Eris, 46° to 78° for Makemake), as derived
-under [Axial tilt](thema:achsneigung). All five bodies are spheres without flattening in the model,
+contradicts the published tilt angle: roughly 78° for Eris, as derived under
+[Axial tilt](thema:achsneigung), and 46° to 78° for Makemake
+([Parker et al. 2016](literatur:parker-2016)). All five bodies are spheres without flattening in the model,
 including Haumea: its strongly triaxial outline (semi-axes roughly 1061, 844 and 514 km) deviates
 from the model sphere (radius 774.1 km) by about −27 percent along the long axis and about +51
 percent along the short axis (details under [Haumea](objekt:haumea)); its ring is entirely absent
