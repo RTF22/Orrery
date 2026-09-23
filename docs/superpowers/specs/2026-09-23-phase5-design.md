@@ -25,7 +25,7 @@ Phase 5 hat fünf Etappen, jede mit eigenem Plan und eigener Abnahme:
   Panelüberschriften (`ui/panels/Panel.tsx`) sind weiße, halbfette Schrift ohne
   farbliche Abhebung.
 - **Kino.** `CinemaPanel` zeigt eine Zeile „Aktuelle Szene“. Eine Szenenauswahl gibt
-  es nicht. 20 Szenen in `data/scenes.ts`; die Reihenfolge bestimmt
+  es nicht. 19 Szenen in `data/scenes.ts`; die Reihenfolge bestimmt
   `sceneIndexFor(nummer, anzahl, seed, shuffle)` in `sim/director.ts`, der Film ist
   aus `nummer`, `seed` und `shuffle` vollständig reproduzierbar.
 - **Schmale Bildschirme.** Unter 900 px Breite wird das Infopanel zum Bogen von unten
