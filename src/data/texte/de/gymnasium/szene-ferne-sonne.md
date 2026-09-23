@@ -1,7 +1,9 @@
 # Szene: Von Neptun zur fernen Sonne
 
-Die Kamera steht nahe [Neptun](objekt:neptune) und blickt zur [Sonne](objekt:sun). Neptun
-umläuft sie in 30,1 AE Abstand; ihr Licht braucht gut vier Stunden bis hierher. Weil die
+Die Kamera steht hinter [Neptun](objekt:neptune), auf seiner sonnenabgewandten Seite, und blickt
+auf ihn zurück; die [Sonne](objekt:sun) steht deutlich daneben im Bild, sodass Neptun nur eine
+schmale, von ihr beleuchtete Sichel zeigt. Neptun umläuft sie in 30,1 AE Abstand; ihr Licht
+braucht gut vier Stunden bis hierher. Weil die
 Bestrahlungsstärke mit dem Quadrat des Abstands abnimmt, kommt nur etwa ein Neunhundertstel
 dessen an, was die [Erde](objekt:earth) erreicht. Die Sonnenscheibe ist von hier aus gut
 eine Bogenminute groß, ein Dreißigstel ihres Anblicks von der Erde, und für das bloße Auge

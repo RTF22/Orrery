@@ -1,27 +1,30 @@
 # Szene: Von Neptun zur fernen Sonne
 
-Die Kamera steht nahe [Neptun](objekt:neptune) und blickt fest zur [Sonne](objekt:sun) – die
-Szene zeigt, wie klein und schwach der Stern aussieht, um den auch Neptun kreist, aus den
-Außenbezirken des Sonnensystems.
+Die Kamera steht hinter [Neptun](objekt:neptune), auf dessen sonnenabgewandter Seite, und blickt
+auf ihn zurück; die [Sonne](objekt:sun) steht daneben im Bild – die Szene zeigt Neptun als
+überwiegend dunkle Scheibe mit einer schmalen, zur Sonne hin beleuchteten Sichel, während sein
+eigener Stern von hier aus nur noch wie ein ferner Lichtpunkt erscheint.
 
 ## Was das Bild zeigt
 
-Der Bahntyp `static` (`render/camera/cinema.ts`) hält die Kamera fest bei Neptun,
-`lookAtId: 'sun'` richtet den Blick dauerhaft zur Sonne. Radius: 12 dargestellte Neptunradien
-($R_\mathrm{N}=24\,622\,\mathrm{km}$) mal Streufaktor; bei 0,9/1,0/1,5 sind das 265 918/295 464/
-443 196 km. Elevation ist additiv fest zwischen 5° und 40° (Basis 15°, asymmetrisch −10°/+25°),
-Azimut additiv fest zwischen 80° und 160° (Basis 120°, symmetrisch ± 40°); die Rate ist 0, das
-Bild driftet über die 30 s Dauer also nicht.
+Der Bahntyp `sichtlinie` (`render/camera/cinema.ts`) setzt die Kamera auf die Verbindungslinie
+Neptun–Sonne, auf der von der Sonne abgewandten Seite Neptuns, und richtet den Blick fest auf
+Neptun selbst: `lookAtId: 'sun'` legt hier nur die Richtung dieser Linie fest, nicht das
+Blickziel der Kamera (Entwurf §4); `blickzielVon` liefert entsprechend den Standortkörper Neptun,
+nicht die Sonne. Radius: 14 dargestellte Neptunradien ($R_\mathrm{N}=24\,622\,\mathrm{km}$) mal
+Streufaktor; bei 0,9/1,0/1,5 sind das 310 237/344 708/517 062 km. Der Basisazimut 196° liegt 16°
+jenseits der 180°, die genau die sonnenabgewandte Richtung träfen, mit ± 4° Azimut- und ± 3°
+Elevationsversatz je Ziehung – die Kamera steht damit in jeder Ziehung nahe, aber nicht exakt, auf
+der Nachtseite.
 
-Weil die Kamera nur wenige hunderttausend Kilometer von Neptun absteht, gegen 4,5 Milliarden km
-Neptun-Sonne-Abstand, bestimmt allein die Blickrichtung zur Sonne, wo Neptun im Bild landet – und
-das ist nirgends: Eine eigene Rastersuche über den ganzen gezogenen Azimut-/Elevationsbereich
-ergibt für den Winkel zwischen der Blickrichtung (Kamera→Sonne) und der Richtung Kamera→Neptun
-Werte zwischen 123° und rund 175°. Das liegt in jeder Ziehung weit über 90° und damit auch weit über
-dem großzügigeren horizontalen Halbfeld von 39,7° (16:9 bei `KAMERA_FOV_GRAD` 50°, das vertikale
-Halbfeld beträgt nur 25°) – Neptun steht nicht am Bildrand, sondern schlicht hinter der Kamera.
-Die Szene zeigt buchstäblich nur den Blick von Neptuns Standort zur fernen Sonne, nicht Neptun
-selbst.
+Der Winkelabstand zwischen Sonnen- und Neptunmitte im Bild reicht dadurch, je nach Maßstab und
+Ziehung, von rund 10° bis rund 21° (Rastersuche über den ganzen gezogenen Bereich: „Realistisch"
+12,0°–21,0°, „Schaubild" 11,7°–20,8°, „Kompakt" 10,2°–19,0°) – die Sonne bleibt damit in jedem
+Fall innerhalb des Sichtfelds (Halbfeld 25° vertikal), aber deutlich neben Neptun. Der
+Phasenwinkel Sonne–Neptun–Kamera folgt daraus zu $180^\circ-\theta$, rund 159° bis 170°; der
+beleuchtete Flächenanteil $(1+\cos\alpha)/2$ einer Kugel liegt entsprechend nur bei rund 1 bis 3
+Prozent – Neptun zeigt der Kamera eine schmale, sichelförmig beleuchtete Fläche zur Sonne hin und
+sonst seine Nachtseite.
 
 Der reale Sonnendurchmesser beträgt von hier aus rund 64″ (eigene Rechnung mit dem
 Neptun-Sonne-Abstand 4 505 484 129 km zur Epoche J2000: 63,7″, [Sonne](objekt:sun) nennt gerundet
@@ -48,8 +51,7 @@ der Nähe gesehen, am 25. August 1989. Sein Schwesterschiff Voyager 1 blickte, b
 außerhalb der Planetenbahnen, am 14. Februar 1990 noch einmal zurück: Die Aufnahmesequenz des
 „Familienporträts" begann ausgerechnet bei Neptun, dem lichtschwächsten Ziel, und arbeitete sich
 von dort zur Sonne vor
-([Erstes Familienporträt des Sonnensystems](quelle:nasa-family-portrait)) – dieselbe Blickrichtung,
-die diese Szene zeigt.
+([Erstes Familienporträt des Sonnensystems](quelle:nasa-family-portrait)).
 
 Voyager 2 selbst flog nach der Begegnung mit Neptun weiter hinaus und überschritt am 5. November
 2018, bei 119 AE, die Heliopause – die Grenze, an der der Sonnenwind dem interstellaren Medium
@@ -61,13 +63,20 @@ mehr als sichtbares Licht.
 
 - **Sonne vergrößert:** In „Schaubild" erscheint sie 1,2° statt 64″
   ([Sonne](objekt:sun)) – rund 68-fach überhöht (eigene Rechnung).
-- **Belichtung folgt der Sonne, nicht Neptun:** Weil `lookAtId` gesetzt ist, liefert
-  `exposureTargetId` hier die Sonne; da sie stets im Koordinatenursprung steht, ergibt das den
-  Referenzwert für 1 AE (Faktor $\pi$, eigene Rechnung). Anders als bei den meisten übrigen Szenen
-  dieser Etappe, wo das angesehene Ziel exakt auf Referenzniveau erscheint, bekäme Neptun bei
-  dieser Belichtung rechnerisch nur rund 13 % davon (eigene Rechnung; deckt sich mit der in
-  [Albedo und Helligkeit](thema:photometrie) verwendeten Formel $E^{1-0{,}7}$) – in der Praxis
-  unerheblich, weil Neptun ohnehin außerhalb des Bildfelds liegt (siehe „Was das Bild zeigt").
+- **Belichtung jetzt auf Neptun:** `blickzielVon` liefert bei `path: 'sichtlinie'` den
+  Standortkörper, hier Neptun, statt der Sonne; `exposureTargetId` belichtet damit wie bei
+  praktisch jeder anderen Szene auf den tatsächlich angesehenen Körper. Der dafür nötige
+  Verstärkungsfaktor (`targetExposure`, Bezugswert 1 bei 1 AE) liegt bei rund 24 in „Realistisch"
+  (Neptuns wahrem Abstand von 30,12 AE) und bei rund 11 in „Schaubild" (auf 7,7 AE komprimiert,
+  $r^{0{,}6}$; eigene Rechnung) – Neptuns beleuchtete Seite landet dadurch, anders als früher,
+  unabhängig vom Maßstab exakt auf dem Referenzwert (`EXPOSURE_REFERENCE=1`). Auf die im selben
+  Bild sichtbare Sonne wirkt dieser Faktor nicht, weil ihr Material unbeleuchtet ist und
+  Belichtung ignoriert ([Sonne](objekt:sun)). Das vom Maßstab unabhängige Fülllicht der
+  Nachtseite ($\mathrm{nightFill}=0{,}25$, `store/index.ts`; Emissiv gleich
+  $\mathrm{nightFill}\cdot\mathrm{dayLevel}/\pi$, `render/lighting.ts`) hebt Neptuns physikalisch
+  fast schwarze Nachtseite dabei auf ein Viertel des jetzt korrekt eingestellten Tagniveaus an –
+  im Bild erscheint Neptun deshalb überwiegend als graue Scheibe (Median rund 153 von 255) mit
+  der schmalen, helleren Sichel darüber, statt der in Wirklichkeit fast schwarzen Nachtseite.
 - **Keine Streuung, kein Blendeffekt** über den Bloom-Durchgang hinaus (`render/postfx.ts`):
   Nur Objekte auf der Bloom-Ebene erhalten den zusätzlichen Leuchtkranz, ein atmosphärisches oder
   optisches Streumodell fehlt.
