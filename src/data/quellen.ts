@@ -601,6 +601,13 @@ export const QUELLEN: readonly Quelle[] = [
     fuer: ['thema:kirkwood-luecken'],
   },
   {
+    id: 'wikipedia-en-asteroid-belt',
+    titel: { de: 'Asteroidengürtel (englische Wikipedia)', en: 'Asteroid belt (Wikipedia)' },
+    herausgeber: 'Wikipedia', sprache: 'en', art: 'uebersicht',
+    url: 'https://en.wikipedia.org/wiki/Asteroid_belt',
+    fuer: ['szene:ceres-guertel'],
+  },
+  {
     id: 'jpl-ephemeriden',
     titel: { de: 'Planetare Ephemeriden (JPL SSD)', en: 'Planetary ephemerides (JPL SSD)' },
     herausgeber: 'JPL', sprache: 'en', art: 'werkzeug',
