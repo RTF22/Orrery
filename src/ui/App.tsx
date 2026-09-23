@@ -2,6 +2,7 @@ import { useStore } from '../store';
 import { t } from './i18n';
 import { useSprache } from './i18n/useSprache';
 import { Kopfzeile } from './Kopfzeile';
+import { Seitenleiste } from './Seitenleiste';
 import { Panel } from './panels/Panel';
 import { TimePanel } from './panels/TimePanel';
 import { ScalePanel } from './panels/ScalePanel';
@@ -112,8 +113,7 @@ export function App(): React.JSX.Element | null {
 
   return (
     <div className="pointer-events-none fixed inset-0 flex items-start justify-between gap-2 p-3 text-slate-100">
-      <div className="flex max-h-full w-72 max-w-full flex-col gap-2 overflow-y-auto">
-        <Kopfzeile />
+      <Seitenleiste kopf={<Kopfzeile />}>
         {/* Die Himmelskörper stehen bewusst gleich unter dem Sprachschalter. */}
         <BodyTree />
         <TimePanel />
@@ -123,7 +123,7 @@ export function App(): React.JSX.Element | null {
         <DisplayPanel />
         <AnsichtenPanel />
         {zeigeKuerzel ? <Kuerzeluebersicht /> : null}
-      </div>
+      </Seitenleiste>
       <InfoPanel />
     </div>
   );

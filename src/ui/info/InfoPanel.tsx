@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { KeyboardEvent } from 'react';
 import { useStore } from '../../store';
+import { remPx, useFensterbreite, useSchmal } from '../fenster';
 import {
   INFO_BREITE_MAX_REM, INFO_BREITE_MIN_REM, INFO_TEILUNG_MAX, INFO_TEILUNG_MIN,
 } from '../../store/types';
@@ -33,40 +34,6 @@ export { INFO_PANEL, SCHMAL_ABFRAGE };
 const HERVORHEBUNG_MS = 1500;
 /** Höchstbreite als Anteil der Fensterbreite. */
 const BREITE_MAX_ANTEIL = 0.6;
-
-const remPx = (): number =>
-  (typeof document === 'undefined' ? 16 : parseFloat(getComputedStyle(document.documentElement).fontSize) || 16);
-
-/**
- * Fensterbreite als Zustand statt einmalig beim Rendern gelesen: Die
- * Höchstbreite des Panels hängt von ihr ab (60 % der Fensterbreite,
- * Entwurf 4c §3.2) und muss deshalb einer Größenänderung des Fensters
- * folgen, nicht nur dem ersten Aufruf.
- */
-function useFensterbreite(): number | null {
-  const [breite, setBreite] = useState<number | null>(() => (typeof window === 'undefined' ? null : window.innerWidth));
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const bei = (): void => { setBreite(window.innerWidth); };
-    window.addEventListener('resize', bei);
-    return () => { window.removeEventListener('resize', bei); };
-  }, []);
-  return breite;
-}
-
-function useSchmal(): boolean {
-  const abfrage = (): boolean =>
-    typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia(SCHMAL_ABFRAGE).matches;
-  const [schmal, setSchmal] = useState(abfrage);
-  useEffect(() => {
-    if (typeof window.matchMedia !== 'function') return;
-    const mq = window.matchMedia(SCHMAL_ABFRAGE);
-    const bei = (): void => { setSchmal(mq.matches); };
-    mq.addEventListener('change', bei);
-    return () => { mq.removeEventListener('change', bei); };
-  }, []);
-  return schmal;
-}
 
 interface Anzeige { schluessel: string; niveau: Niveau; sprache: 'de' | 'en'; geladen: GeladenerText | null }
 

@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { App } from './App';
 import { useStore, DEFAULT_STATE } from '../store';
 
@@ -10,7 +10,8 @@ describe('App', () => {
   it('setzt die Himmelskörper direkt unter die Kopfzeile', () => {
     const { container } = render(<App />);
     const kopfzeile = container.querySelector('header');
-    const naechstes = kopfzeile?.nextElementSibling;
+    // Die Kopfzeile sitzt mit dem Einklappknopf in einer eigenen Zeile der Seitenleiste.
+    const naechstes = kopfzeile?.parentElement?.parentElement?.nextElementSibling;
     expect(naechstes?.querySelector('button')?.textContent).toContain('Himmelskörper');
   });
 
@@ -27,5 +28,13 @@ describe('App', () => {
     expect(screen.getByText('Controller')).toBeTruthy();
     expect(screen.getByText('Linker Stick')).toBeTruthy();
     expect(screen.getByText('Zum Objekt unter dem Fadenkreuz fahren')).toBeTruthy();
+  });
+
+  it('zeigt bei eingeklappter Leiste (etwa aus der Sitzung) nur den Reiter', () => {
+    useStore.getState().setUi({ panels: { ...DEFAULT_STATE.ui.panels, leiste: false } });
+    render(<App />);
+    expect(screen.queryByRole('button', { name: 'Link kopieren' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Bedienung öffnen' }));
+    expect(screen.getByRole('button', { name: 'Link kopieren' })).toBeTruthy();
   });
 });

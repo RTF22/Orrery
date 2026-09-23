@@ -50,6 +50,8 @@ html, body, #root { height: 100%; margin: 0; background: #05070d; }
    899px ist ein Zwilling von SCHMAL_ABFRAGE in src/ui/info/konstanten.ts —
    beide Stellen nur gemeinsam ändern. */
 .info-reiter { writing-mode: vertical-rl; }
+/* Reiter der eingeklappten Seitenleiste (Entwurf Phase 5 §3.1). */
+.leiste-reiter { writing-mode: vertical-rl; }
 @media (max-width: 899px) {
   .info-panel {
     position: fixed;
