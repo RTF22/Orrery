@@ -594,6 +594,13 @@ export const QUELLEN: readonly Quelle[] = [
     fuer: ['thema:resonanzen'],
   },
   {
+    id: 'wikipedia-en-kirkwood-gap',
+    titel: { de: 'Kirkwood-Lücke (englische Wikipedia)', en: 'Kirkwood gap (Wikipedia)' },
+    herausgeber: 'Wikipedia', sprache: 'en', art: 'uebersicht',
+    url: 'https://en.wikipedia.org/wiki/Kirkwood_gap',
+    fuer: ['thema:kirkwood-luecken'],
+  },
+  {
     id: 'jpl-ephemeriden',
     titel: { de: 'Planetare Ephemeriden (JPL SSD)', en: 'Planetary ephemerides (JPL SSD)' },
     herausgeber: 'JPL', sprache: 'en', art: 'werkzeug',
