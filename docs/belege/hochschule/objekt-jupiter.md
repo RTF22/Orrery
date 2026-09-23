@@ -22,11 +22,10 @@ durante-2020, militzer-2022, militzer-2023, mallama-2017, li-2018, mankovich-202
 tremaine-2009, archinal-2018, kruijer-2017, pollack-1996, walsh-2011) sind für jede hier neu
 zitierte Aussage anhand der bereits fachgeprüften Texte `thema-innerer-aufbau.md`,
 `thema-photometrie.md`, `thema-entstehung.md`, `thema-finsternis.md`, `thema-bezugssysteme.md`
-gegengelesen (Ruling 7, gleichlautende Modellzahlen); deren Fundstellen sind unten mit Zeilenangabe
+gegengelesen (dort fachgeprüft, gleichlautende Modellzahlen); deren Fundstellen sind unten mit Zeilenangabe
 genannt.
 
-**Nacharbeit nach der Fachprüfung (20.09.2026):** Behoben F2 und F3 der Befunddatei
-`task-1-befunde.md`, dazu die Hinweise zu den Zeilen 7, 41, 43 und 68. F1 (Westwärtsdrift der
+**Nacharbeit nach der Fachprüfung (20.09.2026):** Behoben mehrere Befunde, dazu die Hinweise zu den Zeilen 7, 41, 43 und 68. F1 (Westwärtsdrift der
 1980er) wurde nach eigener Prüfung **nicht** übernommen: Die per WebFetch direkt abgerufene
 Crossref-JATS-Fassung des Originalabstracts (`api.crossref.org/works/10.3847/1538-3881/aaae01`)
 gibt den Wert wörtlich als „∼0.°026/day in the 1980s" wieder — die AAS-Schreibweise setzt das
@@ -34,9 +33,8 @@ Gradzeichen mitten in die Ziffernfolge (vergleiche denselben Mechanismus beim un
 aktuellen Wert „∼0.°36/day", der nach Entfernen des Gradzeichens ebenfalls korrekt 0,36 ergibt);
 liest man die Ziffern in der angegebenen Reihenfolge und lässt nur das Gradzeichen weg, ergibt sich
 0,026, nicht 0,26. Eine zweite, unabhängig abgerufene Crossref-Zusammenfassung (Bibliografiesuche,
-bereits beim Erstumsetzer verwendet) nennt ebenfalls „0.026°/day in the 1980s". Eine mit reinem Text
-lesende Volltextabfrage der Verlagsseite war nicht möglich (Bot-Sperre); Begründung und
-Ledger-Eintrag stehen im Nacharbeitsbericht (`task-1-report.md`, Abschnitt „Nacharbeit"), Zeile 36
+aus früherer Recherche verfügbar) nennt ebenfalls „0.026°/day in the 1980s". Eine mit reinem Text
+lesende Volltextabfrage der Verlagsseite war nicht möglich (Bot-Sperre); Begründung und Details stehen im Prüfbericht (Abschnitt „Nacharbeit"), Zeile 36
 unten bleibt deshalb unverändert (Prüfung des Fachprüfers erhalten). Neue oder geänderte Zeilen sind
 mit `neu nach Fachprüfung` markiert; alle anderen Prüfeinträge des Fachprüfers bleiben unverändert.
 
