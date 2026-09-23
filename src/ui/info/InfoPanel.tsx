@@ -23,6 +23,7 @@ import { zitierteArbeiten } from './zitate';
 import { Griff } from './Griff';
 import { verweisAusfuehren } from './verweisAusfuehren';
 import { INFO_PANEL, SCHMAL_ABFRAGE, infoOffen } from './konstanten';
+import { UEBERSCHRIFT_STREIFEN, UEBERSCHRIFT_TEXT } from '../ueberschrift';
 
 // Re-Export: Bestehende Importstellen (u. a. Tests) holen die beiden
 // Konstanten weiterhin von hier; die eigentliche Definition liegt aber
@@ -213,8 +214,8 @@ export function InfoPanel(): React.JSX.Element {
           className="absolute top-0 left-0 z-10 h-full w-2 -translate-x-1/2 rounded hover:bg-sky-300/30"
         />
       )}
-      <header className="flex items-center justify-between gap-2 border-b border-white/10 px-3 py-2">
-        <h2 className="m-0 truncate text-sm font-semibold">{titel}</h2>
+      <header className={`flex items-center justify-between gap-2 rounded-t-lg border-b border-white/10 px-3 py-2 ${UEBERSCHRIFT_STREIFEN}`}>
+        <h2 className={`m-0 truncate text-sm font-semibold ${UEBERSCHRIFT_TEXT}`}>{titel}</h2>
         <button
           type="button"
           aria-expanded

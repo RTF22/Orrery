@@ -7,6 +7,7 @@ import { setSprache } from '../i18n';
 import { fahrtAbbrechen, fahreZuSystem } from '../kamerafahrt';
 import { zurueckgesetzt } from '../../store/persist';
 import { themaVerfallStarten } from './themaVerfall';
+import { UEBERSCHRIFT_STREIFEN, UEBERSCHRIFT_TEXT } from '../ueberschrift';
 
 // Der Themenverfall ist ein Store-Abonnement (themaVerfall.ts), das
 // app/main.tsx einmal startet; ohne es verfiele hier kein Thema.
@@ -175,5 +176,13 @@ describe('InfoPanel', () => {
     render(<InfoPanel />);
     expect(await screen.findByText(/second largest/)).toBeTruthy();
     expect(screen.getByRole('tab', { name: 'Secondary school' })).toBeTruthy();
+  });
+
+  it('trägt im Kopf denselben Überschriftenstil wie die Panels', async () => {
+    render(<InfoPanel />);
+    const h2 = await titel('Sonne');
+    expect(h2.classList).toContain(UEBERSCHRIFT_TEXT);
+    const kopf = h2.closest('header') as HTMLElement;
+    for (const klasse of UEBERSCHRIFT_STREIFEN.split(' ')) expect(kopf.classList).toContain(klasse);
   });
 });

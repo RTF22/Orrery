@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { useStore } from '../../store';
+import { UEBERSCHRIFT_STREIFEN, UEBERSCHRIFT_TEXT } from '../ueberschrift';
 
 interface PanelProps {
   /** Schlüssel in `ui.panels` — der Klappzustand lebt im Store, nicht lokal. */
@@ -24,9 +25,11 @@ export function Panel({ id, title, children }: PanelProps): React.JSX.Element {
         type="button"
         aria-expanded={offen}
         onClick={() => { setUi({ panels: { ...panels, [id]: !offen } }); }}
-        className="flex w-full items-center justify-between gap-3 px-3 py-2 text-left text-sm font-semibold"
+        className={`flex w-full items-center justify-between gap-3 px-3 py-2 text-left text-sm font-semibold ${UEBERSCHRIFT_STREIFEN} ${
+          offen ? 'rounded-t-lg' : 'rounded-lg'
+        }`}
       >
-        <span>{title}</span>
+        <span className={UEBERSCHRIFT_TEXT}>{title}</span>
         <span aria-hidden="true" className="text-xs opacity-70">{offen ? '▾' : '▸'}</span>
       </button>
       {offen ? <div className="border-t border-white/10 px-3 py-2 text-sm">{children}</div> : null}
