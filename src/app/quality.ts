@@ -27,3 +27,13 @@ export function detectTier(frameZeitenMs: number[]): QualityTier {
   if (median > 20) return 'medium';
   return 'high';
 }
+
+/**
+ * Mit grobem Zeiger im Kompaktmodus (Telefon) endet die automatische
+ * Einstufung bei „mittel“ (Entwurf Phase 5 §4.2): Texturen bleiben bei 2k,
+ * die Pixeldichte bei 1,5. Eine von Hand gewählte Stufe berührt das nicht,
+ * weil loop.ts nur einstuft, solange `quality.tier` auf „auto“ steht.
+ */
+export function deckeStufe(stufe: QualityTier, grobKompakt: boolean): QualityTier {
+  return grobKompakt && stufe === 'high' ? 'medium' : stufe;
+}

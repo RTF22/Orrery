@@ -12,5 +12,9 @@ export default defineConfig({
     include: ['src/**/*.test.{ts,tsx}', 'scripts/**/*.test.ts'],
     // Räumt nach Komponententests den DOM auf; für die node-Tests folgenlos.
     setupFiles: ['src/test/setup.ts'],
+    // Vitest ersetzt CSS-Importe sonst durch einen leeren Text (auch mit
+    // ?raw): ui/info/konstanten.test.ts liest src/index.css als Zwillingsprüfung
+    // der Medienabfragen und braucht dafür den echten Inhalt.
+    css: { include: [/index\.css/] },
   },
 });

@@ -112,6 +112,8 @@ export const en: Record<Key, string> = {
   'cinema.pauseOnInput': 'Pause on input',
   'cinema.szenen': 'Scenes',
   'cinema.szeneStarten': 'Start cinema from this scene',
+  'cinema.laeuft': 'playing',
+  'cinema.naechsterStart': 'next start',
   'camera.mode.cinema': 'Cinema ride',
   'shortcuts.cinema': 'Start and stop cinema mode',
   'shortcuts.nextScene': 'Next scene',

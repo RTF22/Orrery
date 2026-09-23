@@ -36,14 +36,14 @@ describe('CinemaPanel', () => {
     render(<CinemaPanel />);
     expect(zeilen()).toHaveLength(SCENES.length);
     expect(markiert()).toHaveLength(1);
-    expect(markiert()[0]!.textContent).toBe(`●${t(SCENES[3]!.titleKey)}`);
+    expect(markiert()[0]!.textContent).toBe(`●${t(SCENES[3]!.titleKey)} (läuft)`);
     for (const k of zeilen()) expect(k.textContent).not.toContain('['); // kein fehlender Sprachschlüssel
   });
 
   it('markiert bei stehendem Kino die Szene des nächsten Starts mit ○', () => {
     useStore.getState().setCinema({ running: false, nummer: 25, shuffle: false });
     render(<CinemaPanel />);
-    expect(markiert()[0]!.textContent).toBe(`○${t(SCENES[25 % SCENES.length]!.titleKey)}`);
+    expect(markiert()[0]!.textContent).toBe(`○${t(SCENES[25 % SCENES.length]!.titleKey)} (nächster Start)`);
   });
 
   it('die Markierung folgt einem neuen Keim sofort', () => {
@@ -51,7 +51,7 @@ describe('CinemaPanel', () => {
     render(<CinemaPanel />);
     fireEvent.change(screen.getByLabelText(/Zufallskeim/), { target: { value: '4711' } });
     const index = sceneIndexFor(4, SCENES.length, 4711, true);
-    expect(markiert()[0]!.textContent).toBe(`●${t(SCENES[index]!.titleKey)}`);
+    expect(markiert()[0]!.textContent).toBe(`●${t(SCENES[index]!.titleKey)} (läuft)`);
   });
 
   it('die Markierung folgt dem Umschalten des Mischens sofort', () => {
@@ -59,7 +59,14 @@ describe('CinemaPanel', () => {
     render(<CinemaPanel />);
     fireEvent.click(screen.getByLabelText(/Szenen mischen/));
     expect(useStore.getState().cinema.shuffle).toBe(false);
-    expect(markiert()[0]!.textContent).toBe(`●${t(SCENES[4]!.titleKey)}`);
+    expect(markiert()[0]!.textContent).toBe(`●${t(SCENES[4]!.titleKey)} (läuft)`);
+  });
+
+  it('nennt den Zustand der markierten Zeile für Screenreader', () => {
+    useStore.getState().setCinema({ running: true, nummer: 0, shuffle: false });
+    render(<CinemaPanel />);
+    const zusatz = markiert()[0]!.querySelector('.sr-only');
+    expect(zusatz?.textContent).toBe(' (läuft)');
   });
 
   it('ein Klick startet das Kino ab dieser Szene', () => {

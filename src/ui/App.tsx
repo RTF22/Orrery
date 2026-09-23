@@ -4,7 +4,7 @@ import { useSprache } from './i18n/useSprache';
 import { Kopfzeile } from './Kopfzeile';
 import { Seitenleiste } from './Seitenleiste';
 import { Bogenreiter } from './Bogenreiter';
-import { useSchmal } from './fenster';
+import { useSchmal, useGrob } from './fenster';
 import { Panel } from './panels/Panel';
 import { TimePanel } from './panels/TimePanel';
 import { ScalePanel } from './panels/ScalePanel';
@@ -104,6 +104,7 @@ export function App(): React.JSX.Element | null {
   useShortcuts();
   const untaetig = useIdleHide();
   const schmal = useSchmal();
+  const grob = useGrob();
   const versteckt = useStore((s) => s.ui.hidden);
   const laeuftKino = useStore((s) => s.cinema.running);
   // Solange der Film läuft, darf der Bildschirm nicht abschalten.
@@ -115,7 +116,7 @@ export function App(): React.JSX.Element | null {
   if (versteckt || (laeuftKino && untaetig)) return null;
 
   return (
-    <div className="pointer-events-none fixed inset-0 flex items-start justify-between gap-2 p-3 text-slate-100">
+    <div className="ui-ebene pointer-events-none fixed inset-0 flex items-start justify-between gap-2 p-3 text-slate-100">
       <Seitenleiste kopf={<Kopfzeile />}>
         {/* Die Himmelskörper stehen bewusst gleich unter dem Sprachschalter. */}
         <BodyTree />
@@ -125,7 +126,7 @@ export function App(): React.JSX.Element | null {
         <CameraPanel />
         <DisplayPanel />
         <AnsichtenPanel />
-        {zeigeKuerzel ? <Kuerzeluebersicht /> : null}
+        {zeigeKuerzel && !grob ? <Kuerzeluebersicht /> : null}
       </Seitenleiste>
       <InfoPanel />
       {schmal ? <Bogenreiter /> : null}

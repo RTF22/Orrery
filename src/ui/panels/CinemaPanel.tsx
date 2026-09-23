@@ -58,6 +58,9 @@ export function CinemaPanel(): React.JSX.Element {
                       {aktuell ? (cinema.running ? '●' : '○') : ''}
                     </span>
                     <span>{t(szene.titleKey)}</span>
+                    {aktuell ? (
+                      <span className="sr-only">{` (${t(cinema.running ? 'cinema.laeuft' : 'cinema.naechsterStart')})`}</span>
+                    ) : null}
                   </button>
                 </li>
               );

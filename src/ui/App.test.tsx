@@ -65,4 +65,14 @@ describe('App', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Info' }));
     expect(useStore.getState().ui.panels).toEqual(vorher);
   });
+
+  it('blendet bei grobem Zeiger die Kürzelübersicht aus', () => {
+    vi.stubGlobal('matchMedia', (abfrage: string) => ({
+      matches: abfrage === '(pointer: coarse)', media: abfrage,
+      addEventListener: () => {}, removeEventListener: () => {},
+    }));
+    useStore.getState().setUi({ panels: { ...DEFAULT_STATE.ui.panels, shortcuts: true } });
+    render(<App />);
+    expect(screen.queryByText('W A S D')).toBeNull();
+  });
 });

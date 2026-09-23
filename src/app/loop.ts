@@ -1,6 +1,7 @@
 import { useStore } from '../store';
-import { detectTier, MESSFENSTER } from './quality';
+import { detectTier, deckeStufe, MESSFENSTER } from './quality';
 import { imZeitbereich } from '../sim/time';
+import { istGrob, istSchmal } from '../ui/info/konstanten';
 
 /**
  * Die Renderschleife. Sie liest den Store direkt (ohne Abonnement), damit
@@ -27,7 +28,7 @@ export function startLoop(onFrame: (jd: number, dtSek: number) => void): () => v
     if (messwerte !== null) {
       messwerte.push(dtSek * 1000);
       if (messwerte.length >= MESSFENSTER * 3) {
-        const stufe = detectTier(messwerte);
+        const stufe = deckeStufe(detectTier(messwerte), istGrob() && istSchmal());
         messwerte = null;
         if (stufe !== 'auto' && useStore.getState().quality.tier === 'auto') {
           useStore.setState({ quality: { tier: stufe } });

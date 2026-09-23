@@ -84,3 +84,17 @@ html, body, #root { height: 100%; margin: 0; background: #05070d; }
   }
   .bogenreiter[data-offen="true"] { bottom: 0.75rem; }
 }
+
+/* Grober Zeiger (Entwurf Phase 5 §4.2): Bedienziele mindestens 44 × 44 px.
+   Zwilling von GROB_ABFRAGE in src/ui/info/konstanten.ts. Kästchen 24 px und
+   Griffe 24 px (Plan 5-2, Ruling); ihre Zeilen werden über die Knöpfe hoch genug. */
+@media (pointer: coarse) {
+  .ui-ebene :is(button, select, input[type="number"], input[type="text"], input[type="date"]) {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .ui-ebene input[type="range"] { min-height: 44px; }
+  .ui-ebene input[type="checkbox"] { width: 24px; height: 24px; }
+  .ui-ebene [role="separator"][aria-orientation="vertical"] { width: 24px; }
+  .ui-ebene [role="separator"][aria-orientation="horizontal"] { height: 24px; }
+}

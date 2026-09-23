@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { detectTier, QUALITY_SETTINGS } from './quality';
+import { detectTier, deckeStufe, QUALITY_SETTINGS } from './quality';
 import { beltCount } from '../sim/belts';
 
 describe('detectTier', () => {
@@ -21,6 +21,19 @@ describe('detectTier', () => {
     const werte = Array(180).fill(14);
     werte[10] = 500; // Nachladen einer Textur
     expect(detectTier(werte)).toBe('high');
+  });
+});
+
+describe('deckeStufe (Entwurf Phase 5 §4.2)', () => {
+  it('deckelt „hoch“ bei grobem Zeiger im Kompaktmodus auf „mittel“', () => {
+    expect(deckeStufe('high', true)).toBe('medium');
+  });
+
+  it('lässt niedrigere Stufen, „auto“ und den Schreibtisch unberührt', () => {
+    expect(deckeStufe('medium', true)).toBe('medium');
+    expect(deckeStufe('low', true)).toBe('low');
+    expect(deckeStufe('auto', true)).toBe('auto');
+    expect(deckeStufe('high', false)).toBe('high');
   });
 });
 

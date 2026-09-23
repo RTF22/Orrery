@@ -111,6 +111,8 @@ export const de = {
   'cinema.pauseOnInput': 'Bei Eingabe anhalten',
   'cinema.szenen': 'Szenen',
   'cinema.szeneStarten': 'Kino ab dieser Szene starten',
+  'cinema.laeuft': 'läuft',
+  'cinema.naechsterStart': 'nächster Start',
   'camera.mode.cinema': 'Kinofahrt',
   'shortcuts.cinema': 'Kino-Modus starten und beenden',
   'shortcuts.nextScene': 'Nächste Szene',
