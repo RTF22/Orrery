@@ -29,22 +29,26 @@ Musikrecherche für Etappe 5-4 (`docs/phase5-musik-auswahl.md`).
 Auf `65862ce` (23.09.2026):
 
 - `npm run lint`: `eslint .` ohne Befund.
-- `npm test`:
+- `npm test` (Endstand nach der Nacharbeit, §9):
 
   ```
   Test Files  103 passed (103)
-       Tests  5173 passed (5173)
+       Tests  5174 passed (5174)
   ```
 
   Stand vor der Etappe: 5150. Herleitung laut Ledger: 5154 nach Task 1 (`74e5ab4`), 5159 nach
   Task 2 (`e63dafa`), 5163 nach der Fixrunde 1 zu Task 2 (`605a03b`, +4 durch `fenster.test.ts`),
   5165 nach Task 3 (`1d30e78`), 5173 nach Task 4 (`3cdc64a`). Task 5 (Musikrecherche, reines
-  Dokument) und diese Abnahme ändern keinen Code und keine Testzahl.
+  Dokument) ändert keine Testzahl; die Nacharbeit nach der Schlussprüfung (§9) ergänzt einen
+  Test in `CinemaPanel.test.tsx`, macht 5174.
 - `npm run build` (`tsc -b && vite build`): 532 Module, `✓ built in 1,07s`, Hauptchunk
   `index--lBcQu5R.js` **1 456,56 kB** (gzip 394,51 kB), nur der bekannte Hinweis zu Chunkgrößen
   über 500 kB (Katalog im Hauptbundle, offener Punkt aus der lokalen Projektanleitung, hier
   nicht behandelt). Stand vor der Etappe 1 453,78 kB, Grenze 1 503,78 kB (Entwurf §8.3) — Zuwachs
-  rund 2,78 kB, deutlich unter der Grenze.
+  rund 2,78 kB, deutlich unter der Grenze; die Nacharbeit ändert nur eine Testdatei und damit den
+  Hauptchunk nicht.
+- Wort- und Trailerprüfung aus der lokalen Projektanleitung für alle Commits und neuen
+  Dateien dieser Etappe: Ergebnis 0.
 
 ## 3. Sichtprüfung
 
@@ -163,8 +167,9 @@ Aus dem Ledger (zurückgestellt, kein Merge-Hindernis):
 
 1. **Musikauswahl:** Alle vier Vorschläge stammen vom selben Urheber (Chris Zabriskie, CC BY
    4.0); kein CC0-Stück ist dabei, obwohl der Entwurf es bevorzugt. Stück 1 liegt bei
-   Wikimedia Commons nur als 170-kbit/s-MP3 vor (Original Ogg Vorbis 150 kbit/s) — das
-   Kriterium verlangte verlustfrei oder MP3 ab 192 kbit/s. Anfang und Ende der Stücke wurden
+   Wikimedia Commons nur als 170-kbit/s-MP3 vor (Original Ogg Vorbis 150 kbit/s, 4,73 MB,
+   laut der Wikimedia-Commons-Dateiseite von Stück 1, gelesen bei der Quellenprüfung der
+   Musikauswahl am 23.09.2026) — das Kriterium verlangte verlustfrei oder MP3 ab 192 kbit/s. Anfang und Ende der Stücke wurden
    nicht abgehört (kein Wiedergabewerkzeug in der Recherche verfügbar). Alle vier
    Commons-Seiten tragen die Kategorie „License review needed (audio)“ aus dem automatischen
    Import vom Free Music Archive; die Lizenz ist aber zusätzlich an der Seite des Künstlers
@@ -180,3 +185,35 @@ Aus dem Ledger (zurückgestellt, kein Merge-Hindernis):
    unterscheiden „läuft“ und „nächster Start“ nicht, nur `aria-current` markiert überhaupt
    eine Zeile. Jetzt nachbessern (eigener kleiner Task) oder in Etappe 5-2 mitnehmen, die
    sich ohnehin mit Bedienzielen und Zugänglichkeit befasst?
+
+## 9. Nacharbeit nach der Schlussprüfung
+
+Schlussprüfung: Branch bereit zum Zusammenführen, drei kleine Punkte.
+
+1. **Test (Important):** `src/ui/panels/CinemaPanel.test.tsx` deckte vom Review-Punkt „Keim
+   oder Mischen geändert → Markierung folgt sofort“ nur die Keim-Hälfte ab; der Mischen-Fall
+   fehlte. Ergänzt direkt danach: `running: true, nummer: 4, shuffle: true`, Klick auf
+   „Szenen mischen“, danach `cinema.shuffle` false und die Markierung weiterhin auf dem
+   Katalogeintrag 4 (ohne Mischen ist Nummer 4 der Katalogeintrag 4). Lauf `npx vitest run
+   src/ui/panels/CinemaPanel.test.tsx`: 9 Tests bestanden (vorher 8). Ergebnis: behoben,
+   Testzahl insgesamt 5174 (§2).
+2. **Protokoll (Important):** §2 nannte bislang nicht, dass die Wort- und Trailerprüfung aus
+   der lokalen Projektanleitung für alle Commits und neuen Dateien dieser Etappe gelaufen ist.
+   Ergänzt als eigener Satz in §2, Ergebnis 0.
+3. **Protokoll (Quelle):** §8 Frage 1 nannte für Stück 1 „Original Ogg Vorbis 150 kbit/s“ ohne
+   Quelle. Die Zahl war richtig; ergänzt wurde die Quelle (Wikimedia-Commons-Dateiseite von
+   Stück 1, Ogg Vorbis, 150 kbit/s, 4,73 MB, gelesen bei der Quellenprüfung der Musikauswahl
+   am 23.09.2026).
+
+Als geparkt aus der Schlussprüfung (Minor, kein Merge-Hindernis):
+
+- Die Szenenknöpfe tragen `title` statt `aria-label`; unschädlich, weil der sichtbare Text
+  der Zeile ohnehin den Namen liefert (Screenreader lesen den Textinhalt des Buttons).
+- Die Kästchen im Plan (`docs/superpowers/plans/2026-09-23-phase5-etappe1-oberflaeche.md`)
+  sind nicht abgehakt; maßgeblich für den Stand der Etappe ist das Ledger
+  (`.superpowers/sdd/2026-09-23-phase5-etappe1-oberflaeche/progress.md`), nicht die
+  Kästchen im Plan.
+
+Prüfläufe nach der Nacharbeit: `npm run lint` ohne Befund, `npm test` 5174 bestanden,
+`npm run build` unverändert 1 456,56 kB (eine Testdatei ändert den Hauptchunk nicht). Beide
+Prüfungen (Trailer der Commit-Nachricht, Wortprüfung der geänderten Dateien) ergaben 0.

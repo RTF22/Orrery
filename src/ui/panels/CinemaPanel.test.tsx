@@ -54,6 +54,14 @@ describe('CinemaPanel', () => {
     expect(markiert()[0]!.textContent).toBe(`●${t(SCENES[index]!.titleKey)}`);
   });
 
+  it('die Markierung folgt dem Umschalten des Mischens sofort', () => {
+    useStore.getState().setCinema({ running: true, nummer: 4, shuffle: true });
+    render(<CinemaPanel />);
+    fireEvent.click(screen.getByLabelText(/Szenen mischen/));
+    expect(useStore.getState().cinema.shuffle).toBe(false);
+    expect(markiert()[0]!.textContent).toBe(`●${t(SCENES[4]!.titleKey)}`);
+  });
+
   it('ein Klick startet das Kino ab dieser Szene', () => {
     useStore.getState().setCinema({ nummer: 5, shuffle: false });
     render(<CinemaPanel />);
