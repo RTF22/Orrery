@@ -12,7 +12,7 @@ der Jupitermonde, die NASA-Seiten „Jupiter moons/Ganymede" und „Galileo", di
 Wikipedia (englisch, ausschließlich für die JUICE-Ganymed-Orbit-Jahreszahl, siehe Nr. 55) abgerufen.
 Bereits im Katalog vorhandene Einträge (`gomez-casajus-2022`, `nimmo-2026`, `grasset-2013`) wurden für
 jede hier neu zitierte Aussage anhand der bereits fachgeprüften Texte `thema-innerer-aufbau.md` und
-`thema-resonanzen.md` gegengelesen ((Fundstelle unten) mit
+`thema-resonanzen.md` gegengelesen (gleichlautende Modellzahlen, Fundstelle unten mit
 Zeilenangabe); `gomez-casajus-2022` wurde zusätzlich in seiner eigenen Zusammenfassung selbst
 gegengeprüft. Für `anderson-1996` und `kivelson-1996` (beide Nature 1996) ließ sich in dieser Sitzung
 keine frei zugängliche Zusammenfassung öffnen (Verlagsseite hinter einer Anmeldeschranke, Crossref und

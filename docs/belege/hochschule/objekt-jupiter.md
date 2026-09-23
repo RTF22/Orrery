@@ -25,7 +25,7 @@ zitierte Aussage anhand der bereits fachgeprüften Texte `thema-innerer-aufbau.m
 gegengelesen (dort fachgeprüft, gleichlautende Modellzahlen); deren Fundstellen sind unten mit Zeilenangabe
 genannt.
 
-**Nacharbeit nach der Fachprüfung (20.09.2026):** Behoben mehrere Befunde, dazu die Hinweise zu den Zeilen 7, 41, 43 und 68. F1 (Westwärtsdrift der
+**Nacharbeit nach der Fachprüfung (20.09.2026):** Behoben die Befunde F2 und F3 der Fachprüfung, dazu die Hinweise zu den Zeilen 7, 41, 43 und 68. F1 (Westwärtsdrift der
 1980er) wurde nach eigener Prüfung **nicht** übernommen: Die per WebFetch direkt abgerufene
 Crossref-JATS-Fassung des Originalabstracts (`api.crossref.org/works/10.3847/1538-3881/aaae01`)
 gibt den Wert wörtlich als „∼0.°026/day in the 1980s" wieder — die AAS-Schreibweise setzt das
