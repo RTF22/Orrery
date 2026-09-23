@@ -659,3 +659,13 @@ gekennzeichnet, nicht erfunden zitiert (26).
 
 - Der englische Kirkwood-Text verlinkt nun wie der deutsche auf `objekt:jupiter` in der Einleitung (Befund aus §5.1/§7 behoben).
 - Schlusssatz zur Wort- und Trailerprüfung: Die Wort- und Trailerprüfung vor dem Commit erfolgte wie in der lokalen Projektanleitung beschrieben (Ergebnis 0), ohne Suchmuster in dieser Datei.
+
+## Entscheidungen von Jens (23.09.2026)
+
+Push von master nach origin freigegeben („ja", ed8b069 gepusht). Zu §6 und §8 („Rulings
+bestätigt, §8 zur Kenntnis"): Die 26 Plan-Rulings und die Rulings in §6 gelten als bestätigt;
+die Punkte aus §8 sind zur Kenntnis genommen und bleiben ohne eigenen Task. Etappe 4d-11 ist
+noch nicht freigegeben.
+
+Die Wort- und Trailerprüfung vor dem Commit erfolgte wie in der lokalen Projektanleitung
+beschrieben (Ergebnis 0), ohne Suchmuster in dieser Datei.
