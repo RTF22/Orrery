@@ -605,5 +605,16 @@ wurden danach in §6 die zwei Rulings aus der Umsetzung der Szene „Von Neptun
 zur fernen Sonne" (`stone-2019`, Belichtung und Bildausschnitt), die dort
 fehlten; inhaltlich standen beide bereits in §7 und §8.
 
+## Entscheidungen von Jens (23.09.2026)
+
+Zu §8 („Pushen, Kamera hinter Neptun ist gut, Thema nachführen, Rulings bestätigt.
+Freigabe."): Push von master nach origin freigegeben, Branch `hochschule-9` auf origin
+gelöscht. Die Szene „Von Neptun zur fernen Sonne" bekommt eine Kamera hinter Neptun, sodass
+Neptun und die Sonne im Bild stehen; die Szenentexte werden danach nachgeführt.
+`thema-achsneigung.md` wird bei der „chaotischen Schiefe" wie der Pluto-Text berichtigt.
+Beide Punkte kommen als Nachführungs-Tasks an den Anfang von Etappe 4d-10. Die 24
+Plan-Rulings und die Rulings in §6 gelten als bestätigt; die übrigen Punkte aus §8 sind zur
+Kenntnis genommen. Etappe 4d-10 ist freigegeben.
+
 Die Wort- und Trailerprüfung vor dem Commit erfolgte wie in der lokalen Projektanleitung
 beschrieben (Ergebnis 0), ohne Suchmuster in dieser Datei.
