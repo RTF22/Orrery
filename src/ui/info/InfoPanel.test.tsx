@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { InfoPanel, INFO_PANEL } from './InfoPanel';
 import { useStore, DEFAULT_STATE } from '../../store';
@@ -8,6 +8,16 @@ import { fahrtAbbrechen, fahreZuSystem } from '../kamerafahrt';
 import { zurueckgesetzt } from '../../store/persist';
 import { themaVerfallStarten } from './themaVerfall';
 import { UEBERSCHRIFT_STREIFEN, UEBERSCHRIFT_TEXT } from '../ueberschrift';
+import { useBogen } from '../bogen';
+import { SCHMAL_ABFRAGE } from './konstanten';
+
+/** Kompaktmodus an: nur SCHMAL_ABFRAGE trifft zu. */
+function kompakt(): void {
+  vi.stubGlobal('matchMedia', (abfrage: string) => ({
+    matches: abfrage === SCHMAL_ABFRAGE, media: abfrage,
+    addEventListener: () => {}, removeEventListener: () => {},
+  }));
+}
 
 // Der Themenverfall ist ein Store-Abonnement (themaVerfall.ts), das
 // app/main.tsx einmal startet; ohne es verfiele hier kein Thema.
@@ -23,6 +33,8 @@ afterEach(() => {
   abbestellen?.();
   abbestellen = null;
   setSprache('de');
+  vi.unstubAllGlobals();
+  useBogen.getState().setBogen(null);
 });
 
 const titel = (name: string): Promise<HTMLElement> => screen.findByRole('heading', { level: 2, name });
@@ -184,5 +196,24 @@ describe('InfoPanel', () => {
     expect(h2.classList).toContain(UEBERSCHRIFT_TEXT);
     const kopf = h2.closest('header') as HTMLElement;
     for (const klasse of UEBERSCHRIFT_STREIFEN.split(' ')) expect(kopf.classList).toContain(klasse);
+  });
+
+  it('zeigt im Kompaktmodus ohne offenen Infobogen weder Panel noch Reiter', () => {
+    kompakt();
+    const { container } = render(<InfoPanel />);
+    expect(container.firstElementChild).toBeNull();
+  });
+
+  it('ist im Kompaktmodus ein Bogen; Schließen schließt den Bogen und lässt ui.panels.info stehen', async () => {
+    kompakt();
+    useBogen.getState().setBogen('info');
+    render(<InfoPanel />);
+    await titel('Sonne');
+    const aside = document.querySelector('aside.info-panel') as HTMLElement;
+    expect(aside.classList).toContain('bogen');
+    expect(screen.queryByRole('separator', { name: 'Breite des Infopanels' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Infopanel ausblenden' }));
+    expect(useBogen.getState().bogen).toBeNull();
+    expect(useStore.getState().ui.panels.info).toBeUndefined();
   });
 });

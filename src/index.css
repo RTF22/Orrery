@@ -45,27 +45,42 @@ html, body, #root { height: 100%; margin: 0; background: #05070d; }
    Bewegung von selbst zurück (siehe ui/idle.ts). */
 .zeiger-aus, .zeiger-aus * { cursor: none !important; }
 
-/* Infopanel: rechte Spalte; unter 900 px ein Bogen von unten mit voller
-   Breite (Entwurf 4c §3.4). Die Breite kommt sonst aus dem Store.
-   899px ist ein Zwilling von SCHMAL_ABFRAGE in src/ui/info/konstanten.ts —
-   beide Stellen nur gemeinsam ändern. */
-.info-reiter { writing-mode: vertical-rl; }
-/* Reiter der eingeklappten Seitenleiste (Entwurf Phase 5 §3.1). */
-.leiste-reiter { writing-mode: vertical-rl; }
-@media (max-width: 899px) {
-  .info-panel {
+/* Reiter der eingeklappten Spalten auf breiten Bildschirmen. */
+.info-reiter, .leiste-reiter { writing-mode: vertical-rl; }
+
+/* Kompaktmodus (Entwurf Phase 5 §4.1): höchstens ein Bogen, zwei Reiter unten
+   rechts. Die Abfrage ist ein Zwilling von SCHMAL_ABFRAGE in
+   src/ui/info/konstanten.ts — beide Stellen nur gemeinsam ändern. */
+.bogenreiter {
+  position: fixed;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+}
+@media (max-width: 899px), (max-height: 499px) {
+  /* Hochformat: Bogen von unten mit 55 % der Höhe; die Reiter wandern über
+     seine Oberkante, damit sie erreichbar bleiben. */
+  .bogen {
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
     width: auto !important;
-    height: 45vh;
+    height: 55vh;
+    max-height: none;
     border-radius: 0.5rem 0.5rem 0 0;
   }
-  .info-reiter {
-    position: fixed;
-    right: 0.75rem;
-    bottom: 0.75rem;
-    writing-mode: horizontal-tb;
+  .bogenreiter[data-offen="true"] { bottom: calc(55vh + 0.5rem); }
+}
+@media (orientation: landscape) and (max-width: 899px), (orientation: landscape) and (max-height: 499px) {
+  /* Querformat: Bogen von links über die volle Höhe; die Reiter bleiben unten rechts. */
+  .bogen {
+    top: 0;
+    right: auto;
+    height: auto;
+    width: min(24rem, 55vw) !important;
+    border-radius: 0 0.5rem 0.5rem 0;
   }
+  .bogenreiter[data-offen="true"] { bottom: 0.75rem; }
 }

@@ -23,6 +23,7 @@ import { zitierteArbeiten } from './zitate';
 import { Griff } from './Griff';
 import { verweisAusfuehren } from './verweisAusfuehren';
 import { INFO_PANEL, SCHMAL_ABFRAGE, infoOffen } from './konstanten';
+import { useBogen } from '../bogen';
 import { UEBERSCHRIFT_STREIFEN, UEBERSCHRIFT_TEXT } from '../ueberschrift';
 
 // Re-Export: Bestehende Importstellen (u. a. Tests) holen die beiden
@@ -75,14 +76,18 @@ const TAB_RUHIG = `${TAB} border-transparent opacity-70 hover:opacity-100`;
  * Der Text wird beim Wechsel von Kennung, Niveau oder Sprache faul geladen;
  * bis dahin bleibt der vorige stehen, damit nichts flackert.
  */
-export function InfoPanel(): React.JSX.Element {
+export function InfoPanel(): React.JSX.Element | null {
   const language = useStore((s) => s.ui.language);
   const info = useStore((s) => s.ui.info);
   const setInfo = useStore((s) => s.setInfo);
   const setUi = useStore((s) => s.setUi);
   const panels = useStore((s) => s.ui.panels);
   const schmal = useSchmal();
-  const offen = infoOffen(panels, schmal);
+  const bogen = useBogen((s) => s.bogen);
+  const setBogen = useBogen((s) => s.setBogen);
+  // Kompaktmodus: offen genau dann, wenn der Infobogen gewählt ist (ui/bogen.ts);
+  // sonst die gespeicherte Wahl mit „offen“ als Standard.
+  const offen = schmal ? bogen === 'info' : infoOffen(panels, false);
   const schluessel = useStore((s) => textSchluessel(aktuellerText(s)));
   const kennung = useMemo<TextKennung>(() => {
     const [art, rest] = schluessel.split(/:(.*)/s);
@@ -182,6 +187,7 @@ export function InfoPanel(): React.JSX.Element {
   );
 
   if (!offen) {
+    if (schmal) return null;
     return (
       <button
         type="button"
@@ -198,7 +204,7 @@ export function InfoPanel(): React.JSX.Element {
   return (
     <aside
       aria-label={t('panel.info')}
-      className="info-panel pointer-events-auto relative flex h-full max-h-full flex-col rounded-lg border border-white/10 bg-slate-900/70 text-slate-100 backdrop-blur-md"
+      className={`info-panel pointer-events-auto relative flex h-full max-h-full flex-col rounded-lg border border-white/10 bg-slate-900/70 text-slate-100 backdrop-blur-md ${schmal ? 'bogen' : ''}`}
       style={{ width: `${breite}rem` }}
     >
       {schmal ? null : (
@@ -220,7 +226,7 @@ export function InfoPanel(): React.JSX.Element {
           type="button"
           aria-expanded
           aria-label={t('info.schliessen')}
-          onClick={() => { setUi({ panels: { ...panels, [INFO_PANEL]: false } }); }}
+          onClick={() => { if (schmal) { setBogen(null); } else { setUi({ panels: { ...panels, [INFO_PANEL]: false } }); } }}
           className="text-xs opacity-70 hover:opacity-100"
         >
           ▾

@@ -3,6 +3,8 @@ import { t } from './i18n';
 import { useSprache } from './i18n/useSprache';
 import { Kopfzeile } from './Kopfzeile';
 import { Seitenleiste } from './Seitenleiste';
+import { Bogenreiter } from './Bogenreiter';
+import { useSchmal } from './fenster';
 import { Panel } from './panels/Panel';
 import { TimePanel } from './panels/TimePanel';
 import { ScalePanel } from './panels/ScalePanel';
@@ -101,6 +103,7 @@ export function App(): React.JSX.Element | null {
   useSprache();
   useShortcuts();
   const untaetig = useIdleHide();
+  const schmal = useSchmal();
   const versteckt = useStore((s) => s.ui.hidden);
   const laeuftKino = useStore((s) => s.cinema.running);
   // Solange der Film läuft, darf der Bildschirm nicht abschalten.
@@ -125,6 +128,7 @@ export function App(): React.JSX.Element | null {
         {zeigeKuerzel ? <Kuerzeluebersicht /> : null}
       </Seitenleiste>
       <InfoPanel />
+      {schmal ? <Bogenreiter /> : null}
     </div>
   );
 }

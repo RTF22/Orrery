@@ -1,10 +1,21 @@
 // @vitest-environment jsdom
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { App } from './App';
 import { useStore, DEFAULT_STATE } from '../store';
+import { useBogen } from './bogen';
+import { SCHMAL_ABFRAGE } from './info/konstanten';
+
+/** Kompaktmodus an: nur SCHMAL_ABFRAGE trifft zu. */
+function kompakt(): void {
+  vi.stubGlobal('matchMedia', (abfrage: string) => ({
+    matches: abfrage === SCHMAL_ABFRAGE, media: abfrage,
+    addEventListener: () => {}, removeEventListener: () => {},
+  }));
+}
 
 beforeEach(() => { useStore.getState().replaceAll(structuredClone(DEFAULT_STATE)); });
+afterEach(() => { vi.unstubAllGlobals(); useBogen.getState().setBogen(null); });
 
 describe('App', () => {
   it('setzt die Himmelskörper direkt unter die Kopfzeile', () => {
@@ -36,5 +47,22 @@ describe('App', () => {
     expect(screen.queryByRole('button', { name: 'Link kopieren' })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Bedienung öffnen' }));
     expect(screen.getByRole('button', { name: 'Link kopieren' })).toBeTruthy();
+  });
+
+  it('zeigt im Kompaktmodus die Bogenreiter, aber keine Spalte', () => {
+    kompakt();
+    render(<App />);
+    expect(screen.getByRole('button', { name: 'Bedienung' })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Link kopieren' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Bedienung' }));
+    expect(screen.getByRole('button', { name: 'Link kopieren' })).toBeTruthy();
+  });
+
+  it('lässt ui.panels beim Wechsel in den Kompaktmodus unberührt', () => {
+    const vorher = structuredClone(useStore.getState().ui.panels);
+    kompakt();
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Info' }));
+    expect(useStore.getState().ui.panels).toEqual(vorher);
   });
 });

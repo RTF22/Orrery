@@ -10,11 +10,13 @@
 export const INFO_PANEL = 'info';
 
 /**
- * Unterhalb wird die Spalte zum Bogen von unten (Entwurf 4c §3.4). Zwilling
- * der Medienabfrage `@media (max-width: 899px)` in `src/index.css` — beide
- * Stellen gehören zusammen und werden nur gemeinsam geändert.
+ * Kompaktmodus (Entwurf Phase 5 §4.1, zuvor „schmal“ nach Entwurf 4c §3.4):
+ * Breite unter 900 px oder Höhe unter 500 px. Dann gibt es statt zweier
+ * Spalten höchstens einen Bogen (ui/bogen.ts). Zwilling der Medienabfragen
+ * in `src/index.css` — beide Stellen nur gemeinsam ändern
+ * (ui/info/konstanten.test.ts prüft das).
  */
-export const SCHMAL_ABFRAGE = '(max-width: 899px)';
+export const SCHMAL_ABFRAGE = '(max-width: 899px), (max-height: 499px)';
 
 /**
  * Gilt der Bildschirm als schmal? Ohne `window`/`matchMedia` (serverseitig,
