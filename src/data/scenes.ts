@@ -124,17 +124,25 @@ export const SCENES: readonly Scene[] = [
   {
     // Standort Neptun, Blick zurück zur Sonne: Sie ist von dort nur noch
     // ein sehr heller Stern.
+    // Hinter Neptun, Blick auf ihn zurück zur fernen Sonne: Bahntyp
+    // sichtlinie mit rund 180° Azimutversatz stellt die Kamera auf die
+    // sonnenabgewandte Seite; der Restversatz von 12° bis 20° setzt die Sonne
+    // neben die Neptunscheibe, sodass beide im Bild stehen und Neptun von
+    // hinten als schmale Sichel beleuchtet ist. Die Elevation addiert
+    // sichtlinie auf die Elevation der Sonnenrichtung statt auf deren
+    // Gegenwert; bei Neptuns Bahnneigung von 1,77° verschiebt das den
+    // Versatz um höchstens rund 3,6° (Test in camera/cinema.test.ts).
     id: 'ferne-sonne',
     titleKey: 'scene.ferneSonne',
     targetId: 'neptune',
     lookAtId: 'sun',
-    path: 'static',
+    path: 'sichtlinie',
     distanceBasis: 'bodyRadius',
-    params: { distanceInRadii: 12, elevationDeg: 15, azimuthDeg: 120, azimuthRateDegPerSec: 0 },
+    params: { distanceInRadii: 14, elevationDeg: 0, azimuthDeg: 196, azimuthRateDegPerSec: 0 },
     durationSec: 30,
     timeRateDaysPerSec: 0.5,
     variation: {
-      azimuthDeg: [-40, 40], elevationDeg: [-10, 25], distanceFactor: [0.9, 1.5],
+      azimuthDeg: [-4, 4], elevationDeg: [-3, 3], distanceFactor: [0.9, 1.5],
     },
   },
   {

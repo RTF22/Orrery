@@ -2,11 +2,12 @@ import { describe, it, expect } from 'vitest';
 import { blickzielVon, cinemaTargetFor, systemRadiusKm } from './cinema';
 import { plannedSceneAt } from '../../sim/director';
 import { SCENES } from '../../data/scenes';
-import { scaledPositionAt, scaledRadius } from '../../sim/scale';
+import { scaledPositionAt, scaledRadius, SCALE_PRESETS } from '../../sim/scale';
 import { velocityAt } from '../../sim/orbit';
 import { bodyIndex } from '../../data/index';
 import { DEFAULT_STATE } from '../../store';
 import type { Scene } from '../../data/scenes';
+import type { Vec3 } from '../../sim/types';
 
 const jd = DEFAULT_STATE.time.jd;
 const s = DEFAULT_STATE.scale;
@@ -26,6 +27,15 @@ function feste(scene: Scene) {
 }
 
 const szene = (id: string): Scene => SCENES.find((x) => x.id === id)!;
+
+/** Frühere Fassung von „Von Neptun zur fernen Sonne": Standort Neptun, fester Blick zur Sonne. */
+const statischMitBlickziel: Scene = {
+  id: 'test-static-lookat', titleKey: 'scene.ferneSonne', targetId: 'neptune', lookAtId: 'sun',
+  path: 'static', distanceBasis: 'bodyRadius',
+  params: { distanceInRadii: 12, elevationDeg: 15, azimuthDeg: 120, azimuthRateDegPerSec: 0 },
+  durationSec: 30, timeRateDaysPerSec: 0.5,
+  variation: { azimuthDeg: [0, 0], elevationDeg: [0, 0], distanceFactor: [1, 1] },
+};
 
 describe('systemRadiusKm', () => {
   it('entspricht dem dargestellten Abstand des äußersten Planeten', () => {
@@ -49,7 +59,7 @@ describe('cinemaTargetFor', () => {
 
   it('blickt bei gesetztem lookAtId auf den anderen Körper', () => {
     // „Von Neptun zur fernen Sonne": Standort Neptun, Blick zur Sonne.
-    const ziel = cinemaTargetFor(feste(szene('ferne-sonne')), 0, jd, s);
+    const ziel = cinemaTargetFor(feste(statischMitBlickziel), 0, jd, s);
     expect(abstand(ziel.lookAtKm, { x: 0, y: 0, z: 0 })).toBeLessThan(1);
 
     const neptun = scaledPositionAt('neptune', bodyIndex, jd, s);
@@ -89,7 +99,7 @@ describe('cinemaTargetFor', () => {
   });
 
   it('steht bei static still', () => {
-    const geplant = feste(szene('ferne-sonne'));
+    const geplant = feste(statischMitBlickziel);
     const a = cinemaTargetFor(geplant, 0, jd, s).positionKm;
     const b = cinemaTargetFor(geplant, 20, jd, s).positionKm;
     expect(abstand(a, b)).toBeLessThan(1);
@@ -220,6 +230,59 @@ describe('blickzielVon (Nachtrag Flug §13.2)', () => {
     for (const sc of SCENES) {
       const ziel = cinemaTargetFor(feste(sc), 0, jd, s);
       expect(abstand(ziel.lookAtKm, scaledPositionAt(blickzielVon(sc), bodyIndex, jd, s))).toBeLessThan(1e-6);
+    }
+  });
+});
+
+describe('Szene ferne-sonne — Kamera hinter Neptun', () => {
+  const GRAD = 180 / Math.PI;
+  const differenz = (a: Vec3, b: Vec3): Vec3 => ({ x: a.x - b.x, y: a.y - b.y, z: a.z - b.z });
+  const laenge = (v: Vec3): number => Math.hypot(v.x, v.y, v.z);
+  const winkelGrad = (a: Vec3, b: Vec3): number => {
+    const c = (a.x * b.x + a.y * b.y + a.z * b.z) / (laenge(a) * laenge(b));
+    return Math.acos(Math.min(1, Math.max(-1, c))) * GRAD;
+  };
+  // 1800, 1900, J2000, 2026 und 2050 sowie ein voller Neptunumlauf in Vierteln ab J2000.
+  const zeiten = [2378496.5, 2415020.5, 2451545.0, 2461300.5, 2469807.5,
+    2451545.0 + 15047.5, 2451545.0 + 30095, 2451545.0 + 45142.5];
+  const ecken = (bereich: readonly [number, number]): number[] => [bereich[0], (bereich[0] + bereich[1]) / 2, bereich[1]];
+
+  it('zeigt Neptun und die Sonne zugleich im Bild, die Sonne neben der Neptunscheibe', () => {
+    const scene = szene('ferne-sonne');
+    expect(scene.path).toBe('sichtlinie');
+    expect(scene.targetId).toBe('neptune');
+    expect(scene.lookAtId).toBe('sun');
+    for (const [name, preset] of Object.entries(SCALE_PRESETS)) {
+      for (const jdTest of zeiten) {
+        for (const az of ecken(scene.variation.azimuthDeg)) {
+          for (const el of ecken(scene.variation.elevationDeg)) {
+            for (const f of ecken(scene.variation.distanceFactor)) {
+              const geplant = {
+                scene, nummer: 0,
+                azimuthDeg: scene.params.azimuthDeg + az,
+                elevationDeg: scene.params.elevationDeg + el,
+                distanceFactor: f,
+              };
+              const ziel = cinemaTargetFor(geplant, 0, jdTest, preset);
+              const neptun = scaledPositionAt('neptune', bodyIndex, jdTest, preset);
+              const zuNeptun = differenz(neptun, ziel.positionKm);
+              const zuSonne = differenz({ x: 0, y: 0, z: 0 }, ziel.positionKm);
+              const fall = `${name} jd=${jdTest} az=${az} el=${el} f=${f}`;
+              // Blick auf Neptun, Kamera auf der sonnenabgewandten Seite.
+              expect(abstand(ziel.lookAtKm, neptun), fall).toBeLessThan(1);
+              expect(laenge(ziel.positionKm), fall).toBeGreaterThan(laenge(neptun));
+              const theta = winkelGrad(zuNeptun, zuSonne);
+              const neptunRadius = Math.asin(scaledRadius(bodyIndex.neptune!, preset) / laenge(zuNeptun)) * GRAD;
+              const sonnenRadius = Math.asin(scaledRadius(bodyIndex.sun!, preset) / laenge(zuSonne)) * GRAD;
+              // Sonnenscheibe ganz neben der Neptunscheibe, mit 2° Luft.
+              expect(theta - neptunRadius - sonnenRadius, fall).toBeGreaterThan(2);
+              // Sonnenscheibe ganz im Bild: innerhalb von 22° um die Bildmitte,
+              // unter dem halben vertikalen Sichtfeld von 25° (KAMERA_FOV_GRAD 50).
+              expect(theta + sonnenRadius, fall).toBeLessThan(22);
+            }
+          }
+        }
+      }
     }
   });
 });

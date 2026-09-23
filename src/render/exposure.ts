@@ -3,6 +3,7 @@ import { bodyIndex } from '../data/index';
 import { SCENES } from '../data/scenes';
 import { plannedSceneAt } from '../sim/director';
 import { scaledPositionAt } from '../sim/scale';
+import { blickzielVon } from './camera/cinema';
 import { smoothDamp } from './camera/damping';
 import { targetExposure } from './lighting';
 
@@ -15,16 +16,16 @@ export const EXPOSURE_ZEITKONSTANTE_S = 1;
 
 /**
  * Der Körper, auf den die Kamera belichtet: im Kino-Modus der angesehene
- * Körper der geplanten Szene (`lookAtId`, sonst der Standortkörper), in den
- * Handmodi das Kameraziel, im Flug der Bezugskörper. Dieselbe Auflösung wie
- * in camera/controller.ts.
+ * Körper der geplanten Szene, bei der Sichtlinie also der Standortkörper,
+ * siehe `blickzielVon`; in den Handmodi das Kameraziel, im Flug der
+ * Bezugskörper. Dieselbe Auflösung wie in camera/controller.ts.
  */
 export function exposureTargetId(state: AppState): string {
   if (state.camera.mode === 'cinema') {
     const { scene } = plannedSceneAt(
       state.cinema.nummer, SCENES, state.cinema.seed, state.cinema.shuffle,
     );
-    return scene.lookAtId ?? scene.targetId;
+    return blickzielVon(scene);
   }
   // Im Flug der Bezugskörper: Wer zum Saturn fliegt, während das Ziel die
   // Sonne ist, soll den Saturn richtig belichtet sehen (Plan Flug Etappe 1,

@@ -3,6 +3,7 @@ import {
   exposureTargetId, exposureFor, createExposureMeter, EXPOSURE_ZEITKONSTANTE_S,
 } from './exposure';
 import { targetExposure } from './lighting';
+import { blickzielVon } from './camera/cinema';
 import { DEFAULT_STATE } from '../store';
 import type { AppState } from '../store/types';
 import { SCENES } from '../data/scenes';
@@ -29,7 +30,7 @@ describe('exposureTargetId', () => {
         ...mitKamera({ mode: 'cinema' }),
         cinema: { ...DEFAULT_STATE.cinema, running: true, shuffle: false, nummer: n },
       };
-      expect(exposureTargetId(state), szene.id).toBe(szene.lookAtId ?? szene.targetId);
+      expect(exposureTargetId(state), szene.id).toBe(blickzielVon(szene));
     }
   });
 
