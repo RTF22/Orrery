@@ -26,13 +26,17 @@ ohne Anmeldung oder mit kostenlosem Konto erreichbar ist.
 - Charakter: Ruhiges Klavierthema über einer flächigen, leise unterlegten
   Synthesizer-Fläche, aus dem Album „Undercover Vampire Policeman" (2012), auf der
   Wikimedia-Dateiseite als minimalistisch, ambient und instrumental eingeordnet.
-  Geschrieben, produziert und gespielt von Chris Zabriskie selbst („Written, produced,
-  and performed by Chris Zabriskie"). Ob Anfang und Ende hart einsetzen bzw. enden,
-  wurde nicht durch Abhören geprüft (kein Wiedergabewerkzeug in dieser Recherche
-  verfügbar) und ist vor der endgültigen Wahl gegenzuhören.
+  Auf der Albumseite `chriszabriskie.com/uvp/` steht dazu der Wortlaut „Written,
+  produced, and performed by Chris Zabriskie" — also geschrieben, produziert und
+  gespielt von Chris Zabriskie selbst, am 23.09.2026 dort geprüft. Ob Anfang und
+  Ende hart einsetzen bzw. enden, wurde nicht durch Abhören geprüft (kein
+  Wiedergabewerkzeug in dieser Recherche verfügbar) und ist vor der endgültigen
+  Wahl gegenzuhören.
 - Lizenznachweis: Wikimedia-Commons-Dateiseite, Abschnitt „Licensing", Wortlaut
   „This file is licensed under the Creative Commons Attribution 4.0 International
-  license.", am 23.09.2026 geprüft.
+  license.", am 23.09.2026 geprüft. Die Urheber- und Aufführungsangabe („Written,
+  produced, and performed by Chris Zabriskie") stammt von `chriszabriskie.com/uvp/`,
+  ebenfalls am 23.09.2026 geprüft.
 - Namensnennung (bei CC BY) im Wortlaut, wie sie in der Anwendung und in
   `ASSETS.md` erscheinen soll: „The Temperature of the Air on the Bow of the
   Kaleetan" von Chris Zabriskie, Lizenz CC BY 4.0, Quelle:
@@ -41,15 +45,18 @@ ohne Anmeldung oder mit kostenlosem Konto erreichbar ist.
 ### 2. Cylinder Two
 
 - Charakter: Zweites Stück aus dem neunteiligen Album „Cylinders" (2014), laut
-  Wikimedia-Kategorien Soundtrack/Ambient/Instrumental/Minimal Music. Geschrieben,
-  produziert und gespielt von Chris Zabriskie. Die neun „Cylinder"-Stücke bauen laut
-  Beschreibung des Albums aufeinander auf und stehen stilistisch in der Nähe
-  minimalistischer Komponisten (Cage, Riley, Glass). Ob Anfang und Ende hart
-  einsetzen bzw. enden, wurde nicht durch Abhören geprüft (kein Wiedergabewerkzeug
-  verfügbar) und ist vor der endgültigen Wahl gegenzuhören.
+  Wikimedia-Kategorien Soundtrack/Ambient/Instrumental/Minimal Music. Auf der
+  Albumseite `chriszabriskie.bandcamp.com/album/cylinders` steht dazu der Wortlaut
+  „Written, produced, and performed by Chris Zabriskie" — also geschrieben,
+  produziert und gespielt von Chris Zabriskie selbst, am 23.09.2026 dort geprüft.
+  Ob Anfang und Ende hart einsetzen bzw. enden, wurde nicht durch Abhören geprüft
+  (kein Wiedergabewerkzeug verfügbar) und ist vor der endgültigen Wahl
+  gegenzuhören.
 - Lizenznachweis: Wikimedia-Commons-Dateiseite, Abschnitt „Licensing", Wortlaut
   „This file is licensed under the Creative Commons Attribution 4.0 International
-  license.", am 23.09.2026 geprüft.
+  license.", am 23.09.2026 geprüft. Auf `chriszabriskie.bandcamp.com/album/cylinders`
+  ist zusätzlich ein CC-BY-4.0-Zeichen mit Verweis auf die Lizenz hinterlegt,
+  ebenfalls am 23.09.2026 geprüft.
 - Namensnennung (bei CC BY) im Wortlaut, wie sie in der Anwendung und in
   `ASSETS.md` erscheinen soll: „Cylinder Two" von Chris Zabriskie, Lizenz CC BY 4.0,
   Quelle:
@@ -58,14 +65,18 @@ ohne Anmeldung oder mit kostenlosem Konto erreichbar ist.
 ### 3. Cylinder Eight
 
 - Charakter: Achtes Stück desselben Albums „Cylinders" (2014), gleiche Einordnung
-  (Soundtrack/Ambient/Instrumental/Minimal Music) und gleiche Urheberschaft
-  (geschrieben, produziert und gespielt von Chris Zabriskie). Mit 5:39 das am
+  (Soundtrack/Ambient/Instrumental/Minimal Music). Auf der Albumseite
+  `chriszabriskie.bandcamp.com/album/cylinders` steht dazu der Wortlaut „Written,
+  produced, and performed by Chris Zabriskie" — also geschrieben, produziert und
+  gespielt von Chris Zabriskie selbst, am 23.09.2026 dort geprüft. Mit 5:39 das am
   zweitlängsten laufende Stück der hier vorgeschlagenen Auswahl. Ob Anfang und Ende
   hart einsetzen bzw. enden, wurde nicht durch Abhören geprüft (kein
   Wiedergabewerkzeug verfügbar) und ist vor der endgültigen Wahl gegenzuhören.
 - Lizenznachweis: Wikimedia-Commons-Dateiseite, Abschnitt „Licensing", Wortlaut
   „This file is licensed under the Creative Commons Attribution 4.0 International
-  license.", am 23.09.2026 geprüft.
+  license.", am 23.09.2026 geprüft. Auf `chriszabriskie.bandcamp.com/album/cylinders`
+  ist zusätzlich ein CC-BY-4.0-Zeichen mit Verweis auf die Lizenz hinterlegt,
+  ebenfalls am 23.09.2026 geprüft.
 - Namensnennung (bei CC BY) im Wortlaut, wie sie in der Anwendung und in
   `ASSETS.md` erscheinen soll: „Cylinder Eight" von Chris Zabriskie, Lizenz CC BY 4.0,
   Quelle:
@@ -74,14 +85,18 @@ ohne Anmeldung oder mit kostenlosem Konto erreichbar ist.
 ### 4. Cylinder Nine
 
 - Charakter: Letztes Stück desselben Albums „Cylinders" (2014), gleiche Einordnung
-  (Soundtrack/Ambient/Instrumental/Minimal Music) und gleiche Urheberschaft
-  (geschrieben, produziert und gespielt von Chris Zabriskie). Als Abschlussstück des
-  Albums vermutlich mit ausklingendem statt hartem Ende, das wurde jedoch nicht
-  durch Abhören geprüft (kein Wiedergabewerkzeug verfügbar) und ist vor der
-  endgültigen Wahl gegenzuhören.
+  (Soundtrack/Ambient/Instrumental/Minimal Music). Auf der Albumseite
+  `chriszabriskie.bandcamp.com/album/cylinders` steht dazu der Wortlaut „Written,
+  produced, and performed by Chris Zabriskie" — also geschrieben, produziert und
+  gespielt von Chris Zabriskie selbst, am 23.09.2026 dort geprüft. Als
+  Abschlussstück des Albums vermutlich mit ausklingendem statt hartem Ende, das
+  wurde jedoch nicht durch Abhören geprüft (kein Wiedergabewerkzeug verfügbar) und
+  ist vor der endgültigen Wahl gegenzuhören.
 - Lizenznachweis: Wikimedia-Commons-Dateiseite, Abschnitt „Licensing", Wortlaut
   „This file is licensed under the Creative Commons Attribution 4.0 International
-  license.", am 23.09.2026 geprüft.
+  license.", am 23.09.2026 geprüft. Auf `chriszabriskie.bandcamp.com/album/cylinders`
+  ist zusätzlich ein CC-BY-4.0-Zeichen mit Verweis auf die Lizenz hinterlegt,
+  ebenfalls am 23.09.2026 geprüft.
 - Namensnennung (bei CC BY) im Wortlaut, wie sie in der Anwendung und in
   `ASSETS.md` erscheinen soll: „Cylinder Nine" von Chris Zabriskie, Lizenz CC BY 4.0,
   Quelle:
