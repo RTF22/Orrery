@@ -1,8 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
   startCinema, stopCinema, toggleCinema, nextScene, noteUserInput, resumeIfIdle,
+  naechsteNummerFuer, starteSzene,
 } from './cinemaControl';
 import { useStore, DEFAULT_STATE } from '../store';
+import { SCENES } from '../data/scenes';
+import { sceneIndexFor } from '../sim/director';
 
 // stopCinema zuerst: Es löscht den gemerkten Zustand von vor dem Start und
 // die Pausenmarke, die als Modulvariablen sonst in den nächsten Test lecken.
@@ -160,5 +163,54 @@ describe('Kino-Steuerung', () => {
     stopCinema();
     resumeIfIdle(Date.now() + 3600_000);
     expect(useStore.getState().cinema.running).toBe(false);
+  });
+});
+
+describe('naechsteNummerFuer (Entwurf Phase 5 §3.3)', () => {
+  it('ohne Mischen: die nächste Nummer mit n mod anzahl = index, ab der aktuellen', () => {
+    expect(naechsteNummerFuer(3, 0, 19, 1, false)).toBe(3);
+    expect(naechsteNummerFuer(3, 5, 19, 1, false)).toBe(22);
+    expect(naechsteNummerFuer(5, 5, 19, 1, false)).toBe(5);
+  });
+
+  it('gemischt: findet jede Szene ab jeder Startnummer als kleinste Nummer innerhalb von zwei Runden', () => {
+    const anzahl = SCENES.length;
+    const keim = DEFAULT_STATE.cinema.seed;
+    for (const ab of [0, 7, anzahl - 1, anzahl, 2 * anzahl + 3, 999]) {
+      for (let index = 0; index < anzahl; index++) {
+        const n = naechsteNummerFuer(index, ab, anzahl, keim, true);
+        expect(sceneIndexFor(n, anzahl, keim, true)).toBe(index);
+        expect(n).toBeGreaterThanOrEqual(ab);
+        expect(n).toBeLessThan(ab + 2 * anzahl);
+        for (let m = ab; m < n; m++) expect(sceneIndexFor(m, anzahl, keim, true)).not.toBe(index);
+      }
+    }
+  });
+
+  it('bleibt bei einem Index ohne Szene bei der Startnummer', () => {
+    expect(naechsteNummerFuer(99, 4, 19, 1, true)).toBe(4);
+  });
+});
+
+describe('starteSzene', () => {
+  it('setzt die Nummer, beginnt die Szene von vorn und startet das Kino', () => {
+    useStore.getState().setCinema({ nummer: 5, elapsedSec: 12, shuffle: false });
+    starteSzene(2);
+    const { cinema, camera } = useStore.getState();
+    expect(cinema).toMatchObject({ nummer: 2 + SCENES.length, elapsedSec: 0, running: true });
+    expect(camera.mode).toBe('cinema');
+  });
+
+  it('läuft nach einer Pause durch Eingabe sofort und bleibt laufen, wenn die Ruhefrist abläuft', () => {
+    startCinema();
+    noteUserInput();
+    expect(useStore.getState().cinema.running).toBe(false);
+    starteSzene(4);
+    const { nummer } = useStore.getState().cinema;
+    expect(useStore.getState().cinema.running).toBe(true);
+    expect(sceneIndexFor(nummer, SCENES.length, DEFAULT_STATE.cinema.seed, true)).toBe(4);
+    // startCinema löscht die Pausenmarke; die abgelaufene Ruhefrist ändert nichts mehr.
+    resumeIfIdle(Date.now() + 10 * 3600 * 1000);
+    expect(useStore.getState().cinema).toMatchObject({ running: true, nummer });
   });
 });

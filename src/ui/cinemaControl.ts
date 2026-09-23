@@ -1,5 +1,7 @@
 import { useStore } from '../store';
 import type { AppState } from '../store/types';
+import { SCENES } from '../data/scenes';
+import { sceneIndexFor } from '../sim/director';
 
 /**
  * Der Kino-Modus wurde durch eine Nutzereingabe angehalten und darf nach
@@ -93,4 +95,32 @@ export function resumeIfIdle(jetztMs: number): void {
   pausiertSeitMs = null;
   setCinema({ running: true });
   setCamera({ mode: 'cinema' });
+}
+
+/**
+ * Kleinste Playlist-Nummer ab `ab`, auf die die Szene `index` des Katalogs
+ * fällt (Entwurf Phase 5 §3.3). Jede Runde von `anzahl` Nummern ist eine
+ * Permutation aller Szenen, auch gemischt (sim/director.ts) — spätestens
+ * nach 2 · anzahl Schritten ist die Szene gefunden. Für einen Index ohne
+ * Szene bleibt es bei der (normalisierten) Startnummer.
+ */
+export function naechsteNummerFuer(
+  index: number, ab: number, anzahl: number, seed: number, shuffle: boolean,
+): number {
+  const start = Math.max(0, Math.floor(ab));
+  for (let n = start; n < start + 2 * anzahl; n++) {
+    if (sceneIndexFor(n, anzahl, seed, shuffle) === index) return n;
+  }
+  return start;
+}
+
+/**
+ * Startet das Kino ab der Szene `index` des Katalogs; danach läuft die
+ * Playlist normal weiter. Kein eigenes Store-Feld: Die Szene steckt allein
+ * in `cinema.nummer`, startCinema setzt `elapsedSec` auf 0.
+ */
+export function starteSzene(index: number): void {
+  const { cinema, setCinema } = useStore.getState();
+  setCinema({ nummer: naechsteNummerFuer(index, cinema.nummer, SCENES.length, cinema.seed, cinema.shuffle) });
+  startCinema();
 }

@@ -3,8 +3,8 @@ import { useStore } from '../../store';
 import { t } from '../i18n';
 import { Panel } from './Panel';
 import { SCENES } from '../../data/scenes';
-import { plannedSceneAt } from '../../sim/director';
-import { startCinema, stopCinema, nextScene } from '../cinemaControl';
+import { sceneIndexFor } from '../../sim/director';
+import { startCinema, stopCinema, nextScene, starteSzene } from '../cinemaControl';
 
 export function CinemaPanel(): React.JSX.Element {
   const cinema = useStore((s) => s.cinema);
@@ -13,7 +13,8 @@ export function CinemaPanel(): React.JSX.Element {
   const mischenId = useId();
   const pauseId = useId();
 
-  const geplant = plannedSceneAt(cinema.nummer, SCENES, cinema.seed, cinema.shuffle);
+  // Die laufende Szene (Kino läuft) bzw. die des nächsten Starts (Kino steht).
+  const markiert = sceneIndexFor(cinema.nummer, SCENES.length, cinema.seed, cinema.shuffle);
 
   return (
     <Panel id="cinema" title={t('panel.cinema')}>
@@ -37,12 +38,32 @@ export function CinemaPanel(): React.JSX.Element {
           </button>
         </div>
 
-        <p className="m-0 flex justify-between gap-2">
-          <span className="opacity-70">{t('cinema.current')}</span>
-          <span data-testid="cinema-titel" className="text-right">
-            {t(geplant.scene.titleKey)}
-          </span>
-        </p>
+        <div>
+          <h3 className="m-0 mb-1 text-xs font-semibold opacity-80">{t('cinema.szenen')}</h3>
+          <ul data-testid="szenenliste" className="m-0 flex list-none flex-col gap-0.5 p-0">
+            {SCENES.map((szene, index) => {
+              const aktuell = index === markiert;
+              return (
+                <li key={szene.id}>
+                  <button
+                    type="button"
+                    title={t('cinema.szeneStarten')}
+                    aria-current={aktuell ? 'true' : undefined}
+                    onClick={() => { starteSzene(index); }}
+                    className={`flex w-full items-center gap-2 rounded px-1 py-0.5 text-left hover:bg-white/10 ${
+                      aktuell ? 'text-sky-300' : ''
+                    }`}
+                  >
+                    <span aria-hidden="true" className="inline-block w-3 shrink-0 text-center text-xs">
+                      {aktuell ? (cinema.running ? '●' : '○') : ''}
+                    </span>
+                    <span>{t(szene.titleKey)}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
 
         <label htmlFor={keimId} className="flex items-center justify-between gap-2">
           <span>{t('cinema.seed')}</span>
