@@ -98,9 +98,11 @@ kohlenstoffreichen Staubkörnern bei einem Radius von rund $4300\,\mathrm{km}$, 
 3:1-Spin-Bahn-Resonanz der kürzeren Rotationsperiode; welche der beiden Erklärungen zutrifft,
 ist unentschieden ([Kiss et al. 2024](literatur:kiss-2024)). Direkte JWST-Spektroskopie
 detektierte 2025 erstmals Fluoreszenz von gasförmigem Methan über Makemake – nach Pluto der
-zweite Transneptunkörper mit gesichertem Nachweis flüchtiger Stoffe im Gaszustand; das
-D/H-Verhältnis im Gas, $(3{,}98 \pm 0{,}34) \times 10^{-4}$, stimmt innerhalb von $2\sigma$
-mit dem im Eis gemessenen Wert überein
+zweite Transneptunkörper mit gesichertem Nachweis flüchtiger Stoffe im Gaszustand; das aus
+derselben Beobachtung erneut gemessene D/H-Verhältnis im Methaneis (nicht im Gas selbst),
+$(3{,}98 \pm 0{,}34) \times 10^{-4}$, stimmt innerhalb von $2\sigma$ mit dem von
+[Grundy et al. 2024](literatur:grundy-2024) gemessenen Wert überein – eine eigene
+D/H-Bestimmung für das gasförmige Methan berichtet die Arbeit nicht
 ([Protopapa et al. 2025](literatur:protopapa-2025)).
 
 ## Atmosphäre und Magnetosphäre
@@ -131,8 +133,8 @@ Perihelabstand von $38{,}33\,\mathrm{AU}$ und ein Aphelabstand von $52{,}81\,\ma
 (Nachrechnung am Code), nahe dem Aphel – in Übereinstimmung mit der Feststellung, dass sich
 Makemake derzeit nahe seinem sonnenfernsten Bahnpunkt befindet
 ([Parker et al. 2016](literatur:parker-2016)). Bei $a = 45{,}57\,\mathrm{AU}$ liegt Makemake
-zwischen den bekannten Neptun-Resonanzen des Kuipergürtels und ist, wie
-[Eris](objekt:eris), an keine gebunden; es zählt zu den klassischen, nicht resonanten
+zwischen den bekannten Neptun-Resonanzen des Kuipergürtels und ist, wie Eris, an keine
+gebunden; es zählt zu den klassischen, nicht resonanten
 Kuipergürtelkörpern ([Parker et al. 2016](literatur:parker-2016)) und wegen seiner im
 Vergleich zur „kalten" Population ($i < 5^\circ$) hohen Bahnneigung zur dynamisch „heißen"
 Untergruppe der Klassischen ([Lykawka und Mukai 2007](literatur:lykawka-mukai-2007)).
@@ -219,7 +221,8 @@ gebracht worden sein, statt wie Pluto in eine schützende Resonanz eingefangen z
   und Knotenlänge, nachgerechnet auf vier Nachkommastellen deckungsgleich mit dem
   Katalogwert (Nachrechnung am Code). Diese Behelfsachse steht im Widerspruch zur einzigen
   abgeleiteten Achsinformation, der Kippwinkelspanne von $46^\circ$ bis $78^\circ$ aus MK 2s
-  Bahnebene ([Parker et al. 2016](literatur:parker-2016); Zahlen und Begründung wie
+  Bahnebene ([Parker et al. 2016](literatur:parker-2016); dieselbe Art zusätzlicher Annahme
+  wie bei Eris' Dysnomia-Bahnpol, Einordnung unter
   [Achsneigung](thema:achsneigung)): Die Bahnnormale selbst entspricht einem Kippwinkel von
   $0^\circ$, kann also um bis zu $78^\circ$ falsch stehen. Die mit `achsneigungDeg`
   nachgerechnete Datenblock-Achsneigung ergibt entsprechend nur $0{,}0000384^\circ$ – der

@@ -92,8 +92,11 @@ which of the two explanations is correct is undecided
 ([Kiss et al. 2024](literatur:kiss-2024)). Direct JWST spectroscopy in 2025 detected
 fluorescence from gaseous methane over Makemake for the first time — making it, after Pluto,
 the second trans-Neptunian object with confirmed volatile release in the gas phase; the D/H
-ratio in the gas, $(3.98 \pm 0.34) \times 10^{-4}$, agrees within $2\sigma$ with the value
-measured in the ice ([Protopapa et al. 2025](literatur:protopapa-2025)).
+ratio newly measured in the methane ice from the same observation (not in the gas itself),
+$(3.98 \pm 0.34) \times 10^{-4}$, agrees within $2\sigma$ with the value found by
+[Grundy et al. 2024](literatur:grundy-2024) — the paper does not report a separate D/H
+determination for the gaseous methane
+([Protopapa et al. 2025](literatur:protopapa-2025)).
 
 ## Atmosphere and magnetosphere
 
@@ -122,7 +125,7 @@ code, consistent with Kepler's third law for the heliocentric semi-major axis). 
 near aphelion — consistent with the statement that Makemake currently lies close to its
 farthest orbital point ([Parker et al. 2016](literatur:parker-2016)). At
 $a = 45.57\,\mathrm{AU}$, Makemake lies between the Kuiper belt's known Neptune resonances
-and, like [Eris](objekt:eris), is locked into none of them; it belongs to the classical,
+and, like Eris, is locked into none of them; it belongs to the classical,
 non-resonant Kuiper belt objects ([Parker et al. 2016](literatur:parker-2016)) and, because
 of its inclination being high compared with the "cold" population ($i < 5^\circ$), to the
 dynamically "hot" classical subgroup
@@ -205,7 +208,8 @@ into a protective resonance like Pluto (context under
   the node, independently checked in code and matching the catalog value to four decimal
   places. This stand-in axis contradicts the only derived axis information, the tilt range
   of $46^\circ$ to $78^\circ$ from MK2's orbital plane
-  ([Parker et al. 2016](literatur:parker-2016); values and reasoning as in
+  ([Parker et al. 2016](literatur:parker-2016); the same kind of additional assumption as for
+  Eris' Dysnomia orbit pole, context under
   [Axial tilt](thema:achsneigung)): the orbital normal itself corresponds to a tilt of
   $0^\circ$, so it can be wrong by as much as $78^\circ$. The axial tilt recomputed in the
   data panel with `achsneigungDeg` accordingly gives only $0.0000384^\circ$ — the panel
