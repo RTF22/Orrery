@@ -46,36 +46,38 @@ Phase 4a (Englisch, Sprachumschaltung zur Laufzeit) und Phase 4b (URL-Sharing,
 Sitzungswiederherstellung und Zurücksetzen in Etappe 1; benannte Ansichten
 speichern, laden, exportieren und importieren in Etappe 2) sind abgeschlossen.
 Phase 4c Etappe 1 (Infopanel-Gerüst: Niveaustufen, Datenblock mit Live-Werten,
-Quellenkarten, Kamerafahrt), Etappe 2 (Grundschulstufe komplett: 35 Körper und
-8 Themen in Deutsch und Englisch), Etappe 3 (Gymnasialstufe komplett: 35
-Körper und 8 Themen in Deutsch und Englisch, 62 Quellen, Achsneigung im
-Datenblock gegen die eigene Bahn) und Etappe 4 (alle 19 Kinoszenen mit Texten
-in Grundschule und Gymnasium, Deutsch und Englisch; Thema „Das Sonnensystem"
-mit Erklärung des Namens Orrery beim Start und an der Wurzel des Objektbaums;
-Quellenkarten für alle Szenen) sind abgeschlossen. Phase 4c ist damit komplett
-(Tag `v0.4.0`). Phase 4d (Hochschulstufe) läuft: Etappe 1 bringt Formeln
-(TeX-Teilmenge als MathML), Tabellen, Zitate mit Literaturkarten, ein
+Quellenkarten, Kamerafahrt), Etappe 2 (Grundschulstufe komplett: 35 Körper
+und 8 Themen in Deutsch und Englisch), Etappe 3 (Gymnasialstufe komplett:
+35 Körper und 8 Themen in Deutsch und Englisch, 62 Quellen, Achsneigung
+im Datenblock gegen die eigene Bahn) und Etappe 4 (alle 19 Kinoszenen mit
+Texten in Grundschule und Gymnasium, Deutsch und Englisch; Thema „Das
+Sonnensystem" mit Erklärung des Namens Orrery beim Start und an der Wurzel
+des Objektbaums; Quellenkarten für alle Szenen) sind abgeschlossen. Phase 4c
+ist damit komplett (Tag `v0.4.0`). Phase 4d (Hochschulstufe): Etappe 1 bringt
+Formeln (TeX-Teilmenge als MathML), Tabellen, Zitate mit Literaturkarten, ein
 Prüfskript für den Literaturkatalog (`npm run literatur:pruefen`) und drei
-Pilottexte (Bahnelemente, Erde, Mondfinsternis); Etappe 2 die sechs
-Fachthemen (Bezugssysteme und Zeitskalen, Gezeiten, Bahnresonanzen, innerer
-Aufbau, Albedo und Helligkeit, Entstehung des Sonnensystems); Etappe 3 Sonne,
-Mond, Finsternisse, gebundene Rotation und die Szenen „Der Tanz des Mondes"
-und „Sonnenaufgang über dem Erdrand"; Etappe 4 Merkur, Venus, Mars, Phobos,
-Deimos und die Szenen „Merkur auf der Innenbahn" und „Tiefflug über Phobos";
-Etappe 5 Jupiter, Io, Europa, Ganymed, Kallisto und die Szenen „Vorbeiflug an
-Jupiter" und „Das galileische Schattenspiel"; Etappe 6 Saturn, Titan,
-Enceladus, das Thema „Ringsysteme" und die Szenen „Saturn im Streiflicht",
-„Saturns Ringe von der Kante", „Durchflug durch Saturns Ringe", „Titan im
-Dunst vor Saturn" und „Enceladus im hellen Glanz"; Etappe 7 Mimas, Tethys,
-Dione, Rhea, Iapetus und die Szene „Die geneigte Bahn des Iapetus"; Etappe 8
-Uranus, Miranda, Ariel, Umbriel, Titania, Oberon, das Thema „Achsneigung" und
-die Szene „Der liegende Uranus"; Etappe 9 Neptun, Triton, Pluto, Charon und
-die Szenen „Tritons rückläufige Bahn", „Von Neptun zur fernen Sonne" und
-„Pluto und Charon im Doppel"; Etappe 10 Ceres, Eris, Haumea, Makemake, die
-Themen „Zwergplaneten" und „Kirkwood-Lücken" und die Szene „Ceres im
-Asteroidengürtel". Offen sind die übrigen Hochschultexte (Etappe 4d-11) und
-Phase 5 (Ambient-Sound, Qualitätsstufen, Texturkompression,
-Veröffentlichung).
+Pilottexte (Bahnelemente, Erde, Mondfinsternis); Etappe 2 die sechs Fachthemen
+(Bezugssysteme und Zeitskalen, Gezeiten, Bahnresonanzen, innerer Aufbau,
+Albedo und Helligkeit, Entstehung des Sonnensystems); Etappe 3 Sonne, Mond,
+Finsternisse, gebundene Rotation und die Szenen „Der Tanz des Mondes" und
+„Sonnenaufgang über dem Erdrand"; Etappe 4 Merkur, Venus, Mars, Phobos,
+Deimos und die Szenen „Merkur auf der Innenbahn" und „Tiefflug über
+Phobos"; Etappe 5 Jupiter, Io, Europa, Ganymed, Kallisto und die Szenen
+„Vorbeiflug an Jupiter" und „Das galileische Schattenspiel"; Etappe 6
+Saturn, Titan, Enceladus, das Thema „Ringsysteme" und die Szenen „Saturn
+im Streiflicht", „Saturns Ringe von der Kante", „Durchflug durch Saturns
+Ringe", „Titan im Dunst vor Saturn" und „Enceladus im hellen Glanz"; Etappe
+7 Mimas, Tethys, Dione, Rhea, Iapetus und die Szene „Die geneigte Bahn des
+Iapetus"; Etappe 8 Uranus, Miranda, Ariel, Umbriel, Titania, Oberon, das Thema
+„Achsneigung" und die Szene „Der liegende Uranus"; Etappe 9 Neptun, Triton,
+Pluto, Charon und die Szenen „Tritons rückläufige Bahn", „Von Neptun
+zur fernen Sonne" und „Pluto und Charon im Doppel"; Etappe 10 Ceres, Eris,
+Haumea, Makemake, die Themen „Zwergplaneten" und „Kirkwood-Lücken" und
+die Szene „Ceres im Asteroidengürtel"; Etappe 11 die Themen „Grenzen des
+Modells" und „Das Sonnensystem" und die Szene „Das System von oben". Damit
+hat jeder Körper, jede Szene und jedes Thema einen Hochschultext in Deutsch
+und Englisch; Phase 4d ist abgeschlossen (Tag `v0.5.0`). Offen ist Phase 5
+(Ambient-Sound, Qualitätsstufen, Texturkompression, Veröffentlichung).
 
 ## Entwicklung
 
