@@ -32,8 +32,8 @@ Näherung ist bewusst gewählt und hat bekannte Grenzen.
   [Charon](objekt:charon) liegt er rund 900 km über Plutos Oberfläche; Pluto müsste
   deshalb alle 6,4 Tage einen Kreis von rund 2 100 km Radius ziehen, den die Simulation
   weglässt.
-- **Erde als Schwerpunkt:** Die Tabelle liefert den Erde-Mond-Schwerpunkt; die
-  Abweichung zum Erdmittelpunkt liegt unter 4 700 km.
+- **Erde als Schwerpunkt:** Die Tabelle liefert den Erde-Mond-Schwerpunkt; der
+  Erdmittelpunkt liegt je nach Mondabstand rund 4 400 bis 4 900 km daneben.
 
 Quellen: [JPL Approximate Positions](quelle:jpl-approx-pos) für die Bahnelemente,
 [NSSDC Fact Sheets](quelle:nssdc-factsheets) für die Kennzahlen,

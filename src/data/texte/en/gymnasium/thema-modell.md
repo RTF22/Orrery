@@ -29,8 +29,8 @@ that change slowly with time. This approximation is deliberate and has known lim
   inside the larger body. For [Pluto](objekt:pluto) and [Charon](objekt:charon) it lies
   about 900 km above Pluto's surface; Pluto should therefore trace a circle with a radius
   of about 2,100 km every 6.4 days, which the simulation leaves out.
-- **Earth as barycentre:** The table gives the Earth-Moon barycentre; the deviation
-  from the Earth's centre is below 4,700 km.
+- **Earth as barycentre:** The table gives the Earth-Moon barycentre; depending on the
+  Moon's distance, the Earth's centre lies about 4,400 to 4,900 km away from it.
 
 Sources: [JPL Approximate Positions](quelle:jpl-approx-pos) for the orbital
 elements, [NSSDC Fact Sheets](quelle:nssdc-factsheets) for the key figures,

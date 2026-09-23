@@ -110,7 +110,7 @@ rising and sinking flow respectively; as derived above, their zonal winds extend
 deep. The Great Red Spot, an anticyclonic storm with roots reaching down to about 320 km, has been
 shrinking continuously since at least the 1930s: between 1995 and 2017 its length decreased by
 about $0.194^\circ$ and its width by about $0.048^\circ$ per year, its westward drift relative to
-System III accelerated over the same period from about $0.026^\circ$ to about $0.36^\circ$ per day,
+System III accelerated from about $0.26^\circ$ per day in the 1980s to about $0.36^\circ$ per day today,
 and since 2014 its colour and internal circulation have changed noticeably
 ([Simon et al. 2018](literatur:simon-2018)).
 

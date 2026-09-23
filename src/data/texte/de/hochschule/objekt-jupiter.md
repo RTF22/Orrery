@@ -113,8 +113,8 @@ auf- beziehungsweise absteigende Strömung; ihre zonalen Winde reichen, wie oben
 3000 km tief. Der Große Rote Fleck, ein antizyklonaler Wirbelsturm mit Wurzeln bis in etwa
 320 km Tiefe, schrumpft seit mindestens den 1930er-Jahren kontinuierlich: Zwischen 1995 und 2017
 nahm seine Länge um rund $0{,}194^\circ$ und seine Breite um rund $0{,}048^\circ$ je Jahr ab, seine
-Westwärtsdrift gegenüber System III beschleunigte sich im selben Zeitraum von rund
-$0{,}026^\circ$ auf rund $0{,}36^\circ$ je Tag, und seit 2014 verändern sich Farbe und innere
+Westwärtsdrift gegenüber System III beschleunigte sich von rund $0{,}26^\circ$ je Tag in den
+1980er-Jahren auf heute rund $0{,}36^\circ$ je Tag, und seit 2014 verändern sich Farbe und innere
 Zirkulation merklich ([Simon et al. 2018](literatur:simon-2018)).
 
 An beiden Polen ordnen sich weitere, erst durch Juno entdeckte Wirbelstürme in einem stabilen
