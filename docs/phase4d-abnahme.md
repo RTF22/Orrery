@@ -421,3 +421,30 @@ beschrieben (Ergebnis 0), ohne Suchmuster in dieser Datei.
 - Zurückgestellte Kleinigkeiten, vor dem Merge nicht nötig: zwei getrennte Importzeilen aus
   `../themen` im Dateitest; im Parser bliebe eine Datumszeile als allererste Zeile eines Texts
   eine Liste (Grenzfall, kein Fall in der Sammlung).
+
+## Entscheidungen (23.09.2026)
+
+Jens hat die Fragen aus §7 zur Entscheidung übertragen („Entscheide die Fragen selbst sinnvoll,
+dann push"). Entschieden:
+
+1. **Push und Tag:** `master` wird gepusht, der annotierte Tag `v0.5.0` sitzt auf dem Endstand der
+   Phase 4d (dieser Commit). Die unter 2 und 3 genannten Berichtigungen folgen als eigene Commits
+   nach dem Tag; die bekannten Fehler sind hier und in den Etappenprotokollen offengelegt, wie bei
+   den früheren Tags.
+2. **Driftrate des Großen Roten Flecks:** Berichtigung auf 0,26°/Tag in `objekt-jupiter` (DE und
+   EN) samt Belegzeile 36, gestützt auf die Crossref-Zusammenfassung (§7 Punkt 1). Eigener kleiner
+   Nachführungs-Task „Nachführung nach Phase 4d", vor Phase 5.
+3. **Gymnasialtexte:** Die drei Befunde aus 4d-8 (Uranus-Sonnenwende, Verona-Rupes-Höhe,
+   Titania/Oberon-Anteile) und der Befund „unter 4 700 km" in `thema-modell` gehen in denselben
+   Nachführungs-Task, jeder Punkt vor der Änderung an Quelle oder Code geprüft.
+4. **Prozesssprache in 27 Beleglisten und die drei unmaskierten `|` in Prüfspalten:** mechanische
+   Bereinigung als zweiter Teil desselben Nachführungs-Tasks (kleinstes Modell, Zellenkontrolle
+   per Skript); Aussagen und Prüfeinträge bleiben inhaltlich unverändert.
+5. **Formfix `thema-modell` (§7 Punkt 5):** entfällt. Mit dem Parser-Fix (`33d2812`) bleibt die
+   Zeile „23. Mai 2023 …" Teil des Absatzes, und der Verweis `quelle:jpl-satelliten-entdeckung`
+   über den Zeilenwechsel bleibt ganz; der Gesamtrundgang (§4) fand keine geordnete Liste mehr.
+6. **Zurückgestellte Code- und Datensatzbefunde (§6a):** bleiben zurückgestellt; sie sind in den
+   Texten als Modellgrenzen offengelegt. Die Liste geht als Auswahlvorlage ins Brainstorming der
+   Phase 5, die bisher andere Schwerpunkte hat (Ambient-Sound, Qualitätsstufen,
+   Texturkompression, Veröffentlichung).
+7. **Rulings:** Die Plan-Rulings der Etappe 11 und die Rulings der Umsetzung gelten als angenommen.

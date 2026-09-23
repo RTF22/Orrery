@@ -441,14 +441,6 @@ inhaltlich in §1 (Freigabe, Reihenfolge, eine Prüfrunde), §2 (Richtwerte), §
 Modellzahlen-Übernahme), §5 (Ersatz entfällt) dieses Protokolls eingearbeitet; als Themenliste in
 §8.
 
-## Nacharbeit nach der Schlussprüfung
-
-- Gesamtabnahme §1: Endcommit der Etappe 4d-11 auf `33d2812` angeglichen (wie §3.1).
-- Gesamtabnahme §7 Punkt 1: Nachprüfung der Driftrate an der Crossref-Zusammenfassung ergänzt.
-- Zurückgestellte Kleinigkeiten, vor dem Merge nicht nötig: zwei getrennte Importzeilen aus
-  `../themen` im Dateitest; im Parser bliebe eine Datumszeile als allererste Zeile eines Texts
-  eine Liste (Grenzfall, kein Fall in der Sammlung).
-
 ## 7. Bekannte Unschärfen
 
 **DE-Randbefund in `thema-modell.md` (§5.1):** Der Verweis `quelle:jpl-satelliten-entdeckung`
@@ -563,3 +555,18 @@ Ja, Tag sitzt auf dem Endcommit nach der Schlussprüfung (16); Gesamtabnahme als
 Literaturkatalog im Hauptbundle unter der 50-kB-Schwelle (19); Katalogform wie 4d-4 bis 4d-10,
 Bücher ohne DOI/arXiv/URL nicht zitierfähig (20); Tausendertrennung ab fünf Stellen,
 Zahlenspannen mit Geltungsbereich (21); Beleglisten-Nacharbeit nur mit Zellenkontrolle (22).
+
+## Nacharbeit nach der Schlussprüfung
+
+- Gesamtabnahme §1: Endcommit der Etappe 4d-11 auf `33d2812` angeglichen (wie §3.1).
+- Gesamtabnahme §7 Punkt 1: Nachprüfung der Driftrate an der Crossref-Zusammenfassung ergänzt.
+- Zurückgestellte Kleinigkeiten, vor dem Merge nicht nötig: zwei getrennte Importzeilen aus
+  `../themen` im Dateitest; im Parser bliebe eine Datumszeile als allererste Zeile eines Texts
+  eine Liste (Grenzfall, kein Fall in der Sammlung).
+
+## Entscheidungen (23.09.2026)
+
+Jens hat die Fragen aus §8 und aus der Gesamtabnahme §7 zur Entscheidung übertragen („Entscheide
+die Fragen selbst sinnvoll, dann push"). Die Entscheidungen stehen in `docs/phase4d-abnahme.md`
+unter „Entscheidungen (23.09.2026)"; die 22 Plan-Rulings und die Rulings in §6 gelten damit als
+angenommen.
