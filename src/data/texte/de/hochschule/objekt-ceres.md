@@ -112,8 +112,8 @@ Nachwirken hin ([Nathues et al. 2020](literatur:nathues-2020)).
 
 Auch abseits von Occator gibt es Anzeichen für Kryovulkanismus: Ahuna Mons, eine rund 17 km
 breite und 4 km hohe, kegelförmige Kuppel ohne Gegenstück anderswo auf Ceres, lässt sich am
-besten als Extrusion einer zähen, salzreichen Kryolava erklären, die vor weniger als einer
-Milliarde Jahren erstarrte ([Ruesch et al. 2016](literatur:ruesch-2016)) — jung genug, dass
+besten als Extrusion einer zähen, salzreichen Kryolava erklären, die vor rund 210 Millionen
+Jahren erstarrte ([Ruesch et al. 2016](literatur:ruesch-2016)) — jung genug, dass
 Ceres trotz ihrer geringen Größe bis in geologisch junge Zeit innere Wärme und mobile
 Flüssigkeiten besaß. Am Krater Ernutet fanden sich zudem lokal begrenzte Ablagerungen
 aliphatischer organischer Verbindungen; ihre Konzentration und Verteilung lassen einen
@@ -171,7 +171,7 @@ wie [Bahnelemente](thema:bahnelemente)); daraus folgt über das dritte Keplersch
 der Sonnenmasse eine Umlaufzeit von $1679{,}8$ Tagen beziehungsweise $4{,}60$ Jahren
 (Herleitung) — die einfache Kepler-Gegenprobe (Umlaufzeit in Jahren gleich der großen
 Halbachse in Astronomischen Einheiten hoch drei halbe) liefert $4{,}599$ Jahre und bestätigt
-den Wert auf rund 0,003 Prozent.
+den Wert auf rund 0,0004 Prozent.
 
 Diese Bahn liegt im äußeren Hauptgürtel zwischen zwei der markantesten
 [Kirkwood-Lücken](thema:kirkwood-luecken): der 3:1-Mittelbewegungsresonanz mit Jupiter bei
@@ -313,7 +313,7 @@ mittelgroßen New-Frontiers-Vorschlags nennt
   gemessenen Wert; Rotationsperiode, Pol und Albedo treffen die Literatur wie oben beschrieben
   auf wenige Promille oder besser. Die Umlaufzeit rechnet der Datenblock über
   `umlaufzeitTage` aus $a$ und $G\,(M_\odot+M_\mathrm{Ceres})$; sie trifft die aus
-  $\dot L$ tatsächlich bewegte Periode auf rund 0,0004 Prozent, praktisch deckungsgleich, weil
+  $\dot L$ tatsächlich bewegte Periode auf rund 0,002 Prozent, praktisch deckungsgleich, weil
   beide Rechnungen auf derselben Halbachse beruhen. Jeder Körper trägt seine Albedo normiert
   auf den Reglerbereich ([Albedo und Helligkeit](thema:photometrie)). Weitere
   Vereinfachungen: [Grenzen des Modells](thema:modell).

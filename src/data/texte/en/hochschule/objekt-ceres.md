@@ -109,7 +109,7 @@ geologically recent times ([Nathues et al. 2020](literatur:nathues-2020)).
 
 There are also signs of cryovolcanism away from Occator: Ahuna Mons, a roughly 17 km wide
 and 4 km high, cone-shaped dome with no counterpart elsewhere on Ceres, is best explained as
-the extrusion of a viscous, salt-rich cryomagma that solidified less than a billion years
+the extrusion of a viscous, salt-rich cryomagma that solidified about 210 million years
 ago ([Ruesch et al. 2016](literatur:ruesch-2016)) — young enough that, despite its small
 size, Ceres retained internal heat and mobile liquids into geologically recent times. At
 Ernutet crater, localized deposits of aliphatic organic material were also found; their
@@ -163,7 +163,7 @@ $a = 2.7655\,\mathrm{AU}$, $e = 0.0797$ and $i = 10.59^\circ$ against the eclipt
 in [Orbital elements](thema:bahnelemente)); Kepler's third law with the Sun's mass then gives
 an orbital period of $1679.8$ days, or $4.60$ years (derivation) — the simple Kepler check
 (orbital period in years equal to the semi-major axis in astronomical units to the power of
-three halves) gives $4.599$ years and confirms the value to about 0.003 percent.
+three halves) gives $4.599$ years and confirms the value to about 0.0004 percent.
 
 This orbit lies in the outer main belt between two of the most prominent
 [Kirkwood gaps](thema:kirkwood-luecken): the 3:1 mean-motion resonance with Jupiter at
@@ -303,7 +303,7 @@ proposal ([National Academies of Sciences 2022](literatur:national-academies-202
   Parameters and measurement; rotation period, pole and albedo match the literature as
   described above to within a few parts per thousand or better. The data panel computes the
   orbital period via `umlaufzeitTage` from $a$ and $G\,(M_\odot+M_\mathrm{Ceres})$; it
-  matches the period Ceres actually moves with, from $\dot L$, to about 0.0004 percent,
+  matches the period Ceres actually moves with, from $\dot L$, to about 0.002 percent,
   practically identical because both calculations rest on the same semi-major axis. Every
   body carries its albedo normalized to the slider range
   ([Albedo and brightness](thema:photometrie)). Further simplifications:
