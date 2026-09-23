@@ -211,8 +211,15 @@ beschrieben (beide Ergebnisse 0 bzw. leer), ohne Suchmuster in dieser Datei.
     sie inhaltsgleiche oder grammatisch saubere Verbesserungen ohne Bedeutungsänderung sind
     (`objekt-europa.md` Nr. 63 „(fachgeprüft(dort fachgeprüft))" → „(fachgeprüft)";
     `szene-jupiter-vorbeiflug.md` Nr. 26 „Ruling 7 korrekt angewendet" → „korrekt übernommen").
-13. Schlussprüfung (dieses Protokoll) auf dem mittleren statt dem stärksten Modell (Weisung
-    Jens: möglichst kleine Modelle) — reiner Text-/Dokumentdiff.
+13. Die Schlussprüfung des Branchs vor dem Fast-Forward lief auf dem mittleren statt dem
+    stärksten Modell (Weisung Jens: möglichst kleine Modelle); der Diff besteht nur aus Texten,
+    Beleglisten, zwei Kommentarzeilen und diesem Protokoll. Das Protokoll selbst (Task 4) lief
+    plangemäß auf dem mittleren Modell.
+14. Das Ledger liegt im vom Werkzeug vergebenen Ordner
+    `.superpowers/sdd/2026-09-23-nachfuehrung-nach-phase4d/` statt in dem im Plan genannten
+    `.superpowers/sdd/2026-09-23-nachfuehrung-4d/` (git-ignoriert, ohne Folgen).
+15. Höchstens eine Prüfrunde je Task statt mehrerer Fix-Runden (Regel von Jens vom
+    20.09.2026); Restbefunde stehen in §7.
 
 ## 7. Bekannte Unschärfen
 
@@ -226,6 +233,9 @@ beschrieben (beide Ergebnisse 0 bzw. leer), ohne Suchmuster in dieser Datei.
   `objekt-saturn.md` Nr. 38 „[-(Controller-Hinweis)-]{+(Hinweis bei der Abnahme)+}" (Teilwort
   „Hinweis"), `objekt-tethys.md` Nr. 1 „Siehe [-Befunddatei, Hinweis)-]{+Hinweis der
   Fachprüfung)+}" (Teil der Fußnote innerhalb eines unveränderten „ok"-Urteils).
+- `docs/belege/hochschule/szene-saturn-ringkante.md` Nr. 7 nennt „F1 aus Prüfbericht" statt der
+  sonst verwendeten Form „Befund F1 der Fachprüfung" — sachlich richtig, nur uneinheitlich;
+  zurückgestellt (Schlussprüfung, gering).
 - Restbefunde aus früheren Etappen, die diese Nachführung nicht behandelt hat (weiterhin offen,
   Stand Gesamtabnahme, §7 dort): Erdrotation ohne gültiges Modell, Uhr setzt UTC als TDB, Erde im
   Erde-Mond-Schwerpunkt, Pluto im Ursprung statt um den Schwerpunkt, Keplerlöser divergiert bei
@@ -246,3 +256,13 @@ beschrieben (beide Ergebnisse 0 bzw. leer), ohne Suchmuster in dieser Datei.
   Aufgabe nicht — beide Umsetzungsversuche (Task 2 unvollständig, Task 3 verworfen) mussten auf
   das mittlere Modell nachgearbeitet werden. Ob künftige, ähnlich gelagerte mechanische
   Bereinigungen gleich auf dem mittleren Modell starten sollen, liegt bei dir.
+
+## Nacharbeit nach der Schlussprüfung
+
+Die Schlussprüfung des Branchs gab Texte, Beleglisten und Testkommentare frei (Suche nach
+Prozesssprache 0 Treffer, Zellenprüfskript ohne Ausgabe, Wort- und Trailerprüfung nach der lokalen
+Projektanleitung ohne Befund, Zahlen in §1 und §3 bestätigt) und fand zwei Befunde in diesem
+Protokoll: Ruling 13 bezeichnete das Protokoll fälschlich als Schlussprüfung, und das Ruling zum
+Ledger-Ordner fehlte. Beides ist in §6 berichtigt (Punkte 13 bis 15); ein geringer Formbefund steht
+in §7. Der lokale Hilfsbranch mit dem verworfenen ersten Versuch von Task 3 wird vor dem
+Fast-Forward gelöscht.
