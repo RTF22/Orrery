@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useStore, DEFAULT_STATE } from '../../store';
 import { toggleCinema, nextScene, stopCinema, cinemaAktiv } from '../cinemaControl';
 import { INFO_PANEL, infoOffen, istSchmal } from '../info/konstanten';
+import { useBogen } from '../bogen';
 
 /** Panel-Schlüssel der Kürzel-Übersicht. */
 export const SHORTCUTS_PANEL = 'shortcuts';
@@ -63,10 +64,14 @@ export function handleShortcut(taste: string): boolean {
       s.setUi({ language: s.ui.language === 'de' ? 'en' : 'de' });
       return true;
     case 'i':
-      // Ohne Eintrag gilt das Panel auf breiten Bildschirmen als offen, auf
-      // schmalen als zu (infoOffen, Zwilling der Regel in InfoPanel.tsx);
-      // die Taste kippt den so ermittelten Zustand.
-      s.setUi({ panels: { ...s.ui.panels, [INFO_PANEL]: !infoOffen(s.ui.panels, istSchmal()) } });
+      // Im Kompaktmodus gibt es höchstens einen Bogen (ui/bogen.ts); die
+      // Taste kippt den Infobogen und lässt ui.panels unberührt. Auf breiten
+      // Bildschirmen gilt das Panel ohne Eintrag als offen (infoOffen).
+      if (istSchmal()) {
+        useBogen.getState().kippen('info');
+        return true;
+      }
+      s.setUi({ panels: { ...s.ui.panels, [INFO_PANEL]: !infoOffen(s.ui.panels, false) } });
       return true;
     case 'Home':
       s.setCamera({ ...DEFAULT_STATE.camera });

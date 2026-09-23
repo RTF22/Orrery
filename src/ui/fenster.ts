@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { SCHMAL_ABFRAGE } from './info/konstanten';
+import { SCHMAL_ABFRAGE, GROB_ABFRAGE } from './info/konstanten';
 
 /**
  * Fensterhelfer für beide Spalten (Seitenleiste und Infopanel). Früher
@@ -27,20 +27,27 @@ export function useFensterbreite(): number | null {
   return breite;
 }
 
-/** Folgt der Medienabfrage SCHMAL_ABFRAGE (Entwurf 4c §3.4). */
-export function useSchmal(): boolean {
-  const abfrage = (): boolean =>
-    typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia(SCHMAL_ABFRAGE).matches;
-  const [schmal, setSchmal] = useState(abfrage);
+/** Folgt einer Medienabfrage und rendert bei jeder Änderung neu. */
+export function useMedienabfrage(abfrage: string): boolean {
+  const pruefe = (): boolean =>
+    typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia(abfrage).matches;
+  const [trifft, setTrifft] = useState(pruefe);
   useEffect(() => {
     if (typeof window.matchMedia !== 'function') return;
-    const mq = window.matchMedia(SCHMAL_ABFRAGE);
-    const bei = (): void => { setSchmal(mq.matches); };
-    mq.addEventListener('change', bei);
-    return () => { mq.removeEventListener('change', bei); };
-  }, []);
-  return schmal;
+    const mq = window.matchMedia(abfrage);
+    const bei = (): void => { setTrifft(mq.matches); };
+    bei();
+    mq.addEventListener?.('change', bei);
+    return () => { mq.removeEventListener?.('change', bei); };
+  }, [abfrage]);
+  return trifft;
 }
+
+/** Kompaktmodus (SCHMAL_ABFRAGE, Entwurf Phase 5 §4.1). */
+export const useSchmal = (): boolean => useMedienabfrage(SCHMAL_ABFRAGE);
+
+/** Grober Zeiger (GROB_ABFRAGE, Entwurf Phase 5 §4.2). */
+export const useGrob = (): boolean => useMedienabfrage(GROB_ABFRAGE);
 
 /**
  * Wirksame Breite einer Spalte in rem: Die Obergrenze ist der kleinere Wert

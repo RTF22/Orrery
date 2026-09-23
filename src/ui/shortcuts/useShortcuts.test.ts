@@ -4,6 +4,7 @@ import { renderHook } from '@testing-library/react';
 import { handleShortcut, useShortcuts, SHORTCUTS_PANEL } from './useShortcuts';
 import { useStore, DEFAULT_STATE } from '../../store';
 import { noteUserInput, stopCinema } from '../cinemaControl';
+import { useBogen } from '../bogen';
 
 describe('handleShortcut', () => {
   // stopCinema zuerst: löscht den gemerkten Zustand von vor dem Kinostart.
@@ -117,17 +118,19 @@ describe('handleShortcut', () => {
     expect(useStore.getState().ui.panels.info).toBe(true);
   });
 
-  it('öffnet das Infopanel auf schmalen Bildschirmen beim ersten Druck auf I', () => {
-    // Ohne gespeicherten Wert gilt das Panel auf schmalen Bildschirmen als
-    // zu (siehe infoOffen in ui/info/konstanten.ts); der erste Druck muss es
-    // also öffnen, nicht wie auf breiten Bildschirmen schließen.
+  it('kippt im Kompaktmodus den Infobogen statt ui.panels.info', () => {
+    useBogen.getState().setBogen('bedienung');
     const matchMedia = vi.fn((abfrage: string) => ({ abfrage, matches: true }));
     vi.stubGlobal('matchMedia', matchMedia);
     try {
       expect(handleShortcut('i')).toBe(true);
-      expect(useStore.getState().ui.panels.info).toBe(true);
+      expect(useBogen.getState().bogen).toBe('info');
+      expect(useStore.getState().ui.panels.info).toBeUndefined();
+      expect(handleShortcut('i')).toBe(true);
+      expect(useBogen.getState().bogen).toBeNull();
     } finally {
       vi.unstubAllGlobals();
+      useBogen.getState().setBogen(null);
     }
   });
 });
