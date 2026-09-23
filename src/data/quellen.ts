@@ -152,7 +152,7 @@ export const QUELLEN: readonly Quelle[] = [
     titel: { de: 'Entdeckungsumstände der Planetenmonde (JPL SSD)', en: 'Planetary Satellite Discovery Circumstances (JPL SSD)' },
     herausgeber: 'JPL', sprache: 'en', art: 'faktenblatt',
     url: 'https://ssd.jpl.nasa.gov/sats/discovery.html',
-    fuer: ['thema:modell'],
+    fuer: ['thema:modell', 'thema:sonnensystem'],
   },
   // --- Übersichten ---
   {
@@ -338,6 +338,13 @@ export const QUELLEN: readonly Quelle[] = [
     fuer: ['objekt:pluto', 'objekt:eris', 'objekt:haumea', 'objekt:makemake', 'thema:zwergplaneten'],
   },
   {
+    id: 'nasa-oortwolke',
+    titel: { de: 'Oortsche Wolke bei NASA Science', en: 'Oort Cloud at NASA Science' },
+    herausgeber: 'NASA', sprache: 'en', art: 'uebersicht',
+    url: 'https://science.nasa.gov/solar-system/oort-cloud/',
+    fuer: ['thema:sonnensystem'],
+  },
+  {
     id: 'nasa-marsmonde',
     titel: { de: 'Marsmonde bei NASA Science', en: 'Mars moons at NASA Science' },
     herausgeber: 'NASA', sprache: 'en', art: 'uebersicht',
@@ -517,6 +524,13 @@ export const QUELLEN: readonly Quelle[] = [
     herausgeber: 'NASA', sprache: 'en', art: 'werkzeug',
     url: 'https://eyes.nasa.gov/apps/solar-system/',
     fuer: ['objekt:sun', 'objekt:earth', 'objekt:saturn', 'thema:modell', 'szene:systemblick'],
+  },
+  {
+    id: 'nasa-exoplaneten',
+    titel: { de: 'Exoplaneten-Katalog (NASA)', en: 'Exoplanet Catalog (NASA)' },
+    herausgeber: 'NASA', sprache: 'en', art: 'werkzeug',
+    url: 'https://science.nasa.gov/exoplanets/exoplanet-catalog/',
+    fuer: ['thema:sonnensystem'],
   },
   {
     id: 'jpl-horizons',
