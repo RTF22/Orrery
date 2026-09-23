@@ -2,6 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { textKennungGueltig, verweisAufloesen } from '../verweise';
 import { quellenFuer } from '../quellen';
 import { LITERATUR, erstautorNachname, jahrMitSuffix, publikationFinden } from '../literatur';
+import { bodies } from '../index';
+import { SCENES } from '../scenes';
+import { NIVEAUS, THEMEN } from '../themen';
 import type { Niveau } from '../themen';
 import { inlineText, parseMarkdown } from '../../ui/info/markdownParser';
 import type { Block, Inline } from '../../ui/info/markdownParser';
@@ -22,13 +25,6 @@ const MUSTER = /^\.\/(de|en)\/(grundschule|gymnasium|hochschule)\/(objekt|szene|
  */
 const WORTGRENZE: Record<Niveau, number> = { grundschule: 110, gymnasium: Infinity, hochschule: Infinity };
 
-/**
- * Bis einschließlich Etappe 4d-10 genügt für Verweise aus Hochschultexten
- * ein Gymnasialtext als Ersatz (Entwurf 4d §5.5 Punkt 6); die Anzeige zeigt
- * ihn mit dem Hinweis info.hochschuleFolgt. Etappe 4d-11 setzt false.
- */
-const HOCHSCHULE_GYMNASIUM_ERSATZ = true;
-
 /** Feste Gliederung der Hochschultexte (Entwurf 4d §5.1); `pflicht` sind Stellen in den Listen. */
 const GLIEDERUNG: Record<'objekt' | 'szene', { de: readonly string[]; en: readonly string[]; pflicht: readonly number[] }> = {
   objekt: {
@@ -48,6 +44,11 @@ const GLIEDERUNG: Record<'objekt' | 'szene', { de: readonly string[]; en: readon
     pflicht: [2],
   },
 };
+
+/** Fachthemen gibt es nur auf Hochschulniveau (Entwurf 4d §5.3). */
+const FACHTHEMEN: readonly string[] = [
+  'gezeiten', 'resonanzen', 'bezugssysteme', 'innerer-aufbau', 'photometrie', 'entstehung',
+];
 
 const MONATE = {
   de: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
@@ -165,10 +166,7 @@ describe('Textdateien', () => {
           const textziel = textZiel(ziel);
           if (textziel === null) continue;
           const pfadZiel = `./${sprache}/${niveau}/${textziel.art}-${textziel.kennung}.md`;
-          const ersatz = `./${sprache}/gymnasium/${textziel.art}-${textziel.kennung}.md`;
-          const vorhanden = Object.hasOwn(dateien, pfadZiel)
-            || (HOCHSCHULE_GYMNASIUM_ERSATZ && niveau === 'hochschule' && Object.hasOwn(dateien, ersatz));
-          expect(vorhanden, `Verweis ${ziel}: ${pfadZiel} fehlt`).toBe(true);
+          expect(Object.hasOwn(dateien, pfadZiel), `Verweis ${ziel}: ${pfadZiel} fehlt`).toBe(true);
         }
       });
 
@@ -237,6 +235,31 @@ describe('Textdateien', () => {
       const partner = pfad.startsWith('./de/') ? pfad.replace('./de/', './en/') : pfad.replace('./en/', './de/');
       expect(pfade.has(partner), `Gegenstück fehlt: ${partner}`).toBe(true);
     }
+  });
+
+  it('hat zu jeder Kennung einen Text in jeder Sprache und jedem Niveau, Fachthemen nur auf Hochschulniveau', () => {
+    // Akzeptanzkriterium der Phase 4d: jeder Körper, jede Szene und jedes
+    // Thema mit Hochschultext in Deutsch und Englisch.
+    const namen = [
+      ...bodies.map((b) => `objekt-${b.id}`),
+      ...SCENES.map((s) => `szene-${s.id}`),
+      ...THEMEN.map((t) => `thema-${t.id}`),
+    ];
+    expect(namen).toHaveLength(69);
+    const fehlend: string[] = [];
+    for (const sprache of ['de', 'en']) {
+      for (const niveau of NIVEAUS) {
+        for (const name of namen) {
+          const nurHochschule = FACHTHEMEN.some((id) => name === `thema-${id}`);
+          if (nurHochschule && niveau !== 'hochschule') continue;
+          const pfad = `./${sprache}/${niveau}/${name}.md`;
+          if (!Object.hasOwn(dateien, pfad)) fehlend.push(pfad);
+        }
+      }
+    }
+    expect(fehlend).toEqual([]);
+    // Keine Datei ohne Kennung und keine Fachthemen auf den unteren Niveaus.
+    expect(Object.keys(dateien)).toHaveLength(390);
   });
 
   it('zitiert jeden Eintrag des Literaturkatalogs mindestens einmal', () => {

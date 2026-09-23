@@ -409,6 +409,12 @@ Zwillingsvergleich (Punkt 5) normiert in Formeln zusätzlich den Leerraum (`T^2 
 gleich `T^2=a^3`). Inhalte von `\text{…}` müssen in beiden Sprachfassungen gleich sein, sonst
 schlägt der Zwillingsvergleich fehl.
 
+**Nachtrag (4d-11):** Der Gymnasialersatz aus Punkt 6 ist entfernt; ein Verweis aus einem
+Hochschultext muss auf einen Hochschultext zeigen. Ein neuer Test zählt gegen die Kennungslisten
+(Körper, Szenen, Themen): Zu jeder der 69 Kennungen gibt es den Hochschultext in beiden Sprachen,
+zu jeder außer den sechs Fachthemen auch Grundschul- und Gymnasialtext, zusammen 390 Dateien. Die
+Anzeige behält den Hinweis `info.hochschuleFolgt` als Schutz für künftige Kennungen.
+
 ## 6. Arbeitsweise und inhaltliche Prüfung
 
 ### 6.1 Recherche
