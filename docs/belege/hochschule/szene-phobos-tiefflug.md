@@ -6,18 +6,18 @@ Modulen des Quellbaums ausgeführt (Vite-SSR aus dem Projektverzeichnis, `server
 `sim/orbit.ts`, `sim/scale.ts`, `data/index.ts`, `data/scenes.ts`, `render/camera/cinema.ts`,
 `sim/time.ts`; Skript im Scratchpad, nicht versioniert), nicht aus Kommentaren übernommen. „Gleich
 <Text>" heißt: dieselbe, dort bereits fachgeprüfte Modellzahl wortgleich übernommen (Entwurf-Vorgabe
-zu wiederkehrenden Modellzahlen), ohne die zugrunde liegende Arbeit in diesem Task erneut zu öffnen.
+zu wiederkehrenden Modellzahlen), ohne die zugrunde liegende Arbeit bei der Erstellung dieser Liste erneut zu öffnen.
 
-Kopfnotiz zur Recherche: Das Websuche-Kontingent dieser Sitzung war beim Bearbeiten dieses Tasks
+Kopfnotiz zur Recherche: Das Websuche-Kontingent dieser Sitzung war bei der Erstellung dieser Liste
 bereits erschöpft (gemeinsam genutzt mit anderen, zuvor gelaufenen Aufträgen); `WebFetch` blieb
 verfügbar und wurde einmal genutzt (Zeile 20). Deshalb stützt sich dieser Text für alle
 Phobos/Mars-Sachaussagen, die nicht unmittelbar aus dem Code folgen, ausschließlich auf bereits
 fachgeprüfte Hochschultexte (`objekt-phobos`, `objekt-mars`, `thema-gezeiten`,
 `thema-gebundene-rotation`, `thema-finsternis`, `objekt-deimos`) statt auf frisch geöffnete
-Primärliteratur; die im Task genannten Ausgangspunkte Jacobson/Lainey 2014, Willner et al. 2014,
+Primärliteratur; die als Ausgangspunkte der Recherche genannten Ausgangspunkte Jacobson/Lainey 2014, Willner et al. 2014,
 Archinal et al. 2018 und Murray/Dermott wurden geprüft, tauchen aber in keiner fachgeprüften Zeile
 zu genau den hier gebrauchten Werten auf (die neuere Ephemeride Brozović et al. 2025 hat
-Jacobson/Lainey 2014 in den Vorgänger-Tasks bereits ersetzt) und werden deshalb hier nicht zitiert;
+Jacobson/Lainey 2014 in früheren Texten bereits ersetzt) und werden deshalb hier nicht zitiert;
 Bell et al. 2005 und Black/Mittal 2015 stecken in den wiederverwendeten Zeilen von `thema-finsternis`
 beziehungsweise `objekt-phobos`. Das eigentlich neue an diesem Text ist die Kamerageometrie der
 Szene selbst, vollständig durch Nachrechnung am Code belegt.
@@ -59,4 +59,4 @@ sowie der Winkeldurchmesser des Mars ($2\arcsin(r_\mathrm{Mars,dargestellt}/d)$)
 | 25 | Anders als beim mondlosen Merkur zählt Mars für seine Monde immer als möglicher Verschatter; ob real ein Kernschatten entsteht, wird pro Bildpunkt berechnet, in dieser Szene nicht eigens abgestimmt | – | Nachrechnung am Code: `src/render/shadows.ts` (`waehleOkkluder`); `src/sim/scale.ts` (`isSatellite`); gleich `szene-merkurjagd` (Nr. 26, Merkur-Fall) | `waehleOkkluder`: Ist `body` Satellit (`isSatellite`: `parent !== null && parent !== 'sun'`; Phobos `parent: 'mars'` erfüllt das), wird `mutter = index[body.parent]` (Mars) IMMER zuerst in `kugeln` aufgenommen, unabhängig von der aktuellen Geometrie; ob ein Kernschatten entsteht, entscheidet erst `sonnenAnteil`/`kugelSchatten` mit der realen Sonnenrichtung je Bildpunkt (GLSL); `szene-merkurjagd`-Belegliste Nr. 26 zeigt den Gegenfall (Merkur ohne Monde, `kugeln = []`) | ok (render/shadows.ts: waehleOkkluder nimmt den Mutterkörper bei Satelliten immer zuerst auf; Vergleich mit szene-merkurjagd Nr. 26 (Merkur ohne Monde, kugeln=[]) bestätigt) |
 
 Prüfskript (`npm run literatur:pruefen`): siehe Bericht (Schlusszeile dort notiert; keine neuen
-Katalogeinträge in diesem Task, `--nur` daher ohne neue Kennungen aufgerufen).
+Katalogeinträge bei der Erstellung dieser Liste, `--nur` daher ohne neue Kennungen aufgerufen).
