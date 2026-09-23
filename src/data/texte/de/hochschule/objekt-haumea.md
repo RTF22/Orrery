@@ -161,8 +161,9 @@ schnelle Rotation in ein und demselben schrägen Einschlag: Hydrodynamische Simu
 solchen „graze-and-merge"-Ereignisses reproduzieren sowohl die beobachtete Geschwindigkeitsstreuung
 der Familie als auch die extreme Rotation des verbliebenen Hauptkörpers
 ([Leinhardt et al. 2010](literatur:leinhardt-2010)). Nach dem anderen entstand die Familie erst in
-einem zweiten Schritt, als von einem größeren, schon rotationsinstabilen Trümmerkörper Material
-abgestoßen wurde, ohne dass dafür ein zweiter, unabhängiger Einschlag nötig wäre
+einem zweiten Schritt: Der ursprüngliche Einschlag formte zunächst nur Haumea und einen einzigen
+großen Mond, der sich durch Gezeiten nach außen entwickelte, bis eine zweite, unabhängige
+Kollision ihn zerstörte und daraus die Familienmitglieder entstanden
 ([Schlichting und Sari 2009](literatur:schlichting-2009)). Das oben unter Inneres beschriebene
 geophysikalische Modell verbindet beide Bilder mit einer längeren inneren Entwicklung: Danach
 entstanden Ring, Monde und Familie gemeinsam beim Ausschleudern von Eismaterial während der
@@ -174,9 +175,9 @@ vereinbart.
 ## Offene Fragen
 
 - **Wie genau entstanden Familie, Ring, Monde und schnelle Rotation — in einem einzigen
-  „graze-and-merge"-Einschlag oder in einem nachfolgenden Zerfall eines zunächst rotationsinstabilen
-  Trümmerkörpers?** Beide Mechanismen sind mit der gemessenen Geschwindigkeitsstreuung der Familie
-  vereinbar ([Leinhardt et al. 2010](literatur:leinhardt-2010);
+  „graze-and-merge"-Einschlag oder in einer zweiten, unabhängigen Kollision auf einem aus dem
+  Ur-Einschlag entstandenen Mond?** Beide Mechanismen sind mit der gemessenen
+  Geschwindigkeitsstreuung der Familie vereinbar ([Leinhardt et al. 2010](literatur:leinhardt-2010);
   [Schlichting und Sari 2009](literatur:schlichting-2009)), sagen aber unterschiedliche
   Ausgangszustände voraus.
 - **Ist Haumea ein Jacobi-Ellipsoid im hydrostatischen Gleichgewicht, und wie hoch ist ihre Dichte
@@ -229,8 +230,8 @@ vereinbart.
   völlig anderen Grund (dort echte Kippung, hier eine Messung, die zufällig nahe $90^\circ$ liegt;
   [Achsneigung](thema:achsneigung)).
 - **Elemente und Maßstab:** Haumea läuft mit oskulierenden heliozentrischen SBDB-Elementen zur
-  Epoche JD 2 461 200,5, alle Raten außer $\dot L$ null, wie bei den übrigen Zwergplaneten
-  ([Zwergplaneten](thema:zwergplaneten)); die daraus über $360^\circ/\dot L$ gerechnete Umlaufzeit
+  Epoche JD 2 461 200,5, alle Raten außer $\dot L$ null, wie bei den übrigen Zwergplaneten (Zahlen
+  wie [Bahnelemente](thema:bahnelemente)); die daraus über $360^\circ/\dot L$ gerechnete Umlaufzeit
   ergibt $103\,208\,\mathrm{d}$, rund 0,002 % über der oben aus Masse und Halbachse
   gerechneten Kepler-Umlaufzeit (Herleitung). Als heliozentrischer Zwergplanet skaliert Haumea mit der
   Abstandskompression wie ein Planet, nicht mit `sizeScale` wie ein Satellit (`sim/scale.ts`).

@@ -151,8 +151,9 @@ formation mechanism. In one, family and fast rotation arose in one and the same 
 hydrodynamic simulations of such a "graze-and-merge" event reproduce both the observed velocity
 dispersion of the family and the extreme rotation of the surviving primary
 ([Leinhardt et al. 2010](literatur:leinhardt-2010)). In the other, the family formed only in a second
-step, when material was shed from a larger, already rotationally unstable debris body, without
-requiring a second, independent impact ([Schlichting and Sari 2009](literatur:schlichting-2009)). The
+step: the original impact first formed only Haumea and a single large moon, which tidally evolved
+outward until a second, independent collision destroyed it and the family members formed from the
+debris ([Schlichting and Sari 2009](literatur:schlichting-2009)). The
 geophysical model described above under Interior links both pictures to a longer internal evolution:
 in it, ring, moons and family formed together by ejecting icy material during the initial spin-up
 after the impact, before Haumea's rotation later slowed again through core growth
@@ -162,8 +163,8 @@ formation mechanism is not yet reconciled with the two previous models.
 ## Open questions
 
 - **How exactly did family, ring, moons and fast rotation form — in a single "graze-and-merge"
-  impact, or in a subsequent breakup of an initially rotationally unstable debris body?** Both
-  mechanisms are consistent with the family's measured velocity dispersion
+  impact, or in a second, independent collision on a moon that formed in the original impact?**
+  Both mechanisms are consistent with the family's measured velocity dispersion
   ([Leinhardt et al. 2010](literatur:leinhardt-2010);
   [Schlichting and Sari 2009](literatur:schlichting-2009)), but predict different starting states.
 - **Is Haumea a Jacobi ellipsoid in hydrostatic equilibrium, and how dense is it really?** Depending
@@ -214,8 +215,8 @@ formation mechanism is not yet reconciled with the two previous models.
   reason (there, genuine obliquity; here, a measurement that happens to fall near $90^\circ$;
   [Axial tilt](thema:achsneigung)).
 - **Elements and scale:** Haumea runs on osculating heliocentric SBDB elements at epoch
-  JD 2,461,200.5, with all rates except $\dot L$ zero, as for the other dwarf planets
-  ([Dwarf planets](thema:zwergplaneten)); the orbital period computed from this via
+  JD 2,461,200.5, with all rates except $\dot L$ zero, as for the other dwarf planets (values as
+  in [Orbital elements](thema:bahnelemente)); the orbital period computed from this via
   $360^\circ/\dot L$ gives $103\,208\,\mathrm{d}$, about 0.002% above the Kepler period computed
   above from mass and semi-major axis (derivation). As a heliocentric dwarf planet, Haumea scales
   with the distance compression like a planet, not with `sizeScale` like a satellite
