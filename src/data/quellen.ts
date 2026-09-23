@@ -317,6 +317,13 @@ export const QUELLEN: readonly Quelle[] = [
     fuer: ['objekt:ceres', 'thema:zwergplaneten', 'szene:ceres-guertel'],
   },
   {
+    id: 'nasa-haumea',
+    titel: { de: 'Haumea bei NASA Science', en: 'Haumea at NASA Science' },
+    herausgeber: 'NASA', sprache: 'en', art: 'uebersicht',
+    url: 'https://science.nasa.gov/dwarf-planets/haumea/',
+    fuer: ['objekt:haumea'],
+  },
+  {
     id: 'nasa-kuiperguertel',
     titel: { de: 'Kuipergürtel bei NASA Science', en: 'Kuiper Belt at NASA Science' },
     herausgeber: 'NASA', sprache: 'en', art: 'uebersicht',
