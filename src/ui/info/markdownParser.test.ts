@@ -78,6 +78,30 @@ describe('parseMarkdown', () => {
     ]);
   });
 
+  it('lässt einen geordneten Listenpunkt keinen Absatz unterbrechen (Datum am Zeilenanfang)', () => {
+    const md = [
+      'Voyager 2 sah am',
+      '24. Januar 1986 nur die [Südhalbkugel](objekt:ariel).',
+      '',
+      'Nach dem Perihel am',
+      '5. September 1989 folgt',
+      '- ein Punkt',
+      '',
+      '1. eins',
+      '2. zwei',
+    ].join('\n');
+    expect(parseMarkdown(md)).toEqual([
+      { typ: 'absatz', kinder: [
+        text('Voyager 2 sah am 24. Januar 1986 nur die '),
+        { typ: 'link', ziel: 'objekt:ariel', kinder: [text('Südhalbkugel')] },
+        text('.'),
+      ] },
+      { typ: 'absatz', kinder: [text('Nach dem Perihel am 5. September 1989 folgt')] },
+      { typ: 'liste', geordnet: false, punkte: [[text('ein Punkt')]] },
+      { typ: 'liste', geordnet: true, punkte: [[text('eins')], [text('zwei')]] },
+    ]);
+  });
+
   it('kommt mit Windows-Zeilenenden und Leerzeilen am Ende zurecht', () => {
     expect(parseMarkdown('# T\r\n\r\nAbsatz\r\n\r\n')).toEqual([
       { typ: 'ueberschrift', ebene: 1, kinder: [text('T')] },

@@ -493,6 +493,14 @@ WebSocket-Verbindung führte in der ersten, langen Sichtprüfungs-Sitzung zu ein
 Fehler und einer Serie von WebGL-Framebuffer-Warnungen; in einer eng getakteten Kontrollsitzung
 mit identischer Interaktionsfolge nicht reproduzierbar, `npm run build` unabhängig fehlerfrei.
 
+**Nachtrag: Datumsangaben am Zeilenanfang (behoben).** Der Randbefund aus §5.1 (ein
+`quelle:`-Verweis in `thema-modell` rendert nicht) hatte eine allgemeine Ursache: Der Parser
+wertete jede Zeile „<Zahl>. …" als geordneten Listenpunkt, auch mitten im Absatz. Betroffen
+waren 20 Zeilen in 18 Dateien (1 deutscher Gymnasialtext, 15 deutsche und 2 englische Hochschultexte),
+fast alle Datumsangaben. Seit dem Commit „Markdown: geordnete Listenpunkte unterbrechen keinen Absatz"
+gilt: Ein geordneter Punkt unterbricht keinen Absatz; kein Text musste geändert werden, die Textsammlung
+enthält danach keine geordnete Liste mehr.
+
 ## 8. Halt: Fragen an Jens
 
 **Gymnasialtext-Fehler „unter 4700 km" in `thema-modell.md` (DE, §4/§7 aus Task 1):** Die

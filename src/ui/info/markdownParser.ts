@@ -1,12 +1,12 @@
 /**
  * Markdown-Teilmenge für die Erläuterungstexte (Entwurf 4c §4.2, 4d §3.1):
- * Überschriften # bis ###, Absätze, Listen mit - oder 1., fett, kursiv,
- * Links, Formeln ($…$ im Satz, $$…$$ als Absatz) und Pipe-Tabellen. Alles
- * andere bleibt Klartext, HTML wird nie durchgereicht — deshalb braucht
- * die Ausgabe keine Bereinigung. Zeichenweise Zerlegung statt regulärer
- * Ausdrücke, damit Klammern in Linktexten und Sternchen in Zahlen (5*10)
- * nicht kippen. TeX wird hier nicht übersetzt, nur als Quelle gehalten
- * (texUebersetzer.ts).
+ * Überschriften # bis ###, Absätze, Listen mit - oder 1. (ein geordneter
+ * Punkt unterbricht keinen Absatz), fett, kursiv, Links, Formeln ($…$ im
+ * Satz, $$…$$ als Absatz) und Pipe-Tabellen. Alles andere bleibt Klartext,
+ * HTML wird nie durchgereicht — deshalb braucht die Ausgabe keine
+ * Bereinigung. Zeichenweise Zerlegung statt regulärer Ausdrücke, damit
+ * Klammern in Linktexten und Sternchen in Zahlen (5*10) nicht kippen.
+ * TeX wird hier nicht übersetzt, nur als Quelle gehalten (texUebersetzer.ts).
  */
 export type Inline =
   | { typ: 'text'; text: string }
@@ -318,7 +318,12 @@ export function parseMarkdown(text: string): Block[] {
       continue;
     }
     const punkt = LISTENPUNKT.exec(zeile);
-    if (punkt !== null) {
+    // Ein geordneter Punkt unterbricht keinen Absatz: „24. Januar 1986 …" am
+    // Anfang einer umbrochenen Zeile ist Fließtext, keine Liste. Geordnete
+    // Listen stehen deshalb nach einer Leerzeile, einer Überschrift oder
+    // einem anderen Listenpunkt.
+    const unterbrichtAbsatz = punkt !== null && punkt[1] !== '-' && absatz.length > 0;
+    if (punkt !== null && !unterbrichtAbsatz) {
       absatzSchliessen();
       const geordnet = punkt[1] !== '-';
       if (liste !== null && liste.geordnet !== geordnet) listeSchliessen();
