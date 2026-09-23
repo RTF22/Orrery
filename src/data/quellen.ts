@@ -147,6 +147,13 @@ export const QUELLEN: readonly Quelle[] = [
       'objekt:triton', 'objekt:charon',
     ],
   },
+  {
+    id: 'jpl-satelliten-entdeckung',
+    titel: { de: 'Entdeckungsumstände der Planetenmonde (JPL SSD)', en: 'Planetary Satellite Discovery Circumstances (JPL SSD)' },
+    herausgeber: 'JPL', sprache: 'en', art: 'faktenblatt',
+    url: 'https://ssd.jpl.nasa.gov/sats/discovery.html',
+    fuer: ['thema:modell'],
+  },
   // --- Übersichten ---
   {
     id: 'nasa-earth',
