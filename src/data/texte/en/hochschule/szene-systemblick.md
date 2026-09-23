@@ -38,12 +38,15 @@ projection onto the image's vertical axis at camera distance $D=1.6\cdot f$ (wit
 factor) and elevation $e$ gives a near-side angle $\arctan(\rho\sin e/(D-\rho\cos e))$ and a far-side
 angle $\arctan(\rho\sin e/(D+\rho\cos e))$ (derivation, the camera's look-at plane). For
 Neptune's own orbit ($\rho=1$) the two add up, depending on the draw, to $46.8^\circ$ (elevation
-$53^\circ$, factor 1.25) through $72.6^\circ$ (elevation $88^\circ$, factor 0.85) — Neptune's
-orbit exceeds the field of view in every possible draw; it never fits fully into the frame. Only
-from an orbital radius of about 59 % (tightest draw) to 92 % (widest draw) of the system radius
-does a circular orbit stay fully within frame; Uranus (64–84 % of the system radius, depending on
-preset) sits inside the frame in some draws and beyond its edge in others, while the four inner
-planets (at most 30 % even under "Compact") always stay safely inside.
+$53^\circ$, factor 1.25) through $72.6^\circ$ (elevation $88^\circ$, factor 0.85); because the
+near and far points do not sit symmetrically about the image centre, though, this sum is not what
+decides the fit — the single near-point angle against the half-angle $25^\circ$ is. Solved for the
+orbital radius, that gives a threshold of about 59 % (tightest draw) to 92 % (widest draw) of the
+system radius, above which a circular orbit no longer stays fully within frame; since Neptune's
+own orbital radius ($\rho=1$) exceeds this in every draw, it never fits fully into the frame.
+Uranus (64–84 % of the system radius, depending on preset) sits inside the frame in some draws and
+beyond its edge in others, while the four inner planets (up to 30.3 % under "Compact", the
+largest value being Mars) always stay safely inside.
 
 The inner planets never resolve into discs: at an image height of 1440 pixels and factor 1, Earth,
 the largest of the four, measures 0.0014 pixels in radius under "Realistic", 0.267 under "Diagram"
@@ -95,8 +98,8 @@ System from 1800 to 2050, 1.21 solar radii on average, 1.07 of that shifted by
 
 The camera shows the planets around a Sun resting at the origin, not around the true, wandering
 barycentre (above, as [Limits of the model](thema:modell) describes in general); distances are
-compressed by different amounts per preset and bodies are enlarged ([The Solar
-System](thema:sonnensystem) gives the formula and the values). As derived above, the system
+compressed by different amounts per preset and bodies are enlarged, by the formula given in
+"Limits of the model" ([The Solar System](thema:sonnensystem) gives the values). As derived above, the system
 radius excludes all dwarf planets, even though several of them leave the catalogue's range and
 would, in principle, stand farther out in the image than Neptune. The asteroid and Kuiper belts,
 where within the view cone, appear only as synthetic clouds of points without individual orbits.

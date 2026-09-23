@@ -39,12 +39,14 @@ Elevation $e$
 einen nahseitigen Winkel $\arctan(\rho\sin e/(D-\rho\cos e))$ und einen fernseitigen
 $\arctan(\rho\sin e/(D+\rho\cos e))$ (Herleitung, camera.lookAt-Ebene). Für Neptuns
 eigene Bahn ($\rho=1$) summieren sich beide je nach Ziehung zu $46{,}8^\circ$ (Elevation $53^\circ$,
-Faktor 1,25) bis $72{,}6^\circ$ (Elevation $88^\circ$, Faktor 0,85) — Neptuns Bahn übersteigt in
-jeder möglichen Ziehung das Sichtfeld, sie passt nie vollständig ins Bild. Erst ab einem
-Bahnradius von rund 59 % (engste Ziehung) bis 92 % (weiteste Ziehung) des Systemradius bleibt eine
-Kreisbahn vollständig im Rahmen; Uranus (64–84 % des Systemradius, je nach Voreinstellung) liegt
-damit teils im Bild, teils über dem Rand, die vier inneren Planeten (höchstens 30 % selbst unter
-„Kompakt") bleiben immer sicher innerhalb.
+Faktor 1,25) bis $72{,}6^\circ$ (Elevation $88^\circ$, Faktor 0,85); weil Nah- und Fernpunkt aber
+nicht symmetrisch zur Bildmitte liegen, entscheidet nicht diese Summe, sondern der einzelne
+Nahpunktwinkel gegen den Halbwinkel $25^\circ$. Danach aufgelöst ergibt sich eine Passschwelle von
+rund 59 % (engste Ziehung) bis 92 % (weiteste Ziehung) des Systemradius, ab der eine Kreisbahn
+vollständig im Rahmen bleibt; da Neptuns eigener Bahnradius ($\rho=1$) darüber liegt, passt seine
+Bahn in keiner Ziehung vollständig ins Bild. Uranus (64–84 % des Systemradius, je nach
+Voreinstellung) liegt damit teils im Bild, teils über dem Rand, die vier inneren Planeten (bis
+30,3 % unter „Kompakt", größter Wert Mars) bleiben immer sicher innerhalb.
 
 Als Scheiben lösen sich die inneren Planeten dabei nicht auf: Bei 1440 Bildpunkten Höhe und
 Faktor 1 misst die Erde, der größte der vier, unter „Realistisch" 0,0014, unter „Schaubild" 0,267
@@ -96,9 +98,9 @@ des Sonnensystems entfernt, im Mittel 1,21 Sonnenradien, davon 1,07 allein durch
 
 Die Kamera zeigt die Planeten um eine im Ursprung ruhende Sonne, nicht um den tatsächlichen,
 wandernden Schwerpunkt (oben, wie [Grenzen des Modells](thema:modell) allgemein beschreibt);
-Abstände sind je Voreinstellung unterschiedlich stark gestaucht und Körper vergrößert
-([Das Sonnensystem](thema:sonnensystem) nennt die Formel und die Werte). Der Systemradius
-schließt, wie oben hergeleitet, alle Zwergplaneten aus, obwohl mehrere von ihnen den Katalog
+Abstände sind je Voreinstellung unterschiedlich stark gestaucht und Körper vergrößert, nach der
+Formel aus „Grenzen des Modells" ([Das Sonnensystem](thema:sonnensystem) nennt die Werte). Der
+Systemradius schließt, wie oben hergeleitet, alle Zwergplaneten aus, obwohl mehrere von ihnen den Katalog
 verlassen und im Bild theoretisch weiter draußen stünden als Neptun. Asteroiden- und Kuipergürtel
 erscheinen, sofern im Sichtkegel, nur als synthetische Punktwolken ohne individuelle Bahnen. Jeder
 Körper wird, wie im ganzen Programm, ungestört auf seiner Kepler-Ellipse fortgeschrieben — echte
