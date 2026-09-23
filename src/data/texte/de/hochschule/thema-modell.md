@@ -17,8 +17,10 @@ nennt seine Quelle; eigene Nachrechnungen sind als solche gekennzeichnet.
 ## Zeit
 
 Orrery zählt julianische Tage im Bereich vom 1. Januar 1, 0 Uhr, bis zum 31. Dezember 9999,
-0 Uhr (Code-Konstanten `JD_MIN`/`JD_MAX`); außerhalb kann der Kepler-Löser scheitern, weil eine
-linear fortgeschriebene Exzentrizität die Eins erreichen oder unterschreiten würde. Innerhalb
+0 Uhr (Code-Konstanten `JD_MIN`/`JD_MAX`); jenseits dieses selbst gewählten Randes hätte eine
+ungebremst linear fortgeschriebene Exzentrizität Folgen — Saturns $e$ erreichte im Jahr 12 563
+null und würde danach negativ, rückwärts Neptuns $e$ im Jahr −14 828, Werte, die der Keplerlöser
+zurückweist ([Entstehung des Sonnensystems](thema:entstehung)). Innerhalb
 dieses Bereichs stellt die Uhr das Datum als UTC dar, setzt dieselbe Zahl aber ohne Umrechnung
 als TDB in die Bahnrechnung ein. Seit dem 1. Januar 2017 gilt
 $\mathrm{TT} - \mathrm{UTC} = 32{,}184\,\mathrm{s} + 37\,\mathrm{s} = 69{,}184\,\mathrm{s}$, und
@@ -38,10 +40,10 @@ von etwa 14 Jahrhunderten um ihren Mittelwert ([Morrison et al. 2021](literatur:
 eine einfache Fortschreibung über Jahrtausende hinaus wäre deshalb nur eine grobe eigene
 Abschätzung, keine belegte Zahl. Orrery rechnet mit keiner dieser Korrekturen; das Programm markiert stattdessen
 den Zeitraum, für den seine Bahnelemente überhaupt geprüft sind: Außerhalb von 1800 bis 2050
-zeigen sowohl der Datenblock eines Körpers als auch das Zeit-Bedienfeld den Hinweis „Außerhalb
-des Genauigkeitsfensters" beziehungsweise „Positionen ungenau" — diese Warnung ist also, anders
-als man vermuten könnte, kein bloßer Programmtext, sondern an eine geprüfte Schwelle im Code
-gebunden. Unabhängig vom Kalenderdatum dreht sich die Erde im Modell gleichförmig mit
+zeigen sowohl der Datenblock eines Körpers als auch das Zeit-Bedienfeld einen Warnhinweis auf
+das eingeschränkte Genauigkeits- beziehungsweise Gültigkeitsfenster — diese Warnung ist also,
+anders als man vermuten könnte, kein bloßer Programmtext, sondern an eine geprüfte Schwelle im
+Code gebunden. Unabhängig vom Kalenderdatum dreht sich die Erde im Modell gleichförmig mit
 23,9345 h, das sind 0,101 s mehr als ein Umlauf des tatsächlichen Erdrotationswinkels; zur
 Epoche J2000 steht der Kartennullmeridian deshalb schon um 79,5° gegenüber Greenwich verdreht,
 am 17. September 2026 um 75,4° — für die Erde gibt es seit dem IAU-Bericht 2015 überhaupt kein
@@ -63,14 +65,11 @@ an — nicht nur andere Zahlen, sondern entgegengesetztes Vorzeichen, weil jede 
 jeweiligen Fenster wirksame säkulare Drift auffängt, keine echte Mittelung ist
 ([Bahnelemente](thema:bahnelemente)). Gegenseitige Störungen zwischen den Planeten rechnet
 Orrery nicht; jeder Körper läuft für sich allein um die im Ursprung ruhende Sonne. Diese
-Vereinfachung trifft die Sonne selbst am stärksten: Allein der Zweikörperanteil Sonne–Jupiter
-verschiebt den gemeinsamen Schwerpunkt um
-$a_\mathrm{Jup}\,M_\mathrm{Jup}/(M_\odot + M_\mathrm{Jup})$, mit den Katalogwerten also auf rund
-742 260 km ab Sonnenmitte — das sind 1,067 Sonnenradien, rund 46 600 km über der
-sichtbaren Oberfläche (eigene Nachrechnung an den Massen und der großen Halbachse des
-Datensatzes, Zweikörpernäherung); Saturn, Uranus und Neptun verschieben den tatsächlichen
-Schwerpunkt zusätzlich, je nach ihrer gegenseitigen Stellung verstärkend oder schwächend — eine
-vollständige Rechnung mit allen vier Riesenplaneten ist nicht Teil dieser Nachrechnung.
+Vereinfachung trifft die Sonne selbst am stärksten: Mit den tatsächlichen Positionen und Massen
+aus Orrerys eigenen Datensätzen lag ihr Mittelpunkt 1800 bis 2050 zwischen 0,06 und 2,11
+$R_\odot$ vom Schwerpunkt des Sonnensystems entfernt, im Mittel 1,21 $R_\odot$; Jupiter allein
+verschiebt den Schwerpunkt um 1,07 $R_\odot$, den größten Einzelanteil unter den vier
+Riesenplaneten (fachgeprüfte Mehrkörper-Nachrechnung, [Sonne](objekt:sun)).
 Innerhalb der Bahn wandelt der Newton-gestützte Keplerlöser die mittlere in die exzentrische
 Anomalie um; für die größte Exzentrizität im Katalog, $e = 0{,}438$ bei Eris, genügen ihm
 höchstens fünf Schritte, bei $e = 0{,}99$ höchstens zehn. Bei $e = 0{,}999$ — deutlich über
@@ -120,7 +119,7 @@ Sichtbarkeit im Bild ohnehin fraglich wäre.
 
 Alle Rotationspole im Katalog stehen als feste Rektaszension und Deklination, ohne Präzession
 und ohne die periodischen Glieder, die der IAU-Bericht bei manchen Monden zusätzlich angibt
-([Archinal et al. 2018](literatur:archinal-2018)); [Miranda und Triton](thema:achsneigung)
+([Archinal et al. 2011](literatur:archinal-2011)); [Miranda und Triton](thema:achsneigung)
 behalten deshalb nur die konstanten Anteile ihrer amtlich komplizierteren Polbahn. Wo überhaupt
 keine Messung vorliegt, weicht der Datensatz auf einen Behelf aus: [Eris'](objekt:eris) Pol
 steht senkrecht auf ihrer eigenen heliozentrischen Bahn, entspricht also einem angenommenen
@@ -176,7 +175,7 @@ Blickrichtung gilt und deshalb mit dem Phasenwinkel wächst — 0,04 bei voller 
 135° und 0,41 bei 160° —, dazu kommt ein kleiner ungefärbter Glanz. Eine Kugel der linearen
 Reflexion $p$ erreicht dadurch, ohne Glanz und Fülllicht, nur die geometrische Albedo
 $0{,}640\,p$: Die Erdkugel zeigt so 0,278 und 0,415 statt der gemessenen 0,434 und 0,293,
-Enceladus 0,64 statt der katalogisierten 1,0 ([Albedo und Helligkeit](thema:photometrie)).
+Enceladus 0,64 statt der gemessenen 1,24 ([Albedo und Helligkeit](thema:photometrie)).
 Die Nachtseite bleibt trotzdem nie ganz schwarz: Ein Fülllicht (`nightFill`), im Standard ein
 Viertel des Tagniveaus, hellt sie mit derselben Textur, aber ohne den Streufaktor auf — eine
 gestalterische Zugabe ohne physikalisches Vorbild, notwendig, damit die verdeckte Seite eines
@@ -252,10 +251,13 @@ Kuipergürtel mischt 60 % kalte klassische Objekte (Neigungsstreuung 3°), 25 % 
   ([Stephenson et al. 2016](literatur:stephenson-2016)); für Orrerys vollen Zeitbereich vom
   Jahr 1 bis 9999 gibt es keine vergleichbar belegte Reihe, und ob die beobachtete
   Tageslängenzunahme über solche Zeiträume überhaupt gleichmäßig bliebe, ist unbekannt.
-- **Plutos Masse und Pol.** Verschiedene Bahnlösungen des Pluto-Charon-Systems verwenden leicht
-  unterschiedliche Systemmassen und Poldefinitionen; welche Fassung als aktuell gültig gilt,
-  ändert sich mit jeder neuen Reduktion der New-Horizons-Daten, ohne dass sich die Fachwelt auf
-  einen einzigen, abschließenden Wert festgelegt hätte.
+- **Haumeas wahre Form und Dichte.** Je nach zugrunde gelegter Formbestimmung ergeben sich rund
+  1859 oder rund 2050 kg/m³ mittlere Dichte; ein homogener Körper passt nicht zur gemessenen
+  Form ([Ortiz et al. 2017](literatur:ortiz-2017)), ein differenzierter dagegen schon
+  ([Dunham et al. 2019](literatur:dunham-2019)), und eine neuere Rechnung sagt für den
+  hydrostatischen Fall sogar eine von jedem Ellipsoid abweichende, „eingeschnürte" Form voraus,
+  die Orrerys Kugelnäherung noch weiter unterläuft und erst eine künftige Bedeckung entscheiden
+  könnte ([Staelen et al. 2026](literatur:staelen-2026)).
 - **Die nächste Fassung des IAU-Rotationsberichts.** Der Bericht von 2018 ist selbst schon eine
   Momentaufnahme, die einzelne Werte (etwa für Uranus und Neptun) bewusst auf dem Stand älterer
   Raumsondenmissionen belässt, weil ein förmlicher Beschluss der zuständigen Arbeitsgruppe noch

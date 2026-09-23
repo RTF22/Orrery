@@ -16,8 +16,10 @@ and names its source; own calculations are marked as such.
 ## Time
 
 Orrery counts Julian days from 1 January 1, 0:00, to 31 December 9999, 0:00 (code constants
-`JD_MIN`/`JD_MAX`); outside that range the Kepler solver could fail, because a linearly
-extrapolated eccentricity would reach or pass one. Within the range, the clock displays the date
+`JD_MIN`/`JD_MAX`); beyond this self-chosen edge, an unchecked, linearly extrapolated
+eccentricity would have consequences — Saturn's $e$ would reach zero in the year 12,563 and go
+negative thereafter, and Neptune's $e$ going backwards in the year −14,828, values the Kepler
+solver rejects ([Formation of the Solar System](thema:entstehung)). Within the range, the clock displays the date
 as UTC but feeds the same number into the orbit calculation as TDB, unconverted. Since
 1 January 2017,
 $\mathrm{TT} - \mathrm{UTC} = 32.184\,\mathrm{s} + 37\,\mathrm{s} = 69.184\,\mathrm{s}$,
@@ -36,8 +38,8 @@ per century against +2.3 ± 0.1 ms from tidal friction alone, [Stephenson et al.
 ([Morrison et al. 2021](literatur:morrison-2021)); a simple extrapolation over millennia would
 therefore be only a rough estimate of our own, not a documented figure. Orrery applies none of
 these corrections; instead, the program flags the period for which its orbital elements are
-actually checked: outside 1800 to 2050, both a body's data panel and the time control show the
-notice "Outside the accuracy window" or "Positions inaccurate" — this warning is, contrary to
+actually checked: outside 1800 to 2050, both a body's data panel and the time control show a
+warning about the reduced accuracy or validity window — this warning is, contrary to
 what one might expect, not mere program text but tied to a tested threshold in the code.
 Regardless of the calendar date, Earth spins uniformly in the model at 23.9345 h, 0.101 s longer
 than one turn of the actual Earth rotation angle; at epoch J2000 the map's null meridian is
@@ -61,13 +63,11 @@ merely different numbers, but opposite signs, because each table only captures t
 effective within its own window, not a true average ([Orbital
 elements](thema:bahnelemente)). Orrery computes no mutual perturbations between the planets;
 each body moves alone around the Sun, which rests at the origin. This simplification affects the
-Sun itself most strongly: the two-body term Sun–Jupiter alone shifts their common center of mass
-by $a_\mathrm{Jup}\,M_\mathrm{Jup}/(M_\odot + M_\mathrm{Jup})$, with the catalog values about
-742,260 km from the Sun's center — that is 1.067 solar radii, roughly 46,600 km above the
-visible surface (own calculation from the dataset's masses and semi-major axis, two-body
-approximation); Saturn, Uranus and Neptune shift the true barycenter further, reinforcing or
-weakening it depending on their mutual configuration — a full calculation with all four giant
-planets is not part of this estimate. Within an orbit, the Newton-based Kepler solver converts
+Sun itself most strongly: with the actual positions and masses from Orrery's own datasets, its
+center lay between 0.06 and 2.11 $R_\odot$ from the Solar System's barycenter from 1800 to 2050,
+1.21 $R_\odot$ on average; Jupiter alone shifts the barycenter by 1.07 $R_\odot$, the largest
+single share among the four giant planets (fact-checked many-body calculation,
+[Sun](objekt:sun)). Within an orbit, the Newton-based Kepler solver converts
 mean into eccentric anomaly; for the largest eccentricity in the catalog, $e = 0.438$ at Eris, it
 needs at most five steps, at $e = 0.99$ at most ten. At $e = 0.999$ — well above any value that
 occurs in the catalog, but a limiting case suited to testing the solver's robustness — 943 of
@@ -113,7 +113,7 @@ the image would be doubtful anyway.
 
 Every rotation pole in the catalog stands as a fixed right ascension and declination, without
 precession and without the periodic terms the IAU report adds for some moons ([Archinal et al.
-2018](literatur:archinal-2018)); [Miranda and Triton](thema:achsneigung) therefore keep only the
+2011](literatur:archinal-2011)); [Miranda and Triton](thema:achsneigung) therefore keep only the
 constant part of their officially more complicated pole path. Where no measurement exists at
 all, the dataset falls back on a substitute: [Eris'](objekt:eris) pole stands perpendicular to
 its own heliocentric orbit, corresponding to an assumed tilt of 0°, while the one actual
@@ -165,7 +165,7 @@ direction and therefore grows with phase angle — 0.04 at full phase, 0.13 at 1
 160° — plus a small uncolored specular term. A sphere of linear reflectance $p$ therefore
 reaches, without specular and fill light, only the geometric albedo $0.640\,p$: the Earth sphere
 shows 0.278 and 0.415 instead of the measured 0.434 and 0.293, Enceladus 0.64 instead of the
-cataloged 1.0 ([Albedo and brightness](thema:photometrie)). The night side is never fully black
+measured 1.24 ([Albedo and brightness](thema:photometrie)). The night side is never fully black
 regardless: a fill light (`nightFill`), a quarter of the day level by default, brightens it with
 the same texture but without the scattering factor — a design addition without a physical model,
 needed so the hidden side of a body does not vanish without a trace on screen. Orrery draws
@@ -240,10 +240,13 @@ individual orbits over time.
   ([Stephenson et al. 2016](literatur:stephenson-2016)); for Orrery's full time range from
   year 1 to 9999 there is no comparably documented series, and whether the observed increase
   in day length would even stay uniform over such spans is unknown.
-- **Pluto's mass and pole.** Different orbital solutions for the Pluto-Charon system use
-  slightly different system masses and pole definitions; which version currently counts as
-  valid changes with every new reduction of the New Horizons data, without the field having
-  settled on one final value.
+- **Haumea's true shape and density.** Depending on the adopted shape determination, the
+  derived mean density is about 1859 or about 2050 kg/m³; a homogeneous body does not fit the
+  measured shape ([Ortiz et al. 2017](literatur:ortiz-2017)), a differentiated one does
+  ([Dunham et al. 2019](literatur:dunham-2019)), and a more recent calculation even predicts,
+  for the hydrostatic case, a "pinched" shape departing from any ellipsoid — undercutting
+  Orrery's sphere approximation even further — that only a future occultation could decide
+  ([Staelen et al. 2026](literatur:staelen-2026)).
 - **The next edition of the IAU rotation report.** The 2018 report is itself already a
   snapshot that deliberately leaves individual values (for Uranus and Neptune, for instance) at
   the level of older spacecraft missions, because a formal decision by the responsible working
