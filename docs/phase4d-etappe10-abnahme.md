@@ -600,7 +600,7 @@ Massenbestimmung; der Text kennzeichnet das. Vorschlag: zur Kenntnis nehmen, bei
 begutachteten Fassung nachführen.
 
 **DE/EN-Asymmetrie in `thema-kirkwood-luecken` (§5.1/§7):** Fehlender Verweis auf `objekt:jupiter`
-in der englischen Einleitung. Vorschlag: kleinen Formfix vormerken (mechanisch, kleinstes
+in der englischen Einleitung (behoben, siehe Nacharbeit nach der Schlussprüfung). Vorschlag: kleinen Formfix vormerken (mechanisch, kleinstes
 Modell).
 
 **Fünfte Prüfskript-Warnung `mckinnon-2016` und der Falsch-Fehler `trujillo-2007` (§3):** Beide
@@ -654,3 +654,8 @@ umgestellt, Belichtung folgt `blickzielVon` (22); Testgrenzen für Task 2 (23); 
 Sichel von hinten beleuchtet (24); Plutos Einstufung folgt `objekt-pluto` (IAU 2006 mit
 geophysikalischer Gegenposition als offene Frage) (25); unbelegte Datensatzwerte werden im Text
 gekennzeichnet, nicht erfunden zitiert (26).
+
+## Nacharbeit nach der Schlussprüfung
+
+- Der englische Kirkwood-Text verlinkt nun wie der deutsche auf `objekt:jupiter` in der Einleitung (Befund aus §5.1/§7 behoben).
+- Schlusssatz zur Wort- und Trailerprüfung: Die Wort- und Trailerprüfung vor dem Commit erfolgte wie in der lokalen Projektanleitung beschrieben (Ergebnis 0), ohne Suchmuster in dieser Datei.

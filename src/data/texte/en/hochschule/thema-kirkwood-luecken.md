@@ -3,7 +3,7 @@
 Plot the semi-major axes of all main-belt asteroids and the distribution is not smooth: at
 several places the frequency drops to a fraction of its surroundings, while at two neighbouring
 places bodies actually cluster instead. The location of these gaps follows from Kepler's third law
-for orbits whose period stands in a ratio of small integers to Jupiter's (a mean-motion resonance),
+for orbits whose period stands in a ratio of small integers to [Jupiter's](objekt:jupiter) (a mean-motion resonance),
 as derived in [Orbital resonances](thema:resonanzen):
 
 $$a = a_\mathrm{J} \left( \frac{p-q}{p} \right)^{2/3}$$
