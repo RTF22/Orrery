@@ -44,7 +44,9 @@ def stufe(quelle, ziel, breite, spiegeln):
 def vergleich(a, b):
     bild_a = Image.open(a).convert("RGB")
     bild_b = Image.open(b).convert("RGB")
-    groesse = min(bild_a.size, bild_b.size)
+    # min() auf den Tupeln würde lexikografisch vergleichen (erst Breite,
+    # dann bei Gleichstand Höhe) statt je Kante die kleinere zu nehmen.
+    groesse = (min(bild_a.width, bild_b.width), min(bild_a.height, bild_b.height))
     feld_a = np.asarray(bild_a.resize(groesse, Image.LANCZOS)).astype(float)
     feld_b = np.asarray(bild_b.resize(groesse, Image.LANCZOS)).astype(float)
     return {"abweichung": round(float(np.abs(feld_a - feld_b).mean()), 3)}
