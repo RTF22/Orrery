@@ -3,7 +3,7 @@
  *
  * Aufruf aus dem Projektstamm, nach `npm run build`:
  *   node scripts/deploy.ts             hochladen
- *   node scripts/deploy.ts --trocken   nur verbinden und Zielverzeichnis auflisten (legt nichts an)
+ *   node scripts/deploy.ts --trocken   Dateiliste und Gesamtgröße von dist/ zeigen, dann nur verbinden und Zielverzeichnis auflisten (legt nichts an)
  *
  * Zugangsdaten stehen in `.env.local` (git-ignoriert), Vorlage in `.env.example`:
  *   DEPLOY_HOST, DEPLOY_USER, DEPLOY_PASSWORD, DEPLOY_DIR, optional DEPLOY_PORT, DEPLOY_SECURE.
@@ -18,8 +18,8 @@
  * Hauptlauf startet nur beim direkten Aufruf der Datei.
  */
 import { Client } from 'basic-ftp';
-import { existsSync, readdirSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { existsSync, readdirSync, statSync } from 'node:fs';
+import { join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export interface DeployKonfig {
@@ -73,10 +73,82 @@ export function veralteteNamen(entfernt: readonly string[], lokal: readonly stri
   return entfernt.filter((name) => !vorhanden.has(name));
 }
 
+export interface DistDatei {
+  /** Pfad relativ zur Wurzel, immer mit `/` wie auf dem Server. */
+  readonly pfad: string;
+  readonly bytes: number;
+}
+
+/** Alle Dateien unter `wurzel` (rekursiv), alphabetisch nach Pfad. */
+export function dateienUnter(wurzel: string): DistDatei[] {
+  const liste: DistDatei[] = [];
+  const gehe = (ordner: string): void => {
+    for (const eintrag of readdirSync(ordner, { withFileTypes: true })) {
+      const voll = join(ordner, eintrag.name);
+      if (eintrag.isDirectory()) gehe(voll);
+      else liste.push({ pfad: relative(wurzel, voll).split(sep).join('/'), bytes: statSync(voll).size });
+    }
+  };
+  gehe(wurzel);
+  return liste.sort((a, b) => (a.pfad < b.pfad ? -1 : a.pfad > b.pfad ? 1 : 0));
+}
+
+/** Größe in Zehnerpotenzen wie die Ausgabe von `vite build`, mit Dezimalkomma. */
+export function groesse(bytes: number): string {
+  if (bytes < 1000) return `${bytes} B`;
+  const einheiten = ['kB', 'MB', 'GB'] as const;
+  let wert = bytes / 1000;
+  let i = 0;
+  while (wert >= 1000 && i < einheiten.length - 1) {
+    wert /= 1000;
+    i += 1;
+  }
+  return `${wert.toFixed(2).replace('.', ',')} ${einheiten[i]}`;
+}
+
+function anzahlText(anzahl: number): string {
+  return `${anzahl} ${anzahl === 1 ? 'Datei' : 'Dateien'}`;
+}
+
+/**
+ * Lokale Übersicht für den Trockenlauf: je Datei eine Zeile, Summen je oberstem
+ * Ordner, ein Hinweis auf eigene Musik, zuletzt die Gesamtgröße.
+ */
+export function uebersichtZeilen(dateien: readonly DistDatei[]): string[] {
+  const zeilen = dateien.map((d) => `  ${d.pfad}  ${groesse(d.bytes)}`);
+  const ordner = new Map<string, { anzahl: number; bytes: number }>();
+  for (const d of dateien) {
+    const kopf = d.pfad.includes('/') ? `${d.pfad.split('/')[0]}/` : '(Stamm)';
+    const summe = ordner.get(kopf) ?? { anzahl: 0, bytes: 0 };
+    summe.anzahl += 1;
+    summe.bytes += d.bytes;
+    ordner.set(kopf, summe);
+  }
+  zeilen.push('Summen je Ordner:');
+  for (const [kopf, summe] of [...ordner].sort(([a], [b]) => (a < b ? -1 : 1))) {
+    zeilen.push(`  ${kopf}  ${anzahlText(summe.anzahl)}, ${groesse(summe.bytes)}`);
+  }
+  if (ordner.has('musik/')) {
+    zeilen.push('Hinweis: musik/ stammt aus public/musik/ (git-ignoriert) und würde mit hochgeladen.');
+  }
+  const gesamt = dateien.reduce((summe, d) => summe + d.bytes, 0);
+  zeilen.push(`Gesamt: ${anzahlText(dateien.length)}, ${groesse(gesamt)}`);
+  return zeilen;
+}
+
 async function hauptlauf(): Promise<void> {
   const trocken = process.argv.includes('--trocken');
   const stamm = resolve(fileURLToPath(import.meta.url), '..', '..');
   const dist = join(stamm, 'dist');
+
+  if (trocken) {
+    if (existsSync(join(dist, 'index.html'))) {
+      console.log('Lokal in dist/ (würde hochgeladen):');
+      for (const zeile of uebersichtZeilen(dateienUnter(dist))) console.log(zeile);
+    } else {
+      console.log('dist/ fehlt, die lokale Übersicht entfällt (zuerst `npm run build`)');
+    }
+  }
 
   try {
     process.loadEnvFile(join(stamm, '.env.local'));

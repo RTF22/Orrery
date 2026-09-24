@@ -103,7 +103,7 @@ passend zur Vite-Basis `/Orrery/`. Hochgeladen wird per FTPS auf den Webspace:
 
 ```
 cp .env.example .env.local   # Zugangsdaten eintragen (git-ignoriert)
-npm run deploy:trocken       # nur verbinden, Zielverzeichnis auflisten
+npm run deploy:trocken       # Dateiliste und Größe von dist/, dann nur verbinden und auflisten
 npm run deploy               # bauen und dist/ hochladen
 ```
 
