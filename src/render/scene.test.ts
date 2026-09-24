@@ -79,7 +79,9 @@ function fakeContext(): import('./renderer').RenderContext {
   return {
     scene: new THREE.Scene(),
     camera: new THREE.PerspectiveCamera(),
-    renderer: { getPixelRatio: () => 1 } as unknown as THREE.WebGLRenderer,
+    renderer: {
+      getPixelRatio: () => 1, capabilities: { maxTextureSize: 16384 },
+    } as unknown as THREE.WebGLRenderer,
     resize: () => {},
     setPixelRatioCap: () => {},
     afterResize: null,
@@ -265,5 +267,14 @@ describe('buildScene — Zeiger und Treffer', () => {
     expect(szene.trefferBei(x, y, 'maus')).toBeNull();
 
     testLinien = new Map();
+  });
+});
+
+describe('buildScene — Texturstand', () => {
+  it('meldet den Texturstand aller Körper mit Stufen, anfangs ohne geladene Stufe', () => {
+    const handle = buildScene(fakeContext(), fakeOverlay, (k) => k);
+    const stand = handle.texturStand();
+    expect(Object.keys(stand)).toHaveLength(29);
+    expect(Object.values(stand).every((b) => b === 0)).toBe(true);
   });
 });

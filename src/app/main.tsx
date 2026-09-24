@@ -61,8 +61,12 @@ function App(): React.JSX.Element {
     }
     const szene = buildScene(ctx, overlay, (key) => t(key));
     if (import.meta.env.DEV) {
-      // Für die Abnahme der Klickflächen: Kamera und Szene ohne Klickweg abfragen.
-      Object.assign(window as unknown as Record<string, unknown>, { kamera: ctx.camera, szene, letztePose });
+      // Für die Abnahme der Klickflächen: Kamera und Szene ohne Klickweg
+      // abfragen, dazu den Stand der Texturstufen für die Ladezeitmessung.
+      Object.assign(
+        window as unknown as Record<string, unknown>,
+        { kamera: ctx.camera, szene, letztePose, texturStand: () => szene.texturStand() },
+      );
     }
     const postfx = createPostFx(ctx);
     // Ziehen dreht, Rad und Zwei-Finger-Geste zoomen; Tippen fährt zum

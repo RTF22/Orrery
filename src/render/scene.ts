@@ -6,7 +6,7 @@ import { createRingViews } from './rings';
 import { createBeltViews } from './belts';
 import { createOrbitLines } from './orbits';
 import { createStarfield } from './starfield';
-import { createLabelOverlay } from './labels';
+import { createLabelOverlay, apparentRadiusPixels } from './labels';
 import type { LabelEintrag } from './labels';
 import { createCameraController } from './camera/controller';
 import { createExposureMeter } from './exposure';
@@ -18,7 +18,7 @@ import { kmToUnits, worldToRender } from './units';
 import { findeTreffer, projiziereZug, FANG_PX } from './treffer';
 import type { Bahnzug, Kandidaten, Zeigerart } from './treffer';
 import { TEXTUREN } from '../data/texturen';
-import { erzeugeKtx2Lader } from './texturen';
+import { erzeugeKtx2Lader, erzeugeTexturSteuerung, obergrenzeFuer, type TexturBedarf } from './texturen';
 
 /**
  * Abstand der Erde von der Sonne in Render-Einheiten — der Fixpunkt der
@@ -41,6 +41,8 @@ export interface SceneHandle {
   hervorgehoben: () => string | null;
   /** Trefferprüfung gegen die Kandidaten des zuletzt berechneten Bildes, für Tippen/Klick. */
   trefferBei: (x: number, y: number, art: Zeigerart) => string | null;
+  /** Geladene Texturbreite je Körper, für Messungen (window.texturStand im DEV-Build). */
+  texturStand: () => Record<string, number>;
 }
 
 /**
@@ -58,16 +60,25 @@ export function buildScene(
   const ringe = createRingViews(ctx.scene);
   const koerper = createBodyViews(ctx.scene, (id) => ringe.ringTextur(id));
 
-  // Start: die erste Stufe jedes Körpers (Entwurf Phase 5 §5.4). Bis sie
-  // steht — und dauerhaft, wenn sie scheitert — bleibt die Ausweichfarbe.
-  const texturLader = erzeugeKtx2Lader(ctx.renderer);
-  for (const [id, stufen] of Object.entries(TEXTUREN)) {
-    const erste = stufen[0]!;
-    texturLader.lade(erste.pfad).then(
-      (textur) => koerper.setzeTextur(id, textur, erste.breite),
-      () => { /* Ausweichfarbe bleibt; kein Log-Spam bei fehlender Datei. */ },
-    );
-  }
+  // Texturstufen (Entwurf Phase 5 §5.4): Start mit der ersten Stufe jedes
+  // Körpers, danach Nachladen nach dargestelltem Durchmesser.
+  const texturen = erzeugeTexturSteuerung(
+    erzeugeKtx2Lader(ctx.renderer), TEXTUREN,
+    (id, textur, breite) => koerper.setzeTextur(id, textur, breite),
+  );
+  texturen.start();
+  const texturBedarf = (): TexturBedarf[] => {
+    const hoehePx = overlay.clientHeight * ctx.renderer.getPixelRatio();
+    const bedarf: TexturBedarf[] = [];
+    for (const [id, mesh] of koerper.meshes) {
+      if (!mesh.visible) continue;
+      bedarf.push({
+        id,
+        durchmesserPx: 2 * apparentRadiusPixels(mesh.scale.x, mesh.position.length(), ctx.camera.fov, hoehePx),
+      });
+    }
+    return bedarf;
+  };
 
   const guertel = createBeltViews(ctx.scene);
   const bahnen = createOrbitLines(ctx.scene);
@@ -137,6 +148,11 @@ export function buildScene(
       bahnen.update(cameraKm, state.visible, state.display.orbits, jd, state.scale, hover);
 
       koerper.update(jd, state.scale, cameraKm, state.visible, belichtet, state.display.shadows);
+
+      texturen.pruefe(
+        performance.now(), texturBedarf, state.camera.targetId,
+        obergrenzeFuer(state.quality.tier, ctx.renderer.capabilities.maxTextureSize),
+      );
 
       // Das Licht sitzt an der (kamerarelativen) Sonnenposition.
       const sonnenpositionKm = scaledPositionAt('sun', bodyIndex, jd, state.scale);
@@ -212,5 +228,6 @@ export function buildScene(
     },
     hervorgehoben: () => hover,
     trefferBei: (x, y, art) => findeTreffer({ x, y }, kandidaten(), FANG_PX[art]),
+    texturStand: () => texturen.stand(),
   };
 }

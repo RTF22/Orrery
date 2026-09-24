@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { detectTier, deckeStufe, QUALITY_SETTINGS } from './quality';
 import { beltCount } from '../sim/belts';
+import { TEXTUR_OBERGRENZE } from '../render/texturen';
 
 describe('detectTier', () => {
   it('bleibt bei guter Framezeit auf hoher Stufe', () => {
@@ -54,5 +55,11 @@ describe('QUALITY_SETTINGS', () => {
     expect(QUALITY_SETTINGS.low.beltParticles).toBe(beltCount('low'));
     expect(QUALITY_SETTINGS.medium.beltParticles).toBe(beltCount('medium'));
     expect(QUALITY_SETTINGS.high.beltParticles).toBe(beltCount('high'));
+  });
+
+  it('hält die Texturobergrenzen in render/texturen.ts gleich (dort gespiegelt, weil render/ nicht aus app/ importiert)', () => {
+    expect(TEXTUR_OBERGRENZE.low).toBe(QUALITY_SETTINGS.low.textureSize);
+    expect(TEXTUR_OBERGRENZE.medium).toBe(QUALITY_SETTINGS.medium.textureSize);
+    expect(TEXTUR_OBERGRENZE.high).toBe(QUALITY_SETTINGS.high.textureSize);
   });
 });
