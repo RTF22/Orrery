@@ -113,6 +113,33 @@ nie geleert. `public/.htaccess` regelt Kompression und Cache-Dauern auf dem Serv
 Bis zur Fertigstellung wird nicht veröffentlicht; das Skript läuft ausschließlich
 von Hand.
 
+## Eigene Musik
+
+Orrery bringt keine Musik mit. Wer die Seite betreibt, kann eigene Stücke hinterlegen:
+
+1. MP3-Dateien in den Ordner `musik/` der ausgelieferten Seite legen (auf dem Webspace
+   neben `index.html`; lokal in `public/musik/`, der Ordner ist git-ignoriert und wird
+   von `npm run deploy` mit hochgeladen).
+2. Daneben die Liste `musik/stuecke.json` anlegen:
+
+   ```json
+   [
+     { "datei": "morgen.mp3", "titel": "Morgen", "urheber": "Name", "link": "https://example.org" },
+     { "datei": "abend.mp3" }
+   ]
+   ```
+
+   Pflicht ist nur `datei` (Dateiname ohne Ordner); `titel`, `urheber` und `link`
+   erscheinen, wenn vorhanden, in der Zeile zum laufenden Stück.
+
+Ohne Liste oder mit leerer Liste zeigt Orrery keine Musikbedienung und bleibt still.
+Mit Liste steht im Kino-Abschnitt „Aus / Nur Kino / Immer", ein Lautstärkeregler und
+„Stumm (M)". Die Stücke laufen in gemischter Folge. Lautheit und Format der Dateien
+gleicht Orrery nicht an.
+
+**Rechte:** Für die hinterlegten Stücke ist allein der Betreiber der Seite
+verantwortlich, einschließlich Lizenz, Namensnennung und Nutzungsrechten.
+
 ## Aufbau
 
 Vier Schichten mit streng einseitiger Abhängigkeit, jede kennt nur die unter ihr

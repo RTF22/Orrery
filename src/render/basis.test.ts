@@ -18,7 +18,7 @@ describe('Basis-Transcoder', () => {
     const htaccess = readFileSync('public/.htaccess', 'utf8') as string;
     expect(htaccess).toContain('AddType image/ktx2 .ktx2');
     expect(htaccess).toContain('AddType application/wasm .wasm');
-    expect(htaccess).toMatch(/FilesMatch "\\\.\(jpg\|jpeg\|png\|webp\|ktx2\)\$"/);
+    expect(htaccess).toMatch(/FilesMatch "\\\.\(jpg\|jpeg\|png\|webp\|ktx2\|mp3\)\$"/);
     expect(htaccess).toMatch(/DEFLATE[^\n]*application\/wasm/);
   });
 });

@@ -17,8 +17,8 @@ AddType application/wasm .wasm
   <FilesMatch "-[A-Za-z0-9_-]{8}\.(js|css)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
-  # Texturen tragen keinen Hash im Namen: einen Tag cachen, danach mit ETag nachfragen.
-  <FilesMatch "\.(jpg|jpeg|png|webp|ktx2)$">
+  # Texturen und Musik tragen keinen Hash im Namen: einen Tag cachen, danach mit ETag nachfragen.
+  <FilesMatch "\.(jpg|jpeg|png|webp|ktx2|mp3)$">
     Header set Cache-Control "public, max-age=86400, must-revalidate"
   </FilesMatch>
   # Einstieg immer nachfragen, damit ein neues Bündel sofort greift.
