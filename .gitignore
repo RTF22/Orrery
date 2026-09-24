@@ -6,3 +6,5 @@ coverage/
 .superpowers/
 *.tsbuildinfo
 .playwright-mcp/
+.cache/
+__pycache__/
