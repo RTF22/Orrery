@@ -164,14 +164,16 @@ Verhalten bei feinem Zeiger und breitem Fenster nicht verändert.
 
 | Prüfpunkt | Ergebnis |
 |---|---|
-| Reiter öffnen/schließen | |
-| Bogenwechsel | |
-| Gerät drehen | |
-| Objektwahl per Tipp | |
-| Szene starten/anhalten | |
-| Zeit-/Maßstabsregler | |
-| Qualitätsstufe | |
-| Bildrate | |
+| Reiter öffnen/schließen | in Ordnung |
+| Bogenwechsel | in Ordnung |
+| Gerät drehen | in Ordnung |
+| Objektwahl per Tipp | in Ordnung |
+| Szene starten/anhalten | in Ordnung |
+| Zeit-/Maßstabsregler | in Ordnung |
+| Qualitätsstufe | in Ordnung |
+| Bildrate | in Ordnung |
+
+Ergebnis (Jens, 24.09.2026): Handprüfung auf dem A55 ohne Befund.
 
 ## 6. Rulings
 
