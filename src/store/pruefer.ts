@@ -29,6 +29,7 @@ const AUFZAEHLUNGEN: Readonly<Record<string, readonly string[]>> = {
   'ui.language': ['de', 'en'],
   'scale.preset': Object.keys(SCALE_PRESETS),
   'ui.info.niveau': NIVEAUS,
+  'ton.modus': ['aus', 'kino', 'immer'],
 };
 
 /** Felder, die null sein dürfen, mit dem Typ des Nicht-null-Falls. */
@@ -55,7 +56,8 @@ const BOOLESCHE_RECORDS: ReadonlySet<string> = new Set(['visible', 'ui.panels'])
  * der Zeitbereich aus sim/time.ts (1. Januar 1 bis 31. Dezember 9999).
  * `camera.azimuth` und `camera.fly.yaw` (Winkel ohne Grenze, wickeln um) und
  * `cinema.seed` (beliebige ganze Zahl) bleiben bewusst ohne Eintrag hier. Die
- * Lage im Flug reicht wie `camera.distance` bis 10¹³ km.
+ * Lage im Flug reicht wie `camera.distance` bis 10¹³ km. Zwilling des
+ * Lautstärkereglers in `ui/panels/MusikSteuerung.tsx`.
  */
 const BEREICHE: Readonly<Record<string, readonly [number, number]>> = {
   'time.jd': [JD_MIN, JD_MAX],
@@ -80,6 +82,7 @@ const BEREICHE: Readonly<Record<string, readonly [number, number]>> = {
   'ui.info.breiteRem': [INFO_BREITE_MIN_REM, INFO_BREITE_MAX_REM],
   'ui.info.teilung': [INFO_TEILUNG_MIN, INFO_TEILUNG_MAX],
   'ui.leiste.breiteRem': [LEISTE_BREITE_MIN_REM, LEISTE_BREITE_MAX_REM],
+  'ton.lautstaerke': [0, 1],
 };
 
 /** Markierung für „dieses Feld fällt weg" — undefined wäre als Wert mehrdeutig. */

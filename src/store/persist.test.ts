@@ -379,3 +379,19 @@ describe('ui.leiste in den Profilen', () => {
     expect(zurueckgesetzt(aktuell).ui.leiste).toEqual({ breiteRem: 26 });
   });
 });
+
+describe('ton in den Profilen', () => {
+  it('reist mit der Sitzung, nicht im Link und nicht in Ansichten', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    state.ton = { modus: 'immer', lautstaerke: 0.3, stumm: true };
+    expect(patchFuer(state, 'sitzung')).toHaveProperty('ton');
+    expect(patchFuer(state, 'link')).not.toHaveProperty('ton');
+    expect(patchFuer(state, 'ansicht')).not.toHaveProperty('ton');
+  });
+
+  it('bleibt beim Zurücksetzen erhalten', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    state.ton = { modus: 'aus', lautstaerke: 0.2, stumm: true };
+    expect(zurueckgesetzt(state).ton).toEqual({ modus: 'aus', lautstaerke: 0.2, stumm: true });
+  });
+});

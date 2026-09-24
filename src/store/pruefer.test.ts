@@ -149,3 +149,15 @@ describe('pruefeZustand: Flug', () => {
     expect(z.camera.fly).toEqual(DEFAULT_STATE.camera.fly);
   });
 });
+
+describe('pruefeZustand — ton', () => {
+  it('übernimmt gültige Werte', () => {
+    expect(pruefeZustand({ ton: { modus: 'immer', lautstaerke: 0.8, stumm: true } }))
+      .toEqual({ ton: { modus: 'immer', lautstaerke: 0.8, stumm: true } });
+  });
+
+  it('verwirft unbekannte Modi, Lautstärken außerhalb 0 bis 1 und falsche Typen', () => {
+    expect(pruefeZustand({ ton: { modus: 'laut', lautstaerke: 1.5, stumm: 'ja' } })).toEqual({});
+    expect(pruefeZustand({ ton: { lautstaerke: -0.1 } })).toEqual({});
+  });
+});

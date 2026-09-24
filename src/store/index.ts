@@ -48,6 +48,7 @@ export const DEFAULT_STATE: AppState = {
   },
   visible: {},
   quality: { tier: 'auto' },
+  ton: { modus: 'kino', lautstaerke: 0.5, stumm: false },
   ui: {
     hidden: false,
     panels: { time: true, scale: true, camera: true, tree: true },
@@ -65,6 +66,7 @@ interface Actions {
   setUi(patch: Partial<AppState['ui']>): void;
   setInfo(patch: Partial<AppState['ui']['info']>): void;
   setCinema(patch: Partial<AppState['cinema']>): void;
+  setTon(patch: Partial<AppState['ton']>): void;
   toggleVisible(id: string): void;
   replaceAll(state: AppState): void;
 }
@@ -88,6 +90,7 @@ export const useStore = create<AppState & Actions>((set) => ({
   setUi: (p) => set((s) => ({ ui: { ...s.ui, ...p } })),
   setInfo: (p) => set((s) => ({ ui: { ...s.ui, info: { ...s.ui.info, ...p } } })),
   setCinema: (p) => set((s) => ({ cinema: { ...s.cinema, ...p } })),
+  setTon: (p) => set((s) => ({ ton: { ...s.ton, ...p } })),
   // Blendet aus, indem der Schlüssel auf `false` gesetzt wird; blendet wieder
   // ein, indem der Schlüssel vollständig entfernt wird. `visible` enthält so
   // stets nur echte Abweichungen vom Standard „sichtbar" (DEFAULT_STATE.visible

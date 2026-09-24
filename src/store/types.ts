@@ -2,6 +2,7 @@ import type { Niveau } from '../data/themen';
 
 export type CameraMode = 'free' | 'attached' | 'follow' | 'cinema' | 'fly';
 export type QualityTier = 'auto' | 'low' | 'medium' | 'high';
+export type TonModus = 'aus' | 'kino' | 'immer';
 
 /**
  * Grenzen des Infopanels (Entwurf 4c §3.2, §4.6). Zwillinge der Griffe in
@@ -82,6 +83,11 @@ export interface AppState {
   /** Nur Abweichungen vom Standard „sichtbar" — siehe toggleVisible in index.ts. */
   visible: Record<string, boolean>;
   quality: { tier: QualityTier };
+  /**
+   * Musik aus Dateien des Betreibers (Entwurf Phase 5 §6.2). `stumm` trägt die
+   * Taste M, damit der gewählte Modus erhalten bleibt.
+   */
+  ton: { modus: TonModus; lautstaerke: number; stumm: boolean };
   ui: {
     hidden: boolean;
     panels: Record<string, boolean>;
