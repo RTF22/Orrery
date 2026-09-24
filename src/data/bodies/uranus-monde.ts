@@ -187,7 +187,6 @@ export const uranusMonde: readonly Body[] = [
       albedo: 0.32,
     },
     appearance: {
-      textures: { albedo: '' },
       // Mittelhelles Eisgrau, Albedo 0,32 laut Fact Sheet.
       color: '#a8a5a0',
     },
@@ -222,7 +221,6 @@ export const uranusMonde: readonly Body[] = [
       albedo: 0.39,
     },
     appearance: {
-      textures: { albedo: '' },
       // Hellstes Eisgrau der fünf großen Uranusmonde, Albedo 0,39.
       color: '#c7c3ba',
     },
@@ -255,7 +253,6 @@ export const uranusMonde: readonly Body[] = [
       albedo: 0.21,
     },
     appearance: {
-      textures: { albedo: '' },
       // Dunkelstes der fünf großen Uranusmonde, Albedo nur 0,21.
       color: '#6b6560',
     },
@@ -288,7 +285,6 @@ export const uranusMonde: readonly Body[] = [
       albedo: 0.27,
     },
     appearance: {
-      textures: { albedo: '' },
       // Mittleres Eisgrau, Albedo 0,27 — größter Uranusmond.
       color: '#948e84',
     },
@@ -321,7 +317,6 @@ export const uranusMonde: readonly Body[] = [
       albedo: 0.23,
     },
     appearance: {
-      textures: { albedo: '' },
       // Mittleres, leicht rötlich getöntes Grau, Albedo 0,23 — äußerster
       // der fünf großen Uranusmonde.
       color: '#8a7f74',

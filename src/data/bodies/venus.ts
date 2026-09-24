@@ -37,7 +37,6 @@ export const venus: Body = {
     albedo: 0.689,
   },
   appearance: {
-    textures: { albedo: 'textures/venus/albedo.jpg' },
     color: '#e8c39e',
   },
   info: { nameKey: 'body.venus.name' },

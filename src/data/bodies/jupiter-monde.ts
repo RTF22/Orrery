@@ -166,7 +166,6 @@ export const jupiterMonde: readonly Body[] = [
       albedo: 0.62,
     },
     appearance: {
-      textures: { albedo: 'textures/io/albedo.jpg' },
       color: '#d8c257',
     },
     info: { nameKey: 'body.io.name' },
@@ -198,7 +197,6 @@ export const jupiterMonde: readonly Body[] = [
       albedo: 0.68,
     },
     appearance: {
-      textures: { albedo: 'textures/europa/albedo.jpg' },
       color: '#d9cdb0',
     },
     info: { nameKey: 'body.europa.name' },
@@ -232,7 +230,6 @@ export const jupiterMonde: readonly Body[] = [
       albedo: 0.44,
     },
     appearance: {
-      textures: { albedo: 'textures/ganymede/albedo.jpg' },
       color: '#8a8175',
     },
     info: { nameKey: 'body.ganymede.name' },
@@ -264,7 +261,6 @@ export const jupiterMonde: readonly Body[] = [
       albedo: 0.19,
     },
     appearance: {
-      textures: { albedo: 'textures/callisto/albedo.jpg' },
       color: '#5f564c',
     },
     info: { nameKey: 'body.callisto.name' },

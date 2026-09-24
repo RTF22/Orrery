@@ -139,7 +139,6 @@ export const plutoSystem: readonly Body[] = [
       // die von New Horizons gezeigte, tholingefärbte Oberfläche (u. a. das
       // helle Stickstoffeisfeld Tombaugh Regio, umgeben von dunkleren,
       // rötlich-braunen Regionen wie Cthulhu Macula).
-      textures: { albedo: 'textures/pluto/albedo.jpg' },
       color: '#d3b58f',
     },
     info: { nameKey: 'body.pluto.name' },
@@ -201,7 +200,6 @@ export const plutoSystem: readonly Body[] = [
       albedo: 0.42,
     },
     appearance: {
-      textures: { albedo: 'textures/charon/albedo.jpg' },
       // Grau mit rötlicher Polkappe (Mordor Macula, Tholin-Ablagerung aus
       // entwichenem Methan von Pluto); hier ein neutrales Grau als
       // Ausweichfarbe, da eine einzelne Polkappe erst eine Textur zeigen kann.

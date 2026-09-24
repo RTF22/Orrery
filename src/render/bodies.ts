@@ -9,12 +9,13 @@ import { kmToUnits, worldToRender } from './units';
 import { BLOOM_LAYER } from './postfx';
 import { bodyLighting } from './lighting';
 import type { LightingSettings } from './lighting';
-import { albedoFaktor, farbMittelLinear, mittlereReflexion } from './albedo';
+import { albedoFaktor, farbMittelLinear } from './albedo';
 import {
   MAX_OKKLUDER, sonnenGeometrie, waehleOkkluder,
   SCHATTEN_GLSL_KOERPER_PARS, SCHATTEN_GLSL_KOERPER_ANWENDUNG,
   SCHATTEN_GLSL_VERTEX_PARS, SCHATTEN_GLSL_VERTEX,
 } from './shadows';
+import { TEXTUREN } from '../data/texturen';
 
 /** Untergrenze, damit Geometrie nie auf null kollabiert. */
 export const MIN_RADIUS_UNITS = 1e-4;
@@ -46,6 +47,10 @@ export interface BodyViews {
     schatten: boolean,
   ): void;
   meshes: Map<string, THREE.Mesh>;
+  /** Setzt eine geladene Stufe; eine Stufe, die nicht breiter ist als die sitzende, wird verworfen (dispose). */
+  setzeTextur(id: string, textur: THREE.Texture, breite: number): void;
+  /** Breite der sitzenden Stufe, 0 ohne Textur. */
+  texturBreite(id: string): number;
 }
 
 /**
@@ -119,7 +124,7 @@ type KoerperMaterial = THREE.MeshBasicMaterial | THREE.MeshStandardMaterial;
  *
  * `albedoFaktor` normiert die Reflexion auf die Katalog-Albedo
  * (physical.albedo): vor dem Laden aus der Ausweichfarbe, danach aus dem
- * gemessenen Mittel der Textur — siehe albedo.ts. Er geht auf die
+ * Mittel in `data/texturen.ts` — siehe albedo.ts. Er geht auf die
  * Materialfarbe und auf das Nachtseiten-Emissiv, damit die Nachtseite
  * derselbe Bruchteil der Tagseite bleibt.
  */
@@ -129,68 +134,8 @@ interface KoerperEintrag {
   albedoFaktor: number;
   /** Nur bei MeshStandardMaterial belegt: Die Sonne leuchtet selbst und wird nie beschattet. */
   schatten: SchattenUniforms | null;
-}
-
-/** Messformat der Texturauswertung — dasselbe wie in scripts/textur-mittel.py. */
-const MESS_BREITE = 256;
-const MESS_HOEHE = 128;
-
-/**
- * Mittlere lineare Reflexion der geladenen Textur, über ein verkleinertes
- * Canvas. `null`, wenn kein 2D-Kontext zu haben ist — dann bleibt der
- * Faktor aus der Ausweichfarbe stehen.
- */
-function texturMittelLinear(bild: CanvasImageSource): number | null {
-  const canvas = document.createElement('canvas');
-  canvas.width = MESS_BREITE;
-  canvas.height = MESS_HOEHE;
-  const ctx = canvas.getContext('2d', { willReadFrequently: true });
-  if (ctx === null) return null;
-  ctx.drawImage(bild, 0, 0, MESS_BREITE, MESS_HOEHE);
-  const { data } = ctx.getImageData(0, 0, MESS_BREITE, MESS_HOEHE);
-  return mittlereReflexion(data, MESS_BREITE, MESS_HOEHE);
-}
-
-/**
- * Lädt die Albedo-Textur asynchron nach und setzt sie erst bei Erfolg auf
- * das Material. Bis dahin — und bei einem Fehlschlag dauerhaft — bleibt die
- * bereits gesetzte Fallback-Farbe des Körpers sichtbar. Würde man `map`
- * sofort auf das von TextureLoader zurückgegebene (noch leere) Texturobjekt
- * setzen, bliebe die Kugel bis zum Laden schwarz statt in der Fallback-Farbe.
- *
- * Dieselbe Textur dient als `emissiveMap`: Das Fülllicht der Nachtseite
- * zeigt damit die Oberfläche selbst und nicht eine flache Einheitsfarbe.
- */
-function ladeAlbedo(
-  lader: THREE.TextureLoader, pfad: string, eintrag: KoerperEintrag, albedo: number | undefined,
-): void {
-  // Körper ohne belegte Textur (siehe ASSETS.md für die dokumentierten
-  // Lücken) tragen absichtlich einen leeren Pfad. Ohne diese Abfrage würde
-  // TextureLoader den leeren String gegen die Dokument-URL auflösen und pro
-  // Körper einen sinnlosen Netzwerk-Request auslösen, der ohnehin nur im
-  // stillen Fehlerzweig unten landet — die Fallback-Farbe bleibt so oder so.
-  if (pfad === '') return;
-  lader.load(
-    pfad,
-    (textur) => {
-      textur.colorSpace = THREE.SRGBColorSpace;
-      const { material } = eintrag;
-      material.map = textur;
-      if (material instanceof THREE.MeshStandardMaterial) {
-        material.emissiveMap = textur;
-        material.emissive.setRGB(1, 1, 1);
-      }
-      eintrag.basisFarbe.setRGB(1, 1, 1);
-      // Die Karte ist ein kontrastnormiertes Mosaik — erst der Faktor macht
-      // aus ihrem Mittel die Albedo des Körpers (siehe albedo.ts).
-      eintrag.albedoFaktor = albedoFaktor(
-        albedo, texturMittelLinear(textur.image as CanvasImageSource),
-      );
-      material.needsUpdate = true;
-    },
-    undefined,
-    () => { /* Fallback-Farbe bleibt bestehen; kein Log-Spam bei fehlendem Bild. */ },
-  );
+  /** Breite der sitzenden Stufe, 0 ohne Textur. */
+  texturBreite: number;
 }
 
 /**
@@ -201,7 +146,6 @@ function ladeAlbedo(
 export function createBodyViews(
   scene: THREE.Scene, ringTextur?: (bodyId: string) => THREE.Texture | undefined,
 ): BodyViews {
-  const lader = new THREE.TextureLoader();
   const meshes = new Map<string, THREE.Mesh>();
   const eintraege = new Map<string, KoerperEintrag>();
   // Eine einzige leere Textur für alle Körper ohne Ringträger.
@@ -226,6 +170,7 @@ export function createBodyViews(
       albedoFaktor: albedoFaktor(body.physical.albedo, farbMittelLinear(body.appearance.color)),
       schatten: material instanceof THREE.MeshStandardMaterial
         ? neueSchattenUniforms(leereTextur) : null,
+      texturBreite: 0,
     };
     eintraege.set(body.id, eintrag);
 
@@ -251,10 +196,11 @@ export function createBodyViews(
       };
       material.customProgramCacheKey = () => 'schatten';
     }
-    ladeAlbedo(lader, body.appearance.textures.albedo, eintrag, body.physical.albedo);
 
     // Einheitskugel; die tatsächliche Größe kommt über scale.
     const mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 32), material);
+    // Der Name macht das Mesh für Messungen per scene.getObjectByName auffindbar.
+    mesh.name = body.id;
     // Selbstleuchtende Körper zusätzlich auf die Bloom-Ebene: Nur sie
     // bekommen im Post-Processing einen Lichtkranz (siehe postfx.ts).
     if (body.kind === 'star') mesh.layers.enable(BLOOM_LAYER);
@@ -271,6 +217,33 @@ export function createBodyViews(
 
   return {
     meshes,
+    setzeTextur(id, textur, breite) {
+      const eintrag = eintraege.get(id);
+      const stufen = TEXTUREN[id];
+      // Nie herunterstufen (Entwurf Phase 5 §5.4): Kommt eine schmalere
+      // Stufe erst nach einer breiteren an, wird sie verworfen.
+      if (eintrag === undefined || stufen === undefined || breite <= eintrag.texturBreite) {
+        textur.dispose();
+        return;
+      }
+      const { material } = eintrag;
+      const alt = material.map;
+      material.map = textur;
+      if (material instanceof THREE.MeshStandardMaterial) {
+        material.emissiveMap = textur;
+        material.emissive.setRGB(1, 1, 1);
+      }
+      eintrag.basisFarbe.setRGB(1, 1, 1);
+      // Die Karte ist ein kontrastnormiertes Mosaik — erst der Faktor macht
+      // aus ihrem Mittel die Albedo des Körpers (siehe albedo.ts). Alle
+      // Stufen teilen das Mittel der 1k-Stufe, damit der Tausch die
+      // Helligkeit nicht verschiebt; das Bauskript hält sie auf 0,005 beisammen.
+      eintrag.albedoFaktor = albedoFaktor(bodyIndex[id]?.physical.albedo, stufen[0]!.mittel);
+      eintrag.texturBreite = breite;
+      material.needsUpdate = true;
+      alt?.dispose();
+    },
+    texturBreite: (id) => eintraege.get(id)?.texturBreite ?? 0,
     update(jd, s, cameraKm, visible, licht, schatten) {
       positionen.clear();
       radien.clear();

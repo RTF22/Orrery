@@ -34,7 +34,6 @@ export const earth: Body = {
     albedo: 0.434,
   },
   appearance: {
-    textures: { albedo: 'textures/earth/albedo.jpg' },
     color: '#2a6fdb',
     // Kernschattenfarbe (Blutmond): Gestaltungswert nahe einer
     // Farbtemperatur von 2500 K, wie sie das durch die Erdatmosphäre

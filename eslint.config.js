@@ -3,7 +3,9 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['dist/**', 'coverage/**', '.cache/**'],
+    // public/basis/ enthält den unveränderten Basis-Transcoder aus three.js
+    // (Kopie, siehe render/basis.test.ts) — fremder Code, nicht unserer Regeln.
+    ignores: ['dist/**', 'coverage/**', '.cache/**', 'public/basis/**'],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

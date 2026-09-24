@@ -162,7 +162,6 @@ export const neptunMonde: readonly Body[] = [
       albedo: 0.72,
     },
     appearance: {
-      textures: { albedo: 'textures/triton/albedo.jpg' },
       // Blasses Rosa-Weiß: Albedo 0,72 (Stickstoffeisfrost) mit der von
       // Voyager 2 beobachteten „Cantaloupe"-Färbung.
       color: '#e8d4c8',

@@ -206,7 +206,6 @@ export const saturnMonde: readonly Body[] = [
       albedo: 0.6,
     },
     appearance: {
-      textures: { albedo: 'textures/mimas/albedo.jpg' },
       // Helles, leicht bräunliches Eisgrau; Albedo 0,6 laut Fact Sheet.
       color: '#b8b3aa',
     },
@@ -244,7 +243,6 @@ export const saturnMonde: readonly Body[] = [
       albedo: 1.0,
     },
     appearance: {
-      textures: { albedo: 'textures/enceladus/albedo.jpg' },
       // Albedo 1,0 laut Fact Sheet — der hellste Körper des Sonnensystems,
       // deshalb nahezu reines Weiß statt eines Grautons.
       color: '#f5f6f4',
@@ -282,7 +280,6 @@ export const saturnMonde: readonly Body[] = [
       albedo: 0.8,
     },
     appearance: {
-      textures: { albedo: 'textures/tethys/albedo.jpg' },
       // Helles Eis, Albedo 0,8 laut Fact Sheet.
       color: '#d9d5c9',
     },
@@ -317,7 +314,6 @@ export const saturnMonde: readonly Body[] = [
       albedo: 0.7,
     },
     appearance: {
-      textures: { albedo: 'textures/dione/albedo.jpg' },
       // Eisgrau, Albedo 0,7 laut Fact Sheet.
       color: '#c4c0b6',
     },
@@ -350,7 +346,6 @@ export const saturnMonde: readonly Body[] = [
       albedo: 0.7,
     },
     appearance: {
-      textures: { albedo: 'textures/rhea/albedo.jpg' },
       // Eisgrau, Albedo 0,7 laut Fact Sheet.
       color: '#c9c5bb',
     },
@@ -384,7 +379,6 @@ export const saturnMonde: readonly Body[] = [
       albedo: 0.22,
     },
     appearance: {
-      textures: { albedo: 'textures/titan/albedo.jpg' },
       // Orange-bräunlich wegen des dichten, undurchsichtigen Dunstschleiers;
       // Albedo 0,22 laut Fact Sheet, keine feste Oberfläche sichtbar.
       color: '#e3a857',
@@ -429,7 +423,6 @@ export const saturnMonde: readonly Body[] = [
       albedo: 0.275,
     },
     appearance: {
-      textures: { albedo: 'textures/iapetus/albedo.jpg' },
       // Mittleres Grau als Rückfallebene: Iapetus' Vorderseite (Cassini
       // Regio) ist mit Albedo 0,05 einer der dunkelsten Körper des
       // Sonnensystems, seine Rückseite mit Albedo 0,5 vergleichsweise hell

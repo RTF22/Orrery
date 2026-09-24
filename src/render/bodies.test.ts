@@ -1,9 +1,8 @@
 // @vitest-environment jsdom
-// createBodyViews legt beim Aufbau Texturen über THREE.TextureLoader an, das
-// dafür ein document braucht. In jsdom werden die Bilder nie geladen (kein
-// Netzwerk), die Erfolgs-Rückrufe laufen also nie — genau richtig: Geprüft
-// werden Material, Shader-Einbau und Uniforms, nicht das Nachladen.
-import { describe, it, expect } from 'vitest';
+// createBodyViews lädt selbst keine Texturen mehr — das übernimmt scene.ts
+// über den KTX2-Lader (texturen.ts), der hier nicht mit aufgebaut wird.
+// Geprüft werden Material, Shader-Einbau, Uniforms und setzeTextur().
+import { describe, it, expect, vi } from 'vitest';
 import * as THREE from 'three';
 import { pickRadiusUnits, MIN_RADIUS_UNITS, poleAusrichtung, createBodyViews } from './bodies';
 import { getBody } from '../data/index';
@@ -12,6 +11,8 @@ import { kmToUnits } from './units';
 import { poleVector } from '../sim/frames';
 import type { LightingSettings } from './lighting';
 import { J2000 } from '../sim/time';
+import { albedoFaktor } from './albedo';
+import { TEXTUREN } from '../data/texturen';
 
 describe('pickRadiusUnits', () => {
   it('rechnet den skalierten Radius in Render-Einheiten um', () => {
@@ -167,5 +168,66 @@ describe('createBodyViews.update — Okkluder je Bild', () => {
     views.update(J2000, SCALE_PRESETS.schaubild, new THREE.Vector3(0, 0, 0), {}, LICHT, true);
     expect(uniforms['uOkkluderAnzahl']!.value).toBe(0);
     expect(uniforms['uRingAktiv']!.value).toBe(0);
+  });
+});
+
+describe('createBodyViews — Texturstufen', () => {
+  const erzeuge = () => createBodyViews(new THREE.Scene());
+
+  it('benennt jedes Mesh nach seiner ID', () => {
+    const { meshes } = erzeuge();
+    for (const [id, mesh] of meshes) expect(mesh.name).toBe(id);
+  });
+
+  it('setzt die erste Stufe als map und emissiveMap', () => {
+    const views = erzeuge();
+    const textur = new THREE.Texture();
+    views.setzeTextur('earth', textur, 1024);
+    const material = views.meshes.get('earth')!.material as THREE.MeshStandardMaterial;
+    expect(material.map).toBe(textur);
+    expect(material.emissiveMap).toBe(textur);
+    expect(views.texturBreite('earth')).toBe(1024);
+  });
+
+  it('ersetzt eine Stufe durch eine breitere und gibt die alte frei', () => {
+    const views = erzeuge();
+    const alt = new THREE.Texture();
+    const neu = new THREE.Texture();
+    const freigabe = vi.spyOn(alt, 'dispose');
+    views.setzeTextur('earth', alt, 1024);
+    views.setzeTextur('earth', neu, 8192);
+    expect((views.meshes.get('earth')!.material as THREE.MeshStandardMaterial).map).toBe(neu);
+    expect(freigabe).toHaveBeenCalledOnce();
+    expect(views.texturBreite('earth')).toBe(8192);
+  });
+
+  it('verwirft eine verspätete schmalere Stufe', () => {
+    const views = erzeuge();
+    const breit = new THREE.Texture();
+    const spaet = new THREE.Texture();
+    const freigabe = vi.spyOn(spaet, 'dispose');
+    views.setzeTextur('earth', breit, 2048);
+    views.setzeTextur('earth', spaet, 1024);
+    expect((views.meshes.get('earth')!.material as THREE.MeshStandardMaterial).map).toBe(breit);
+    expect(freigabe).toHaveBeenCalledOnce();
+    expect(views.texturBreite('earth')).toBe(2048);
+  });
+
+  it('lässt Körper ohne Eintrag in TEXTUREN bei ihrer Ausweichfarbe', () => {
+    const views = erzeuge();
+    const textur = new THREE.Texture();
+    const freigabe = vi.spyOn(textur, 'dispose');
+    views.setzeTextur('deimos', textur, 1024);
+    expect((views.meshes.get('deimos')!.material as THREE.MeshStandardMaterial).map).toBeNull();
+    expect(freigabe).toHaveBeenCalledOnce();
+    expect(views.texturBreite('deimos')).toBe(0);
+  });
+
+  it('nimmt den Albedo-Faktor aus dem Mittel der Datenliste', () => {
+    const views = erzeuge();
+    views.setzeTextur('earth', new THREE.Texture(), 1024);
+    views.update(J2000, SCALE_PRESETS.realistisch, new THREE.Vector3(0, 0, 0), {}, LICHT, false);
+    expect(views.meshes.get('earth')!.userData['albedoFaktor'])
+      .toBeCloseTo(albedoFaktor(getBody('earth').physical.albedo, TEXTUREN['earth']![0]!.mittel), 12);
   });
 });

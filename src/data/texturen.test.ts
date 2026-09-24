@@ -53,4 +53,12 @@ describe('TEXTUREN', () => {
     for (const stufen of Object.values(TEXTUREN)) summe += statSync(`public/${stufen[0]!.pfad}`).size;
     expect(summe).toBeLessThan(4_000_000);
   });
+
+  it('liefert keine Albedo-JPEGs mehr aus', async () => {
+    // @ts-expect-error -- 'node:fs' hat ohne @types/node keine Typdeklaration (wie in src/data/index.test.ts).
+    const { existsSync } = await import('node:fs');
+    for (const id of Object.keys(TEXTUREN)) {
+      expect(existsSync(`public/textures/${id}/albedo.jpg`), id).toBe(false);
+    }
+  });
 });

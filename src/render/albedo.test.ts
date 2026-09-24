@@ -4,7 +4,11 @@ import {
   LUECKEN_SCHWELLE_LINEAR, ALBEDO_FAKTOR_MIN, ALBEDO_FAKTOR_MAX,
 } from './albedo';
 import { bodies } from '../data/index';
+import { TEXTUREN } from '../data/texturen';
 import fixture from './__fixtures__/textur-mittel.json';
+
+/** Prüfspalte der Fixture — Schlüssel `textures/<koerper>/albedo.jpg` wie im bisherigen Katalog. */
+const soll = fixture.mittel as Record<string, number>;
 
 /** RGBA-Feld aus Grauwerten (eine Zahl je Pixel), zeilenweise. */
 function grauBild(zeilen: number[][]): { daten: number[]; breite: number; hoehe: number } {
@@ -80,20 +84,17 @@ describe('farbMittelLinear', () => {
 });
 
 describe('Katalog — kein Körper erreicht die Klemme', () => {
-  it('hat für jede belegte Textur einen Messwert in der Fixture', () => {
-    for (const body of bodies) {
-      const pfad = body.appearance.textures.albedo;
-      if (pfad === '' || body.kind === 'star') continue;
-      expect(fixture.mittel[pfad as keyof typeof fixture.mittel], pfad).toBeGreaterThan(0);
+  it('hat für jeden Körper mit Texturstufen einen Messwert in der Fixture', () => {
+    for (const id of Object.keys(TEXTUREN)) {
+      expect(soll[`textures/${id}/albedo.jpg`], id).toBeGreaterThan(0);
     }
   });
 
   it('liegt mit albedo / Texturmittel für jeden Körper strikt innerhalb der Klemme', () => {
     for (const body of bodies) {
-      const pfad = body.appearance.textures.albedo;
-      if (pfad === '' || body.kind === 'star') continue;
-      const mittel = fixture.mittel[pfad as keyof typeof fixture.mittel] as number;
-      const roh = body.physical.albedo! / mittel;
+      const stufen = TEXTUREN[body.id];
+      if (stufen === undefined || body.kind === 'star') continue;
+      const roh = body.physical.albedo! / stufen[0]!.mittel;
       expect(roh, body.id).toBeGreaterThan(ALBEDO_FAKTOR_MIN);
       expect(roh, body.id).toBeLessThan(ALBEDO_FAKTOR_MAX);
     }
@@ -101,7 +102,7 @@ describe('Katalog — kein Körper erreicht die Klemme', () => {
 
   it('liegt mit albedo / Ausweichfarbe für Körper ohne Textur ebenfalls innerhalb der Klemme', () => {
     for (const body of bodies) {
-      if (body.appearance.textures.albedo !== '' || body.kind === 'star') continue;
+      if (TEXTUREN[body.id] !== undefined || body.kind === 'star') continue;
       const roh = body.physical.albedo! / farbMittelLinear(body.appearance.color);
       expect(roh, body.id).toBeGreaterThan(ALBEDO_FAKTOR_MIN);
       expect(roh, body.id).toBeLessThan(ALBEDO_FAKTOR_MAX);

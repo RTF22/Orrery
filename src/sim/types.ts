@@ -41,7 +41,6 @@ export interface PhysicalData {
 }
 
 export interface Appearance {
-  textures: { albedo: string; normal?: string; specular?: string; emissive?: string };
   /** Fallback-Farbe sowie Farbe von Marker und Bahnlinie. */
   color: string;
   atmosphere?: { colorInner: string; colorOuter: string; heightKm: number };

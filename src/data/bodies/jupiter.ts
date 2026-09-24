@@ -32,7 +32,6 @@ export const jupiter: Body = {
     albedo: 0.538,
   },
   appearance: {
-    textures: { albedo: 'textures/jupiter/albedo.jpg' },
     color: '#d9b382',
   },
   info: { nameKey: 'body.jupiter.name' },

@@ -123,7 +123,6 @@ export const marsMonde: readonly Body[] = [
       // Textur seit Task 11 gesetzt (Viking-Mosaik, siehe ASSETS.md); die
       // Ausweichfarbe bleibt als Rückfallebene bestehen (dunkles,
       // rötlich-graues Regolith).
-      textures: { albedo: 'textures/phobos/albedo.jpg' },
       color: '#6b6259',
     },
     info: { nameKey: 'body.phobos.name' },
@@ -164,7 +163,6 @@ export const marsMonde: readonly Body[] = [
       // eine nicht-amtliche Fan-Rekonstruktion, siehe ASSETS.md) — die
       // Ausweichfarbe trägt den Körper deshalb dauerhaft (dunkles,
       // rötlich-graues Regolith, wie Phobos).
-      textures: { albedo: '' },
       color: '#7a7067',
     },
     info: { nameKey: 'body.deimos.name' },

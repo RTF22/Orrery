@@ -94,7 +94,6 @@ export const moon: Body = {
     albedo: 0.12,
   },
   appearance: {
-    textures: { albedo: 'textures/moon/albedo.jpg' },
     color: '#9c9c9c',
   },
   info: { nameKey: 'body.moon.name' },

@@ -17,6 +17,8 @@ import { AU_KM } from '../sim/orbit';
 import { kmToUnits, worldToRender } from './units';
 import { findeTreffer, projiziereZug, FANG_PX } from './treffer';
 import type { Bahnzug, Kandidaten, Zeigerart } from './treffer';
+import { TEXTUREN } from '../data/texturen';
+import { erzeugeKtx2Lader } from './texturen';
 
 /**
  * Abstand der Erde von der Sonne in Render-Einheiten — der Fixpunkt der
@@ -55,6 +57,18 @@ export function buildScene(
   // Abfrage gereicht (siehe RingViews.ringTextur).
   const ringe = createRingViews(ctx.scene);
   const koerper = createBodyViews(ctx.scene, (id) => ringe.ringTextur(id));
+
+  // Start: die erste Stufe jedes Körpers (Entwurf Phase 5 §5.4). Bis sie
+  // steht — und dauerhaft, wenn sie scheitert — bleibt die Ausweichfarbe.
+  const texturLader = erzeugeKtx2Lader(ctx.renderer);
+  for (const [id, stufen] of Object.entries(TEXTUREN)) {
+    const erste = stufen[0]!;
+    texturLader.lade(erste.pfad).then(
+      (textur) => koerper.setzeTextur(id, textur, erste.breite),
+      () => { /* Ausweichfarbe bleibt; kein Log-Spam bei fehlender Datei. */ },
+    );
+  }
+
   const guertel = createBeltViews(ctx.scene);
   const bahnen = createOrbitLines(ctx.scene);
   // Einmalig aufgebaut: Sterne stehen fest auf einer sehr großen Kugel um den

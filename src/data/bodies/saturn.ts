@@ -33,7 +33,6 @@ export const saturn: Body = {
     albedo: 0.499,
   },
   appearance: {
-    textures: { albedo: 'textures/saturn/albedo.jpg' },
     color: '#e3c16f',
     // NASA/JPL NSSDC Saturnian Rings Fact Sheet,
     // https://nssdc.gsfc.nasa.gov/planetary/factsheet/satringfact.html,

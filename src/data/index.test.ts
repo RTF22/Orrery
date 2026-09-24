@@ -102,27 +102,6 @@ describe('Katalog-Invarianten', () => {
     }
   });
 
-  it('verweist nur auf vorhandene Texturdateien', async () => {
-    // Ein Tippfehler im Pfad fiele sonst erst im Browser auf, und dort nur
-    // als stumm bleibende Ausweichfarbe (siehe ladeAlbedo in render/bodies.ts).
-    // @ts-expect-error -- 'node:fs' hat ohne @types/node keine Typdeklaration;
-    // das Paket wird bewusst nicht als neue Abhängigkeit ergänzt (siehe
-    // Task-11-Vorgabe „keine neuen Abhängigkeiten"). Zur Laufzeit unter
-    // Vitest/Node funktioniert der dynamische Import unverändert.
-    const { existsSync } = await import('node:fs');
-    // Geprüft werden alle vier Texturarten, nicht nur albedo — ein toter
-    // Pfad bei normal/specular/emissive fiel bisher durch diesen Test durch
-    // (siehe Fixrunde Task 11, Sonne trug einen nie existierenden
-    // emissive-Pfad).
-    for (const body of bodies) {
-      const { albedo, normal, specular, emissive } = body.appearance.textures;
-      for (const pfad of [albedo, normal, specular, emissive]) {
-        if (pfad === undefined || pfad === '') continue;
-        expect(existsSync(`public/${pfad}`), `${body.id}: ${pfad}`).toBe(true);
-      }
-    }
-  });
-
   it('führt Phobos und Deimos in der Marsäquatorebene', () => {
     for (const id of ['phobos', 'deimos']) {
       const mond = bodyIndex[id];

@@ -3,9 +3,13 @@
 # Kein Verzeichnislisting, keine Rückschlüsse auf den Ordnerinhalt.
 Options -Indexes
 
+# KTX2-Texturen und der Basis-Transcoder (Entwurf Phase 5 §5.5).
+AddType image/ktx2 .ktx2
+AddType application/wasm .wasm
+
 # Textinhalte komprimiert ausliefern; das JS-Bündel schrumpft damit auf rund ein Viertel.
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json image/svg+xml
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json image/svg+xml application/wasm
 </IfModule>
 
 <IfModule mod_headers.c>
@@ -14,7 +18,7 @@ Options -Indexes
     Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
   # Texturen tragen keinen Hash im Namen: einen Tag cachen, danach mit ETag nachfragen.
-  <FilesMatch "\.(jpg|jpeg|png|webp)$">
+  <FilesMatch "\.(jpg|jpeg|png|webp|ktx2)$">
     Header set Cache-Control "public, max-age=86400, must-revalidate"
   </FilesMatch>
   # Einstieg immer nachfragen, damit ein neues Bündel sofort greift.

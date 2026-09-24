@@ -5,16 +5,26 @@ import { exposureFor } from './exposure';
 import { SCALE_PRESETS } from '../sim/scale';
 import { projiziereZug } from './treffer';
 
-// createBodyViews lädt beim Aufbau Texturen über THREE.TextureLoader, was in
-// der Node-Testumgebung (kein document) fehlschlagen würde — hier interessiert
-// nur die Bahnlinien-Verdrahtung, daher ein leerer Ersatz.
+// Die Körper laden nichts mehr selbst (siehe texturen.ts unten); hier
+// interessiert nur die Bahnlinien-Verdrahtung, daher ein leerer Ersatz.
 const koerperUpdateSpion = vi.fn();
 vi.mock('./bodies', () => ({
-  createBodyViews: () => ({ meshes: new Map(), update: koerperUpdateSpion }),
+  createBodyViews: () => ({
+    meshes: new Map(), update: koerperUpdateSpion, setzeTextur: vi.fn(), texturBreite: () => 0,
+  }),
 }));
 
-// Dieselbe Begründung wie bei createBodyViews: createRingViews lädt beim
-// Aufbau die Ringtextur über THREE.TextureLoader (siehe rings.ts).
+// Der KTX2-Lader braucht eine echte Grafikkarte und Worker; geprüft wird er
+// im Browser. Hier bleibt jede Ladung offen.
+vi.mock('./texturen', async (original) => ({
+  ...(await original<typeof import('./texturen')>()),
+  erzeugeKtx2Lader: () => ({ lade: () => new Promise(() => {}) }),
+}));
+
+// Die Ringe laden ihre Textur weiterhin beim Aufbau über THREE.TextureLoader
+// (siehe rings.ts), was in der Node-Testumgebung (kein document) fehlschlagen
+// würde — hier interessiert nur die Bahnlinien-Verdrahtung, daher ein leerer
+// Ersatz.
 vi.mock('./rings', () => ({
   createRingViews: () => ({ update: vi.fn(), dispose: vi.fn() }),
 }));

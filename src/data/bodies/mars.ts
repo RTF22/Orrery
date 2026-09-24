@@ -41,7 +41,6 @@ export const mars: Body = {
     albedo: 0.170,
   },
   appearance: {
-    textures: { albedo: 'textures/mars/albedo.jpg' },
     color: '#c1502e',
   },
   info: { nameKey: 'body.mars.name' },

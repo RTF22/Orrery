@@ -31,7 +31,6 @@ export const mercury: Body = {
     albedo: 0.142,
   },
   appearance: {
-    textures: { albedo: 'textures/mercury/albedo.jpg' },
     color: '#8c8680',
   },
   info: { nameKey: 'body.mercury.name' },

@@ -77,7 +77,6 @@ export const uranus: Body = {
     albedo: 0.488,
   },
   appearance: {
-    textures: { albedo: 'textures/uranus/albedo.jpg' },
     color: '#9fd9e0',
     // Streifen von der Innenkante des ζ-Rings (37 850 km) bis knapp hinter
     // die Außenkante des ε-Rings (51 178 km), mit Luft für dessen

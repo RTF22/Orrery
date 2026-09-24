@@ -102,7 +102,7 @@ describe('Bezugsebene parentEquator', () => {
         radiusKm: 1000, massKg: 1e24, rotationPeriodH: 24,
         pole: { raDeg: polRa, decDeg: polDec }, rotationAtEpochDeg: 0,
       },
-      appearance: { textures: { albedo: '' }, color: '#ffffff' },
+      appearance: { color: '#ffffff' },
       info: { nameKey: 'x' },
     };
     const trabant: Body = {
