@@ -58,8 +58,11 @@ Auf `63edc93` (24.09.2026, eigener Lauf für diese Abnahme):
   aktuelle Stand 1 523,05 kB liegt rund 48,74 kB unter dieser neuen Schwelle.
 - Wort- und Trailerprüfung der lokalen Projektanleitung für alle Commits und neuen Dateien
   dieser Etappe: Ergebnis 0.
-- Schlussprüfung: ohne kritische oder wichtige Befunde, mehrere kleine Punkte als „Bekannte
-  Unschärfen“ in §7 ergänzt; Branch bereit zum Fast-Forward.
+- Schlussprüfung: ohne kritische Befunde; ein wichtiger Befund (fehlende Freigabe von Lader und
+  spät eintreffenden Ladungen beim Abbau) und mehrere kleine Punkte als „Bekannte Unschärfen“ in
+  §7 ergänzt, Branch bereit zum Fast-Forward. Nacharbeit (Commit `257750a`, siehe §7/§8): der
+  wichtige Befund und zwei der kleinen (Konstante, Kommentare ohne Ziel) sind behoben. Stand
+  danach: **5235 Tests**, Hauptchunk **1 523,15 kB** (vorher 1 523,05 kB).
 
 ## 3. Probe und Kodierung, Stufen und Größen
 
@@ -146,6 +149,13 @@ neue JPEG-Quellen unter `assets-quellen/texturen/`, abzüglich der gelöschten a
 und Mars (27 528 890 Bytes, rund 26,3 MiB); die 8k-Stufe der Erde bleibt mit 12 990 043 Bytes
 deutlich kleiner (weniger feine, schlecht komprimierbare Strukturen als bei den anderen vier
 Körpern).
+
+Beleg (Nacharbeit, per `git ls-tree -r -l <rev> -- public/textures assets-quellen/texturen`):
+vor der Etappe (`1e1274c`) 30 Dateien / 8 782 272 Bytes, danach (`db37710`) 77 Dateien /
+186 697 022 Bytes — Differenz 177 914 750 Bytes (169,68 MiB), deckungsgleich mit der
+KTX2-Summe oben (die verschobenen JPEG-Quellen ändern die Baumgröße per Saldo nicht, nur den
+Pfad). Dieselbe Abfrage bestätigt die vier größten Einzeldateien mit exakt den oben genannten
+Bytezahlen.
 
 ## 4. Messungen
 
@@ -287,19 +297,30 @@ Aus dem Ledger (zurückgestellt, kein Merge-Hindernis):
 - Task 1: Lageprüfung nur an 3 von 6 Kodierungen durchgeführt (Mond fehlt).
 - Task 1: Pyright meldet `Image.LANCZOS`/`FLIP_TOP_BOTTOM` und `spec None` in
   `textur-stufe.py` (nur Typprüfung, das Skript läuft).
-- Task 2: `texturen-bauen.ts` vergleicht bei der 1k-Summe wörtlich `breite === 1024` statt der
-  Konstante `ETC1S_BREITE`.
+- Task 2: `texturen-bauen.ts` verglich bei der 1k-Summe wörtlich `breite === 1024` statt der
+  Konstante `ETC1S_BREITE` — **behoben** in der Nacharbeit (Commit `257750a`).
 - Task 3: `eslint.config.js` schließt `public/basis/**` aus (fremder, unminifizierter
   Emscripten-Code) — nicht im Plan vorgesehen, aber sachlich nötig, damit `npm run lint` den
   kopierten Transcoder nicht prüft.
-- Task 4: Kein `dispose()` für den `KTX2Loader` in `buildScene.dispose` — Ursache der Warnung
-  „Multiple active KTX2 loaders“ im StrictMode des DEV-Builds (siehe §4.2 und §8).
+- Task 4: Kein `dispose()` für den `KTX2Loader` in `buildScene.dispose` und keine Freigabe spät
+  eintreffender Texturen nach dem Abbau — Ursache der Warnung „Multiple active KTX2 loaders“ im
+  StrictMode des DEV-Builds (siehe §4.2 und §8) — **behoben** in der Nacharbeit (Commit
+  `257750a`): `TexturLader.freigeben()`, `TexturSteuerung.beenden()`, Aufruf in `scene.ts
+  dispose()` vor den übrigen Aufräumaufrufen. Browser-Kontrolle danach: frischer Navigate, 3 s
+  gewartet, keine Konsolenwarnung mehr, `texturStand()` weiter 29 × mindestens 1024.
 - Task 4: `benoetigteStufe` erlaubt Stufe 0 auch bei einer Obergrenze unter 1024 (gewollt,
   praktisch nicht erreichbar, da die kleinste Obergrenze 1024 ist).
 - Task 5: Die Zeit, bis das Kameraziel nach „alle texturiert“ seine breitere Stufe erhält,
   streut stark (3,4–5 589,9 ms) durch den Prüftakt und belegte Nachladeplätze (das
   Standardkameraziel Sonne kann einen der zwei Plätze belegen) — Bestandsverhalten, von der
   Korrektur `63edc93` unberührt.
+- Task 5 Korrektur: Im Test „fordert eine Stufe, die schon der Start lädt, nicht ein zweites Mal
+  an“ ist der erste `pruefe`-Aufruf seit der Korrektur `63edc93` wirkungslos (Startladungen noch
+  offen); die Aussage des Tests trägt der zweite Aufruf nach Abschluss der Startladungen.
+- Task 6 (Kommentare): In `pluto-system.ts:137` und `zwergplaneten.ts:88,142,202,254` verwies
+  die Wendung „Ausweichfarbe für die Ladezeit der Textur (unten)“ auf keine Zeile mehr im
+  selben Block (die Texturzeile war beim Entfernen von `appearance.textures` in Task 3
+  entfallen) — **behoben** in der Nacharbeit (Commit `257750a`): Verweis auf `data/texturen.ts`.
 
 ## 8. Fragen an Jens
 
@@ -310,9 +331,8 @@ Aus dem Ledger (zurückgestellt, kein Merge-Hindernis):
 2. **Repositoryzuwachs rund 170 MiB** durch die 47 neuen KTX2-Dateien (§3.4) — soll das so
    bleiben, oder gibt es eine Grenze, ab der zum Beispiel auf weniger hohe Stufen oder eine
    andere Ablage ausgewichen werden soll?
-3. **Fehlende Freigabe des `KTX2Loader`** beim Abbau der Szene (§7, Task 4) — löst im
-   Entwicklungslauf die Warnung „Multiple active KTX2 loaders“ aus (StrictMode-Doppelmontage).
-   Nur als Hinweis vermerkt, falls sie bis zu einer künftigen Aufräumrunde nicht ohnehin
-   behoben ist.
-4. **Handprüfung der Texturen auf dem A55** bei mittlerer Qualitätsstufe — noch offen, wird in
+3. **Handprüfung der Texturen auf dem A55** bei mittlerer Qualitätsstufe — noch offen, wird in
    der Gesamtabnahme 5-5 gesammelt geprüft.
+
+(Die frühere Frage 3, fehlende Freigabe des `KTX2Loader` beim Abbau der Szene, ist mit der
+Nacharbeit behoben — siehe §7, Task 4.)
