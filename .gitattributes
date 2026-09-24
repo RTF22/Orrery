@@ -1,0 +1,3 @@
+# Der Basis-Transcoder wird byteweise mit der Fassung aus three.js verglichen
+# (src/render/basis.test.ts); keine Zeilenend-Umwandlung beim Auschecken.
+public/basis/** -text
