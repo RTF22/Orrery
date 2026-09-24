@@ -210,9 +210,10 @@ vereinbart.
   um rund 27 % und überschätzt den kürzesten (entlang $c = 514\,\mathrm{km}$) um rund 51 %
   (Herleitung) — die Kugel trifft also weder die lange noch die kurze Achse, sondern liegt dazwischen.
   Weder Ring noch Monde noch der dunkle rote Fleck sind Teil des Modells; alle drei erscheinen
-  allenfalls als Teil der statischen Textur (`textures/haumea/albedo.jpg`, eine stilisierte, an Farbe
-  und Albedo angenäherte „fictional"-Darstellung von Solar System Scope, `ASSETS.md`), nicht als
-  eigenes physikalisches Element.
+  allenfalls als Teil der statischen Textur (`textures/haumea/albedo-1024.ktx2`, Quelle
+  `assets-quellen/texturen/haumea/albedo.jpg`, eine stilisierte, an Farbe und Albedo angenäherte
+  „fictional"-Darstellung von Solar System Scope, `ASSETS.md`), nicht als eigenes physikalisches
+  Element.
 - **Masse und Dichte:** `massKg` $3{,}952 \times 10^{21}$ folgt
   [Proudfoot et al. 2024](literatur:proudfoot-2024); zusammen mit der Kugel ergibt sich eine
   Datenblock-Dichte von rund $2034\,\mathrm{kg\,m^{-3}}$ (Herleitung) — zwischen den beiden oben

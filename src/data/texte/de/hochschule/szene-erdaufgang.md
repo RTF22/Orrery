@@ -79,13 +79,13 @@ zu den Tagundnachtgleichen geht er durch die Pole.
 
 ## Modellgrenzen
 
-- **Keine Atmosphäre, keine Wolken:** Die einzige Erdtextur ist eine Albedokarte
-  (`public/textures/earth/albedo.jpg`); eine Wolken- oder Atmosphärenschicht, einen
-  Refraktionsknick am Rand, Dämmerungsfarben, das Chappuis-Band oder Luftleuchten gibt es
-  nicht. Der Terminator folgt dem lambertschen Anteil des Materials mal $1-F$ (Fresnel-Faktor)
-  plus dem Fülllicht der Nachtseite – standardmäßig ein Viertel des Tagniveaus, über die
-  ganze sichtbare Scheibe und damit auch auf der Tagseite; die abgeplattete Sonnenscheibe aus
-  dem Hintergrund-Abschnitt fehlt ebenso.
+- **Keine Atmosphäre, keine Wolken:** Die einzige Erdtextur ist eine Albedokarte in drei
+  Auflösungsstufen (`public/textures/earth/albedo-{1024,2048,8192}.ktx2`); eine Wolken- oder
+  Atmosphärenschicht, einen Refraktionsknick am Rand, Dämmerungsfarben, das Chappuis-Band oder
+  Luftleuchten gibt es nicht. Der Terminator folgt dem lambertschen Anteil des Materials mal
+  $1-F$ (Fresnel-Faktor) plus dem Fülllicht der Nachtseite – standardmäßig ein Viertel des
+  Tagniveaus, über die ganze sichtbare Scheibe und damit auch auf der Tagseite; die
+  abgeplattete Sonnenscheibe aus dem Hintergrund-Abschnitt fehlt ebenso.
 - **Feste Rotationslage:** Orrery dreht die Erde gleichförmig mit der siderischen Periode
   23,9345 h ab einem festen Nullpunkt bei Rektaszension 0°
   ([NSSDC Earth Fact Sheet](quelle:nssdc-earth)), ohne Präzession, Nutation oder Polbewegung;

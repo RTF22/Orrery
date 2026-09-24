@@ -336,3 +336,13 @@ Aus dem Ledger (zurückgestellt, kein Merge-Hindernis):
 
 (Die frühere Frage 3, fehlende Freigabe des `KTX2Loader` beim Abbau der Szene, ist mit der
 Nacharbeit behoben — siehe §7, Task 4.)
+
+### Entscheidungen (24.09.2026)
+
+1. **Zehn Textfundstellen** (§5): Texte aktualisieren, wenn möglich — die Freigabe von Jens
+   liegt vor. Alle zehn Stellen (Pfade bei Ceres, Charon, Haumea, Erdaufgang DE/EN sowie die
+   Sonnenauflösung DE/EN) sind auf die ausgelieferten KTX2-Pfade bzw. auf die stufenabhängige
+   Auflösung der Sonnenkarte umgestellt, in diesem Commit.
+2. **Repositoryzuwachs rund 170 MiB** (§3.4, §8 Frage 2): bleibt so.
+3. **Handprüfung der Texturen auf dem A55** (§8 Frage 3): weiterhin offen, wird in der
+   Gesamtabnahme 5-5 gesammelt geprüft.

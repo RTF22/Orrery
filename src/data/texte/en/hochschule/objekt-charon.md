@@ -221,7 +221,8 @@ debris disk of the event (context under [Pluto](objekt:pluto)).
   more closely than Pluto's does (0.52 against a measured 0.62); each body carries its albedo
   normalized to the slider range ([Albedo and brightness](thema:photometrie)).
 - **Polar cap as texture only:** Mordor Macula appears only as part of the static New Horizons
-  global-mosaic texture (`textures/charon/albedo.jpg`, `ASSETS.md`), not as its own physical
+  global-mosaic texture (`textures/charon/albedo-1024.ktx2`, source
+  `assets-quellen/texturen/charon/albedo.jpg`, `ASSETS.md`), not as its own physical
   model; the model has no methane transport from Pluto, no freeze-out and no photolysis, and the
   hemisphere the probe never imaged (about a third of the surface) stays unlit and black.
 - **Shadows:** Charon is a satellite (`isSatellite`, `parent` is Pluto); `waehleOkkluder`

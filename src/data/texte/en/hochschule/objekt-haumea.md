@@ -196,8 +196,9 @@ formation mechanism is not yet reconciled with the two previous models.
   and overestimates the shortest (along $c = 514\,\mathrm{km}$) by about 51% (derivation) — the
   sphere matches neither the long nor the short axis, but sits in between. Neither the ring, nor the
   moons, nor the dark red spot are part of the model; all three appear at most as part of the static
-  texture (`textures/haumea/albedo.jpg`, a stylized "fictional" rendering by Solar System Scope
-  approximating color and albedo, `ASSETS.md`), not as their own physical element.
+  texture (`textures/haumea/albedo-1024.ktx2`, source
+  `assets-quellen/texturen/haumea/albedo.jpg`, a stylized "fictional" rendering by Solar System
+  Scope approximating color and albedo, `ASSETS.md`), not as their own physical element.
 - **Mass and density:** `massKg` $3.952 \times 10^{21}$ follows
   [Proudfoot et al. 2024](literatur:proudfoot-2024); together with the sphere this gives a data-panel
   density of about $2034\,\mathrm{kg\,m^{-3}}$ (derivation) — between the two literature values

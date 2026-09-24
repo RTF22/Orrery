@@ -233,8 +233,9 @@ weiter außen aus der Trümmerscheibe des Ereignisses zusammenwuchsen (Einordnun
   Pluto (0,52 gegen gemessene 0,62); jeder Körper trägt seine Albedo normiert auf den
   Reglerbereich ([Albedo und Helligkeit](thema:photometrie)).
 - **Polkappe nur als Textur:** Mordor Macula erscheint ausschließlich als Teil der statischen
-  New-Horizons-Globalmosaik-Textur (`textures/charon/albedo.jpg`, `ASSETS.md`), nicht als
-  eigenes physikalisches Modell; es gibt keinen Methantransport von Pluto, kein Ausfrieren und
+  New-Horizons-Globalmosaik-Textur (`textures/charon/albedo-1024.ktx2`, Quelle
+  `assets-quellen/texturen/charon/albedo.jpg`, `ASSETS.md`), nicht als eigenes physikalisches
+  Modell; es gibt keinen Methantransport von Pluto, kein Ausfrieren und
   keine Photolyse im Modell, und die von der Sonde nicht angeflogene Rückseite (rund ein Drittel
   der Fläche) bleibt unbelichtet und schwarz.
 - **Schatten:** Charon ist ein Satellit (`isSatellite`, `parent` ist Pluto); `waehleOkkluder`

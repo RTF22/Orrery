@@ -359,8 +359,9 @@ branch, so the Earth probably is as well
   of the base colour to white runs only for lit bodies, the fallback colour #fdb813 remains as a
   factor: the linear map mean (0.874, 0.246, 0.034) becomes (0.859, 0.118, 0.0002), after the tone
   curve and sRGB about (237, 112, 21) of 255 before the glow; the disc appears deep orange, with
-  almost no blue. The artistic map has 2134 km per pixel at the equator and so shows neither
-  granulation nor spots; limb darkening is missing. The brightness slider and exposure do not act
+  almost no blue. The artistic map resolves, depending on the loaded level, between 4269 km per
+  pixel at the equator (1024) and 1067 km per pixel (4096), so it shows neither granulation nor
+  spots at any level; limb darkening is missing. The brightness slider and exposure do not act
   on the Sun. Only the Sun receives the glow (switch "Glow"), with strength 0.7 or 1.1 depending on
   the quality tier, none in the lowest.
 - **Light:** a white point light sits at the displayed centre of the Sun and by default falls off

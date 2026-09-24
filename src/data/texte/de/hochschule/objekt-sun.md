@@ -374,8 +374,9 @@ der Spitze des Riesenasts verschluckt werden, die Erde also wahrscheinlich auch
   Wechsel der Grundfarbe auf Weiß nur für beleuchtete Körper läuft, bleibt die Ausweichfarbe
   #fdb813 als Faktor stehen: Das lineare Kartenmittel (0,874, 0,246, 0,034) wird zu (0,859,
   0,118, 0,0002), nach Tonwertkurve und sRGB rund (237, 112, 21) von 255 vor dem Lichtkranz; die
-  Scheibe erscheint kräftig orange, Blau fehlt fast ganz. Die künstlerische Karte hat am Äquator
-  2134 km je Pixel, zeigt also weder Granulation noch Flecken; Randverdunklung fehlt.
+  Scheibe erscheint kräftig orange, Blau fehlt fast ganz. Die künstlerische Karte löst am
+  Äquator je nach nachgeladener Stufe zwischen 4269 km je Pixel (1024) und 1067 km je Pixel
+  (4096) auf, zeigt also auf keiner Stufe Granulation oder Flecken; Randverdunklung fehlt.
   Helligkeitsregler und Belichtung wirken nicht auf die Sonne. Nur sie bekommt den Lichtkranz
   (Schalter „Leuchten"), je nach Qualitätsstufe mit der Stärke 0,7 oder 1,1, in der niedrigsten
   gar nicht.

@@ -262,9 +262,10 @@ mittelgroßen New-Frontiers-Vorschlags nennt
   aus den Halbachsen hergeleitete polare Abplattung von rund 7,5 Prozent (siehe Kenngrößen)
   fehlt im Modell vollständig, während die äquatoriale Abweichung von der Kreisform mit rund
   0,02 Prozent ohnehin unter jeder Darstellungsgenauigkeit liegt.
-- **Textur:** `textures/ceres/albedo.jpg` ist laut `ASSETS.md` eine „fictional"-Karte von
-  Solar System Scope, also eine an bekannte Farbe und Albedo angenäherte künstlerische
-  Darstellung, obwohl Dawn tatsächlich globale, photographisch belegte Karten geliefert hat
+- **Textur:** `textures/ceres/albedo-1024.ktx2` (Quelle: `assets-quellen/texturen/ceres/albedo.jpg`)
+  ist laut `ASSETS.md` eine „fictional"-Karte von Solar System Scope, also eine an bekannte
+  Farbe und Albedo angenäherte künstlerische Darstellung, obwohl Dawn tatsächlich globale,
+  photographisch belegte Karten geliefert hat
   ([Russell et al. 2016](literatur:russell-2016)); Occators helle Flecken, Ahuna Mons und die
   übrigen unter Oberfläche beschriebenen Strukturen erscheinen darin nicht in ihrer realen
   Form und Lage.

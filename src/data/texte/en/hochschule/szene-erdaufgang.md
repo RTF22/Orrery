@@ -79,10 +79,11 @@ course of a year; only at the equinoxes does it run through the poles.
 
 ## Model limitations
 
-- **No atmosphere, no clouds:** the only Earth texture is an albedo map
-  (`public/textures/earth/albedo.jpg`); there is no cloud or atmosphere layer, no refractive
-  bending at the edge, no twilight colours, no Chappuis band and no airglow. The terminator
-  follows the Lambertian part of the material times $1-F$ (the Fresnel factor) plus the
+- **No atmosphere, no clouds:** the only Earth texture is an albedo map in three resolution
+  levels (`public/textures/earth/albedo-{1024,2048,8192}.ktx2`); there is no cloud or
+  atmosphere layer, no refractive bending at the edge, no twilight colours, no Chappuis band
+  and no airglow. The terminator follows the Lambertian part of the material times $1-F$
+  (the Fresnel factor) plus the
   night-side fill light — by default a quarter of the day level, applied over the whole
   visible disc and hence on the day side too; the flattened solar disc from the Background
   section is likewise absent.

@@ -253,9 +253,10 @@ proposal ([National Academies of Sciences 2022](literatur:national-academies-202
   Parameters and measurement) is entirely absent from the model, while the equatorial
   deviation from a circle, about 0.02 percent, is in any case far below any display
   precision.
-- **Texture:** according to `ASSETS.md`, `textures/ceres/albedo.jpg` is a "fictional" map
-  from Solar System Scope, an artistic rendering approximating known color and albedo, even
-  though Dawn actually delivered global, photographically grounded maps
+- **Texture:** according to `ASSETS.md`, `textures/ceres/albedo-1024.ktx2` (source:
+  `assets-quellen/texturen/ceres/albedo.jpg`) is a "fictional" map from Solar System Scope, an
+  artistic rendering approximating known color and albedo, even though Dawn actually delivered
+  global, photographically grounded maps
   ([Russell et al. 2016](literatur:russell-2016)); Occator's bright spots, Ahuna Mons and the
   other features described under Surface do not appear in it in their real form and
   location.
