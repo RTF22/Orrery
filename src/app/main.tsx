@@ -17,6 +17,7 @@ import { sicherungStarten, startZustand } from './persistenz';
 import { fahreZu } from '../ui/kamerafahrt';
 import { zeigerAusgeblendet } from '../ui/idle';
 import { themaVerfallStarten } from '../ui/info/themaVerfall';
+import { musikStarten } from './musik';
 import { steuerungTakt, tempoAendern } from '../ui/steuerung/anwenden';
 import type { SteuerungUmgebung } from '../ui/steuerung/anwenden';
 import { padLeserErstellen } from '../ui/steuerung/gamepad';
@@ -183,6 +184,14 @@ useStore.getState().replaceAll(startZustand({
 }));
 sicherungStarten(useStore, { ablage, ziel: window });
 themaVerfallStarten();
+
+// Musik des Betreibers (Entwurf Phase 5 §6): ohne musik/stuecke.json bleibt es
+// still. Im Entwicklungslauf liegt der Spieler für Messungen unter window.musik.
+void musikStarten({ basis: import.meta.env.BASE_URL }).then((musik) => {
+  if (import.meta.env.DEV && musik !== null) {
+    (window as unknown as { musik: unknown }).musik = musik.spieler;
+  }
+});
 
 createRoot(wurzelElement).render(
   <StrictMode>
