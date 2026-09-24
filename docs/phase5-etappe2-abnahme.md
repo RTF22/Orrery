@@ -54,6 +54,8 @@ Auf `654327a` (24.09.2026):
   der Grenze.
 - Wort- und Trailerprüfung der lokalen Projektanleitung für alle Commits und neuen
   Dateien dieser Etappe: Ergebnis 0.
+- Schlussprüfung: ohne kritische oder wichtige Befunde, zwei kleine Punkte als „Bekannte
+  Unschärfen“ in §7 ergänzt; Branch bereit zum Fast-Forward.
 
 ## 3. Messung in der Emulation und Kontrollen am Schreibtisch
 
@@ -202,6 +204,11 @@ Aus dem Ledger (zurückgestellt, kein Merge-Hindernis):
 - Task 1: Kommentar zu `GROB_ABFRAGE` nennt den CSS-Zwilling, der erst in Task 3 entsteht
   (planvorgegeben).
 - Task 1: `istGrob`/`useGrob` ohne direkten Test (Nutzung und Test folgen erst in Task 3).
+  Schlussprüfung: `useGrob` ist seither indirekt über `App.test.tsx` geprüft
+  („blendet bei grobem Zeiger die Kürzelübersicht aus“); die Verdrahtung in
+  `src/app/loop.ts` Z. 31 (`deckeStufe(detectTier(messwerte), istGrob() && istSchmal())`)
+  hat weiterhin keinen eigenen Test — `deckeStufe` selbst ist getestet, die
+  Emulationsmessung (§3.1) bestätigt „mittel“ als Ergebnis der Verdrahtung.
 - Task 1: `useMedienabfrage` ruft `bei()` im Effekt zusätzlich auf — ein überflüssiges
   Rendern nach dem Einhängen (planvorgegeben).
 - Task 4, Messweg (kein Code-Befund): Eine frisch erzeugte Playwright-Kontextseite steht
@@ -210,6 +217,11 @@ Aus dem Ledger (zurückgestellt, kein Merge-Hindernis):
   5-s-Zeitrahmen reißt und `quality.tier` bei „auto“ hängen bleibt. Kontrollmessung ohne
   `bringToFront()`: Hochformat blieb bei „auto“, Querformat sprang schon auf „medium“ —
   reine Zufälligkeit der Reihenfolge, kein Fehler der Anwendung.
+- Schlussprüfung: `infoOffen(panels, schmal)` (`src/ui/info/konstanten.ts` Z. 47) — beide
+  Aufrufer (`src/ui/shortcuts/useShortcuts.ts` Z. 74, `src/ui/info/InfoPanel.tsx` Z. 90)
+  übergeben für `schmal` inzwischen stets `false`, weil der Kompaktmodus über den
+  Bogenzustand entscheidet; der `schmal`-Zweig ist toter Pfad, kein Fehlverhalten.
+  Aufräumen (Parameter entfernen) bei Gelegenheit.
 
 ## 8. Fragen an Jens
 
