@@ -61,9 +61,12 @@ export function buildScene(
   const koerper = createBodyViews(ctx.scene, (id) => ringe.ringTextur(id));
 
   // Texturstufen (Entwurf Phase 5 §5.4): Start mit der ersten Stufe jedes
-  // Körpers, danach Nachladen nach dargestelltem Durchmesser.
+  // Körpers, danach Nachladen nach dargestelltem Durchmesser. Der Lader bleibt
+  // in einer eigenen Konstante, damit dispose() ihn (und seinen Worker-Pool)
+  // beim Szenenabbau freigeben kann.
+  const texturLader = erzeugeKtx2Lader(ctx.renderer);
   const texturen = erzeugeTexturSteuerung(
-    erzeugeKtx2Lader(ctx.renderer), TEXTUREN,
+    texturLader, TEXTUREN,
     (id, textur, breite) => koerper.setzeTextur(id, textur, breite),
   );
   texturen.start();
@@ -218,6 +221,11 @@ export function buildScene(
       hover = zeiger === null ? null : findeTreffer(zeiger, kandidaten(), FANG_PX[zeiger.art]);
     },
     dispose() {
+      // Spät eintreffende Ladungen dürfen die verwaiste Szene danach nicht
+      // mehr anfassen (koerper.setzeTextur) — beenden() greift, bevor der
+      // Lader selbst seinen Worker-Pool schließt.
+      texturen.beenden();
+      texturLader.freigeben();
       labels.dispose();
       ringe.dispose();
       guertel.dispose();

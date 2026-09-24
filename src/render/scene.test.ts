@@ -16,9 +16,10 @@ vi.mock('./bodies', () => ({
 
 // Der KTX2-Lader braucht eine echte Grafikkarte und Worker; geprüft wird er
 // im Browser. Hier bleibt jede Ladung offen.
+const freigabeSpion = vi.fn();
 vi.mock('./texturen', async (original) => ({
   ...(await original<typeof import('./texturen')>()),
-  erzeugeKtx2Lader: () => ({ lade: () => new Promise(() => {}) }),
+  erzeugeKtx2Lader: () => ({ lade: () => new Promise(() => {}), freigeben: freigabeSpion }),
 }));
 
 // Die Ringe laden ihre Textur weiterhin beim Aufbau über THREE.TextureLoader
@@ -276,5 +277,12 @@ describe('buildScene — Texturstand', () => {
     const stand = handle.texturStand();
     expect(Object.keys(stand)).toHaveLength(29);
     expect(Object.values(stand).every((b) => b === 0)).toBe(true);
+  });
+
+  it('gibt beim Abbau den Texturlader frei', () => {
+    freigabeSpion.mockClear();
+    const handle = buildScene(fakeContext(), fakeOverlay, (k) => k);
+    handle.dispose();
+    expect(freigabeSpion).toHaveBeenCalledOnce();
   });
 });

@@ -9,6 +9,8 @@ import type { TexturStufe } from '../data/texturen';
  */
 export interface TexturLader {
   lade(pfad: string): Promise<THREE.Texture>;
+  /** Beendet den Worker-Pool (three `KTX2Loader.dispose()`). */
+  freigeben(): void;
 }
 
 /**
@@ -26,6 +28,7 @@ export function erzeugeKtx2Lader(renderer: THREE.WebGLRenderer): TexturLader {
       textur.colorSpace = THREE.SRGBColorSpace;
       return textur;
     },
+    freigeben() { lader.dispose(); },
   };
 }
 
@@ -87,6 +90,12 @@ export interface TexturSteuerung {
   pruefe(jetztMs: number, bedarf: () => readonly TexturBedarf[], zielId: string, obergrenze: number): void;
   /** Geladene Breite je Körper der Liste, 0 = noch keine. */
   stand(): Record<string, number>;
+  /**
+   * Beendet die Steuerung: Nach dem Beenden fordert `pruefe` nichts mehr an,
+   * und jede danach eintreffende Textur wird freigegeben (`textur.dispose()`)
+   * statt an `setze` gereicht; `stand()` bleibt abfragbar.
+   */
+  beenden(): void;
 }
 
 /**
@@ -108,6 +117,9 @@ export function erzeugeTexturSteuerung(
   // verringert im finally, egal ob erfüllt oder gescheitert). Solange er über
   // 0 liegt, bleibt das Nachladen aus — siehe MAX_NACHLADEN-Kommentar.
   let offeneStarts = 0;
+  // Nach beenden(): pruefe() fordert nichts mehr an, eintreffende Texturen
+  // werden freigegeben statt gesetzt (siehe TexturSteuerung.beenden JSDoc).
+  let beendet = false;
 
   function lade(id: string, s: TexturStufe, nachladen: boolean): void {
     angefordert.set(id, Math.max(angefordert.get(id) ?? 0, s.breite));
@@ -115,6 +127,7 @@ export function erzeugeTexturSteuerung(
     else offeneStarts += 1;
     lader.lade(s.pfad).then(
       (textur) => {
+        if (beendet) { textur.dispose(); return; }
         geladen.set(id, Math.max(geladen.get(id) ?? 0, s.breite));
         setze(id, textur, s.breite);
       },
@@ -130,6 +143,7 @@ export function erzeugeTexturSteuerung(
       for (const [id, stufen] of Object.entries(liste)) lade(id, stufen[0]!, false);
     },
     pruefe(jetztMs, bedarf, zielId, obergrenze) {
+      if (beendet) return;
       if (offeneStarts > 0) return;
       if (jetztMs - letztePruefung < PRUEF_ABSTAND_MS) return;
       letztePruefung = jetztMs;
@@ -150,6 +164,9 @@ export function erzeugeTexturSteuerung(
     },
     stand() {
       return Object.fromEntries(Object.keys(liste).map((id) => [id, geladen.get(id) ?? 0]));
+    },
+    beenden() {
+      beendet = true;
     },
   };
 }

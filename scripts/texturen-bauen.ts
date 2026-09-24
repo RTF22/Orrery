@@ -153,7 +153,7 @@ async function main(): Promise<void> {
       const meldung = mittelFehler(koerper.id, breite, mittel, fixture);
       if (meldung !== null) fehler.push(meldung);
       const groesse = statSync(ziel).size;
-      if (breite === 1024) summe1k += groesse;
+      if (breite === ETC1S_BREITE) summe1k += groesse;
       anzahl += 1;
       stufen.push({ breite, pfad, mittel });
       console.log(`${pfad}  ${groesse} Bytes  Mittel ${mittel}`);

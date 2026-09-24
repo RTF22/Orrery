@@ -85,10 +85,10 @@ export const zwergplaneten: readonly Body[] = [
       albedo: 0.090,
     },
     appearance: {
-      // Ausweichfarbe für die Ladezeit der Textur (unten) und für den
-      // seltenen Fehlschlagsfall: dunkles Grau (Albedo 0,09 laut SBDB —
-      // einer der dunkelsten großen Körper des inneren Sonnensystems,
-      // kohlenstoffreiche Oberfläche).
+      // Ausweichfarbe für die Ladezeit der Textur (Stufen in
+      // `data/texturen.ts`) und für den seltenen Fehlschlagsfall: dunkles
+      // Grau (Albedo 0,09 laut SBDB — einer der dunkelsten großen Körper
+      // des inneren Sonnensystems, kohlenstoffreiche Oberfläche).
       color: '#6e6a63',
     },
     info: { nameKey: 'body.ceres.name' },
@@ -139,11 +139,11 @@ export const zwergplaneten: readonly Body[] = [
       albedo: 0.96,
     },
     appearance: {
-      // Ausweichfarbe für die Ladezeit der Textur (unten) und für den
-      // seltenen Fehlschlagsfall: sehr helles, nahezu weißes Grau (Albedo
-      // 0,96 laut Sicardy et al. 2011 — die höchste im gesamten Katalog,
-      // gefrorener Stickstoff auf der Oberfläche, ähnlich Plutos Tombaugh
-      // Regio).
+      // Ausweichfarbe für die Ladezeit der Textur (Stufen in
+      // `data/texturen.ts`) und für den seltenen Fehlschlagsfall: sehr
+      // helles, nahezu weißes Grau (Albedo 0,96 laut Sicardy et al. 2011 —
+      // die höchste im gesamten Katalog, gefrorener Stickstoff auf der
+      // Oberfläche, ähnlich Plutos Tombaugh Regio).
       color: '#f1efe9',
     },
     info: { nameKey: 'body.eris.name' },
@@ -199,9 +199,10 @@ export const zwergplaneten: readonly Body[] = [
       albedo: 0.51,
     },
     appearance: {
-      // Ausweichfarbe für die Ladezeit der Textur (unten) und für den
-      // seltenen Fehlschlagsfall: sehr helles Grauweiß (kristallines
-      // Wassereis an der Oberfläche, hohe Albedo).
+      // Ausweichfarbe für die Ladezeit der Textur (Stufen in
+      // `data/texturen.ts`) und für den seltenen Fehlschlagsfall: sehr
+      // helles Grauweiß (kristallines Wassereis an der Oberfläche, hohe
+      // Albedo).
       color: '#e6e2da',
     },
     info: { nameKey: 'body.haumea.name' },
@@ -251,10 +252,10 @@ export const zwergplaneten: readonly Body[] = [
       albedo: 0.77,
     },
     appearance: {
-      // Ausweichfarbe für die Ladezeit der Textur (unten) und für den
-      // seltenen Fehlschlagsfall: helles, rötlich-oranges Tan (Albedo 0,82
-      // laut Hromakina et al. 2019 — hell wie Eris, aber mit Methaneis und
-      // Tholinen ähnlich Pluto gefärbt).
+      // Ausweichfarbe für die Ladezeit der Textur (Stufen in
+      // `data/texturen.ts`) und für den seltenen Fehlschlagsfall: helles,
+      // rötlich-oranges Tan (Albedo 0,82 laut Hromakina et al. 2019 — hell
+      // wie Eris, aber mit Methaneis und Tholinen ähnlich Pluto gefärbt).
       color: '#d9a679',
     },
     info: { nameKey: 'body.makemake.name' },

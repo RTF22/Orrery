@@ -134,11 +134,12 @@ export const plutoSystem: readonly Body[] = [
       albedo: 0.52,
     },
     appearance: {
-      // Ausweichfarbe für die Ladezeit der Textur (unten) und für den
-      // seltenen Fehlschlagsfall: blasses, bräunliches Tan, angenähert an
-      // die von New Horizons gezeigte, tholingefärbte Oberfläche (u. a. das
-      // helle Stickstoffeisfeld Tombaugh Regio, umgeben von dunkleren,
-      // rötlich-braunen Regionen wie Cthulhu Macula).
+      // Ausweichfarbe für die Ladezeit der Textur (Stufen in
+      // `data/texturen.ts`) und für den seltenen Fehlschlagsfall: blasses,
+      // bräunliches Tan, angenähert an die von New Horizons gezeigte,
+      // tholingefärbte Oberfläche (u. a. das helle Stickstoffeisfeld
+      // Tombaugh Regio, umgeben von dunkleren, rötlich-braunen Regionen wie
+      // Cthulhu Macula).
       color: '#d3b58f',
     },
     info: { nameKey: 'body.pluto.name' },

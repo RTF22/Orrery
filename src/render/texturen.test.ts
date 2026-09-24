@@ -24,6 +24,7 @@ function testLader() {
       aufrufe.push(pfad);
       offen.set(pfad, { erfuelle: () => erfuelle(new THREE.Texture()), scheitere: () => scheitere(new Error('404')) });
     }),
+    freigeben: vi.fn(),
   };
   return { lader, aufrufe, offen };
 }
@@ -214,5 +215,27 @@ describe('erzeugeTexturSteuerung', () => {
       'textures/moon/albedo-1024.ktx2', 'textures/io/albedo-1024.ktx2',
       'textures/earth/albedo-8192.ktx2',
     ]);
+  });
+
+  it('gibt nach dem Beenden eintreffende Texturen frei, statt sie zu setzen', async () => {
+    const { lader, offen } = testLader();
+    const setze = vi.fn();
+    const disposeSpion = vi.spyOn(THREE.Texture.prototype, 'dispose');
+    const steuerung = erzeugeTexturSteuerung(lader, LISTE, setze);
+    steuerung.start();
+    steuerung.beenden();
+    offen.get('textures/earth/albedo-1024.ktx2')!.erfuelle();
+    await ruhe();
+    expect(setze).not.toHaveBeenCalled();
+    expect(disposeSpion).toHaveBeenCalledOnce();
+    disposeSpion.mockRestore();
+  });
+
+  it('fordert nach dem Beenden nichts mehr an', () => {
+    const { lader, aufrufe } = testLader();
+    const steuerung = erzeugeTexturSteuerung(lader, LISTE, vi.fn());
+    steuerung.beenden();
+    steuerung.pruefe(0, () => [{ id: 'earth', durchmesserPx: 3000 }], 'earth', 8192);
+    expect(aufrufe).toEqual([]);
   });
 });
