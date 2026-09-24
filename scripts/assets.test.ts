@@ -61,4 +61,13 @@ describe('Web-App', () => {
     expect(readFileSync('index.html', 'utf8')).toContain('<link rel="manifest" href="/manifest.webmanifest"');
     expect(readFileSync('public/.htaccess', 'utf8')).toContain('AddType application/manifest+json .webmanifest');
   });
+
+  it('führt für jede Größe ein maskierbares Symbol', () => {
+    for (const groesse of [192, 512]) {
+      const symbol = manifest.icons.find(
+        (i) => i.sizes === `${groesse}x${groesse}` && i.purpose === 'maskable',
+      );
+      expect(symbol).toBeDefined();
+    }
+  });
 });

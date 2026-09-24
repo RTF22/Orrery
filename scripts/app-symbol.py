@@ -1,8 +1,9 @@
 """Zeichnet das App-Symbol (schlichtes Orrery-Zeichen) in 192 und 512 Pixeln.
 
 Aufruf aus dem Projektstamm: python scripts/app-symbol.py
-Das Motiv liegt vollständig in der inneren Sicherheitszone (80 % der Fläche),
-damit Android es als maskierbares Symbol rund oder abgerundet beschneiden darf.
+Das Motiv liegt vollständig im Kreis mit 40 % Radius der Kantenlänge
+(Sicherheitszone maskierbarer Symbole), damit Android es als maskierbares
+Symbol rund oder abgerundet beschneiden darf.
 """
 from pathlib import Path
 
@@ -22,16 +23,21 @@ def zeichne(groesse: int) -> Image.Image:
     d = ImageDraw.Draw(bild)
     m = s / 2
 
-    def kreis(r: float, **art: object) -> None:
-        d.ellipse((m - r, m - r, m + r, m + r), **art)
+    def kreis(
+        r: float,
+        fill: tuple[int, int, int] | None = None,
+        outline: tuple[int, int, int] | None = None,
+        width: int = 1,
+    ) -> None:
+        d.ellipse((m - r, m - r, m + r, m + r), fill=fill, outline=outline, width=width)
 
     strich = max(1, round(s * 0.012))
-    kreis(s * 0.24, outline=BAHN, width=strich)
-    kreis(s * 0.36, outline=BAHN, width=strich)
-    kreis(s * 0.11, fill=SONNE)
+    kreis(s * 0.21, outline=BAHN, width=strich)
+    kreis(s * 0.32, outline=BAHN, width=strich)
+    kreis(s * 0.10, fill=SONNE)
     for bahn, winkel_x, winkel_y, farbe, r in (
-        (0.24, 0.866, -0.5, INNEN, 0.045),   # 30° über der Waagerechten, rechts
-        (0.36, -0.766, 0.643, AUSSEN, 0.055),  # 220°, links unten
+        (0.21, 0.866, -0.5, INNEN, 0.045),   # 30° über der Waagerechten, rechts
+        (0.32, -0.766, 0.643, AUSSEN, 0.05),  # 220°, links unten; äußerster Punkt 0,37
     ):
         x, y = m + s * bahn * winkel_x, m + s * bahn * winkel_y
         d.ellipse((x - s * r, y - s * r, x + s * r, y + s * r), fill=farbe)
