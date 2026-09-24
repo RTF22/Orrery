@@ -37,7 +37,13 @@ export function erzeugeKtx2Lader(renderer: THREE.WebGLRenderer): TexturLader {
 export const TEXTUR_OBERGRENZE = { low: 1024, medium: 2048, high: 8192 } as const;
 /** Nachladen wird höchstens zweimal je Sekunde geprüft. */
 export const PRUEF_ABSTAND_MS = 500;
-/** Höchstens so viele Nachladevorgänge gleichzeitig; der Start zählt nicht mit. */
+/**
+ * Höchstens so viele Nachladevorgänge gleichzeitig; der Start zählt nicht
+ * mit. Nachladen beginnt erst, wenn alle Startladungen abgeschlossen sind —
+ * sonst nähme es dem Start Bandbreite (Ruling, Etappe 5-3: Die Fast-4G-Messung
+ * in Task 5 verfehlte ihr Ziel um rund 200 ms, weil das Kameraziel schon
+ * während der 29 Startladungen eine breitere Stufe anforderte).
+ */
 export const MAX_NACHLADEN = 2;
 /**
  * Eine Kugel zeigt die halbe Kartenbreite über ihren Durchmesser: W/2 Texel
@@ -74,7 +80,9 @@ export interface TexturSteuerung {
   /**
    * Höchstens alle PRUEF_ABSTAND_MS: fehlende breitere Stufen anfordern, das
    * Kameraziel zuerst, dann nach Durchmesser absteigend. `bedarf` wird nur
-   * bei fälliger Prüfung ausgewertet.
+   * bei fälliger Prüfung ausgewertet. Solange noch Startladungen offen sind,
+   * kehrt `pruefe` sofort zurück, ohne den Prüftakt zu verbrauchen — die
+   * erste Prüfung nach dem Start greift dadurch sofort.
    */
   pruefe(jetztMs: number, bedarf: () => readonly TexturBedarf[], zielId: string, obergrenze: number): void;
   /** Geladene Breite je Körper der Liste, 0 = noch keine. */
@@ -96,17 +104,25 @@ export function erzeugeTexturSteuerung(
   const angefordert = new Map<string, number>();
   const laufend = new Set<string>();
   let letztePruefung = -Infinity;
+  // Zählt die noch offenen Startladungen (start() erhöht, jede Startladung
+  // verringert im finally, egal ob erfüllt oder gescheitert). Solange er über
+  // 0 liegt, bleibt das Nachladen aus — siehe MAX_NACHLADEN-Kommentar.
+  let offeneStarts = 0;
 
   function lade(id: string, s: TexturStufe, nachladen: boolean): void {
     angefordert.set(id, Math.max(angefordert.get(id) ?? 0, s.breite));
     if (nachladen) laufend.add(id);
+    else offeneStarts += 1;
     lader.lade(s.pfad).then(
       (textur) => {
         geladen.set(id, Math.max(geladen.get(id) ?? 0, s.breite));
         setze(id, textur, s.breite);
       },
       () => { /* bisherige Stufe bleibt; kein zweiter Versuch, keine Meldung */ },
-    ).finally(() => { if (nachladen) laufend.delete(id); });
+    ).finally(() => {
+      if (nachladen) laufend.delete(id);
+      else offeneStarts -= 1;
+    });
   }
 
   return {
@@ -114,6 +130,7 @@ export function erzeugeTexturSteuerung(
       for (const [id, stufen] of Object.entries(liste)) lade(id, stufen[0]!, false);
     },
     pruefe(jetztMs, bedarf, zielId, obergrenze) {
+      if (offeneStarts > 0) return;
       if (jetztMs - letztePruefung < PRUEF_ABSTAND_MS) return;
       letztePruefung = jetztMs;
       const kandidaten: { id: string; stufe: TexturStufe; durchmesserPx: number }[] = [];

@@ -169,12 +169,50 @@ describe('erzeugeTexturSteuerung', () => {
     fehler.mockRestore();
   });
 
-  it('fordert eine Stufe, die schon der Start lädt, nicht ein zweites Mal an', () => {
-    const { lader, aufrufe } = testLader();
+  it('fordert eine Stufe, die schon der Start lädt, nicht ein zweites Mal an', async () => {
+    const { lader, aufrufe, offen } = testLader();
     const steuerung = erzeugeTexturSteuerung(lader, LISTE, vi.fn());
     steuerung.start();
     steuerung.pruefe(0, () => [{ id: 'io', durchmesserPx: 5000 }, { id: 'earth', durchmesserPx: 100 }], 'io', 8192);
     expect(aufrufe.filter((p) => p.includes('io'))).toEqual(['textures/io/albedo-1024.ktx2']);
     expect(aufrufe.filter((p) => p.includes('earth'))).toEqual(['textures/earth/albedo-1024.ktx2']);
+    // Auch nach Abschluss der Startladungen fordert dieselbe Prüfung nichts
+    // Neues an: io hat nur eine Stufe, earth braucht bei 100 px nicht mehr als 1024.
+    offen.get('textures/earth/albedo-1024.ktx2')!.erfuelle();
+    offen.get('textures/mars/albedo-1024.ktx2')!.erfuelle();
+    offen.get('textures/moon/albedo-1024.ktx2')!.erfuelle();
+    offen.get('textures/io/albedo-1024.ktx2')!.erfuelle();
+    await ruhe();
+    steuerung.pruefe(1, () => [{ id: 'io', durchmesserPx: 5000 }, { id: 'earth', durchmesserPx: 100 }], 'io', 8192);
+    expect(aufrufe.filter((p) => p.includes('io'))).toEqual(['textures/io/albedo-1024.ktx2']);
+    expect(aufrufe.filter((p) => p.includes('earth'))).toEqual(['textures/earth/albedo-1024.ktx2']);
+  });
+
+  it('wartet mit dem Nachladen, bis alle Startladungen abgeschlossen sind', async () => {
+    const { lader, aufrufe, offen } = testLader();
+    const steuerung = erzeugeTexturSteuerung(lader, LISTE, vi.fn());
+    steuerung.start();
+    // Startladungen (vier Körper) laufen noch — das Kameraziel Erde bräuchte bei
+    // 3000 px längst die 8k-Stufe, darf sie aber nicht schon jetzt anfordern,
+    // sonst nimmt sie den Startladungen Bandbreite (Ruling des Controllers).
+    steuerung.pruefe(0, () => [{ id: 'earth', durchmesserPx: 3000 }], 'earth', 8192);
+    expect(aufrufe).toEqual([
+      'textures/earth/albedo-1024.ktx2', 'textures/mars/albedo-1024.ktx2',
+      'textures/moon/albedo-1024.ktx2', 'textures/io/albedo-1024.ktx2',
+    ]);
+    offen.get('textures/earth/albedo-1024.ktx2')!.erfuelle();
+    offen.get('textures/mars/albedo-1024.ktx2')!.erfuelle();
+    offen.get('textures/moon/albedo-1024.ktx2')!.erfuelle();
+    offen.get('textures/io/albedo-1024.ktx2')!.scheitere();
+    await ruhe();
+    // Die erste Prüfung nach den Startladungen greift sofort, obwohl seit der
+    // ersten Prüfung erst 1 ms vergangen ist (PRUEF_ABSTAND_MS wurde nicht
+    // gesetzt, solange offeneStarts > 0 war).
+    steuerung.pruefe(1, () => [{ id: 'earth', durchmesserPx: 3000 }], 'earth', 8192);
+    expect(aufrufe).toEqual([
+      'textures/earth/albedo-1024.ktx2', 'textures/mars/albedo-1024.ktx2',
+      'textures/moon/albedo-1024.ktx2', 'textures/io/albedo-1024.ktx2',
+      'textures/earth/albedo-8192.ktx2',
+    ]);
   });
 });
