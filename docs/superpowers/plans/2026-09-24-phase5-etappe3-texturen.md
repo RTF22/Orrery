@@ -22,7 +22,8 @@
 - Ablage `public/textures/<koerper>/albedo-<breite>.ktx2`; Quell-JPEGs nach `assets-quellen/texturen/<koerper>/albedo.jpg` (versioniert, nicht ausgeliefert); neue 4k-/8k-Quellen in `.cache/texturen/` (git-ignoriert).
 - Mittel: 256 × 128, nach cos(Breite) gewichtet, Pixel unter 0,005 linear ausgeschlossen (Verfahren `scripts/textur-mittel.py`); jede Stufe höchstens 0,005 vom Wert in `src/render/__fixtures__/textur-mittel.json` entfernt. Eine größere Abweichung ist ein Fehler der Werkzeugkette, kein neuer Sollwert.
 - Nachladen (Entwurf §5.4): kleinste Stufe W mit `durchmesserPx ≤ 0,75 · W / 2`, höchstens die Obergrenze; Obergrenze `low` 1024, `medium` und `auto` 2048, `high` 8192, zusätzlich höchstens `renderer.capabilities.maxTextureSize`; Prüftakt höchstens zweimal je Sekunde; höchstens zwei Nachladevorgänge gleichzeitig, das Kameraziel zuerst, danach nach Durchmesser absteigend; nie herunterstufen; eine gescheiterte Stufe wird in dieser Sitzung nicht erneut versucht, ohne Meldung.
-- Ziele (Entwurf §5.6): 1k-Stufen aller Körper zusammen unter 1,5 MB (1 500 000 Bytes); unter „Fast 4G“ alle Körper spätestens 3 s nach dem ersten gerenderten Bild texturiert; mittlere Abweichung der 2k-Stufe gegen das bisherige 2k-JPEG auf der Scheibe höchstens 2 von 255; ein Einzelbild-Ausreißer beim Tausch über 100 ms geht als Frage an Jens.
+- Kodierung (Entscheidung Jens, 24.09.2026, nach der Probe in Task 1): die 1k-Stufe ETC1S mit `--encode basis-lz --clevel 5 --qlevel 255 --max-endpoints 16128 --max-selectors 16128`, alle Stufen ab 2048 UASTC mit `--encode uastc --uastc-quality 2 --uastc-rdo --uastc-rdo-l 1.0 --zstd 18`, jeweils mit `--format R8G8B8_SRGB --generate-mipmap`.
+- Ziele (Entwurf §5.6, nach der Probe von Jens angehoben): 1k-Stufen aller Körper zusammen unter 4 MB (4 000 000 Bytes, Entwurf 1,5 MB); unter „Fast 4G“ alle Körper spätestens 5 s nach dem ersten gerenderten Bild texturiert (Entwurf 3 s); mittlere Abweichung der 2k-Stufe gegen das bisherige 2k-JPEG auf der Scheibe höchstens 2 von 255; ein Einzelbild-Ausreißer beim Tausch über 100 ms geht als Frage an Jens.
 - Bündel: Hauptchunk vorher 1 458,08 kB. Übersteigt er 1 503,78 kB, wird das als Frage an Jens ins Protokoll geschrieben (dynamischer Import von `KTX2Loader` als vorbereiteter Vorschlag), die Arbeit läuft weiter.
 - Fachgeprüfte Texte in `src/data/texte/` werden nicht geändert; Aussagen, die durch die Stufen oder die neuen Pfade falsch werden, gehen als Frage an Jens.
 - Vor „fertig“ je Task: `npm run lint`, `npm test`, `npm run build` (Ausgabe zeigen). Testzahl vorher 5192; die Mindestzahl nach jedem Task steht im Task.
@@ -237,11 +238,14 @@ Expected: `29`. `ring.png` wird nicht kopiert.
 
 - [ ] **Step 2: Quellliste `scripts/texturen-quellen.json` anlegen**
 
-`kodierung` enthält genau die Schalter aus dem Ruling von Task 1 (ohne `--format` und `--generate-mipmap`, die setzt das Skript). Für die acht Körper mit Höchststufe über 2048 die Quelle von Solar System Scope mit SHA-256; die Hashes einmal per `curl -L -o .cache/texturen/<id>-hoch.jpg <url>` und `sha256sum` ermitteln und eintragen (die 8k-Erde aus Task 1 unter diesem Namen ablegen). Die übrigen Körper stehen mit `"stufen": [1024]`, Uranus und Neptun mit `[1024, 2048]`, jeweils ohne `hoch`.
+`kodierung` enthält die Schalter aus den Global Constraints, getrennt nach `etc1s` (für die 1k-Stufe) und `uastc` (für alle breiteren Stufen), jeweils ohne `--format` und `--generate-mipmap`, die setzt das Skript. Für die acht Körper mit Höchststufe über 2048 die Quelle von Solar System Scope mit SHA-256; die Hashes einmal per `curl -L -o .cache/texturen/<id>-hoch.jpg <url>` und `sha256sum` ermitteln und eintragen (die 8k-Erde aus Task 1 unter diesem Namen ablegen). Die übrigen Körper stehen mit `"stufen": [1024]`, Uranus und Neptun mit `[1024, 2048]`, jeweils ohne `hoch`.
 
 ```json
 {
-  "kodierung": ["--encode", "basis-lz", "--clevel", "2", "--qlevel", "255"],
+  "kodierung": {
+    "etc1s": ["--encode", "basis-lz", "--clevel", "5", "--qlevel", "255", "--max-endpoints", "16128", "--max-selectors", "16128"],
+    "uastc": ["--encode", "uastc", "--uastc-quality", "2", "--uastc-rdo", "--uastc-rdo-l", "1.0", "--zstd", "18"]
+  },
   "koerper": [
     { "id": "mercury", "stufen": [1024, 2048, 8192], "hoch": { "url": "https://www.solarsystemscope.com/textures/download/8k_mercury.jpg", "sha256": "<gemessen>" } },
     { "id": "venus", "stufen": [1024, 2048, 8192], "hoch": { "url": "https://www.solarsystemscope.com/textures/download/8k_venus_surface.jpg", "sha256": "<gemessen>" } },
@@ -258,7 +262,7 @@ Expected: `29`. `ring.png` wird nicht kopiert.
 }
 ```
 
-`<gemessen>` wird durch den ermittelten Hash (64 Hexziffern) ersetzt; `kodierung` durch die Schalter aus dem Ruling. Nach `callisto` folgen die übrigen 1k-Körper alphabetisch: ceres, charon, dione, enceladus, eris, europa, ganymede, haumea, iapetus, io, makemake, mimas, phobos, pluto, rhea, tethys, titan, triton — zusammen 29 Einträge. Liefert eine URL kein Bild oder eine andere Breite als erwartet (8192 bzw. 4096), Ledger-Zeile und `BLOCKED` mit Befund.
+`<gemessen>` wird durch den ermittelten Hash (64 Hexziffern) ersetzt. Nach `callisto` folgen die übrigen 1k-Körper alphabetisch: ceres, charon, dione, enceladus, eris, europa, ganymede, haumea, iapetus, io, makemake, mimas, phobos, pluto, rhea, tethys, titan, triton — zusammen 29 Einträge. Liefert eine URL kein Bild oder eine andere Breite als erwartet (8192 bzw. 4096), Ledger-Zeile und `BLOCKED` mit Befund.
 
 - [ ] **Step 3: Failing test für die reinen Funktionen schreiben**
 
@@ -266,12 +270,21 @@ Expected: `29`. `ring.png` wird nicht kopiert.
 
 ```ts
 import { describe, expect, it } from 'vitest';
-import { datenlisteText, mittelFehler, quelleFuer, stufenPfad } from './texturen-bauen.ts';
+import { datenlisteText, kodierungFuer, mittelFehler, quelleFuer, stufenPfad } from './texturen-bauen.ts';
 
 describe('stufenPfad', () => {
   it('legt jede Stufe unter public/textures/<koerper>/ ab', () => {
     expect(stufenPfad('earth', 1024)).toBe('textures/earth/albedo-1024.ktx2');
     expect(stufenPfad('sun', 4096)).toBe('textures/sun/albedo-4096.ktx2');
+  });
+});
+
+describe('kodierungFuer', () => {
+  it('kodiert die 1k-Stufe als ETC1S und alle breiteren als UASTC', () => {
+    const kodierung = { etc1s: ['--encode', 'basis-lz'], uastc: ['--encode', 'uastc'] };
+    expect(kodierungFuer(1024, kodierung)).toEqual(['--encode', 'basis-lz']);
+    expect(kodierungFuer(2048, kodierung)).toEqual(['--encode', 'uastc']);
+    expect(kodierungFuer(8192, kodierung)).toEqual(['--encode', 'uastc']);
   });
 });
 
@@ -355,15 +368,23 @@ import { fileURLToPath } from 'node:url';
 
 export interface Hochquelle { url: string; sha256: string }
 export interface KoerperQuelle { id: string; stufen: number[]; hoch?: Hochquelle }
-export interface Quellliste { kodierung: string[]; koerper: KoerperQuelle[] }
+export interface Kodierung { etc1s: string[]; uastc: string[] }
+export interface Quellliste { kodierung: Kodierung; koerper: KoerperQuelle[] }
 export interface GebauteStufe { breite: number; pfad: string; mittel: number }
 
 /** Bis zu dieser Breite stammen die Stufen aus den versionierten JPEGs. */
 export const JPEG_HOECHSTBREITE = 2048;
 export const MITTEL_TOLERANZ = 0.005;
+/** Die 1k-Stufe ist ETC1S (klein, schneller Start), alle breiteren UASTC (treu). */
+export const ETC1S_BREITE = 1024;
 
 export function stufenPfad(id: string, breite: number): string {
   return `textures/${id}/albedo-${breite}.ktx2`;
+}
+
+/** Schalter für `ktx create` je Stufe (Entscheidung Jens nach der Probe, siehe Plan 5-3). */
+export function kodierungFuer(breite: number, kodierung: Kodierung): string[] {
+  return breite <= ETC1S_BREITE ? kodierung.etc1s : kodierung.uastc;
 }
 
 export function quelleFuer(
@@ -471,7 +492,7 @@ async function main(): Promise<void> {
       mkdirSync(dirname(ziel), { recursive: true });
       json(python, [helfer, 'stufe', eingang, png, String(breite), '--spiegeln']);
       execFileSync(ktx, [
-        'create', '--format', 'R8G8B8_SRGB', ...liste.kodierung, '--generate-mipmap', png, ziel,
+        'create', '--format', 'R8G8B8_SRGB', ...kodierungFuer(breite, liste.kodierung), '--generate-mipmap', png, ziel,
       ]);
       execFileSync(ktx, ['extract', '--transcode', 'rgba8', '--level', '0', ziel, zurueck]);
       const { mittel } = json<{ mittel: number }>(python, [helfer, 'mittel', zurueck]);
@@ -502,7 +523,7 @@ Weichen die Schalter von `ktx create`/`ktx extract` laut Task 1 ab, gelten die a
 
 - [ ] **Step 5: Test grün**
 
-Run: `npx vitest run scripts/texturen-bauen.test.ts` — Expected: PASS (7 Tests).
+Run: `npx vitest run scripts/texturen-bauen.test.ts` — Expected: PASS (8 Tests).
 
 - [ ] **Step 6: Skript eintragen und bauen**
 
@@ -564,22 +585,22 @@ describe('TEXTUREN', () => {
     }
   });
 
-  it('bleibt mit allen 1k-Stufen zusammen unter 1,5 MB', async () => {
+  it('bleibt mit allen 1k-Stufen zusammen unter 4 MB', async () => {
     // @ts-expect-error -- 'node:fs' hat ohne @types/node keine Typdeklaration (wie in src/data/index.test.ts).
     const { statSync } = await import('node:fs');
     let summe = 0;
     for (const stufen of Object.values(TEXTUREN)) summe += statSync(`public/${stufen[0]!.pfad}`).size;
-    expect(summe).toBeLessThan(1_500_000);
+    expect(summe).toBeLessThan(4_000_000);
   });
 });
 ```
 
-`node:fs` wird wie in `src/data/index.test.ts` dynamisch und mit `@ts-expect-error` importiert, weil `tsc -b` keine Node-Typen kennt. `bodyIndex` ist ein `Record<string, Body>`. Scheitert der 1,5-MB-Test, Summe ins Ledger und `BLOCKED` (der Controller entscheidet über die Kodierung).
+`node:fs` wird wie in `src/data/index.test.ts` dynamisch und mit `@ts-expect-error` importiert, weil `tsc -b` keine Node-Typen kennt. `bodyIndex` ist ein `Record<string, Body>`. Scheitert der 4-MB-Test, Summe ins Ledger und `BLOCKED` (der Controller entscheidet über die Kodierung).
 
 - [ ] **Step 8: Tests grün, Gesamtprüfung, Commit**
 
 Run: `npx vitest run src/data/texturen.test.ts` — Expected: PASS (5 Tests).
-Run: `npm run lint && npm test && npm run build` — Expected: mindestens 5204 Tests grün.
+Run: `npm run lint && npm test && npm run build` — Expected: mindestens 5205 Tests grün.
 
 ```bash
 git add scripts/texturen-quellen.json scripts/texturen-bauen.ts scripts/texturen-bauen.test.ts package.json src/data/texturen.ts src/data/texturen.test.ts assets-quellen/texturen public/textures/*/albedo-*.ktx2
@@ -944,7 +965,7 @@ mesh.material.needsUpdate = true;
    Zwei Bilder abwarten (zwei `requestAnimationFrame`), Screenshot B.
 3. Mit Python messen: Maske = Pixel, deren Helligkeit in A oder B über 8 liegt; mittlere absolute Abweichung A gegen B auf der Maske (0–255). Kontrolle: B gegen A senkrecht gespiegelt um den Scheibenmittelpunkt muss deutlich größer sein (Lage stimmt).
 
-Werte ins Ledger: Abweichung A–B (Soll höchstens 2), Abweichung gespiegelt. Liegt A–B über 2, Screenshot-Paar behalten (`.playwright-mcp/`, nicht committen) und `DONE_WITH_CONCERNS` mit den Zahlen. Heißt die three-Datei in `.vite/deps` anders, den Namen aus den Resource-Einträgen nehmen (Ledger-Zeile).
+Werte ins Ledger: Abweichung A–B, Abweichung gespiegelt. Die 1k-Stufe ist ETC1S; die Probe maß auf der Textur 3,1 (Erde), deshalb gilt hier kein Soll von 2 — die Kontrolle dient der Lage (gespiegelt deutlich größer als A–B) und einer groben Helligkeitsprüfung (A–B höchstens 4). Liegt A–B über 4 oder ist die Lage falsch, Screenshot-Paar behalten (`.playwright-mcp/`, nicht committen) und `DONE_WITH_CONCERNS` mit den Zahlen. Heißt die three-Datei in `.vite/deps` anders, den Namen aus den Resource-Einträgen nehmen (Ledger-Zeile).
 
 - [ ] **Step 11: Commit**
 
@@ -1447,7 +1468,7 @@ await page.addInitScript(() => {
 await page.goto('http://localhost:5173/Orrery/');
 ```
 
-Nach 15 s `window.__ladung` auslesen; Zeit bis texturiert = `alleTexturiert − erstesBild`. Dazu aus `performance.getEntriesByType('resource')` alle `.ktx2`-Einträge: Anzahl, Summe `transferSize` bzw. `encodedBodySize`, Summe der 1k-Stufen, längste Einzeldauer. Die Drosselwerte vorher mit der „Fast 4G“-Voreinstellung der laufenden Chrome-Version abgleichen (DevTools, Netzwerk-Drosselung, Eigenschaften der Voreinstellung); weichen sie ab, die echten Werte nehmen und ins Ledger schreiben. Je Lauf drei Wiederholungen, Median. Soll unter „Fast 4G“: höchstens 3 000 ms; Soll 1k-Summe: unter 1 500 000 Bytes.
+Nach 15 s `window.__ladung` auslesen; Zeit bis texturiert = `alleTexturiert − erstesBild`. Dazu aus `performance.getEntriesByType('resource')` alle `.ktx2`-Einträge: Anzahl, Summe `transferSize` bzw. `encodedBodySize`, Summe der 1k-Stufen, längste Einzeldauer. Die Drosselwerte vorher mit der „Fast 4G“-Voreinstellung der laufenden Chrome-Version abgleichen (DevTools, Netzwerk-Drosselung, Eigenschaften der Voreinstellung); weichen sie ab, die echten Werte nehmen und ins Ledger schreiben. Je Lauf drei Wiederholungen, Median. Soll unter „Fast 4G“: höchstens 5 000 ms; Soll 1k-Summe: unter 4 000 000 Bytes (beide Ziele nach der Probe von Jens angehoben; Entwurf 3 000 ms und 1 500 000 Bytes, im Protokoll mit nennen).
 
 - [ ] **Step 3: Zeit bis zur 8k-Erde und längster Ausreißer beim Tausch**
 
@@ -1491,7 +1512,7 @@ Screenshots, Skripte und Logs aus `.playwright-mcp/` und dem Projektstamm lösch
 1. In allen Tabellenzeilen `public/textures/<k>/albedo.jpg` durch `assets-quellen/texturen/<k>/albedo.jpg` ersetzen (29 Zeilen; die Zeile `public/textures/saturn/ring.png` bleibt). Kontrolle: `grep -c "public/textures/.*/albedo.jpg" ASSETS.md` ergibt 0. Den Absatz, der die Ablage „unter `public/textures/<koerper>/albedo.jpg`“ beschreibt, entsprechend anpassen: Die JPEGs sind jetzt versionierte Quellen und werden nicht ausgeliefert.
 2. Neuer Abschnitt „Texturstufen (KTX2)“ am Ende der Texturabschnitte:
    - Ablage `public/textures/<koerper>/albedo-<breite>.ktx2`, Stufen je Körper wie in `src/data/texturen.ts`.
-   - Bearbeitung: Stufen bis 2048 aus dem jeweiligen JPEG unter `assets-quellen/`, verkleinert mit Lanczos (Pillow), senkrecht gespiegelt (KTX2 kennt kein flipY), kodiert mit KTX-Software 4.4.2 von Khronos mit den Schaltern aus `scripts/texturen-quellen.json` (Basis Universal, sRGB, Mipmaps). Erzeugt mit `npm run texturen`.
+   - Bearbeitung: Stufen bis 2048 aus dem jeweiligen JPEG unter `assets-quellen/`, verkleinert mit Lanczos (Pillow), senkrecht gespiegelt (KTX2 kennt kein flipY), kodiert mit KTX-Software 4.4.2 von Khronos mit den Schaltern aus `scripts/texturen-quellen.json` (Basis Universal, sRGB, Mipmaps; die 1k-Stufe ETC1S, breitere Stufen UASTC mit Zstandard). Erzeugt mit `npm run texturen`.
    - Neue Quellen der Höchststufen: Tabelle mit Körper, URL, Urheber Solar System Scope, Lizenz CC BY 4.0, Quellgröße (8192×4096 bzw. 4096×2048), SHA-256 aus `scripts/texturen-quellen.json`, Bearbeitung wie oben. Die Quelldateien selbst liegen nicht im Repository (`.cache/texturen/`).
 3. Neuer Abschnitt „Basis-Transcoder“: `public/basis/basis_transcoder.js` und `.wasm`, unverändert aus three.js r186 (`node_modules/three/examples/jsm/libs/basis/`), Byte-Gleichheit per Test `src/render/basis.test.ts`. Die README im three-Ordner nennt keine Lizenz; Lizenz und Urheber aus der Datei `LICENSE` des Repositorys <https://github.com/BinomialLLC/basis_universal> belegen (Seite öffnen, erwartet Apache 2.0, Binomial LLC) und nur übernehmen, was dort steht.
 
