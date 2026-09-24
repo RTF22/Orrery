@@ -1,8 +1,17 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { dateienUnter, groesse, konfigLesen, uebersichtZeilen, veralteteNamen } from './deploy.ts';
+import {
+  dateienUnter,
+  groesse,
+  istNetzfehler,
+  konfigLesen,
+  mitWiederholung,
+  ordnerFuer,
+  uebersichtZeilen,
+  veralteteNamen,
+} from './deploy.ts';
 
 const voll = {
   DEPLOY_HOST: 'ftp.example.org',
@@ -90,6 +99,89 @@ describe('dateienUnter', () => {
     } finally {
       rmSync(wurzel, { recursive: true, force: true });
     }
+  });
+});
+
+describe('istNetzfehler', () => {
+  it('erkennt bekannte Netzwerk-Fehlercodes', () => {
+    expect(istNetzfehler(Object.assign(new Error('x'), { code: 'ECONNRESET' }))).toBe(true);
+  });
+
+  it('erkennt FTP-Antwortcodes 421 und 425/426', () => {
+    expect(istNetzfehler(Object.assign(new Error('x'), { code: 425 }))).toBe(true);
+    expect(istNetzfehler(Object.assign(new Error('x'), { code: 426 }))).toBe(true);
+    expect(istNetzfehler(Object.assign(new Error('x'), { code: 421 }))).toBe(true);
+  });
+
+  it('erkennt eine geschlossene Verbindung an der Meldung', () => {
+    expect(istNetzfehler(new Error('Client is closed'))).toBe(true);
+  });
+
+  it('erkennt eine Zeitüberschreitung an der Meldung', () => {
+    expect(istNetzfehler(new Error('Timeout (control socket)'))).toBe(true);
+  });
+
+  it('lehnt FTP-Fehler ohne Netz-Code ab', () => {
+    expect(istNetzfehler(new Error('550 No such file'))).toBe(false);
+  });
+
+  it('lehnt Nicht-Fehler-Werte ab', () => {
+    expect(istNetzfehler('text')).toBe(false);
+  });
+});
+
+describe('mitWiederholung', () => {
+  it('gibt bei Erfolg im ersten Versuch das Ergebnis zurück, ohne neu zu verbinden', async () => {
+    const neuVerbinden = vi.fn(async () => {});
+    const ergebnis = await mitWiederholung(async () => 'ok', neuVerbinden);
+    expect(ergebnis).toBe('ok');
+    expect(neuVerbinden).not.toHaveBeenCalled();
+  });
+
+  it('versucht nach zwei Netzfehlern ein drittes Mal erfolgreich', async () => {
+    const neuVerbinden = vi.fn(async () => {});
+    let versuch = 0;
+    const aktion = vi.fn(async () => {
+      versuch += 1;
+      if (versuch <= 2) throw Object.assign(new Error('x'), { code: 'ECONNRESET' });
+      return 'ok';
+    });
+    const ergebnis = await mitWiederholung(aktion, neuVerbinden);
+    expect(ergebnis).toBe('ok');
+    expect(neuVerbinden).toHaveBeenCalledTimes(2);
+  });
+
+  it('wirft nach drei Netzfehlern den letzten Fehler und verbindet nur zweimal neu', async () => {
+    const neuVerbinden = vi.fn(async () => {});
+    const fehler3 = Object.assign(new Error('dritter'), { code: 'ECONNRESET' });
+    const aktion = vi
+      .fn()
+      .mockRejectedValueOnce(Object.assign(new Error('erster'), { code: 'ECONNRESET' }))
+      .mockRejectedValueOnce(Object.assign(new Error('zweiter'), { code: 'ECONNRESET' }))
+      .mockRejectedValueOnce(fehler3);
+    await expect(mitWiederholung(aktion, neuVerbinden)).rejects.toBe(fehler3);
+    expect(neuVerbinden).toHaveBeenCalledTimes(2);
+  });
+
+  it('wirft andere Fehler sofort weiter, ohne neu zu verbinden', async () => {
+    const neuVerbinden = vi.fn(async () => {});
+    const fehler = new Error('550 No such file');
+    const aktion = vi.fn().mockRejectedValueOnce(fehler);
+    await expect(mitWiederholung(aktion, neuVerbinden)).rejects.toBe(fehler);
+    expect(neuVerbinden).not.toHaveBeenCalled();
+  });
+});
+
+describe('ordnerFuer', () => {
+  it('liefert die vorab anzulegenden Ordner, sortiert, ohne Wurzel', () => {
+    const dateien = ['index.html', 'assets/a.js', 'textures/earth/x.ktx2', 'textures/sun/y.ktx2'].map(
+      (pfad) => ({ pfad, bytes: 0 }),
+    );
+    expect(ordnerFuer(dateien)).toEqual(['assets', 'textures', 'textures/earth', 'textures/sun']);
+  });
+
+  it('liefert eine leere Liste ohne Unterordner', () => {
+    expect(ordnerFuer([{ pfad: 'index.html', bytes: 0 }])).toEqual([]);
   });
 });
 

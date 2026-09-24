@@ -12,7 +12,8 @@
  * erhalten), danach werden in DEPLOY_DIR/assets/ nur die gehashten Bündel
  * gelöscht, die es lokal nicht mehr gibt. Ein Leeren des Zielverzeichnisses
  * findet bewusst nicht statt: ein falsch gesetztes DEPLOY_DIR darf nie den
- * übrigen Webauftritt löschen.
+ * übrigen Webauftritt löschen. Hochgeladen wird Datei für Datei; bei
+ * Netzfehlern wird mit neuer Verbindung bis zu dreimal wiederholt.
  *
  * Die reinen Funktionen sind exportiert und in deploy.test.ts geprüft; der
  * Hauptlauf startet nur beim direkten Aufruf der Datei.
@@ -73,6 +74,38 @@ export function veralteteNamen(entfernt: readonly string[], lokal: readonly stri
   return entfernt.filter((name) => !vorhanden.has(name));
 }
 
+const NETZFEHLER_CODES = new Set(['ECONNRESET', 'ETIMEDOUT', 'EPIPE', 'ECONNABORTED', 'ECONNREFUSED']);
+const NETZFEHLER_FTP_CODES = new Set([421, 425, 426]);
+
+/** Netzfehler, nach denen ein neuer Versuch mit frischer Verbindung lohnt. */
+export function istNetzfehler(fehler: unknown): boolean {
+  if (!(fehler instanceof Error)) return false;
+  const code = (fehler as { code?: unknown }).code;
+  if (typeof code === 'string' && NETZFEHLER_CODES.has(code)) return true;
+  if (typeof code === 'number' && NETZFEHLER_FTP_CODES.has(code)) return true;
+  return fehler.message.includes('closed') || fehler.message.includes('Timeout');
+}
+
+/**
+ * Führt `aktion` aus; scheitert sie mit einem Netzfehler, wird `neuVerbinden`
+ * aufgerufen und erneut versucht, insgesamt höchstens `versuche`-mal.
+ * Andere Fehler und der letzte Netzfehler werden weitergeworfen.
+ */
+export async function mitWiederholung<T>(
+  aktion: () => Promise<T>,
+  neuVerbinden: () => Promise<void>,
+  versuche = 3,
+): Promise<T> {
+  for (let versuch = 1; ; versuch += 1) {
+    try {
+      return await aktion();
+    } catch (fehler) {
+      if (!istNetzfehler(fehler) || versuch >= versuche) throw fehler;
+      await neuVerbinden();
+    }
+  }
+}
+
 export interface DistDatei {
   /** Pfad relativ zur Wurzel, immer mit `/` wie auf dem Server. */
   readonly pfad: string;
@@ -91,6 +124,21 @@ export function dateienUnter(wurzel: string): DistDatei[] {
   };
   gehe(wurzel);
   return liste.sort((a, b) => (a.pfad < b.pfad ? -1 : a.pfad > b.pfad ? 1 : 0));
+}
+
+/** Ordner, die vor den Dateien angelegt werden müssen, sortiert, ohne Wurzel: 'textures', 'textures/earth', … */
+export function ordnerFuer(dateien: readonly DistDatei[]): string[] {
+  const ordner = new Set<string>();
+  for (const datei of dateien) {
+    const teile = datei.pfad.split('/');
+    teile.pop(); // Dateiname entfernen
+    let pfad = '';
+    for (const teil of teile) {
+      pfad = pfad === '' ? teil : `${pfad}/${teil}`;
+      ordner.add(pfad);
+    }
+  }
+  return [...ordner].sort();
 }
 
 /** Größe in Zehnerpotenzen wie die Ausgabe von `vite build`, mit Dezimalkomma. */
@@ -162,16 +210,27 @@ async function hauptlauf(): Promise<void> {
     throw new Error('dist/index.html fehlt, zuerst `npm run build` ausführen');
   }
 
-  const client = new Client();
+  // 60 s statt Standard 30 s: die größten Dateien haben 36 MB.
+  const client = new Client(60_000);
   try {
-    await client.access({
-      host: konfig.host,
-      port: konfig.port,
-      user: konfig.user,
-      password: konfig.password,
-      secure: konfig.secure,
-    });
-    console.log(`Verbunden mit ${konfig.host}:${konfig.port}${konfig.secure ? ' (FTPS)' : ' (unverschlüsselt)'}`);
+    let ersteVerbindung = true;
+    const verbinden = async (): Promise<void> => {
+      if (!ersteVerbindung) client.close();
+      await client.access({
+        host: konfig.host,
+        port: konfig.port,
+        user: konfig.user,
+        password: konfig.password,
+        secure: konfig.secure,
+      });
+      if (ersteVerbindung) {
+        console.log(
+          `Verbunden mit ${konfig.host}:${konfig.port}${konfig.secure ? ' (FTPS)' : ' (unverschlüsselt)'}`,
+        );
+        ersteVerbindung = false;
+      }
+    };
+    await verbinden();
 
     if (trocken) {
       // Nur lesen: ensureDir würde das Zielverzeichnis anlegen.
@@ -187,15 +246,38 @@ async function hauptlauf(): Promise<void> {
       return;
     }
 
-    await client.ensureDir(konfig.dir);
-    await client.uploadFromDir(dist);
-    console.log(`Hochgeladen: dist/ nach ${konfig.dir}`);
+    const dateien = dateienUnter(dist);
+    await mitWiederholung(() => client.ensureDir(konfig.dir), verbinden);
+    for (const ordner of ordnerFuer(dateien)) {
+      await mitWiederholung(() => client.ensureDir(`${konfig.dir}/${ordner}`), verbinden);
+    }
+
+    let hochgeladen = 0;
+    for (const datei of dateien) {
+      const quelle = join(dist, ...datei.pfad.split('/'));
+      const ziel = `${konfig.dir}/${datei.pfad}`;
+      let wiederholt = false;
+      await mitWiederholung(
+        () => client.uploadFrom(quelle, ziel),
+        async () => {
+          wiederholt = true;
+          await verbinden();
+        },
+      );
+      if (wiederholt) console.log(`Neuer Versuch nach Netzfehler: ${datei.pfad}`);
+      hochgeladen += 1;
+      if (hochgeladen % 50 === 0 && hochgeladen < dateien.length) {
+        console.log(`Hochgeladen: ${hochgeladen} von ${dateien.length} Dateien`);
+      }
+    }
+    console.log(`Hochgeladen: ${hochgeladen} von ${dateien.length} Dateien`);
 
     const assetsLokal = readdirSync(join(dist, 'assets'));
-    await client.cd(`${konfig.dir}/assets`);
-    const assetsEntfernt = (await client.list()).filter((e) => !e.isDirectory).map((e) => e.name);
+    const zielAssets = `${konfig.dir}/assets`;
+    const eintraegeAssets = await mitWiederholung(() => client.list(zielAssets), verbinden);
+    const assetsEntfernt = eintraegeAssets.filter((e) => !e.isDirectory).map((e) => e.name);
     for (const name of veralteteNamen(assetsEntfernt, assetsLokal)) {
-      await client.remove(name);
+      await mitWiederholung(() => client.remove(`${zielAssets}/${name}`), verbinden);
       console.log(`Entfernt: assets/${name}`);
     }
   } finally {
