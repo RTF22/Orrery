@@ -25,7 +25,40 @@ describe('ASSETS.md', () => {
 describe('public/', () => {
   it('enthält nur belegte Ordner und die Serverkonfiguration', () => {
     // musik/ ist git-ignoriert und gehört dem Betreiber (README „Eigene Musik").
-    const erlaubt = new Set(['.htaccess', 'basis', 'textures', 'musik']);
+    const erlaubt = new Set(['.htaccess', 'basis', 'textures', 'musik', 'icons', 'manifest.webmanifest']);
     expect(readdirSync('public').filter((name) => !erlaubt.has(name))).toEqual([]);
+  });
+});
+
+/** Breite und Höhe aus dem IHDR-Block einer PNG-Datei (Bytes 16–23, big-endian). */
+function pngMasse(pfad: string): [number, number] {
+  const daten = readFileSync(pfad);
+  return [daten.readUInt32BE(16), daten.readUInt32BE(20)];
+}
+
+describe('Web-App', () => {
+  const manifest = JSON.parse(readFileSync('public/manifest.webmanifest', 'utf8')) as {
+    name: string; short_name: string; start_url: string; scope: string; display: string;
+    icons: { src: string; sizes: string; type: string; purpose?: string }[];
+  };
+
+  it('startet im Vollbild innerhalb der eigenen Basis', () => {
+    expect(manifest.display).toBe('fullscreen');
+    expect(manifest.start_url).toBe('./');
+    expect(manifest.scope).toBe('./');
+    expect(manifest.short_name).toBe('Orrery');
+  });
+
+  it('führt Symbole in 192 und 512 Pixeln, die es gibt und die so groß sind', () => {
+    for (const groesse of [192, 512]) {
+      const symbol = manifest.icons.find((i) => i.sizes === `${groesse}x${groesse}`);
+      expect(symbol?.type).toBe('image/png');
+      expect(pngMasse(`public/${symbol!.src}`)).toEqual([groesse, groesse]);
+    }
+  });
+
+  it('ist in index.html verlinkt und hat einen MIME-Typ auf dem Server', () => {
+    expect(readFileSync('index.html', 'utf8')).toContain('<link rel="manifest" href="/manifest.webmanifest"');
+    expect(readFileSync('public/.htaccess', 'utf8')).toContain('AddType application/manifest+json .webmanifest');
   });
 });

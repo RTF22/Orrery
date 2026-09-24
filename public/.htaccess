@@ -3,9 +3,10 @@
 # Kein Verzeichnislisting, keine Rückschlüsse auf den Ordnerinhalt.
 Options -Indexes
 
-# KTX2-Texturen und der Basis-Transcoder (Entwurf Phase 5 §5.5).
+# KTX2-Texturen, der Basis-Transcoder und das Web-App-Manifest (Entwurf Phase 5 §5.5).
 AddType image/ktx2 .ktx2
 AddType application/wasm .wasm
+AddType application/manifest+json .webmanifest
 
 # Textinhalte komprimiert ausliefern; das JS-Bündel schrumpft damit auf rund ein Viertel.
 <IfModule mod_deflate.c>

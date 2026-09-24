@@ -336,6 +336,12 @@ Datei `LICENSE` des Ursprungsrepositorys
 — und damit der daraus gebaute Transcoder — unter der Apache License 2.0,
 Copyright 2019–2026 Binomial LLC.
 
+## App-Symbol
+
+`public/icons/orrery-192.png` und `public/icons/orrery-512.png` sind eigene
+Zeichnungen (Sonne mit zwei Bahnen), erzeugt mit `scripts/app-symbol.py`
+(Pillow); keine fremden Urheber.
+
 ## Musik
 
 Orrery liefert keine Musik aus. Wer die Seite betreibt, kann eigene MP3-Dateien

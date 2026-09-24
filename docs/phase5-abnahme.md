@@ -13,7 +13,7 @@ bringt fünf Etappen, jede mit eigenem Plan, eigener Umsetzung und eigenem Abnah
 | 5-2 | Mobile: Kompaktmodus mit Bögen, grober Zeiger, Bedienziele ≥ 44 px | `afc205d` | `docs/phase5-etappe2-abnahme.md` |
 | 5-3 | Texturen bis 8k in Stufen (KTX2), Nachladen nach Bedarf, Ladezeit | `c2d871e` (Textnachführung `f57a655`, Transcoder-Checkout `9a2ef39`) | `docs/phase5-etappe3-abnahme.md` |
 | 5-4 | Musik aus Dateien des Betreibers (kein mitgeliefertes Stück) | `1c53656` | `docs/phase5-etappe4-abnahme.md` |
-| 5-5 | Abschluss: `ASSETS.md`, Trockenlauf der Veröffentlichung, diese Gesamtabnahme | siehe unten | dieses Protokoll |
+| 5-5 | Abschluss: `ASSETS.md`, Trockenlauf der Veröffentlichung, installierbare Web-App mit Vollbildstart (Manifest, App-Symbol), diese Gesamtabnahme | siehe unten | dieses Protokoll |
 
 Etappe 5-5 selbst: `a2c655f` (ASSETS-Nachweis für Musik, Test auf vollständige Herkunftsangaben)
 und `de97203` (Trockenlauf zeigt Dateiliste und Gesamtgröße von `dist/`), dazu der Commit dieses
@@ -134,14 +134,14 @@ leer.
 
 ## 5. Handprüfung auf dem A55 (Jens)
 
-**Vorbereitung:** Entwicklungsserver beenden, dann im Projektordner `npm run dev -- --host`
-starten; die angezeigte Netzwerkadresse (`http://<Rechner-IP>:5173/Orrery/`) auf dem A55 im
-selben WLAN öffnen. Für den Ton eigene MP3-Dateien nach `public/musik/` legen und daneben
-`public/musik/stuecke.json` anlegen (Beispiel und Pflichtfelder im Abschnitt „Eigene Musik“ der
-`README.md`).
+**Vorbereitung:** Die Handprüfung läuft auf dem Webspace `https://www.jensfricke.com/Orrery/` mit
+dem Stand dieser Etappe. Eigene MP3-Dateien und `stuecke.json` legt Jens per FTP in den Ordner
+`musik/` neben `index.html` (Beispiel im Abschnitt „Eigene Musik“ der `README.md`).
 
 | Prüfpunkt | Ergebnis |
 |---|---|
+| Installation: im Browsermenü „Zum Startbildschirm hinzufügen“ bzw. „App installieren“, Start vom Symbol im Vollbild ohne Adress- und Statusleiste | |
+| Symbol auf dem Startbildschirm sauber (nicht abgeschnitten) | |
 | Oberfläche: Seitenleiste ein-/ausklappen, Breite ziehen, farbige Überschriften | |
 | Kompaktmodus Hochformat: zwei Reiter, nur ein Bogen gleichzeitig, Bedienziele ≥ 44 px | |
 | Kompaktmodus Querformat: dasselbe, Gerät drehen | |
@@ -155,6 +155,7 @@ selben WLAN öffnen. Für den Ton eigene MP3-Dateien nach `public/musik/` legen 
 | Überblendung zwischen zwei Stücken hörbar weich (kein Knacken/Sprung) | |
 | Verdeckter Tab auf dem A55: Ton blendet aus, beim Zurückkehren wieder ein | |
 | Dasselbe für Ton und verdeckten Tab am Desktop (eigener Browser-Tab wechseln) | |
+| Kino: Bildschirm bleibt während des Films an (Wake Lock) | |
 
 ## 6. Rulings der Phase
 
