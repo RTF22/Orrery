@@ -1,7 +1,10 @@
 # Assets
 
-Diese Datei dokumentiert die Herkunft aller im Repository abgelegten Texturdateien
-und erfüllt damit die Namensnennungspflicht der CC-BY-Lizenz.
+Diese Datei dokumentiert die Herkunft aller im Repository abgelegten und
+ausgelieferten Dateien fremder Urheber (Texturen, Sternkatalog, Basis-Transcoder)
+und erfüllt damit die Namensnennungspflicht der CC-BY-Lizenz. Ein Test
+(`scripts/assets.test.ts`) prüft, dass jeder Texturordner unter `public/textures/`
+hier genannt ist.
 
 ## Textur-Quelle: Solar System Scope
 
@@ -332,3 +335,13 @@ Datei `LICENSE` des Ursprungsrepositorys
 <https://github.com/BinomialLLC/basis_universal> steht der Basis-Universal-Code
 — und damit der daraus gebaute Transcoder — unter der Apache License 2.0,
 Copyright 2019–2026 Binomial LLC.
+
+## Musik
+
+Orrery liefert keine Musik aus. Wer die Seite betreibt, kann eigene MP3-Dateien
+im Ordner `musik/` der ausgelieferten Seite hinterlegen (Anleitung in der
+`README.md`, Abschnitt „Eigene Musik"); lokal liegt der Ordner unter
+`public/musik/` und ist git-ignoriert, erscheint also nie im Repository. Für
+Lizenz, Namensnennung und Nutzungsrechte dieser Stücke ist allein der Betreiber
+verantwortlich. Die Anwendung zeigt beim laufenden Stück Titel, Urheber und Link
+aus seiner Liste `musik/stuecke.json` an.
