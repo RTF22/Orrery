@@ -4,7 +4,7 @@
 
 **Goal:** Phase 5 abschließen: `ASSETS.md` vollständig und per Test abgesichert, der Deploy-Trockenlauf zeigt Dateiliste und Gesamtgröße, Gesamtabnahme mit Rundgang und Handprüfung auf dem A55, README-Stand, Tag `v0.6.0`.
 
-**Architecture:** Ein Test über `ASSETS.md` und `public/` (Task 1); drei reine, getestete Funktionen in `scripts/deploy.ts` für die lokale Übersicht, die der Trockenlauf vor dem Verbinden ausgibt (Task 2); ein Protokoll `docs/phase5-abnahme.md`, das die vier Etappenprotokolle bündelt und die Handprüfliste für Jens enthält (Task 3); nach Jens' Handprüfung Nachtrag, README-Stand und Tag (Task 4).
+**Architecture:** Ein Test über `ASSETS.md` und `public/` (Task 1); Manifest und App-Symbol für den Vollbildstart als installierte Web-App (Task 3a, nachträglich); drei reine, getestete Funktionen in `scripts/deploy.ts` für die lokale Übersicht, die der Trockenlauf vor dem Verbinden ausgibt (Task 2); ein Protokoll `docs/phase5-abnahme.md`, das die vier Etappenprotokolle bündelt und die Handprüfliste für Jens enthält (Task 3); nach Jens' Handprüfung Nachtrag, README-Stand und Tag (Task 4).
 
 **Tech Stack:** TypeScript, Node (`node:fs`, `node:path`, `node:os`), Vitest (Umgebung `node`; `scripts/**/*.test.ts` gehört zur Suite), basic-ftp (vorhanden), Playwright-MCP, Python 3.12.
 
@@ -385,6 +385,180 @@ git commit -m "Gesamtabnahme Phase 5: Rundgang, Veröffentlichungsprobe, Handpr�
 ```
 
 Danach **Halt**: Die Handprüfung macht Jens; Task 4 beginnt erst mit seinen Ergebnissen.
+
+---
+
+### Task 3a: Installierbare Web-App mit Vollbildstart
+
+Nachträglich eingefügt (Jens, 24.09.2026): Die Seite läuft auf dem Webspace unter HTTPS (Let's Encrypt), damit lässt sie sich als Web-App installieren und vom Startbildschirm im Vollbild starten. Symbol: schlichtes Orrery-Zeichen. Die Handprüfung findet danach auf dem Webspace statt.
+
+**Files:**
+- Create: `scripts/app-symbol.py`, `public/icons/orrery-192.png`, `public/icons/orrery-512.png`, `public/manifest.webmanifest`
+- Modify: `index.html`, `public/.htaccess`, `scripts/assets.test.ts`, `ASSETS.md`, `docs/phase5-abnahme.md` (§1 und §5)
+
+**Interfaces:** keine Code-Schnittstellen; `dist/manifest.webmanifest` und `dist/icons/*.png` werden mit ausgeliefert.
+
+- [ ] **Step 1: Failing tests schreiben**
+
+In `scripts/assets.test.ts` die erlaubte Menge im Test „enthält nur belegte Ordner und die Serverkonfiguration“ auf `['.htaccess', 'basis', 'textures', 'musik', 'icons', 'manifest.webmanifest']` erweitern und anfügen:
+
+```ts
+/** Breite und Höhe aus dem IHDR-Block einer PNG-Datei (Bytes 16–23, big-endian). */
+function pngMasse(pfad: string): [number, number] {
+  const daten = readFileSync(pfad);
+  return [daten.readUInt32BE(16), daten.readUInt32BE(20)];
+}
+
+describe('Web-App', () => {
+  const manifest = JSON.parse(readFileSync('public/manifest.webmanifest', 'utf8')) as {
+    name: string; short_name: string; start_url: string; scope: string; display: string;
+    icons: { src: string; sizes: string; type: string; purpose?: string }[];
+  };
+
+  it('startet im Vollbild innerhalb der eigenen Basis', () => {
+    expect(manifest.display).toBe('fullscreen');
+    expect(manifest.start_url).toBe('./');
+    expect(manifest.scope).toBe('./');
+    expect(manifest.short_name).toBe('Orrery');
+  });
+
+  it('führt Symbole in 192 und 512 Pixeln, die es gibt und die so groß sind', () => {
+    for (const groesse of [192, 512]) {
+      const symbol = manifest.icons.find((i) => i.sizes === `${groesse}x${groesse}`);
+      expect(symbol?.type).toBe('image/png');
+      expect(pngMasse(`public/${symbol!.src}`)).toEqual([groesse, groesse]);
+    }
+  });
+
+  it('ist in index.html verlinkt und hat einen MIME-Typ auf dem Server', () => {
+    expect(readFileSync('index.html', 'utf8')).toContain('<link rel="manifest" href="/manifest.webmanifest"');
+    expect(readFileSync('public/.htaccess', 'utf8')).toContain('AddType application/manifest+json .webmanifest');
+  });
+});
+```
+
+Run: `npx vitest run scripts/assets.test.ts` — Expected: FAIL (Manifest und Symbole fehlen).
+
+- [ ] **Step 2: Symbole zeichnen**
+
+`scripts/app-symbol.py` (Python 3.12 mit Pillow; wird nicht von `npm` aufgerufen, nur bei Änderungen des Symbols von Hand):
+
+```python
+"""Zeichnet das App-Symbol (schlichtes Orrery-Zeichen) in 192 und 512 Pixeln.
+
+Aufruf aus dem Projektstamm: python scripts/app-symbol.py
+Das Motiv liegt vollständig in der inneren Sicherheitszone (80 % der Fläche),
+damit Android es als maskierbares Symbol rund oder abgerundet beschneiden darf.
+"""
+from pathlib import Path
+
+from PIL import Image, ImageDraw
+
+GRUND = (5, 7, 13)          # fast schwarz, wie der Weltraum der Anwendung
+BAHN = (120, 140, 170)      # gedämpftes Blaugrau
+SONNE = (255, 196, 80)
+INNEN = (90, 160, 255)      # blauer Planet auf der inneren Bahn
+AUSSEN = (210, 120, 80)     # rötlicher Planet auf der äußeren Bahn
+UEBERABTASTUNG = 4
+
+
+def zeichne(groesse: int) -> Image.Image:
+    s = groesse * UEBERABTASTUNG
+    bild = Image.new('RGB', (s, s), GRUND)
+    d = ImageDraw.Draw(bild)
+    m = s / 2
+
+    def kreis(r: float, **art: object) -> None:
+        d.ellipse((m - r, m - r, m + r, m + r), **art)
+
+    strich = max(1, round(s * 0.012))
+    kreis(s * 0.24, outline=BAHN, width=strich)
+    kreis(s * 0.36, outline=BAHN, width=strich)
+    kreis(s * 0.11, fill=SONNE)
+    for bahn, winkel_x, winkel_y, farbe, r in (
+        (0.24, 0.866, -0.5, INNEN, 0.045),   # 30° über der Waagerechten, rechts
+        (0.36, -0.766, 0.643, AUSSEN, 0.055),  # 220°, links unten
+    ):
+        x, y = m + s * bahn * winkel_x, m + s * bahn * winkel_y
+        d.ellipse((x - s * r, y - s * r, x + s * r, y + s * r), fill=farbe)
+    return bild.resize((groesse, groesse), Image.Resampling.LANCZOS)
+
+
+if __name__ == '__main__':
+    ziel = Path('public/icons')
+    ziel.mkdir(parents=True, exist_ok=True)
+    for groesse in (192, 512):
+        zeichne(groesse).save(ziel / f'orrery-{groesse}.png', optimize=True)
+        print(f'public/icons/orrery-{groesse}.png')
+```
+
+Run: `python scripts/app-symbol.py` — Expected: zwei Pfade ausgegeben. Das 512er-Bild einmal ansehen (Read-Werkzeug auf die PNG): Sonne mittig, zwei Bahnen, zwei Planeten, nichts ragt über 80 % der Fläche hinaus.
+
+- [ ] **Step 3: Manifest, Verweis, Server**
+
+`public/manifest.webmanifest`:
+
+```json
+{
+  "name": "Orrery – das Sonnensystem im Browser",
+  "short_name": "Orrery",
+  "lang": "de",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#05070d",
+  "theme_color": "#05070d",
+  "icons": [
+    { "src": "icons/orrery-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icons/orrery-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
+```
+
+`index.html`: die Zeilen mit dem Kommentar über das Favicon und `<link rel="icon" href="data:," />` ersetzen durch
+
+```html
+    <link rel="icon" type="image/png" href="/icons/orrery-192.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#05070d" />
+```
+
+(Vite setzt beim Bauen die Basis `/Orrery/` vor absolute Pfade in `index.html`; nach `npm run build` in `dist/index.html` nachsehen, dass dort `/Orrery/manifest.webmanifest` und `/Orrery/icons/orrery-192.png` stehen.)
+
+`public/.htaccess`: nach `AddType application/wasm .wasm` die Zeile `AddType application/manifest+json .webmanifest` und im Kommentar darüber „und das Web-App-Manifest“ ergänzen; im `FilesMatch` der Bilder ist `png` schon enthalten.
+
+`ASSETS.md`: vor „## Musik“ einen Abschnitt:
+
+```markdown
+## App-Symbol
+
+`public/icons/orrery-192.png` und `public/icons/orrery-512.png` sind eigene
+Zeichnungen (Sonne mit zwei Bahnen), erzeugt mit `scripts/app-symbol.py`
+(Pillow); keine fremden Urheber.
+```
+
+- [ ] **Step 4: Handprüfliste nachführen**
+
+In `docs/phase5-abnahme.md`:
+1. §1 Umfang, Zeile zu 5-5: „installierbare Web-App mit Vollbildstart (Manifest, App-Symbol)“ ergänzen.
+2. §5 „Vorbereitung“ ersetzen durch: Die Handprüfung läuft auf dem Webspace `https://www.jensfricke.com/Orrery/` mit dem Stand dieser Etappe. Eigene MP3-Dateien und `stuecke.json` legt Jens per FTP in den Ordner `musik/` neben `index.html` (Beispiel im Abschnitt „Eigene Musik“ der `README.md`).
+3. In der §5-Tabelle zwei Zeilen vorn einfügen: „Installation: im Browsermenü ‚Zum Startbildschirm hinzufügen‘ bzw. ‚App installieren‘, Start vom Symbol im Vollbild ohne Adress- und Statusleiste“ und „Symbol auf dem Startbildschirm sauber (nicht abgeschnitten)“; eine Zeile hinten: „Kino: Bildschirm bleibt während des Films an (Wake Lock)“. Ergebnisspalte leer.
+
+- [ ] **Step 5: Tests grün, Gesamtprüfung, Commit**
+
+Run: `npx vitest run scripts/assets.test.ts` — Expected: PASS (7 Tests).
+Run: `npm run lint && npm test && npm run build` — Expected: grün, mindestens 5288 Tests; `dist/manifest.webmanifest` und `dist/icons/` vorhanden, Pfade in `dist/index.html` wie oben.
+
+```bash
+git status --short
+git add scripts/app-symbol.py public/icons/orrery-192.png public/icons/orrery-512.png public/manifest.webmanifest index.html public/.htaccess scripts/assets.test.ts ASSETS.md docs/phase5-abnahme.md
+git commit -m "Installierbare Web-App mit Vollbildstart und App-Symbol"
+```
+
+- [ ] **Step 6: Auf den Webspace (Controller, Freigabe von Jens liegt vor)**
+
+Nach der Prüfung dieses Tasks lädt der Controller den Branchstand mit `npm run deploy` hoch (vorher `npm run deploy:trocken`, `public/musik/` muss fehlen). Danach `curl -sI https://www.jensfricke.com/Orrery/manifest.webmanifest` (200, `Content-Type: application/manifest+json`) und einmal die Seite laden.
 
 ---
 
