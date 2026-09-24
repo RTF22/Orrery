@@ -12,7 +12,7 @@ Phase 5 hat fünf Etappen, jede mit eigenem Plan und eigener Abnahme:
 | 5-1 | Oberfläche: Seitenleiste, Überschriften, Szenenliste; nebenher Musikrecherche | §3 |
 | 5-2 | Mobile: Kompaktmodus, Bedienziele, Referenzgerät Galaxy A55 | §4 |
 | 5-3 | Texturen bis 8k in Stufen, Nachladen, KTX2, Ladezeit | §5 |
-| 5-4 | Frei lizenzierte Musik, nur im Kino oder immer | §6 |
+| 5-4 | Musik aus Dateien des Betreibers, nur im Kino oder immer | §6 |
 | 5-5 | Abschluss: `ASSETS.md`, Gesamtabnahme, `v0.6.0` | §7 |
 
 ## 1. Ausgangslage
@@ -67,6 +67,9 @@ Phase 5 hat fünf Etappen, jede mit eigenem Plan und eigener Abnahme:
    Wiedergabe wahlweise „nur im Kino“ oder „immer“, Standard für neue Besucher
    „nur im Kino“. Stücke lassen sich später ohne Codeänderung nachrüsten (Datei plus
    Listeneintrag).
+   *Änderung (Jens, 24.09.2026):* Die Anwendung bringt keine Musik mit. Sie spielt
+   MP3-Dateien, die der Betreiber der Seite selbst hinterlegt; Lizenz- und Rechtefragen
+   obliegen dem Betreiber (§6).
 6. **Reihenfolge:** 5-1 → 5-2 → 5-3 → 5-4 → 5-5. Die Musikrecherche läuft während
    5-1 nebenher, damit Jens vor 5-4 wählen kann.
 
@@ -264,21 +267,36 @@ und Kompression für den Transcoder.
   Albedokarten. Eine Aussage, die durch die Stufen falsch würde, geht als Frage an
   Jens; fachgeprüfte Texte werden nicht geändert.
 
-## 6. Etappe 5-4: Musik
+## 6. Etappe 5-4: Musik aus Dateien des Betreibers
 
-### 6.1 Stückliste und Dateien
+Fassung vom 24.09.2026 (Jens): Die Anwendung bringt keine Musik mit. Der Betreiber der
+Seite kann eigene MP3-Dateien hinterlegen, die dann abgespielt werden; Lizenz- und
+Rechtefragen obliegen ihm. Die Musikrecherche aus 5-1 (`docs/phase5-musik-auswahl.md`)
+wird nicht umgesetzt.
 
-- Dateien in `public/musik/`, Liste in `public/musik/stuecke.json`:
-  `[{ "datei", "titel", "urheber", "lizenz", "quelle" }]`. Die App lädt die Liste
-  zur Laufzeit. Ein neues Stück braucht nur Datei, Listeneintrag und eine Zeile in
-  `ASSETS.md`; das geht auch direkt auf dem Webspace ohne neuen Build.
-- **Format:** MP3, 160 kbit/s, Stereo; das spielen alle Zielbrowser ab, auch Safari
-  und Samsung Internet.
-- **Lautheit:** `scripts/musik-bauen.ts` bringt ein Quellstück per ffmpeg (loudnorm,
-  zwei Durchgänge) auf −18 LUFS integriert und höchstens −1,5 dBTP und kodiert es als
-  MP3. Diese Bearbeitung steht in `ASSETS.md`.
-- **Test** über die Liste: alle Felder gefüllt, Datei vorhanden, Lizenz ist `CC0`,
-  `CC BY 3.0` oder `CC BY 4.0`, `ASSETS.md` nennt die Datei.
+### 6.1 Dateien und Liste
+
+- **Ablage:** Dateien im Ordner `musik/` der ausgelieferten Seite, dazu die Liste
+  `musik/stuecke.json`: `[{ "datei": "stueck.mp3", "titel": "…", "urheber": "…",
+  "link": "https://…" }]`. Pflicht ist nur `datei` (Name relativ zu `musik/`, ohne
+  Pfadtrenner); `titel`, `urheber` und `link` sind freiwillig. Eine Liste ist nötig, weil
+  eine statische Seite ihren Ordner nicht auflisten kann (`.htaccess`: `Options
+  -Indexes`).
+- **Laden:** Die Anwendung holt die Liste zur Laufzeit (`fetch`, ohne Cache-Zwang).
+  Fehlt sie, ist sie kein gültiges JSON, oder bleibt nach der Prüfung kein Eintrag
+  übrig, gibt es keine Musik: keine Bedienung, kein Ton, keine Meldung. Ungültige
+  Einträge (kein `datei`, Pfadtrenner, falscher Typ) werden still verworfen.
+- **Nichts im Repository:** Weder Liste noch Musikdatei werden versioniert.
+  `public/musik/` ist git-ignoriert; legt jemand lokal Dateien dort ab, lädt
+  `npm run deploy` sie mit hoch, sie erscheinen aber nie im öffentlichen Repository.
+  Weil der Build keine Liste enthält, überschreibt ein Deploy die Liste des
+  Betreibers auf dem Webspace nicht; gelöscht wird dort ohnehin nur in `assets/`.
+- **Format:** MP3 (spielen alle Zielbrowser, auch Safari und Samsung Internet).
+  Lautheit und Bitrate liegen beim Betreiber; die Anwendung gleicht nichts an.
+- **Doku:** Ein Abschnitt „Eigene Musik“ in der `README.md` beschreibt Ablage, Liste mit
+  Beispiel, Verhalten ohne Liste und den Hinweis, dass Rechte und Lizenzen beim
+  Betreiber liegen. `public/.htaccess` bekommt einen Tag Cache für `.mp3` wie für
+  Bilder.
 
 ### 6.2 Zustand
 
@@ -286,7 +304,9 @@ Neues Store-Feld `ton: { modus: 'aus' | 'kino' | 'immer'; lautstaerke: number;
 stumm: boolean }`, Standard `{ modus: 'kino', lautstaerke: 0.5, stumm: false }`.
 `stumm` trägt die Taste M, damit der gewählte Modus erhalten bleibt. `ton` reist mit
 der Sitzung, nicht im Link und nicht in Ansichten (beide Streichlisten erweitern);
-`store/pruefer.ts` prüft Werte und Grenzen.
+`store/pruefer.ts` prüft Werte und Grenzen. Die geladene Liste ist kein Store-Zustand
+der Sitzung; ob Musik verfügbar ist, hält ein kleiner, nicht gespeicherter Zustand
+für die Oberfläche.
 
 ### 6.3 Wiedergabe
 
@@ -298,41 +318,47 @@ Browser):
   laufendem Kino.
 - **Technik:** ein `AudioContext`, zwei `HTMLAudioElement`s (`preload="none"`, also
   gestreamt) über je einen `GainNode` an einen gemeinsamen Lautstärke-Knoten. Nur so
-  greift die Lautstärke auch auf iOS, wo `audio.volume` nichts bewirkt.
+  greift die Lautstärke auch auf iOS, wo `audio.volume` nichts bewirkt. Der
+  `AudioContext` entsteht erst, wenn die Liste Einträge hat.
 - **Reihenfolge:** gemischte Folge aller Stücke, keine Wiederholung, bevor alle
-  gespielt sind, und nicht dasselbe Stück zweimal hintereinander an der Rundengrenze.
-  Unabhängig von den Kinoszenen.
+  gespielt sind, und nicht dasselbe Stück zweimal hintereinander an der Rundengrenze
+  (bei einem einzigen Stück läuft es in Schleife). Unabhängig von den Kinoszenen.
 - **Blenden:** Einblenden und Ausblenden 1,5 s bei jedem Wechsel von `sollSpielen`,
   Überblendung 3 s zum nächsten Stück. Ausgeblendet wird pausiert, nicht beendet;
   das Stück läuft beim nächsten Einblenden weiter.
 - **Autoplay-Sperre:** Ist der `AudioContext` gesperrt, wird er beim nächsten
   `pointerdown` oder `keydown` fortgesetzt. Kein Hinweis in der Oberfläche.
 - **Fehler:** Fehlt eine Datei oder scheitert das Dekodieren, wird das Stück
-  übersprungen; ist die Liste leer oder nicht ladbar, bleibt es still. Keine
-  Meldungen.
+  übersprungen und in dieser Sitzung nicht erneut versucht; scheitern alle, bleibt es
+  still. Keine Meldungen.
 
 ### 6.4 Bedienung
 
-Im Kino-Abschnitt der Seitenleiste (im Kompaktmodus im Bedienbogen):
+Nur sichtbar, wenn Musik verfügbar ist; im Kino-Abschnitt der Seitenleiste (im
+Kompaktmodus im Bedienbogen):
 
 - Umschalter „Aus / Nur Kino / Immer“, Lautstärkeregler.
-- Zeile „♪ Titel — Urheber (Lizenz)“ zum laufenden Stück, verlinkt auf die Quelle.
-  Sie erfüllt die Namensnennung nach CC BY in der Anwendung.
-- Taste **M** schaltet `stumm` um; die Kürzelübersicht nennt sie. Deutsch und
-  Englisch für alle neuen Texte.
+- Zeile „♪ Titel — Urheber“ zum laufenden Stück aus den Angaben der Liste; fehlt der
+  Titel, steht der Dateiname. Mit `link` ist die Zeile ein Link (neuer Tab,
+  `rel="noopener"`).
+- Taste **M** schaltet `stumm` um, wenn Musik verfügbar ist; die Kürzelübersicht nennt
+  sie dann. Deutsch und Englisch für alle neuen Texte.
 
 ### 6.5 Prüfung
 
-Einheitstests für `sollSpielen`, die Mischfolge und die Blendkurven, der Spieler mit
-einem nachgebauten `AudioContext`. Im Browser Gain-Werte als Zeitreihe über
-`performance.now()` (Blenddauer, Endwert, Überblendung) und fortlaufende
-`currentTime`. Die Hörprüfung macht Jens, auch auf dem A55.
+Einheitstests für die Prüfung der Liste, `sollSpielen`, die Mischfolge und die
+Blendkurven, der Spieler mit einem nachgebauten `AudioContext`. Im Browser mit einer
+Testliste und kurzen, selbst erzeugten Tondateien (ffmpeg-Sinus, nur im Scratchpad
+bzw. git-ignoriert): Gain-Werte als Zeitreihe über `performance.now()` (Blenddauer,
+Endwert, Überblendung), fortlaufende `currentTime`, und ohne Liste: keine Bedienung,
+keine Anfrage außer der Liste. Die Hörprüfung mit eigenen Stücken macht Jens, auch auf
+dem A55.
 
 ## 7. Etappe 5-5: Abschluss
 
 - `ASSETS.md` vollständig: neue Texturstufen samt Bearbeitung (Verkleinerung,
   KTX2-Kodierung, Spiegelung), verschobene Quell-JPEGs, Basis-Transcoder (Apache 2.0,
-  aus three.js), Musikstücke mit Lautheitsbearbeitung.
+  aus three.js). Musik bringt die Anwendung nicht mit (§6).
 - `npm run deploy -- --trocken` zeigt Dateiliste und Gesamtgröße; beides kommt ins
   Protokoll. Ausgeführt wird die Veröffentlichung nicht.
 - Gesamtabnahme `docs/phase5-abnahme.md`: Zusammenfassung der Etappen, Handprüfung
@@ -362,7 +388,7 @@ einem nachgebauten `AudioContext`. Im Browser Gain-Werte als Zeitreihe über
 | 5-1 | Seitenleiste mit Reiter und Breite; Überschriftenstil mit Kontrastmessung; Szenenliste und Suchfunktion; Musikrecherche; Abnahme |
 | 5-2 | Kompaktmodus und Bögen; grober Zeiger und Startstufe; Emulationsmessung und Handprüfung; Abnahme |
 | 5-3 | Probe und Werkzeugkette; KTX2 und Datenliste mit 1k/2k; Nachladen bis zur Höchststufe; Messung, `ASSETS.md`, Abnahme |
-| 5-4 | Liste, Lautheitsskript, Dateien; Store-Feld und Wiedergabe; Bedienung und Taste M; Messung und Abnahme |
+| 5-4 | Liste laden und prüfen, README, Ignore-Eintrag; Store-Feld und Wiedergabe; Bedienung und Taste M; Messung und Abnahme |
 | 5-5 | `ASSETS.md`, Trockenlauf, Gesamtabnahme, Tag |
 
 ### 8.3 Bündelgröße
@@ -370,7 +396,8 @@ einem nachgebauten `AudioContext`. Im Browser Gain-Werte als Zeitreihe über
 Der Hauptchunk steht bei 1 453,78 kB. Übersteigt er 1 503,78 kB (die bestehende
 Regel „Frage an Jens ab +50 kB“), entscheidet Jens, ob `KTX2Loader` und die
 Musikwiedergabe per dynamischem Import ausgelagert werden. Die Texturen und
-Musikdateien selbst zählen nicht zum Bündel.
+Musikdateien selbst zählen nicht zum Bündel. (Stand 24.09.2026: Jens hat den
+KTX2Loader im Hauptchunk belassen; nächste Frage ab 1 571,79 kB.)
 
 ### 8.4 Fachgeprüfte Texte
 
