@@ -5,12 +5,14 @@ import { handleShortcut, useShortcuts, SHORTCUTS_PANEL } from './useShortcuts';
 import { useStore, DEFAULT_STATE } from '../../store';
 import { noteUserInput, stopCinema } from '../cinemaControl';
 import { useBogen } from '../bogen';
+import { useMusikStand } from '../musikStand';
 
 describe('handleShortcut', () => {
   // stopCinema zuerst: löscht den gemerkten Zustand von vor dem Kinostart.
   beforeEach(() => {
     stopCinema();
     useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
+    useMusikStand.setState({ verfuegbar: false, aktuell: null });
   });
 
   it('beendet mit Escape das Kino und stellt die Kamera von vorher wieder her', () => {
@@ -132,5 +134,18 @@ describe('handleShortcut', () => {
       vi.unstubAllGlobals();
       useBogen.getState().setBogen(null);
     }
+  });
+
+  it('lässt die Taste M ohne Musik frei', () => {
+    expect(handleShortcut('m')).toBe(false);
+    expect(useStore.getState().ton.stumm).toBe(false);
+  });
+
+  it('schaltet mit M die Musik stumm und wieder an', () => {
+    useMusikStand.setState({ verfuegbar: true });
+    expect(handleShortcut('m')).toBe(true);
+    expect(useStore.getState().ton.stumm).toBe(true);
+    handleShortcut('m');
+    expect(useStore.getState().ton.stumm).toBe(false);
   });
 });

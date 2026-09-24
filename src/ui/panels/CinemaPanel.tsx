@@ -5,6 +5,7 @@ import { Panel } from './Panel';
 import { SCENES } from '../../data/scenes';
 import { sceneIndexFor } from '../../sim/director';
 import { startCinema, stopCinema, nextScene, starteSzene } from '../cinemaControl';
+import { MusikSteuerung } from './MusikSteuerung';
 
 export function CinemaPanel(): React.JSX.Element {
   const cinema = useStore((s) => s.cinema);
@@ -101,6 +102,8 @@ export function CinemaPanel(): React.JSX.Element {
           />
           <span>{t('cinema.pauseOnInput')}</span>
         </label>
+
+        <MusikSteuerung />
       </div>
     </Panel>
   );

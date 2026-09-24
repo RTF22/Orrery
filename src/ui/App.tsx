@@ -17,6 +17,7 @@ import { InfoPanel } from './info/InfoPanel';
 import { useShortcuts, SHORTCUTS_PANEL } from './shortcuts/useShortcuts';
 import { useIdleHide } from './idle';
 import { useWakeLock } from './wakeLock';
+import { useMusikStand } from './musikStand';
 
 /**
  * Belegung für die Übersicht — Wirkung als Sprachschlüssel. Die Taste selbst
@@ -44,6 +45,9 @@ const KUERZEL: Kuerzel = [
   ['I', 'shortcuts.info'],
   ['?', 'shortcuts.toggleHelp'],
 ];
+
+/** M ist nur mit Musik des Betreibers belegt (useShortcuts.ts). */
+const MUSIK_KUERZEL: Kuerzel = [['M', 'shortcuts.mute']];
 
 /** Controller nach der Standardbelegung (Entwurf Flug und Controller §5.2, §5.3). */
 const PAD_KUERZEL: Kuerzel = [
@@ -80,9 +84,11 @@ function Kuerzelliste({ eintraege }: { eintraege: Kuerzel }): React.JSX.Element 
 }
 
 function Kuerzeluebersicht(): React.JSX.Element {
+  // M ist nur mit Musik des Betreibers belegt (useShortcuts.ts).
+  const musik = useMusikStand((s) => s.verfuegbar);
   return (
     <Panel id={SHORTCUTS_PANEL} title={t('shortcuts.title')}>
-      <Kuerzelliste eintraege={KUERZEL} />
+      <Kuerzelliste eintraege={musik ? [...KUERZEL, ...MUSIK_KUERZEL] : KUERZEL} />
       <h3 className="mb-1 mt-3 text-xs font-semibold opacity-80">{t('shortcuts.padTitle')}</h3>
       <Kuerzelliste eintraege={PAD_KUERZEL} />
     </Panel>

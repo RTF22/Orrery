@@ -7,6 +7,7 @@ import { stopCinema } from '../cinemaControl';
 import { SCENES } from '../../data/scenes';
 import { t } from '../i18n';
 import { sceneIndexFor } from '../../sim/director';
+import { useMusikStand } from '../musikStand';
 
 beforeEach(() => {
   stopCinema();
@@ -86,5 +87,15 @@ describe('CinemaPanel', () => {
     render(<CinemaPanel />);
     fireEvent.click(screen.getByLabelText(/Szenen mischen/));
     expect(useStore.getState().cinema.shuffle).toBe(false);
+  });
+
+  it('zeigt die Musikbedienung nur mit verfügbarer Musik', () => {
+    useMusikStand.setState({ verfuegbar: false, aktuell: null });
+    const { unmount } = render(<CinemaPanel />);
+    expect(screen.queryByTestId('musik')).toBeNull();
+    unmount();
+    useMusikStand.setState({ verfuegbar: true });
+    render(<CinemaPanel />);
+    expect(screen.getByTestId('musik')).toBeTruthy();
   });
 });

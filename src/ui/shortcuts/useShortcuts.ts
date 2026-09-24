@@ -3,6 +3,7 @@ import { useStore, DEFAULT_STATE } from '../../store';
 import { toggleCinema, nextScene, stopCinema, cinemaAktiv } from '../cinemaControl';
 import { INFO_PANEL, infoOffen, istSchmal } from '../info/konstanten';
 import { useBogen } from '../bogen';
+import { useMusikStand } from '../musikStand';
 
 /** Panel-Schlüssel der Kürzel-Übersicht. */
 export const SHORTCUTS_PANEL = 'shortcuts';
@@ -82,6 +83,11 @@ export function handleShortcut(taste: string): boolean {
       s.setUi({
         panels: { ...s.ui.panels, [SHORTCUTS_PANEL]: !(s.ui.panels[SHORTCUTS_PANEL] ?? false) },
       });
+      return true;
+    case 'm':
+      // Nur mit Musik des Betreibers belegt (Entwurf Phase 5 §6.4); sonst bleibt die Taste frei.
+      if (!useMusikStand.getState().verfuegbar) return false;
+      s.setTon({ stumm: !s.ton.stumm });
       return true;
     default:
       return false;

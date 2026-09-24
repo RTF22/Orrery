@@ -5,6 +5,7 @@ import { App } from './App';
 import { useStore, DEFAULT_STATE } from '../store';
 import { useBogen } from './bogen';
 import { SCHMAL_ABFRAGE } from './info/konstanten';
+import { useMusikStand } from './musikStand';
 
 /** Kompaktmodus an: nur SCHMAL_ABFRAGE trifft zu. */
 function kompakt(): void {
@@ -14,7 +15,10 @@ function kompakt(): void {
   }));
 }
 
-beforeEach(() => { useStore.getState().replaceAll(structuredClone(DEFAULT_STATE)); });
+beforeEach(() => {
+  useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
+  useMusikStand.setState({ verfuegbar: false, aktuell: null });
+});
 afterEach(() => { vi.unstubAllGlobals(); useBogen.getState().setBogen(null); });
 
 describe('App', () => {
@@ -74,5 +78,15 @@ describe('App', () => {
     useStore.getState().setUi({ panels: { ...DEFAULT_STATE.ui.panels, shortcuts: true } });
     render(<App />);
     expect(screen.queryByText('W A S D')).toBeNull();
+  });
+
+  it('nennt die Taste M in der Kürzelübersicht nur mit verfügbarer Musik', () => {
+    useStore.getState().setUi({ panels: { ...DEFAULT_STATE.ui.panels, shortcuts: true } });
+    const { unmount } = render(<App />);
+    expect(screen.queryByText('Musik stumm schalten')).toBeNull();
+    unmount();
+    useMusikStand.setState({ verfuegbar: true });
+    render(<App />);
+    expect(screen.getByText('Musik stumm schalten')).toBeTruthy();
   });
 });
