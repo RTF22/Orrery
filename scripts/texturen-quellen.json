@@ -1,0 +1,37 @@
+{
+  "kodierung": {
+    "etc1s": ["--encode", "basis-lz", "--clevel", "5", "--qlevel", "255", "--max-endpoints", "16128", "--max-selectors", "16128"],
+    "uastc": ["--encode", "uastc", "--uastc-quality", "2", "--uastc-rdo", "--uastc-rdo-l", "1.0", "--zstd", "18"]
+  },
+  "koerper": [
+    { "id": "mercury", "stufen": [1024, 2048, 8192], "hoch": { "url": "https://www.solarsystemscope.com/textures/download/8k_mercury.jpg", "sha256": "5c8bd885ae3571c6ba2cd34b3446b9c6d767e314bf0ee8c1d5c147cadd388fc3" } },
+    { "id": "venus", "stufen": [1024, 2048, 8192], "hoch": { "url": "https://www.solarsystemscope.com/textures/download/8k_venus_surface.jpg", "sha256": "9bc21a50577ed8ac734cda91058724c7a741c19427aa276224ce349351432c5b" } },
+    { "id": "earth", "stufen": [1024, 2048, 8192], "hoch": { "url": "https://www.solarsystemscope.com/textures/download/8k_earth_daymap.jpg", "sha256": "88ab060b6e7d241cfc590c69f528fab2b3247b738d40124cb590999a6fe44abc" } },
+    { "id": "mars", "stufen": [1024, 2048, 8192], "hoch": { "url": "https://www.solarsystemscope.com/textures/download/8k_mars.jpg", "sha256": "4cc52149924abc6ae507d63032f994e1d42a55cb82c09e002d1a567ff66c23ee" } },
+    { "id": "moon", "stufen": [1024, 2048, 8192], "hoch": { "url": "https://www.solarsystemscope.com/textures/download/8k_moon.jpg", "sha256": "d1875bcec83588ca25e4802e576f6bb9f88b39e1e403cb41ff55867419c54796" } },
+    { "id": "sun", "stufen": [1024, 2048, 4096], "hoch": { "url": "https://www.solarsystemscope.com/textures/download/8k_sun.jpg", "sha256": "f22b1cfb306ddce72a7e3b628668a0175b745038ce6268557cb2f7f1bdf98b9d" } },
+    { "id": "jupiter", "stufen": [1024, 2048, 4096], "hoch": { "url": "https://www.solarsystemscope.com/textures/download/8k_jupiter.jpg", "sha256": "0bd844bf20822c4e3e80882b077859833c0dac44c7e4e1e0cd63d1b1b6d43085" } },
+    { "id": "saturn", "stufen": [1024, 2048, 4096], "hoch": { "url": "https://www.solarsystemscope.com/textures/download/8k_saturn.jpg", "sha256": "0d39a4a490c87c3edabe00a3881a29bb3418364178c79c534fe0986e97e09853" } },
+    { "id": "uranus", "stufen": [1024, 2048] },
+    { "id": "neptune", "stufen": [1024, 2048] },
+    { "id": "callisto", "stufen": [1024] },
+    { "id": "ceres", "stufen": [1024] },
+    { "id": "charon", "stufen": [1024] },
+    { "id": "dione", "stufen": [1024] },
+    { "id": "enceladus", "stufen": [1024] },
+    { "id": "eris", "stufen": [1024] },
+    { "id": "europa", "stufen": [1024] },
+    { "id": "ganymede", "stufen": [1024] },
+    { "id": "haumea", "stufen": [1024] },
+    { "id": "iapetus", "stufen": [1024] },
+    { "id": "io", "stufen": [1024] },
+    { "id": "makemake", "stufen": [1024] },
+    { "id": "mimas", "stufen": [1024] },
+    { "id": "phobos", "stufen": [1024] },
+    { "id": "pluto", "stufen": [1024] },
+    { "id": "rhea", "stufen": [1024] },
+    { "id": "tethys", "stufen": [1024] },
+    { "id": "titan", "stufen": [1024] },
+    { "id": "triton", "stufen": [1024] }
+  ]
+}
