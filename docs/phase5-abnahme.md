@@ -184,6 +184,8 @@ Musikvorschläge aus Etappe 5-1, gegenstandslos durch die Umplanung der Etappe 5
 
 **(a) Tests, die eine Verzweigung nicht einzeln abdecken**
 
+- `pruefer.test.ts`: Der Test für `ui.leiste` sitzt im `describe`-Block `ui.info`,
+  planvorgegeben (5-1).
 - Kein Test für „schmaler Bildschirm → kein Breitengriff“ (5-1).
 - Die Verdrahtung der Qualitäts-Startstufe (`deckeStufe` in `app/loop.ts`) hat keinen eigenen
   Test, nur die Emulationsmessung bestätigt sie indirekt (5-2).
@@ -193,7 +195,7 @@ Musikvorschläge aus Etappe 5-1, gegenstandslos durch die Umplanung der Etappe 5
 **(b) Bedienung und Barrierefreiheit**
 
 - Die Szenenknöpfe tragen `title` statt `aria-label` (unschädlich, der sichtbare Text liefert
-  den zugänglichen Namen ohnehin) (5-1).
+  den zugänglichen Namen ohnehin) (5-1, §9 geparkt).
 - `useMedienabfrage` löst im Einhänge-Effekt ein zusätzliches, überflüssiges Rendern aus (5-2).
 - `infoOffen(panels, schmal)` bekommt von beiden Aufrufern inzwischen immer `schmal=false`; der
   andere Zweig ist toter Pfad, Aufräumen bei Gelegenheit (5-2).
