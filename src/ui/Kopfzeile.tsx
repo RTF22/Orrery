@@ -22,11 +22,15 @@ const MELDUNG_MS = 2000;
 
 const KNOPF = 'rounded border border-transparent px-2 py-0.5 opacity-70 hover:opacity-100';
 
+/** Grundform der Sprachknöpfe; ⓘ teilt sie. */
+const SPRACHKNOPF = 'rounded border px-2 py-0.5 font-semibold';
+
 /**
- * Schmale Leiste über der Panel-Spalte: „Link kopieren", „Zurücksetzen",
- * eine kurzlebige Statusmeldung und der Sprachschalter. Die weiteren
- * Schaltflächen aus dem Gesamtentwurf (UI aus, Vollbild, Kino) bekommen
- * später hier ihren Platz; ⓘ öffnet die Info-Karte.
+ * Schmale Leiste über der Panel-Spalte in zwei Zeilen: oben „Link kopieren",
+ * „Zurücksetzen" und eine kurzlebige Statusmeldung, unten links ⓘ (öffnet
+ * die Info-Karte) und rechts der Sprachschalter. Die weiteren Schaltflächen
+ * aus dem Gesamtentwurf (UI aus, Vollbild, Kino) bekommen später hier ihren
+ * Platz.
  */
 export function Kopfzeile(): React.JSX.Element {
   const language = useStore((s) => s.ui.language);
@@ -72,46 +76,55 @@ export function Kopfzeile(): React.JSX.Element {
   };
 
   return (
-    <header className="pointer-events-auto flex flex-wrap items-center justify-end gap-1 rounded-lg border border-white/10 bg-slate-900/70 px-2 py-1 text-xs text-slate-100 backdrop-blur-md">
-      <button
-        type="button"
-        className={KNOPF}
-        aria-label={t('infokarte.knopf')}
-        title={t('infokarte.knopf')}
-        onClick={() => { oeffnen(startReiter(grobJetzt(), laeuftAlsApp())); }}
-      >
-        ⓘ
-      </button>
-      <button type="button" className={KNOPF} onClick={() => { void linkKopieren(); }}>
-        {t('header.copyLink')}
-      </button>
-      <button type="button" className={KNOPF} onClick={zuruecksetzen}>
-        {t('header.reset')}
-      </button>
-      {/* Immer im Baum, damit die Live-Region beim ersten Text schon existiert. */}
-      <span role="status" aria-live="polite" className="text-slate-300">
-        {meldung === null ? '' : t(meldung)}
-      </span>
-      <div role="group" aria-label={t('language.switch')} className="flex gap-1">
-        {SPRACHEN.map(([code, kurz, schluessel]) => {
-          const aktiv = code === language;
-          return (
-            <button
-              key={code}
-              type="button"
-              aria-pressed={aktiv}
-              aria-label={`${t(schluessel)} (${kurz})`}
-              onClick={() => { setUi({ language: code }); }}
-              className={`rounded border px-2 py-0.5 font-semibold ${
-                aktiv
-                  ? 'border-sky-300/60 bg-sky-400/20'
-                  : 'border-transparent opacity-70 hover:opacity-100'
-              }`}
-            >
-              {kurz}
-            </button>
-          );
-        })}
+    <header className="pointer-events-auto flex flex-col gap-1 rounded-lg border border-white/10 bg-slate-900/70 px-2 py-1 text-xs text-slate-100 backdrop-blur-md">
+      <div className="flex flex-wrap items-center justify-end gap-1">
+        <button type="button" className={KNOPF} onClick={() => { void linkKopieren(); }}>
+          {t('header.copyLink')}
+        </button>
+        <button type="button" className={KNOPF} onClick={zuruecksetzen}>
+          {t('header.reset')}
+        </button>
+        {/* Immer im Baum, damit die Live-Region beim ersten Text schon existiert. */}
+        <span role="status" aria-live="polite" className="text-slate-300">
+          {meldung === null ? '' : t(meldung)}
+        </span>
+      </div>
+      {/* ⓘ links, Sprachschalter rechts; ⓘ im Stil der Sprachknöpfe. Das
+          Zeichen ⓘ selbst fiele in der kleinen Schrift winzig aus, deshalb
+          ein „i“ im Kreis aus Rahmen. */}
+      <div className="flex items-center justify-between gap-1">
+        <button
+          type="button"
+          className={`${SPRACHKNOPF} border-transparent opacity-70 hover:opacity-100`}
+          aria-label={t('infokarte.knopf')}
+          title={t('infokarte.knopf')}
+          onClick={() => { oeffnen(startReiter(grobJetzt(), laeuftAlsApp())); }}
+        >
+          <span className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-current leading-none">
+            i
+          </span>
+        </button>
+        <div role="group" aria-label={t('language.switch')} className="flex gap-1">
+          {SPRACHEN.map(([code, kurz, schluessel]) => {
+            const aktiv = code === language;
+            return (
+              <button
+                key={code}
+                type="button"
+                aria-pressed={aktiv}
+                aria-label={`${t(schluessel)} (${kurz})`}
+                onClick={() => { setUi({ language: code }); }}
+                className={`${SPRACHKNOPF} ${
+                  aktiv
+                    ? 'border-sky-300/60 bg-sky-400/20'
+                    : 'border-transparent opacity-70 hover:opacity-100'
+                }`}
+              >
+                {kurz}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </header>
   );

@@ -31,6 +31,16 @@ describe('Kopfzeile', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Info und Hilfe' }));
     expect(useInfoKarte.getState().offen).toBe(true);
   });
+
+  it('setzt ⓘ links in die Zeile des Sprachschalters, im Stil der Sprachknöpfe', () => {
+    render(<Kopfzeile />);
+    const info = screen.getByRole('button', { name: 'Info und Hilfe' });
+    const sprachen = screen.getByRole('group', { name: 'Sprache' });
+    expect(info.parentElement).toBe(sprachen.parentElement);
+    expect(info.parentElement?.firstElementChild).toBe(info);
+    const en = screen.getByRole('button', { name: 'English (EN)' });
+    expect(info.className).toBe(en.className);
+  });
 });
 
 describe('Kopfzeile: Link kopieren und Zurücksetzen', () => {
