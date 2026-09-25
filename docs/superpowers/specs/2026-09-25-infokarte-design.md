@@ -100,8 +100,9 @@ Deutsch und Englisch, knapp. Texte in `ui/i18n/de.ts` und `en.ts` unter `infokar
   NASA/GSFC SVS, ESA/Gaia/DPAC unter CC BY-NC 3.0 IGO) — Übersicht in ASSETS.md ↗“ →
   `https://github.com/RTF22/Orrery/blob/master/ASSETS.md`.
 - „Nichtkommerzielles Projekt.“
-- Version „v“ + Versionsnummer aus `package.json` (über `define` in `vite.config.ts` als
-  `__ORRERY_VERSION__`); `package.json` bekommt mit den Inhalten `"version": "0.7.1"`.
+- Version mit der Versionsnummer aus `package.json`, etwa „Version 0.7.1“ (über `define` in
+  `vite.config.ts` als `__ORRERY_VERSION__`); `package.json` bekommt mit den Inhalten
+  `"version": "0.7.1"`.
 
 ## 5. Prüfung
 
