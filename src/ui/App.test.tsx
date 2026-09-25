@@ -123,6 +123,26 @@ describe('App', () => {
     useInfoKarte.setState({ offen: false });
   });
 
+  it('wechselt von der Info-Karte über „Alle Tastenkürzel und Controller" zur Steuerungskarte und zurück', () => {
+    render(<App />);
+    const infoKnopf = screen.getByRole('button', { name: 'Info und Hilfe' });
+    infoKnopf.focus();
+    fireEvent.click(infoKnopf);
+    expect(useInfoKarte.getState().offen).toBe(true);
+
+    fireEvent.click(screen.getByRole('tab', { name: 'Bedienung' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Alle Tastenkürzel und Controller' }));
+
+    expect(useInfoKarte.getState().offen).toBe(false);
+    expect(screen.getByRole('dialog', { name: 'Steuerung' })).toBeTruthy();
+    const reiterTastatur = screen.getByRole('tab', { name: 'Tastatur' });
+    expect(document.activeElement).toBe(reiterTastatur);
+
+    fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
+    expect(useSteuerKarte.getState().offen).toBe(false);
+    expect(document.activeElement).toBe(infoKnopf);
+  });
+
   it('breit: kein Hilfe-Knopf', () => {
     render(<App />);
     expect(document.querySelector('.hilfeknopf')).toBeNull();

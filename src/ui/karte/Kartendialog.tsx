@@ -95,7 +95,7 @@ export function Kartendialog<R extends string>(p: KartendialogProps<R>): React.J
           <h2 id={titelId} className="text-base font-semibold">{t(p.titelSchluessel)}</h2>
           <button
             type="button"
-            aria-label={t('infokarte.schliessen')}
+            aria-label={t('karte.schliessen')}
             onClick={p.schliessen}
             className="rounded px-2 py-1 text-lg leading-none opacity-70 hover:opacity-100"
           >

@@ -279,9 +279,10 @@ export const de = {
   'padKey.dpadDown': 'Steuerkreuz ▼',
   'padKey.menu': 'Menü',
   'padKey.view': 'Ansicht',
+  /** Gemeinsamer Schließen-Knopf im Kartenrahmen (Kartendialog.tsx). */
+  'karte.schliessen': 'Schließen',
   'infokarte.knopf': 'Info und Hilfe',
   'infokarte.titel': 'Orrery',
-  'infokarte.schliessen': 'Schließen',
   'infokarte.reiter': 'Bereiche der Info-Karte',
   'infokarte.reiter.app': 'App',
   'infokarte.reiter.bedienung': 'Bedienung',

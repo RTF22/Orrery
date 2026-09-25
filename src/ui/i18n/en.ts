@@ -277,9 +277,10 @@ export const en: Record<Key, string> = {
   'padKey.dpadDown': 'D-pad ▼',
   'padKey.menu': 'Menu',
   'padKey.view': 'View',
+  /** Gemeinsamer Schließen-Knopf im Kartenrahmen (Kartendialog.tsx). */
+  'karte.schliessen': 'Close',
   'infokarte.knopf': 'Info and help',
   'infokarte.titel': 'Orrery',
-  'infokarte.schliessen': 'Close',
   'infokarte.reiter': 'Sections of the info card',
   'infokarte.reiter.app': 'App',
   'infokarte.reiter.bedienung': 'Controls',
