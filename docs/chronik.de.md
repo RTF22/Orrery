@@ -49,7 +49,7 @@ verlangte ausdrücklich: „starte mit dem brainstorming-Skill und interviewe mi
 bevor du planst oder Code schreibst. Stelle die Fragen einzeln, schlage jeweils eine
 begründete Empfehlung vor und fasse am Ende ein Design-Dokument zusammen, das ich
 freigebe. Erst danach: Implementierungsplan, dann Umsetzung in kleinen, testbaren
-Schritten." (`docs/ursprungsprompt.md`). Dieser Ablauf — Brainstorming, Design-Dokument,
+Schritten.“ (`docs/ursprungsprompt.md`). Dieser Ablauf — Brainstorming, Design-Dokument,
 Freigabe, Plan, Umsetzung, Abnahme — zieht sich durch das ganze Projekt. Die dabei
 verwendeten Skills stammen aus der Sammlung Superpowers (Plugin von Jesse Vincent).
 
@@ -180,7 +180,7 @@ statt nach einer festen Kamera, Albedo ist ein Katalogdatum je Körper, Sonne un
 Sterne bleiben von der Belichtung unberührt.
 
 **Ergebnis:** Tag `v0.3.0` (Tag-Commit `515f4fe`, 17:46 Uhr). Rund 46 Minuten danach,
-um 18:32 Uhr, wurde das Projekt in „Orrery" umbenannt (`6d3409b`). Eine eigene Testzahl
+um 18:32 Uhr, wurde das Projekt in „Orrery“ umbenannt (`6d3409b`). Eine eigene Testzahl
 oder ein eigener Hauptchunk-Wert für diese Etappe ist im Faktenblatt nicht gesondert
 ausgewiesen (die nächste dort verzeichnete Zahl gehört bereits zu Phase 4a). Die Etappe
 dauerte laut Zeitstempeln rund 8,7 Stunden, ganz am 13.09.2026 — dem Tag mit
@@ -206,7 +206,7 @@ dieser Phase entfielen auf Subagenten, vorherrschendes Modell war Claude Opus 5
 externes i18n-Framework einzuführen.
 
 **Entscheidungen:** Von Jens Fricke am 13.09.2026 festgelegt: Die Startsprache
-richtet sich automatisch nach `navigator.language` (beginnt der Wert mit „en",
+richtet sich automatisch nach `navigator.language` (beginnt der Wert mit „en“,
 startet die App englisch); statt eines Frameworks entstand eine eigene, kleine
 Lösung; die englische Locale ist `en-GB` (Tag vor Monat, 24-Stunden-Uhr).
 
@@ -234,9 +234,9 @@ beginnen.
 
 **Entscheidungen:** Von Jens Fricke am 14.09.2026 festgelegt: zwei Etappen,
 zuerst Prüfer, Profile, Sitzung, Link und Zurücksetzen, danach ein eigenes
-Panel „Ansichten" mit Export und Import; die Sitzung wird automatisch und
-entprellt gesichert, die Checkbox „Sitzung merken" ist standardmäßig an; die
-Adresszeile bleibt sauber, nur der Knopf „Link kopieren" erzeugt das
+Panel „Ansichten“ mit Export und Import; die Sitzung wird automatisch und
+entprellt gesichert, die Checkbox „Sitzung merken“ ist standardmäßig an; die
+Adresszeile bleibt sauber, nur der Knopf „Link kopieren“ erzeugt das
 URL-Fragment.
 
 **Ergebnis:** Nach Etappe 1 58 Testdateien und Hauptchunk 1 125,99 kB (gzip
@@ -281,9 +281,9 @@ Tages).
 
 **Fehler und Korrekturen:** Die Grundschultexte wichen zunächst vom
 freigegebenen Plan ab: `objekt-phobos` nannte eine Aufgangszahl statt der
-Umlaufaussage, `thema-ringe` gab die Ringbreite als „über 250 000 km" (das ist
-der Durchmesser) statt „200 000 km breit" an, `objekt-makemake` verglich
-Makemake mit Pluto als „gut halb so groß" statt „zwei Drittel" — gefangen durch
+Umlaufaussage, `thema-ringe` gab die Ringbreite als „über 250 000 km“ (das ist
+der Durchmesser) statt „200 000 km breit“ an, `objekt-makemake` verglich
+Makemake mit Pluto als „gut halb so groß“ statt „zwei Drittel“ — gefangen durch
 die Fachprüfung, korrigiert in einer Fix-Welle, die 15 Grundschultexte wörtlich
 auf den Planstand brachte.
 
@@ -303,12 +303,12 @@ war Claude Sonnet 5 (47,5 % der Ausgabetokens), vor Claude Opus 5 (35,5 %).
 **Entscheidungen:** Laut Abnahmeprotokoll hat Jens am 15.09.2026 entschieden,
 dass ein erneuter Klick auf das bereits gewählte Kameraziel dieses wieder
 anfährt (der Zoom-Reset-Effekt ist gewollt) und dass Klicks in der dichten
-Systemansicht auch eine Bahn statt „ins Leere" treffen dürfen: „Es bleibt
-dabei."
+Systemansicht auch eine Bahn statt „ins Leere“ treffen dürfen: „Es bleibt
+dabei.“
 
 **Ergebnis:** 2003 Tests in 81 Testdateien. Die Etappe lief am Nachmittag des
 15.09.2026, von `ebc5abc` (16:10 Uhr) bis `e9e78c0` (19:28 Uhr) — rund 3,3
-Stunden — und überschneidet sich zeitlich mit dem Ende von Phase 4c.
+Stunden — und überschneidet sich zeitlich mit Phase 4c.
 
 **Fehler und Korrekturen:** Ein Klick auf einen nur durch Hover sichtbaren
 Namen traf zunächst nichts oder das falsche Ziel, weil `pointerdown` sofort
@@ -363,7 +363,7 @@ der Ausgabetokens dieser Phase entfielen auf Subagenten, vorherrschendes
 Modell war Claude Sonnet 5 (70,9 % der Ausgabetokens), vor Claude Opus 5
 (29,1 %).
 
-**Commits:** `ccb398c`, `6566e32`, `4b77caf`, `46c7319`.
+**Commits:** `ccb398c`, `6566e32`, `46c7319`, `4b77caf`.
 
 <a id="flug"></a>
 ## Flug: Tastatur, Maus und Controller (19.09.2026)
@@ -372,7 +372,7 @@ Modell war Claude Sonnet 5 (70,9 % der Ausgabetokens), vor Claude Opus 5
 sowie mit einem Xbox-Controller samt Fadenkreuz (Etappe 2).
 
 **Entscheidungen:** Von Jens Fricke am 19.09.2026 festgehalten: „Mach alles
-wie empfohlen" — die Regel aus §13.5 des Entwurfs bleibt bestehen; das Kino
+wie empfohlen“ — die Regel aus §13.5 des Entwurfs bleibt bestehen; das Kino
 darf im Fenster laufen, wenn Chrome das Vollbild verweigert; rechter Stick und
 die Taste R3 brechen keine laufende Kamerafahrt mehr ab, und eine
 Wiederherstellung wird auch während eines laufenden Flugs erkannt.
@@ -421,17 +421,18 @@ ein eigenes Abnahmeprotokoll.
 ### 4d-1: Pilottexte (17.09.2026)
 
 Die ersten beiden Hochschultexte, `thema-bahnelemente` und `objekt-earth`, liefen
-als Pilot und wurden mit Commit `f0963a0` abgenommen — und lieferten gleich zwei
-Lehrstücke zum Leitmotiv. `thema-bahnelemente` schrieb den vier äußeren
-Uranusmonden pauschal „über 40 Jahre keinen belastbaren linearen Trend“ zu; das
-traf nur auf zwei von ihnen zu, einziger Beleg für die Pauschalaussage war ein
-falscher Kommentar in `uranus-monde.ts` — gefangen durch die Fachprüfung, mit
-Commit `a21082a` richtiggestellt. Derselbe Text schrieb die Herkunft der
-Mondraten pauschal „JPL“ zu, obwohl die Umlaufzeit selbst aus der siderischen
-Periode stammt — ebenfalls durch die Fachprüfung gefangen, in einer zweiten,
-ledger-geführten Prüfrunde mit Commit `dc36107` berichtigt. `objekt-earth`
-verwechselte den Beginn eines Messzeitraums (1972) mit dem Beginn des
-physikalischen Effekts selbst, richtiggestellt mit Commit `4e5d336`.
+als Pilot und wurden mit Commit `f0963a0` abgenommen. Dabei traten gleich drei
+Fälle auf, die der Fehlerkatalog dieser Phase zuordnet: `thema-bahnelemente`
+schrieb den vier äußeren Uranusmonden pauschal „über 40 Jahre keinen
+belastbaren linearen Trend“ zu; das traf nur auf zwei von ihnen zu, einziger
+Beleg für die Pauschalaussage war ein falscher Kommentar in `uranus-monde.ts`
+— gefangen durch die Fachprüfung, mit Commit `a21082a` richtiggestellt.
+Derselbe Text schrieb die Herkunft der Mondraten pauschal „JPL“ zu, obwohl die
+Umlaufzeit selbst aus der siderischen Periode stammt — ebenfalls durch die
+Fachprüfung gefangen, in einer zweiten, ledger-geführten Prüfrunde mit Commit
+`dc36107` berichtigt. `objekt-earth` verwechselte den Beginn eines
+Messzeitraums (1972) mit dem Beginn des physikalischen Effekts selbst —
+gefangen durch die Fachprüfung, richtiggestellt mit Commit `4e5d336`.
 
 ![Infopanel auf Hochschulniveau zum Thema Bahnelemente mit Formeln.](bilder/entstehung/infopanel-hochschule.jpg)
 
@@ -470,8 +471,9 @@ unterschiedliche physikalische Größen (Kippwinkel „wie bei Io“), gefangen 
 die Fachprüfung und in der Nacharbeit richtiggestellt. Ein zweiter Befund blieb
 dagegen offen: Ein Kommentar in `scenes.ts` zur Szene „galileisches
 Schattenspiel“ behauptet, Kallistos Bahn rage „gelegentlich“ über den Bildrand —
-die vollständige geometrische Nachrechnung ergab 52,4 % aller Ziehungen; der Text
-folgt der eigenen Rechnung, der Kommentar blieb unverändert.
+gefangen durch die Fachprüfung, deren vollständige geometrische Nachrechnung
+52,4 % aller Ziehungen ergab; der Text folgt der eigenen Rechnung, der
+Kommentar blieb unverändert.
 
 ### 4d-6: Saturn und Ringe (21.–22.09.2026)
 
@@ -482,9 +484,10 @@ verzeichnet der Fehlerkatalog keinen Fall.
 
 Commits `e227ac2`…`f3d579b`. Auch hier erwies sich ein Code-Kommentar als
 unbelegt: Zur Szene „Iapetus schief“ behauptet `scenes.ts`, `distanceInRadii: 40`
-zeige „Iapetus' vollständige, klar geneigte Bahnellipse komfortabel im Bild“; ein
-eigener Frustumtest zeigte tatsächlich nur 5 bis 31 von 72 Stützpunkten im Bild.
-Auch dieser Befund blieb ohne Codeeingriff als Vormerkung im Protokoll stehen.
+zeige „Iapetus' vollständige, klar geneigte Bahnellipse komfortabel im Bild“ —
+gefangen durch die Fachprüfung, deren eigener Frustumtest tatsächlich nur 5 bis
+31 von 72 Stützpunkten im Bild zeigte. Auch dieser Befund blieb ohne
+Codeeingriff als Vormerkung im Protokoll stehen.
 
 ### 4d-8: Uranussystem (22.09.2026)
 
@@ -497,15 +500,20 @@ und in der Nacharbeit richtiggestellt.
 Abgenommen mit `4e39a04`. `objekt-pluto` und das fachgeprüfte Grundlagenthema
 `thema-achsneigung` schrieben Plutos „chaotische“ Achsschiefe fälschlich
 Dobrovolskis und Harris 1983 zu; die Arbeit beschreibt tatsächlich eine stabile
-Oszillation. In `objekt-pluto` wurde das richtiggestellt; `thema-achsneigung`
-blieb unverändert, weil die Regel „keine Änderung fachgeprüfter Texte in dieser
-Etappe“ galt — ein Widerspruch, den das Protokoll offen benennt, statt ihn
-stillschweigend aufzulösen.
+Oszillation. `objekt-pluto` wurde noch in der Etappe berichtigt; für
+`thema-achsneigung` verbot die Regel „keine Änderung fachgeprüfter Texte in
+dieser Etappe“ zunächst eine Korrektur, die Entscheidung blieb bei Jens. Er traf
+sie noch am selben Tag: Commit `63d3144` (23.09.2026, 06:32 Uhr) berichtigte
+`thema-achsneigung` in beiden Sprachen samt Belegliste. Die Gesamtabnahme von
+Phase 4d vermerkte diese Korrektur an einer Stelle, führte die Zuschreibung an
+anderer Stelle aber weiter als offen — ein Widerspruch im eigenen Protokoll, den
+der erste Entwurf dieses Abschnitts übernahm, bis die Prüfung dieses
+Chronik-Teils ihn am Commit selbst fand (Fehlerkatalog Nr. 37).
 
 ### 4d-10: Zwergplaneten (23.09.2026)
 
-Abgenommen mit `5bed033`, die dichteste Nacharbeitsrunde der Phase: eine
-Fachprüfung fing gleich vier Zuschreibungsfehler. Bei `objekt-eris` wurde die
+Abgenommen mit `5bed033`: Eine Fachprüfung fing hier vier Zuschreibungsfehler
+auf einmal. Bei `objekt-eris` wurde die
 Dämpfungsgröße Q/k₂ = 3200 fälschlich der frequenzabhängigen statt der
 konstanten Dämpfung zugeschrieben, und der Dysnomia-Radius von 350 km fälschlich
 einer Arbeit von 2023 statt der tatsächlichen Quelle von 2018. Bei
@@ -526,10 +534,10 @@ veraltete Notiz in einer Prüfspalte und drei unmaskierte Trennstriche — und
 verwies sie in die anschließende Etappe
 [Nachführung nach Phase 4d](#nachfuehrung-4d).
 
-**Fehler und Korrekturen:** Der Fehlerkatalog führt 19 Fälle mit Kennung
-`phase-4d` (Nr. 4–23, ohne Nr. 17, das zu [Zeitbereich](#zeitbereich) gehört) —
-vierzehn davon stehen oben bei ihrer Etappe, fünf (Nr. 4, 20–23) fand erst die
-Gesamtabnahme und sind bei [Nachführung nach Phase 4d](#nachfuehrung-4d)
+**Fehler und Korrekturen:** Der Fehlerkatalog führt 20 Fälle mit Kennung
+`phase-4d` (Nr. 4–23 und Nr. 37, ohne Nr. 17, das zu [Zeitbereich](#zeitbereich)
+gehört) — fünfzehn davon stehen oben bei ihrer Etappe, fünf (Nr. 4, 20–23) fand
+erst die Gesamtabnahme und sind bei [Nachführung nach Phase 4d](#nachfuehrung-4d)
 beschrieben.
 
 **Ergebnis:** Am Ende von 4d-1 standen 6 Textdateien, 3537 Tests, 51
