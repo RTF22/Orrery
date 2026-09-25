@@ -15,9 +15,10 @@ mit eigenem Commit auf dem Branch `phase6`:
 - **Darstellung** (`3f6085b`): Modul `render/milchstrasse.ts` (Himmelskugel hinter den Körpern,
   ohne Tiefentest, `renderOrder -1`), Einbindung in die Szene, Nachladen erst nach den
   Startladungen der Körper, Ausnahme im Bloom-Durchgang.
-- **Sichtprüfung und Abnahmeprotokoll** (dieses Protokoll): Messungen im Browser gegen die in
-  `docs/superpowers/sdd/2026-09-25-phase6-milchstrasse/constraints.md` festgehaltenen Zielwerte,
-  Handprüfliste für Jens.
+- **Sichtprüfung und Abnahmeprotokoll** (dieses Protokoll): Messungen im Browser gegen die
+  Zielwerte aus Entwurf (`docs/superpowers/specs/2026-09-25-phase6-milchstrasse-design.md`, §3.2
+  und §6.2) und Plan (`docs/superpowers/plans/2026-09-25-phase6-milchstrasse.md`), Handprüfliste
+  für Jens.
 
 Zusätzlich in diesem Schritt nachgeführt: `docs/superpowers/specs/2026-09-25-phase6-milchstrasse-design.md`
 §4.1 nennt die Himmelskugel jetzt „von innen gesehen, beidseitig gezeichnet (`DoubleSide`,
@@ -219,6 +220,14 @@ ist ein nichtkommerzielles Projekt.
 - Ein gültiger Link ersetzt eine vorhandene, gesicherte Sitzung erst nach rund einer Sekunde statt
   sofort; für die Messung in Schritt 5 wurde deshalb die Sitzung vor jedem Linkaufruf gelöscht.
   Betrifft nur diese Messung, das Verhalten selbst ist ein seit Phase 5 offen vermerkter Punkt.
+- `scripts/milchstrasse.py`: `kurve()` und `schirmwerte()` berechnen das RA/Dec-Gitter der
+  Messstufe je einmal neu; nur Bauzeit, keine Wirkung auf die Stufen.
+- `scripts/milchstrasse-bauen.ts` `werteFehler`: Meldungen zeigen Zahlen mit Dezimalpunkt statt
+  Komma (nur Ausgabe des Bauskripts).
+- `src/render/milchstrasse.ts` `HIMMEL_RADIUS = 1e9` wiederholt den Radius des Sternfelds
+  (`RADIUS` in `src/render/starfield.ts`), nur per Kommentar gekoppelt; ein gemeinsamer Export
+  wäre sauberer.
+- Aufnahmezeitpunkte in §3 pauschal mit Datum statt je Aufnahme.
 
 ## 8. Fragen an Jens
 
