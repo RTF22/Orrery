@@ -11,7 +11,7 @@ import { useInfoKarte } from './infokarte/zustand';
 
 describe('Kopfzeile', () => {
   beforeEach(() => { useStore.getState().replaceAll(structuredClone(DEFAULT_STATE)); });
-  afterEach(() => { setSprache('de'); });
+  afterEach(() => { setSprache('de'); useInfoKarte.setState({ offen: false }); });
 
   it('zeigt die aktive Sprache als gedrückt', () => {
     render(<Kopfzeile />);
@@ -30,7 +30,6 @@ describe('Kopfzeile', () => {
     render(<Kopfzeile />);
     fireEvent.click(screen.getByRole('button', { name: 'Info und Hilfe' }));
     expect(useInfoKarte.getState().offen).toBe(true);
-    useInfoKarte.setState({ offen: false });
   });
 });
 

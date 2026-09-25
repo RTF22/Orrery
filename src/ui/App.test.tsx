@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { App } from './App';
 import { useStore, DEFAULT_STATE } from '../store';
 import { useBogen } from './bogen';
@@ -20,7 +20,11 @@ beforeEach(() => {
   useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
   useMusikStand.setState({ verfuegbar: false, aktuell: null });
 });
-afterEach(() => { vi.unstubAllGlobals(); useBogen.getState().setBogen(null); });
+afterEach(() => {
+  vi.unstubAllGlobals();
+  useBogen.getState().setBogen(null);
+  useInfoKarte.setState({ offen: false });
+});
 
 describe('App', () => {
   it('setzt die Himmelskörper direkt unter die Kopfzeile', () => {
@@ -96,6 +100,29 @@ describe('App', () => {
     useInfoKarte.setState({ offen: true, reiter: 'ueber' });
     render(<App />);
     expect(screen.getByRole('dialog', { name: 'Orrery' })).toBeTruthy();
-    useInfoKarte.setState({ offen: false });
+  });
+
+  it('behält denselben Dialogknoten über einen Sichtbarkeitswechsel und gibt den Fokus beim Schließen zurück', () => {
+    // Ein externer Knopf steht hier für das auslösende Element (etwa ⓘ):
+    // Der echte ⓘ-Knopf läge in der ausblendbaren Ebene und verschwände beim
+    // Ausblenden selbst — dann verlöre auch der Test das Ziel der Fokusrückgabe.
+    const knopf = document.createElement('button');
+    document.body.appendChild(knopf);
+    knopf.focus();
+    render(<App />);
+    act(() => { useInfoKarte.getState().oeffnen('app'); });
+    const dialog = screen.getByRole('dialog', { name: 'Orrery' });
+
+    // Die Info-Karte steht an fester Stelle im Baum (App.tsx): Ein Wechsel
+    // der ausblendbaren Ebene hängt sie nicht neu ein.
+    act(() => { useStore.getState().setUi({ hidden: true }); });
+    expect(screen.getByRole('dialog', { name: 'Orrery' })).toBe(dialog);
+
+    act(() => { useStore.getState().setUi({ hidden: false }); });
+    expect(screen.getByRole('dialog', { name: 'Orrery' })).toBe(dialog);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Schließen' }));
+    expect(document.activeElement).toBe(knopf);
+    knopf.remove();
   });
 });

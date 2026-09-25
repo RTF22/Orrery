@@ -119,28 +119,32 @@ export function App(): React.JSX.Element {
   const zeigeKuerzel = useStore((s) => s.ui.panels[SHORTCUTS_PANEL] === true);
 
   // Im Kino-Modus verschwindet die Oberfläche nach kurzer Ruhe von selbst;
-  // außerhalb bleibt sie stehen, bis H gedrückt wird.
-  // Die Info-Karte steht außerhalb der ausblendbaren Ebene: Eine offene
-  // Karte darf weder mit Taste H noch mit der Ruhe im Kino verschwinden.
-  if (versteckt || (laeuftKino && untaetig)) return <InfoKarte />;
+  // außerhalb bleibt sie stehen, bis H gedrückt wird. Die Info-Karte steht
+  // immer an derselben Stelle im Baum (zweites Kind des Fragments), auch
+  // wenn die Ebene selbst verschwindet: Sonst hängt React `InfoKarte` beim
+  // Wechsel neu ein, und die Fokusrückgabe beim Schließen (InfoKarte.tsx)
+  // verliert ihr Ziel, weil `ausloeser` dann aus `document.body` gelesen wird.
+  const sichtbar = !(versteckt || (laeuftKino && untaetig));
 
   return (
     <>
-      <div className="ui-ebene pointer-events-none fixed inset-0 flex items-start justify-between gap-2 p-3 text-slate-100">
-        <Seitenleiste kopf={<Kopfzeile />}>
-          {/* Die Himmelskörper stehen bewusst gleich unter dem Sprachschalter. */}
-          <BodyTree />
-          <TimePanel />
-          <ScalePanel />
-          <CinemaPanel />
-          <CameraPanel />
-          <DisplayPanel />
-          <AnsichtenPanel />
-          {zeigeKuerzel && !grob ? <Kuerzeluebersicht /> : null}
-        </Seitenleiste>
-        <InfoPanel />
-        {schmal ? <Bogenreiter /> : null}
-      </div>
+      {sichtbar ? (
+        <div className="ui-ebene pointer-events-none fixed inset-0 flex items-start justify-between gap-2 p-3 text-slate-100">
+          <Seitenleiste kopf={<Kopfzeile />}>
+            {/* Die Himmelskörper stehen bewusst gleich unter dem Sprachschalter. */}
+            <BodyTree />
+            <TimePanel />
+            <ScalePanel />
+            <CinemaPanel />
+            <CameraPanel />
+            <DisplayPanel />
+            <AnsichtenPanel />
+            {zeigeKuerzel && !grob ? <Kuerzeluebersicht /> : null}
+          </Seitenleiste>
+          <InfoPanel />
+          {schmal ? <Bogenreiter /> : null}
+        </div>
+      ) : null}
       <InfoKarte />
     </>
   );
