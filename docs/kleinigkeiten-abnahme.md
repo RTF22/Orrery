@@ -15,8 +15,8 @@ Kleinigkeiten aus früheren Abnahmen und die offenen Punkte der Info-Karte
 4. **Controller am Touchgerät:** Im Reiter „Bedienung“ der Info-Karte erscheint am Touchgerät
    ein Knopf zur Steuerungskarte, sobald ein Controller verbunden ist.
 
-Abschluss als `v0.7.2`. Fünf Commits auf dem Branch `kleinigkeiten` (ab `master` `f1e308d`),
-dazu dieses Protokoll:
+Abschluss als `v0.7.2`. Acht Commits auf dem Branch `kleinigkeiten` (ab `master` `f1e308d`) in
+fünf Schritten, dazu dieses Protokoll:
 
 - **Mechanische Kleinigkeiten** (`d249dda`, „Kleinigkeiten: Export-Freigabe, Meldungen,
   Linkstil, Gerätetest, Szenennummer“): Kopfzeile-Test ohne echten 2-s-Timer (Fake-Timer statt
@@ -63,13 +63,16 @@ dazu dieses Protokoll:
   optionalen Startreiter. Im Reiter „Bedienung“ der Info-Karte steht am Touchgerät bei
   verbundenem Controller ein Knopf „Controller-Belegung“ unter der Gestenliste; er schließt die
   Info-Karte und öffnet die Steuerungskarte im Reiter „Controller“.
-- **Messung, Protokoll, Version** (dieser Schritt): Browser-Messungen gegen die Entscheidungen
-  1–4 und die Prüfschwerpunkte des Plans (§ 3), `npm version 0.7.2 --no-git-tag-version`,
-  dieses Protokoll. Dabei fiel auf, dass der Test „Über: Links in neuem Tab, Rechte, Version“ in
-  `src/ui/infokarte/inhalte.test.tsx` die Versionsnummer fest als `/0\.7\.1/` erwartete
-  (Plan-Warnung „kein Test die alte Nummer festschreibt“ zutreffend); er prüft jetzt gegen die
-  echte Konstante `VERSION` aus `./version` statt gegen eine feste Ziffernfolge, damit künftige
-  Versionswechsel ihn nicht erneut brechen.
+- **Messung, Protokoll, Version** (`117e56a`, „Abnahme Kleinigkeiten, Version 0.7.2“):
+  Browser-Messungen gegen die Entscheidungen 1–4 und die Prüfschwerpunkte des Plans (§ 3),
+  `npm version 0.7.2 --no-git-tag-version`, dieses Protokoll. Dabei fiel auf, dass der Test
+  „Über: Links in neuem Tab, Rechte, Version“ in `src/ui/infokarte/inhalte.test.tsx` die
+  Versionsnummer fest als `/0\.7\.1/` erwartete (Plan-Warnung „kein Test die alte Nummer
+  festschreibt“ zutreffend); er prüft jetzt gegen die echte Konstante `VERSION` aus `./version`
+  statt gegen eine feste Ziffernfolge, damit künftige Versionswechsel ihn nicht erneut brechen.
+
+Die Wort- und Trailerprüfung vor jedem Commit erfolgte wie in der lokalen Projektanleitung
+beschrieben, Ergebnis 0 bzw. leer.
 
 ## 2. Zahlen
 
@@ -192,8 +195,8 @@ Entfällt: keine neuen Fremddateien, keine geänderten Lizenzangaben.
 
 ## 7. Offene Punkte
 
-- `cinema.test.ts:35` trägt im Kommentar den Anglizismus „Fix“.
-- `AnsichtenPanel.tsx:156`: Der Export-Freigabe-Timer wird beim Unmount nicht aufgeräumt
+- `cinema.test.ts:41`/`:46` tragen im Kommentar den Anglizismus „Fix“.
+- `AnsichtenPanel.tsx:161`: Der Export-Freigabe-Timer wird beim Unmount nicht aufgeräumt
   (unschädlich — die Objekt-URL bleibt dann bis zur nächsten Verwendung des Exports gültig —,
   weicht aber vom Aufräum-Stil der übrigen Datei ab).
 - `InfoKarte.test.tsx`: Der `aria-orientation`-Test räumt die `matchMedia`-Attrappe am
