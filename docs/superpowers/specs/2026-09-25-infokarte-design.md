@@ -137,3 +137,43 @@ A55: Karte beim ersten Aufruf (privates Fenster oder gelöschte Websitedaten), I
 | 2 | Inhalte: drei Reiter in beiden Sprachen, Installationsknopf, App-Erkennung, Version (`package.json` 0.7.1) |
 | 3 | Messung „kein Scrollen“ und Abnahmeprotokoll `docs/infokarte-abnahme.md` |
 | 4 | Nach Jens' Handprüfung: Nachtrag, README, Tag `v0.7.1`, Push, Deploy |
+
+## 7. Nachtrag: Karte „Steuerung“ und Hilfe-Knopf am Handy (Jens, 25.09.2026)
+
+Aus der Handprüfung: Die Tastenübersicht als Panel am Ende der Seitenleiste stört. Sie wird
+eine eigene Karte wie die Info-Karte; am Handy hilft ein kleiner „?“-Knopf.
+
+- **Gemeinsamer Rahmen:** Der Dialog der Info-Karte (Rahmen, Reiter, Fokus, Fokusfalle,
+  Schließen über ✕, Escape, Hintergrund) wird zum Baustein `ui/karte/Kartendialog.tsx`;
+  Info-Karte und Steuerungskarte nutzen ihn. Verhalten und Prüfkennungen
+  (`data-testid="infokarte-…"`) der Info-Karte bleiben gleich.
+- **Karte „Steuerung“** (Titel „Steuerung“ / „Controls“) mit den Reitern „Tastatur“ und
+  „Controller“, Startreiter „Tastatur“. Eigener flüchtiger Zustand `useSteuerKarte`.
+  - „Tastatur“: die bisherige Liste (Taste und Wirkung), M nur mit Musik des Betreibers.
+  - „Controller“: selbst gezeichnete, schematische Controllergrafik (SVG, kein fremdes
+    Bildmaterial, kein Herstellerlogo) in der Standardbelegung, A/B/X/Y in den üblichen Farben,
+    Beschriftungen links und rechts mit Linien zu den Knöpfen: LT, LB (halten: um den Körper
+    drehen, RT/LT näher und weiter), Ansicht-Taste, linker Stick (umschauen, startet den Flug),
+    Steuerkreuz (↑ Zeit, ← → Tempo, ↓ Laufrichtung); RT, RB, Menü-Taste, Y, B, A, rechter Stick
+    (Fadenkreuz, drücken: zur Mitte). X, linker Stick drücken und Mitteltaste bleiben ohne
+    Beschriftung. Für Screenreader steht dieselbe Belegung als unsichtbare Liste daneben, die
+    Grafik ist `aria-hidden`.
+- **Öffnen:** Taste `?` und der Knopf „Alle Tastenkürzel und Controller“ der Info-Karte (schließt
+  die Info-Karte). Immer höchstens eine Karte offen; bei offener Karte sind die Tastenkürzel
+  gesperrt und die UI-Ebene ist `inert`.
+- **Entfällt:** das Panel „Tastenkürzel“ in der Seitenleiste samt `ui.panels.shortcuts` und der
+  Scroll-/Fokus-Behelf dafür. Gespeicherte Sitzungen mit diesem Eintrag bleiben harmlos.
+- **Hilfe-Knopf am Handy:** Im Kompaktmodus ein runder Knopf „?“ oben rechts (44 × 44 px,
+  zugänglicher Name „Info und Hilfe“), öffnet die Info-Karte mit dem Startreiter nach §3. Am
+  Desktop bleibt ⓘ in der Kopfzeile.
+- **Prüfung:** Tests für beide Öffnungswege, Reiter, Exklusivität, Kürzelsperre, Hilfe-Knopf nur
+  im Kompaktmodus. Messung: Steuerungskarte ohne Scrollen bei 1280×720 und 2560×1440, Deutsch und
+  Englisch, beide Reiter, mit und ohne Musik; im Reiter „Controller“ liegen alle Beschriftungen
+  innerhalb der Grafik und überlappen einander nicht. Hilfe-Knopf auf A55 hoch und quer im Bild,
+  ohne Überschneidung mit den Bogenreitern und bei offenem Bogen.
+
+| Task | Inhalt |
+|---|---|
+| 2b | `Kartendialog`, Karte „Steuerung“ mit Reiter „Tastatur“, Öffnen über `?` und Info-Karte, Panel entfällt, Hilfe-Knopf am Handy |
+| 2c | Reiter „Controller“ mit SVG-Grafik und Beschriftungen |
+| 3b | Messung der neuen Teile, Protokoll-Nachtrag |

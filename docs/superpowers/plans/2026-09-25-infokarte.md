@@ -1181,6 +1181,684 @@ Danach Wort- und Trailerkontrolle, `.playwright-mcp/` aufräumen. **Halt** für 
 
 ---
 
+## Nachtrag (Jens, 25.09.2026): Karte „Steuerung“, Controllergrafik, Hilfe-Knopf
+
+Entwurf §7. Die Tasks 2b, 2c und 3b laufen nach Task 3 und vor Task 4. Testzahl vor 2b: 5358, Hauptchunk 1 543,81 kB.
+
+### Task 2b: Kartendialog, Karte „Steuerung“ (Tastatur), Hilfe-Knopf
+
+**Modell:** sonnet.
+
+**Files:**
+- Create: `src/ui/karte/Kartendialog.tsx`, `src/ui/steuerkarte/zustand.ts`, `src/ui/steuerkarte/belegung.ts`, `src/ui/steuerkarte/Kuerzelliste.tsx`, `src/ui/steuerkarte/SteuerKarte.tsx`, `src/ui/steuerkarte/SteuerKarte.test.tsx`, `src/ui/HilfeKnopf.tsx`
+- Modify: `src/ui/infokarte/InfoKarte.tsx`, `src/ui/infokarte/inhalte.tsx`, `src/ui/infokarte/inhalte.test.tsx`, `src/ui/App.tsx`, `src/ui/App.test.tsx`, `src/ui/shortcuts/useShortcuts.ts`, `src/ui/shortcuts/useShortcuts.test.ts`, `src/ui/i18n/de.ts`, `src/ui/i18n/en.ts`, ggf. `src/ui/i18n/i18n.test.ts`
+
+**Interfaces:**
+- Produces: `Kartendialog<R>` (Props unten); `useSteuerKarte` mit `offen`, `reiter: SteuerReiter`, `oeffnen()`, `schliessen()`, `setReiter()`; `type SteuerReiter = 'tastatur' | 'controller'`; `KUERZEL`, `MUSIK_KUERZEL`, `PAD_KUERZEL`, `type Kuerzel` in `belegung.ts`; `Kuerzelliste`; `SteuerKarte`; `HilfeKnopf`. `SHORTCUTS_PANEL` entfällt.
+- Consumes: `useInfoKarte`, `startReiter` (zustand.ts), `grobJetzt`, `laeuftAlsApp` (geraet.ts), `useMusikStand`.
+
+- [ ] **Step 1: Kartendialog herauslösen (Verhalten unverändert)**
+
+`src/ui/karte/Kartendialog.tsx` — der Rumpf von `InfoKarte.tsx` wird generisch; Logik (Fokus beim Öffnen, Rückgabe nur an verbundenen Auslöser, Escape mit preventDefault/stopPropagation, Fokusfalle mit tabIndex-Filter, Pfeiltasten auf den Reitern, Hintergrundklick) bleibt wörtlich gleich:
+
+```tsx
+import { useEffect, useId, useRef, type ReactNode } from 'react';
+import { t } from '../i18n';
+
+export interface KartenReiter<R extends string> {
+  readonly id: R;
+  readonly schluessel: string;
+}
+
+interface KartendialogProps<R extends string> {
+  offen: boolean;
+  titelSchluessel: string;
+  /** Zugänglicher Name der Reiterleiste. */
+  reiterSchluessel: string;
+  reiter: readonly KartenReiter<R>[];
+  aktiv: R;
+  setAktiv(id: R): void;
+  schliessen(): void;
+  /** Präfix der Prüfkennungen `<kennung>-hintergrund` und `<kennung>-inhalt`. */
+  kennung: string;
+  /** Tailwind-Klassen für die Breite der Karte (vollständige Klassennamen, damit Tailwind sie findet). */
+  breite: string;
+  /** Inhalt des aktiven Reiters. */
+  children: ReactNode;
+}
+
+const FOKUSSIERBAR = 'button, a[href], [tabindex]';
+
+/**
+ * Gemeinsamer Rahmen der Karten (Entwurf Info-Karte §3, §7): modaler Dialog
+ * über abgedunkeltem Hintergrund, Reiter, kein Scrollen. Escape wird hier
+ * behandelt und als erledigt markiert (preventDefault), damit der globale
+ * Kürzel-Hook es nicht zusätzlich als „Kino beenden“ liest.
+ */
+export function Kartendialog<R extends string>(p: KartendialogProps<R>): React.JSX.Element | null {
+  const titelId = useId();
+  const basisId = useId();
+  const karte = useRef<HTMLDivElement>(null);
+  const ausloeser = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!p.offen) return;
+    ausloeser.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    karte.current?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.focus();
+    // Der Auslöser kann inzwischen aus dem DOM verschwunden sein (etwa: ⓘ im
+    // laufenden Kino geöffnet, Kino-Ruhe blendet die Oberfläche samt
+    // Kopfzeile aus, Karte schließen) — dann bleibt der Fokus beim Dokument.
+    return () => { if (ausloeser.current?.isConnected === true) ausloeser.current.focus(); };
+  }, [p.offen]);
+
+  if (!p.offen) return null;
+
+  const tasteImDialog = (e: React.KeyboardEvent): void => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      e.stopPropagation();
+      p.schliessen();
+      return;
+    }
+    if (e.key !== 'Tab' || karte.current === null) return;
+    // Nur per Tab erreichbare Ziele: Reiter außer dem aktiven tragen tabIndex −1.
+    const ziele = [...karte.current.querySelectorAll<HTMLElement>(FOKUSSIERBAR)].filter((z) => z.tabIndex >= 0);
+    if (ziele.length === 0) return;
+    const erstes = ziele[0]!;
+    const letztes = ziele[ziele.length - 1]!;
+    if (!e.shiftKey && document.activeElement === letztes) { e.preventDefault(); erstes.focus(); }
+    if (e.shiftKey && document.activeElement === erstes) { e.preventDefault(); letztes.focus(); }
+  };
+
+  const tasteAufReiter = (e: React.KeyboardEvent): void => {
+    const richtung = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1
+      : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
+    if (richtung === 0) return;
+    e.preventDefault();
+    const i = p.reiter.findIndex((r) => r.id === p.aktiv);
+    const neu = p.reiter[(i + richtung + p.reiter.length) % p.reiter.length]!.id;
+    p.setAktiv(neu);
+    karte.current?.querySelector<HTMLElement>(`#${CSS.escape(`${basisId}-${neu}`)}`)?.focus();
+  };
+
+  return (
+    <div
+      data-testid={`${p.kennung}-hintergrund`}
+      className="pointer-events-auto fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3"
+      onClick={(e) => { if (e.target === e.currentTarget) p.schliessen(); }}
+    >
+      <div
+        ref={karte}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titelId}
+        onKeyDown={tasteImDialog}
+        className={`karte flex max-h-full ${p.breite} flex-col overflow-hidden rounded-xl border border-white/10 bg-slate-900/95 text-sm text-slate-100 shadow-2xl`}
+      >
+        {/* Kopf, Reiterleiste und Inhaltsbereich: Markup und Klassen unverändert aus InfoKarte.tsx übernehmen,
+            mit p.titelSchluessel, p.reiterSchluessel, p.reiter (r.id, r.schluessel), p.aktiv, p.setAktiv,
+            p.schliessen, data-testid={`${p.kennung}-inhalt`} und {p.children} im tabpanel. */}
+      </div>
+    </div>
+  );
+}
+```
+
+Den Kommentarblock im JSX durch das bisherige Markup aus `InfoKarte.tsx` ersetzen (Kopf mit `<h2 id={titelId}>{t(p.titelSchluessel)}</h2>` und ✕-Knopf mit `aria-label={t('infokarte.schliessen')}`; Reiterleiste `role="tablist"` mit `aria-label={t(p.reiterSchluessel)}`; je Reiter `id={`${basisId}-${r.id}`}`, `aria-selected`, `aria-controls`, `tabIndex`, `onClick={() => { p.setAktiv(r.id); }}`, `onKeyDown={tasteAufReiter}`, Beschriftung `t(r.schluessel)`; Inhaltsbereich `role="tabpanel"` mit `data-testid={`${p.kennung}-inhalt`}` und `{p.children}`). Nichts an Klassen oder Verhalten ändern.
+
+`src/ui/infokarte/InfoKarte.tsx` wird dünn:
+
+```tsx
+import { Kartendialog, type KartenReiter } from '../karte/Kartendialog';
+import { useInfoKarte, type InfoReiter } from './zustand';
+import { ReiterApp, ReiterBedienung, ReiterUeber } from './inhalte';
+
+const REITER: readonly KartenReiter<InfoReiter>[] = [
+  { id: 'app', schluessel: 'infokarte.reiter.app' },
+  { id: 'bedienung', schluessel: 'infokarte.reiter.bedienung' },
+  { id: 'ueber', schluessel: 'infokarte.reiter.ueber' },
+];
+
+/** Info-Karte (Entwurf Info-Karte §3–§4) im gemeinsamen Kartenrahmen. */
+export function InfoKarte(): React.JSX.Element | null {
+  const offen = useInfoKarte((s) => s.offen);
+  const reiter = useInfoKarte((s) => s.reiter);
+  const setReiter = useInfoKarte((s) => s.setReiter);
+  const schliessen = useInfoKarte((s) => s.schliessen);
+  return (
+    <Kartendialog
+      offen={offen}
+      titelSchluessel="infokarte.titel"
+      reiterSchluessel="infokarte.reiter"
+      reiter={REITER}
+      aktiv={reiter}
+      setAktiv={setReiter}
+      schliessen={schliessen}
+      kennung="infokarte"
+      breite="w-[min(92vw,34rem)] [@media(max-height:500px)]:w-[min(96vw,48rem)]"
+    >
+      {reiter === 'app' ? <ReiterApp /> : reiter === 'bedienung' ? <ReiterBedienung /> : <ReiterUeber />}
+    </Kartendialog>
+  );
+}
+```
+
+Run: `npx vitest run src/ui/infokarte src/ui/App.test.tsx` — Expected: PASS ohne Änderung an diesen Tests (reiner Umbau). Prüfe, ob eine CSS-Regel die Klasse `infokarte` nutzt (`grep -rn "infokarte" src/index.css`); falls ja, auf `karte` umstellen.
+
+- [ ] **Step 2: Zustand und Belegung der Steuerungskarte**
+
+`src/ui/steuerkarte/zustand.ts`:
+
+```ts
+import { create } from 'zustand';
+
+/** Reiter der Steuerungskarte (Entwurf Info-Karte §7). */
+export type SteuerReiter = 'tastatur' | 'controller';
+
+interface SteuerKarteZustand {
+  offen: boolean;
+  reiter: SteuerReiter;
+  /** Öffnet immer mit „Tastatur“. */
+  oeffnen(): void;
+  schliessen(): void;
+  setReiter(reiter: SteuerReiter): void;
+}
+
+/** Flüchtig wie useInfoKarte: nicht in Link, Sitzung oder Ansicht. */
+export const useSteuerKarte = create<SteuerKarteZustand>((set) => ({
+  offen: false,
+  reiter: 'tastatur',
+  oeffnen: () => { set({ offen: true, reiter: 'tastatur' }); },
+  schliessen: () => { set({ offen: false }); },
+  setReiter: (reiter) => { set({ reiter }); },
+}));
+```
+
+`src/ui/steuerkarte/belegung.ts`: den Typ `Kuerzel` und die Listen `KUERZEL`, `MUSIK_KUERZEL`, `PAD_KUERZEL` samt Kommentaren aus `src/ui/App.tsx` hierher verschieben (exportiert, Inhalt unverändert). `src/ui/steuerkarte/Kuerzelliste.tsx`: die Komponente `Kuerzelliste` aus `App.tsx` hierher verschieben (exportiert, unverändert).
+
+- [ ] **Step 3: Steuerungskarte, Test zuerst**
+
+`src/ui/steuerkarte/SteuerKarte.test.tsx`:
+
+```tsx
+// @vitest-environment jsdom
+import { describe, expect, it, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, act } from '@testing-library/react';
+import { SteuerKarte } from './SteuerKarte';
+import { useSteuerKarte } from './zustand';
+import { useInfoKarte } from '../infokarte/zustand';
+import { useMusikStand } from '../musikStand';
+import { handleShortcut } from '../shortcuts/useShortcuts';
+import { useStore, DEFAULT_STATE } from '../../store';
+
+describe('SteuerKarte', () => {
+  beforeEach(() => {
+    useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
+    useSteuerKarte.setState({ offen: false, reiter: 'tastatur' });
+    useInfoKarte.setState({ offen: false, reiter: 'bedienung' });
+    useMusikStand.setState({ verfuegbar: false });
+  });
+  afterEach(() => {
+    useSteuerKarte.setState({ offen: false });
+    useInfoKarte.setState({ offen: false });
+    useMusikStand.setState({ verfuegbar: false });
+  });
+
+  it('öffnet über ? mit dem Reiter Tastatur', () => {
+    render(<SteuerKarte />);
+    act(() => { expect(handleShortcut('?')).toBe(true); });
+    expect(screen.getByRole('dialog', { name: 'Steuerung' })).toBeTruthy();
+    expect(screen.getAllByRole('tab').map((r) => r.textContent)).toEqual(['Tastatur', 'Controller']);
+    expect(screen.getByRole('tab', { name: 'Tastatur' }).getAttribute('aria-selected')).toBe('true');
+    expect(screen.getByText('Vollbild')).toBeTruthy();
+    expect(screen.getByText('Fliegen: vor, links, zurück, rechts')).toBeTruthy();
+  });
+
+  it('zeigt M nur mit Musik des Betreibers', () => {
+    useSteuerKarte.getState().oeffnen();
+    const { rerender } = render(<SteuerKarte />);
+    expect(screen.queryByText('Musik stumm schalten')).toBeNull();
+    act(() => { useMusikStand.setState({ verfuegbar: true }); });
+    rerender(<SteuerKarte />);
+    expect(screen.getByText('Musik stumm schalten')).toBeTruthy();
+  });
+
+  it('wechselt auf Controller und schließt mit Escape', () => {
+    useSteuerKarte.getState().oeffnen();
+    render(<SteuerKarte />);
+    fireEvent.click(screen.getByRole('tab', { name: 'Controller' }));
+    expect(useSteuerKarte.getState().reiter).toBe('controller');
+    fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
+    expect(useSteuerKarte.getState().offen).toBe(false);
+  });
+
+  it('sperrt die Tastenkürzel, solange sie offen ist', () => {
+    useSteuerKarte.getState().oeffnen();
+    const hidden = useStore.getState().ui.hidden;
+    expect(handleShortcut('h')).toBe(false);
+    expect(useStore.getState().ui.hidden).toBe(hidden);
+  });
+
+  it('öffnet nicht über ?, solange die Info-Karte offen ist', () => {
+    useInfoKarte.setState({ offen: true, reiter: 'bedienung' });
+    expect(handleShortcut('?')).toBe(false);
+    expect(useSteuerKarte.getState().offen).toBe(false);
+  });
+});
+```
+
+Run: `npx vitest run src/ui/steuerkarte` — Expected: FAIL (Modul fehlt).
+
+`src/ui/steuerkarte/SteuerKarte.tsx`:
+
+```tsx
+import { Kartendialog, type KartenReiter } from '../karte/Kartendialog';
+import { useMusikStand } from '../musikStand';
+import { KUERZEL, MUSIK_KUERZEL, PAD_KUERZEL } from './belegung';
+import { Kuerzelliste } from './Kuerzelliste';
+import { useSteuerKarte, type SteuerReiter } from './zustand';
+
+const REITER: readonly KartenReiter<SteuerReiter>[] = [
+  { id: 'tastatur', schluessel: 'steuerkarte.reiter.tastatur' },
+  { id: 'controller', schluessel: 'steuerkarte.reiter.controller' },
+];
+
+/** Reiter „Tastatur“; M nur mit Musik des Betreibers (useShortcuts.ts). */
+function ReiterTastatur(): React.JSX.Element {
+  const musik = useMusikStand((s) => s.verfuegbar);
+  return <Kuerzelliste eintraege={musik ? [...KUERZEL, ...MUSIK_KUERZEL] : KUERZEL} />;
+}
+
+/** Reiter „Controller“ — die Grafik folgt; bis dahin die Liste der Standardbelegung. */
+function ReiterController(): React.JSX.Element {
+  return <Kuerzelliste eintraege={PAD_KUERZEL} />;
+}
+
+/** Karte „Steuerung“ (Entwurf Info-Karte §7). */
+export function SteuerKarte(): React.JSX.Element | null {
+  const offen = useSteuerKarte((s) => s.offen);
+  const reiter = useSteuerKarte((s) => s.reiter);
+  const setReiter = useSteuerKarte((s) => s.setReiter);
+  const schliessen = useSteuerKarte((s) => s.schliessen);
+  return (
+    <Kartendialog
+      offen={offen}
+      titelSchluessel="steuerkarte.titel"
+      reiterSchluessel="steuerkarte.reiter"
+      reiter={REITER}
+      aktiv={reiter}
+      setAktiv={setReiter}
+      schliessen={schliessen}
+      kennung="steuerkarte"
+      breite="w-[min(96vw,56rem)]"
+    >
+      {reiter === 'tastatur' ? <ReiterTastatur /> : <ReiterController />}
+    </Kartendialog>
+  );
+}
+```
+
+Sprachschlüssel — `de.ts`: `'steuerkarte.titel': 'Steuerung'`, `'steuerkarte.reiter': 'Bereiche der Steuerung'`, `'steuerkarte.reiter.tastatur': 'Tastatur'`, `'steuerkarte.reiter.controller': 'Controller'`; `en.ts`: `'Controls'`, `'Sections of the controls'`, `'Keyboard'`, `'Controller'` (`steuerkarte.reiter.controller` in `GLEICH_ERLAUBT` von `i18n.test.ts`). Den Text von `shortcuts.toggleHelp` ändern: de `'Steuerung anzeigen'`, en `'Show controls'`. Schlüssel, die danach nirgends mehr benutzt werden (`shortcuts.title`, `shortcuts.padTitle`), in beiden Sprachen entfernen (vorher per `grep -rn` bestätigen).
+
+- [ ] **Step 4: Tastenkürzel und Info-Karte umstellen**
+
+`src/ui/shortcuts/useShortcuts.ts`: Import `useSteuerKarte` aus `../steuerkarte/zustand`; die Sperre wird
+
+```ts
+  // Die Karten sind modal: Ihre Tasten (Escape, Tab, Pfeile) gehören ihnen.
+  if (useInfoKarte.getState().offen || useSteuerKarte.getState().offen) return false;
+```
+
+und der Fall `'?'`:
+
+```ts
+    case '?':
+      useSteuerKarte.getState().oeffnen();
+      return true;
+```
+
+`SHORTCUTS_PANEL` samt Export entfernen. In `useShortcuts.test.ts` den bisherigen Test zu `?` (Panel umschalten) durch „`?` öffnet die Steuerungskarte“ ersetzen (`expect(useSteuerKarte.getState().offen).toBe(true)`, danach zurücksetzen).
+
+`src/ui/infokarte/inhalte.tsx`: `alleKuerzel` wird
+
+```ts
+  const alleKuerzel = (): void => {
+    schliessen();
+    useSteuerKarte.getState().oeffnen();
+  };
+```
+
+Importe `SHORTCUTS_PANEL`, `LEISTE_PANEL`, `useStore`/`setUi` entfernen, soweit ungenutzt. In `inhalte.test.tsx` den Test „Maus zeigt Tasten und öffnet die vollständige Übersicht“ anpassen: nach dem Klick `useInfoKarte.getState().offen === false` und `useSteuerKarte.getState().offen === true` (statt der Panel-Einträge).
+
+- [ ] **Step 5: App umbauen, Hilfe-Knopf**
+
+`src/ui/HilfeKnopf.tsx`:
+
+```tsx
+import { t } from './i18n';
+import { useInfoKarte, startReiter } from './infokarte/zustand';
+import { grobJetzt, laeuftAlsApp } from './infokarte/geraet';
+
+/**
+ * „?“ oben rechts im Kompaktmodus (Entwurf Info-Karte §7): Am Handy liegt ⓘ
+ * sonst nur im Bogen „Bedienung“. 44 × 44 px wie alle Bedienziele am Touchgerät.
+ */
+export function HilfeKnopf(): React.JSX.Element {
+  const oeffnen = useInfoKarte((s) => s.oeffnen);
+  return (
+    <button
+      type="button"
+      aria-label={t('infokarte.knopf')}
+      title={t('infokarte.knopf')}
+      onClick={() => { oeffnen(startReiter(grobJetzt(), laeuftAlsApp())); }}
+      className="hilfeknopf pointer-events-auto fixed right-3 top-3 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-slate-900/70 text-lg font-semibold text-slate-100 backdrop-blur-md"
+    >
+      ?
+    </button>
+  );
+}
+```
+
+`src/ui/App.tsx`:
+- `KUERZEL`, `MUSIK_KUERZEL`, `PAD_KUERZEL`, `Kuerzel`, `Kuerzelliste`, `Kuerzeluebersicht` (samt Scroll-/Fokus-Effekt) und `zeigeKuerzel` entfernen; ungenutzte Importe (`Panel`, `useMusikStand`, `SHORTCUTS_PANEL`, `useRef`, `useEffect`) entfernen.
+- `const karteOffen = useInfoKarte((s) => s.offen) || useSteuerKarte((s) => s.offen);` — als zwei getrennte Hook-Aufrufe schreiben (`const infoOffen = …; const steuerOffen = …; const karteOffen = infoOffen || steuerOffen;`).
+- In der UI-Ebene nach `{schmal ? <Bogenreiter /> : null}`: `{schmal ? <HilfeKnopf /> : null}`.
+- Nach `<InfoKarte />`: `<SteuerKarte />` (feste Stelle, drittes Kind des Fragments).
+- JSDoc von `App` von überholten Sätzen befreien („hier steht zunächst das Gerüst mit Tastenkürzeln und Übersicht“).
+
+`src/ui/App.test.tsx`: Tests zur alten Kürzelübersicht (Flug-Nennung, Scroll-/Fokus-Tests aus der Korrektur nach der Handprüfung) entfernen — die Flug-Nennung prüft jetzt `SteuerKarte.test.tsx`. Neu:
+
+- Test „breit: kein Hilfe-Knopf“: `render(<App />)`, `document.querySelector('.hilfeknopf')` ist `null`.
+- Test „schmal: Hilfe-Knopf öffnet die Info-Karte“: Kompaktmodus so auslösen, wie es die vorhandenen Tests in `App.test.tsx` für `Bogenreiter` tun (dort nachsehen, wie `useSchmal` in jsdom wahr wird; falls über eine `matchMedia`-Attrappe, dieselbe nutzen und wiederherstellen); dann: `.hilfeknopf` vorhanden, Klick → `useInfoKarte.getState().offen === true`. Einen Test ergänzen: bei offener Steuerungskarte trägt die UI-Ebene `inert`.
+
+- [ ] **Step 6: Gesamtprüfung, Blick im Browser, Commit**
+
+```bash
+npm run lint && npm test && npm run build
+git status --short
+```
+
+Browser (Dev-Server 5173, keinen zweiten starten; Playwright nur nach `.playwright-mcp/`, danach löschen): Taste `?` öffnet „Steuerung“; ⓘ → Bedienung → „Alle Tastenkürzel und Controller“ öffnet sie ebenfalls; in der Seitenleiste gibt es kein Panel „Tastenkürzel“ mehr; Konsole ohne Fehler.
+
+```bash
+git add src/ui/karte src/ui/steuerkarte src/ui/HilfeKnopf.tsx src/ui/infokarte src/ui/App.tsx src/ui/App.test.tsx \
+  src/ui/shortcuts/useShortcuts.ts src/ui/shortcuts/useShortcuts.test.ts src/ui/i18n
+git commit -m "Steuerung als eigene Karte mit Reitern, Hilfe-Knopf am Handy"
+```
+
+Expected: Tests grün (Zahl im Bericht). Danach Wort- und Trailerkontrolle.
+
+---
+
+### Task 2c: Reiter „Controller“ als Grafik
+
+**Modell:** sonnet.
+
+**Files:**
+- Create: `src/ui/steuerkarte/Controller.tsx`, `src/ui/steuerkarte/Controller.test.tsx`
+- Modify: `src/ui/steuerkarte/SteuerKarte.tsx` (ReiterController), `src/ui/steuerkarte/belegung.ts` (PAD_KUERZEL entfernen, falls danach ungenutzt), `src/ui/i18n/de.ts`, `src/ui/i18n/en.ts`, ggf. `src/ui/i18n/i18n.test.ts`, `src/ui/steuerkarte/SteuerKarte.test.tsx`
+
+**Interfaces:**
+- Produces: `ControllerBild` (Komponente), `BESCHRIFTUNGEN` (exportierte Tabelle für Tests).
+
+- [ ] **Step 1: Sprachschlüssel**
+
+`de.ts`:
+
+```ts
+  'steuerkarte.pad.lt': 'LT: rückwärts fliegen',
+  'steuerkarte.pad.rt': 'RT: vorwärts fliegen',
+  'steuerkarte.pad.lb': 'LB halten: um den Körper drehen',
+  'steuerkarte.pad.lbZusatz': 'dazu RT/LT: näher und weiter',
+  'steuerkarte.pad.rb': 'RB: nächste Szene',
+  'steuerkarte.pad.ansicht': 'Ansicht: Oberfläche ein/aus',
+  'steuerkarte.pad.menue': 'Menü: Kino starten/beenden',
+  'steuerkarte.pad.linkerStick': 'Linker Stick: umschauen',
+  'steuerkarte.pad.linkerStickZusatz': 'startet den Flug',
+  'steuerkarte.pad.rechterStick': 'Rechter Stick: Fadenkreuz',
+  'steuerkarte.pad.rechterStickZusatz': 'drücken: zur Bildmitte',
+  'steuerkarte.pad.kreuzOben': 'Steuerkreuz ↑: Zeit an/aus',
+  'steuerkarte.pad.kreuzSeiten': '← →: Zeitraffung',
+  'steuerkarte.pad.kreuzUnten': '↓: Laufrichtung umkehren',
+  'steuerkarte.pad.a': 'A: zum Objekt fahren',
+  'steuerkarte.pad.b': 'B: Draufsicht',
+  'steuerkarte.pad.y': 'Y: Infopanel',
+```
+
+`en.ts`:
+
+```ts
+  'steuerkarte.pad.lt': 'LT: fly backwards',
+  'steuerkarte.pad.rt': 'RT: fly forwards',
+  'steuerkarte.pad.lb': 'Hold LB: orbit the body',
+  'steuerkarte.pad.lbZusatz': 'with RT/LT: closer and farther',
+  'steuerkarte.pad.rb': 'RB: next scene',
+  'steuerkarte.pad.ansicht': 'View: toggle interface',
+  'steuerkarte.pad.menue': 'Menu: start/stop cinema',
+  'steuerkarte.pad.linkerStick': 'Left stick: look around',
+  'steuerkarte.pad.linkerStickZusatz': 'starts flying',
+  'steuerkarte.pad.rechterStick': 'Right stick: crosshair',
+  'steuerkarte.pad.rechterStickZusatz': 'press: recentre',
+  'steuerkarte.pad.kreuzOben': 'D-pad ↑: pause/resume time',
+  'steuerkarte.pad.kreuzSeiten': '← →: time speed',
+  'steuerkarte.pad.kreuzUnten': '↓: reverse direction',
+  'steuerkarte.pad.a': 'A: fly to object',
+  'steuerkarte.pad.b': 'B: system view',
+  'steuerkarte.pad.y': 'Y: info panel',
+```
+
+- [ ] **Step 2: Test zuerst**
+
+`src/ui/steuerkarte/Controller.test.tsx`:
+
+```tsx
+// @vitest-environment jsdom
+import { describe, expect, it, afterEach } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { ControllerBild, BESCHRIFTUNGEN } from './Controller';
+import { setSprache } from '../i18n';
+
+describe('ControllerBild', () => {
+  afterEach(() => { setSprache('de'); });
+
+  it('beschriftet vierzehn Bedienelemente links und rechts', () => {
+    expect(BESCHRIFTUNGEN).toHaveLength(14);
+    expect(BESCHRIFTUNGEN.filter((b) => b.seite === 'links')).toHaveLength(7);
+    expect(BESCHRIFTUNGEN.filter((b) => b.seite === 'rechts')).toHaveLength(7);
+  });
+
+  it('zeichnet die Grafik für Screenreader verborgen und liefert die Belegung als Liste', () => {
+    const { container } = render(<ControllerBild />);
+    expect(container.querySelector('svg')?.getAttribute('aria-hidden')).toBe('true');
+    const liste = screen.getByRole('list');
+    expect(liste.querySelectorAll('li')).toHaveLength(14);
+    expect(liste.textContent).toContain('A: zum Objekt fahren');
+    expect(liste.textContent).toContain('startet den Flug');
+  });
+
+  it('übersetzt die Beschriftungen', () => {
+    setSprache('en');
+    const { container } = render(<ControllerBild />);
+    expect(container.querySelector('svg')?.textContent).toContain('RT: fly forwards');
+  });
+});
+```
+
+Run: `npx vitest run src/ui/steuerkarte/Controller.test.tsx` — Expected: FAIL.
+
+- [ ] **Step 3: Grafik**
+
+`src/ui/steuerkarte/Controller.tsx`:
+
+```tsx
+import { t } from '../i18n';
+
+/** Eine Beschriftung: Text, optionale zweite Zeile, Seite, Grundlinie, Zielpunkt am Controller (viewBox-Einheiten). */
+export interface Beschriftung {
+  readonly schluessel: string;
+  readonly zusatz?: string;
+  readonly seite: 'links' | 'rechts';
+  readonly y: number;
+  readonly ziel: readonly [number, number];
+}
+
+/**
+ * Belegung nach dem Entwurf Flug und Controller §5.2/§5.3 (Standardbelegung).
+ * Die Grundlinien sind so gewählt, dass sich die Linien nicht kreuzen und an
+ * den Knöpfen vorbeiführen; X, L3 und die Mitteltaste sind unbelegt.
+ */
+export const BESCHRIFTUNGEN: readonly Beschriftung[] = [
+  { schluessel: 'steuerkarte.pad.lt', seite: 'links', y: 50, ziel: [402, 66] },
+  { schluessel: 'steuerkarte.pad.lb', zusatz: 'steuerkarte.pad.lbZusatz', seite: 'links', y: 88, ziel: [400, 84] },
+  { schluessel: 'steuerkarte.pad.ansicht', seite: 'links', y: 135, ziel: [455, 150] },
+  { schluessel: 'steuerkarte.pad.linkerStick', zusatz: 'steuerkarte.pad.linkerStickZusatz', seite: 'links', y: 175, ziel: [400, 165] },
+  { schluessel: 'steuerkarte.pad.kreuzOben', seite: 'links', y: 230, ziel: [435, 226] },
+  { schluessel: 'steuerkarte.pad.kreuzSeiten', seite: 'links', y: 255, ziel: [421, 237] },
+  { schluessel: 'steuerkarte.pad.kreuzUnten', seite: 'links', y: 280, ziel: [435, 248] },
+  { schluessel: 'steuerkarte.pad.rt', seite: 'rechts', y: 50, ziel: [558, 66] },
+  { schluessel: 'steuerkarte.pad.rb', seite: 'rechts', y: 80, ziel: [560, 84] },
+  { schluessel: 'steuerkarte.pad.menue', seite: 'rechts', y: 110, ziel: [505, 150] },
+  { schluessel: 'steuerkarte.pad.y', seite: 'rechts', y: 145, ziel: [565, 150] },
+  { schluessel: 'steuerkarte.pad.b', seite: 'rechts', y: 180, ziel: [587, 172] },
+  { schluessel: 'steuerkarte.pad.a', seite: 'rechts', y: 212, ziel: [565, 194] },
+  { schluessel: 'steuerkarte.pad.rechterStick', zusatz: 'steuerkarte.pad.rechterStickZusatz', seite: 'rechts', y: 250, ziel: [525, 237] },
+];
+
+const TEXT_LINKS = 290;
+const TEXT_RECHTS = 670;
+const KOERPER = 'M 345 95 C 380 86 420 88 440 92 L 520 92 C 540 88 580 86 615 95 C 650 105 668 160 682 240 C 695 315 690 370 650 382 C 615 392 590 360 572 322 C 562 302 548 296 525 296 L 435 296 C 412 296 398 302 388 322 C 370 360 345 392 310 382 C 270 370 265 315 278 240 C 292 160 310 105 345 95 Z';
+const TASTEN: readonly (readonly [string, number, number, string])[] = [
+  ['Y', 565, 150, '#d29922'],
+  ['X', 543, 172, '#58a6ff'],
+  ['B', 587, 172, '#f85149'],
+  ['A', 565, 194, '#3fb950'],
+];
+
+/**
+ * Schematischer Controller (eigene Zeichnung, kein fremdes Bildmaterial) mit
+ * Beschriftungen links und rechts (Entwurf Info-Karte §7). Die Grafik ist für
+ * Screenreader verborgen; dieselbe Belegung steht als unsichtbare Liste daneben.
+ */
+export function ControllerBild(): React.JSX.Element {
+  return (
+    <div>
+      <svg viewBox="0 0 960 400" aria-hidden="true" className="h-auto w-full" fontSize="15" fill="currentColor">
+        {/* Schultertasten und Trigger */}
+        <rect x="380" y="55" width="45" height="22" rx="8" className="fill-slate-600" />
+        <rect x="535" y="55" width="45" height="22" rx="8" className="fill-slate-600" />
+        <rect x="365" y="78" width="70" height="12" rx="6" className="fill-slate-500" />
+        <rect x="525" y="78" width="70" height="12" rx="6" className="fill-slate-500" />
+        <path d={KOERPER} className="fill-slate-700 stroke-slate-400" strokeWidth="2" />
+        {/* Linien unter den Knöpfen */}
+        <g className="stroke-slate-400/70" strokeWidth="1.2" fill="none">
+          {BESCHRIFTUNGEN.map((b) => (
+            <line
+              key={b.schluessel}
+              x1={b.seite === 'links' ? TEXT_LINKS + 6 : TEXT_RECHTS - 6}
+              y1={b.y - 5}
+              x2={b.ziel[0]}
+              y2={b.ziel[1]}
+            />
+          ))}
+        </g>
+        {/* Sticks, Steuerkreuz, Mitte */}
+        <circle cx="400" cy="165" r="22" className="fill-slate-800 stroke-slate-500" strokeWidth="2" />
+        <circle cx="400" cy="165" r="14" className="fill-slate-600" />
+        <circle cx="525" cy="237" r="22" className="fill-slate-800 stroke-slate-500" strokeWidth="2" />
+        <circle cx="525" cy="237" r="14" className="fill-slate-600" />
+        <path d="M 430 222 h 10 v 10 h 10 v 10 h -10 v 10 h -10 v -10 h -10 v -10 h 10 Z" className="fill-slate-500" />
+        <circle cx="455" cy="150" r="6" className="fill-slate-500" />
+        <circle cx="505" cy="150" r="6" className="fill-slate-500" />
+        <circle cx="480" cy="120" r="9" className="fill-slate-600" />
+        {TASTEN.map(([name, x, y, farbe]) => (
+          <g key={name}>
+            <circle cx={x} cy={y} r="10" fill={farbe} />
+            <text x={x} y={y + 4} textAnchor="middle" fontSize="11" fontWeight="700" className="fill-slate-900">{name}</text>
+          </g>
+        ))}
+        {/* Beschriftungen */}
+        {BESCHRIFTUNGEN.map((b) => {
+          const x = b.seite === 'links' ? TEXT_LINKS : TEXT_RECHTS;
+          const anker = b.seite === 'links' ? 'end' : 'start';
+          return (
+            <text key={b.schluessel} x={x} y={b.y} textAnchor={anker} className="fill-slate-100">
+              {t(b.schluessel)}
+              {b.zusatz !== undefined ? (
+                <tspan x={x} dy="16" fontSize="12" className="fill-slate-400">{t(b.zusatz)}</tspan>
+              ) : null}
+            </text>
+          );
+        })}
+      </svg>
+      <ul className="sr-only">
+        {BESCHRIFTUNGEN.map((b) => (
+          <li key={b.schluessel}>{t(b.schluessel)}{b.zusatz !== undefined ? ` (${t(b.zusatz)})` : ''}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+`SteuerKarte.tsx`: `ReiterController` rendert `<ControllerBild />` (Kommentar „die Grafik folgt“ entfernen). `PAD_KUERZEL` und die Schlüssel `padKey.*`/`shortcuts.pad*` entfernen, falls danach nirgends mehr benutzt (per `grep -rn` bestätigen; `shortcuts.pause`/`rate`/… bleiben, die nutzt die Tastatur). In `SteuerKarte.test.tsx` im Controller-Test prüfen, dass nach dem Reiterwechsel `A: zum Objekt fahren` im Dokument steht.
+
+Run: `npx vitest run src/ui/steuerkarte` — Expected: PASS.
+
+- [ ] **Step 4: Sichtprobe und Commit**
+
+Browser: `?` → Reiter „Controller“ bei 1280×720; Screenshot ansehen: Controller mittig, Beschriftungen links/rechts lesbar, Linien enden an den richtigen Knöpfen (LT/RT oben, LB/RB darunter, Sticks, Steuerkreuz, A/B/Y), keine Überschneidung von Texten. Liegt eine Linie falsch oder kreuzt eine andere, die Koordinaten in `BESCHRIFTUNGEN` nachstellen und das im Bericht nennen. Screenshot danach löschen.
+
+```bash
+npm run lint && npm test && npm run build
+git status --short
+git add src/ui/steuerkarte src/ui/i18n
+git commit -m "Steuerung: Controller als Grafik mit beschrifteten Knöpfen"
+```
+
+---
+
+### Task 3b: Messung der neuen Teile, Protokoll-Nachtrag
+
+**Modell:** sonnet.
+
+**Files:**
+- Modify: `docs/infokarte-abnahme.md`
+
+- [ ] **Step 1: Steuerungskarte ohne Scrollen**
+
+Je Viewport 1280×720 und 2560×1440 (Maus, `deviceScaleFactor` 1), Deutsch und Englisch, Reiter „Tastatur“ (einmal ohne, einmal mit Musik: `(await import('/Orrery/src/ui/musikStand.ts')).useMusikStand.setState({ verfuegbar: true })`) und „Controller“: `?` drücken, Reiter wählen (Selektor auf `[role="dialog"]` beschränken), messen wie in Task 3 (`[data-testid="steuerkarte-inhalt"]`: `scrollHeight ≤ clientHeight`, Dialogrechteck im Bild). 2 × 2 × 3 = 12 Fälle.
+
+- [ ] **Step 2: Beschriftungen der Grafik**
+
+Im Reiter „Controller“ je Viewport und Sprache: Rechtecke aller Beschriftungen (`[role="dialog"] svg > text`, `getBoundingClientRect`) — keine zwei überlappen, alle liegen innerhalb des `svg`-Rechtecks. Screenshot je Sprache bei 1280×720 ansehen und im Protokoll beschreiben (Linien enden an den genannten Knöpfen).
+
+- [ ] **Step 3: Hilfe-Knopf am Handy**
+
+A55 hoch (412×915) und quer (915×412), `deviceScaleFactor` 2.625, `isMobile`/`hasTouch`: `.hilfeknopf` sichtbar, Rechteck im Bild, mindestens 44 × 44 CSS-px, keine Überschneidung mit `.bogenreiter`-Knöpfen — einmal ohne Bogen, einmal mit offenem Bogen „Bedienung“ (`(await import('/Orrery/src/ui/bogen.ts')).useBogen.setState({ bogen: 'bedienung' })`), dann auch keine Überschneidung mit `.bogen`. Tippen öffnet die Info-Karte. Am Desktop (1280×720) gibt es keinen `.hilfeknopf`.
+
+- [ ] **Step 4: Protokoll-Nachtrag und Commit**
+
+`docs/infokarte-abnahme.md`: §1 um die neuen Commits ergänzen, §2 Zahlen nachführen, in §3 einen Abschnitt „Steuerung und Hilfe-Knopf“ mit den Tabellen aus Step 1–3, §5 Handprüfliste ergänzen:
+
+| Prüfpunkt | Ergebnis |
+|---|---|
+| Desktop: Taste `?` und Knopf in der Info-Karte öffnen „Steuerung“; Reiter Tastatur/Controller | |
+| Desktop: Controllergrafik verständlich, Beschriftungen passen zu den Knöpfen | |
+| A55: „?“-Knopf oben rechts, öffnet die Info-Karte, stört nicht | |
+
+§6 um neue „Ruling:“-Zeilen des Ledgers ergänzen, §7 um neue Restpunkte. In §7 den Satz mit „Korrekturwelle“ sprachlich berichtigen (etwa „Behoben:“). Außerhalb §6 keine Prozesssprache.
+
+```bash
+npm run lint && npm test && npm run build
+git status --short
+git add docs/infokarte-abnahme.md
+git commit -m "Abnahme Info-Karte: Steuerung und Hilfe-Knopf gemessen"
+```
+
+Halt für Jens' Handprüfung (dann Task 4).
+
+---
+
 ### Task 4: Nachtrag, Tag, Push, Deploy (nach Jens' Handprüfung)
 
 **Modell:** Controller selbst.
