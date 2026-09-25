@@ -104,8 +104,9 @@ RA/Dec wie in §4.2 wird im Skript benutzt.
 
 ### 4.1 Modul
 
-- Neues Modul `render/milchstrasse.ts`: eine von innen gesehene Kugel (`BackSide`) um den
-  Ursprung, ohne Beleuchtung. Sie wird wie die Sterne nie kamerarelativ verschoben (keine
+- Neues Modul `render/milchstrasse.ts`: eine von innen gesehene, beidseitig gezeichnete Kugel
+  (`DoubleSide`, unabhängig von der Umlaufrichtung der Dreiecke) um den Ursprung, ohne
+  Beleuchtung. Sie wird wie die Sterne nie kamerarelativ verschoben (keine
   Parallaxe) und als deckendes Objekt mit `renderOrder = -1` zuerst gezeichnet (three.js
   zeichnet durchsichtige Objekte wie das Sternfeld nach den deckenden), ohne
   Tiefentest und ohne Schreiben in den Tiefenpuffer, sodass die HYG-Punkte scharf obenauf
