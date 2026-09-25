@@ -166,7 +166,8 @@ ist ein nichtkommerzielles Projekt.
 ## 5. Handprüfung (Jens)
 
 **Ergebnis (Jens, 25.09.2026):** „Handprüfung bestanden“. Die Aussage gilt für alle Prüfpunkte;
-Befunde für §7 ergaben sich nicht.
+Befunde für §7 ergaben sich nicht. Die beiden A55-Punkte hat Jens nach dem Hochladen auf den
+Webspace am 25.09.2026 dort nachgeprüft: „Geprüft auf A55. Sieht gut aus“.
 
 | Prüfpunkt | Ergebnis |
 |---|---|
