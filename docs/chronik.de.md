@@ -622,3 +622,239 @@ Modell war Claude Opus 5.5 (51,2 % der Ausgabetokens), vor Claude Sonnet 5
 (33,5 %).
 
 **Commits:** `218b1f7`, `a323c80`, `8989c69`, `b6558f6`, `c0b39fb`.
+
+<a id="phase-5"></a>
+## Phase 5: Oberfläche, Mobile, Texturen, Musik (23.–25.09.2026, v0.6.0)
+
+**Ziel:** Nach Phase 4d in vier funktionalen Etappen weiterbauen — 5-1 Oberfläche,
+5-2 Mobile, 5-3 Texturen und Laden, 5-4 Musik — und mit Etappe 5-5 abschließen.
+
+**Entscheidungen:** Die Gesamtabnahme der Phase (Jens Fricke, 25.09.2026) hielt die
+Handprüfung ohne Befund fest; Tag `v0.6.0` wurde gesetzt und nach `master` gepusht.
+Sie bestätigte zugleich die schon bei der Nachführung nach Phase 4d gezogene Lehre
+zur Modellwahl bei regelgebundenen Bereinigungen (siehe oben).
+
+**Ergebnis:** Tests und Hauptchunk wuchsen von Etappe zu Etappe: 5-1 5174 Tests
+(1 456,56 kB), 5-2 5192 Tests (1 458,08 kB), 5-3 nach Nacharbeit 5235 Tests
+(1 523,15 kB), 5-4 5275 Tests, Endstand (`de97203`) 5285 Tests bei unverändertem
+Hauptchunk 1 529,67 kB. Etappe 5-3 senkte die 1k-Texturensumme auf 3 567 420 Bytes
+(Ziel unter 4 000 000 Bytes) und, nach einer Korrektur (`63edc93`), die Ladezeit im
+simulierten „Fast 4G“ auf 4 543,6 ms im Median (Ziel höchstens 5 000 ms) — bei einem
+Repositoryzuwachs von rund 170 MiB für die neuen Texturstufen (KTX2-Gesamtsumme
+177 914 750 Bytes). Die Phase lief laut Zeitstempeln rund 36,3 Stunden, vom
+23.09.2026 (`d326970`, 20:00 Uhr) bis zum 25.09.2026 (`d0e88f5`, 08:21 Uhr).
+
+![Der Kompaktmodus auf einem Smartphone-Bildschirm mit Bogen-Navigation unten.](bilder/entstehung/kompakt-handy.jpg)
+
+**Fehler und Korrekturen:** In Etappe 5-2 lehnte `npm run build` (`tsc -b`) den
+literalen Import `readFileSync` aus `node:fs` in `konstanten.test.ts` ab (TS2591) —
+gefangen durch den Build, im selben Task behoben. In Etappe 5-3 verglich
+`texturen-bauen.ts` bei der 1k-Summe wörtlich `breite === 1024` statt der
+Konstante `ETC1S_BREITE` — gefangen durch die Fachprüfung, in der Nacharbeit
+richtiggestellt (Commit `257750a`).
+
+**Tokens:** 1 386 592 Ausgabe-Tokens, 413 032 693 Cache-Lesen-Tokens in 2 784
+Antworten (Kennung `phase-5`; 534 Haupt-, 2 250 Subagentenantworten); 56,6 % der
+Ausgabetokens dieser Phase entfielen auf Subagenten, vorherrschendes Modell war
+Claude Sonnet 5 (53,5 % der Ausgabetokens), vor Claude Opus 5.5 (43,4 %).
+
+**Commits:** `d326970`, `626dba1`, `c2d871e`, `1c53656`, `d0e88f5`.
+
+<a id="phase-6"></a>
+## Phase 6: Milchstraße (25.09.2026, v0.7.0)
+
+**Ziel:** Die Milchstraße im Hintergrund der Szene ergänzen.
+
+**Entscheidungen:** Aus der Gesamtabnahme (Jens Fricke, 25.09.2026): Das gemessene
+Kohlensack-Kontrastverhältnis von 0,707 blieb trotz des Zielwerts unter 0,6
+akzeptiert, die Helligkeitskurve unverändert. Die Handprüfung bestand, Tag `v0.7.0`
+wurde gesetzt, nach `master` gepusht und auf den Webspace ausgerollt.
+
+**Ergebnis:** Tests stiegen von 5301 auf 5328, der Hauptchunk von 1 529,67 kB auf
+1 531,36 kB. Die drei Texturstufen der Milchstraße liegen bei 59 941 Bytes (1k),
+1 069 543 Bytes (2k) und 30 310 600 Bytes (8k). Die Etappe lief laut Zeitstempeln
+rund 3,4 Stunden, am 25.09.2026 von `02bb097` (08:45 Uhr) bis `a576b7b` (12:10 Uhr);
+der Tag-Commit `8d1b268` (11:56 Uhr) liegt dazwischen.
+
+![Blick von Neptun zurück zur fernen, kleinen Sonne vor der Milchstraße.](bilder/entstehung/ferne-sonne.jpg)
+
+**Fehler und Korrekturen:** Der Gaia-Anteil der Milchstraßen-Quelle war im Entwurf
+mit der Lizenz CC BY-SA angenommen; tatsächlich gilt CC BY-NC 3.0 IGO
+(nichtkommerziell, genehmigungspflichtig) — gefangen durch die Fachprüfung, behoben
+mit einem NC-Vermerk auf der Quellenkarte und einer Nachführung des Entwurfs (Orrery
+ist nichtkommerziell).
+
+**Tokens:** 352 026 Ausgabe-Tokens, 136 374 213 Cache-Lesen-Tokens in 644 Antworten
+(Kennung `phase-6`; 125 Haupt-, 519 Subagentenantworten); 59,3 % der Ausgabetokens
+dieser Phase entfielen auf Subagenten, vorherrschendes Modell war Claude Sonnet 5
+(56,0 % der Ausgabetokens), vor Claude Opus 5.5 (40,7 %).
+
+**Commits:** `02bb097`, `8d1b268`, `a576b7b`.
+
+<a id="infokarte"></a>
+## Info-Karte (25.09.2026, v0.7.1)
+
+**Ziel:** Eine Info-Karte mit den Reitern Einrichtung, Bedienung und Über einführen,
+dazu eine eigene Karte Steuerung.
+
+**Entscheidungen:** Handprüfung an Desktop und am Referenzgerät Galaxy A55 ohne
+Befund; das zunächst zu kleine Symbol ⓘ wanderte in die Sprachzeile der Kopfzeile.
+Tag `v0.7.1` und der Deploy wurden freigegeben.
+
+**Ergebnis:** Die Testzahl stieg in vier Stationen von 5328 über 5354 und 5364 auf
+5370 und 5371, der Hauptchunk von 1 531,36 kB über 1 543,51 kB und 1 548,56 kB auf
+1 548,89 kB und 1 549,24 kB. Die Etappe lief laut Zeitstempeln rund 5,9 Stunden, am
+25.09.2026 von `32fc0b5` (12:26 Uhr) bis `6f8a9d9` (18:22 Uhr).
+
+![Die geöffnete Info-Karte mit dem Reiter „Controls“ und den wichtigsten Tastenkürzeln.](bilder/entstehung/infokarte.jpg)
+
+**Fehler und Korrekturen:** Am Desktop (1600×900) erwies sich das Symbol ⓘ als zu
+klein — gefangen durch Jens' eigene Handprüfung, behoben durch den Umzug in die
+Sprachzeile (Commit `f8adc75`). `App.tsx` gab bei offener Karte zwei verschiedene
+Baumformen zurück, wodurch die Info-Karte beim Wechsel von `ui.hidden` neu gemountet
+wurde und die Fokusrückgabe verlorenging — gefangen durch die Fachprüfung, behoben,
+indem `App` immer dieselbe Baumform liefert. `steuerungTakt` fragte die offene
+Info- oder Steuerungskarte nicht ab, sodass Controller und WASD bei geöffneter Karte
+weiter flogen, drehten und zoomten und Pad-A/-B Kamerafahrten auslösten — ebenfalls
+durch die Fachprüfung gefangen; die Sperre wurde ausgeweitet, Pad-B schließt
+seither die Karte.
+
+**Tokens:** 636 957 Ausgabe-Tokens, 178 316 206 Cache-Lesen-Tokens in 1 021
+Antworten (Kennung `infokarte`; 190 Haupt-, 831 Subagentenantworten); 68,4 % der
+Ausgabetokens dieser Phase entfielen auf Subagenten, vorherrschendes Modell war
+Claude Sonnet 5 (68,1 % der Ausgabetokens), vor Claude Opus 5.5 (31,6 %).
+
+**Commits:** `32fc0b5`, `f8adc75`, `6f8a9d9`.
+
+<a id="kleinigkeiten"></a>
+## Kleinigkeiten (25.09.2026, v0.7.2)
+
+**Ziel:** Kleinere, nach der Info-Karte offen gebliebene Punkte abarbeiten.
+
+**Entscheidungen:** Die Handprüfung entfiel in dieser Etappe — Jens ließ sie aus,
+nur die automatischen Belege zählten. Tag `v0.7.2` wurde freigegeben; das Hochladen
+auf den Webspace sollte Jens danach selbst anstoßen.
+
+**Ergebnis:** Tests stiegen von 5371 auf 5402, der Hauptchunk von 1 549,24 kB auf
+1 550,81 kB. Die Etappe lief laut Zeitstempeln rund 1,7 Stunden, am 25.09.2026 von
+`f1e308d` (18:37 Uhr) bis `a203f11` (20:17 Uhr).
+
+**Fehler und Korrekturen:** Ein Typfehler aus einer Nacharbeit
+(`cinemaControl.test.ts:267`, TS2349) ließ `npm run build` (`tsc -b`) abbrechen —
+gefangen durch den Build, vom selben Umsetzer sofort behoben und mit einer
+Testnamen-Umbenennung gebündelt.
+
+**Tokens:** 334 554 Ausgabe-Tokens, 83 144 170 Cache-Lesen-Tokens in 559 Antworten
+(Kennung `kleinigkeiten`; 89 Haupt-, 470 Subagentenantworten); 84,6 % der
+Ausgabetokens dieser Phase entfielen auf Subagenten, vorherrschendes Modell war
+Claude Sonnet 5 (84,6 % der Ausgabetokens), vor Claude Opus 5.5 (15,4 %).
+
+**Commits:** `f1e308d`, `a203f11`.
+
+<a id="domain"></a>
+## Weg zur Domain (25.09.2026)
+
+**Ziel:** Die letzten technischen Voraussetzungen für die eigene Domain schaffen,
+damit `https://orrery3d.de` ebenso funktioniert wie die bisherige Adresse
+`https://www.jensfricke.com/Orrery/`.
+
+**Entscheidungen:** Am Beginn stand die schon in der Ideen-Phase getroffene
+Entscheidung, das Repository bis zur Fertigstellung privat zu halten (siehe
+[Die Idee](#idee)). Es folgten das Deploy-Skript samt `.htaccess` und
+Umgebungsvorlage am 14.09.2026 (Commit `c07b521`), am 19.09.2026 die
+README-Änderung „Repository öffentlich, Lizenz weiter offen“ (Commit `04fe610`)
+und am 24.09.2026 in Etappe 5-5 eine installierbare Web-App mit Vollbildstart und
+eigenem Symbol (Commit `60fa468`) samt Hochladen Datei für Datei mit Wiederholung
+bei Netzfehlern (Commit `217a4f7`).
+
+**Ergebnis:** Zwei Commits am 25.09.2026 behoben die letzten technischen
+Hindernisse: `1e08dba` (20:25 Uhr) stellte den Build auf relative Pfade um, weil die
+feste Basis `/Orrery/` unter der eigenen Domain zu 500-Antworten des Servers
+führte — relative Pfade laufen unter beiden Adressen, der Entwicklungsserver bleibt
+bei `/Orrery/`. `f3807c7` (20:30 Uhr) verschob die App-Symbole nach `symbole/`, weil
+ein globaler Server-Alias `/icons/` dort sonst dessen eigene Symbole statt der
+App-Symbole auslieferte (404 für Favicon und Manifest-Symbole).
+Laut `docs/entwicklung.md` liegt die Seite seither unter `https://orrery3d.de` und
+`https://www.jensfricke.com/Orrery/`, hochgeladen per FTPS, ohne GitHub Pages. Die
+Etappe selbst dauerte laut Zeitstempeln rund fünf Minuten.
+
+**Fehler und Korrekturen:** Für diese Etappe verzeichnet der Fehlerkatalog keinen
+Fall.
+
+**Tokens:** 6 458 Ausgabe-Tokens, 1 559 177 Cache-Lesen-Tokens in 18 Antworten
+(Kennung `domain`; alle 18 in der Hauptsitzung, keine Subagentenantwort); 0,0 % der
+Ausgabetokens dieser Phase entfielen auf Subagenten, vorherrschendes Modell war
+Claude Opus 5.5 (100,0 % der Ausgabetokens).
+
+**Commits:** `c07b521`, `04fe610`, `60fa468`, `1e08dba`, `f3807c7`.
+
+<a id="anhang-tokens"></a>
+## Anhang: Tokenbilanz
+
+Dieser Anhang fasst den Sprachmodell-Verbrauch des gesamten Projekts zusammen,
+ausgewertet aus den lokalen Sitzungsprotokollen des Assistenten zu diesem Projekt;
+veröffentlicht werden nur Summen, nie Protokollinhalte.
+
+**Methode:** Jede Antwort zählt einmal, erkannt an ihrer Nachrichtenkennung; beim
+Streaming steht dieselbe Antwort mehrfach im Protokoll, darum zählt je Feld der
+Höchstwert über alle Zeilen mit gleicher Kennung — ohne diese Regel ergab eine Probe
+für Claude Sonnet 5 nur 1,9 statt 23,8 Mio. Ausgabetokens. Gezählt werden vier
+Kategorien je Antwort: Eingabe ohne Cache, Ausgabe, Cache-Lesen, Cache-Schreiben.
+Zeitstempel stehen als UTC im Protokoll und wurden fest mit +02:00 in Berliner
+Sommerzeit umgerechnet (gilt im ganzen September 2026); die Phase je Antwort ergibt
+sich aus dem Intervall der jeweiligen Phasengrenzen, bei Überlappung aus der zuletzt
+begonnenen Etappe. Stichtag ist der Upload des Domain-Fixes (`f3807c7`, 25.09.2026,
+20:30 Uhr).
+
+**Grenzen:** Die Protokolle liegen nur lokal vor und sind nicht gegen eine
+Abrechnung abgeglichen; Zählweise und Stichtag stehen deshalb im Text, damit sich
+die Zahlen einordnen lassen.
+
+**Tokens je Modell (bis Stichtag):**
+
+| Anzeigename | Antworten | Ausgabe | Cache-Lesen |
+|---|---:|---:|---:|
+| Claude Opus 5 | 10 523 | 14 011 620 | 3 015 452 404 |
+| Claude Opus 5.5 | 1 646 | 1 747 637 | 452 555 143 |
+| Claude Fable 5.1 | 1 976 | 2 623 271 | 473 944 393 |
+| Claude Sonnet 5 | 29 164 | 23 833 638 | 6 360 113 132 |
+| Claude Haiku 4.5 | 1 586 | 679 317 | 111 541 452 |
+| **Summe** | **44 895** | **42 895 483** | **10 413 606 524** |
+
+Dazu kommen bis zum Stichtag 152 983 Tokens ungecachte Eingabe und 200 194 976
+Tokens Cache-Schreiben (gleiche Tabelle).
+
+**Tokens je Phase (bis Stichtag):**
+
+| Kennung | Ausgabe | Cache-Lesen |
+|---|---:|---:|
+| `idee` | 230 581 | 8 843 552 |
+| `phase-1` | 1 187 833 | 175 356 549 |
+| `phase-2` | 147 022 | 51 721 718 |
+| `phase-3a` | 4 344 979 | 724 412 063 |
+| `phase-3b` | 1 435 858 | 204 267 920 |
+| `phase-4a` | 463 002 | 66 461 714 |
+| `phase-4b` | 881 748 | 103 360 297 |
+| `phase-4c` | 3 987 747 | 539 796 022 |
+| `klickflaechen` | 984 680 | 98 857 888 |
+| `phase-4d` | 23 807 582 | 7 178 734 109 |
+| `zeitbereich` | 365 863 | 89 041 341 |
+| `flug` | 2 107 770 | 278 589 820 |
+| `nachfuehrung-4d` | 234 231 | 81 737 072 |
+| `phase-5` | 1 386 592 | 413 032 693 |
+| `phase-6` | 352 026 | 136 374 213 |
+| `infokarte` | 636 957 | 178 316 206 |
+| `kleinigkeiten` | 334 554 | 83 144 170 |
+| `domain` | 6 458 | 1 559 177 |
+| **Summe** | **42 895 483** | **10 413 606 524** |
+
+![Tokens je Tag nach Modell und Cache-Lesen je Tag.](bilder/entstehung/tokens-je-tag.svg)
+
+**Diagramm:** Oben stehen die Ausgabetokens je Kalendertag, gestapelt nach Modell
+(Anzeigenamen ohne Herstellerpräfix); unten steht, auf einer eigenen Achse, das um
+Größenordnungen höhere Cache-Lesen je Tag als eigene Reihe — nur getrennt bleibt der
+Verlauf der Ausgabe überhaupt sichtbar.
+
+**Nach dem Stichtag:** Sitzungen nach diesem Stichtag — etwa für das
+zweisprachige README und für diese Chronik-Etappe selbst — laufen bereits, fließen
+in die vorstehenden Zahlen aber nicht ein, weil ihre Summe noch wächst.
