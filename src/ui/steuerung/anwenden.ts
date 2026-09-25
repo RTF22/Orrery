@@ -13,6 +13,8 @@ import { fahreZu, fahreZuSystem, fahrtAbbrechen } from '../kamerafahrt';
 import { blickzielVon } from '../../render/camera/cinema';
 import { eingabeMelden, zeigerAusgeblendet } from '../idle';
 import { handleShortcut } from '../shortcuts/useShortcuts';
+import { useInfoKarte } from '../infokarte/zustand';
+import { useSteuerKarte } from '../steuerkarte/zustand';
 import { padAuswerten, PAD } from './gamepad';
 import type { PadAbsicht, PadBild, PadRoh, Stick } from './gamepad';
 import { tastenAbsicht } from './tastatur';
@@ -389,14 +391,51 @@ function padTasten(bild: PadBild, u: SteuerungUmgebung): void {
 }
 
 /**
+ * Bei offener Info- oder Steuerungskarte ausgewertetes Controller-Bild
+ * (Kartensperre, wie `handleShortcut` in useShortcuts.ts): Nur der
+ * Vorzustand (padVorher) wird fortgeschrieben, sonst entstünde beim
+ * Schließen ein Nachläufer — ein im Folgebild noch gehaltenes B läse sich
+ * sonst wieder als frische Flanke und löste `fahreZuSystem` aus. Pad-B
+ * schließt dabei die offene Karte (übliche Zurück-Taste am Controller,
+ * sonst bliebe ein Controller-Nutzer darin gefangen); jede andere Taste
+ * bleibt wirkungslos.
+ */
+function padTaktKarteGesperrt(u: SteuerungUmgebung): void {
+  const roh = u.pad?.() ?? null;
+  if (roh === null) {
+    padZuruecksetzen();
+    return;
+  }
+  const erstes = padVorher === null;
+  const { bild, gedrueckt } = padAuswerten(roh, padVorher);
+  padVorher = gedrueckt;
+  if (erstes || !bild.flanken.includes(PAD.B)) return;
+  if (useInfoKarte.getState().offen) useInfoKarte.getState().schliessen();
+  else if (useSteuerKarte.getState().offen) useSteuerKarte.getState().schliessen();
+}
+
+/**
  * Je Bild vor dem Kino-Takt (Entwurf §6.2). Gehaltene Flugtasten ohne Shift
  * sowie linker Stick oder Trigger ohne LB starten den Flug an der gezeigten
  * Lage und fliegen; im Flug laufen Mindesthöhe und Bezugswahl auch ohne
  * Eingabe. Mit Shift oder LB dreht die Kamera um den Körper nächst der
  * Bildmitte (§4.2, §5.2). Danach bewegt der rechte Stick das Fadenkreuz.
  * Zuletzt wirken die Tasten des Controllers.
+ *
+ * Kartensperre: Solange die Info- oder die Steuerungskarte offen ist (wie in
+ * `handleShortcut`), bewegt und dreht sich nichts, es wird nicht gezoomt,
+ * Pad-Aktionen (A, B, Kürzeltasten) bleiben aus und ein sichtbares
+ * Fadenkreuz verschwindet — sonst erschiene es über der Karte. Einzige
+ * Ausnahme ist Pad-B, das die offene Karte schließt (padTaktKarteGesperrt).
  */
 export function steuerungTakt(jd: number, dt: number, u: SteuerungUmgebung): void {
+  if (useInfoKarte.getState().offen || useSteuerKarte.getState().offen) {
+    padTaktKarteGesperrt(u);
+    kreuzAusblenden();
+    const leinwand = u.leinwand?.();
+    if (leinwand !== undefined) kreuzZeichnen(leinwand);
+    return;
+  }
   const pad = padTakt(u);
   bewegen(jd, dt, u, pad.bild);
   kreuzTakt(dt, u, pad);

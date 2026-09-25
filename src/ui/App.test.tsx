@@ -123,7 +123,7 @@ describe('App', () => {
     useInfoKarte.setState({ offen: false });
   });
 
-  it('wechselt von der Info-Karte über „Alle Tastenkürzel und Controller" zur Steuerungskarte und zurück', () => {
+  it('wechselt von der Info-Karte über „Alle Tastenkürzel und Controller“ zur Steuerungskarte und zurück', () => {
     render(<App />);
     const infoKnopf = screen.getByRole('button', { name: 'Info und Hilfe' });
     infoKnopf.focus();

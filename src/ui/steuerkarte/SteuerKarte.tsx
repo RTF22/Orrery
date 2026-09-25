@@ -10,18 +10,18 @@ const REITER: readonly KartenReiter<SteuerReiter>[] = [
   { id: 'controller', schluessel: 'steuerkarte.reiter.controller' },
 ];
 
-/** Reiter „Tastatur"; M nur mit Musik des Betreibers (useShortcuts.ts). */
+/** Reiter „Tastatur“; M nur mit Musik des Betreibers (useShortcuts.ts). */
 function ReiterTastatur(): React.JSX.Element {
   const musik = useMusikStand((s) => s.verfuegbar);
   return <Kuerzelliste eintraege={musik ? [...KUERZEL, ...MUSIK_KUERZEL] : KUERZEL} />;
 }
 
-/** Reiter „Controller" — schematische Grafik mit beschrifteten Knöpfen. */
+/** Reiter „Controller“ — schematische Grafik mit beschrifteten Knöpfen. */
 function ReiterController(): React.JSX.Element {
   return <ControllerBild />;
 }
 
-/** Karte „Steuerung" (Entwurf Info-Karte §7). */
+/** Karte „Steuerung“ (Entwurf Info-Karte §7). */
 export function SteuerKarte(): React.JSX.Element | null {
   const offen = useSteuerKarte((s) => s.offen);
   const reiter = useSteuerKarte((s) => s.reiter);

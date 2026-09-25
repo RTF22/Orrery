@@ -29,7 +29,7 @@ const FOKUSSIERBAR = 'button, a[href], [tabindex]';
  * Gemeinsamer Rahmen der Karten (Entwurf Info-Karte §3, §7): modaler Dialog
  * über abgedunkeltem Hintergrund, Reiter, kein Scrollen. Escape wird hier
  * behandelt und als erledigt markiert (preventDefault), damit der globale
- * Kürzel-Hook es nicht zusätzlich als „Kino beenden" liest.
+ * Kürzel-Hook es nicht zusätzlich als „Kino beenden“ liest.
  */
 export function Kartendialog<R extends string>(p: KartendialogProps<R>): React.JSX.Element | null {
   const titelId = useId();

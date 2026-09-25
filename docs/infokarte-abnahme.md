@@ -26,7 +26,9 @@ und ein Hilfe-Knopf am Handy. Sie schließt Phase 6 (Tag `v0.7.0`) an und endet 
   dem umgesetzten Code (siehe § 6).
 - **Steuerung und Hilfe-Knopf** (`1013fa9`, Korrektur `7a3e727`; Grafik `7a888da`; deckender
   Hintergrund `1590a3f`): Nachtrag zu Entwurf und Plan (§7, Jens 25.09.2026) nach der ersten
-  Handprüfung. Das Panel „Tastenkürzel“ in der Seitenleiste entfällt, sein Feld
+  Handprüfung. Die vorherige Korrektur `2458ffa` (Tastenübersicht ins Bild holen, im Panel der
+  Seitenleiste) wurde mit dem Wegfall dieses Panels gegenstandslos. Das Panel „Tastenkürzel“ in
+  der Seitenleiste entfällt, sein Feld
   `ui.panels.shortcuts` bleibt in alten gespeicherten Sitzungen ohne Wirkung liegen. Der
   Rahmen der Info-Karte (Reiter, Fokus, Fokusfalle, Escape, Hintergrund) wandert in den
   gemeinsamen Baustein `ui/karte/Kartendialog.tsx`; darauf baut die neue Karte „Steuerung“
@@ -40,17 +42,28 @@ und ein Hilfe-Knopf am Handy. Sie schließt Phase 6 (Tag `v0.7.0`) an und endet 
   durchscheinenden Hintergrund.
 - **Messung dieses Nachtrags**: Messungen der Steuerungskarte und des Hilfe-Knopfs gegen
   Entwurf §7 (siehe § 3.3), Handprüfliste ergänzt.
+- **Kartensperre und Anführungszeichen**: `steuerungTakt` (`src/ui/steuerung/anwenden.ts`)
+  fragt wie `handleShortcut` ab, ob die Info- oder die Steuerungskarte offen ist. Bei offener
+  Karte bewegt und dreht sich nichts, es wird nicht gezoomt, Pad-Aktionen (A, B, Kürzeltasten)
+  bleiben aus und ein sichtbares Fadenkreuz wird ausgeblendet; Pad-B schließt dabei die offene
+  Karte wie die übliche Zurück-Taste, ohne im selben oder im folgenden Bild mit weiter
+  gehaltenem B zusätzlich `fahreZuSystem` auszulösen. Sechs neue Tests in `anwenden.test.ts`.
+  Dazu acht mit geradem Anführungszeichen geschlossene Zitate auf „…“ vereinheitlicht
+  (`ui/karte/Kartendialog.tsx`, `ui/steuerkarte/SteuerKarte.tsx`, `ui/steuerkarte/zustand.ts`,
+  `ui/HilfeKnopf.tsx`, `ui/App.test.tsx`).
 
 ## 2. Zahlen
 
-| Größe | Vorher (master `78ee0b8`) | Nach Messung (`984699b`) | Nach Steuerung/Hilfe-Knopf (`1590a3f`) |
-|---|---:|---:|---:|
-| Tests | 5328 | 5354 | 5364 |
-| Hauptchunk | 1 531,36 kB | 1 543,51 kB | 1 548,56 kB |
+| Größe | Vorher (master `78ee0b8`) | Nach Messung (`984699b`) | Nach Steuerung/Hilfe-Knopf (`1590a3f`) | Nach Kartensperre |
+|---|---:|---:|---:|---:|
+| Tests | 5328 | 5354 | 5364 | 5370 |
+| Hauptchunk | 1 531,36 kB | 1 543,51 kB | 1 548,56 kB | 1 548,89 kB |
 
-Die letzte Spalte stammt aus einem frischen Durchlauf von `npm test` und `npm run build` in
-diesem Schritt; dieser Schritt selbst ändert keinen Quelltext, die Werte sind gegenüber dem
-Stand nach dem deckenden Hintergrund (`1590a3f`) unverändert.
+Die Spalte „Nach Steuerung/Hilfe-Knopf“ stammt aus einem frischen Durchlauf von `npm test` und
+`npm run build` beim Schreiben dieses Protokolls; dieser Schritt selbst änderte keinen
+Quelltext, die Werte sind gegenüber dem Stand nach dem deckenden Hintergrund (`1590a3f`)
+unverändert. Die letzte Spalte stammt aus einem ebensolchen Durchlauf nach der Kartensperre und
+den Anführungszeichen-Korrekturen (sechs neue Tests in `anwenden.test.ts`, siehe § 1).
 
 ## 3. Messungen im Browser
 
@@ -256,6 +269,23 @@ dieses Schritts.
   Seitenleiste durch die Karte; der Hintergrund beider Karten wurde daraufhin deckend
   gestellt (`bg-slate-900` statt teiltransparent), eine einzeilige Änderung in
   `Kartendialog.tsx`.
+- **Ruling (Wortwahl § 7):** Offene Punkte, die zwischenzeitlich behoben wurden, tragen dort nur
+  noch das sachliche Präfix „Behoben:“ statt einer Formulierung wie „in dieser
+  Korrekturwelle“ — außerhalb von § 6 bleibt jede Prozesssprache untersagt.
+- **Ruling (Kartensperre auch für Controller und Flugtasten, B schließt die Karte):**
+  `handleShortcut` sperrte die Tastenkürzel bei offener Info- oder Steuerungskarte, aber
+  `steuerungTakt` fragte die Karten nicht ab: Stick und WASD flogen weiter, LB drehte, RT/LT
+  zoomten, Pad-A fuhr per `fahreZu`, Pad-B rief `fahreZuSystem`, und das Fadenkreuz erschien
+  über der Karte. Entschieden wurde, die Sperre auf `steuerungTakt` auszuweiten: Bei offener
+  Karte bewegt und dreht sich nichts, es wird nicht gezoomt, Pad-Aktionen bleiben aus und ein
+  sichtbares Fadenkreuz wird ausgeblendet. Ausnahme: Pad-B schließt die offene Karte wie die
+  übliche Zurück-Taste, sonst bliebe ein Controller-Nutzer darin gefangen; die schließende
+  B-Flanke selbst löst dabei nie zusätzlich `fahreZuSystem` aus, auch nicht im folgenden Bild
+  mit weiter gehaltenem B.
+- **Ruling (Steuerungskarte ohne Tastatur):** Ein Touch-Gerät mit gekoppeltem Controller, aber
+  ohne Tastatur, erreicht die Steuerungskarte nicht — es gibt dort kein `?`, und der Reiter
+  „Bedienung“ der Info-Karte zeigt in diesem Fall nur die Gesten. Ein eigener Weg dorthin ist
+  nicht Teil dieser Korrektur; der Befund bleibt offen (§ 7).
 
 ## 7. Offene Punkte
 
@@ -266,8 +296,9 @@ dieses Schritts.
   Übersetzungsdatei.
 - Die Reiterleiste trägt im Querformat mit geringer Höhe (dort stehen die Reiter seitlich statt
   oben) kein `aria-orientation="vertical"`; nur die Sprachausgabe betroffen.
-- Das Fadenkreuz kann bei gleichem z-Index über der Karte liegen; kaum erreichbar und ohne
-  Wirkung auf die Bedienung.
+- Behoben: Das Fadenkreuz konnte bei gleichem z-Index über der Karte liegen; `steuerungTakt`
+  blendet ein sichtbares Fadenkreuz jetzt aus, sobald die Info- oder die Steuerungskarte offen
+  ist (Kartensperre, § 6).
 - Blendet die Kino-Ruhe die Oberfläche samt Kopfzeile aus, während die Karte über ⓘ offen ist,
   kehrt der Fokus beim Schließen nicht mehr zum ⓘ-Knopf zurück — der Knopf ist dann nicht mehr
   im DOM; der Fokus bleibt stattdessen beim Dokument.
@@ -276,6 +307,8 @@ dieses Schritts.
   dem jeweiligen Test nicht zurückgesetzt.
 - Die Unterstreichung von `ExternerLink` nutzt keine `decoration-sky-300/50`; die Deckkraft
   weicht optisch vom übrigen Bestand ab.
+- Ein Touch-Gerät mit gekoppeltem Controller, aber ohne Tastatur, erreicht die Steuerungskarte
+  nicht (kein `?`, und der Reiter „Bedienung“ zeigt dort nur Gesten).
 
 ## 8. Fragen an Jens
 

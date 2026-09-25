@@ -3,8 +3,8 @@ import { useInfoKarte, startReiter } from './infokarte/zustand';
 import { grobJetzt, laeuftAlsApp } from './infokarte/geraet';
 
 /**
- * „?" oben rechts im Kompaktmodus (Entwurf Info-Karte §7): Am Handy liegt ⓘ
- * sonst nur im Bogen „Bedienung". 44 × 44 px wie alle Bedienziele am Touchgerät.
+ * „?“ oben rechts im Kompaktmodus (Entwurf Info-Karte §7): Am Handy liegt ⓘ
+ * sonst nur im Bogen „Bedienung“. 44 × 44 px wie alle Bedienziele am Touchgerät.
  */
 export function HilfeKnopf(): React.JSX.Element {
   const oeffnen = useInfoKarte((s) => s.oeffnen);

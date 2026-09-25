@@ -27,6 +27,8 @@ import { SCENES } from '../../data/scenes';
 import { IDLE_HIDE_SEC, useIdleHide, zeigerAusgeblendet } from '../idle';
 import { kreuzAusblenden, kreuzLage, kreuzSichtbar, kreuzZuruecksetzen, zeigerVonMaus } from './kreuz';
 import { INFO_PANEL } from '../info/konstanten';
+import { useInfoKarte } from '../infokarte/zustand';
+import { useSteuerKarte } from '../steuerkarte/zustand';
 
 const jd = DEFAULT_STATE.time.jd;
 const s = DEFAULT_STATE.scale;
@@ -67,6 +69,8 @@ beforeEach(() => {
   useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
   tempoZuruecksetzen();
   padZuruecksetzen();
+  useInfoKarte.setState({ offen: false, reiter: 'bedienung' });
+  useSteuerKarte.setState({ offen: false, reiter: 'tastatur' });
 });
 
 describe('steuerungTakt: Flug', () => {
@@ -724,5 +728,91 @@ describe('steuerungTakt: Tasten des Controllers', () => {
     expect(z.cinema.running).toBe(vorher.cinema.running);
     expect(z.camera.targetId).toBe(vorher.camera.targetId);
     expect(fahrtLaeuft()).toBe(false);
+  });
+});
+
+/**
+ * Kartensperre (Nachtrag Schlussprüfung): Bei offener Info- oder
+ * Steuerungskarte fragt handleShortcut sie schon ab, aber steuerungTakt lief
+ * bislang ungeprüft weiter — Stick/WASD flogen, LB drehte, Pad-A/-B wirkten
+ * und das Fadenkreuz erschien über der Karte. Ausnahme: Pad-B schließt die
+ * offene Karte (Zurück-Taste), ohne im selben oder folgenden Bild zusätzlich
+ * fahreZuSystem auszulösen.
+ */
+describe('steuerungTakt: Kartensperre', () => {
+  const l = { breite: 800, hoehe: 600 };
+
+  it('lässt bei offener Info-Karte Stick, WASD und Pad-A ohne Wirkung', () => {
+    useInfoKarte.setState({ offen: true });
+    const pose = vorErde();
+    const treffer: [number, number][] = [];
+    const mit = (p: PadRoh | null): SteuerungUmgebung => ({
+      tasten: () => ({ gehalten: new Set<Flugtaste>(['KeyW']), shift: false }),
+      letztePose: () => pose,
+      pad: () => p,
+      leinwand: () => l,
+      trefferBei: (x, y) => { treffer.push([x, y]); return 'mars'; },
+    });
+    steuerungTakt(jd, 0, mit(padAttrappe())); // erstes Auftauchen des Controllers
+    steuerungTakt(jd, 0.5, mit(padAttrappe({ axes: [1, 0, 0, 0], gedrueckt: [PAD.A] })));
+    expect(useStore.getState().camera.mode).toBe('free');
+    expect(treffer).toEqual([]);
+    expect(fahrtLaeuft()).toBe(false);
+  });
+
+  it('lässt bei offener Steuerungskarte WASD ohne Controller ebenfalls ohne Wirkung', () => {
+    useSteuerKarte.setState({ offen: true });
+    steuerungTakt(jd, 0.5, umgebung(['KeyW'], vorErde()));
+    expect(useStore.getState().camera.mode).toBe('free');
+  });
+
+  it('blendet ein sichtbares Fadenkreuz aus, sobald eine Karte offen ist', () => {
+    kreuzZuruecksetzen();
+    const mit = (p: PadRoh | null): SteuerungUmgebung =>
+      ({ ...umgebung([], null), pad: () => p, leinwand: () => l });
+    steuerungTakt(jd, 0, mit(padAttrappe()));
+    steuerungTakt(jd, 0.25, mit(padAttrappe({ axes: [0, 0, 1, 0] })));
+    expect(kreuzSichtbar()).toBe(true);
+    useSteuerKarte.setState({ offen: true });
+    steuerungTakt(jd, 0, mit(padAttrappe({ axes: [0, 0, 1, 0] })));
+    expect(kreuzSichtbar()).toBe(false);
+  });
+
+  it('schließt die offene Info-Karte mit Pad-B, ohne fahreZuSystem auszulösen — auch nicht im Folgebild', () => {
+    useStore.getState().setCamera({ targetId: 'mars' });
+    useInfoKarte.setState({ offen: true });
+    const mit = (p: PadRoh | null): SteuerungUmgebung => ({ ...umgebung([], null), pad: () => p });
+    steuerungTakt(jd, 0, mit(padAttrappe())); // erstes Auftauchen
+    steuerungTakt(jd, 0, mit(padAttrappe({ gedrueckt: [PAD.B] }))); // Flanke: schließt
+    expect(useInfoKarte.getState().offen).toBe(false);
+    expect(useStore.getState().camera.targetId).toBe('mars');
+    expect(fahrtLaeuft()).toBe(false);
+    // Folgebild, B weiter gehalten, Karte inzwischen zu: keine Flanke mehr.
+    steuerungTakt(jd, 0, mit(padAttrappe({ gedrueckt: [PAD.B] })));
+    expect(useStore.getState().camera.targetId).toBe('mars');
+    expect(fahrtLaeuft()).toBe(false);
+  });
+
+  it('schließt die offene Steuerungskarte mit Pad-B, ohne fahreZuSystem auszulösen — auch nicht im Folgebild', () => {
+    useStore.getState().setCamera({ targetId: 'jupiter' });
+    useSteuerKarte.setState({ offen: true });
+    const mit = (p: PadRoh | null): SteuerungUmgebung => ({ ...umgebung([], null), pad: () => p });
+    steuerungTakt(jd, 0, mit(padAttrappe()));
+    steuerungTakt(jd, 0, mit(padAttrappe({ gedrueckt: [PAD.B] })));
+    expect(useSteuerKarte.getState().offen).toBe(false);
+    expect(useStore.getState().camera.targetId).toBe('jupiter');
+    expect(fahrtLaeuft()).toBe(false);
+    steuerungTakt(jd, 0, mit(padAttrappe({ gedrueckt: [PAD.B] })));
+    expect(useStore.getState().camera.targetId).toBe('jupiter');
+    expect(fahrtLaeuft()).toBe(false);
+  });
+
+  it('wirkt ohne offene Karte wie bisher: B fährt in die Draufsicht', () => {
+    useStore.getState().setCamera({ targetId: 'mars' });
+    const mit = (p: PadRoh | null): SteuerungUmgebung => ({ ...umgebung([], null), pad: () => p, leinwand: () => l });
+    steuerungTakt(jd, 0, mit(padAttrappe()));
+    steuerungTakt(jd, 0, mit(padAttrappe({ gedrueckt: [PAD.B] })));
+    expect(useStore.getState().camera.targetId).toBe('sun');
+    expect(fahrtLaeuft()).toBe(true);
   });
 });

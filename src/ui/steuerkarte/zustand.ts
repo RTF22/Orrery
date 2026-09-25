@@ -6,7 +6,7 @@ export type SteuerReiter = 'tastatur' | 'controller';
 interface SteuerKarteZustand {
   offen: boolean;
   reiter: SteuerReiter;
-  /** Öffnet immer mit „Tastatur". */
+  /** Öffnet immer mit „Tastatur“. */
   oeffnen(): void;
   schliessen(): void;
   setReiter(reiter: SteuerReiter): void;
