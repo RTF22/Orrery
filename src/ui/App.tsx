@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { useStore } from '../store';
 import { t } from './i18n';
 import { useSprache } from './i18n/useSprache';
@@ -88,12 +89,28 @@ function Kuerzelliste({ eintraege }: { eintraege: Kuerzel }): React.JSX.Element 
 function Kuerzeluebersicht(): React.JSX.Element {
   // M ist nur mit Musik des Betreibers belegt (useShortcuts.ts).
   const musik = useMusikStand((s) => s.verfuegbar);
+  const wrapper = useRef<HTMLDivElement>(null);
+
+  // Die Übersicht steht als letzter Abschnitt am Ende der scrollenden
+  // Seitenleiste und kann beim Einblenden weit außerhalb des sichtbaren
+  // Fensters liegen (Handprüfung: y≈2528 px bei 615 px Fensterhöhe). Beim
+  // Einhängen holt sie sich deshalb selbst ins Bild und übernimmt den Fokus
+  // von ihrer Kopfzeile, statt stumm irgendwo unten zu erscheinen.
+  useEffect(() => {
+    const knopf = wrapper.current?.querySelector<HTMLButtonElement>('button[aria-expanded]');
+    knopf?.focus({ preventScroll: true });
+    // jsdom kennt scrollIntoView nicht.
+    wrapper.current?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' });
+  }, []);
+
   return (
-    <Panel id={SHORTCUTS_PANEL} title={t('shortcuts.title')}>
-      <Kuerzelliste eintraege={musik ? [...KUERZEL, ...MUSIK_KUERZEL] : KUERZEL} />
-      <h3 className="mb-1 mt-3 text-xs font-semibold opacity-80">{t('shortcuts.padTitle')}</h3>
-      <Kuerzelliste eintraege={PAD_KUERZEL} />
-    </Panel>
+    <div ref={wrapper}>
+      <Panel id={SHORTCUTS_PANEL} title={t('shortcuts.title')}>
+        <Kuerzelliste eintraege={musik ? [...KUERZEL, ...MUSIK_KUERZEL] : KUERZEL} />
+        <h3 className="mb-1 mt-3 text-xs font-semibold opacity-80">{t('shortcuts.padTitle')}</h3>
+        <Kuerzelliste eintraege={PAD_KUERZEL} />
+      </Panel>
+    </div>
   );
 }
 

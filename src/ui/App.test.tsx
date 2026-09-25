@@ -136,6 +136,36 @@ describe('App', () => {
     knopf.remove();
   });
 
+  it('holt die Kürzelübersicht bei Taste „?“ ins Bild und fokussiert ihre Kopfzeile', () => {
+    // Die Übersicht steht als letzter Abschnitt der scrollenden Seitenleiste
+    // und kann außerhalb des Fensters liegen — jsdom kennt scrollIntoView
+    // nicht, daher ein eigener Ersatz auf dem Prototyp.
+    const scrollSpy = vi.fn();
+    Object.defineProperty(Element.prototype, 'scrollIntoView', { value: scrollSpy, configurable: true });
+    render(<App />);
+    fireEvent.keyDown(window, { key: '?' });
+    const knopf = screen.getByRole('button', { name: 'Tastenkürzel' });
+    expect(scrollSpy).toHaveBeenCalledTimes(1);
+    expect((scrollSpy.mock.contexts[0] as HTMLElement).textContent).toContain('Tastenkürzel');
+    expect(document.activeElement).toBe(knopf);
+    delete (Element.prototype as { scrollIntoView?: unknown }).scrollIntoView;
+  });
+
+  it('schließt die Info-Karte bei „Alle Tastenkürzel und Controller“, zeigt die Übersicht im Bild und übernimmt den Fokus', () => {
+    const scrollSpy = vi.fn();
+    Object.defineProperty(Element.prototype, 'scrollIntoView', { value: scrollSpy, configurable: true });
+    // Feiner Zeiger: jsdom kennt matchMedia nicht, useGrob ist also false.
+    useInfoKarte.setState({ offen: true, reiter: 'bedienung' });
+    render(<App />);
+    fireEvent.click(screen.getByRole('button', { name: 'Alle Tastenkürzel und Controller' }));
+    expect(screen.queryByRole('dialog')).toBeNull();
+    const knopf = screen.getByRole('button', { name: 'Tastenkürzel' });
+    expect(scrollSpy).toHaveBeenCalledTimes(1);
+    // Der Fokus landet in der Übersicht, nicht beim ⓘ-Knopf zurück.
+    expect(document.activeElement).toBe(knopf);
+    delete (Element.prototype as { scrollIntoView?: unknown }).scrollIntoView;
+  });
+
   it('übersetzt eine offene Info-Karte beim Sprachwechsel sofort', () => {
     useInfoKarte.setState({ offen: true, reiter: 'bedienung' });
     render(<App />);
