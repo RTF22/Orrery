@@ -1,6 +1,7 @@
 import { t } from '../i18n';
 import { useGrob } from '../fenster';
 import { useSteuerKarte } from '../steuerkarte/zustand';
+import { usePadVerbunden } from '../steuerung/padVerbunden';
 import { laeuftAlsApp } from './geraet';
 import { installieren, useInstallation } from './installation';
 import { useInfoKarte } from './zustand';
@@ -65,8 +66,13 @@ const TASTEN: readonly (readonly [string | { key: string }, string])[] = [
 export function ReiterBedienung(): React.JSX.Element {
   const grob = useGrob();
   const schliessen = useInfoKarte((s) => s.schliessen);
+  const padVerbunden = usePadVerbunden();
 
   if (grob) {
+    const controllerKarte = (): void => {
+      schliessen();
+      useSteuerKarte.getState().oeffnen('controller');
+    };
     return (
       <div className="flex flex-col gap-2">
         <p className="m-0">{t('infokarte.bedienung.einleitung')}</p>
@@ -76,6 +82,11 @@ export function ReiterBedienung(): React.JSX.Element {
           <li>{t('infokarte.bedienung.touchTippen')}</li>
           <li>{t('infokarte.bedienung.touchBoegen')}</li>
         </ul>
+        {padVerbunden ? (
+          <button type="button" onClick={controllerKarte} className={`self-start ${LINKSTIL}`}>
+            {t('infokarte.bedienung.controllerKarte')}
+          </button>
+        ) : null}
       </div>
     );
   }

@@ -5,6 +5,7 @@ import { ReiterApp, ReiterBedienung, ReiterUeber } from './inhalte';
 import { useInstallation } from './installation';
 import { useInfoKarte } from './zustand';
 import { useSteuerKarte } from '../steuerkarte/zustand';
+import { padAttrappe } from '../steuerung/padAttrappe';
 import { useStore, DEFAULT_STATE } from '../../store';
 
 function zeiger(grob: boolean, app = false): void {
@@ -25,6 +26,8 @@ describe('Reiter der Info-Karte', () => {
   afterEach(() => {
     vi.restoreAllMocks();
     window.matchMedia = urspruenglicheMatchMedia;
+    vi.unstubAllGlobals();
+    Reflect.deleteProperty(navigator, 'getGamepads');
   });
 
   it('App: drei Anleitungen, ohne Ereignis kein Installationsknopf', () => {
@@ -58,12 +61,27 @@ describe('Reiter der Info-Karte', () => {
     expect(screen.queryByText(/Android/)).toBeNull();
   });
 
-  it('Bedienung: Touch zeigt Gesten, keine Tasten', () => {
+  it('Bedienung: Touch zeigt Gesten, keine Tasten und ohne Controller keinen Knopf', () => {
     zeiger(true);
+    vi.stubGlobal('isSecureContext', true);
+    Object.defineProperty(navigator, 'getGamepads', { value: () => [], configurable: true });
     render(<ReiterBedienung />);
     expect(screen.getByText(/einem Finger/)).toBeTruthy();
     expect(screen.queryByText('Leertaste')).toBeNull();
     expect(screen.queryByRole('button', { name: 'Alle Tastenkürzel und Controller' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Controller-Belegung' })).toBeNull();
+  });
+
+  it('Bedienung: Touch mit verbundenem Controller öffnet die Steuerungskarte mit Controller', () => {
+    zeiger(true);
+    vi.stubGlobal('isSecureContext', true);
+    Object.defineProperty(navigator, 'getGamepads', { value: () => [padAttrappe()], configurable: true });
+    render(<ReiterBedienung />);
+    fireEvent.click(screen.getByRole('button', { name: 'Controller-Belegung' }));
+    expect(useInfoKarte.getState().offen).toBe(false);
+    expect(useSteuerKarte.getState().offen).toBe(true);
+    expect(useSteuerKarte.getState().reiter).toBe('controller');
+    useSteuerKarte.setState({ offen: false });
   });
 
   it('Bedienung: Maus zeigt Tasten und öffnet die vollständige Übersicht', () => {

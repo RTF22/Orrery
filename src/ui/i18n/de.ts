@@ -306,6 +306,7 @@ export const de = {
   'infokarte.bedienung.mausKlick': 'Klick auf einen Körper: hinfliegen',
   'infokarte.bedienung.tastenLeer': 'Leertaste',
   'infokarte.bedienung.alleKuerzel': 'Alle Tastenkürzel und Controller',
+  'infokarte.bedienung.controllerKarte': 'Controller-Belegung',
   'infokarte.ueber.text': 'Orrery zeigt das Sonnensystem physikalisch gerechnet: Körper, Monde und Himmel in echter Lage, mit Texten in drei Niveaustufen.',
   'infokarte.ueber.quellcode': 'Quellcode auf GitHub',
   'infokarte.ueber.recht': '© Jens Fricke. Code: alle Rechte vorbehalten.',

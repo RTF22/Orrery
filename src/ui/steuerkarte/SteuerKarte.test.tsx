@@ -31,6 +31,12 @@ describe('SteuerKarte', () => {
     expect(screen.getByText('Fliegen: vor, links, zurück, rechts')).toBeTruthy();
   });
 
+  it('öffnet direkt mit dem übergebenen Reiter', () => {
+    useSteuerKarte.getState().oeffnen('controller');
+    expect(useSteuerKarte.getState().offen).toBe(true);
+    expect(useSteuerKarte.getState().reiter).toBe('controller');
+  });
+
   it('zeigt M nur mit Musik des Betreibers', () => {
     useSteuerKarte.getState().oeffnen();
     const { rerender } = render(<SteuerKarte />);

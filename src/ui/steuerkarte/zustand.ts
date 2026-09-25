@@ -6,8 +6,8 @@ export type SteuerReiter = 'tastatur' | 'controller';
 interface SteuerKarteZustand {
   offen: boolean;
   reiter: SteuerReiter;
-  /** Öffnet immer mit „Tastatur“. */
-  oeffnen(): void;
+  /** Öffnet mit dem übergebenen Reiter, ohne Angabe mit „Tastatur“. */
+  oeffnen(reiter?: SteuerReiter): void;
   schliessen(): void;
   setReiter(reiter: SteuerReiter): void;
 }
@@ -16,7 +16,7 @@ interface SteuerKarteZustand {
 export const useSteuerKarte = create<SteuerKarteZustand>((set) => ({
   offen: false,
   reiter: 'tastatur',
-  oeffnen: () => { set({ offen: true, reiter: 'tastatur' }); },
+  oeffnen: (reiter = 'tastatur') => { set({ offen: true, reiter }); },
   schliessen: () => { set({ offen: false }); },
   setReiter: (reiter) => { set({ reiter }); },
 }));

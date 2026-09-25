@@ -304,6 +304,7 @@ export const en: Record<Key, string> = {
   'infokarte.bedienung.mausKlick': 'Click a body: fly there',
   'infokarte.bedienung.tastenLeer': 'Space',
   'infokarte.bedienung.alleKuerzel': 'All shortcuts and controller',
+  'infokarte.bedienung.controllerKarte': 'Controller layout',
   'infokarte.ueber.text': 'Orrery shows the solar system computed physically: bodies, moons and sky in their true positions, with texts at three levels.',
   'infokarte.ueber.quellcode': 'Source code on GitHub',
   'infokarte.ueber.recht': '© Jens Fricke. Code: all rights reserved.',
