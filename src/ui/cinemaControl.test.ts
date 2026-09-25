@@ -247,6 +247,34 @@ describe('Kino-Steuerung: eigenes Vollbild', () => {
       vi.unstubAllGlobals();
     }
   });
+
+  it('verlässt das Vollbild nachträglich, wenn das Kino vor der Zusage schon endet (Nacharbeit Runde 1)', async () => {
+    // Zurückgehaltene Zusage: startCinema löst sie nicht sofort ein, ein
+    // schnelles doppeltes C oder Escape kurz nach dem Start endet das Kino,
+    // bevor requestFullscreen sich erfüllt.
+    let erfuellen: (() => void) | null = null;
+    const zusage = new Promise<void>((resolve) => { erfuellen = resolve; });
+    const doc = attrappe(null);
+    doc.documentElement.requestFullscreen = vi.fn<() => Promise<void>>(() => zusage);
+    vi.stubGlobal('document', doc);
+    try {
+      startCinema();
+      stopCinema();
+      expect(doc.exitFullscreen).not.toHaveBeenCalled();
+      // Die Zusage erfüllt sich jetzt nachträglich; der Browser ist inzwischen
+      // im Vollbild.
+      doc.fullscreenElement = {};
+      erfuellen?.();
+      await Promise.resolve();
+      await Promise.resolve();
+      expect(doc.exitFullscreen).toHaveBeenCalledTimes(1);
+      // Ein weiteres Beenden löst kein zweites exitFullscreen aus.
+      stopCinema();
+      expect(doc.exitFullscreen).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
 });
 
 describe('naechsteNummerFuer (Entwurf Phase 5 §3.3)', () => {

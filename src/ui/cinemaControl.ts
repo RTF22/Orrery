@@ -46,7 +46,18 @@ export function startCinema(): void {
   // exitFullscreen.
   if (typeof document !== 'undefined' && document.fullscreenElement === null) {
     void document.documentElement.requestFullscreen?.()
-      .then(() => { vollbildVomKino = true; })
+      .then(() => {
+        // Das Kino kann sich schon wieder beendet haben, bevor die Zusage
+        // erfüllt wurde (schnelles doppeltes C, Escape kurz nach dem Start,
+        // Pad-Menü doppelt): stopCinema fand vollbildVomKino damals noch
+        // falsch vor und rief kein exitFullscreen. Das holt dieser Zweig
+        // nach, statt den Browser ungefragt im Vollbild stehen zu lassen.
+        if (!cinemaAktiv()) {
+          void document.exitFullscreen?.().catch(() => { /* schon verlassen */ });
+          return;
+        }
+        vollbildVomKino = true;
+      })
       .catch(() => { /* verweigert */ });
   }
 }
