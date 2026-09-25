@@ -9,10 +9,13 @@ import { VERSION } from './version';
 const REPO = 'https://github.com/RTF22/Orrery';
 const ASSETS = 'https://github.com/RTF22/Orrery/blob/master/ASSETS.md';
 
+/** Linkstil wie `LINK` in ui/info/Literaturkarten.tsx — gemeinsame Konstante statt zweier gleicher Zeichenketten. */
+const LINKSTIL = 'text-sky-300 underline decoration-sky-300/50 underline-offset-2 hover:text-sky-200';
+
 /** Externer Link: immer neuer Tab, sichtbares ↗, Hinweis für Screenreader. */
 export function ExternerLink({ href, children }: { href: string; children: React.ReactNode }): React.JSX.Element {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="text-sky-300 underline underline-offset-2 hover:text-sky-200">
+    <a href={href} target="_blank" rel="noopener noreferrer" className={LINKSTIL}>
       {children}
       <span aria-hidden="true"> ↗</span>
       <span className="sr-only"> {t('infokarte.neuerTab')}</span>
@@ -98,7 +101,7 @@ export function ReiterBedienung(): React.JSX.Element {
           </div>
         ))}
       </dl>
-      <button type="button" onClick={alleKuerzel} className="self-start text-sky-300 underline underline-offset-2 hover:text-sky-200">
+      <button type="button" onClick={alleKuerzel} className={`self-start ${LINKSTIL}`}>
         {t('infokarte.bedienung.alleKuerzel')}
       </button>
     </div>

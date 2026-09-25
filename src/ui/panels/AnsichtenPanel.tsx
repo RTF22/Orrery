@@ -13,6 +13,13 @@ import { Panel } from './Panel';
 /** So lange lässt sich ein Löschen zurücknehmen (Entwurf §5.3). */
 const RUECKGAENGIG_MS = 5000;
 
+/**
+ * So lange bleibt die Objekt-URL des Exports nach dem Klick gültig, bevor
+ * sie freigegeben wird — eine sofortige Freigabe bricht den Download in
+ * manchen Browsern ab.
+ */
+const EXPORT_FREIGABE_MS = 1000;
+
 const KNOPF = 'rounded border border-white/15 px-2 py-1 hover:bg-white/10 disabled:opacity-40 disabled:hover:bg-transparent';
 const FELD = 'min-w-0 flex-1 rounded border border-white/15 bg-transparent px-2 py-1';
 const KLEIN = 'rounded border border-transparent px-1 opacity-70 hover:opacity-100';
@@ -26,7 +33,7 @@ interface Props {
 interface Umbenennung { alt: string; neu: string; doppelt: boolean }
 
 /** Meldung unter den Knöpfen; Schlüssel statt Text, damit ein Sprachwechsel sie mitnimmt. */
-interface Meldung { schluessel: Key; anzahl: number }
+interface Meldung { schluessel: Key; anzahl?: number }
 
 /**
  * Panel „Ansichten" (Entwurf §5.3): benannte Einstellungen speichern, laden,
@@ -146,7 +153,7 @@ export function AnsichtenPanel({ ablage = ablageHolen() }: Props): React.JSX.Ele
     a.href = url;
     a.download = EXPORT_DATEINAME;
     a.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => { URL.revokeObjectURL(url); }, EXPORT_FREIGABE_MS);
   };
 
   const importieren = async (datei: File): Promise<void> => {
@@ -155,14 +162,13 @@ export function AnsichtenPanel({ ablage = ablageHolen() }: Props): React.JSX.Ele
       text = await datei.text();
     } catch {
       // Datei nach der Wahl nicht mehr lesbar: wie eine fremde Datei behandeln.
-      setMeldung({ schluessel: 'views.importInvalid', anzahl: 0 });
+      setMeldung({ schluessel: 'views.importInvalid' });
       return;
     }
     const ergebnis = ansichtenImportieren(text, listeRef.current);
     if (ergebnis.fehler !== null) {
       setMeldung({
         schluessel: ergebnis.fehler === 'umschlag' ? 'views.importInvalid' : 'views.importEmpty',
-        anzahl: 0,
       });
       return;
     }
@@ -296,7 +302,9 @@ export function AnsichtenPanel({ ablage = ablageHolen() }: Props): React.JSX.Ele
         </div>
         {/* Immer im Baum, damit die Live-Region beim ersten Text schon existiert. */}
         <p role="status" className="m-0 text-amber-200">
-          {meldung === null ? '' : t(meldung.schluessel).replace('{n}', String(meldung.anzahl))}
+          {meldung === null ? '' : (
+            meldung.anzahl === undefined ? t(meldung.schluessel) : t(meldung.schluessel).replace('{n}', String(meldung.anzahl))
+          )}
         </p>
       </div>
     </Panel>

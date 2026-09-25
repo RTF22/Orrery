@@ -35,6 +35,20 @@ describe('advanceCinema', () => {
     const aus = { ...basis, running: false };
     expect(advanceCinema(aus, 5)).toEqual(aus);
   });
+
+  it('schreibt beim Wechsel die normalisierte Nummer zurück, nicht die alte plus eins', () => {
+    // 2,5 normalisiert auf die Szene 2 (plannedSceneAt rundet ab); ohne den
+    // Fix liefe 2,5 + 1 = 3,5 unnormalisiert weiter.
+    const dauerZwei = plannedSceneAt(2, SCENES, basis.seed, basis.shuffle).scene.durationSec;
+    const ausBruch = advanceCinema({ ...basis, nummer: 2.5, elapsedSec: dauerZwei - 0.01 }, 0.02);
+    expect(ausBruch.nummer).toBe(3);
+
+    // −3 normalisiert auf die Szene 0 (Math.max(0, …)); ohne den Fix bliebe
+    // die Nummer negativ (−3 + 1 = −2).
+    const dauerNull = plannedSceneAt(0, SCENES, basis.seed, basis.shuffle).scene.durationSec;
+    const ausNegativ = advanceCinema({ ...basis, nummer: -3, elapsedSec: dauerNull - 0.01 }, 0.02);
+    expect(ausNegativ.nummer).toBe(1);
+  });
 });
 
 describe('blendedRate', () => {

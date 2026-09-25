@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { Kopfzeile } from './Kopfzeile';
 import { setSprache } from './i18n';
 import { useStore, DEFAULT_STATE } from '../store';
@@ -96,13 +96,24 @@ describe('Kopfzeile: Link kopieren und Zurücksetzen', () => {
 
   it('blendet die Meldung nach zwei Sekunden aus', async () => {
     mitZwischenablage();
-    render(<Kopfzeile />);
-    fireEvent.click(screen.getByRole('button', { name: 'Link kopieren' }));
-    await waitFor(() => { expect(screen.getByRole('status').textContent).toBe('Kopiert'); });
-    await waitFor(
-      () => { expect(screen.getByRole('status').textContent).toBe(''); },
-      { timeout: 3000 },
-    );
+    vi.useFakeTimers();
+    try {
+      render(<Kopfzeile />);
+      // Die Zwischenablage-Attrappe liefert ein Promise; zwei Mikrotask-
+      // Umläufe reichen, bis „Kopiert" gesetzt ist (kein echter Timer nötig).
+      await act(async () => {
+        fireEvent.click(screen.getByRole('button', { name: 'Link kopieren' }));
+        await Promise.resolve();
+        await Promise.resolve();
+      });
+      expect(screen.getByRole('status').textContent).toBe('Kopiert');
+      act(() => { vi.advanceTimersByTime(1999); });
+      expect(screen.getByRole('status').textContent).toBe('Kopiert');
+      act(() => { vi.advanceTimersByTime(1); });
+      expect(screen.getByRole('status').textContent).toBe('');
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('setzt zurück und behält Sprache und Qualitätsstufe', () => {

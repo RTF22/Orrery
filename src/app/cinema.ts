@@ -29,7 +29,10 @@ export function advanceCinema(
   }
   return {
     ...cinema,
-    nummer: cinema.nummer + 1,
+    // geplant.nummer statt cinema.nummer + 1: plannedSceneAt normalisiert
+    // (nicht-negative Ganzzahl); eine unnormalisierte Nummer aus einem alten
+    // Zustand liefe sonst unnormalisiert weiter.
+    nummer: geplant.nummer + 1,
     // Der Überhang wandert in die neue Szene, damit sich über Stunden kein
     // Zeitversatz aufsummiert; er wird gedeckelt, falls er die neue Szene
     // schon wieder überschreiten würde.

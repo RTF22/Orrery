@@ -214,35 +214,50 @@ describe('AnsichtenPanel: exportieren und importieren', () => {
     expect((screen.getByRole('button', { name: 'Exportieren' }) as HTMLButtonElement).disabled).toBe(true);
   });
 
-  it('exportiert die Liste als JSON-Datei mit Umschlag über einen Download-Link', async () => {
-    const createObjectURL = vi.fn<(blob: Blob) => string>(() => 'blob:orrery');
-    const revokeObjectURL = vi.fn();
-    Object.defineProperty(URL, 'createObjectURL', { value: createObjectURL, configurable: true });
-    Object.defineProperty(URL, 'revokeObjectURL', { value: revokeObjectURL, configurable: true });
-    let dateiname = '';
-    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) {
-      dateiname = this.download;
-    });
-    render(<AnsichtenPanel ablage={mitAnsichten([{ name: 'Saturn', state: { scale: { sizeScale: 7 } } }])} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Exportieren' }));
-    expect(dateiname).toBe('orrery-ansichten.json');
-    const blob = createObjectURL.mock.calls[0]?.[0] as Blob;
-    expect(JSON.parse(await blob.text())).toEqual({
-      format: EXPORT_FORMAT, version: 1, ansichten: [{ name: 'Saturn', state: { scale: { sizeScale: 7 } } }],
-    });
-    expect(revokeObjectURL).toHaveBeenCalledWith('blob:orrery');
+  it('exportiert die Liste als JSON-Datei mit Umschlag über einen Download-Link und gibt die URL erst nach 1000 ms frei', async () => {
+    vi.useFakeTimers();
+    try {
+      const createObjectURL = vi.fn<(blob: Blob) => string>(() => 'blob:orrery');
+      const revokeObjectURL = vi.fn();
+      Object.defineProperty(URL, 'createObjectURL', { value: createObjectURL, configurable: true });
+      Object.defineProperty(URL, 'revokeObjectURL', { value: revokeObjectURL, configurable: true });
+      let dateiname = '';
+      vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) {
+        dateiname = this.download;
+      });
+      render(<AnsichtenPanel ablage={mitAnsichten([{ name: 'Saturn', state: { scale: { sizeScale: 7 } } }])} />);
+      fireEvent.click(screen.getByRole('button', { name: 'Exportieren' }));
+      expect(dateiname).toBe('orrery-ansichten.json');
+      const blob = createObjectURL.mock.calls[0]?.[0] as Blob;
+      expect(JSON.parse(await blob.text())).toEqual({
+        format: EXPORT_FORMAT, version: 1, ansichten: [{ name: 'Saturn', state: { scale: { sizeScale: 7 } } }],
+      });
+      expect(revokeObjectURL).not.toHaveBeenCalled();
+      act(() => { vi.advanceTimersByTime(1000); });
+      expect(revokeObjectURL).toHaveBeenCalledTimes(1);
+      expect(revokeObjectURL).toHaveBeenCalledWith('blob:orrery');
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('exportiert schwebend gelöschte Einträge nicht', async () => {
-    const createObjectURL = vi.fn<(blob: Blob) => string>(() => 'blob:orrery');
-    Object.defineProperty(URL, 'createObjectURL', { value: createObjectURL, configurable: true });
-    Object.defineProperty(URL, 'revokeObjectURL', { value: vi.fn(), configurable: true });
-    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
-    render(<AnsichtenPanel ablage={mitAnsichten([{ name: 'Saturn', state: {} }, { name: 'Erde', state: {} }])} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Löschen: Saturn' }));
-    fireEvent.click(screen.getByRole('button', { name: 'Exportieren' }));
-    const blob = createObjectURL.mock.calls[0]?.[0] as Blob;
-    expect((JSON.parse(await blob.text()) as { ansichten: { name: string }[] }).ansichten.map((a) => a.name)).toEqual(['Erde']);
+    // Fake-Timer, damit die verzögerte Freigabe der Objekt-URL (EXPORT_FREIGABE_MS)
+    // hier nicht als echter Timer über das Testende hinaus weiterläuft.
+    vi.useFakeTimers();
+    try {
+      const createObjectURL = vi.fn<(blob: Blob) => string>(() => 'blob:orrery');
+      Object.defineProperty(URL, 'createObjectURL', { value: createObjectURL, configurable: true });
+      Object.defineProperty(URL, 'revokeObjectURL', { value: vi.fn(), configurable: true });
+      vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+      render(<AnsichtenPanel ablage={mitAnsichten([{ name: 'Saturn', state: {} }, { name: 'Erde', state: {} }])} />);
+      fireEvent.click(screen.getByRole('button', { name: 'Löschen: Saturn' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Exportieren' }));
+      const blob = createObjectURL.mock.calls[0]?.[0] as Blob;
+      expect((JSON.parse(await blob.text()) as { ansichten: { name: string }[] }).ansichten.map((a) => a.name)).toEqual(['Erde']);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('importiert eine gültige Datei, hängt sie an und löst Namenskonflikte', async () => {
