@@ -52,6 +52,7 @@ export const en: Record<Key, string> = {
   'display.labels': 'Labels',
   'display.markers': 'Markers',
   'display.belts': 'Belts',
+  'display.milchstrasse': 'Milky Way',
   'display.shadows': 'Shadows',
   'display.bloom': 'Glow',
   'display.brightness': 'Brightness',

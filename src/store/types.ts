@@ -35,6 +35,8 @@ export interface AppState {
     orbits: boolean; labels: boolean; markers: boolean;
     /** Asteroiden- und Kuipergürtel als Punktwolken (render/belts.ts). */
     belts: boolean;
+    /** Band der Milchstraße als Himmelshintergrund (render/milchstrasse.ts). */
+    milchstrasse: boolean;
     /** Analytische Kugel-/Ring-Okkluder und Kernschattenfarbe (render/shadows.ts). */
     shadows: boolean;
     bloom: boolean; brightness: number; lightFalloff: number;

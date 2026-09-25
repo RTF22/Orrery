@@ -51,6 +51,7 @@ export const de = {
   'display.labels': 'Beschriftungen',
   'display.markers': 'Marker',
   'display.belts': 'Gürtel',
+  'display.milchstrasse': 'Milchstraße',
   'display.shadows': 'Schatten',
   'display.bloom': 'Leuchten',
   'display.brightness': 'Helligkeit',

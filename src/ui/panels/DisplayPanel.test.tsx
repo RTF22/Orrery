@@ -37,3 +37,18 @@ describe('DisplayPanel: Sitzung merken', () => {
     expect(localStorage.getItem(SCHLUESSEL_MERKEN)).toBeNull();
   });
 });
+
+describe('DisplayPanel: Milchstraße', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
+  });
+
+  it('zeigt das Kästchen angehakt und schaltet display.milchstrasse', () => {
+    render(<DisplayPanel />);
+    const kasten = screen.getByRole('checkbox', { name: 'Milchstraße' }) as HTMLInputElement;
+    expect(kasten.checked).toBe(true);
+    fireEvent.click(kasten);
+    expect(useStore.getState().display.milchstrasse).toBe(false);
+  });
+});

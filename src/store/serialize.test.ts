@@ -36,6 +36,13 @@ describe('toShareable', () => {
     expect(toShareable(state)).toEqual({ display: { shadows: false } });
     expect(toShareable(structuredClone(DEFAULT_STATE))).toEqual({});
   });
+
+  it('nimmt display.milchstrasse nur als Abweichung auf, Standard ist an', () => {
+    expect(DEFAULT_STATE.display.milchstrasse).toBe(true);
+    const state = structuredClone(DEFAULT_STATE);
+    state.display.milchstrasse = false;
+    expect(toShareable(state)).toEqual({ display: { milchstrasse: false } });
+  });
 });
 
 describe('Round-Trip', () => {
@@ -155,6 +162,14 @@ describe('decodeState — Prüfung (Pflichtpunkt 4b)', () => {
     const s = decodeState(encodePatch({ time: { jd: 'x', rateDaysPerSec: 7 } }));
     expect(s.time.jd).toBe(DEFAULT_STATE.time.jd);
     expect(s.time.rateDaysPerSec).toBe(7);
+  });
+
+  it('ergänzt display.milchstrasse bei alten Links und verwirft einen falschen Typ', () => {
+    expect(decodeState(encodePatch({ display: { belts: false } })).display.milchstrasse).toBe(true);
+    const s = decodeState(encodePatch({ display: { milchstrasse: 'ja', orbits: false } }));
+    expect(s.display.milchstrasse).toBe(true);
+    expect(s.display.orbits).toBe(false);
+    expect(decodeState(encodePatch({ display: { milchstrasse: false } })).display.milchstrasse).toBe(false);
   });
 
   it('lässt Funktionen im Zustand nicht in den Patch', () => {
