@@ -45,6 +45,7 @@ describe('SteuerKarte', () => {
     render(<SteuerKarte />);
     fireEvent.click(screen.getByRole('tab', { name: 'Controller' }));
     expect(useSteuerKarte.getState().reiter).toBe('controller');
+    expect(screen.getByRole('dialog').textContent).toContain('A: zum Objekt fahren');
     fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
     expect(useSteuerKarte.getState().offen).toBe(false);
   });

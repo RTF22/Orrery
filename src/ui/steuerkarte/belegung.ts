@@ -27,21 +27,3 @@ export const KUERZEL: Kuerzel = [
 
 /** M ist nur mit Musik des Betreibers belegt (useShortcuts.ts). */
 export const MUSIK_KUERZEL: Kuerzel = [['M', 'shortcuts.mute']];
-
-/** Controller nach der Standardbelegung (Entwurf Flug und Controller §5.2, §5.3). */
-export const PAD_KUERZEL: Kuerzel = [
-  [{ key: 'padKey.leftStick' }, 'shortcuts.padLook'],
-  ['RT / LT', 'shortcuts.padFly'],
-  [{ key: 'padKey.lbStick' }, 'shortcuts.padOrbit'],
-  [{ key: 'padKey.rightStick' }, 'shortcuts.padCrosshair'],
-  ['A', 'shortcuts.padGoTo'],
-  ['B', 'shortcuts.padSystem'],
-  ['R3', 'shortcuts.padCenter'],
-  [{ key: 'padKey.dpadSides' }, 'shortcuts.rate'],
-  [{ key: 'padKey.dpadUp' }, 'shortcuts.pause'],
-  [{ key: 'padKey.dpadDown' }, 'shortcuts.reverse'],
-  [{ key: 'padKey.menu' }, 'shortcuts.cinema'],
-  ['RB', 'shortcuts.nextScene'],
-  [{ key: 'padKey.view' }, 'shortcuts.toggleUi'],
-  ['Y', 'shortcuts.info'],
-];

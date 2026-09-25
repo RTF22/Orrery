@@ -1,6 +1,7 @@
 import { Kartendialog, type KartenReiter } from '../karte/Kartendialog';
 import { useMusikStand } from '../musikStand';
-import { KUERZEL, MUSIK_KUERZEL, PAD_KUERZEL } from './belegung';
+import { KUERZEL, MUSIK_KUERZEL } from './belegung';
+import { ControllerBild } from './Controller';
 import { Kuerzelliste } from './Kuerzelliste';
 import { useSteuerKarte, type SteuerReiter } from './zustand';
 
@@ -15,9 +16,9 @@ function ReiterTastatur(): React.JSX.Element {
   return <Kuerzelliste eintraege={musik ? [...KUERZEL, ...MUSIK_KUERZEL] : KUERZEL} />;
 }
 
-/** Reiter „Controller" — die Grafik folgt; bis dahin die Liste der Standardbelegung. */
+/** Reiter „Controller" — schematische Grafik mit beschrifteten Knöpfen. */
 function ReiterController(): React.JSX.Element {
-  return <Kuerzelliste eintraege={PAD_KUERZEL} />;
+  return <ControllerBild />;
 }
 
 /** Karte „Steuerung" (Entwurf Info-Karte §7). */
