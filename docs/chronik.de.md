@@ -198,3 +198,201 @@ dieser Phase entfielen auf Subagenten, vorherrschendes Modell war Claude Opus 5
 (36,9 % der Ausgabetokens), vor Claude Sonnet 5 (36,4 %).
 
 **Commits:** `d94c497`, `515f4fe`, `6d3409b`, `69e9998`.
+
+<a id="phase-4a"></a>
+## Phase 4a: Englisch und Sprachumschaltung (13.09.2026)
+
+**Ziel:** Die Oberfläche zur Laufzeit auf Englisch umschaltbar machen, ohne ein
+externes i18n-Framework einzuführen.
+
+**Entscheidungen:** Von Jens Fricke am 13.09.2026 festgelegt: Die Startsprache
+richtet sich automatisch nach `navigator.language` (beginnt der Wert mit „en",
+startet die App englisch); statt eines Frameworks entstand eine eigene, kleine
+Lösung; die englische Locale ist `en-GB` (Tag vor Monat, 24-Stunden-Uhr).
+
+**Ergebnis:** 848 Tests in 54 Testdateien, Hauptchunk 1 120,22 kB (gzip
+298,40 kB). Die Etappe lief komplett am 13.09.2026, von `6a565c1` (20:12 Uhr)
+bis `41c0127` (21:25 Uhr) — rund 1,2 Stunden. Ein eigener Git-Tag ist für diese
+Etappe nicht vergeben; sie zählt zum späteren Tag `v0.4.0`.
+
+**Fehler und Korrekturen:** Für diese Etappe verzeichnet der Fehlerkatalog
+keinen Fall.
+
+**Tokens:** 463 002 Ausgabe-Tokens, 66 461 714 Cache-Lesen-Tokens in 519
+Antworten (Kennung `phase-4a`; 100 Haupt-, 419 Subagentenantworten); 72,2 % der
+Ausgabetokens dieser Phase entfielen auf Subagenten, vorherrschendes Modell war
+Claude Sonnet 5 (68,0 % der Ausgabetokens), vor Claude Fable 5.1 (27,8 %).
+
+**Commits:** `6a565c1`, `41c0127`.
+
+<a id="phase-4b"></a>
+## Phase 4b: Persistenz und Ansichten (14.09.2026)
+
+**Ziel:** Zustände über Sitzungen hinweg erhalten — geteilte Links, gemerkte
+Sitzung und gespeicherte Ansichten — statt jedes Mal beim Standardzustand zu
+beginnen.
+
+**Entscheidungen:** Von Jens Fricke am 14.09.2026 festgelegt: zwei Etappen,
+zuerst Prüfer, Profile, Sitzung, Link und Zurücksetzen, danach ein eigenes
+Panel „Ansichten" mit Export und Import; die Sitzung wird automatisch und
+entprellt gesichert, die Checkbox „Sitzung merken" ist standardmäßig an; die
+Adresszeile bleibt sauber, nur der Knopf „Link kopieren" erzeugt das
+URL-Fragment.
+
+**Ergebnis:** Nach Etappe 1 58 Testdateien und Hauptchunk 1 125,99 kB (gzip
+300,42 kB), am Ende der Etappe 59 Testdateien und Hauptchunk 1 134,38 kB (gzip
+302,88 kB). Die gesamte Etappe lief am Vormittag des 14.09.2026, von `f18d527`
+(07:08 Uhr) bis `3dee118` (10:10 Uhr) — rund 3,0 Stunden.
+
+**Fehler und Korrekturen:** Auch für diese Etappe verzeichnet der Fehlerkatalog
+keinen Fall.
+
+**Tokens:** 881 748 Ausgabe-Tokens, 103 360 297 Cache-Lesen-Tokens in 903
+Antworten (Kennung `phase-4b`; 234 Haupt-, 669 Subagentenantworten); 60,0 % der
+Ausgabetokens dieser Phase entfielen auf Subagenten, vorherrschendes Modell war
+Claude Sonnet 5 (45,7 % der Ausgabetokens), vor Claude Fable 5.1 (40,0 %).
+
+**Commits:** `f18d527`, `3dee118`.
+
+<a id="phase-4c"></a>
+## Phase 4c: Infopanel (14.–17.09.2026, v0.4.0)
+
+**Ziel:** Ein Infopanel mit kuratierten Quellenkarten und gestaffelten
+Textstufen je Körper und Thema, dazu Szenentexte und eine Kamerafahrt.
+
+**Entscheidungen:** Von Jens Fricke am 14.09.2026 festgelegt: keine Einbettung
+fremder Seiten, kuratierte Quellenkarten öffnen stattdessen im neuen Tab; die
+Reiter im Panel sind die Niveaustufen Grundschule, Gymnasium und Hochschule und
+schalten den Text um; die Textlänge ist gestaffelt (Grundschule 40 bis 80,
+Gymnasium 120 bis 180 Wörter, Hochschule ohne Obergrenze) — die Hochschulstufe
+wird hier nur technisch eingebaut, gefüllt wird sie erst in Phase 4d.
+
+**Ergebnis:** Der Quellenkatalog wuchs von 24 Einträgen (Etappe 1) über 62
+(Etappe 3) auf 66 am Ende von Phase 4c; die Testzahl stieg parallel von 1126
+(Etappe 1) über 1536 (Etappe 2) und 1940 (Etappe 3, Hauptchunk 1 195,59 kB,
+gzip 317,66 kB) auf 2892 Tests in 82 Testdateien am Ende. Die Etappe reichte
+vom 14.09.2026 (`022dee6`, 13:25 Uhr) bis in die Nacht zum 17.09.2026
+(`ddccc3a`, 00:16 Uhr) — rund 58,8 Stunden — und schloss mit dem Tag `v0.4.0`
+ab (Tag-Commit identisch mit dem letzten Commit der Etappe; das Tag-Objekt
+selbst trägt ein Erstelldatum rund acht Stunden später, 08:17 Uhr desselben
+Tages).
+
+![Entwicklungsstand v0.4.0 mit ausgebauter Oberfläche und Infotext.](bilder/entstehung/alt-v0.4.0.jpg)
+
+**Fehler und Korrekturen:** Die Grundschultexte wichen zunächst vom
+freigegebenen Plan ab: `objekt-phobos` nannte eine Aufgangszahl statt der
+Umlaufaussage, `thema-ringe` gab die Ringbreite als „über 250 000 km" (das ist
+der Durchmesser) statt „200 000 km breit" an, `objekt-makemake` verglich
+Makemake mit Pluto als „gut halb so groß" statt „zwei Drittel" — gefangen durch
+die Fachprüfung, korrigiert in einer Fix-Welle, die 15 Grundschultexte wörtlich
+auf den Planstand brachte.
+
+**Tokens:** 3 987 747 Ausgabe-Tokens, 539 796 022 Cache-Lesen-Tokens in 3 370
+Antworten (Kennung `phase-4c`; 810 Haupt-, 2 560 Subagentenantworten); 62,4 %
+der Ausgabetokens dieser Phase entfielen auf Subagenten, vorherrschendes Modell
+war Claude Sonnet 5 (47,5 % der Ausgabetokens), vor Claude Opus 5 (35,5 %).
+
+**Commits:** `022dee6`, `70e1c4c`, `c8bb17b`, `ddccc3a`.
+
+<a id="klickflaechen"></a>
+## Klickflächen (15.09.2026)
+
+**Ziel:** Körper, Namen und Bahnen im Bild direkt anklickbar machen, statt nur
+über Listen erreichbar.
+
+**Entscheidungen:** Laut Abnahmeprotokoll hat Jens am 15.09.2026 entschieden,
+dass ein erneuter Klick auf das bereits gewählte Kameraziel dieses wieder
+anfährt (der Zoom-Reset-Effekt ist gewollt) und dass Klicks in der dichten
+Systemansicht auch eine Bahn statt „ins Leere" treffen dürfen: „Es bleibt
+dabei."
+
+**Ergebnis:** 2003 Tests in 81 Testdateien. Die Etappe lief am Nachmittag des
+15.09.2026, von `ebc5abc` (16:10 Uhr) bis `e9e78c0` (19:28 Uhr) — rund 3,3
+Stunden — und überschneidet sich zeitlich mit dem Ende von Phase 4c.
+
+**Fehler und Korrekturen:** Ein Klick auf einen nur durch Hover sichtbaren
+Namen traf zunächst nichts oder das falsche Ziel, weil `pointerdown` sofort
+`onZeiger(null)` meldete und der Name schon vor `pointerup` verschwand —
+gefangen durch die Fachprüfung, behoben, indem die Hervorhebung bei Maus und
+Stift während des Drucks stehen bleibt und `onZeiger(null)` erst ab einer
+Tippschwelle, einem zweiten Zeiger, `pointercancel` oder `pointerleave`
+ausgelöst wird (Commit `bda469d`). In der Systemansicht ordnete ein Klick auf
+Mars stattdessen dem Mond Deimos zu, weil bei extremer Abstandskompression
+Rang 1 nach Tiefe statt nach Nähe zur Zeigermitte wählte — gefangen durch
+Pixelmessung, behoben mit einem eigenen Feld `glyphe` je Scheibe und einer
+zweistufigen Rangfolge (Commit `6b43f0c`).
+
+**Tokens:** 984 680 Ausgabe-Tokens, 98 857 888 Cache-Lesen-Tokens in 717
+Antworten (Kennung `klickflaechen`; 114 Haupt-, 603 Subagentenantworten);
+78,7 % der Ausgabetokens dieser Phase entfielen auf Subagenten,
+vorherrschendes Modell war Claude Sonnet 5 (59,7 % der Ausgabetokens), vor
+Claude Opus 5 (34,9 %).
+
+**Commits:** `ebc5abc`, `bda469d`, `6b43f0c`, `e9e78c0`.
+
+<a id="zeitbereich"></a>
+## Zeitbereich (19.09.2026)
+
+**Ziel:** Einen in Phase 4d gefundenen Absturz beheben — bei linear
+fortgeschriebener Bahnrechnung wurde ab dem Jahr 12 563 Saturns
+Bahnexzentrizität rechnerisch negativ, der Keplerlöser warf einen Fehler und
+die Bildschleife blieb dauerhaft stehen, gefangen durch die Fachprüfung
+während Phase 4d — und dafür mit Commit `6566e32` einen festen Zeitbereich vom
+1. Januar 1 bis zum 31. Dezember 9999 einführen.
+
+**Entscheidungen:** Aus den Rulings der Umsetzung: Das Datumsfeld zeigt Jahre
+außerhalb von 1 bis 9999 bewusst leer statt eines ungültigen Werts; die
+Untergrenze bleibt der Julianische Tag 0 (Jahr 1), wie von Jens gewählt; vor
+dem Merge lief eine eigene Fix-Welle für die Anzeige vor Christus, das
+Datumsfeld bei Jahren 1 bis 99 und die Fehlermeldung nach einer Erholung vom
+Absturz.
+
+**Ergebnis:** 3689 Tests in 93 Testdateien (Endstand nach der Nacharbeit). Die
+Etappe lief am Vormittag des 19.09.2026, von `ccb398c` (09:57 Uhr) bis
+`4b77caf` (11:09 Uhr) — rund 1,2 Stunden — und überschneidet sich zeitlich mit
+Phase 4d.
+
+**Fehler und Korrekturen:** Das Datumsfeld selbst schnitt `toISOString()` auf
+zehn Zeichen zu; bei negativem Jahr fehlte darin der Tag, der Browser verwarf
+den Wert und das Feld blieb leer — gefangen durch die Fachprüfung, behoben mit
+der reinen Funktion `jdZuDatumsfeld` in `src/ui/format.ts` (Commit `46c7319`).
+
+**Tokens:** 365 863 Ausgabe-Tokens, 89 041 341 Cache-Lesen-Tokens in 552
+Antworten (Kennung `zeitbereich`; 70 Haupt-, 482 Subagentenantworten); 82,2 %
+der Ausgabetokens dieser Phase entfielen auf Subagenten, vorherrschendes
+Modell war Claude Sonnet 5 (70,9 % der Ausgabetokens), vor Claude Opus 5
+(29,1 %).
+
+**Commits:** `ccb398c`, `6566e32`, `4b77caf`, `46c7319`.
+
+<a id="flug"></a>
+## Flug: Tastatur, Maus und Controller (19.09.2026)
+
+**Ziel:** Freies Fliegen durch die Szene mit Tastatur und Maus (Etappe 1)
+sowie mit einem Xbox-Controller samt Fadenkreuz (Etappe 2).
+
+**Entscheidungen:** Von Jens Fricke am 19.09.2026 festgehalten: „Mach alles
+wie empfohlen" — die Regel aus §13.5 des Entwurfs bleibt bestehen; das Kino
+darf im Fenster laufen, wenn Chrome das Vollbild verweigert; rechter Stick und
+die Taste R3 brechen keine laufende Kamerafahrt mehr ab, und eine
+Wiederherstellung wird auch während eines laufenden Flugs erkannt.
+
+**Ergebnis:** Nach Etappe 1 3769 Tests in 98 Testdateien, Hauptchunk
+1 291,02 kB (gzip 346,93 kB); nach Etappe 2 3832 Tests in 101 Testdateien,
+Hauptchunk 1 299,03 kB (gzip 349,86 kB). Die gesamte Etappe lief am
+Nachmittag des 19.09.2026, von `691a0ab` (12:45 Uhr) bis `78e6f1d` (18:15 Uhr)
+— rund 5,5 Stunden — und überschneidet sich zeitlich mit Phase 4d.
+
+**Fehler und Korrekturen:** Beim Flugstart verglich die Kamera die gerade
+gezeigte Lage mit der im selben Bild bereits bewegten Solllage, hielt das für
+eine Wiederherstellung und dämpfte mit 0,45 statt der vorgesehenen 0,15
+Sekunden — gefangen durch die Fachprüfung, behoben, indem die Flugfunktion im
+Eintrittsbild sofort zurückkehrt und der eigentliche Flugschritt erst ein Bild
+später beginnt.
+
+**Tokens:** 2 107 770 Ausgabe-Tokens, 278 589 820 Cache-Lesen-Tokens in 1 549
+Antworten (Kennung `flug`; 274 Haupt-, 1 275 Subagentenantworten); 74,0 % der
+Ausgabetokens dieser Phase entfielen auf Subagenten, vorherrschendes Modell
+war Claude Sonnet 5 (51,1 % der Ausgabetokens), vor Claude Opus 5 (48,9 %).
+
+**Commits:** `691a0ab`, `78e6f1d`.
