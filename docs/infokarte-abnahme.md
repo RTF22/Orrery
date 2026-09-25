@@ -5,8 +5,9 @@
 Entwurf `docs/superpowers/specs/2026-09-25-infokarte-design.md` (25.09.2026), Plan
 `docs/superpowers/plans/2026-09-25-infokarte.md`. Die Info-Karte bringt ein Overlay mit
 Kurzanleitung zur Einrichtung als App, zur Bedienung und mit Verweis auf Repository und
-Lizenzinfo. Sie schließt Phase 6 (Tag `v0.7.0`) an und endet mit Tag `v0.7.1`. Drei Commits
-auf dem Branch `infokarte`, dazu dieses Protokoll:
+Lizenzinfo, dazu (Nachtrag Entwurf § 7) eine eigene Karte „Steuerung“ mit Controllergrafik
+und ein Hilfe-Knopf am Handy. Sie schließt Phase 6 (Tag `v0.7.0`) an und endet mit Tag
+`v0.7.1`. Commits auf dem Branch `infokarte`, dazu dieses Protokoll:
 
 - **Gerüst** (`285be98`, Korrektur `3734c87`): eigener Store `useInfoKarte` (offen, Reiter),
   Dialog mit drei leeren Reitern („App“, „Bedienung“, „Über“), Knopf ⓘ in der Kopfzeile,
@@ -23,17 +24,33 @@ auf dem Branch `infokarte`, dazu dieses Protokoll:
   nachgeführt: Die Version steht als „Version“ mit der Zahl aus `package.json` (Beispiel
   „Version 0.7.1“), ohne das dort ursprünglich vorgesehene „v“-Präfix — deckungsgleich mit
   dem umgesetzten Code (siehe § 6).
+- **Steuerung und Hilfe-Knopf** (`1013fa9`, Korrektur `7a3e727`; Grafik `7a888da`; deckender
+  Hintergrund `1590a3f`): Nachtrag zu Entwurf und Plan (§7, Jens 25.09.2026) nach der ersten
+  Handprüfung. Das Panel „Tastenkürzel“ in der Seitenleiste entfällt, sein Feld
+  `ui.panels.shortcuts` bleibt in alten gespeicherten Sitzungen ohne Wirkung liegen. Der
+  Rahmen der Info-Karte (Reiter, Fokus, Fokusfalle, Escape, Hintergrund) wandert in den
+  gemeinsamen Baustein `ui/karte/Kartendialog.tsx`; darauf baut die neue Karte „Steuerung“
+  mit den Reitern „Tastatur“ (bisherige Liste, `M` nur mit Musik des Betreibers) und
+  „Controller“ (selbst gezeichnete SVG-Grafik, Standardbelegung, vierzehn beschriftete
+  Knöpfe, dieselbe Belegung zusätzlich als unsichtbare Liste für Screenreader). Öffnen über
+  Taste `?` oder den Knopf „Alle Tastenkürzel und Controller“ in der Info-Karte, der dabei
+  schließt; höchstens eine Karte ist offen, die Tastenkürzel sind dann gesperrt. Im
+  Kompaktmodus öffnet ein runder Hilfe-Knopf „?“ oben rechts (44 × 44 px) die Info-Karte; am
+  Schreibtisch bleibt ⓘ in der Kopfzeile. Beide Karten haben seither einen deckenden statt
+  durchscheinenden Hintergrund.
+- **Messung dieses Nachtrags**: Messungen der Steuerungskarte und des Hilfe-Knopfs gegen
+  Entwurf §7 (siehe § 3.3), Handprüfliste ergänzt.
 
 ## 2. Zahlen
 
-| Größe | Vorher (master `78ee0b8`) | Nachher |
-|---|---:|---:|
-| Tests | 5328 | 5354 |
-| Hauptchunk | 1 531,36 kB | 1 543,51 kB |
+| Größe | Vorher (master `78ee0b8`) | Nach Messung (`984699b`) | Nach Steuerung/Hilfe-Knopf (`1590a3f`) |
+|---|---:|---:|---:|
+| Tests | 5328 | 5354 | 5364 |
+| Hauptchunk | 1 531,36 kB | 1 543,51 kB | 1 548,56 kB |
 
-Die Zahlen stammen aus einem frischen Durchlauf von `npm test` und `npm run build` in diesem
-Schritt; dieser Schritt selbst ändert keinen Quelltext, die Werte sind gegenüber dem Stand
-nach den Inhalten (`74fc760`) unverändert.
+Die letzte Spalte stammt aus einem frischen Durchlauf von `npm test` und `npm run build` in
+diesem Schritt; dieser Schritt selbst ändert keinen Quelltext, die Werte sind gegenüber dem
+Stand nach dem deckenden Hintergrund (`1590a3f`) unverändert.
 
 ## 3. Messungen im Browser
 
@@ -113,6 +130,70 @@ Deutsch:
 | … die Orrery-Seite bleibt unverändert | URL weiterhin `http://localhost:5173/Orrery/` | erfüllt |
 | Konsole über den ganzen Ablauf (Verhalten und alle vier Geräte-Fälle aus § 3.1) | 0 Fehler, 0 Warnungen | erfüllt |
 
+### 3.3 Steuerung und Hilfe-Knopf (Entwurf § 7)
+
+Gleicher Aufbau wie § 3.1/§ 3.2: je Viewport ein eigener Kontext
+(`newContext({ viewport, deviceScaleFactor, isMobile, hasTouch })`), neue Seite sofort
+`bringToFront()`. Vor jedem Laden wurde `orrery.infokarte.gesehen.v1` per `addInitScript`
+gesetzt, damit die Info-Karte nicht automatisch vor der Steuerungskarte aufgeht. Die Taste
+`?` öffnete die Steuerungskarte in allen vier Sprach-/Viewport-Fällen unmittelbar, ohne den
+in den Hinweisen vorgesehenen Rückgriff auf `zustand.ts`. Reiterwechsel durch Klick auf den
+zweiten `[role="dialog"] [role="tab"]`, nach jedem Wechsel 200 ms gewartet, dann wie in § 3.1
+an `[data-testid="steuerkarte-inhalt"]` gemessen.
+
+**Kein Scrollen: 2 Viewports × 2 Sprachen × 3 Reiter-Fälle (12)**
+
+| Viewport | Sprache | Reiter | scroll | sichtbar | imBild | Ergebnis |
+|---|---|---|---:|---:|---|---|
+| Desktop klein (1280×720, dsf 1) | de | Tastatur ohne Musik | 392 | 392 | ja | erfüllt |
+| Desktop klein | de | Tastatur mit Musik | 415 | 415 | ja | erfüllt |
+| Desktop klein | de | Controller | 383 | 383 | ja | erfüllt |
+| Desktop klein | en | Tastatur ohne Musik | 392 | 392 | ja | erfüllt |
+| Desktop klein | en | Tastatur mit Musik | 415 | 415 | ja | erfüllt |
+| Desktop klein | en | Controller | 383 | 383 | ja | erfüllt |
+| Desktop groß (2560×1440, dsf 1) | de | Tastatur ohne Musik | 392 | 392 | ja | erfüllt |
+| Desktop groß | de | Tastatur mit Musik | 415 | 415 | ja | erfüllt |
+| Desktop groß | de | Controller | 383 | 383 | ja | erfüllt |
+| Desktop groß | en | Tastatur ohne Musik | 392 | 392 | ja | erfüllt |
+| Desktop groß | en | Tastatur mit Musik | 415 | 415 | ja | erfüllt |
+| Desktop groß | en | Controller | 383 | 383 | ja | erfüllt |
+
+Alle zwölf Fälle: `scroll ≤ sichtbar` (hier durchweg mit Gleichheit) und `imBild === true`. An
+beiden Desktop-Viewports lieferte `document.querySelectorAll('.hilfeknopf')` 0 Treffer.
+
+**Beschriftungen der Controllergrafik**
+
+Rechtecke aller `[role="dialog"] svg > text` (`getBoundingClientRect`, inklusive
+`tspan`-Zeilen); zwei gelten als überlappend, wenn sich ihre Rechtecke mit positiver Fläche
+schneiden (`a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom`);
+zusätzlich die Lage innerhalb des `svg`-Rechtecks geprüft.
+
+| Viewport | Sprache | Beschriftungen | außerhalb der Grafik | Überlappungen | Ergebnis |
+|---|---|---:|---:|---:|---|
+| Desktop klein | de | 14 | 0 | 0 | erfüllt |
+| Desktop klein | en | 14 | 0 | 0 | erfüllt |
+| Desktop groß | de | 14 | 0 | 0 | erfüllt |
+| Desktop groß | en | 14 | 0 | 0 | erfüllt |
+
+Screenshots bei 1280×720 je Sprache angesehen: Die Grafik steht mittig, alle vierzehn Linien
+enden sichtbar an den zugehörigen Knöpfen (linke Schultertaste/Trigger LT/LB mit Zusatzzeile,
+Ansicht-Taste, linker Stick mit Zusatzzeile, Steuerkreuz oben/seitlich/unten; rechte
+Schultertaste/Trigger RT/RB, Menü-Taste, Y/B/A, rechter Stick mit Zusatzzeile). X, das
+Drücken des linken Sticks und die Mitteltaste bleiben wie im Entwurf vorgesehen
+unbeschriftet.
+
+**Hilfe-Knopf am Handy** (A55, `deviceScaleFactor` 2,625, `isMobile`/`hasTouch`)
+
+| Fall | Rechteck | im Bild | Überschneidung ohne Bogen | Überschneidung mit Bogen „Bedienung“ | Tippen öffnet Info-Karte | Ergebnis |
+|---|---|---|---|---|---|---|
+| A55 hoch (412×915) | 44 × 44 CSS-px, rechts oben | ja | keine (Reiter „Bedienung“/„Info“ ab y = 859) | keine (Bogen beginnt bei y = 411,75) | ja | erfüllt |
+| A55 quer (915×412) | 44 × 44 CSS-px, rechts oben | ja | keine (Reiter ab y = 356) | keine (Bogen endet bei x = 384, Hilfe-Knopf ab x = 859) | ja | erfüllt |
+
+Am Desktop (1280×720) bestätigt, dass `.hilfeknopf` nicht existiert (siehe oben).
+
+Konsole über den gesamten Ablauf dieses Abschnitts (alle 12 Scroll-Fälle, 4
+Beschriftungsmessungen, beide Handy-Fälle): 0 Fehler, 0 Warnungen.
+
 ## 4. Lizenz
 
 Entfällt: keine neuen Fremddateien. Die Lizenzangaben im Reiter „Über“ (Texturen, Sternkatalog,
@@ -126,7 +207,10 @@ dieses Schritts.
 | A55: Karte beim ersten Aufruf (privates Fenster oder Websitedaten gelöscht) | |
 | A55: Installation über Knopf bzw. Menü, Start vom Symbol zeigt „läuft als App“ | |
 | A55: Links öffnen neuen Tab, Karte ohne Scrollen hoch und quer | |
-| Desktop: ⓘ, Reiter, Escape, „Alle Tastenkürzel und Controller“ | |
+| Desktop: ⓘ, Reiter, Escape | |
+| Desktop: Taste `?` und Knopf in der Info-Karte öffnen „Steuerung“; Reiter Tastatur/Controller | |
+| Desktop: Controllergrafik verständlich, Beschriftungen passen zu den Knöpfen | |
+| A55: „?“-Knopf oben rechts, öffnet die Info-Karte, stört nicht | |
 
 ## 6. Rulings
 
@@ -157,6 +241,21 @@ dieses Schritts.
   Reiterleiste im Querformat und der z-Index des Fadenkreuzes über der Karte bleiben
   zurückgestellt (nur die Sprachausgabe betroffen bzw. kaum erreichbar, ohne Wirkung auf die
   Bedienung).
+- **Ruling (Handprüfung, zwischenzeitlich überholt):** Nach dem ersten Handprüfungsbefund —
+  der Knopf „Alle Tastenkürzel und Controller“ zeigte keine sichtbare Wirkung, weil die
+  Übersicht am Ende der langen Seitenleiste stand — sollte sie sich beim Einblenden zunächst
+  ins Bild scrollen und ihre Kopfzeile fokussieren (`2458ffa`). Jens entschied sich
+  stattdessen für eine eigene Karte „Steuerung“ mit Controllergrafik und einen Hilfe-Knopf am
+  Handy (25.09.2026, Entwurf § 7); die Korrektur `2458ffa` und der dazu zurückgestellte
+  Startsprung sind damit gegenstandslos.
+- **Ruling (Kartenwechsel):** Der Prüfbefund zum Wechsel von der Info-Karte zur Steuerungskarte
+  (fehlender Test für die Fokuskette) und der doppelt vergebene Schließen-Schlüssel wurden
+  gemeinsam behoben: ein Szenariotest in `App.test.tsx`, der Schlüssel neutral als
+  `karte.schliessen` für beide Karten.
+- **Ruling (deckender Hintergrund):** Bei der Sichtprobe der Controllergrafik schien die
+  Seitenleiste durch die Karte; der Hintergrund beider Karten wurde daraufhin deckend
+  gestellt (`bg-slate-900` statt teiltransparent), eine einzeilige Änderung in
+  `Kartendialog.tsx`.
 
 ## 7. Offene Punkte
 
@@ -172,9 +271,11 @@ dieses Schritts.
 - Blendet die Kino-Ruhe die Oberfläche samt Kopfzeile aus, während die Karte über ⓘ offen ist,
   kehrt der Fokus beim Schließen nicht mehr zum ⓘ-Knopf zurück — der Knopf ist dann nicht mehr
   im DOM; der Fokus bleibt stattdessen beim Dokument.
-- Behoben in dieser Korrekturwelle: `ExternerLink` unterstrich den Linktext nur beim
-  Überfahren mit der Maus statt dauerhaft wie der übrige Bestand; die `matchMedia`-Attrappe in
-  den Inhalte-Tests wurde nach dem jeweiligen Test nicht zurückgesetzt.
+- Behoben: `ExternerLink` unterstrich den Linktext nur beim Überfahren mit der Maus statt
+  dauerhaft wie der übrige Bestand; die `matchMedia`-Attrappe in den Inhalte-Tests wurde nach
+  dem jeweiligen Test nicht zurückgesetzt.
+- Die Unterstreichung von `ExternerLink` nutzt keine `decoration-sky-300/50`; die Deckkraft
+  weicht optisch vom übrigen Bestand ab.
 
 ## 8. Fragen an Jens
 
