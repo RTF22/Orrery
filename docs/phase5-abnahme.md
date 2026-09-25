@@ -138,24 +138,27 @@ leer.
 dem Stand dieser Etappe. Eigene MP3-Dateien und `stuecke.json` legt Jens per FTP in den Ordner
 `musik/` neben `index.html` (Beispiel im Abschnitt „Eigene Musik“ der `README.md`).
 
+**Ergebnis (Jens, 25.09.2026):** „A55 manuell geprüft: sieht super aus! alles andere auch ok“.
+Alle Prüfpunkte sind damit in Ordnung, Befunde für §7 ergaben sich nicht.
+
 | Prüfpunkt | Ergebnis |
 |---|---|
-| Installation: im Browsermenü „Zum Startbildschirm hinzufügen“ bzw. „App installieren“, Start vom Symbol im Vollbild ohne Adress- und Statusleiste | |
-| Symbol auf dem Startbildschirm sauber (nicht abgeschnitten) | |
-| Oberfläche: Seitenleiste ein-/ausklappen, Breite ziehen, farbige Überschriften | |
-| Kompaktmodus Hochformat: zwei Reiter, nur ein Bogen gleichzeitig, Bedienziele ≥ 44 px | |
-| Kompaktmodus Querformat: dasselbe, Gerät drehen | |
-| Texturen bei Qualitätsstufe „mittel“: Schärfe der Erde aus der Nähe | |
-| Texturen bei Qualitätsstufe „mittel“: Schärfe des Jupiter aus der Nähe | |
-| Texturen: Ladezeit gefühlt (flüssig/spürbare Wartezeit) | |
-| Ton mit eigenen Stücken, Modus „Nur Kino“: startet nur mit dem Kino, Lautstärke wirkt | |
-| Ton mit eigenen Stücken, Modus „Immer“: spielt auch ohne Kino | |
-| Taste M bzw. Kästchen „Stumm“: schaltet zuverlässig | |
-| Titelzeile zeigt Titel/Urheber bzw. Dateiname | |
-| Überblendung zwischen zwei Stücken hörbar weich (kein Knacken/Sprung) | |
-| Verdeckter Tab auf dem A55: Ton blendet aus, beim Zurückkehren wieder ein | |
-| Dasselbe für Ton und verdeckten Tab am Desktop (eigener Browser-Tab wechseln) | |
-| Kino: Bildschirm bleibt während des Films an (Wake Lock) | |
+| Installation: im Browsermenü „Zum Startbildschirm hinzufügen“ bzw. „App installieren“, Start vom Symbol im Vollbild ohne Adress- und Statusleiste | in Ordnung |
+| Symbol auf dem Startbildschirm sauber (nicht abgeschnitten) | in Ordnung |
+| Oberfläche: Seitenleiste ein-/ausklappen, Breite ziehen, farbige Überschriften | in Ordnung |
+| Kompaktmodus Hochformat: zwei Reiter, nur ein Bogen gleichzeitig, Bedienziele ≥ 44 px | in Ordnung |
+| Kompaktmodus Querformat: dasselbe, Gerät drehen | in Ordnung |
+| Texturen bei Qualitätsstufe „mittel“: Schärfe der Erde aus der Nähe | in Ordnung |
+| Texturen bei Qualitätsstufe „mittel“: Schärfe des Jupiter aus der Nähe | in Ordnung |
+| Texturen: Ladezeit gefühlt (flüssig/spürbare Wartezeit) | in Ordnung |
+| Ton mit eigenen Stücken, Modus „Nur Kino“: startet nur mit dem Kino, Lautstärke wirkt | in Ordnung |
+| Ton mit eigenen Stücken, Modus „Immer“: spielt auch ohne Kino | in Ordnung |
+| Taste M bzw. Kästchen „Stumm“: schaltet zuverlässig | in Ordnung |
+| Titelzeile zeigt Titel/Urheber bzw. Dateiname | in Ordnung |
+| Überblendung zwischen zwei Stücken hörbar weich (kein Knacken/Sprung) | in Ordnung |
+| Verdeckter Tab auf dem A55: Ton blendet aus, beim Zurückkehren wieder ein | in Ordnung |
+| Dasselbe für Ton und verdeckten Tab am Desktop (eigener Browser-Tab wechseln) | in Ordnung |
+| Kino: Bildschirm bleibt während des Films an (Wake Lock) | in Ordnung |
 
 ## 6. Rulings der Phase
 
@@ -247,3 +250,10 @@ Musikvorschläge aus Etappe 5-1, gegenstandslos durch die Umplanung der Etappe 5
 
 Die Wort- und Trailerprüfung aus der lokalen Projektanleitung lief vor dem Commit auch über
 diese Datei (Ergebnis 0), ohne Suchmuster in dieser Datei.
+
+## Entscheidungen (25.09.2026)
+
+1. **Handprüfung:** Alle Prüfpunkte in Ordnung (§5), keine Befunde.
+2. **Tag und Push:** `v0.6.0` wird gesetzt und zusammen mit `master` gepusht.
+3. **Modellwahl für mechanische Bereinigungen:** Ähnlich gelagerte, regelgebundene
+   Bereinigungen starten künftig gleich auf dem mittleren Modell.

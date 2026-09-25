@@ -76,8 +76,14 @@ Haumea, Makemake, die Themen „Zwergplaneten" und „Kirkwood-Lücken" und
 die Szene „Ceres im Asteroidengürtel"; Etappe 11 die Themen „Grenzen des
 Modells" und „Das Sonnensystem" und die Szene „Das System von oben". Damit
 hat jeder Körper, jede Szene und jedes Thema einen Hochschultext in Deutsch
-und Englisch; Phase 4d ist abgeschlossen (Tag `v0.5.0`). Offen ist Phase 5
-(Ambient-Sound, Qualitätsstufen, Texturkompression, Veröffentlichung).
+und Englisch; Phase 4d ist abgeschlossen (Tag `v0.5.0`).
+
+Phase 5 ist abgeschlossen (Tag `v0.6.0`): einklappbare Seitenleiste mit
+Breitengriff, farbige Abschnittsüberschriften und Szenenliste im Kino-Abschnitt;
+Kompaktmodus für Telefone mit Bögen und großen Bedienzielen; Texturen als KTX2 in
+Stufen bis 8k, die nach Bedarf nachgeladen werden; Musik aus Dateien des
+Betreibers (Abschnitt „Eigene Musik“); installierbare Web-App mit Vollbildstart.
+Offen ist die Veröffentlichung.
 
 ## Entwicklung
 
