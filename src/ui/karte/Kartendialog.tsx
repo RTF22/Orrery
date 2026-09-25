@@ -89,7 +89,7 @@ export function Kartendialog<R extends string>(p: KartendialogProps<R>): React.J
         aria-modal="true"
         aria-labelledby={titelId}
         onKeyDown={tasteImDialog}
-        className={`karte flex max-h-full ${p.breite} flex-col overflow-hidden rounded-xl border border-white/10 bg-slate-900/95 text-sm text-slate-100 shadow-2xl`}
+        className={`karte flex max-h-full ${p.breite} flex-col overflow-hidden rounded-xl border border-white/10 bg-slate-900 text-sm text-slate-100 shadow-2xl`}
       >
         <div className="flex items-center justify-between border-b border-white/10 px-4 py-2">
           <h2 id={titelId} className="text-base font-semibold">{t(p.titelSchluessel)}</h2>
