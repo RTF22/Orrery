@@ -19,6 +19,8 @@ import { findeTreffer, projiziereZug, FANG_PX } from './treffer';
 import type { Bahnzug, Kandidaten, Zeigerart } from './treffer';
 import { TEXTUREN } from '../data/texturen';
 import { erzeugeKtx2Lader, erzeugeTexturSteuerung, obergrenzeFuer, type TexturBedarf } from './texturen';
+import { createMilchstrasse } from './milchstrasse';
+import { MILCHSTRASSE_STUFEN } from '../data/milchstrasse';
 
 /**
  * Abstand der Erde von der Sonne in Render-Einheiten — der Fixpunkt der
@@ -43,6 +45,8 @@ export interface SceneHandle {
   trefferBei: (x: number, y: number, art: Zeigerart) => string | null;
   /** Geladene Texturbreite je Körper, für Messungen (window.texturStand im DEV-Build). */
   texturStand: () => Record<string, number>;
+  /** Geladene Breite der Himmelskarte, 0 = noch keine (window.himmelStand im DEV-Build). */
+  himmelStand: () => number;
 }
 
 /**
@@ -85,6 +89,9 @@ export function buildScene(
 
   const guertel = createBeltViews(ctx.scene);
   const bahnen = createOrbitLines(ctx.scene);
+  // Himmelshintergrund (Entwurf Phase 6 §4): derselbe Lader wie die Körper,
+  // geladen erst, wenn deren Stufen ruhen.
+  const milchstrasse = createMilchstrasse(ctx.scene, texturLader, MILCHSTRASSE_STUFEN);
   // Einmalig aufgebaut: Sterne stehen fest auf einer sehr großen Kugel um den
   // Ursprung und werden — anders als Körper und Bahnen — nie pro Frame neu
   // positioniert (siehe Kommentar in starfield.ts).
@@ -152,10 +159,9 @@ export function buildScene(
 
       koerper.update(jd, state.scale, cameraKm, state.visible, belichtet, state.display.shadows);
 
-      texturen.pruefe(
-        performance.now(), texturBedarf, state.camera.targetId,
-        obergrenzeFuer(state.quality.tier, ctx.renderer.capabilities.maxTextureSize),
-      );
+      const obergrenze = obergrenzeFuer(state.quality.tier, ctx.renderer.capabilities.maxTextureSize);
+      texturen.pruefe(performance.now(), texturBedarf, state.camera.targetId, obergrenze);
+      milchstrasse.update(state.display.milchstrasse, obergrenze, texturen.ruhig());
 
       // Das Licht sitzt an der (kamerarelativen) Sonnenposition.
       const sonnenpositionKm = scaledPositionAt('sun', bodyIndex, jd, state.scale);
@@ -225,6 +231,7 @@ export function buildScene(
       // mehr anfassen (koerper.setzeTextur) — beenden() greift, bevor der
       // Lader selbst seinen Worker-Pool schließt.
       texturen.beenden();
+      milchstrasse.dispose();
       texturLader.freigeben();
       labels.dispose();
       ringe.dispose();
@@ -237,5 +244,6 @@ export function buildScene(
     hervorgehoben: () => hover,
     trefferBei: (x, y, art) => findeTreffer({ x, y }, kandidaten(), FANG_PX[art]),
     texturStand: () => texturen.stand(),
+    himmelStand: () => milchstrasse.stand(),
   };
 }

@@ -285,4 +285,14 @@ describe('buildScene — Texturstand', () => {
     handle.dispose();
     expect(freigabeSpion).toHaveBeenCalledOnce();
   });
+
+  it('legt die Himmelskugel an und meldet anfangs keine geladene Himmelsstufe', () => {
+    const ctx = fakeContext();
+    const handle = buildScene(ctx, fakeOverlay, (k) => k);
+    expect(ctx.scene.getObjectByName('milchstrasse')).toBeDefined();
+    handle.update(2451545.0, 0.016, DEFAULT_STATE);
+    expect(handle.himmelStand()).toBe(0);
+    handle.dispose();
+    expect(ctx.scene.getObjectByName('milchstrasse')).toBeUndefined();
+  });
 });

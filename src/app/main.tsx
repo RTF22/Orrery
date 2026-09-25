@@ -66,7 +66,10 @@ function App(): React.JSX.Element {
       // abfragen, dazu den Stand der Texturstufen für die Ladezeitmessung.
       Object.assign(
         window as unknown as Record<string, unknown>,
-        { kamera: ctx.camera, szene, letztePose, texturStand: () => szene.texturStand() },
+        {
+          kamera: ctx.camera, szene, letztePose,
+          texturStand: () => szene.texturStand(), himmelStand: () => szene.himmelStand(),
+        },
       );
     }
     const postfx = createPostFx(ctx);

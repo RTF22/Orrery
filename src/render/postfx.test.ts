@@ -4,6 +4,8 @@ import type { MaterialSicherung } from './postfx';
 import {
   bloomStrengthFor, BLOOM_LAYER, verdunkleSzeneAusserBloom, stelleSzeneWieder,
 } from './postfx';
+import { createMilchstrasse } from './milchstrasse';
+import { MILCHSTRASSE_STUFEN } from '../data/milchstrasse';
 
 describe('bloomStrengthFor', () => {
   it('schaltet Bloom auf niedriger Stufe ganz ab', () => {
@@ -198,5 +200,22 @@ describe('verdunkleSzeneAusserBloom / stelleSzeneWieder', () => {
       expect(ring.material).toBe(ringMaterialVorher);
       expect(ring.visible).toBe(true);
     }
+  });
+
+  it('schwärzt die Himmelskugel im Bloom-Durchgang und stellt sie danach wieder her', () => {
+    const szene = new THREE.Scene();
+    const lader = { lade: () => new Promise<THREE.Texture>(() => {}), freigeben: () => {} };
+    createMilchstrasse(szene, lader, MILCHSTRASSE_STUFEN);
+    const kugel = szene.getObjectByName('milchstrasse') as THREE.Mesh;
+    kugel.visible = true;
+    const original = kugel.material;
+    const sicherung: MaterialSicherung = new Map();
+    const ausgeblendet: THREE.Object3D[] = [];
+    verdunkleSzeneAusserBloom(szene, sicherung, ausgeblendet);
+    expect(kugel.material).not.toBe(original);
+    expect((kugel.material as THREE.MeshBasicMaterial).color.getHex()).toBe(0x000000);
+    stelleSzeneWieder(sicherung, ausgeblendet);
+    expect(kugel.material).toBe(original);
+    expect(kugel.visible).toBe(true);
   });
 });

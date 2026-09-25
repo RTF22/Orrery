@@ -239,3 +239,16 @@ describe('erzeugeTexturSteuerung', () => {
     expect(aufrufe).toEqual([]);
   });
 });
+
+describe('erzeugeTexturSteuerung — ruhig', () => {
+  it('ist ruhig erst, wenn Start und Nachladen abgeschlossen sind', async () => {
+    const { lader, offen } = testLader();
+    const s = erzeugeTexturSteuerung(lader, { io: [stufe('io', 1024)] }, () => {});
+    expect(s.ruhig()).toBe(true);
+    s.start();
+    expect(s.ruhig()).toBe(false);
+    offen.get('textures/io/albedo-1024.ktx2')!.erfuelle();
+    await ruhe();
+    expect(s.ruhig()).toBe(true);
+  });
+});

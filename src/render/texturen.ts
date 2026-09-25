@@ -96,6 +96,8 @@ export interface TexturSteuerung {
    * statt an `setze` gereicht; `stand()` bleibt abfragbar.
    */
   beenden(): void;
+  /** Keine Start- und keine Nachladung offen — dann darf der Himmel laden (render/milchstrasse.ts). */
+  ruhig(): boolean;
 }
 
 /**
@@ -167,6 +169,9 @@ export function erzeugeTexturSteuerung(
     },
     beenden() {
       beendet = true;
+    },
+    ruhig() {
+      return offeneStarts === 0 && laufend.size === 0;
     },
   };
 }
