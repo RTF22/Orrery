@@ -75,14 +75,16 @@ describe('InfoPanel', () => {
     expect(tabpanel.getAttribute('aria-labelledby')).toBe(aktiverReiter.id);
   });
 
-  it('Pos1 und Ende springen zum ersten/letzten Reiter', async () => {
+  it('Pos1 und Ende springen zum ersten/letzten Reiter und fokussieren ihn', async () => {
     useStore.getState().setCamera({ targetId: 'earth' });
     render(<InfoPanel />);
     await titel('Erde');
     fireEvent.keyDown(screen.getByRole('tab', { name: 'Gymnasium' }), { key: 'End' });
     expect(useStore.getState().ui.info.niveau).toBe('hochschule');
+    expect(document.activeElement).toBe(screen.getByRole('tab', { name: 'Hochschule' }));
     fireEvent.keyDown(screen.getByRole('tab', { name: 'Hochschule' }), { key: 'Home' });
     expect(useStore.getState().ui.info.niveau).toBe('grundschule');
+    expect(document.activeElement).toBe(screen.getByRole('tab', { name: 'Grundschule' }));
   });
 
   it('Fokus liegt nach Pfeil rechts auf dem neuen Reiter', async () => {
