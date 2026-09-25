@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { t } from '../i18n';
+import { useMedienabfrage } from '../fenster';
 
 export interface KartenReiter<R extends string> {
   readonly id: R;
@@ -26,6 +27,13 @@ interface KartendialogProps<R extends string> {
 const FOKUSSIERBAR = 'button, a[href], [tabindex]';
 
 /**
+ * Gibt dieselbe Abfrage wie die Tailwind-Klassen `[@media(max-height:500px)]:…`
+ * weiter unten wieder (Reiterleiste steht dann senkrecht statt waagerecht) —
+ * für `aria-orientation`. Beide Stellen nur gemeinsam ändern.
+ */
+export const KARTE_QUER_ABFRAGE = '(max-height: 500px)';
+
+/**
  * Gemeinsamer Rahmen der Karten (Entwurf Info-Karte §3, §7): modaler Dialog
  * über abgedunkeltem Hintergrund, Reiter, kein Scrollen. Escape wird hier
  * behandelt und als erledigt markiert (preventDefault), damit der globale
@@ -36,6 +44,7 @@ export function Kartendialog<R extends string>(p: KartendialogProps<R>): React.J
   const basisId = useId();
   const karte = useRef<HTMLDivElement>(null);
   const ausloeser = useRef<HTMLElement | null>(null);
+  const quer = useMedienabfrage(KARTE_QUER_ABFRAGE);
 
   useEffect(() => {
     if (!p.offen) return;
@@ -66,15 +75,29 @@ export function Kartendialog<R extends string>(p: KartendialogProps<R>): React.J
     if (e.shiftKey && document.activeElement === erstes) { e.preventDefault(); letztes.focus(); }
   };
 
+  const waehleReiter = (neu: R): void => {
+    p.setAktiv(neu);
+    karte.current?.querySelector<HTMLElement>(`#${CSS.escape(`${basisId}-${neu}`)}`)?.focus();
+  };
+
   const tasteAufReiter = (e: React.KeyboardEvent): void => {
+    if (e.key === 'Home') {
+      e.preventDefault();
+      waehleReiter(p.reiter[0]!.id);
+      return;
+    }
+    if (e.key === 'End') {
+      e.preventDefault();
+      waehleReiter(p.reiter[p.reiter.length - 1]!.id);
+      return;
+    }
     const richtung = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1
       : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
     if (richtung === 0) return;
     e.preventDefault();
     const i = p.reiter.findIndex((r) => r.id === p.aktiv);
     const neu = p.reiter[(i + richtung + p.reiter.length) % p.reiter.length]!.id;
-    p.setAktiv(neu);
-    karte.current?.querySelector<HTMLElement>(`#${CSS.escape(`${basisId}-${neu}`)}`)?.focus();
+    waehleReiter(neu);
   };
 
   return (
@@ -106,6 +129,7 @@ export function Kartendialog<R extends string>(p: KartendialogProps<R>): React.J
           <div
             role="tablist"
             aria-label={t(p.reiterSchluessel)}
+            aria-orientation={quer ? 'vertical' : 'horizontal'}
             className="flex gap-1 border-b border-white/10 px-3 pt-2 [@media(max-height:500px)]:flex-col [@media(max-height:500px)]:border-b-0 [@media(max-height:500px)]:border-r [@media(max-height:500px)]:pb-2"
           >
             {p.reiter.map((r) => {

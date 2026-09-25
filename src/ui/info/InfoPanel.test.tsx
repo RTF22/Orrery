@@ -65,6 +65,34 @@ describe('InfoPanel', () => {
     expect(useStore.getState().ui.info.niveau).toBe('grundschule');
   });
 
+  it('verknüpft den aktiven Reiter und den Textbereich über aria-controls/aria-labelledby', async () => {
+    useStore.getState().setCamera({ targetId: 'earth' });
+    render(<InfoPanel />);
+    await titel('Erde');
+    const aktiverReiter = screen.getByRole('tab', { name: 'Gymnasium', selected: true });
+    const tabpanel = screen.getByRole('tabpanel');
+    expect(aktiverReiter.getAttribute('aria-controls')).toBe(tabpanel.id);
+    expect(tabpanel.getAttribute('aria-labelledby')).toBe(aktiverReiter.id);
+  });
+
+  it('Pos1 und Ende springen zum ersten/letzten Reiter', async () => {
+    useStore.getState().setCamera({ targetId: 'earth' });
+    render(<InfoPanel />);
+    await titel('Erde');
+    fireEvent.keyDown(screen.getByRole('tab', { name: 'Gymnasium' }), { key: 'End' });
+    expect(useStore.getState().ui.info.niveau).toBe('hochschule');
+    fireEvent.keyDown(screen.getByRole('tab', { name: 'Hochschule' }), { key: 'Home' });
+    expect(useStore.getState().ui.info.niveau).toBe('grundschule');
+  });
+
+  it('Fokus liegt nach Pfeil rechts auf dem neuen Reiter', async () => {
+    useStore.getState().setCamera({ targetId: 'earth' });
+    render(<InfoPanel />);
+    await titel('Erde');
+    fireEvent.keyDown(screen.getByRole('tab', { name: 'Gymnasium' }), { key: 'ArrowRight' });
+    expect(document.activeElement).toBe(screen.getByRole('tab', { name: 'Hochschule' }));
+  });
+
   it('Themenverweis wechselt den Text; ein Zielwechsel löscht das Thema', async () => {
     useStore.getState().setCamera({ targetId: 'earth' });
     render(<InfoPanel />);

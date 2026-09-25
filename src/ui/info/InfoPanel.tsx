@@ -1,4 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  useEffect, useId, useMemo, useRef, useState,
+} from 'react';
 import type { KeyboardEvent } from 'react';
 import { useStore } from '../../store';
 import { remPx, spaltenBreite, useFensterbreite, useSchmal } from '../fenster';
@@ -171,13 +173,37 @@ export function InfoPanel(): React.JSX.Element | null {
   if (frisch && geladen !== null && info.niveau === 'hochschule' && geladen.niveau !== 'hochschule') hinweise.push('info.hochschuleFolgt');
   if (frisch && geladen !== null && geladen.sprache !== language) hinweise.push('info.nichtUebersetzt');
 
+  // Basis für die Reiter-IDs (aria-controls/aria-labelledby); die Reiter
+  // selbst sind immer alle drei gerendert, daher liefert die Suche nach der
+  // ID des neuen Reiters direkt nach setInfo ein vorhandenes Element (wie in
+  // Kartendialog.tsx) — kein Warten auf den nächsten Render nötig.
+  const reiterBasis = useId();
+  const reiterId = (n: Niveau): string => `${reiterBasis}-${n}`;
+  const tabpanelId = `${reiterBasis}-panel`;
+  const reiterListe = useRef<HTMLDivElement | null>(null);
+
+  const waehleNiveau = (neu: Niveau): void => {
+    setInfo({ niveau: neu });
+    reiterListe.current?.querySelector<HTMLElement>(`#${CSS.escape(reiterId(neu))}`)?.focus();
+  };
+
   const tabTasten = (e: KeyboardEvent<HTMLDivElement>): void => {
+    if (e.key === 'Home') {
+      e.preventDefault();
+      waehleNiveau(NIVEAUS[0]!);
+      return;
+    }
+    if (e.key === 'End') {
+      e.preventDefault();
+      waehleNiveau(NIVEAUS[NIVEAUS.length - 1]!);
+      return;
+    }
     const i = NIVEAUS.indexOf(info.niveau);
     const richtung = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
     if (richtung === 0) return;
     e.preventDefault();
     const neu = NIVEAUS[(i + richtung + NIVEAUS.length) % NIVEAUS.length];
-    if (neu !== undefined) setInfo({ niveau: neu });
+    if (neu !== undefined) waehleNiveau(neu);
   };
 
   const fensterbreite = useFensterbreite();
@@ -232,13 +258,15 @@ export function InfoPanel(): React.JSX.Element | null {
           ▾
         </button>
       </header>
-      <div role="tablist" aria-label={t('info.niveau')} onKeyDown={tabTasten} className="flex gap-1 border-b border-white/10 px-3 pt-1">
+      <div ref={reiterListe} role="tablist" aria-label={t('info.niveau')} onKeyDown={tabTasten} className="flex gap-1 border-b border-white/10 px-3 pt-1">
         {NIVEAUS.map((n) => (
           <button
             key={n}
+            id={reiterId(n)}
             type="button"
             role="tab"
             aria-selected={n === info.niveau}
+            aria-controls={tabpanelId}
             tabIndex={n === info.niveau ? 0 : -1}
             onClick={() => { setInfo({ niveau: n }); }}
             className={n === info.niveau ? TAB_AKTIV : TAB_RUHIG}
@@ -248,7 +276,14 @@ export function InfoPanel(): React.JSX.Element | null {
         ))}
       </div>
       <div ref={segmente} className="flex min-h-0 flex-1 flex-col">
-        <div ref={oben} role="tabpanel" className="min-h-0 overflow-y-auto px-3 py-2" style={{ flex: `${info.teilung} 1 0px` }}>
+        <div
+          ref={oben}
+          id={tabpanelId}
+          role="tabpanel"
+          aria-labelledby={reiterId(info.niveau)}
+          className="min-h-0 overflow-y-auto px-3 py-2"
+          style={{ flex: `${info.teilung} 1 0px` }}
+        >
           {hinweise.map((h) => <p key={h} className="m-0 mb-2 text-xs text-amber-300">{t(h)}</p>)}
           {body !== undefined ? (
             <Datenblock body={body} niveau={info.niveau} onModell={() => { setInfo({ thema: 'modell' }); }} />

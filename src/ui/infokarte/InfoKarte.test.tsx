@@ -3,6 +3,7 @@ import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { InfoKarte } from './InfoKarte';
 import { useInfoKarte } from './zustand';
+import { KARTE_QUER_ABFRAGE } from '../karte/Kartendialog';
 
 describe('InfoKarte', () => {
   beforeEach(() => { useInfoKarte.setState({ offen: false, reiter: 'bedienung' }); });
@@ -38,6 +39,34 @@ describe('InfoKarte', () => {
     expect(useInfoKarte.getState().reiter).toBe('app');
     fireEvent.keyDown(screen.getByRole('tab', { name: 'App' }), { key: 'ArrowLeft' });
     expect(useInfoKarte.getState().reiter).toBe('ueber');
+  });
+
+  it('Pos1 und Ende springen zum ersten/letzten Reiter und fokussieren ihn', () => {
+    useInfoKarte.getState().oeffnen('bedienung');
+    render(<InfoKarte />);
+    fireEvent.keyDown(screen.getByRole('tab', { name: 'Bedienung' }), { key: 'End' });
+    expect(useInfoKarte.getState().reiter).toBe('ueber');
+    expect(document.activeElement).toBe(screen.getByRole('tab', { name: 'Über' }));
+    fireEvent.keyDown(screen.getByRole('tab', { name: 'Über' }), { key: 'Home' });
+    expect(useInfoKarte.getState().reiter).toBe('app');
+    expect(document.activeElement).toBe(screen.getByRole('tab', { name: 'App' }));
+  });
+
+  it('aria-orientation der Reiterleiste ist waagerecht ohne passende Medienabfrage', () => {
+    useInfoKarte.getState().oeffnen('app');
+    render(<InfoKarte />);
+    expect(screen.getByRole('tablist').getAttribute('aria-orientation')).toBe('horizontal');
+  });
+
+  it('aria-orientation der Reiterleiste ist senkrecht bei geringer Höhe', () => {
+    vi.stubGlobal('matchMedia', (abfrage: string) => ({
+      matches: abfrage === KARTE_QUER_ABFRAGE, media: abfrage,
+      addEventListener: () => {}, removeEventListener: () => {},
+    }));
+    useInfoKarte.getState().oeffnen('app');
+    render(<InfoKarte />);
+    expect(screen.getByRole('tablist').getAttribute('aria-orientation')).toBe('vertical');
+    vi.unstubAllGlobals();
   });
 
   it('schließt über ✕, Escape und den Hintergrund, nicht über einen Klick in die Karte', () => {
