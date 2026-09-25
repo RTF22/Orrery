@@ -396,3 +396,221 @@ Ausgabetokens dieser Phase entfielen auf Subagenten, vorherrschendes Modell
 war Claude Sonnet 5 (51,1 % der Ausgabetokens), vor Claude Opus 5 (48,9 %).
 
 **Commits:** `691a0ab`, `78e6f1d`.
+
+<a id="phase-4d"></a>
+## Phase 4d: Hochschultexte (17.–23.09.2026, v0.5.0)
+
+**Ziel:** Neben Grundschule und Gymnasium eine dritte, unbegrenzte Textstufe
+„Hochschule“ mit Formeln, Tabellen und Primärliteratur füllen — in elf Etappen
+(4d-1 bis 4d-11) je Körper- oder Fachthemengruppe. Kernregel aus dem Entwurf:
+„jede Literaturangabe ist maschinell gegen Crossref beziehungsweise arXiv und
+inhaltlich gegen die zitierte Arbeit geprüft“; Werkzeug `scripts/pruefe-literatur.ts`,
+aufgerufen über `npm run literatur:pruefen`.
+
+**Entscheidungen:** Ablauf je Text: schreiben → `npm test` und
+`npm run literatur:pruefen -- --nur <neue Kennungen>` → gemeinsamer Commit von Text,
+Fassung, Belegliste und Katalogeinträgen → eine Fachprüfung, im Fehlerfall eine
+Nacharbeit mit eigenem Commit; weitere Prüfrunden kamen nur vereinzelt vor, offen
+gebliebene Befunde wurden sonst vorgemerkt (siehe 4d-3, 4d-5, 4d-7). Für die ganze
+Phase galt außerdem: ein Umsetzer gleichzeitig, Rulings statt Rückfragen während
+eines laufenden Plans, jede Entscheidung ins Ledger und gesammelt an Jens, und
+Kommentare im Code sind kein Beleg — das bestätigten mehrere Etappen an eigenen
+Fällen (unten). Jede der elf Etappen hatte einen eigenen Plan, eigene Commits und
+ein eigenes Abnahmeprotokoll.
+
+### 4d-1: Pilottexte (17.09.2026)
+
+Die ersten beiden Hochschultexte, `thema-bahnelemente` und `objekt-earth`, liefen
+als Pilot und wurden mit Commit `f0963a0` abgenommen — und lieferten gleich zwei
+Lehrstücke zum Leitmotiv. `thema-bahnelemente` schrieb den vier äußeren
+Uranusmonden pauschal „über 40 Jahre keinen belastbaren linearen Trend“ zu; das
+traf nur auf zwei von ihnen zu, einziger Beleg für die Pauschalaussage war ein
+falscher Kommentar in `uranus-monde.ts` — gefangen durch die Fachprüfung, mit
+Commit `a21082a` richtiggestellt. Derselbe Text schrieb die Herkunft der
+Mondraten pauschal „JPL“ zu, obwohl die Umlaufzeit selbst aus der siderischen
+Periode stammt — ebenfalls durch die Fachprüfung gefangen, in einer zweiten,
+ledger-geführten Prüfrunde mit Commit `dc36107` berichtigt. `objekt-earth`
+verwechselte den Beginn eines Messzeitraums (1972) mit dem Beginn des
+physikalischen Effekts selbst, richtiggestellt mit Commit `4e5d336`.
+
+![Infopanel auf Hochschulniveau zum Thema Bahnelemente mit Formeln.](bilder/entstehung/infopanel-hochschule.jpg)
+
+### 4d-2: Fachthemen (17.–19.09.2026)
+
+Themen unabhängig von einzelnen Körpern, unter anderem Innerer Aufbau, Albedo
+und Helligkeit, Entstehung des Sonnensystems (Commits `2db1043`…`2008eed`),
+abgenommen mit `6a76e77`/`b24fc6a`. In dieser Etappe fand die Fachprüfung den bei
+[Zeitbereich](#zeitbereich) beschriebenen Kepler-Absturz: Bei linear
+fortgeschriebener Bahnrechnung wird Saturns Exzentrizität ab dem Jahr 12 563
+rechnerisch negativ, der Keplerlöser wirft einen Fehler, die Bildschleife bleibt
+stehen. Der Fund selbst gehört zu 4d-2, seine Behebung lief als eigene,
+eingeschobene Etappe.
+
+### 4d-3: Sonne, Erde-Mond-System (19.–20.09.2026)
+
+Commits `87320bb`…`512ad5b` (abgenommen `2df3430`/`512ad5b`). Zwei Fälle zeigen,
+wie unterschiedlich Prüfungen ausgehen: Beim Thema gebundene Rotation ergab das
+Modell für Tethys eine Librationsperiode von 57,8 statt der erwarteten 1,89 Tage
+— rund Faktor 30 —, die Fachprüfung hielt das fest, ohne den Code zu ändern; der
+Befund ging als Vormerkung in den späteren Tethys-Körpertext (Etappe 4d-7). Bei
+der Szene „Sonnenaufgang über dem Erdrand“ irrte zunächst die Prüfung selbst: Eine
+erste Rechnung kam wegen eines eigenen Vorrundungs- und Vorzeichenfehlers auf
++0,5 statt +5,275 ppm GM⊕-Abweichung; erst eine zweite, unabhängige Rechnung
+bestätigte den ursprünglichen Umsetzerwert.
+
+### 4d-4: Innere Planeten (20.09.2026)
+
+Commits `7fcea01`…`1059282`, an einem Tag umgesetzt und abgenommen. Für diese
+Etappe verzeichnet der Fehlerkatalog keinen Fall.
+
+### 4d-5: Jupitersystem (20.–21.09.2026)
+
+Commits `fcf9845`…`df715ff`. `objekt-europa` verwechselte an einer Stelle zwei
+unterschiedliche physikalische Größen (Kippwinkel „wie bei Io“), gefangen durch
+die Fachprüfung und in der Nacharbeit richtiggestellt. Ein zweiter Befund blieb
+dagegen offen: Ein Kommentar in `scenes.ts` zur Szene „galileisches
+Schattenspiel“ behauptet, Kallistos Bahn rage „gelegentlich“ über den Bildrand —
+die vollständige geometrische Nachrechnung ergab 52,4 % aller Ziehungen; der Text
+folgt der eigenen Rechnung, der Kommentar blieb unverändert.
+
+### 4d-6: Saturn und Ringe (21.–22.09.2026)
+
+Commits `c74c4b4`…`53a1d63` (abgenommen `dde8291`/`53a1d63`). Für diese Etappe
+verzeichnet der Fehlerkatalog keinen Fall.
+
+### 4d-7: Mittlere Saturnmonde (22.09.2026)
+
+Commits `e227ac2`…`f3d579b`. Auch hier erwies sich ein Code-Kommentar als
+unbelegt: Zur Szene „Iapetus schief“ behauptet `scenes.ts`, `distanceInRadii: 40`
+zeige „Iapetus' vollständige, klar geneigte Bahnellipse komfortabel im Bild“; ein
+eigener Frustumtest zeigte tatsächlich nur 5 bis 31 von 72 Stützpunkten im Bild.
+Auch dieser Befund blieb ohne Codeeingriff als Vormerkung im Protokoll stehen.
+
+### 4d-8: Uranussystem (22.09.2026)
+
+Commits `7dacecb`…`0a8b584`. `objekt-umbriel` verwechselte an einer Fundstelle
+Ariels große Halbachse mit ihrer Exzentrizität, gefangen durch die Fachprüfung
+und in der Nacharbeit richtiggestellt.
+
+### 4d-9: Neptun, Pluto (23.09.2026)
+
+Abgenommen mit `4e39a04`. `objekt-pluto` und das fachgeprüfte Grundlagenthema
+`thema-achsneigung` schrieben Plutos „chaotische“ Achsschiefe fälschlich
+Dobrovolskis und Harris 1983 zu; die Arbeit beschreibt tatsächlich eine stabile
+Oszillation. In `objekt-pluto` wurde das richtiggestellt; `thema-achsneigung`
+blieb unverändert, weil die Regel „keine Änderung fachgeprüfter Texte in dieser
+Etappe“ galt — ein Widerspruch, den das Protokoll offen benennt, statt ihn
+stillschweigend aufzulösen.
+
+### 4d-10: Zwergplaneten (23.09.2026)
+
+Abgenommen mit `5bed033`, die dichteste Nacharbeitsrunde der Phase: eine
+Fachprüfung fing gleich vier Zuschreibungsfehler. Bei `objekt-eris` wurde die
+Dämpfungsgröße Q/k₂ = 3200 fälschlich der frequenzabhängigen statt der
+konstanten Dämpfung zugeschrieben, und der Dysnomia-Radius von 350 km fälschlich
+einer Arbeit von 2023 statt der tatsächlichen Quelle von 2018. Bei
+`objekt-makemake` wurde ein D/H-Wert von 3,98·10⁻⁴ fälschlich der Gasphase statt
+dem Methaneis zugeschrieben; ein Kommentar in `zwergplaneten.ts` schrieb
+Makemakes Kippwinkelspanne zudem der falschen Arbeit zu (Hromakina statt Parker
+et al. 2016) — im Text richtiggestellt, der Kommentar blieb unverändert.
+
+### 4d-11: Abschluss (23.09.2026, v0.5.0)
+
+Die letzten Themen (`modell`, `sonnensystem`) und die Szene `systemblick`
+schlossen den Hochschulkorpus ab; der Dateitest verlangt seither keinen
+Gymnasialersatz mehr. Commit `ce8cf95` setzte den Tag `v0.5.0` und schloss
+zugleich die Gesamtabnahme der Phase ab. Diese Gesamtabnahme fand fünf weitere
+Restbefunde — eine zu niedrige Driftrate des Großen Roten Flecks, eine zu große
+Abweichung im Gymnasialtext `thema-modell`, Prozesssprache in Beleglisten, eine
+veraltete Notiz in einer Prüfspalte und drei unmaskierte Trennstriche — und
+verwies sie in die anschließende Etappe
+[Nachführung nach Phase 4d](#nachfuehrung-4d).
+
+**Fehler und Korrekturen:** Der Fehlerkatalog führt 19 Fälle mit Kennung
+`phase-4d` (Nr. 4–23, ohne Nr. 17, das zu [Zeitbereich](#zeitbereich) gehört) —
+vierzehn davon stehen oben bei ihrer Etappe, fünf (Nr. 4, 20–23) fand erst die
+Gesamtabnahme und sind bei [Nachführung nach Phase 4d](#nachfuehrung-4d)
+beschrieben.
+
+**Ergebnis:** Am Ende von 4d-1 standen 6 Textdateien, 3537 Tests, 51
+Katalogeinträge, 80 Quellenkarten und ein Hauptchunk von 1 243,77 kB; am Ende der
+Phase (4d-11) waren es 5150 Tests, 761 Katalogeinträge, 91 Quellenkarten und
+1 453,78 kB, bei insgesamt 138 Hochschuldateien (69 deutsch, 69 englisch). Die
+deutschen Texte kommen zusammen auf 151 719 Wörter (Mittel 2199 je Datei), die
+englischen auf 167 219 (Mittel 2423) — macht 318 938 Wörter Hochschulkorpus. Der
+Literaturkatalog wuchs auf 761 Einträge, 761 verschiedene, maschinell gegen
+Crossref oder arXiv geprüfte Zitate. Die Phase lief laut Zeitstempeln rund 152,9
+Stunden, vom 17.09.2026 (`5707089`) bis zum 23.09.2026 (`ce8cf95`).
+
+**Tokens:** 23 807 582 Ausgabe-Tokens, 7 178 734 109 Cache-Lesen-Tokens in
+24 905 Antworten (Kennung `phase-4d`; 2 254 Haupt-, 22 651 Subagentenantworten);
+87,9 % der Ausgabetokens dieser Phase entfielen auf Subagenten, vorherrschendes
+Modell war Claude Sonnet 5 (54,9 % der Ausgabetokens), vor Claude Opus 5
+(38,1 %).
+
+**Commits:** `5707089`, `f0963a0`, `4e39a04`, `5bed033`, `ce8cf95`.
+
+<a id="nachfuehrung-4d"></a>
+## Nachführung nach Phase 4d (23.09.2026)
+
+**Ziel:** Die von der Gesamtabnahme gefundenen Restbefunde aus Phase 4d
+abarbeiten, bevor Phase 5 beginnt: die Driftrate des Großen Roten Flecks, eine
+Abweichung im Gymnasialtext `thema-modell`, Prozesssprache in Beleglisten und ein
+technisches Zeichenproblem.
+
+**Entscheidungen:** Der fachgeprüfte Hochschultext `objekt-jupiter` durfte
+ausnahmsweise geändert werden — eine ausdrückliche Entscheidung vom 23.09.2026
+gegen die sonst geltende Regel, fachgeprüfte Texte in späteren Etappen nicht mehr
+anzufassen. Die mechanische Bereinigung der Prozesssprache wurde auf zwei Tasks
+für das kleinste eingesetzte Modell aufgeteilt — das reichte am Ende nicht,
+beide Versuche mussten nachgearbeitet werden (siehe unten).
+
+**Fehler und Korrekturen:** Commit `a323c80` berichtigte zwei der von der
+Gesamtabnahme gefundenen Fälle: Die Westwärtsdrift des Großen Roten Flecks stand
+in einem Hochschultext mit „rund 0,026° je Tag“ statt „rund 0,26° je Tag“ —
+Faktor 10 zu klein —, und der Gymnasialtext `thema-modell` nannte die Abweichung
+zwischen Erde-Mond-Schwerpunkt und Erdmittelpunkt mit „unter 4700 km“, obwohl der
+fachgeprüfte Maximalwert bei 4928 km liegt; auf „rund 4400 bis 4900 km“
+berichtigt. Die Prozesssprache selbst betraf 27 Beleglisten (rund 230 Treffer in
+40 Dateien bei breiter Suche) und wurde zum Lehrstück über das kleinste Modell:
+Der erste Bereinigungscommit ließ 37 regelgedeckte Treffer stehen, statt sie
+vollständig zu entfernen — gefangen durch die Controller-Prüfung, eine
+grepbasierte Durchsicht vor der eigentlichen Fachprüfung; ein weiterer Commit
+erreichte danach 0 Treffer (Commits `5c27397`/`8989c69`). Ein paralleler zweiter Versuch
+auf einem Hilfsbranch (`sicherung-task3-haiku`, Commit `d25d58f`) schoss übers
+Ziel hinaus: Er strich „(Runde 1)“ in rund 15 unbeteiligten Beleglisten und
+löschte Hinweisnummern ersatzlos — ebenfalls durch die Controller-Prüfung
+gefangen, der Versuch wurde verworfen, der Branch zurückgesetzt, und die Etappe
+danach zusammen mit der Nacharbeit von Teil A auf dem mittleren Modell
+wiederholt. Eine dritte Bereinigung verlor dabei
+außerdem Modellzahlen in `objekt-ganymede.md` sowie Befundnummern in
+`objekt-jupiter.md` und `objekt-mars.md` — von der Fachprüfung gefangen und mit
+Commit `b6558f6` wiederhergestellt. Ein drittes technisches Problem betraf drei
+Beleglisten-Zeilen mit einem unmaskierten Trennstrich `|`, die eine erste, naive
+Zellenzählung fälschlich als 51 „falsche Zellenzahlen“ im ganzen Korpus meldete;
+sie wurden in derselben Etappe maskiert, inhaltlich blieben die Zeilen
+unverändert. Eine fünfte Randnotiz der Gesamtabnahme erwies sich als reiner
+Buchhaltungsbefund: Die Prüfspalte zu `objekt-neptune.md` hielt eine
+Sprachmischung für ungeklärt, die seit Etappe 4d-9 bereits korrekt war — die
+Spalte selbst blieb unnachgeführt. Zuletzt musste sich die Etappe auch mit der
+eigenen Vorgängerin auseinandersetzen: Die Gesamtabnahme von Phase 4d hatte drei
+Gymnasialbefunde (Uranus-Sonnenwende „2028“ statt 2030, die Höhe von Verona
+Rupes, Titania/Oberon-Anteile) als weiterhin offen gemeldet, obwohl alle drei
+schon seit Commit `44b760c` vom 22.09.2026 behoben waren — ein späterer Task
+stellte das richtig, ohne das ursprüngliche Protokoll erneut zu ändern. Die Lehre
+daraus zog Jens für die nächste Phase: Ähnlich gelagerte, regelgebundene
+Bereinigungen starten seither gleich auf dem mittleren statt zuerst auf dem
+kleinsten Modell.
+
+**Ergebnis:** Tests, Katalog und Hauptchunk blieben unverändert bei 5150 Tests,
+761 Katalogeinträgen, 91 Quellenkarten und 1 453,78 kB — die Etappe änderte Text-
+und Prozessinhalte, keinen Code. Sie lief laut Zeitstempeln rund eine Stunde, am
+23.09.2026 von `218b1f7` (17:42 Uhr) bis `c0b39fb` (18:41 Uhr).
+
+**Tokens:** 234 231 Ausgabe-Tokens, 81 737 072 Cache-Lesen-Tokens in 604
+Antworten (Kennung `nachfuehrung-4d`; 121 Haupt-, 483 Subagentenantworten);
+48,8 % der Ausgabetokens dieser Phase entfielen auf Subagenten, vorherrschendes
+Modell war Claude Opus 5.5 (51,2 % der Ausgabetokens), vor Claude Sonnet 5
+(33,5 %).
+
+**Commits:** `218b1f7`, `a323c80`, `8989c69`, `b6558f6`, `c0b39fb`.
