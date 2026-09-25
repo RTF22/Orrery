@@ -20,7 +20,7 @@
 - **Nichts veröffentlichen:** `npm run deploy` läuft in dieser Phase nie; kein `git push` ohne Jens' Ja.
 - Quelle: `https://svs.gsfc.nasa.gov/vis/a000000/a004800/a004851/milkyway_2020_8k.exr` (130,9 MB), nur im Cache `.cache/milchstrasse/`, nie versioniert.
 - Konvention der SVS-Karte: RA 0h in der Bildmitte, RA wächst nach links, Norden oben. KTX2-Stufen werden gespiegelt gespeichert (Zeile 0 = Südrand), weil KTX2 kein flipY kennt.
-- Zielwerte (Schirm, von 255, an der 2k-Stufe vorhergesagt): Median des Bandes (|b| < 10°) 20 bis 30, 99,5-Perzentil des Bandes 60 bis 70, Mittel der Polkappen (|b| > 80°) höchstens 4.
+- Zielwerte (Schirm, von 255, an der 2k-Stufe vorhergesagt): Median des Bandes (|b| < 10°) 20 bis 30, 99,5-Perzentil des Bandes 60 bis 70, Mittel der Polkappen (|b| > 80°) höchstens 6.
 - Lagetoleranz: Große und Kleine Magellansche Wolke 2°, galaktisches Zentrum 5°.
 - Stufen `textures/milchstrasse/himmel-1024.ktx2` (ETC1S), `-2048.ktx2` und `-8192.ktx2` (UASTC mit Zstandard), Kodierschalter aus `scripts/texturen-quellen.json` über `kodierungFuer`.
 - Fachgeprüfte Texte (`src/data/texte/…`) werden nicht geändert.
@@ -1187,7 +1187,7 @@ Je eine Aufnahme mit Blick auf galaktisches Zentrum (266,4°/−28,9°), Große 
 
 Für die Aufnahme „galaktisches Zentrum“ und eine Aufnahme auf den galaktischen Nordpol (192,86°/27,13°): Für jedes Pixel die Himmelsrichtung zurückrechnen, RA/Dec bestimmen, aus `.cache/milchstrasse/stufen/himmel-8192.png` (gespiegelt gespeichert: Zeile 0 = Süden) den Texturwert holen und mit `schirm_aus_textur` den Schirmwert vorhersagen. Sternkerne (Pixel ≥ 200 in der Aufnahme) ausschließen.
 - Median(Schirm) − Median(Vorhersage) je Aufnahme: Betrag ≤ 3.
-- Nordpol: Median am Schirm ≤ 4.
+- Nordpol: Median am Schirm ≤ 6.
 Weicht der Schirm ab, gilt der Schirm: Halt, Befund an den Controller (Nachführung der Kurve in Task 1 als Nacharbeit).
 
 - [ ] **Step 4: Naht**

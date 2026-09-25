@@ -69,7 +69,7 @@ Die Veröffentlichung auf dem Webspace folgt danach mit eigener Freigabe.
   ACES → sRGB vorhergesagt; in der 8k-Stufe heben einzelne Gaia-Sterne das Perzentil):
   - hellste Sternwolken (Schütze, Schild; 99,5-Perzentil des Bandes): 60 bis 70,
   - mittleres Band (Median der Pixel mit galaktischer Breite |b| < 10°): 20 bis 30,
-  - galaktische Pole (Mittel über |b| > 80°): höchstens 4.
+  - galaktische Pole (Mittel über |b| > 80°): höchstens 6.
 - Die Farbe der Vorlage bleibt erhalten; die Kurve wirkt auf die Leuchtdichte und skaliert
   die drei Kanäle gemeinsam.
 

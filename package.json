@@ -10,6 +10,7 @@
     "deploy:trocken": "node scripts/deploy.ts --trocken",
     "literatur:pruefen": "node scripts/pruefe-literatur.ts",
     "texturen": "node scripts/texturen-bauen.ts",
+    "milchstrasse": "node scripts/milchstrasse-bauen.ts",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",

@@ -68,6 +68,30 @@ und Deklination auf drei, Helligkeit und Farbindex auf zwei Nachkommastellen).
 |---|---|---|---|---|---|---|
 | `src/data/stars/hyg.json` | <https://github.com/astronexus/HYG-Database/blob/3bf37f4b2d5460e1278286320d1d62fab9b493c1/hyg/CURRENT/hygdata_v41.csv> | Astronexus | CC BY-SA 4.0 | 5070 Sterne | 247 290 Bytes | gefiltert auf mag ≤ 6,0, Sonne ausgeschlossen, auf vier Felder (ra/dec in Grad, mag, ci) reduziert, gerundet — siehe Beschreibung oben |
 
+## Milchstraße: NASA SVS Deep Star Maps 2020
+
+Der Himmelshintergrund (`public/textures/milchstrasse/`) beruht auf der Karte „Milky Way
+Background“ der „Deep Star Maps 2020“ des NASA Goddard Scientific Visualization Studio
+(<https://svs.gsfc.nasa.gov/4851>): Plate carrée in ICRF/J2000, gerechnet aus 1,7 Milliarden
+Sternen von Gaia DR2 ohne die hellen Hipparcos- und Tycho-Sterne. Namensnennung:
+„NASA/Goddard Space Flight Center Scientific Visualization Studio. Gaia DR2: ESA/Gaia/DPAC“.
+Das SVS erklärt seinen Inhalt als gemeinfrei, sofern nicht anders vermerkt
+(<https://svs.gsfc.nasa.gov/help/>); der zugrunde liegende Gaia-DR2-Anteil steht laut ESA
+unter CC BY-NC 3.0 IGO mit Namensnennung
+(<https://www.cosmos.esa.int/web/gaia-users/license>). Orrery ist ein nichtkommerzielles
+Projekt.
+
+Bearbeitung: `scripts/milchstrasse-bauen.ts` und `scripts/milchstrasse.py` bilden die
+HDR-Karte über eine Potenzkurve (Median des Bandes und 99,5-Perzentil als Stützpunkte) mit
+eingerechneter Umkehrung des ACES-Tonemappings auf 8 bit sRGB ab, spiegeln sie senkrecht
+(KTX2 kennt kein flipY) und kodieren sie als KTX2.
+
+| Datei | Quelle | Urheber | Lizenz | Maße | Größe | Bearbeitung |
+|---|---|---|---|---|---|---|
+| `public/textures/milchstrasse/himmel-1024.ktx2` | <https://svs.gsfc.nasa.gov/vis/a000000/a004800/a004851/milkyway_2020_8k.exr> | NASA/GSFC SVS; Gaia DR2: ESA/Gaia/DPAC | SVS gemeinfrei; Gaia-Anteil CC BY-NC 3.0 IGO (Namensnennung) | 1024×512 | 59 941 Bytes | siehe oben, ETC1S |
+| `public/textures/milchstrasse/himmel-2048.ktx2` | wie oben | wie oben | wie oben | 2048×1024 | 1 069 543 Bytes | siehe oben, UASTC |
+| `public/textures/milchstrasse/himmel-8192.ktx2` | wie oben | wie oben | wie oben | 8192×4096 | 30 310 600 Bytes | siehe oben, UASTC |
+
 ## Textur-Quelle: Solar System Scope (Zwergplaneten, Task 11)
 
 Vier weitere Albedo-Texturen stammen erneut von Solar System Scope
