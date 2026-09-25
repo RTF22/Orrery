@@ -4,7 +4,7 @@
 
 **Ziel:** Zwei zweisprachige Dokumente über die Entstehung von Orrery (Überblick und Chronik) mit Screenshots, Tokenbilanz und dem Leitmotiv „deterministische Anwendung mit nicht deterministischem Werkzeug“, verlinkt aus der README.
 
-**Architektur:** Erst Material (Faktenblatt, Fehlerkatalog, Tokenbilanz, Bilder) im git-ignorierten Ledger beziehungsweise unter `docs/bilder/entstehung/`, dann die deutsche Chronik in vier Teilen, daraus der deutsche Überblick, eine Fachprüfung, dann die englischen Fassungen, zuletzt Verlinkung und Abnahme. Jede Zahl in den Texten stammt aus dem Material und trägt dort eine Fundstelle.
+**Architektur:** Erst Material (Faktenblatt, Fehlerkatalog, Tokenbilanz, Bilder) im git-ignorierten Ledger beziehungsweise unter `docs/bilder/entstehung/`, dann die deutsche Chronik in vier Teilen, daraus der deutsche Überblick, eine Fachprüfung, dann die englischen Fassungen, dann ein kleiner Generator, der beim Bau statische Seiten unter `dist/doku/making-of/` erzeugt (Entwurf §3a), zuletzt Verlinkung und Abnahme. Jede Zahl in den Texten stammt aus dem Material und trägt dort eine Fundstelle.
 
 **Tech-Stack:** Markdown (GitHub-Darstellung), Git, Python 3.12 mit Pillow und numpy (kein matplotlib installiert), Playwright-MCP am Entwicklungsserver, Node/npm für die Abschlussprüfungen.
 
@@ -29,7 +29,7 @@
 1. **Erfundene Fakten:** Eine Zahl oder ein Ereignis im Text ohne Zeile im Material. Erwartung: Die Fachprüfung (Task 10) gleicht jede Zahl ab; Tasks 5–9 führen je Absatz die Fundstelle im Ledger mit.
 2. **Wortregel-Leck:** Produktname in einer anderen versionierten Datei oder im Commit-Text. Erwartung: `pruefe.sh` gibt `ok` aus — nach jedem Commit.
 3. **Datenschutz-Leck:** Benutzerpfad, E-Mail, Hostname oder Protokollauszug. Erwartung: `pruefe.sh` gibt `ok` aus — nach jedem Commit ab Task 3.
-4. **Kaputte Verweise:** Link auf eine fehlende Datei, eine fehlende Sprungmarke oder die falsche Sprachfassung. Erwartung: Linkprüfung aus Task 13 Schritt 3 ohne „FEHLT“ — ab Task 9 nach jedem Textcommit.
+4. **Kaputte Verweise:** Link auf eine fehlende Datei, eine fehlende Sprungmarke oder die falsche Sprachfassung. Erwartung: Linkprüfung aus Task 15 Schritt 3 ohne „FEHLT“ — ab Task 9 nach jedem Textcommit.
 5. **Zahlen DE ≠ EN:** Übersetzung ändert eine Zahl oder rundet anders. Erwartung: Zahlenabgleich in Task 11/12 (Schritt „Zahlen abgleichen“) ohne Abweichung außer dem Format.
 
 ## Dateistruktur
@@ -45,7 +45,9 @@
 | 10 | Fachprüfung und Nacharbeit | Ledger `pruefung.md`; `docs/chronik.de.md`, `docs/entstehung.de.md` |
 | 11 | Überblick EN | `docs/entstehung.en.md` |
 | 12 | Chronik EN | `docs/chronik.en.md` |
-| 13 | Verlinkung, Abnahme | `README.md`, `README.de.md`, `docs/entstehung-abnahme.md`; lokale Projektanleitung (nicht versioniert) |
+| 13 | Doku-Generator | neu `scripts/doku-bauen.ts`, `scripts/doku-bauen.test.ts`; `package.json` (`build`, devDependency `marked`), `package-lock.json` |
+| 14 | Seitenvorlage, Sprachwahl, Sichtprüfung | neu `scripts/doku-vorlage.ts`, `scripts/doku-vorlage.test.ts`; `scripts/doku-bauen.ts` |
+| 15 | Verlinkung, Abnahme | `README.md`, `README.de.md`, `docs/entwicklung.md`, `docs/entstehung-abnahme.md`; lokale Projektanleitung (nicht versioniert) |
 
 Ruling (Plan): Das Diagramm wird SVG statt PNG (kein matplotlib; SVG bleibt scharf und wird von GitHub dargestellt). Farben und Achsen nach dem Skill `dataviz`.
 
@@ -253,7 +255,7 @@ Commit „Chronik: Phase 5 bis zur Domain, Tokenanhang“.
 
 - [ ] **Schritt 1:** Gliederung genau nach Entwurf §4 (neun Abschnitte), Umfang 2 500–3 200 Wörter. Kopf mit Sprachzeile `[English](entstehung.en.md) | **Deutsch**`, erster Absatz nennt beide Werbeaussagen (Wissenschaftskommunikation; deterministische Anwendung mit nicht deterministischem Werkzeug). Bild `bilder/orrery-saturn.jpg` oben, im Text drei bis fünf Bilder aus Task 4, Diagramm im Kostenabschnitt.
 - [ ] **Schritt 2:** Kernkapitel nach Entwurf §4a: sieben Maschen, je ein echter Fall aus dem Fehlerkatalog (Nr. im Ledger), dazu die Zählung aus `## Zählung`; Absatz „Was das Netz nicht fing“. Kosten nach §4b mit Summe, Anteil Cache-Lesen, Verteilung Haupt/Sub und Modelle, Erklärung und Grenzen; keine Geldbeträge.
-- [ ] **Schritt 3:** Jede Phase im Abschnitt „Phasen“ endet mit einem Verweis `[Chronik](chronik.de.md#<marke>)`. Linkprüfung (Task 13 Schritt 3) und `pruefe.sh` laufen lassen.
+- [ ] **Schritt 3:** Jede Phase im Abschnitt „Phasen“ endet mit einem Verweis `[Chronik](chronik.de.md#<marke>)`. Linkprüfung (Task 15 Schritt 3) und `pruefe.sh` laufen lassen.
 - [ ] **Schritt 4:** Fundstellen in `progress.md`, Commit „Entstehung: Überblick“.
 
 ### Task 10: Fachprüfung und Nacharbeit
@@ -281,13 +283,283 @@ Jede Abweichung erklären (Datumsschreibweise, ausgeschriebene Zahlen) oder behe
 
 Wie Task 11 für `docs/chronik.en.md` (Sprachzeile `**English** | [Deutsch](chronik.de.md)`, gleiche Sprungmarken). Bei mehr als 5 000 Wörtern in zwei Aufträgen (bis `nachfuehrung-4d`, Rest). Commit(s) „Chronik: englische Fassung“.
 
-### Task 13: Verlinkung, Abnahme
+### Task 13: Doku-Generator
 
-**Dateien:** `README.md`, `README.de.md`, neu `docs/entstehung-abnahme.md`; lokale Projektanleitung.
+**Dateien:** neu `scripts/doku-bauen.ts`, `scripts/doku-bauen.test.ts`; `package.json` und `package-lock.json` (devDependency `marked`, Skript `build`).
 
-- [ ] **Schritt 1: README**
+**Nutzt:** die vier Texte aus Tasks 5–12, Bilder unter `docs/bilder/`.
+**Liefert** (Task 14 baut darauf auf, Namen genau so):
 
-In beiden READMEs vor dem Abschnitt Lizenz einen kurzen Abschnitt „How it was built“ / „Wie es entstand“ (drei bis vier Sätze): 15 Tage vom Prompt bis zur Domain, mit einem KI-Coding-Assistenten gebaut — **ohne Produktnamen** (README fällt nicht unter die Ausnahme) —, Leitmotiv deterministische Anwendung mit nicht deterministischem Werkzeug, Links auf Überblick und Chronik der jeweiligen Sprache.
+```ts
+export type Sprache = 'de' | 'en';
+export type Dokument = 'entstehung' | 'chronik';
+export interface Eintrag { ebene: 2 | 3; text: string; id: string }
+export interface Umgewandelt { html: string; titel: string; toc: Eintrag[]; bilder: string[] }
+export interface SeitenDaten {
+  sprache: Sprache; dokument: Dokument; titel: string; beschreibung: string;
+  html: string; toc: Eintrag[];
+}
+export function slug(text: string): string;
+export function inhaltsverzeichnis(md: string): Eintrag[];
+export function verweisUmschreiben(href: string, sprache: Sprache): { href: string; bild?: string };
+export function umwandeln(md: string, sprache: Sprache): Umgewandelt;
+export function pruefeVerweise(wurzel: string): string[];   // leere Liste = alles gut
+export function baue(quelle: string, ziel: string, seite: (d: SeitenDaten) => string): void;
+export function seiteEinfach(d: SeitenDaten): string;       // Platzhaltervorlage, Task 14 ersetzt sie
+```
+
+Regeln (Entwurf §3a):
+- `slug`: klein, `ä ö ü` → `a o u` (Unicode NFKD, Kombinationszeichen weg), `ß` → `ss`, alles außer `a-z0-9` → `-`, Ränder ohne `-`.
+- `inhaltsverzeichnis`: ATX-Überschriften `##` und `###` außerhalb von Code-Zäunen (```` ``` ````). Steht in der vorigen nicht leeren Zeile `<a id="x"></a>`, ist `x` die Kennung, sonst `slug(text)`; doppelte Kennungen bekommen `-2`, `-3`. Inline-Markdown im Text (`**`, `` ` ``, Links) wird für `text` entfernt.
+- `umwandeln`: `marked` mit GFM; jede `##`/`###`-Überschrift erhält `id` aus `inhaltsverzeichnis` in derselben Reihenfolge; die `<a id>`-Zeilen entfallen (keine doppelten Kennungen); `titel` = Text der ersten `#`-Überschrift, die selbst nicht ins HTML übernommen wird (die Vorlage setzt sie); die Sprachzeile (erste Zeile, die mit `[English]` oder `**English**` beginnt) entfällt, weil die Vorlage einen eigenen Umschalter hat; `href` und `src` laufen durch `verweisUmschreiben`; `bilder` sammelt die Quellpfade relativ zu `docs/`.
+- `verweisUmschreiben` (Seiten liegen in `making-of/<sprache>/`):
+
+| Eingabe (aus `docs/`) | Ausgabe auf Seite `de` |
+|---|---|
+| `https://…`, `mailto:…`, `#x` | unverändert |
+| `chronik.de.md#phase-1` | `chronik.html#phase-1` |
+| `entstehung.de.md` | `index.html` |
+| `entstehung.en.md` | `../en/index.html` |
+| `chronik.en.md#x` | `../en/chronik.html#x` |
+| `bilder/entstehung/a.jpg` | `../bilder/entstehung/a.jpg`, `bild: 'bilder/entstehung/a.jpg'` |
+| `../README.md` | `https://github.com/RTF22/Orrery/blob/master/README.md` |
+| `belege/hochschule/` | `https://github.com/RTF22/Orrery/tree/master/docs/belege/hochschule/` |
+
+- `baue(quelle, ziel, seite)`: liest `entstehung.{de,en}.md`, `chronik.{de,en}.md` aus `quelle` (fehlt eine, bricht der Bau mit Meldung ab), schreibt `ziel/making-of/{de,en}/index.html` und `…/chronik.html` über `seite(…)`, kopiert genau die verwendeten Bilder nach `ziel/making-of/bilder/…`. `beschreibung` = erster Absatz nach der Sprachzeile, ohne Markdown, höchstens 160 Zeichen.
+- `pruefeVerweise(wurzel)`: jede `.html`-Datei unter `wurzel`; jeder relative `href`/`src` muss auf eine Datei zeigen, jede `#marke` in einer Datei als `id="marke"` vorkommen. Rückgabe: Liste „Datei → Verweis“.
+- Einstieg wie in `scripts/deploy.ts`: `if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url))` → `baue('docs', 'dist/doku', seiteEinfach)`, danach `pruefeVerweise('dist/doku')`; Befund → Meldung und `process.exitCode = 1`.
+
+- [ ] **Schritt 1: Abhängigkeit**
+
+```bash
+npm install --save-dev marked
+node -e "import('marked').then(m => console.log(typeof m.marked))"   # function
+```
+
+- [ ] **Schritt 2: Tests zuerst** (`scripts/doku-bauen.test.ts`, eigene Beispieltexte, keine Produktnamen)
+
+```ts
+import { describe, expect, it } from 'vitest';
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { baue, inhaltsverzeichnis, pruefeVerweise, seiteEinfach, slug, umwandeln, verweisUmschreiben } from './doku-bauen.ts';
+
+describe('slug', () => {
+  it('bildet Kennungen aus Überschriften', () => {
+    expect(slug('Phase 4d – Hochschule')).toBe('phase-4d-hochschule');
+    expect(slug('Größe und Maß')).toBe('grosse-und-mass');
+  });
+});
+
+describe('inhaltsverzeichnis', () => {
+  it('nimmt feste Marken, sonst den Slug, zählt Doppelte hoch und überspringt Code', () => {
+    const md = ['# Titel', '', '<a id="phase-1"></a>', '## Phase **1**', '### Ziel', '### Ziel',
+      '```', '## Kein Kopf', '```'].join('\n');
+    expect(inhaltsverzeichnis(md)).toEqual([
+      { ebene: 2, text: 'Phase 1', id: 'phase-1' },
+      { ebene: 3, text: 'Ziel', id: 'ziel' },
+      { ebene: 3, text: 'Ziel', id: 'ziel-2' },
+    ]);
+  });
+});
+
+describe('verweisUmschreiben', () => {
+  it.each([
+    ['https://example.org/a', 'https://example.org/a'],
+    ['#x', '#x'],
+    ['chronik.de.md#phase-1', 'chronik.html#phase-1'],
+    ['entstehung.de.md', 'index.html'],
+    ['entstehung.en.md', '../en/index.html'],
+    ['chronik.en.md#x', '../en/chronik.html#x'],
+    ['bilder/entstehung/a.jpg', '../bilder/entstehung/a.jpg'],
+    ['../README.md', 'https://github.com/RTF22/Orrery/blob/master/README.md'],
+    ['belege/hochschule/', 'https://github.com/RTF22/Orrery/tree/master/docs/belege/hochschule/'],
+  ])('%s → %s', (ein, aus) => {
+    expect(verweisUmschreiben(ein, 'de').href).toBe(aus);
+  });
+  it('meldet Bilder zum Kopieren', () => {
+    expect(verweisUmschreiben('bilder/entstehung/a.jpg', 'de').bild).toBe('bilder/entstehung/a.jpg');
+  });
+});
+
+describe('umwandeln', () => {
+  it('setzt Kennungen an Überschriften, entfernt Marken, Titel und Sprachzeile', () => {
+    const md = '# Titel\n\n[English](x.en.md) | **Deutsch**\n\nText.\n\n<a id="p1"></a>\n## Eins\n\n| a | b |\n|---|---|\n| 1 | 2 |\n';
+    const u = umwandeln(md, 'de');
+    expect(u.titel).toBe('Titel');
+    expect(u.html).toContain('<h2 id="p1">Eins</h2>');
+    expect(u.html).not.toContain('<a id="p1">');
+    expect(u.html).not.toContain('<h1');
+    expect(u.html).not.toContain('English');
+    expect(u.html).toContain('<table>');
+  });
+});
+
+describe('baue und pruefeVerweise', () => {
+  function quelle(): string {
+    const q = mkdtempSync(join(tmpdir(), 'doku-'));
+    mkdirSync(join(q, 'bilder', 'entstehung'), { recursive: true });
+    writeFileSync(join(q, 'bilder', 'entstehung', 'a.jpg'), 'x');
+    for (const s of ['de', 'en']) {
+      writeFileSync(join(q, `entstehung.${s}.md`),
+        `# Ü ${s}\n\nErster Absatz.\n\n![Bild](bilder/entstehung/a.jpg)\n\n[Chronik](chronik.${s}.md#p1)\n`);
+      writeFileSync(join(q, `chronik.${s}.md`), `# C ${s}\n\n<a id="p1"></a>\n## Eins\n`);
+    }
+    return q;
+  }
+  it('schreibt vier Seiten, kopiert Bilder und findet keine toten Verweise', () => {
+    const ziel = mkdtempSync(join(tmpdir(), 'dist-'));
+    baue(quelle(), ziel, seiteEinfach);
+    for (const p of ['de/index.html', 'de/chronik.html', 'en/index.html', 'en/chronik.html', 'bilder/entstehung/a.jpg'])
+      expect(existsSync(join(ziel, 'making-of', p))).toBe(true);
+    expect(pruefeVerweise(ziel)).toEqual([]);
+  });
+  it('meldet tote Verweise und fehlende Marken', () => {
+    const ziel = mkdtempSync(join(tmpdir(), 'dist-'));
+    baue(quelle(), ziel, seiteEinfach);
+    const p = join(ziel, 'making-of', 'de', 'index.html');
+    writeFileSync(p, readFileSync(p, 'utf8') + '<a href="fehlt.html">x</a><a href="chronik.html#nichts">y</a>');
+    expect(pruefeVerweise(ziel)).toHaveLength(2);
+  });
+});
+```
+
+Run: `npx vitest run scripts/doku-bauen.test.ts` → FAIL (Modul fehlt).
+
+- [ ] **Schritt 3: Umsetzung** `scripts/doku-bauen.ts` nach den Regeln oben (Kommentare Deutsch, keine Prozesssprache). `seiteEinfach` erzeugt ein gültiges Dokument mit `<html lang>`, `<title>`, `<main>` und dem Inhaltsverzeichnis als Liste — die eigentliche Vorlage folgt in Task 14.
+
+- [ ] **Schritt 4: Tests grün, Bau eingebunden**
+
+`package.json`: `"build": "tsc -b && vite build && node scripts/doku-bauen.ts"`.
+
+```bash
+npx vitest run scripts/doku-bauen.test.ts
+npm run build 2>&1 | tail -5
+ls dist/doku/making-of/de dist/doku/making-of/en
+npm run lint && npx tsc -b --noEmit
+```
+
+Erwartung: Tests grün, Bau ohne Befund von `pruefeVerweise`, je Sprache `index.html` und `chronik.html`.
+
+- [ ] **Schritt 5: Commit**
+
+```bash
+git add scripts/doku-bauen.ts scripts/doku-bauen.test.ts package.json package-lock.json
+git commit -m "Doku-Generator: Making-of als statische Seiten"
+bash .superpowers/sdd/2026-09-25-entstehung/pruefe.sh   # ok
+```
+
+### Task 14: Seitenvorlage, Sprachwahl, Sichtprüfung
+
+**Dateien:** neu `scripts/doku-vorlage.ts`, `scripts/doku-vorlage.test.ts`; `scripts/doku-bauen.ts` (Einstieg nutzt `seite` statt `seiteEinfach`, schreibt zusätzlich die Weiterleitungen und `doku.css`).
+
+**Nutzt:** `SeitenDaten`, `Eintrag`, `Sprache` aus Task 13.
+**Liefert:**
+
+```ts
+export function seite(d: SeitenDaten): string;
+export function sprachwahlSeite(): string;   // dist/doku/making-of/index.html
+export function dokuWurzelSeite(): string;   // dist/doku/index.html
+export const DOKU_CSS: string;               // dist/doku/making-of/doku.css
+```
+
+Vorgaben (Entwurf §3a):
+- **Kopf** (`<header>`): links „Orrery“ als Link auf die Simulation (`../../../index.html`, relativ, damit beide Adressen funktionieren), daneben der Dokumenttitel; rechts Sprachumschalter `EN | DE` auf **dieselbe** Seite der anderen Sprache (`../en/chronik.html`), aktuelle Sprache mit `aria-current="true"`.
+- **Navigation** (`<nav aria-label>`): Überschrift je Sprache („Making-of“), Links auf Überblick und Chronik (aktuelle Seite `aria-current="page"`), darunter das Inhaltsverzeichnis der aktuellen Seite: Ebene 2 als Liste, Ebene 3 eingerückt; bei der Chronik Ebene 3 nur für den aktiven Abschnitt aufgeklappt. Desktop (ab 900 px Breite): Spalte links, 280 px, `position: sticky`, eigene Scrollleiste. Schmaler: Knopf „Inhalt“/„Contents“ (`aria-expanded`, `aria-controls`) blendet die Navigation als Schicht ein; Klick auf einen Eintrag schließt sie.
+- **Lesefortschritt:** kleines Inline-Skript (ohne Bibliothek) markiert per `IntersectionObserver` den Abschnitt im Inhaltsverzeichnis, der gerade oben im Bild steht (`aria-current="location"`). Ohne JavaScript bleibt alles lesbar und bedienbar (Navigation am Handy dann ausgeklappt über `<noscript>`-Stil).
+- **Inhalt** (`<main>`): `<h1>` mit dem Titel, Text höchstens `72ch` breit, Tabellen in einem Rahmen mit `overflow-x: auto`, Bilder `max-width: 100%; height: auto`, `loading="lazy"` außer beim ersten Bild; Sprungziele mit `scroll-margin-top` gegen die Kopfzeile.
+- **Fuß:** „© Jens Fricke · alle Rechte vorbehalten · Texturen siehe ASSETS.md“ (Link aufs Repository) und Link auf `https://github.com/RTF22/Orrery`; englisch entsprechend.
+- **Kopfdaten:** `<html lang>`, `<meta charset>`, `viewport`, `<title>{titel} · Orrery</title>`, `meta description`, `<link rel="alternate" hreflang="de|en" href="…">`, `og:type=article`, `og:title`, `og:description`, `og:image` (`../bilder/orrery-saturn.jpg`, Bild dafür mitkopieren), `theme-color`, Favicon aus `symbole/` (relativ `../../../symbole/…`, Dateiname aus `public/symbole/` übernehmen).
+- **Optik:** dunkles Thema mit den Farbwerten der App (aus den Tailwind-Klassen der Panels in `src/ui/` abgeleitet, als CSS-Variablen in `DOKU_CSS`), Systemschrift, Kontrast Text/Grund mindestens 7:1, Links unterstrichen, Fokusrahmen sichtbar. Keine externen Ressourcen, kein Tracking.
+- **Sprachwahl** `making-of/index.html`: Skript `location.replace((navigator.languages?.[0] ?? navigator.language ?? 'en').toLowerCase().startsWith('de') ? 'de/' : 'en/')`; darunter sichtbar zwei Links (für ohne JavaScript), `meta robots noindex`. `doku/index.html`: `<meta http-equiv="refresh" content="0; url=making-of/">` plus Link.
+- **Escaping:** Titel, Beschreibung und Inhaltsverzeichnistexte HTML-maskiert (`&`, `<`, `>`, `"`).
+
+- [ ] **Schritt 1: Tests zuerst** (`scripts/doku-vorlage.test.ts`)
+
+```ts
+import { describe, expect, it } from 'vitest';
+import { dokuWurzelSeite, seite, sprachwahlSeite } from './doku-vorlage.ts';
+
+const d = {
+  sprache: 'de' as const, dokument: 'chronik' as const, titel: 'Chronik <Test>', beschreibung: 'Kurz & gut',
+  html: '<h2 id="p1">Eins</h2><h3 id="z">Ziel</h3>',
+  toc: [{ ebene: 2 as const, text: 'Eins', id: 'p1' }, { ebene: 3 as const, text: 'Ziel', id: 'z' }],
+};
+
+describe('seite', () => {
+  const h = seite(d);
+  it('setzt Sprache, maskierten Titel und Beschreibung', () => {
+    expect(h).toContain('<html lang="de">');
+    expect(h).toContain('<title>Chronik &lt;Test&gt; · Orrery</title>');
+    expect(h).toContain('content="Kurz &amp; gut"');
+  });
+  it('verlinkt die andere Sprache auf dieselbe Seite und setzt hreflang', () => {
+    expect(h).toContain('href="../en/chronik.html"');
+    expect(h).toMatch(/hreflang="en" href="\.\.\/en\/chronik\.html"/);
+  });
+  it('führt das Inhaltsverzeichnis mit beiden Ebenen', () => {
+    expect(h).toContain('href="#p1"');
+    expect(h).toContain('href="#z"');
+  });
+  it('markiert die aktuelle Seite und verlinkt die Simulation relativ', () => {
+    expect(h).toMatch(/href="chronik\.html"[^>]*aria-current="page"/);
+    expect(h).toContain('href="../../../index.html"');
+  });
+  it('lädt nichts von außen', () => {
+    expect(h).not.toMatch(/<(script|link)[^>]+(src|href)="https?:/);
+  });
+});
+
+describe('Weiterleitungen', () => {
+  it('Sprachwahl fällt auf Englisch zurück und bietet Links ohne Skript', () => {
+    const h = sprachwahlSeite();
+    expect(h).toContain("startsWith('de')");
+    expect(h).toContain('href="en/"');
+    expect(h).toContain('href="de/"');
+  });
+  it('Doku-Wurzel leitet auf making-of/', () => {
+    expect(dokuWurzelSeite()).toContain('url=making-of/');
+  });
+});
+```
+
+Run: `npx vitest run scripts/doku-vorlage.test.ts` → FAIL.
+
+- [ ] **Schritt 2: Umsetzung** in `scripts/doku-vorlage.ts`; `scripts/doku-bauen.ts` schreibt im Einstieg `seite` statt `seiteEinfach`, dazu `dist/doku/index.html`, `dist/doku/making-of/index.html`, `dist/doku/making-of/doku.css` und kopiert `docs/bilder/orrery-saturn.jpg`. Tests beider Dateien grün; `npm run build`; `pruefeVerweise` ohne Befund (die Links `../../../index.html` und `../../../symbole/…` liegen außerhalb von `dist/doku/` — `pruefeVerweise` prüft sie gegen `dist/`, dafür bekommt es den `dist`-Stamm als zweites Argument `pruefeVerweise(wurzel, stamm = wurzel)`; Test in `doku-bauen.test.ts` ergänzen).
+
+- [ ] **Schritt 3: Sichtprüfung** gegen `npx vite preview --port 4173 --strictPort` (im Hintergrund, danach beenden; Basis `./`, Aufruf `http://localhost:4173/doku/making-of/`):
+
+| Prüfung | Soll |
+|---|---|
+| Sprachwahl mit `locale: 'de-DE'` bzw. `'en-US'` (eigener Kontext) | landet auf `…/de/` bzw. `…/en/` |
+| Desktop 1600×900, Chronik | Navigation links sichtbar, `getBoundingClientRect().width` 260–300 px; `main` Textspalte ≤ 72ch (`getComputedStyle`) |
+| Scrollen zu `#phase-4d` | Eintrag `phase-4d` im Inhaltsverzeichnis trägt `aria-current="location"` |
+| A55 412×915, `deviceScaleFactor` 2.625, Touch | Navigation verborgen; Knopf sichtbar, ≥ 44 px hoch; nach Tipp Navigation sichtbar, nach Tipp auf Eintrag wieder zu; `document.documentElement.scrollWidth ≤ 412` |
+| Tabellen am A55 | breite Tabelle scrollt im eigenen Rahmen (`scrollWidth > clientWidth` am Rahmen, nicht an der Seite) |
+| Kontrast | Text- gegen Grundfarbe per berechnetem Verhältnis ≥ 7 |
+| Konsole | keine Fehler, keine 404 (Netzwerkliste) |
+
+Zwei Screenshots (Desktop, A55) nur zur Ansicht ins Ledger, **nicht** ins Repository; Messwerte in `progress.md`.
+
+- [ ] **Schritt 4: Commit**
+
+```bash
+npm run lint && npx tsc -b --noEmit && npx vitest run scripts/
+git add scripts/doku-vorlage.ts scripts/doku-vorlage.test.ts scripts/doku-bauen.ts scripts/doku-bauen.test.ts
+git commit -m "Doku-Seiten: Vorlage, Navigation, Sprachwahl"
+bash .superpowers/sdd/2026-09-25-entstehung/pruefe.sh   # ok
+```
+
+### Task 15: Verlinkung, Abnahme
+
+**Dateien:** `README.md`, `README.de.md`, `docs/entwicklung.md`, neu `docs/entstehung-abnahme.md`; lokale Projektanleitung.
+
+- [ ] **Schritt 1: README und Entwicklerdoku**
+
+In beiden READMEs vor dem Abschnitt Lizenz einen kurzen Abschnitt „How it was built“ / „Wie es entstand“ (drei bis vier Sätze): 15 Tage vom Prompt bis zur Domain, mit einem KI-Coding-Assistenten gebaut — **ohne Produktnamen** (README fällt nicht unter die Ausnahme) —, Leitmotiv deterministische Anwendung mit nicht deterministischem Werkzeug, Links auf Überblick und Chronik der jeweiligen Sprache (auf GitHub; die Website-Adresse kommt erst nach dem Deploy dazu).
+
+`docs/entwicklung.md`, Abschnitt Entwicklung: ein Absatz, dass `npm run build` nach dem Vite-Bau `scripts/doku-bauen.ts` ausführt, das die Making-of-Texte als statische Seiten nach `dist/doku/making-of/` schreibt (Sprachwahl nach Browsersprache, Standard Englisch) und alle Verweise prüft; der nächste `npm run deploy` lädt sie mit hoch.
 
 - [ ] **Schritt 2: Datenschutz und Wortregel**
 
@@ -311,13 +583,13 @@ Ausgabe leer.
 
 - [ ] **Schritt 4: Abnahmeprotokoll**
 
-`docs/entstehung-abnahme.md` nach Vorlage `docs/kleinigkeiten-abnahme.md`: §1 Umfang, §2 Zahlen (Wörter je Datei per `wc -w`, Bilder mit Größe, Tokenbilanz-Summen), §3 Prüfungen (Befehle und Ergebnisse aus Schritt 2 und 3, Zahlenabgleich), §4 Lizenz (Bilder zeigen Texturen nach `ASSETS.md`), §5 Handprüfung Jens (GitHub-Darstellung beider Sprachen, hell und dunkel), §6 Rulings aus `progress.md`, §7 offene Punkte (Restbefunde der Fachprüfung), §8 Fragen an Jens. Ohne Produktnamen, ohne Suchmuster der Wortkontrolle.
+`docs/entstehung-abnahme.md` nach Vorlage `docs/kleinigkeiten-abnahme.md`: §1 Umfang, §2 Zahlen (Wörter je Datei per `wc -w`, Bilder mit Größe, Tokenbilanz-Summen), §3 Prüfungen (Befehle und Ergebnisse aus Schritt 2 und 3, Zahlenabgleich, Sichtprüfung der Doku-Seiten aus Task 14), §4 Lizenz (Bilder zeigen Texturen nach `ASSETS.md`), §5 Handprüfung Jens (GitHub-Darstellung beider Sprachen, hell und dunkel; Doku-Seiten lokal über `npx vite preview` an PC und Handy), §6 Rulings aus `progress.md`, §7 offene Punkte (Restbefunde der Fachprüfung), §8 Fragen an Jens. Ohne Produktnamen, ohne Suchmuster der Wortkontrolle.
 
 - [ ] **Schritt 5: Abschluss**
 
 ```bash
 npm run lint && npx tsc -b --noEmit && npm test 2>&1 | grep -E "Test Files|Tests " && npm run build 2>&1 | tail -3
-git add README.md README.de.md docs/entstehung-abnahme.md
+git add README.md README.de.md docs/entwicklung.md docs/entstehung-abnahme.md
 git commit -m "Entstehung: Verlinkung und Abnahme"
 ```
 

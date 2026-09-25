@@ -48,6 +48,47 @@ Die README verweist in beiden Sprachen auf den Überblick, der Überblick bei je
 passenden Abschnitt der Chronik. Deutsch ist die Grundfassung, Englisch die Übersetzung;
 Kennzahlen, Daten und Commit-Kürzel sind in beiden Fassungen gleich.
 
+## 3a. Website `/doku/making-of/` (Nachtrag, Jens, 25.09.2026)
+
+Die vier Texte sollen später auch auf der Website abrufbar sein, als Unterverzeichnis mit
+Inhaltsverzeichnis und Navigation. Veröffentlicht wird erst mit eigener Freigabe (Deploy wie
+bisher von Hand); gebaut wird die Seite in dieser Etappe.
+
+- **Technik:** eigener kleiner Generator `scripts/doku-bauen.ts`, läuft am Ende von
+  `npm run build` (nach `vite build`) und schreibt statisches HTML nach `dist/doku/`. Markdown
+  wandelt die Bibliothek `marked` (devDependency, nur zur Bauzeit). Kein VitePress: Die Seite
+  läuft unter `https://orrery3d.de/` und `https://www.jensfricke.com/Orrery/`, also mit zwei
+  Basen; fertige Doku-Systeme verlangen eine feste Basis. Alle Verweise sind relativ.
+- **Adressen:**
+
+  | Pfad in `dist/` | Inhalt |
+  |---|---|
+  | `doku/index.html` | leitet auf `making-of/` weiter (verhindert die 500-Antwort des Servers für fehlende Dateien) |
+  | `doku/making-of/index.html` | Sprachwahl: Browsersprache beginnt mit `de` → `de/`, sonst `en/`; ohne JavaScript zwei Links |
+  | `doku/making-of/en/index.html`, `…/de/index.html` | Überblick |
+  | `doku/making-of/en/chronik.html`, `…/de/chronik.html` | Chronik |
+  | `doku/making-of/bilder/…` | Kopie der verwendeten Bilder aus `docs/bilder/` |
+
+- **Gliederung:** eine Seite je Dokument. Kopfzeile mit „Orrery“ (Link zur Simulation),
+  Sprachumschalter auf dieselbe Seite der anderen Sprache. Links eine feste Navigation mit
+  beiden Dokumenten und dem Inhaltsverzeichnis der aktuellen Seite (Ebenen `##` und `###`),
+  der aktuelle Abschnitt beim Lesen hervorgehoben; am Handy (schmaler als 900 px) einklappbar
+  über einen Knopf. Inhalt höchstens rund 75 Zeichen breit, Tabellen waagerecht scrollbar,
+  Bilder responsiv. Fußzeile mit Lizenzhinweis und Link zum Repository.
+- **Sprungmarken:** dieselben `<a id="…">` wie auf GitHub; Verweise `chronik.de.md#x` werden
+  zu `chronik.html#x`, `entstehung.de.md` zu `index.html`, Bildpfade auf `../bilder/…`, alle
+  anderen Repository-Verweise auf `https://github.com/RTF22/Orrery/blob/master/…`.
+- **Optik:** dunkles Thema in den Farben der App, Systemschrift, ausreichender Kontrast;
+  kein externes Skript, keine Schriftart von außen, kein Tracking.
+- **Suchmaschinen und Teilen:** `lang`, `<title>`, `meta description`, `hreflang`-Verweise
+  zwischen den Sprachen, `og:title`, `og:description`, `og:image` (Saturn-Bild, relativ).
+- **Wortregel:** Das erzeugte HTML liegt nur in `dist/` (nicht versioniert); Generator,
+  Vorlage und Tests enthalten die Wörter nicht (Tests mit eigenen Beispieltexten).
+- **Prüfung:** Vitest für Umwandlung, Inhaltsverzeichnis und Verweisumschreibung; nach dem
+  Bau prüft ein Test oder Skriptlauf, dass jeder relative Verweis in `dist/doku/` auf eine
+  vorhandene Datei und Sprungmarke zeigt. Sichtprüfung per Playwright gegen `vite preview`
+  (Desktop 1600×900 und A55 412×915), Messwerte statt Eindrücke.
+
 ## 4. Überblick: Gliederung
 
 1. **Die Idee:** Vision aus dem Ursprungsprompt (verlinkt), Interview, Gesamtentwurf.
@@ -173,8 +214,10 @@ jede Zahl mit ihrer Fundstelle im Faktenblatt (§7).
 10. Fachprüfung beider deutschen Texte und Nacharbeit.
 11. Überblick Englisch.
 12. Chronik Englisch (bei Bedarf zwei Tasks).
-13. Verlinkung aus der README (in beiden Sprachen mit beiden Werbeaussagen), Ausnahme in der
+13. Doku-Generator mit Tests (§3a).
+14. Seitenvorlage, Sprachwahl, Sichtprüfung (§3a).
+15. Verlinkung aus der README (in beiden Sprachen mit beiden Werbeaussagen), Ausnahme in der
     Baumkontrolle, Abnahmeprotokoll.
 
 Je Task ein Commit; immer nur ein Umsetzer-Subagent; Texte und Prüfung auf Sonnet.
-Veröffentlichung: Push nach Freigabe; ein Deploy ist nicht nötig, die App ändert sich nicht.
+Veröffentlichung: Push nach Freigabe. Die Website `/doku/making-of/` geht erst mit einem eigenen, freigegebenen Deploy online (der nächste `npm run deploy` lädt sie mit hoch).
