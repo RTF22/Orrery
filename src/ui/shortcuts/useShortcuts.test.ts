@@ -1,12 +1,13 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { handleShortcut, useShortcuts, SHORTCUTS_PANEL } from './useShortcuts';
+import { handleShortcut, useShortcuts } from './useShortcuts';
 import { useStore, DEFAULT_STATE } from '../../store';
 import { cinemaAktiv, noteUserInput, startCinema, stopCinema } from '../cinemaControl';
 import { useBogen } from '../bogen';
 import { useMusikStand } from '../musikStand';
 import { useInfoKarte } from '../infokarte/zustand';
+import { useSteuerKarte } from '../steuerkarte/zustand';
 
 describe('handleShortcut', () => {
   // stopCinema zuerst: löscht den gemerkten Zustand von vor dem Kinostart.
@@ -83,11 +84,10 @@ describe('handleShortcut', () => {
     expect(useStore.getState().camera).toEqual(DEFAULT_STATE.camera);
   });
 
-  it('schaltet die Kürzel-Übersicht um', () => {
-    handleShortcut('?');
-    expect(useStore.getState().ui.panels[SHORTCUTS_PANEL]).toBe(true);
-    handleShortcut('?');
-    expect(useStore.getState().ui.panels[SHORTCUTS_PANEL]).toBe(false);
+  it('öffnet mit ? die Steuerungskarte', () => {
+    expect(handleShortcut('?')).toBe(true);
+    expect(useSteuerKarte.getState().offen).toBe(true);
+    useSteuerKarte.setState({ offen: false });
   });
 
   it('startet und beendet den Kino-Modus mit C', () => {

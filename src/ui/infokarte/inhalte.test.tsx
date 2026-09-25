@@ -4,8 +4,8 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { ReiterApp, ReiterBedienung, ReiterUeber } from './inhalte';
 import { useInstallation } from './installation';
 import { useInfoKarte } from './zustand';
+import { useSteuerKarte } from '../steuerkarte/zustand';
 import { useStore, DEFAULT_STATE } from '../../store';
-import { SHORTCUTS_PANEL } from '../shortcuts/useShortcuts';
 
 function zeiger(grob: boolean, app = false): void {
   window.matchMedia = ((abfrage: string) => ({
@@ -73,8 +73,8 @@ describe('Reiter der Info-Karte', () => {
     expect(screen.queryByText(/einem Finger/)).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Alle Tastenkürzel und Controller' }));
     expect(useInfoKarte.getState().offen).toBe(false);
-    expect(useStore.getState().ui.panels[SHORTCUTS_PANEL]).toBe(true);
-    expect(useStore.getState().ui.panels['leiste']).toBe(true);
+    expect(useSteuerKarte.getState().offen).toBe(true);
+    useSteuerKarte.setState({ offen: false });
   });
 
   it('Über: Links in neuem Tab, Rechte, Version', () => {

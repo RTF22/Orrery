@@ -5,9 +5,7 @@ import { INFO_PANEL, infoOffen, istSchmal } from '../info/konstanten';
 import { useBogen } from '../bogen';
 import { useMusikStand } from '../musikStand';
 import { useInfoKarte } from '../infokarte/zustand';
-
-/** Panel-Schlüssel der Kürzel-Übersicht. */
-export const SHORTCUTS_PANEL = 'shortcuts';
+import { useSteuerKarte } from '../steuerkarte/zustand';
 
 /** Faktor je Tastendruck auf die Zeitraffung — multiplikativ, nie additiv. */
 const RATE_SCHRITT = 1.5;
@@ -29,8 +27,8 @@ function vollbildUmschalten(): void {
 
 /** Die Tastenbelegung als reine Funktion — ohne sie wäre sie nicht prüfbar. */
 export function handleShortcut(taste: string): boolean {
-  // Die Info-Karte ist modal: Ihre Tasten (Escape, Tab, Pfeile) gehören ihr.
-  if (useInfoKarte.getState().offen) return false;
+  // Die Karten sind modal: Ihre Tasten (Escape, Tab, Pfeile) gehören ihnen.
+  if (useInfoKarte.getState().offen || useSteuerKarte.getState().offen) return false;
 
   const s = useStore.getState();
 
@@ -82,11 +80,7 @@ export function handleShortcut(taste: string): boolean {
       s.setCamera({ ...DEFAULT_STATE.camera });
       return true;
     case '?':
-      // Anders als die Bedienpanels ist die Übersicht standardmäßig zu —
-      // ein fehlender Schlüssel gilt hier also als „nicht angezeigt".
-      s.setUi({
-        panels: { ...s.ui.panels, [SHORTCUTS_PANEL]: !(s.ui.panels[SHORTCUTS_PANEL] ?? false) },
-      });
+      useSteuerKarte.getState().oeffnen();
       return true;
     case 'm':
       // Nur mit Musik des Betreibers belegt (Entwurf Phase 5 §6.4); sonst bleibt die Taste frei.

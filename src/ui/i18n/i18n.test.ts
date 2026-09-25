@@ -7,12 +7,13 @@ import { bodies } from '../../data/index';
 
 /**
  * Werte, die auf Englisch bewusst gleich lauten: Eigennamen, Symbole, und
- * 'time.pause'/'shortcuts.padTitle' als echte Lehnwörter (Pause → Pause,
+ * 'time.pause'/'steuerkarte.reiter.controller' als echte Lehnwörter (Pause → Pause,
  * Controller → Controller).
  */
 const GLEICH_ERLAUBT = new Set<string>([
   'app.title', 'infokarte.titel', 'infokarte.reiter.app', 'infokarte.ueber.version', 'panel.info', 'language.de', 'language.en',
-  'key.arrows', 'time.pause', 'shortcuts.padTitle',
+  'steuerkarte.reiter.controller',
+  'key.arrows', 'time.pause',
   'literatur.doi', 'literatur.ads', 'literatur.preprint',
   'body.venus.name', 'body.mars.name', 'body.jupiter.name', 'body.saturn.name',
   'body.uranus.name', 'body.phobos.name', 'body.deimos.name', 'body.io.name',

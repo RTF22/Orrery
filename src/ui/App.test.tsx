@@ -7,6 +7,7 @@ import { useBogen } from './bogen';
 import { SCHMAL_ABFRAGE } from './info/konstanten';
 import { useMusikStand } from './musikStand';
 import { useInfoKarte } from './infokarte/zustand';
+import { useSteuerKarte } from './steuerkarte/zustand';
 
 /** Kompaktmodus an: nur SCHMAL_ABFRAGE trifft zu. */
 function kompakt(): void {
@@ -24,6 +25,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
   useBogen.getState().setBogen(null);
   useInfoKarte.setState({ offen: false });
+  useSteuerKarte.setState({ offen: false });
 });
 
 describe('App', () => {
@@ -33,21 +35,6 @@ describe('App', () => {
     // Die Kopfzeile sitzt mit dem Einklappknopf in einer eigenen Zeile der Seitenleiste.
     const naechstes = kopfzeile?.parentElement?.parentElement?.nextElementSibling;
     expect(naechstes?.querySelector('button')?.textContent).toContain('Himmelskörper');
-  });
-
-  it('nennt in der Kürzelübersicht den Flug', () => {
-    useStore.getState().setUi({ panels: { ...DEFAULT_STATE.ui.panels, shortcuts: true } });
-    render(<App />);
-    expect(screen.getByText('W A S D')).toBeTruthy();
-    expect(screen.getByText('Shift + W A S D')).toBeTruthy();
-  });
-
-  it('nennt in der Kürzelübersicht den Controller', () => {
-    useStore.getState().setUi({ panels: { ...DEFAULT_STATE.ui.panels, shortcuts: true } });
-    render(<App />);
-    expect(screen.getByText('Controller')).toBeTruthy();
-    expect(screen.getByText('Linker Stick')).toBeTruthy();
-    expect(screen.getByText('Zum Objekt unter dem Fadenkreuz fahren')).toBeTruthy();
   });
 
   it('zeigt bei eingeklappter Leiste (etwa aus der Sitzung) nur den Reiter', () => {
@@ -75,26 +62,6 @@ describe('App', () => {
     expect(useStore.getState().ui.panels).toEqual(vorher);
   });
 
-  it('blendet bei grobem Zeiger die Kürzelübersicht aus', () => {
-    vi.stubGlobal('matchMedia', (abfrage: string) => ({
-      matches: abfrage === '(pointer: coarse)', media: abfrage,
-      addEventListener: () => {}, removeEventListener: () => {},
-    }));
-    useStore.getState().setUi({ panels: { ...DEFAULT_STATE.ui.panels, shortcuts: true } });
-    render(<App />);
-    expect(screen.queryByText('W A S D')).toBeNull();
-  });
-
-  it('nennt die Taste M in der Kürzelübersicht nur mit verfügbarer Musik', () => {
-    useStore.getState().setUi({ panels: { ...DEFAULT_STATE.ui.panels, shortcuts: true } });
-    const { unmount } = render(<App />);
-    expect(screen.queryByText('Musik stumm schalten')).toBeNull();
-    unmount();
-    useMusikStand.setState({ verfuegbar: true });
-    render(<App />);
-    expect(screen.getByText('Musik stumm schalten')).toBeTruthy();
-  });
-
   it('zeigt eine offene Info-Karte auch bei ausgeblendeter Oberfläche', () => {
     useStore.getState().setUi({ hidden: true });
     useInfoKarte.setState({ offen: true, reiter: 'ueber' });
@@ -109,6 +76,16 @@ describe('App', () => {
     act(() => { useInfoKarte.getState().oeffnen('app'); });
     expect(ebene()?.hasAttribute('inert')).toBe(true);
     act(() => { useInfoKarte.getState().schliessen(); });
+    expect(ebene()?.hasAttribute('inert')).toBe(false);
+  });
+
+  it('legt die UI-Ebene bei offener Steuerungskarte mit inert still', () => {
+    render(<App />);
+    const ebene = () => document.querySelector('.ui-ebene');
+    expect(ebene()?.hasAttribute('inert')).toBe(false);
+    act(() => { useSteuerKarte.getState().oeffnen(); });
+    expect(ebene()?.hasAttribute('inert')).toBe(true);
+    act(() => { useSteuerKarte.getState().schliessen(); });
     expect(ebene()?.hasAttribute('inert')).toBe(false);
   });
 
@@ -136,36 +113,6 @@ describe('App', () => {
     knopf.remove();
   });
 
-  it('holt die Kürzelübersicht bei Taste „?“ ins Bild und fokussiert ihre Kopfzeile', () => {
-    // Die Übersicht steht als letzter Abschnitt der scrollenden Seitenleiste
-    // und kann außerhalb des Fensters liegen — jsdom kennt scrollIntoView
-    // nicht, daher ein eigener Ersatz auf dem Prototyp.
-    const scrollSpy = vi.fn();
-    Object.defineProperty(Element.prototype, 'scrollIntoView', { value: scrollSpy, configurable: true });
-    render(<App />);
-    fireEvent.keyDown(window, { key: '?' });
-    const knopf = screen.getByRole('button', { name: 'Tastenkürzel' });
-    expect(scrollSpy).toHaveBeenCalledTimes(1);
-    expect((scrollSpy.mock.contexts[0] as HTMLElement).textContent).toContain('Tastenkürzel');
-    expect(document.activeElement).toBe(knopf);
-    delete (Element.prototype as { scrollIntoView?: unknown }).scrollIntoView;
-  });
-
-  it('schließt die Info-Karte bei „Alle Tastenkürzel und Controller“, zeigt die Übersicht im Bild und übernimmt den Fokus', () => {
-    const scrollSpy = vi.fn();
-    Object.defineProperty(Element.prototype, 'scrollIntoView', { value: scrollSpy, configurable: true });
-    // Feiner Zeiger: jsdom kennt matchMedia nicht, useGrob ist also false.
-    useInfoKarte.setState({ offen: true, reiter: 'bedienung' });
-    render(<App />);
-    fireEvent.click(screen.getByRole('button', { name: 'Alle Tastenkürzel und Controller' }));
-    expect(screen.queryByRole('dialog')).toBeNull();
-    const knopf = screen.getByRole('button', { name: 'Tastenkürzel' });
-    expect(scrollSpy).toHaveBeenCalledTimes(1);
-    // Der Fokus landet in der Übersicht, nicht beim ⓘ-Knopf zurück.
-    expect(document.activeElement).toBe(knopf);
-    delete (Element.prototype as { scrollIntoView?: unknown }).scrollIntoView;
-  });
-
   it('übersetzt eine offene Info-Karte beim Sprachwechsel sofort', () => {
     useInfoKarte.setState({ offen: true, reiter: 'bedienung' });
     render(<App />);
@@ -174,5 +121,19 @@ describe('App', () => {
     expect(screen.getByRole('tab', { name: 'Controls' })).toBeTruthy();
     act(() => { useStore.getState().setUi({ language: 'de' }); });
     useInfoKarte.setState({ offen: false });
+  });
+
+  it('breit: kein Hilfe-Knopf', () => {
+    render(<App />);
+    expect(document.querySelector('.hilfeknopf')).toBeNull();
+  });
+
+  it('schmal: Hilfe-Knopf öffnet die Info-Karte', () => {
+    kompakt();
+    render(<App />);
+    const knopf = document.querySelector('.hilfeknopf');
+    expect(knopf).toBeTruthy();
+    fireEvent.click(knopf!);
+    expect(useInfoKarte.getState().offen).toBe(true);
   });
 });

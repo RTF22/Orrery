@@ -1,8 +1,6 @@
-import { useStore } from '../../store';
 import { t } from '../i18n';
 import { useGrob } from '../fenster';
-import { SHORTCUTS_PANEL } from '../shortcuts/useShortcuts';
-import { LEISTE_PANEL } from '../Seitenleiste';
+import { useSteuerKarte } from '../steuerkarte/zustand';
 import { laeuftAlsApp } from './geraet';
 import { installieren, useInstallation } from './installation';
 import { useInfoKarte } from './zustand';
@@ -64,7 +62,6 @@ const TASTEN: readonly (readonly [string | { key: string }, string])[] = [
 export function ReiterBedienung(): React.JSX.Element {
   const grob = useGrob();
   const schliessen = useInfoKarte((s) => s.schliessen);
-  const setUi = useStore((s) => s.setUi);
 
   if (grob) {
     return (
@@ -81,9 +78,8 @@ export function ReiterBedienung(): React.JSX.Element {
   }
 
   const alleKuerzel = (): void => {
-    const panels = useStore.getState().ui.panels;
     schliessen();
-    setUi({ panels: { ...panels, [SHORTCUTS_PANEL]: true, [LEISTE_PANEL]: true } });
+    useSteuerKarte.getState().oeffnen();
   };
 
   return (
