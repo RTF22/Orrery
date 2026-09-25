@@ -44,7 +44,7 @@ Die Veröffentlichung auf dem Webspace folgt danach mit eigener Freigabe.
   OpenEXR mit Halbfließkommazahlen (HDR). Grundlage sind 1,7 Milliarden Sterne aus Gaia DR2;
   die Variante lässt die hellen Hipparcos- und Tycho-Sterne weg, sodass die HYG-Punkte
   (alle heller als 6,0 mag, also Teil von Hipparcos/Tycho) nicht doppelt erscheinen.
-- Die Datei (rund 60 MB) liegt nur im Cache (`.cache/`), nicht im Repository; URL und
+- Die Datei (130,9 MB) liegt nur im Cache (`.cache/`), nicht im Repository; URL und
   sha256 stehen in der Quellliste wie bei den 8k-Planetenquellen.
 - **Namensnennung laut SVS:** „NASA/Goddard Space Flight Center Scientific Visualization
   Studio. Gaia DR2: ESA/Gaia/DPAC“. Vor dem ersten Bau wird an der Quelle geprüft, welche
@@ -59,7 +59,14 @@ Die Veröffentlichung auf dem Webspace folgt danach mit eigener Freigabe.
   Python-Paket, keine neue Abhängigkeit in `package.json`) und bildet sie mit einer festen,
   monotonen Kurve (Verstärkung plus Potenz, Parameter im Skript mit Begründung) auf 8 bit
   sRGB ab.
-- **Zielwerte** (von 255, in der fertigen 8k-Stufe gemessen):
+- **Tonemapping:** Das ganze Bild läuft am Ende der Kette durch `OutputPass` mit ACES
+  (`renderer.toneMapping`, Belichtung 1), die Sterne eingeschlossen. Das Skript rechnet
+  deshalb vom gewünschten Schirmwert rückwärts: Kurve → Schirmwert (sRGB) → linear → Umkehrung
+  der three-ACES-Kurve (`color *= exposure/0.6`, `RRTAndODTFit`; für Grauwerte sind Ein- und
+  Ausgangsmatrix neutral) → Texturwert. Die Farbe wird als Verhältnis der Kanäle zur
+  Leuchtdichte darübergelegt.
+- **Zielwerte** (Schirmwerte von 255, vom Skript an der 2k-Stufe über die Vorwärtsrechnung
+  ACES → sRGB vorhergesagt; in der 8k-Stufe heben einzelne Gaia-Sterne das Perzentil):
   - hellste Sternwolken (Schütze, Schild; 99,5-Perzentil des Bandes): 60 bis 70,
   - mittleres Band (Median der Pixel mit galaktischer Breite |b| < 10°): 20 bis 30,
   - galaktische Pole (Mittel über |b| > 80°): höchstens 4.
@@ -77,7 +84,7 @@ Die Veröffentlichung auf dem Webspace folgt danach mit eigener Freigabe.
 
 Das Skript bricht ab, wenn die Karte gespiegelt oder verschoben ist. Es sucht im geglätteten
 1k-Bild das Helligkeitsmaximum in einem Fenster von 10° um drei Sollpunkte und verlangt eine
-Abweichung von höchstens 2°:
+Abweichung von höchstens 2° (galaktisches Zentrum 5°, siehe unten):
 
 | Merkmal | RA | Dec |
 |---|---|---|
@@ -85,8 +92,13 @@ Abweichung von höchstens 2°:
 | Große Magellansche Wolke | 80,9° | −69,8° |
 | Kleine Magellansche Wolke | 13,2° | −72,8° |
 
-Dieselbe Umrechnung von Pixel in RA/Dec wie in §4.2 wird dabei benutzt (Konvention der
-SVS-Karte an der Quelle bestätigt, nicht angenommen).
+Die Konvention der SVS-Karte nennt die Quelle nicht; sie wurde am 25.09.2026 an der
+Vorschau `milkyway_2020_4k_print.jpg` (1024×512) bestimmt: RA 0h in der Bildmitte, RA wächst
+nach links, Norden oben. Die Maxima lagen 0,8° (Große) und 0,1° (Kleine Magellansche Wolke)
+neben dem Sollpunkt, am galaktischen Zentrum 4° daneben auf der großen Sternwolke im
+Schützen (RA 270,5°, Dec −29,0°) — dort gilt deshalb eine Toleranz von 5° statt 2°. Die
+Magellanschen Wolken entscheiden Richtung und Nullpunkt. Dieselbe Umrechnung von Pixel in
+RA/Dec wie in §4.2 wird im Skript benutzt.
 
 ## 4. Darstellung
 
@@ -94,12 +106,13 @@ SVS-Karte an der Quelle bestätigt, nicht angenommen).
 
 - Neues Modul `render/milchstrasse.ts`: eine von innen gesehene Kugel (`BackSide`) um den
   Ursprung, ohne Beleuchtung. Sie wird wie die Sterne nie kamerarelativ verschoben (keine
-  Parallaxe) und vor ihnen gezeichnet (`renderOrder` kleiner als das Sternfeld), ohne
+  Parallaxe) und als deckendes Objekt mit `renderOrder = -1` zuerst gezeichnet (three.js
+  zeichnet durchsichtige Objekte wie das Sternfeld nach den deckenden), ohne
   Tiefentest und ohne Schreiben in den Tiefenpuffer, sodass die HYG-Punkte scharf obenauf
   liegen und kein Körper verdeckt wird. `frustumCulled = false` aus demselben Grund wie beim
   Sternfeld.
-- **Helligkeit:** fest wie bei den Sternen, unabhängig von Helligkeitsregler, Belichtung und
-  Tonemapping. Die Kurve aus §3.2 ist der sichtbare Wert.
+- **Helligkeit:** fest wie bei den Sternen, unabhängig von Helligkeitsregler und Belichtung.
+  Das Tonemapping am Ende der Kette gilt wie für die Sterne und ist in §3.2 eingerechnet.
 - **Bloom:** Im Bloom-Durchgang wird die Kugel ausgeblendet bzw. geschwärzt; sie strahlt
   nicht. Ein Test in `postfx.test.ts` hält das fest.
 
@@ -107,8 +120,9 @@ SVS-Karte an der Quelle bestätigt, nicht angenommen).
 
 - Die Kugel nutzt `equatorialToEcliptic` aus `starfield.ts` (gemeinsame Drehung, nicht
   kopiert). Die Umrechnung zwischen RA/Dec und Texturkoordinaten ist eine reine, getestete
-  Funktion; die Naht bei RA 0°/360° liegt auf einem Längenkreis der Kugel und zeigt keine
-  Kante (Test über die Texturkoordinaten beiderseits der Naht, Sichtprüfung §6.2).
+  Funktion. Die Kugel ist ein eigenes Gitter auf RA/Dec-Linien mit doppelter Randspalte;
+  die Naht der Karte bei RA 180° (linker und rechter Bildrand) liegt auf einem Längenkreis
+  und zeigt keine Kante (Test über die Texturkoordinaten beiderseits der Naht, Sichtprüfung §6.2).
 
 ### 4.3 Laden
 
@@ -138,7 +152,7 @@ SVS-Karte an der Quelle bestätigt, nicht angenommen).
 
 ### 6.1 Tests
 
-- Umrechnung RA/Dec ↔ Texturkoordinaten an Referenzpunkten und an der Naht.
+- Umrechnung RA/Dec ↔ Texturkoordinaten an Referenzpunkten und an der Naht (RA 180°).
 - Gemeinsame Drehung mit `starfield.ts` (dieselbe Funktion, gleiche Richtung für denselben
   Himmelspunkt).
 - Stufenwahl je Qualitätsstufe, Reihenfolge hinter den Körpern, kein Laden bei Kästchen aus.
@@ -150,14 +164,16 @@ SVS-Karte an der Quelle bestätigt, nicht angenommen).
 
 Playwright-Aufnahme, Messung mit Python (Pillow/numpy), Uhr angehalten, Stufe „hoch“:
 
-- **Differenzbild Kästchen an/aus** in derselben Ladung: auf Körperscheiben und Sternpunkten
-  0 abweichende Pixel; Kontrollbild ohne Umschalten mit 0 abweichenden Pixeln.
+- **Differenzbild Kästchen an/aus** in derselben Ladung: auf Körperscheiben ohne ihre
+  Randpixel und in den Kernen der Sternpunkte 0 abweichende Pixel; Kontrollbild ohne Umschalten mit 0 abweichenden Pixeln.
 - **Lage:** Kamera auf galaktisches Zentrum, Kreuz des Südens mit Kohlensack und die
   Magellanschen Wolken. Maximum bzw. Dunkelfleck liegt an der Sollstelle, gemessen relativ
   zu HYG-Sternen im selben Bild (etwa α/β Crucis neben dem Kohlensack).
-- **Helligkeit:** die Zielwerte aus §3.2 am Schirm; weichen sie von den Werten der Textur ab
-  (Farbraum der Ausgabe), gilt der Schirm, und die Kurve wird nachgeführt.
-- **Naht:** kein Helligkeitssprung entlang RA 0°.
+- **Helligkeit:** Der Schirm zeigt, was das Skript vorhersagt (Median im Bildausschnitt,
+  Abweichung höchstens 3 von 255); weicht er ab, gilt der Schirm, und die Kurve wird
+  nachgeführt.
+- **Naht:** kein Helligkeitssprung entlang RA 180° (dort, wo der Längenkreis das Band beim
+  Kreuz des Südens schneidet).
 - **Bildrate** per eigenem rAF-Zähler unverändert gegenüber Kästchen aus; Startladung bleibt
   unter 4 MB (Ziel aus 5-3).
 
