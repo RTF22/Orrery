@@ -19,6 +19,7 @@ import { useIdleHide } from './idle';
 import { useWakeLock } from './wakeLock';
 import { useMusikStand } from './musikStand';
 import { InfoKarte } from './infokarte/InfoKarte';
+import { useInfoKarte } from './infokarte/zustand';
 
 /**
  * Belegung für die Übersicht — Wirkung als Sprachschlüssel. Die Taste selbst
@@ -114,6 +115,7 @@ export function App(): React.JSX.Element {
   const grob = useGrob();
   const versteckt = useStore((s) => s.ui.hidden);
   const laeuftKino = useStore((s) => s.cinema.running);
+  const karteOffen = useInfoKarte((s) => s.offen);
   // Solange der Film läuft, darf der Bildschirm nicht abschalten.
   useWakeLock(laeuftKino);
   const zeigeKuerzel = useStore((s) => s.ui.panels[SHORTCUTS_PANEL] === true);
@@ -129,7 +131,10 @@ export function App(): React.JSX.Element {
   return (
     <>
       {sichtbar ? (
-        <div className="ui-ebene pointer-events-none fixed inset-0 flex items-start justify-between gap-2 p-3 text-slate-100">
+        <div
+          className="ui-ebene pointer-events-none fixed inset-0 flex items-start justify-between gap-2 p-3 text-slate-100"
+          inert={karteOffen}
+        >
           <Seitenleiste kopf={<Kopfzeile />}>
             {/* Die Himmelskörper stehen bewusst gleich unter dem Sprachschalter. */}
             <BodyTree />

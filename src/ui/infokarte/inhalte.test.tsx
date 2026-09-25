@@ -14,13 +14,18 @@ function zeiger(grob: boolean, app = false): void {
   })) as unknown as typeof window.matchMedia;
 }
 
+const urspruenglicheMatchMedia = window.matchMedia;
+
 describe('Reiter der Info-Karte', () => {
   beforeEach(() => {
     useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
     useInstallation.setState({ ereignis: null });
     useInfoKarte.setState({ offen: true, reiter: 'app' });
   });
-  afterEach(() => { vi.restoreAllMocks(); });
+  afterEach(() => {
+    vi.restoreAllMocks();
+    window.matchMedia = urspruenglicheMatchMedia;
+  });
 
   it('App: drei Anleitungen, ohne Ereignis kein Installationsknopf', () => {
     zeiger(true);

@@ -15,7 +15,7 @@ const FOKUSSIERBAR = 'button, a[href], [tabindex]';
  * Info-Karte (Entwurf Info-Karte §3): modaler Dialog über abgedunkeltem
  * Hintergrund, drei Reiter, kein Scrollen. Escape wird hier behandelt und
  * als erledigt markiert (preventDefault), damit der globale Kürzel-Hook es
- * nicht zusätzlich als „Kino beenden" liest.
+ * nicht zusätzlich als „Kino beenden“ liest.
  */
 export function InfoKarte(): React.JSX.Element | null {
   const offen = useInfoKarte((s) => s.offen);
@@ -31,7 +31,10 @@ export function InfoKarte(): React.JSX.Element | null {
     if (!offen) return;
     ausloeser.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     karte.current?.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')?.focus();
-    return () => { ausloeser.current?.focus(); };
+    // Der Auslöser kann inzwischen aus dem DOM verschwunden sein (etwa: ⓘ im
+    // laufenden Kino geöffnet, Kino-Ruhe blendet die Oberfläche samt
+    // Kopfzeile aus, Karte schließen) — dann bleibt der Fokus beim Dokument.
+    return () => { if (ausloeser.current?.isConnected === true) ausloeser.current.focus(); };
   }, [offen]);
 
   if (!offen) return null;

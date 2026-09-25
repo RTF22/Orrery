@@ -102,6 +102,16 @@ describe('App', () => {
     expect(screen.getByRole('dialog', { name: 'Orrery' })).toBeTruthy();
   });
 
+  it('legt die UI-Ebene bei offener Info-Karte mit inert still', () => {
+    render(<App />);
+    const ebene = () => document.querySelector('.ui-ebene');
+    expect(ebene()?.hasAttribute('inert')).toBe(false);
+    act(() => { useInfoKarte.getState().oeffnen('app'); });
+    expect(ebene()?.hasAttribute('inert')).toBe(true);
+    act(() => { useInfoKarte.getState().schliessen(); });
+    expect(ebene()?.hasAttribute('inert')).toBe(false);
+  });
+
   it('behält denselben Dialogknoten über einen Sichtbarkeitswechsel und gibt den Fokus beim Schließen zurück', () => {
     // Ein externer Knopf steht hier für das auslösende Element (etwa ⓘ):
     // Der echte ⓘ-Knopf läge in der ausblendbaren Ebene und verschwände beim

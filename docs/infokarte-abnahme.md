@@ -9,7 +9,7 @@ Lizenzinfo. Sie schließt Phase 6 (Tag `v0.7.0`) an und endet mit Tag `v0.7.1`. 
 auf dem Branch `infokarte`, dazu dieses Protokoll:
 
 - **Gerüst** (`285be98`, Korrektur `3734c87`): eigener Store `useInfoKarte` (offen, Reiter),
-  Dialog mit drei leeren Reitern („App", „Bedienung", „Über"), Knopf ⓘ in der Kopfzeile,
+  Dialog mit drei leeren Reitern („App“, „Bedienung“, „Über“), Knopf ⓘ in der Kopfzeile,
   Schließen über ✕/Escape/Hintergrund, Fokus beim Öffnen auf den aktiven Reiter und
   Fokusrückgabe beim Schließen (auch nach einem Wechsel von `ui.hidden`, an derselben,
   stabilen Stelle im Baum), automatisches Öffnen beim ersten Besuch, Kürzelsperre bei
@@ -19,9 +19,9 @@ auf dem Branch `infokarte`, dazu dieses Protokoll:
   Abfangen des Browser-Ereignisses mit `prompt()` und `userChoice`), Anzeige der
   Versionsnummer aus `package.json` (jetzt `0.7.1`).
 - **Messung und dieses Protokoll**: Messungen im Browser gegen die Zielwerte aus Entwurf §3
-  („Kein Scrollen") und Plan, Handprüfliste für Jens. Dabei wurde der Entwurf §4.3
-  nachgeführt: Die Version steht als „Version" mit der Zahl aus `package.json` (Beispiel
-  „Version 0.7.1"), ohne das dort ursprünglich vorgesehene „v"-Präfix — deckungsgleich mit
+  („Kein Scrollen“) und Plan, Handprüfliste für Jens. Dabei wurde der Entwurf §4.3
+  nachgeführt: Die Version steht als „Version“ mit der Zahl aus `package.json` (Beispiel
+  „Version 0.7.1“), ohne das dort ursprünglich vorgesehene „v“-Präfix — deckungsgleich mit
   dem umgesetzten Code (siehe § 6).
 
 ## 2. Zahlen
@@ -45,8 +45,8 @@ neue Seite sofort `bringToFront()`. Je Kontext: Seite laden, `orrery.infokarte.g
 Klick auf `[role="tab"]` **innerhalb** des Dialogs (`[role="dialog"] [role="tab"]`) — ein
 zunächst ungebunden auf das ganze Dokument angewandter Selektor hätte auf dem Desktop
 zusätzlich die gleichnamigen Reiter des Infopanels (Grundschule/Gymnasium/Hochschule)
-getroffen; das wurde während der Messung bemerkt und vor der Auswertung richtiggestellt (siehe
-§ 6). Nach jedem Sprach- oder Reiterwechsel 200 ms gewartet, dann:
+getroffen; das wurde während der Messung bemerkt und vor der Auswertung richtiggestellt. Nach
+jedem Sprach- oder Reiterwechsel 200 ms gewartet, dann:
 
 ```js
 const inhalt = document.querySelector('[data-testid="infokarte-inhalt"]');
@@ -57,9 +57,9 @@ const karte = document.querySelector('[role="dialog"]').getBoundingClientRect();
 
 ### 3.1 Kein Scrollen: 4 Viewports × 2 Sprachen × 3 Reiter
 
-Startreiter je Fall (vor jedem Wechsel notiert): A55 hoch und A55 quer (Touch) „App", Desktop
-klein und Desktop groß (Maus) „Bedienung" — deckungsgleich mit der Vorhersage (grober Zeiger →
-„App", sonst „Bedienung").
+Startreiter je Fall (vor jedem Wechsel notiert): A55 hoch und A55 quer (Touch) „App“, Desktop
+klein und Desktop groß (Maus) „Bedienung“ — deckungsgleich mit der Vorhersage (grober Zeiger →
+„App“, sonst „Bedienung“).
 
 | Fall | Sprache | Reiter | scroll | sichtbar | imBild | Ergebnis |
 |---|---|---|---:|---:|---|---|
@@ -90,7 +90,7 @@ klein und Desktop groß (Maus) „Bedienung" — deckungsgleich mit der Vorhersa
 
 Alle 24 Fälle: `scroll ≤ sichtbar` (hier durchweg mit Gleichheit) und `imBild === true`.
 
-Zusätzlich der Reiter „App" mit sichtbarem Installationsknopf (Attrappe für
+Zusätzlich der Reiter „App“ mit sichtbarem Installationsknopf (Attrappe für
 `useInstallation.ereignis` über `import('/Orrery/src/ui/infokarte/installation.ts')` gesetzt),
 Deutsch:
 
@@ -109,13 +109,13 @@ Deutsch:
 | Laufendes Kino (`cinema.running:true`, `camera.mode:'cinema'`), Karte über ⓘ geöffnet, dann Escape: Karte schließt | kein Dialog nach Escape | erfüllt |
 | … Kino läuft danach weiter | `cinema.running === true` | erfüllt |
 | Link mit Fragment `#p=…` (per `encodeState` erzeugt) bei leerer Ablage: Karte bleibt zu | kein Dialog nach dem Laden | erfüllt |
-| Klick auf „Quellcode auf GitHub" im Reiter „Über" öffnet eine neue Seite im Kontext | Seitenzahl 1 → 2, Ziel `https://github.com/RTF22/Orrery` | erfüllt |
+| Klick auf „Quellcode auf GitHub“ im Reiter „Über“ öffnet eine neue Seite im Kontext | Seitenzahl 1 → 2, Ziel `https://github.com/RTF22/Orrery` | erfüllt |
 | … die Orrery-Seite bleibt unverändert | URL weiterhin `http://localhost:5173/Orrery/` | erfüllt |
 | Konsole über den ganzen Ablauf (Verhalten und alle vier Geräte-Fälle aus § 3.1) | 0 Fehler, 0 Warnungen | erfüllt |
 
 ## 4. Lizenz
 
-Entfällt: keine neuen Fremddateien. Die Lizenzangaben im Reiter „Über" (Texturen, Sternkatalog,
+Entfällt: keine neuen Fremddateien. Die Lizenzangaben im Reiter „Über“ (Texturen, Sternkatalog,
 Himmelskarte, Verweis auf `ASSETS.md`) sind Text aus den Inhalten (`74fc760`), nicht Gegenstand
 dieses Schritts.
 
@@ -124,9 +124,9 @@ dieses Schritts.
 | Prüfpunkt | Ergebnis |
 |---|---|
 | A55: Karte beim ersten Aufruf (privates Fenster oder Websitedaten gelöscht) | |
-| A55: Installation über Knopf bzw. Menü, Start vom Symbol zeigt „läuft als App" | |
+| A55: Installation über Knopf bzw. Menü, Start vom Symbol zeigt „läuft als App“ | |
 | A55: Links öffnen neuen Tab, Karte ohne Scrollen hoch und quer | |
-| Desktop: ⓘ, Reiter, Escape, „Alle Tastenkürzel und Controller" | |
+| Desktop: ⓘ, Reiter, Escape, „Alle Tastenkürzel und Controller“ | |
 
 ## 6. Rulings
 
@@ -138,27 +138,43 @@ dieses Schritts.
   Stelle), dazu ein Test für den Live-Übergang (Karte offen, dann `ui.hidden` gesetzt: Dialog
   bleibt dasselbe Element, Fokus kehrt zurück).
 - **Ruling (Gerüst):** Die Erweiterung der Ausnahmeliste für gleichlautende Übersetzungen um
-  `infokarte.titel` und `infokarte.reiter.app` wurde nachträglich gebilligt — „Orrery" und
-  „App" sind in beiden Sprachen gleich geschrieben.
-- **Ruling (Inhalte):** Die Anzeige „Version 0.7.1" bleibt ohne „v"-Präfix — „Version v0.7.1"
+  `infokarte.titel` und `infokarte.reiter.app` wurde nachträglich gebilligt — „Orrery“ und
+  „App“ sind in beiden Sprachen gleich geschrieben.
+- **Ruling (Inhalte):** Die Anzeige „Version 0.7.1“ bleibt ohne „v“-Präfix — „Version v0.7.1“
   wäre doppelt gemoppelt. Der Entwurf wird in diesem Protokoll-Schritt auf die umgesetzte
   Fassung angeglichen (§ 4.3, siehe § 1).
 - **Ruling (Inhalte):** Die Erweiterung der Ausnahmeliste für gleichlautende Übersetzungen um
-  `infokarte.ueber.version` wurde gebilligt — „Version" ist in beiden Sprachen gleich
+  `infokarte.ueber.version` wurde gebilligt — „Version“ ist in beiden Sprachen gleich
   geschrieben.
+- **Ruling (Schlussprüfung):** Beide Important-Befunde der Schlussprüfung — der Hintergrund
+  hinter der offenen Karte blieb für Screenreader im Lesemodus erreichbar statt stillgelegt;
+  die Fokusrückgabe griff auch auf einen inzwischen entfernten Auslöser zu (erreichbar nur über
+  die Kino-Ruhe, da H bei offener Karte gesperrt ist) — wurden in einer Korrekturwelle
+  zusammen mit den günstigen Kleinbefunden behoben: Anführungszeichen im Protokoll und in
+  `InfoKarte.tsx` vereinheitlicht, `ExternerLink` unterstreicht jetzt dauerhaft, die
+  `matchMedia`-Attrappe der Inhalte-Tests wird wiederhergestellt, der ins Leere laufende
+  Verweis „siehe § 6“ beim Selektorfehler entfernt. Das fehlende `aria-orientation` der
+  Reiterleiste im Querformat und der z-Index des Fadenkreuzes über der Karte bleiben
+  zurückgestellt (nur die Sprachausgabe betroffen bzw. kaum erreichbar, ohne Wirkung auf die
+  Bedienung).
 
 ## 7. Offene Punkte
 
 - `geraet.ts` hat keinen eigenen Test; die Fallunterscheidungen (App-Modus, grober Zeiger)
   werden bislang nur mittelbar über die Reiter-Tests der Inhalte mitgeprüft.
-- Das Zeichen „✕" für den Schließen-Knopf steht als Symbolliteral im Code und ist nicht in der
+- Das Zeichen „✕“ für den Schließen-Knopf steht als Symbolliteral im Code und ist nicht in der
   dafür vorgesehenen Ausnahmeliste genannt; sein zugänglicher Name kommt aus der
   Übersetzungsdatei.
-- `ExternerLink` unterstreicht den Linktext nur beim Überfahren mit der Maus; der übrige
-  Bestand (Datenblock, Literaturkarten) unterstreicht Linktext dauerhaft — uneinheitliches
-  Bild.
-- Die `matchMedia`-Attrappe in den Inhalte-Tests wird nach dem jeweiligen Test nicht
-  zurückgesetzt (das dafür vorgesehene Wiederherstellen greift dort nicht).
+- Die Reiterleiste trägt im Querformat mit geringer Höhe (dort stehen die Reiter seitlich statt
+  oben) kein `aria-orientation="vertical"`; nur die Sprachausgabe betroffen.
+- Das Fadenkreuz kann bei gleichem z-Index über der Karte liegen; kaum erreichbar und ohne
+  Wirkung auf die Bedienung.
+- Blendet die Kino-Ruhe die Oberfläche samt Kopfzeile aus, während die Karte über ⓘ offen ist,
+  kehrt der Fokus beim Schließen nicht mehr zum ⓘ-Knopf zurück — der Knopf ist dann nicht mehr
+  im DOM; der Fokus bleibt stattdessen beim Dokument.
+- Behoben in dieser Korrekturwelle: `ExternerLink` unterstrich den Linktext nur beim
+  Überfahren mit der Maus statt dauerhaft wie der übrige Bestand; die `matchMedia`-Attrappe in
+  den Inhalte-Tests wurde nach dem jeweiligen Test nicht zurückgesetzt.
 
 ## 8. Fragen an Jens
 

@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { describe, expect, it, beforeEach } from 'vitest';
+import { describe, expect, it, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { InfoKarte } from './InfoKarte';
 import { useInfoKarte } from './zustand';
@@ -69,6 +69,24 @@ describe('InfoKarte', () => {
     rerender(<InfoKarte />);
     expect(document.activeElement).toBe(knopf);
     knopf.remove();
+  });
+
+  it('wirft beim Schließen nicht und fokussiert nicht mehr, wenn der Auslöser nicht mehr im DOM hängt', () => {
+    const knopf = document.createElement('button');
+    document.body.appendChild(knopf);
+    knopf.focus();
+    const fokusSpion = vi.spyOn(knopf, 'focus');
+    useInfoKarte.getState().oeffnen('app');
+    const { rerender } = render(<InfoKarte />);
+    knopf.remove();
+    fokusSpion.mockClear();
+    expect(() => {
+      fireEvent.click(screen.getByRole('button', { name: 'Schließen' }));
+      rerender(<InfoKarte />);
+    }).not.toThrow();
+    expect(fokusSpion).not.toHaveBeenCalled();
+    expect(document.activeElement).not.toBe(knopf);
+    fokusSpion.mockRestore();
   });
 
   it('hält Tab in der Karte', () => {

@@ -14,7 +14,7 @@ const ASSETS = 'https://github.com/RTF22/Orrery/blob/master/ASSETS.md';
 /** Externer Link: immer neuer Tab, sichtbares ↗, Hinweis für Screenreader. */
 export function ExternerLink({ href, children }: { href: string; children: React.ReactNode }): React.JSX.Element {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className="text-sky-300 underline-offset-2 hover:underline">
+    <a href={href} target="_blank" rel="noopener noreferrer" className="text-sky-300 underline underline-offset-2 hover:text-sky-200">
       {children}
       <span aria-hidden="true"> ↗</span>
       <span className="sr-only"> {t('infokarte.neuerTab')}</span>
@@ -102,7 +102,7 @@ export function ReiterBedienung(): React.JSX.Element {
           </div>
         ))}
       </dl>
-      <button type="button" onClick={alleKuerzel} className="self-start text-sky-300 underline-offset-2 hover:underline">
+      <button type="button" onClick={alleKuerzel} className="self-start text-sky-300 underline underline-offset-2 hover:text-sky-200">
         {t('infokarte.bedienung.alleKuerzel')}
       </button>
     </div>
