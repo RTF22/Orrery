@@ -15,7 +15,9 @@ Material verzeichneten Fälle samt der Prüfung, die sie fing, und **Tokens** de
 Sprachmodell-Verbrauch der Etappe. Die Kürzel in Klammern und unter **Commits** sind
 Commits im Repository `RTF22/Orrery` und lassen sich mit `git show <Kürzel>`
 nachschlagen. Wo ein Screenshot zur Etappe passt, steht er direkt darunter, mit
-Alt-Text.
+Alt-Text. Eingeschobene Etappen (Klickflächen, Zeitbereich, Flug) stehen nach der
+Phase, in der sie begannen, und überschneiden sich zeitlich mit Phase 4c
+beziehungsweise Phase 4d.
 
 ## Inhalt
 
@@ -26,8 +28,8 @@ Alt-Text.
 5. [Phase 3b: Gürtel und Schatten](#phase-3b)
 6. [Phase 4a: Englisch und Sprachumschaltung](#phase-4a)
 7. [Phase 4b: Persistenz und Ansichten](#phase-4b)
-8. [Klickflächen](#klickflaechen)
-9. [Phase 4c: Infopanel](#phase-4c)
+8. [Phase 4c: Infopanel](#phase-4c)
+9. [Klickflächen](#klickflaechen)
 10. [Zeitbereich](#zeitbereich)
 11. [Flug: Tastatur, Maus und Controller](#flug)
 12. [Phase 4d: Hochschultexte](#phase-4d)
@@ -60,8 +62,9 @@ bleibt privat bis zur Fertigstellung, GitHub Pages ist erst zum Abschluss vorges
 und Ursprungsprompt (`docs/ursprungsprompt.md`) festgehalten, dazu die Entscheidung, das
 Repository bis zur Fertigstellung privat zu halten und ohne Deployment. Zwischen dem
 ersten und dem letzten dieser beiden Commits vergingen laut Zeitstempel keine drei
-Minuten (19:58:18 bis 20:01:07 Uhr) — die 63 dieser Etappe zugeordneten Antworten
-liefen also weit überwiegend parallel in Subagenten. Noch kein Code, noch keine Tests.
+Minuten (19:58:18 bis 20:01:07 Uhr); die 63 dieser Etappe zugeordneten Antworten liegen
+laut Tokenbilanz vollständig in der Hauptsitzung, keine davon in einem Subagentenlauf.
+Noch kein Code, noch keine Tests.
 
 **Fehler und Korrekturen:** Für diese Etappe verzeichnet der Fehlerkatalog keinen Fall —
 es gab noch keinen Code, der hätte scheitern können. Der erste im Katalog verzeichnete
@@ -70,11 +73,13 @@ Fall stammt erst aus Phase 4c.
 **Tokens:** 230 581 Ausgabe-Tokens, 8 843 552 Cache-Lesen-Tokens in 63 Antworten
 (Kennung `idee`). Davon lagen 28 Antworten zeitlich vor dem offiziellen Beginn dieser
 Phase und wurden ihr trotzdem zugeordnet, weil die Zeitleiste keine frühere Phase kennt.
-Schon am 11.09.2026 liefen dazu 1 Hauptsitzung und 19 Subagentenläufe. Projektweit
-entfielen rund 82,7 % aller Tokens auf Subagentenläufe, und rund 65 % aller Antworten
-kamen vom insgesamt vorherrschenden Modell Claude Sonnet 5. Die in den folgenden
-Abschnitten genannte Dauer je Etappe ist dabei die reine Kalenderzeit zwischen erstem
-und letztem zugeordnetem Commit, keine gemessene Auslastung.
+Schon am 11.09.2026 liefen dazu 1 Hauptsitzung und 19 Subagentenläufe. In dieser Phase
+selbst entfielen 0,0 % der Ausgabetokens auf Subagenten (63 Hauptsitzungs-, 0
+Subagentenantworten); vorherrschendes Modell war hier Claude Opus 5 (100,0 % der
+Ausgabetokens).
+Die in den folgenden Abschnitten genannte Dauer je Etappe ist dabei die reine
+Kalenderzeit zwischen erstem und letztem zugeordnetem Commit, keine gemessene
+Auslastung.
 
 **Commits:** `32072ef`, `b9e4283`.
 
@@ -98,7 +103,9 @@ Abschlusses liefen bereits 4 Hauptsitzungen und 62 Subagentenläufe.
 **Fehler und Korrekturen:** Für diese Etappe verzeichnet der Fehlerkatalog keinen Fall.
 
 **Tokens:** 1 187 833 Ausgabe-Tokens, 175 356 549 Cache-Lesen-Tokens in 1 126 Antworten
-(Kennung `phase-1`); Subagenten- und Modellanteil wie insgesamt (siehe oben).
+(Kennung `phase-1`; 354 Haupt-, 772 Subagentenantworten); 64,3 % der Ausgabetokens
+dieser Phase entfielen auf Subagenten, vorherrschendes Modell war Claude Sonnet 5
+(63,4 % der Ausgabetokens), vor Claude Opus 5 (35,7 %).
 
 **Commits:** `89b0284`, `bf025fd`.
 
@@ -123,7 +130,9 @@ Zeitstempeln).
 **Fehler und Korrekturen:** Für diese Etappe verzeichnet der Fehlerkatalog keinen Fall.
 
 **Tokens:** 147 022 Ausgabe-Tokens, 51 721 718 Cache-Lesen-Tokens in 171 Antworten
-(Kennung `phase-2`); Subagenten- und Modellanteil wie insgesamt.
+(Kennung `phase-2`; alle 171 in der Hauptsitzung, keine Subagentenantwort); 0,0 % der
+Ausgabetokens dieser Phase entfielen auf Subagenten, vorherrschendes Modell war Claude
+Opus 5 (100,0 % der Ausgabetokens).
 
 **Commits:** `a1d4c5a`, `ff68df5`, `125696f`.
 
@@ -143,18 +152,19 @@ Albedo (Commits `bc0de15`…`a369f57`); seine inhaltlichen Entscheidungen führt
 Faktenblatt zusammen mit denen von Phase 3b, sie stehen deshalb im folgenden Abschnitt.
 
 **Ergebnis:** 689 Tests in 44 Testdateien (im nächsten Lauf bereits 721), Hauptchunk
-1 096,84 kB (gzip 290,66 kB). Im Lauf dieser Etappe wurde das Projekt zudem in
-„Orrery" umbenannt. Die Etappe dauerte laut Zeitstempeln rund 22,1 Stunden und reichte
-vom 12.09.2026 (67 Commits, der commitreichste Tag der ersten drei Tage) bis in den
-13.09.2026 hinein.
+1 096,84 kB (gzip 290,66 kB). Die Etappe dauerte laut Zeitstempeln rund 22,1 Stunden
+und reichte vom 12.09.2026 (67 Commits, der commitreichste Tag der ersten drei Tage)
+bis in den 13.09.2026 hinein.
 
 **Fehler und Korrekturen:** Auch für diese Etappe verzeichnet der Fehlerkatalog keinen
 Fall.
 
 **Tokens:** 4 344 979 Ausgabe-Tokens, 724 412 063 Cache-Lesen-Tokens in 3 851 Antworten
-(Kennung `phase-3a`); Subagenten- und Modellanteil wie insgesamt.
+(Kennung `phase-3a`; 634 Haupt-, 3 217 Subagentenantworten); 79,4 % der Ausgabetokens
+dieser Phase entfielen auf Subagenten, vorherrschendes Modell war Claude Sonnet 5
+(73,9 % der Ausgabetokens), vor Claude Opus 5 (15,4 %).
 
-**Commits:** `0a69089`, `bc0de15`, `a369f57`, `750bef7`, `6d3409b`.
+**Commits:** `0a69089`, `750bef7`, `bc0de15`, `a369f57`.
 
 <a id="phase-3b"></a>
 ## Phase 3b: Gürtel und Schatten (13.09.2026, v0.3.0)
@@ -169,10 +179,11 @@ Halbschattens aus Kreisüberlappung. Die Belichtung richtet sich nach dem Kamera
 statt nach einer festen Kamera, Albedo ist ein Katalogdatum je Körper, Sonne und
 Sterne bleiben von der Belichtung unberührt.
 
-**Ergebnis:** Tag `v0.3.0` (Tag-Commit `515f4fe`). Eine eigene Testzahl oder ein
-eigener Hauptchunk-Wert für diese Etappe ist im Faktenblatt nicht gesondert
-ausgewiesen (die nächste dort verzeichnete Zahl gehört bereits zu Phase 4a). Die
-Etappe dauerte laut Zeitstempeln rund 8,7 Stunden, ganz am 13.09.2026 — dem Tag mit
+**Ergebnis:** Tag `v0.3.0` (Tag-Commit `515f4fe`, 17:46 Uhr). Rund 46 Minuten danach,
+um 18:32 Uhr, wurde das Projekt in „Orrery" umbenannt (`6d3409b`). Eine eigene Testzahl
+oder ein eigener Hauptchunk-Wert für diese Etappe ist im Faktenblatt nicht gesondert
+ausgewiesen (die nächste dort verzeichnete Zahl gehört bereits zu Phase 4a). Die Etappe
+dauerte laut Zeitstempeln rund 8,7 Stunden, ganz am 13.09.2026 — dem Tag mit
 7 Hauptsitzungen und 68 Subagentenläufen, an dem auch Phase 3a endete und Phase 4a
 begann. Bis zum Ende dieses dritten Tages waren nach der Zeitleiste bereits 147 der
 insgesamt 673 Commits bis zum Projektabschluss entstanden (18 am 11.09., 67 am 12.09.,
@@ -182,6 +193,8 @@ insgesamt 673 Commits bis zum Projektabschluss entstanden (18 am 11.09., 67 am 1
 keinen Fall.
 
 **Tokens:** 1 435 858 Ausgabe-Tokens, 204 267 920 Cache-Lesen-Tokens in 1 539 Antworten
-(Kennung `phase-3b`); Subagenten- und Modellanteil wie insgesamt.
+(Kennung `phase-3b`; 324 Haupt-, 1 215 Subagentenantworten); 74,8 % der Ausgabetokens
+dieser Phase entfielen auf Subagenten, vorherrschendes Modell war Claude Opus 5
+(36,9 % der Ausgabetokens), vor Claude Sonnet 5 (36,4 %).
 
-**Commits:** `d94c497`, `515f4fe`, `69e9998`.
+**Commits:** `d94c497`, `515f4fe`, `6d3409b`, `69e9998`.
