@@ -86,8 +86,10 @@ Betreibers (Abschnitt „Eigene Musik“); installierbare Web-App mit Vollbildst
 
 Phase 6 ist abgeschlossen (Tag `v0.7.0`): Das Band der Milchstraße liegt lagetreu als
 Himmelshintergrund hinter den Sternen (NASA SVS „Deep Star Maps 2020“, Gaia DR2), in
-Stufen bis 8k nachgeladen und im Darstellungspanel abschaltbar. Offen ist die
-Veröffentlichung.
+Stufen bis 8k nachgeladen und im Darstellungspanel abschaltbar.
+
+Seit `v0.7.1` erklärt eine Info-Karte (ⓘ in der Kopfzeile) die Einrichtung als App, die
+Bedienung und die Lizenzlage; eine zweite Karte „Steuerung“ zeigt Tastatur und Controller.
 
 ## Entwicklung
 

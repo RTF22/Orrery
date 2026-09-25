@@ -36,7 +36,9 @@ Deploy danach mit eigener Freigabe.
 ## 3. Aufbau und Verhalten
 
 - **Öffnen:** Knopf ⓘ in der Kopfzeile (zugänglicher Name „Info und Hilfe“ / „Info and
-  help“), im Kompaktmodus im Bogen „Bedienung“. Keine neue Taste.
+  help“), im Kompaktmodus im Bogen „Bedienung“. Keine neue Taste. Nachtrag (Jens,
+  25.09.2026): ⓘ steht links in der Zeile des Sprachschalters, im Stil der Sprachknöpfe, als
+  „i“ im Kreis (16 px); das Zeichen ⓘ selbst war am PC zu klein.
 - **Automatisch:** beim Start genau dann, wenn (a) die Ablage kein Merkmal
   `orrery.infokarte.gesehen.v1` trägt, (b) die Adresse kein Fragment `#p=` trug und (c) das
   Kino nach dem Startzustand nicht läuft. Das Merkmal wird beim Schließen gesetzt (nicht beim

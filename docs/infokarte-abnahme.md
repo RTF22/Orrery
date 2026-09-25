@@ -51,13 +51,21 @@ und ein Hilfe-Knopf am Handy. Sie schließt Phase 6 (Tag `v0.7.0`) an und endet 
   Dazu acht mit geradem Anführungszeichen geschlossene Zitate auf „…“ vereinheitlicht
   (`ui/karte/Kartendialog.tsx`, `ui/steuerkarte/SteuerKarte.tsx`, `ui/steuerkarte/zustand.ts`,
   `ui/HilfeKnopf.tsx`, `ui/App.test.tsx`).
+- **ⓘ in der Sprachzeile** (`f8adc75`, Befund aus Jens' Handprüfung am Desktop: „das
+  i-Symbol für Info und Hilfe ist am PC viel zu klein“): Die Kopfzeile hat zwei feste Zeilen,
+  oben „Link kopieren“, „Zurücksetzen“ und die Statusmeldung, unten links ⓘ und rechts der
+  Sprachschalter. Der Knopf teilt die Grundform der Sprachknöpfe (Rahmen, Abstände, fett,
+  Deckkraft wie ein nicht gewählter Sprachknopf) und zeigt ein „i“ im Kreis mit 16 px
+  Durchmesser statt des Zeichens ⓘ. Gemessen bei 1600 × 900: Knopf 34 × 22 CSS-px, gleiche
+  Höhe und Oberkante (y = 43) wie DE und EN, Kopfzeile unverändert 58 px hoch. Ein neuer Test
+  prüft Lage und Klassen. Entwurf § 3 nachgeführt.
 
 ## 2. Zahlen
 
-| Größe | Vorher (master `78ee0b8`) | Nach Messung (`984699b`) | Nach Steuerung/Hilfe-Knopf (`1590a3f`) | Nach Kartensperre |
-|---|---:|---:|---:|---:|
-| Tests | 5328 | 5354 | 5364 | 5370 |
-| Hauptchunk | 1 531,36 kB | 1 543,51 kB | 1 548,56 kB | 1 548,89 kB |
+| Größe | Vorher (master `78ee0b8`) | Nach Messung (`984699b`) | Nach Steuerung/Hilfe-Knopf (`1590a3f`) | Nach Kartensperre | Nach ⓘ-Umzug (`f8adc75`) |
+|---|---:|---:|---:|---:|---:|
+| Tests | 5328 | 5354 | 5364 | 5370 | 5371 |
+| Hauptchunk | 1 531,36 kB | 1 543,51 kB | 1 548,56 kB | 1 548,89 kB | 1 549,24 kB |
 
 Die Spalte „Nach Steuerung/Hilfe-Knopf“ stammt aus einem frischen Durchlauf von `npm test` und
 `npm run build` beim Schreiben dieses Protokolls; dieser Schritt selbst änderte keinen
@@ -217,13 +225,13 @@ dieses Schritts.
 
 | Prüfpunkt | Ergebnis |
 |---|---|
-| A55: Karte beim ersten Aufruf (privates Fenster oder Websitedaten gelöscht) | |
-| A55: Installation über Knopf bzw. Menü, Start vom Symbol zeigt „läuft als App“ | |
-| A55: Links öffnen neuen Tab, Karte ohne Scrollen hoch und quer | |
-| Desktop: ⓘ, Reiter, Escape | |
-| Desktop: Taste `?` und Knopf in der Info-Karte öffnen „Steuerung“; Reiter Tastatur/Controller | |
-| Desktop: Controllergrafik verständlich, Beschriftungen passen zu den Knöpfen | |
-| A55: „?“-Knopf oben rechts, öffnet die Info-Karte, stört nicht | |
+| A55: Karte beim ersten Aufruf (privates Fenster oder Websitedaten gelöscht) | ohne Befund (Jens, 25.09.2026: „sieht gut aus auf dem A55“) |
+| A55: Installation über Knopf bzw. Menü, Start vom Symbol zeigt „läuft als App“ | ohne Befund (Jens, 25.09.2026: „sieht gut aus auf dem A55“) |
+| A55: Links öffnen neuen Tab, Karte ohne Scrollen hoch und quer | ohne Befund (Jens, 25.09.2026: „sieht gut aus auf dem A55“) |
+| Desktop: ⓘ, Reiter, Escape | ohne Befund (Jens, 25.09.2026); ⓘ war zu klein, seither in der Sprachzeile (§ 1) |
+| Desktop: Taste `?` und Knopf in der Info-Karte öffnen „Steuerung“; Reiter Tastatur/Controller | ohne Befund (Jens, 25.09.2026) |
+| Desktop: Controllergrafik verständlich, Beschriftungen passen zu den Knöpfen | ohne Befund (Jens, 25.09.2026) |
+| A55: „?“-Knopf oben rechts, öffnet die Info-Karte, stört nicht | ohne Befund (Jens, 25.09.2026: „sieht gut aus auf dem A55“) |
 
 ## 6. Rulings
 
@@ -309,6 +317,10 @@ dieses Schritts.
   weicht optisch vom übrigen Bestand ab.
 - Ein Touch-Gerät mit gekoppeltem Controller, aber ohne Tastatur, erreicht die Steuerungskarte
   nicht (kein `?`, und der Reiter „Bedienung“ zeigt dort nur Gesten).
+- Bei offener Karte bleiben die Merker `lbVorher` und `padGesperrt` in `steuerungTakt`
+  eingefroren: Wird LB bei offener Karte losgelassen und der Stick dabei ausgelenkt gehalten,
+  bleiben Stick und Trigger nach dem Schließen wirkungslos, bis der Stick einmal in der Mitte
+  war. Keine Fehlbewegung, seltener Randfall.
 
 ## 8. Fragen an Jens
 
@@ -316,3 +328,11 @@ dieses Schritts.
 2. **Freigabe von Tag und Push:** Darf `v0.7.1` gesetzt und zusammen mit `master` gepusht
    werden?
 3. **Deploy:** Soll der Stand danach auf den Webspace (eigene Freigabe)?
+
+## Entscheidungen (25.09.2026)
+
+1. **Handprüfung:** Desktop ohne Befund; das zu kleine ⓘ steht seither links in der Sprachzeile
+   (§ 1). A55 ohne Befund, geprüft am Stand `f8adc75` auf dem Webspace.
+2. **Tag und Push:** freigegeben, `v0.7.1` auf `master`.
+3. **Deploy:** freigegeben; der Webspace trägt den Stand `f8adc75`, der Abschluss ändert nur
+   Dokumente.
