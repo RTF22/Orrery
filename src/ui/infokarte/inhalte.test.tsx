@@ -3,6 +3,7 @@ import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ReiterApp, ReiterBedienung, ReiterUeber } from './inhalte';
 import { useInstallation } from './installation';
+import { VERSION } from './version';
 import { useInfoKarte } from './zustand';
 import { useSteuerKarte } from '../steuerkarte/zustand';
 import { padAttrappe } from '../steuerung/padAttrappe';
@@ -109,6 +110,6 @@ describe('Reiter der Info-Karte', () => {
     }
     expect(screen.getByText(/alle Rechte vorbehalten/)).toBeTruthy();
     expect(screen.getByText(/CC BY-NC 3.0 IGO/)).toBeTruthy();
-    expect(screen.getByText(/Version/).textContent).toMatch(/0\.7\.1/);
+    expect(screen.getByText(/Version/).textContent).toContain(VERSION);
   });
 });
