@@ -165,13 +165,16 @@ ist ein nichtkommerzielles Projekt.
 
 ## 5. Handprüfung (Jens)
 
+**Ergebnis (Jens, 25.09.2026):** „Handprüfung bestanden“. Die Aussage gilt für alle Prüfpunkte;
+Befunde für §7 ergaben sich nicht.
+
 | Prüfpunkt | Ergebnis |
 |---|---|
-| Desktop, Stufe „hoch“: Band wirkt wie unter dunklem Himmel, drängt sich nicht vor die Planeten | |
-| Desktop: Kästchen „Milchstraße“ an/aus, Link mit ausgeschaltetem Kästchen | |
-| Desktop: Kinoszenen mit Blick ins Band (etwa „Das System von oben“, „Tritons rückläufige Bahn“) | |
-| A55, Stufe „mittel“: Band erkennbar, Ladezeit gefühlt | |
-| A55: Kästchen an/aus | |
+| Desktop, Stufe „hoch“: Band wirkt wie unter dunklem Himmel, drängt sich nicht vor die Planeten |bestanden |
+| Desktop: Kästchen „Milchstraße“ an/aus, Link mit ausgeschaltetem Kästchen |bestanden |
+| Desktop: Kinoszenen mit Blick ins Band (etwa „Das System von oben“, „Tritons rückläufige Bahn“) |bestanden |
+| A55, Stufe „mittel“: Band erkennbar, Ladezeit gefühlt |bestanden |
+| A55: Kästchen an/aus |bestanden |
 
 ## 6. Rulings der Phase
 
@@ -238,3 +241,11 @@ ist ein nichtkommerzielles Projekt.
 2. **Ergebnis der Handprüfung** (§5).
 3. **Freigabe von Tag und Push:** Darf `v0.7.0` gesetzt und zusammen mit `master` gepusht werden?
 4. **Deploy:** Soll der Stand danach auf den Webspace (eigene Freigabe)?
+
+## Entscheidungen (25.09.2026)
+
+1. **Kohlensack-Kontrast:** Die Helligkeitskurve bleibt; der Kohlensack bleibt wie gemessen
+   (Verhältnis 0,707), die Handprüfung ergab keinen Befund.
+2. **Handprüfung:** bestanden (§5).
+3. **Tag und Push:** `v0.7.0` wird gesetzt und zusammen mit `master` gepusht.
+4. **Deploy:** Der Stand wird auf den Webspace hochgeladen.

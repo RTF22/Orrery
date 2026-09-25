@@ -83,7 +83,11 @@ Breitengriff, farbige Abschnittsüberschriften und Szenenliste im Kino-Abschnitt
 Kompaktmodus für Telefone mit Bögen und großen Bedienzielen; Texturen als KTX2 in
 Stufen bis 8k, die nach Bedarf nachgeladen werden; Musik aus Dateien des
 Betreibers (Abschnitt „Eigene Musik“); installierbare Web-App mit Vollbildstart.
-Offen ist die Veröffentlichung.
+
+Phase 6 ist abgeschlossen (Tag `v0.7.0`): Das Band der Milchstraße liegt lagetreu als
+Himmelshintergrund hinter den Sternen (NASA SVS „Deep Star Maps 2020“, Gaia DR2), in
+Stufen bis 8k nachgeladen und im Darstellungspanel abschaltbar. Offen ist die
+Veröffentlichung.
 
 ## Entwicklung
 
