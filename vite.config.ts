@@ -3,10 +3,11 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import paket from './package.json';
 
-export default defineConfig({
-  // Pages liegt später in einem Unterpfad — gleich zu Beginn setzen,
-  // damit die spätere Veröffentlichung keine Pfadüberraschungen bringt.
-  base: '/Orrery/',
+export default defineConfig(({ command }) => ({
+  // Der Build nutzt relative Pfade: Dieselben Dateien laufen unter
+  // www.jensfricke.com/Orrery/ und in der Wurzel von orrery3d.de. Der
+  // Entwicklungsserver bleibt unter /Orrery/ (Sichtprüfungen verweisen darauf).
+  base: command === 'build' ? './' : '/Orrery/',
   // Versionsnummer für die Info-Karte (ui/infokarte/version.ts).
   define: { __ORRERY_VERSION__: JSON.stringify(paket.version) },
   plugins: [react(), tailwindcss()],
@@ -20,4 +21,4 @@ export default defineConfig({
     // der Medienabfragen und braucht dafür den echten Inhalt.
     css: { include: [/index\.css/] },
   },
-});
+}));
