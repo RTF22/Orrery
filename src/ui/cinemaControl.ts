@@ -12,14 +12,22 @@ let pausiertSeitMs: number | null = null;
 
 /**
  * Kamera, Zeitrate und Pause von vor dem Start. Das Beenden fällt darauf
- * zurück, auf jedem Weg (Escape, Taste C, Panel, Vollbild verlassen). Das
- * Datum bleibt bewusst stehen: Die Zeit ist im Kino die des Kinos, ein
- * gefundener Finsternis-Zeitpunkt geht nicht verloren (Entscheidung Jens,
- * 14.09.2026). Wird die Seite mit laufendem Kino geladen, gibt es nichts
- * Gemerktes; dann bleibt der freie Modus mit dem Kinoziel.
+ * zurück, auf jedem Weg (Escape, Taste C, Panel, Vollbild verlassen, Ansicht
+ * laden). Das Datum bleibt bewusst stehen: Die Zeit ist im Kino die des
+ * Kinos, ein gefundener Finsternis-Zeitpunkt geht nicht verloren
+ * (Entscheidung Jens, 14.09.2026). Wird die Seite mit laufendem Kino
+ * geladen, gibt es nichts Gemerktes; dann bleibt der freie Modus mit dem
+ * Kinoziel.
  */
 interface VorKino { camera: AppState['camera']; rateDaysPerSec: number; paused: boolean }
 let vorKino: VorKino | null = null;
+
+/**
+ * Ob das Kino selbst das Vollbild eingeschaltet hat: Nur dann verlässt
+ * stopCinema es beim Beenden wieder; ein vorher mit F von Hand gewähltes
+ * Vollbild bleibt stehen (Entscheidung Jens 2, 25.09.2026).
+ */
+let vollbildVomKino = false;
 
 export function startCinema(): void {
   pausiertSeitMs = null;
@@ -32,9 +40,14 @@ export function startCinema(): void {
   setCinema({ running: true, elapsedSec: 0 });
   setCamera({ mode: 'cinema' });
   // Vollbild braucht eine Nutzergeste; der Aufruf steht deshalb hier im
-  // Tasten- beziehungsweise Klickpfad und nicht in einem Effekt.
+  // Tasten- beziehungsweise Klickpfad und nicht in einem Effekt. Der Merker
+  // wird erst gesetzt, wenn das Versprechen erfüllt ist — bei Verweigerung
+  // oder ohne Unterstützung bleibt er falsch, stopCinema ruft dann kein
+  // exitFullscreen.
   if (typeof document !== 'undefined' && document.fullscreenElement === null) {
-    void document.documentElement.requestFullscreen?.().catch(() => { /* verweigert */ });
+    void document.documentElement.requestFullscreen?.()
+      .then(() => { vollbildVomKino = true; })
+      .catch(() => { /* verweigert */ });
   }
 }
 
@@ -44,6 +57,15 @@ export function stopCinema(): void {
   setCinema({ running: false });
   const gemerkt = vorKino;
   vorKino = null;
+  // Nur ein vom Kino selbst eingeschaltetes Vollbild wieder verlassen; der
+  // Merker wird in jedem Fall zurückgesetzt. Löst dieser Aufruf
+  // exitFullscreen aus, feuert fullscreenchange erneut und useShortcuts ruft
+  // stopCinema noch einmal — cinemaAktiv() ist dann aber schon falsch, ein
+  // zweites exitFullscreen bleibt also aus.
+  if (vollbildVomKino && typeof document !== 'undefined' && document.fullscreenElement !== null) {
+    void document.exitFullscreen?.().catch(() => { /* schon verlassen */ });
+  }
+  vollbildVomKino = false;
   // Steht die Kamera nicht mehr im Kinomodus, hat jemand sie während einer
   // Pause von Hand übernommen — das bleibt so.
   if (camera.mode !== 'cinema') return;
@@ -58,7 +80,7 @@ export function stopCinema(): void {
 }
 
 export function toggleCinema(): void {
-  if (useStore.getState().cinema.running) stopCinema();
+  if (cinemaAktiv()) stopCinema();
   else startCinema();
 }
 

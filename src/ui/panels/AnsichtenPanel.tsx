@@ -6,6 +6,7 @@ import {
 } from '../../store/persist';
 import type { Ablage, Ansicht } from '../../store/persist';
 import { flugWiederherstellungMelden } from '../../render/camera/controller';
+import { cinemaAktiv, stopCinema } from '../cinemaControl';
 import type { Key } from '../i18n';
 import { t } from '../i18n';
 import { Panel } from './Panel';
@@ -104,6 +105,10 @@ export function AnsichtenPanel({ ablage = ablageHolen() }: Props): React.JSX.Ele
 
   const laden = (ansicht: Ansicht): void => {
     setMeldung(null);
+    // Ein laufendes oder angehaltenes Kino zuerst beenden, wie zuruecksetzen
+    // in ui/Kopfzeile.tsx: Sonst gäbe die Ansicht der Kamera eine Vorgabe,
+    // die das Kino im selben Zug wieder überschriebe.
+    if (cinemaAktiv()) stopCinema();
     replaceAll(ansichtAnwenden(useStore.getState(), ansicht));
     // Im laufenden Flug gleitet die Kamera sonst mit 0,15 s über den ganzen Weg.
     flugWiederherstellungMelden();

@@ -3,7 +3,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import { CinemaPanel } from './CinemaPanel';
 import { useStore, DEFAULT_STATE } from '../../store';
-import { stopCinema } from '../cinemaControl';
+import { noteUserInput, stopCinema } from '../cinemaControl';
 import { SCENES } from '../../data/scenes';
 import { t } from '../i18n';
 import { sceneIndexFor } from '../../sim/director';
@@ -21,6 +21,16 @@ describe('CinemaPanel', () => {
     expect(useStore.getState().cinema.running).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: /Kino beenden/ }));
     expect(useStore.getState().cinema.running).toBe(false);
+  });
+
+  it('zeigt im angehaltenen Zustand „Kino beenden" und beendet damit das Kino', () => {
+    render(<CinemaPanel />);
+    fireEvent.click(screen.getByRole('button', { name: /Kino starten/ }));
+    noteUserInput();
+    expect(useStore.getState().cinema.running).toBe(false);
+    expect(useStore.getState().camera.mode).toBe('cinema');
+    fireEvent.click(screen.getByRole('button', { name: /Kino beenden/ }));
+    expect(useStore.getState().camera.mode).not.toBe('cinema');
   });
 
   it('springt zur nächsten Szene', () => {

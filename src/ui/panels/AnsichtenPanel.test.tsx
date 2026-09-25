@@ -8,6 +8,7 @@ import type { Ansicht } from '../../store/persist';
 import { setSprache } from '../i18n';
 import { ablageFake } from '../../test/ablageFake';
 import { flugWiederherstellungMelden } from '../../render/camera/controller';
+import { startCinema } from '../cinemaControl';
 
 vi.mock('../../render/camera/controller', async (original) => ({
   ...(await original<typeof import('../../render/camera/controller')>()),
@@ -101,6 +102,20 @@ describe('AnsichtenPanel: speichern und laden', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Ansicht laden: Flug' }));
     expect(useStore.getState().camera.fly.x).toBe(4e7);
     expect(flugWiederherstellungMelden).toHaveBeenCalledTimes(1);
+  });
+
+  it('beendet ein laufendes Kino beim Laden einer Ansicht (wie Zurücksetzen, Entscheidung Jens 3, 25.09.2026)', () => {
+    const ablage = mitAnsichten([
+      { name: 'Saturn', state: { camera: { targetId: 'saturn', mode: 'attached' } } },
+    ]);
+    render(<AnsichtenPanel ablage={ablage} />);
+    startCinema();
+    expect(useStore.getState().cinema.running).toBe(true);
+    fireEvent.click(screen.getByRole('button', { name: 'Ansicht laden: Saturn' }));
+    const z = useStore.getState();
+    expect(z.cinema.running).toBe(false);
+    expect(z.camera.mode).toBe('attached');
+    expect(z.camera.targetId).toBe('saturn');
   });
 
   it('liest eine beschädigte Ablage als leer', () => {

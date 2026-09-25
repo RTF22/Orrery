@@ -97,6 +97,17 @@ describe('handleShortcut', () => {
     expect(useStore.getState().cinema.running).toBe(false);
   });
 
+  it('beendet mit C auch ein durch Eingabe angehaltenes Kino', () => {
+    const kamera = useStore.getState().camera;
+    handleShortcut('c');
+    noteUserInput();
+    expect(useStore.getState().cinema.running).toBe(false);
+    expect(useStore.getState().camera.mode).toBe('cinema');
+    handleShortcut('c');
+    expect(useStore.getState().cinema.running).toBe(false);
+    expect(useStore.getState().camera).toEqual(kamera);
+  });
+
   it('springt mit N zur nächsten Szene', () => {
     handleShortcut('c');
     handleShortcut('n');

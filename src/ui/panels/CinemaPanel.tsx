@@ -10,6 +10,11 @@ import { MusikSteuerung } from './MusikSteuerung';
 export function CinemaPanel(): React.JSX.Element {
   const cinema = useStore((s) => s.cinema);
   const setCinema = useStore((s) => s.setCinema);
+  // Ein durch Eingabe angehaltenes Kino (camera.mode noch 'cinema') gilt als
+  // aktiv (Entscheidung Jens 1, 25.09.2026), wie cinemaAktiv() in
+  // ui/cinemaControl.ts — hier als eigener Selektor, damit der Knopf auf
+  // beide Felder reagiert.
+  const aktiv = useStore((s) => s.cinema.running || s.camera.mode === 'cinema');
   const keimId = useId();
   const mischenId = useId();
   const pauseId = useId();
@@ -26,9 +31,9 @@ export function CinemaPanel(): React.JSX.Element {
           <button
             type="button"
             className="rounded border border-white/15 px-2 py-1 hover:bg-white/10"
-            onClick={() => { if (cinema.running) stopCinema(); else startCinema(); }}
+            onClick={() => { if (aktiv) stopCinema(); else startCinema(); }}
           >
-            {cinema.running ? t('cinema.stop') : t('cinema.start')}
+            {aktiv ? t('cinema.stop') : t('cinema.start')}
           </button>
           <button
             type="button"

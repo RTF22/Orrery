@@ -225,6 +225,16 @@ describe('Ansichten: erstellen und anwenden', () => {
     expect(s.ui).toEqual(aktuell.ui);
   });
 
+  it('übernimmt den Kameramodus „Kino" aus einer Ansicht als „frei", andere Modi bleiben (Entscheidung Jens 3, 25.09.2026)', () => {
+    const aktuell = abgewandelt();
+    const kino: Ansicht = { name: 'Kino', state: { camera: { mode: 'cinema', targetId: 'jupiter' } } };
+    expect(ansichtAnwenden(aktuell, kino).camera.mode).toBe('free');
+    const angeheftet: Ansicht = { name: 'Fix', state: { camera: { mode: 'attached', targetId: 'mars' } } };
+    expect(ansichtAnwenden(aktuell, angeheftet).camera.mode).toBe('attached');
+    const ohneKamera: Ansicht = { name: 'Ohne', state: { scale: { sizeScale: 2 } } };
+    expect(ansichtAnwenden(aktuell, ohneKamera).camera.mode).toBe('free');
+  });
+
   it('ansichtAnwenden mit leerer Ansicht liefert die Standard-Einstellungen zum aktuellen Moment', () => {
     const s = ansichtAnwenden(abgewandelt(), { name: 'Leer', state: {} });
     expect(s.scale).toEqual(DEFAULT_STATE.scale);

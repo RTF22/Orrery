@@ -251,7 +251,14 @@ function nurPfade(patch: Plain, pfade: readonly string[]): Plain {
  */
 export function ansichtAnwenden(aktuell: AppState, ansicht: Ansicht): AppState {
   const bleibt = nurPfade(toShareable(aktuell), GESTRICHEN.ansicht);
-  return fromShareable(mergePatch(bleibt, ansicht.state));
+  const neu = fromShareable(mergePatch(bleibt, ansicht.state));
+  // Der Kameramodus „Kino" aus einer gespeicherten Ansicht wird als „frei"
+  // übernommen (Entscheidung Jens 3, 25.09.2026): store/ kennt cinemaControl
+  // aus ui/ nicht (Schichtentest), ein aktives Kino beendet der Aufrufer
+  // schon vorher (ui/panels/AnsichtenPanel.tsx, wie zuruecksetzen in
+  // ui/Kopfzeile.tsx).
+  if (neu.camera.mode === 'cinema') neu.camera = { ...neu.camera, mode: 'free' };
+  return neu;
 }
 
 /** Einzelner Eintrag aus Ablage oder Datei; null, wenn Name oder Zustand unbrauchbar. */

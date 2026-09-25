@@ -112,6 +112,18 @@ describe('Kino-Steuerung', () => {
     expect(useStore.getState().cinema.running).toBe(false);
   });
 
+  it('beendet mit toggleCinema auch ein durch Eingabe angehaltenes Kino', () => {
+    useStore.getState().setCamera({ targetId: 'mars', distance: 7e4 });
+    const kamera = useStore.getState().camera;
+    startCinema();
+    noteUserInput();
+    expect(useStore.getState().cinema.running).toBe(false);
+    expect(useStore.getState().camera.mode).toBe('cinema');
+    toggleCinema();
+    expect(useStore.getState().cinema.running).toBe(false);
+    expect(useStore.getState().camera).toEqual(kamera);
+  });
+
   it('springt mit nextScene zur nächsten Szene und setzt die Laufzeit zurück', () => {
     startCinema();
     useStore.getState().setCinema({ elapsedSec: 12 });
@@ -163,6 +175,77 @@ describe('Kino-Steuerung', () => {
     stopCinema();
     resumeIfIdle(Date.now() + 3600_000);
     expect(useStore.getState().cinema.running).toBe(false);
+  });
+});
+
+describe('Kino-Steuerung: eigenes Vollbild', () => {
+  // Attrappe statt jsdom: Diese Datei läuft in der Node-Umgebung, in der es
+  // kein `document` gibt; startCinema/stopCinema prüfen typeof document.
+  const attrappe = (fullscreenElement: unknown = null) => ({
+    fullscreenElement,
+    documentElement: { requestFullscreen: vi.fn<() => Promise<void>>(() => Promise.resolve()) },
+    exitFullscreen: vi.fn<() => Promise<void>>(() => Promise.resolve()),
+  });
+
+  it('(a) schaltet beim Start Vollbild ein und verlässt es beim Beenden', async () => {
+    const doc = attrappe(null);
+    vi.stubGlobal('document', doc);
+    try {
+      startCinema();
+      expect(doc.documentElement.requestFullscreen).toHaveBeenCalledTimes(1);
+      await Promise.resolve(); // wartet auf die Erfüllung des Versprechens
+      doc.fullscreenElement = {}; // der Browser wäre jetzt im Vollbild
+      stopCinema();
+      expect(doc.exitFullscreen).toHaveBeenCalledTimes(1);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('(b) lässt ein vorher von Hand gewähltes Vollbild beim Beenden stehen', () => {
+    const doc = attrappe({}); // schon im Vollbild vor dem Start
+    vi.stubGlobal('document', doc);
+    try {
+      startCinema();
+      expect(doc.documentElement.requestFullscreen).not.toHaveBeenCalled();
+      stopCinema();
+      expect(doc.exitFullscreen).not.toHaveBeenCalled();
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('(c) ruft kein exitFullscreen, wenn die Anfrage verweigert wurde', async () => {
+    const doc = attrappe(null);
+    doc.documentElement.requestFullscreen = vi.fn<() => Promise<void>>(() => Promise.reject(new Error('verweigert')));
+    vi.stubGlobal('document', doc);
+    try {
+      startCinema();
+      await Promise.resolve();
+      await Promise.resolve();
+      doc.fullscreenElement = {};
+      stopCinema();
+      expect(doc.exitFullscreen).not.toHaveBeenCalled();
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('(d) ruft kein exitFullscreen, wenn der Nutzer das Vollbild schon selbst verlassen hat', async () => {
+    const doc = attrappe(null);
+    vi.stubGlobal('document', doc);
+    try {
+      startCinema();
+      await Promise.resolve();
+      doc.fullscreenElement = {};
+      // Der Nutzer verlässt das Vollbild selbst (etwa mit Escape im Browser),
+      // bevor das Kino beendet wird.
+      doc.fullscreenElement = null;
+      stopCinema();
+      expect(doc.exitFullscreen).not.toHaveBeenCalled();
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });
 
