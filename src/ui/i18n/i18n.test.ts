@@ -11,8 +11,8 @@ import { bodies } from '../../data/index';
  * Controller → Controller).
  */
 const GLEICH_ERLAUBT = new Set<string>([
-  'app.title', 'panel.info', 'language.de', 'language.en', 'key.arrows', 'time.pause',
-  'shortcuts.padTitle',
+  'app.title', 'infokarte.titel', 'infokarte.reiter.app', 'panel.info', 'language.de', 'language.en',
+  'key.arrows', 'time.pause', 'shortcuts.padTitle',
   'literatur.doi', 'literatur.ads', 'literatur.preprint',
   'body.venus.name', 'body.mars.name', 'body.jupiter.name', 'body.saturn.name',
   'body.uranus.name', 'body.phobos.name', 'body.deimos.name', 'body.io.name',

@@ -4,6 +4,7 @@ import { toggleCinema, nextScene, stopCinema, cinemaAktiv } from '../cinemaContr
 import { INFO_PANEL, infoOffen, istSchmal } from '../info/konstanten';
 import { useBogen } from '../bogen';
 import { useMusikStand } from '../musikStand';
+import { useInfoKarte } from '../infokarte/zustand';
 
 /** Panel-Schlüssel der Kürzel-Übersicht. */
 export const SHORTCUTS_PANEL = 'shortcuts';
@@ -28,6 +29,9 @@ function vollbildUmschalten(): void {
 
 /** Die Tastenbelegung als reine Funktion — ohne sie wäre sie nicht prüfbar. */
 export function handleShortcut(taste: string): boolean {
+  // Die Info-Karte ist modal: Ihre Tasten (Escape, Tab, Pfeile) gehören ihr.
+  if (useInfoKarte.getState().offen) return false;
+
   const s = useStore.getState();
 
   switch (taste) {

@@ -3,6 +3,8 @@ import { useStore } from '../store';
 import { linkErzeugen, zurueckgesetzt } from '../store/persist';
 import { t } from './i18n';
 import { cinemaAktiv, stopCinema } from './cinemaControl';
+import { useInfoKarte, startReiter } from './infokarte/zustand';
+import { grobJetzt, laeuftAlsApp } from './infokarte/geraet';
 import type { Sprache } from './i18n';
 
 /**
@@ -23,13 +25,14 @@ const KNOPF = 'rounded border border-transparent px-2 py-0.5 opacity-70 hover:op
 /**
  * Schmale Leiste über der Panel-Spalte: „Link kopieren", „Zurücksetzen",
  * eine kurzlebige Statusmeldung und der Sprachschalter. Die weiteren
- * Schaltflächen aus dem Gesamtentwurf (UI aus, Vollbild, Kino, Hilfe)
- * bekommen später hier ihren Platz.
+ * Schaltflächen aus dem Gesamtentwurf (UI aus, Vollbild, Kino) bekommen
+ * später hier ihren Platz; ⓘ öffnet die Info-Karte.
  */
 export function Kopfzeile(): React.JSX.Element {
   const language = useStore((s) => s.ui.language);
   const setUi = useStore((s) => s.setUi);
   const replaceAll = useStore((s) => s.replaceAll);
+  const oeffnen = useInfoKarte((s) => s.oeffnen);
   const [meldung, setMeldung] = useState<string | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -70,6 +73,15 @@ export function Kopfzeile(): React.JSX.Element {
 
   return (
     <header className="pointer-events-auto flex flex-wrap items-center justify-end gap-1 rounded-lg border border-white/10 bg-slate-900/70 px-2 py-1 text-xs text-slate-100 backdrop-blur-md">
+      <button
+        type="button"
+        className={KNOPF}
+        aria-label={t('infokarte.knopf')}
+        title={t('infokarte.knopf')}
+        onClick={() => { oeffnen(startReiter(grobJetzt(), laeuftAlsApp())); }}
+      >
+        ⓘ
+      </button>
       <button type="button" className={KNOPF} onClick={() => { void linkKopieren(); }}>
         {t('header.copyLink')}
       </button>

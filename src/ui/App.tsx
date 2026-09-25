@@ -18,6 +18,7 @@ import { useShortcuts, SHORTCUTS_PANEL } from './shortcuts/useShortcuts';
 import { useIdleHide } from './idle';
 import { useWakeLock } from './wakeLock';
 import { useMusikStand } from './musikStand';
+import { InfoKarte } from './infokarte/InfoKarte';
 
 /**
  * Belegung für die Übersicht — Wirkung als Sprachschlüssel. Die Taste selbst
@@ -103,7 +104,7 @@ function Kuerzeluebersicht(): React.JSX.Element {
  * Die Panels für Zeit, Maßstab, Kamera und Objektbaum füllen die Aufgaben 17
  * bis 19; hier steht zunächst das Gerüst mit Tastenkürzeln und Übersicht.
  */
-export function App(): React.JSX.Element | null {
+export function App(): React.JSX.Element {
   // Muss vor allem anderen stehen, damit t() in diesem Durchlauf schon die
   // neue Tabelle sieht.
   useSprache();
@@ -119,23 +120,28 @@ export function App(): React.JSX.Element | null {
 
   // Im Kino-Modus verschwindet die Oberfläche nach kurzer Ruhe von selbst;
   // außerhalb bleibt sie stehen, bis H gedrückt wird.
-  if (versteckt || (laeuftKino && untaetig)) return null;
+  // Die Info-Karte steht außerhalb der ausblendbaren Ebene: Eine offene
+  // Karte darf weder mit Taste H noch mit der Ruhe im Kino verschwinden.
+  if (versteckt || (laeuftKino && untaetig)) return <InfoKarte />;
 
   return (
-    <div className="ui-ebene pointer-events-none fixed inset-0 flex items-start justify-between gap-2 p-3 text-slate-100">
-      <Seitenleiste kopf={<Kopfzeile />}>
-        {/* Die Himmelskörper stehen bewusst gleich unter dem Sprachschalter. */}
-        <BodyTree />
-        <TimePanel />
-        <ScalePanel />
-        <CinemaPanel />
-        <CameraPanel />
-        <DisplayPanel />
-        <AnsichtenPanel />
-        {zeigeKuerzel && !grob ? <Kuerzeluebersicht /> : null}
-      </Seitenleiste>
-      <InfoPanel />
-      {schmal ? <Bogenreiter /> : null}
-    </div>
+    <>
+      <div className="ui-ebene pointer-events-none fixed inset-0 flex items-start justify-between gap-2 p-3 text-slate-100">
+        <Seitenleiste kopf={<Kopfzeile />}>
+          {/* Die Himmelskörper stehen bewusst gleich unter dem Sprachschalter. */}
+          <BodyTree />
+          <TimePanel />
+          <ScalePanel />
+          <CinemaPanel />
+          <CameraPanel />
+          <DisplayPanel />
+          <AnsichtenPanel />
+          {zeigeKuerzel && !grob ? <Kuerzeluebersicht /> : null}
+        </Seitenleiste>
+        <InfoPanel />
+        {schmal ? <Bogenreiter /> : null}
+      </div>
+      <InfoKarte />
+    </>
   );
 }

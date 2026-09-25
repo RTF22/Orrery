@@ -3,9 +3,10 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { handleShortcut, useShortcuts, SHORTCUTS_PANEL } from './useShortcuts';
 import { useStore, DEFAULT_STATE } from '../../store';
-import { noteUserInput, stopCinema } from '../cinemaControl';
+import { cinemaAktiv, noteUserInput, startCinema, stopCinema } from '../cinemaControl';
 import { useBogen } from '../bogen';
 import { useMusikStand } from '../musikStand';
+import { useInfoKarte } from '../infokarte/zustand';
 
 describe('handleShortcut', () => {
   // stopCinema zuerst: löscht den gemerkten Zustand von vor dem Kinostart.
@@ -147,5 +148,19 @@ describe('handleShortcut', () => {
     expect(useStore.getState().ton.stumm).toBe(true);
     handleShortcut('m');
     expect(useStore.getState().ton.stumm).toBe(false);
+  });
+});
+
+describe('handleShortcut bei offener Info-Karte', () => {
+  it('lässt jede Taste durch, das Kino läuft bei Escape weiter', () => {
+    startCinema();
+    useInfoKarte.setState({ offen: true, reiter: 'app' });
+    const paused = useStore.getState().time.paused;
+    expect(handleShortcut(' ')).toBe(false);
+    expect(handleShortcut('Escape')).toBe(false);
+    expect(useStore.getState().time.paused).toBe(paused);
+    expect(cinemaAktiv()).toBe(true);
+    useInfoKarte.setState({ offen: false });
+    stopCinema();
   });
 });

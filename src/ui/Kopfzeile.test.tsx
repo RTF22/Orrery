@@ -7,6 +7,7 @@ import { useStore, DEFAULT_STATE } from '../store';
 import { decodeState } from '../store/serialize';
 import { themaVerfallStarten } from './info/themaVerfall';
 import { cinemaAktiv, startCinema, stopCinema } from './cinemaControl';
+import { useInfoKarte } from './infokarte/zustand';
 
 describe('Kopfzeile', () => {
   beforeEach(() => { useStore.getState().replaceAll(structuredClone(DEFAULT_STATE)); });
@@ -22,6 +23,14 @@ describe('Kopfzeile', () => {
     render(<Kopfzeile />);
     fireEvent.click(screen.getByRole('button', { name: 'English (EN)' }));
     expect(useStore.getState().ui.language).toBe('en');
+  });
+
+  it('öffnet die Info-Karte über ⓘ', () => {
+    useInfoKarte.setState({ offen: false, reiter: 'bedienung' });
+    render(<Kopfzeile />);
+    fireEvent.click(screen.getByRole('button', { name: 'Info und Hilfe' }));
+    expect(useInfoKarte.getState().offen).toBe(true);
+    useInfoKarte.setState({ offen: false });
   });
 });
 

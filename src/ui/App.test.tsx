@@ -6,6 +6,7 @@ import { useStore, DEFAULT_STATE } from '../store';
 import { useBogen } from './bogen';
 import { SCHMAL_ABFRAGE } from './info/konstanten';
 import { useMusikStand } from './musikStand';
+import { useInfoKarte } from './infokarte/zustand';
 
 /** Kompaktmodus an: nur SCHMAL_ABFRAGE trifft zu. */
 function kompakt(): void {
@@ -88,5 +89,13 @@ describe('App', () => {
     useMusikStand.setState({ verfuegbar: true });
     render(<App />);
     expect(screen.getByText('Musik stumm schalten')).toBeTruthy();
+  });
+
+  it('zeigt eine offene Info-Karte auch bei ausgeblendeter Oberfläche', () => {
+    useStore.getState().setUi({ hidden: true });
+    useInfoKarte.setState({ offen: true, reiter: 'ueber' });
+    render(<App />);
+    expect(screen.getByRole('dialog', { name: 'Orrery' })).toBeTruthy();
+    useInfoKarte.setState({ offen: false });
   });
 });

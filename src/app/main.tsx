@@ -12,8 +12,10 @@ import { t } from '../ui/i18n';
 import { App as Bedienoberflaeche } from '../ui/App';
 import type { QualityTier } from '../store/types';
 import { QUALITY_SETTINGS } from './quality';
-import { ablageHolen } from '../store/persist';
+import { ablageHolen, FRAGMENT_PRAEFIX } from '../store/persist';
 import { sicherungStarten, startZustand } from './persistenz';
+import { useInfoKarte, sollBeimStartOeffnen, startReiter } from '../ui/infokarte/zustand';
+import { grobJetzt, laeuftAlsApp } from '../ui/infokarte/geraet';
 import { fahreZu } from '../ui/kamerafahrt';
 import { zeigerAusgeblendet } from '../ui/idle';
 import { themaVerfallStarten } from '../ui/info/themaVerfall';
@@ -177,6 +179,9 @@ if (wurzelElement === null) {
 // gedrosselte Sicherung bis zum Schließen der Seite. Der Themenverfall startet
 // erst nach dem Startzustand, damit dessen Thema Sonnensystem stehen bleibt.
 const ablage = ablageHolen();
+// Info-Karte (Entwurf Info-Karte §3): Ein geteilter Link zeigt sofort seinen
+// Inhalt; die Karte bleibt dann zu, ebenso bei laufendem Kino.
+const mitLink = window.location.hash.startsWith(FRAGMENT_PRAEFIX);
 useStore.getState().replaceAll(startZustand({
   hash: window.location.hash,
   fragmentEntfernen: () => {
@@ -187,6 +192,10 @@ useStore.getState().replaceAll(startZustand({
 }));
 sicherungStarten(useStore, { ablage, ziel: window });
 themaVerfallStarten();
+
+if (sollBeimStartOeffnen({ ablage, mitLink, kinoLaeuft: useStore.getState().cinema.running })) {
+  useInfoKarte.getState().oeffnen(startReiter(grobJetzt(), laeuftAlsApp()));
+}
 
 // Musik des Betreibers (Entwurf Phase 5 §6): ohne musik/stuecke.json bleibt es
 // still. Im Entwicklungslauf liegt der Spieler für Messungen unter window.musik.
