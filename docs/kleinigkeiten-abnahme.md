@@ -164,10 +164,10 @@ Entfällt: keine neuen Fremddateien, keine geänderten Lizenzangaben.
 
 | Prüfpunkt | Ergebnis |
 |---|---|
-| Vollbild-Kreislauf: Kino mit Taste C starten → Vollbild | ausstehend |
-| … Escape oder C beenden das Kino → Vollbild wieder verlassen | ausstehend |
-| … vorher mit F gewähltes Vollbild, danach Kino starten und beenden → Vollbild bleibt bestehen | ausstehend |
-| Controller am Touchgerät (falls ein Gerät mit Controller zur Hand ist): Reiter „Bedienung“ zeigt „Controller-Belegung“, Klick öffnet die Steuerungskarte im Reiter „Controller“ | ausstehend |
+| Vollbild-Kreislauf: Kino mit Taste C starten → Vollbild | nicht geprüft (Jens, 25.09.2026: ausgelassen) |
+| … Escape oder C beenden das Kino → Vollbild wieder verlassen | nicht geprüft (Jens, 25.09.2026: ausgelassen) |
+| … vorher mit F gewähltes Vollbild, danach Kino starten und beenden → Vollbild bleibt bestehen | nicht geprüft (Jens, 25.09.2026: ausgelassen) |
+| Controller am Touchgerät (falls ein Gerät mit Controller zur Hand ist): Reiter „Bedienung“ zeigt „Controller-Belegung“, Klick öffnet die Steuerungskarte im Reiter „Controller“ | nicht geprüft (Jens, 25.09.2026: ausgelassen) |
 
 ## 6. Rulings
 
@@ -227,3 +227,11 @@ Entfällt: keine neuen Fremddateien, keine geänderten Lizenzangaben.
    zur Hand ist — der Controller-Erkennung am Touchgerät?
 2. **Freigabe von Tag und Push:** Darf `v0.7.2` gesetzt und zusammen mit `master` gepusht werden?
 3. **Deploy:** Soll der Stand danach auf den Webspace (eigene Freigabe)?
+
+## Entscheidungen (25.09.2026)
+
+1. **Handprüfung:** von Jens ausgelassen; der Vollbild-Kreislauf ist nur über die Attrappentests
+   belegt, der Controller-Knopf am Touchgerät über Tests und die Messung mit nachgebildetem
+   Controller (§ 3).
+2. **Tag und Push:** freigegeben, `v0.7.2` auf `master`.
+3. **Deploy:** freigegeben; das Hochladen startet Jens selbst.
