@@ -61,10 +61,11 @@ Kennzahlen, Daten und Commit-Kürzel sind in beiden Fassungen gleich.
    kleinen Modellen), der Ablauf Brainstorming → Entwurf → Plan → Umsetzung → Abnahme mit
    Rulings, Pixelmessungen statt Eindrücken, maschinelle Literaturprüfung.
 5. **Deterministisch mit einem nicht deterministischen Werkzeug** (Kernkapitel, §4a).
-6. **Lehren:** fünf bis acht, jede mit dem Anlass, aus dem sie entstand.
-7. **Weg zur Domain:** privates Repository, öffentlich ab 19.09., Webspace per FTPS, HTTPS,
+6. **Was es gekostet hat:** Tokenbilanz (§4b).
+7. **Lehren:** fünf bis acht, jede mit dem Anlass, aus dem sie entstand.
+8. **Weg zur Domain:** privates Repository, öffentlich ab 19.09., Webspace per FTPS, HTTPS,
    `orrery3d.de` mit relativen Pfaden. Keine Zugangsdaten, keine Serverdetails.
-8. **Kennzahlen:** Commits, Tests, Texte, Literatur, Bundlegröße, Texturstufen.
+9. **Kennzahlen:** Commits, Tests, Texte, Literatur, Bundlegröße, Texturstufen.
 
 ## 4a. Kernkapitel: deterministisch mit einem nicht deterministischen Werkzeug
 
@@ -95,6 +96,33 @@ Ehrlich bleiben: Das Kapitel nennt auch, was das Netz nicht fing oder erst spät
 Baufehler, die erst in einem späteren Task auffielen, oder eine Gesamtabnahme, die irrte), und
 die Grenzen des Modells, die im Code bleiben.
 
+## 4b. Kosten in Tokens
+
+Der Überblick bekommt einen Abschnitt „Was es gekostet hat“, die Chronik je Phase eine Zeile
+mit dem Verbrauch. Nur Tokens, keine Geldbeträge (Jens, 25.09.2026).
+
+- **Quelle:** die lokalen Sitzungsprotokolle des Assistenten zu diesem Projekt (60
+  Hauptsitzungen und 759 Subagentenläufe, 11. bis 25.09.2026). Veröffentlicht werden nur
+  Summen, nie Protokollinhalte.
+- **Methode:** Jede Antwort des Modells zählt einmal, erkannt an ihrer Nachrichtenkennung; beim
+  Streaming steht dieselbe Antwort mehrfach im Protokoll, gezählt wird je Feld der Höchstwert
+  (die erste Zeile ist unvollständig, eine Probe ergab sonst für Sonnet 1,9 statt 23,8 Mio.
+  Ausgabetokens). Getrennt ausgewiesen: Eingabe ohne Cache, Cache-Schreiben, Cache-Lesen,
+  Ausgabe; je Modell, Hauptsitzung gegen Subagenten, je Tag und je Phase (Zuordnung über die
+  Zeitstempel und die Zeitleiste des Faktenblatts).
+- **Stichtag:** Upload des Domain-Fixes (f3807c7, 25.09.2026). Sitzungen danach (README,
+  diese Etappe) stehen getrennt oder entfallen; der Text sagt, welches von beiden.
+- **Einordnung:** Probezählung über alle Protokolle: rund 10,4 Mrd. Tokens Cache-Lesen,
+  0,2 Mrd. Cache-Schreiben, 43 Mio. Ausgabe, 0,15 Mio. ungecachte Eingabe; Subagenten tragen den
+  Großteil, Sonnet vor Opus. Der Text erklärt, warum das Lesen des Kontexts die Summe
+  bestimmt und nicht das Schreiben von Code, was die Regeln „kleine Tasks“ und „möglichst kleine
+  Modelle“ bewirkten und wie sich die Modellwahl im Verlauf änderte. Die endgültigen Zahlen
+  kommen aus der Auswertung in Task 3, nicht aus dieser Probe.
+- **Diagramm:** ein Bild Tokens je Tag nach Modell (gestapelt, ohne Cache-Lesen oder mit
+  eigener Achse, damit die Ausgabe sichtbar bleibt), als PNG unter `docs/bilder/entstehung/`.
+- **Grenzen:** Die Protokolle liegen nur lokal vor und sind nicht gegen eine Abrechnung
+  abgeglichen; Zählweise und Stichtag stehen im Text, damit man die Zahlen einordnen kann.
+
 ## 5. Chronik
 
 Dieselbe Reihenfolge, gegliedert nach Etappen. Je Etappe: Ziel, Entscheidungen und Rulings,
@@ -123,8 +151,9 @@ jede Zahl mit ihrer Fundstelle im Faktenblatt (§7).
 - **Fehlerkatalog** ebenda: Fälle, in denen ein Modell Falsches lieferte, mit Art des Fehlers,
   der Prüfung, die ihn fing, der Korrektur und der Fundstelle; dazu Fälle, die erst spät oder
   von Jens gefunden wurden.
-- **Sitzungsprotokolle** des Assistenten dienen nur für einfache Zählungen (Sessions,
-  Subagentenläufe), wenn sie sich billig und eindeutig auszählen lassen; sonst entfallen sie.
+- **Sitzungsprotokolle** des Assistenten liefern Sessions, Subagentenläufe und die
+  Tokenbilanz (§4b). Das Auswerteskript liegt im Scratchpad beziehungsweise Ledger, nicht im
+  Repository (es liest benutzerlokale Pfade); seine Zählweise beschreibt der Text.
 - **Eine Fachprüfung** beider deutschen Texte gegen Git und Protokolle, eine Nacharbeit;
   Restbefunde ins Abnahmeprotokoll.
 - **Vor dem Commit:** Links auf existierende Dateien, Baumkontrolle mit der Ausnahme, keine
@@ -134,16 +163,17 @@ jede Zahl mit ihrer Fundstelle im Faktenblatt (§7).
 
 1. Faktenblatt aus Git und Protokollen.
 2. Fehlerkatalog aus den Protokollen (§7 Unschärfen, Nacharbeiten, Lehren).
-3. Screenshots heutiger Stand; Versuch mit frühen Ständen.
-4. Chronik Deutsch, Teil 1: Idee bis Phase 3.
-5. Chronik Deutsch, Teil 2: Phasen 4a bis 4c.
-6. Chronik Deutsch, Teil 3: Phase 4d und Nachführung.
-7. Chronik Deutsch, Teil 4: Phase 5 bis zur Domain.
-8. Überblick Deutsch, aus der Chronik verdichtet, mit Kernkapitel §4a.
-9. Fachprüfung beider deutschen Texte und Nacharbeit.
-10. Überblick Englisch.
-11. Chronik Englisch (bei Bedarf zwei Tasks).
-12. Verlinkung aus der README (in beiden Sprachen mit beiden Werbeaussagen), Ausnahme in der
+3. Tokenbilanz aus den Sitzungsprotokollen (§4b) mit Diagramm.
+4. Screenshots heutiger Stand; Versuch mit frühen Ständen.
+5. Chronik Deutsch, Teil 1: Idee bis Phase 3.
+6. Chronik Deutsch, Teil 2: Phasen 4a bis 4c.
+7. Chronik Deutsch, Teil 3: Phase 4d und Nachführung.
+8. Chronik Deutsch, Teil 4: Phase 5 bis zur Domain.
+9. Überblick Deutsch, aus der Chronik verdichtet, mit Kernkapitel §4a und Kosten §4b.
+10. Fachprüfung beider deutschen Texte und Nacharbeit.
+11. Überblick Englisch.
+12. Chronik Englisch (bei Bedarf zwei Tasks).
+13. Verlinkung aus der README (in beiden Sprachen mit beiden Werbeaussagen), Ausnahme in der
     Baumkontrolle, Abnahmeprotokoll.
 
 Je Task ein Commit; immer nur ein Umsetzer-Subagent; Texte und Prüfung auf Sonnet.
