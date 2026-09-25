@@ -25,7 +25,7 @@ describe('ASSETS.md', () => {
 describe('public/', () => {
   it('enthält nur belegte Ordner und die Serverkonfiguration', () => {
     // musik/ ist git-ignoriert und gehört dem Betreiber (README „Eigene Musik").
-    const erlaubt = new Set(['.htaccess', 'basis', 'textures', 'musik', 'icons', 'manifest.webmanifest']);
+    const erlaubt = new Set(['.htaccess', 'basis', 'textures', 'musik', 'symbole', 'manifest.webmanifest']);
     expect(readdirSync('public').filter((name) => !erlaubt.has(name))).toEqual([]);
   });
 });

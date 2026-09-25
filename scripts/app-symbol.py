@@ -45,8 +45,8 @@ def zeichne(groesse: int) -> Image.Image:
 
 
 if __name__ == '__main__':
-    ziel = Path('public/icons')
+    ziel = Path('public/symbole')
     ziel.mkdir(parents=True, exist_ok=True)
     for groesse in (192, 512):
         zeichne(groesse).save(ziel / f'orrery-{groesse}.png', optimize=True)
-        print(f'public/icons/orrery-{groesse}.png')
+        print(f'public/symbole/orrery-{groesse}.png')

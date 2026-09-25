@@ -362,7 +362,7 @@ Copyright 2019–2026 Binomial LLC.
 
 ## App-Symbol
 
-`public/icons/orrery-192.png` und `public/icons/orrery-512.png` sind eigene
+`public/symbole/orrery-192.png` und `public/symbole/orrery-512.png` sind eigene
 Zeichnungen (Sonne mit zwei Bahnen), erzeugt mit `scripts/app-symbol.py`
 (Pillow); keine fremden Urheber.
 

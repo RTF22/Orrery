@@ -9,9 +9,9 @@
   "background_color": "#05070d",
   "theme_color": "#05070d",
   "icons": [
-    { "src": "icons/orrery-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/orrery-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "icons/orrery-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icons/orrery-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "symbole/orrery-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "symbole/orrery-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "symbole/orrery-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "symbole/orrery-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
