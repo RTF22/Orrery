@@ -248,12 +248,15 @@ describe('Kino-Steuerung: eigenes Vollbild', () => {
     }
   });
 
-  it('verlässt das Vollbild nachträglich, wenn das Kino vor der Zusage schon endet (Nacharbeit Runde 1)', async () => {
+  it('verlässt das Vollbild nachträglich, wenn das Kino vor der Zusage schon endet', async () => {
     // Zurückgehaltene Zusage: startCinema löst sie nicht sofort ein, ein
     // schnelles doppeltes C oder Escape kurz nach dem Start endet das Kino,
-    // bevor requestFullscreen sich erfüllt.
-    let erfuellen: (() => void) | null = null;
-    const zusage = new Promise<void>((resolve) => { erfuellen = resolve; });
+    // bevor requestFullscreen sich erfüllt. Als Feld eines Objekts statt
+    // als eigene Variable, damit TypeScript die Zuweisung im Executor nicht
+    // als endgültig ansieht und den Typ an der Aufrufstelle auf `never`
+    // verengt (reine Typfrage, keine Laufzeitänderung).
+    const zusagenStand: { erfuellen: (() => void) | null } = { erfuellen: null };
+    const zusage = new Promise<void>((resolve) => { zusagenStand.erfuellen = resolve; });
     const doc = attrappe(null);
     doc.documentElement.requestFullscreen = vi.fn<() => Promise<void>>(() => zusage);
     vi.stubGlobal('document', doc);
@@ -264,7 +267,7 @@ describe('Kino-Steuerung: eigenes Vollbild', () => {
       // Die Zusage erfüllt sich jetzt nachträglich; der Browser ist inzwischen
       // im Vollbild.
       doc.fullscreenElement = {};
-      erfuellen?.();
+      zusagenStand.erfuellen?.();
       await Promise.resolve();
       await Promise.resolve();
       expect(doc.exitFullscreen).toHaveBeenCalledTimes(1);
