@@ -28,6 +28,10 @@ import { Fadenkreuz } from '../ui/steuerung/Fadenkreuz';
 import { tastaturAnhaengen } from '../ui/steuerung/tastatur';
 import { letztePose } from '../render/camera/controller';
 import { TempoHinweis } from '../ui/steuerung/TempoHinweis';
+import { installationAbfangen } from '../ui/infokarte/installation';
+
+// Chrome und Edge melden die Installierbarkeit nur einmal kurz nach dem Laden.
+installationAbfangen(window);
 
 /**
  * Einstiegspunkt der Anwendung.

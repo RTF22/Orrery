@@ -125,4 +125,14 @@ describe('App', () => {
     expect(document.activeElement).toBe(knopf);
     knopf.remove();
   });
+
+  it('übersetzt eine offene Info-Karte beim Sprachwechsel sofort', () => {
+    useInfoKarte.setState({ offen: true, reiter: 'bedienung' });
+    render(<App />);
+    expect(screen.getByRole('tab', { name: 'Bedienung' })).toBeTruthy();
+    act(() => { useStore.getState().setUi({ language: 'en' }); });
+    expect(screen.getByRole('tab', { name: 'Controls' })).toBeTruthy();
+    act(() => { useStore.getState().setUi({ language: 'de' }); });
+    useInfoKarte.setState({ offen: false });
+  });
 });

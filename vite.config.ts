@@ -1,11 +1,14 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
+import paket from './package.json';
 
 export default defineConfig({
   // Pages liegt später in einem Unterpfad — gleich zu Beginn setzen,
   // damit die spätere Veröffentlichung keine Pfadüberraschungen bringt.
   base: '/Orrery/',
+  // Versionsnummer für die Info-Karte (ui/infokarte/version.ts).
+  define: { __ORRERY_VERSION__: JSON.stringify(paket.version) },
   plugins: [react(), tailwindcss()],
   test: {
     environment: 'node',
