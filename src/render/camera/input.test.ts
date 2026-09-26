@@ -225,6 +225,133 @@ describe('attachCameraInput — Koordinaten', () => {
   });
 });
 
+describe('attachCameraInput — Einbettung (Gestenregel Schritt 3)', () => {
+  const einbetten = (): void => { useStore.getState().setUi({ eingebettet: true }); };
+
+  it('setzt touchAction je nach Einbettung beim Anhängen', () => {
+    const elFrei = flaeche();
+    const stopFrei = attachCameraInput(elFrei);
+    expect(elFrei.style.touchAction).toBe('none');
+    stopFrei();
+
+    einbetten();
+    const elEingebettet = flaeche();
+    const stopEingebettet = attachCameraInput(elEingebettet);
+    expect(elEingebettet.style.touchAction).toBe('pan-x pan-y');
+    stopEingebettet();
+  });
+
+  it('Rad ohne Strg/⌘ eingebettet: Abstand unverändert, kein preventDefault, Hinweis „rad"', () => {
+    einbetten();
+    const el = flaeche();
+    const onGestenHinweis = vi.fn();
+    const stop = attachCameraInput(el, { onGestenHinweis });
+    const abstand = useStore.getState().camera.distance;
+    const e = new WheelEvent('wheel', { deltaY: 100, cancelable: true });
+    el.dispatchEvent(e);
+    expect(e.defaultPrevented).toBe(false);
+    expect(useStore.getState().camera.distance).toBe(abstand);
+    expect(onGestenHinweis).toHaveBeenCalledWith('rad');
+    stop();
+  });
+
+  it('Rad mit Strg eingebettet: Abstand ändert sich, kein Hinweis', () => {
+    einbetten();
+    const el = flaeche();
+    const onGestenHinweis = vi.fn();
+    const stop = attachCameraInput(el, { onGestenHinweis });
+    const abstand = useStore.getState().camera.distance;
+    el.dispatchEvent(new WheelEvent('wheel', { deltaY: 100, cancelable: true, ctrlKey: true }));
+    expect(useStore.getState().camera.distance).not.toBe(abstand);
+    expect(onGestenHinweis).not.toHaveBeenCalled();
+    stop();
+  });
+
+  it('Rad mit ⌘ (metaKey) eingebettet zoomt ebenfalls', () => {
+    einbetten();
+    const el = flaeche();
+    const stop = attachCameraInput(el);
+    const abstand = useStore.getState().camera.distance;
+    el.dispatchEvent(new WheelEvent('wheel', { deltaY: 100, cancelable: true, metaKey: true }));
+    expect(useStore.getState().camera.distance).not.toBe(abstand);
+    stop();
+  });
+
+  it('Rad nicht eingebettet: wie heute, unabhängig von Strg', () => {
+    const el = flaeche();
+    const onGestenHinweis = vi.fn();
+    const stop = attachCameraInput(el, { onGestenHinweis });
+    const abstand = useStore.getState().camera.distance;
+    const e = new WheelEvent('wheel', { deltaY: 100, cancelable: true });
+    el.dispatchEvent(e);
+    expect(e.defaultPrevented).toBe(true);
+    expect(useStore.getState().camera.distance).not.toBe(abstand);
+    expect(onGestenHinweis).not.toHaveBeenCalled();
+    stop();
+  });
+
+  it('ein Finger zieht eingebettet: dreht nicht, meldet den Hinweis „touch" nur einmal je Geste', () => {
+    einbetten();
+    const el = flaeche();
+    const onGestenHinweis = vi.fn();
+    const stop = attachCameraInput(el, { onGestenHinweis });
+    const azimut = useStore.getState().camera.azimuth;
+    zeiger(el, 'pointerdown', 100, 100, 1, 'touch');
+    zeiger(el, 'pointermove', 115, 100, 1, 'touch');
+    expect(useStore.getState().camera.azimuth).toBe(azimut);
+    expect(onGestenHinweis).toHaveBeenCalledTimes(1);
+    expect(onGestenHinweis).toHaveBeenCalledWith('touch');
+    // Weiteres Ziehen desselben Fingers: immer noch keine Drehung, kein
+    // weiterer Hinweisaufruf (einmal je Geste).
+    zeiger(el, 'pointermove', 130, 130, 1, 'touch');
+    expect(useStore.getState().camera.azimuth).toBe(azimut);
+    expect(onGestenHinweis).toHaveBeenCalledTimes(1);
+    zeiger(el, 'pointerup', 130, 130, 1, 'touch');
+    stop();
+  });
+
+  it('zwei Finger drehen/zoomen eingebettet weiter wie heute, ohne Hinweis', () => {
+    einbetten();
+    const el = flaeche();
+    const onGestenHinweis = vi.fn();
+    const stop = attachCameraInput(el, { onGestenHinweis });
+    const abstand = useStore.getState().camera.distance;
+    zeiger(el, 'pointerdown', 100, 100, 1, 'touch');
+    zeiger(el, 'pointerdown', 200, 100, 2, 'touch');
+    zeiger(el, 'pointermove', 90, 100, 1, 'touch');
+    zeiger(el, 'pointermove', 210, 100, 2, 'touch');
+    expect(useStore.getState().camera.distance).not.toBe(abstand);
+    expect(onGestenHinweis).not.toHaveBeenCalled();
+    zeiger(el, 'pointerup', 90, 100, 1, 'touch');
+    zeiger(el, 'pointerup', 210, 100, 2, 'touch');
+    stop();
+  });
+
+  it('Maus- oder Stift-Ziehen dreht eingebettet weiter wie heute, ohne Hinweis', () => {
+    einbetten();
+    const el = flaeche();
+    const onGestenHinweis = vi.fn();
+    const stop = attachCameraInput(el, { onGestenHinweis });
+    const azimut = useStore.getState().camera.azimuth;
+    zeiger(el, 'pointerdown', 100, 100);
+    zeiger(el, 'pointermove', 120, 100);
+    expect(useStore.getState().camera.azimuth).not.toBe(azimut);
+    expect(onGestenHinweis).not.toHaveBeenCalled();
+    zeiger(el, 'pointerup', 120, 100);
+    stop();
+  });
+
+  it('nicht passiver touchmove-Lauscher verhindert bei zwei Fingern das Scrollen der Seite, nur eingebettet', () => {
+    einbetten();
+    const el = flaeche();
+    const stop = attachCameraInput(el);
+    const e = new TouchEvent('touchmove', { touches: [{} as Touch, {} as Touch], cancelable: true });
+    el.dispatchEvent(e);
+    expect(e.defaultPrevented).toBe(true);
+    stop();
+  });
+});
+
 describe('attachCameraInput — Flug', () => {
   const imFlug = (): void => {
     useStore.getState().setCamera({ mode: 'fly', fly: { ...DEFAULT_STATE.camera.fly, yaw: 0, pitch: 0 } });

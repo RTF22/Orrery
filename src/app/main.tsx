@@ -33,6 +33,8 @@ import { tastaturAnhaengen } from '../ui/steuerung/tastatur';
 import { letztePose } from '../render/camera/controller';
 import { TempoHinweis } from '../ui/steuerung/TempoHinweis';
 import { installationAbfangen } from '../ui/infokarte/installation';
+import { GestenHinweis } from '../ui/GestenHinweis';
+import { gesteHinweisMelden } from '../ui/gesteMeldung';
 
 // Chrome und Edge melden die Installierbarkeit nur einmal kurz nach dem Laden.
 installationAbfangen(window);
@@ -93,6 +95,9 @@ function App(): React.JSX.Element {
       onZeiger: (zeiger) => { zeigerVonMaus(); szene.setZeiger(zeiger); },
       // Im Flug regelt das Rad das Tempo (Entwurf Flug und Controller §4.3).
       onTempo: (faktor) => { tempoAendern(faktor); },
+      // Einbettung Schritt 3: Rad oder Ein-Finger-Ziehen bewegten im iframe
+      // die Seite statt der Kamera; hier wird nur der Hinweis gemeldet.
+      onGestenHinweis: (art) => { gesteHinweisMelden(art); },
     });
 
     // Flugtasten (Entwurf Flug und Controller §4): gehalten, je Bild ausgewertet.
@@ -171,6 +176,8 @@ function App(): React.JSX.Element {
       <Bedienoberflaeche />
       {/* Außerhalb der Bedienoberfläche: bleibt sichtbar, wenn H sie ausblendet. */}
       <TempoHinweis />
+      {/* Einbettung Schritt 3: mittig über dem Bild, unabhängig von H. */}
+      <GestenHinweis />
       {/* Über der Bedienoberfläche; bleibt sichtbar, wenn H sie ausblendet. */}
       <Fadenkreuz />
     </>

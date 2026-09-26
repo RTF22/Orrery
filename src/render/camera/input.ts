@@ -2,6 +2,7 @@ import { useStore } from '../../store';
 import { TIPP_SCHWELLE_PX, zeigerartVon } from '../treffer';
 import type { Zeigerart } from '../treffer';
 import { ELEVATION_GRENZE, MIN_DISTANCE_KM, MAX_DISTANCE_KM, begrenze, blickDrehen } from './flug';
+import { gesteEntscheiden } from './geste';
 
 /** Bildschirmbreite entspricht etwa einer halben Umdrehung. */
 const DREH_PRO_PIXEL = Math.PI / 600;
@@ -49,9 +50,19 @@ export interface EingabeRueckrufe {
   onZeiger?: (zeiger: { x: number; y: number; art: Zeigerart } | null) => void;
   /** Rad im Flug: Faktor auf das Flugtempo statt Zoom (Entwurf Flug und Controller §4.3). */
   onTempo?: (faktor: number) => void;
+  /**
+   * Einbettung Schritt 3: Rad oder Ein-Finger-Ziehen im iframe hätte die
+   * Kamera bewegt, bewegt stattdessen die Seite (`gesteEntscheiden`). `art`
+   * unterscheidet die beiden Hinweistexte.
+   */
+  onGestenHinweis?: (art: 'rad' | 'touch') => void;
 }
 
-interface Druck { startX: number; startY: number; x: number; y: number; art: Zeigerart; zieht: boolean; tippbar: boolean }
+interface Druck {
+  startX: number; startY: number; x: number; y: number; art: Zeigerart; zieht: boolean; tippbar: boolean;
+  /** Einbettung Schritt 3: Diese Geste bewegt die Seite statt der Kamera (ein Finger, kein Pinch). */
+  gesperrt: boolean;
+}
 
 /**
  * Verbindet Maus- und Berührungseingaben mit dem Store. Der Controller liest
@@ -80,7 +91,7 @@ export function attachCameraInput(element: HTMLElement, rueckrufe: EingabeRueckr
   const onPointerDown = (e: PointerEvent): void => {
     aktive.set(e.pointerId, {
       startX: e.clientX, startY: e.clientY, x: e.clientX, y: e.clientY,
-      art: zeigerartVon(e.pointerType), zieht: false, tippbar: e.button === 0,
+      art: zeigerartVon(e.pointerType), zieht: false, tippbar: e.button === 0, gesperrt: false,
     });
     // Ein zweiter Zeiger macht aus dem Druck eine Geste: kein Tippen mehr, und
     // der verbleibende Finger dreht danach ohne Totzone weiter.
@@ -124,9 +135,28 @@ export function attachCameraInput(element: HTMLElement, rueckrufe: EingabeRueckr
       d.tippbar = false;
       // Während des Ziehens gibt es keine Hervorhebung (Entwurf Klickflächen §5).
       rueckrufe.onZeiger?.(null);
+      // Einbettung Schritt 3: Erst hier (Überschreiten der Tippschwelle) steht
+      // fest, dass daraus eine Ziehgeste wird — entscheidet einmal für die
+      // ganze Geste, ob sie die Kamera oder (ein Finger, im iframe) die Seite
+      // bewegt. Maus und Stift sind für die Regel gleich („nicht touch").
+      const entscheidung = gesteEntscheiden({
+        art: 'ziehen',
+        zeigerart: d.art === 'finger' ? 'touch' : 'maus',
+        strgOderCmd: false,
+        beruehrungen: aktive.size,
+        eingebettet: useStore.getState().ui.eingebettet,
+      });
+      if (entscheidung !== 'kamera') {
+        d.gesperrt = true;
+        if (entscheidung === 'seite-mit-hinweis') rueckrufe.onGestenHinweis?.('touch');
+        return;
+      }
       drehe(d.x - d.startX, d.y - d.startY);
       return;
     }
+    // Gesperrt (Einbettung Schritt 3): Die Seite scrollt selbst, hier ist für
+    // den Rest dieser Geste nichts mehr zu tun.
+    if (d.gesperrt) return;
     drehe(d.x - vorherX, d.y - vorherY);
   };
 
@@ -148,6 +178,20 @@ export function attachCameraInput(element: HTMLElement, rueckrufe: EingabeRueckr
   const onPointerLeave = (): void => { rueckrufe.onZeiger?.(null); };
 
   const onWheel = (e: WheelEvent): void => {
+    // Einbettung Schritt 3: Ein einfaches Rad (ohne Strg/⌘) soll im iframe die
+    // fremde Seite scrollen lassen — dafür darf hier kein preventDefault
+    // stehen, sonst bräche der Seitenscroll ab.
+    const entscheidung = gesteEntscheiden({
+      art: 'rad',
+      zeigerart: 'maus',
+      strgOderCmd: e.ctrlKey || e.metaKey,
+      beruehrungen: 1,
+      eingebettet: useStore.getState().ui.eingebettet,
+    });
+    if (entscheidung !== 'kamera') {
+      rueckrufe.onGestenHinweis?.('rad');
+      return;
+    }
     e.preventDefault();
     // deltaMode 1 zählt Zeilen statt Pixel (Firefox) — auf Pixel normieren.
     const schritte = (e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY) / 100;
@@ -159,14 +203,30 @@ export function attachCameraInput(element: HTMLElement, rueckrufe: EingabeRueckr
     zoome(1.1 ** schritte);
   };
 
+  // Einbettung Schritt 3: `ui.eingebettet` ändert sich nach dem Start nicht
+  // (anders als bei Rad und Ziehen oben deshalb hier einmal beim Anhängen
+  // gelesen statt bei jedem Ereignis).
+  const eingebettetBeimStart = useStore.getState().ui.eingebettet;
+
+  // Nicht passiv: Bei zwei oder mehr Fingern (Drehen/Zoomen der Kamera) soll
+  // die Seite selbst nicht mitscrollen — touchAction allein (unten) erlaubt
+  // dafür pan-x/pan-y auch bei mehreren Fingern.
+  const onTouchMove = (e: TouchEvent): void => {
+    if (e.touches.length >= 2) e.preventDefault();
+  };
+
   element.addEventListener('pointerdown', onPointerDown);
   element.addEventListener('pointermove', onPointerMove);
   element.addEventListener('pointerup', onPointerUp);
   element.addEventListener('pointercancel', onPointerCancel);
   element.addEventListener('pointerleave', onPointerLeave);
   element.addEventListener('wheel', onWheel, { passive: false });
-  // Sonst bricht die Browser-Geste (Scrollen, Zoomen) das Ziehen ab.
-  element.style.touchAction = 'none';
+  if (eingebettetBeimStart) element.addEventListener('touchmove', onTouchMove, { passive: false });
+  // Sonst bricht die Browser-Geste (Scrollen, Zoomen) das Ziehen ab. Im
+  // iframe (Einbettung Schritt 3) lässt pan-x pan-y die Seite unter einem
+  // ziehenden Finger scrollen; die Kamera bewegt sich dort stattdessen über
+  // Rad+Strg/⌘, Ziehen mit Maus/Stift oder zwei Finger.
+  element.style.touchAction = eingebettetBeimStart ? 'pan-x pan-y' : 'none';
 
   return () => {
     element.removeEventListener('pointerdown', onPointerDown);
@@ -175,5 +235,6 @@ export function attachCameraInput(element: HTMLElement, rueckrufe: EingabeRueckr
     element.removeEventListener('pointercancel', onPointerCancel);
     element.removeEventListener('pointerleave', onPointerLeave);
     element.removeEventListener('wheel', onWheel);
+    if (eingebettetBeimStart) element.removeEventListener('touchmove', onTouchMove);
   };
 }
