@@ -14,6 +14,7 @@ import { BodyTree } from './panels/BodyTree';
 import { InfoPanel } from './info/InfoPanel';
 import { useShortcuts } from './shortcuts/useShortcuts';
 import { useIdleHide } from './idle';
+import { Minileiste, KnopfZurueck } from './Minileiste';
 import { useWakeLock } from './wakeLock';
 import { InfoKarte } from './infokarte/InfoKarte';
 import { useInfoKarte } from './infokarte/zustand';
@@ -71,6 +72,14 @@ export function App(): React.JSX.Element {
           {schmal ? <HilfeKnopf /> : null}
         </div>
       ) : null}
+      {/* Außerhalb der ausblendbaren UI-Ebene: Die Minileiste tritt bei
+          ui.hidden gerade an deren Stelle, der Knopf zurück bleibt davon
+          unabhängig immer da (Feature Einbettung, Schritt 2). Der Ruhewächter
+          läuft nur einmal (siehe useIdleHide oben); die Minileiste bekommt
+          seinen Rückgabewert durchgereicht statt ihn ein zweites Mal
+          aufzurufen. */}
+      <Minileiste untaetig={untaetig} />
+      <KnopfZurueck />
       <InfoKarte />
       <SteuerKarte />
     </>

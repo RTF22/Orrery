@@ -17,7 +17,8 @@ export function istEingabefeld(ziel: EventTarget | null): boolean {
   return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
 }
 
-function vollbildUmschalten(): void {
+/** Auch vom Vollbild-Knopf der Minileiste genutzt (Feature Einbettung, Schritt 2). */
+export function vollbildUmschalten(): void {
   if (document.fullscreenElement === null) {
     void document.documentElement.requestFullscreen?.();
   } else {
