@@ -68,7 +68,8 @@ einem KI-Coding-Assistenten, einem nicht deterministisch arbeitenden Werkzeug. L
 mit diesem Werkzeug trotzdem eine deterministische, überprüfbare Anwendung zu bauen: Tests,
 Zahlen und Pixelmessung statt Eindruck. Wie das im Einzelnen ablief, mit allen Zahlen und
 Commit-Kürzeln, erzählen der [Überblick](docs/entstehung.de.md) und die ausführliche
-[Chronik](docs/chronik.de.md).
+[Chronik](docs/chronik.de.md). Beide gibt es auch als Webseiten unter
+<https://orrery3d.de/doku/making-of/de/>.
 
 ## Lizenz
 

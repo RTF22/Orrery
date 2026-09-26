@@ -65,7 +65,8 @@ an AI coding assistant, a tool that does not work deterministically. The guiding
 use that tool to build a deterministic, verifiable application anyway: tests, numbers, and
 pixel measurements instead of impressions. How that unfolded in detail, with every number and
 commit hash, is told by the [overview](docs/entstehung.en.md) and the detailed
-[chronicle](docs/chronik.en.md).
+[chronicle](docs/chronik.en.md). Both are also available as web pages at
+<https://orrery3d.de/doku/making-of/en/>.
 
 ## Licence
 
