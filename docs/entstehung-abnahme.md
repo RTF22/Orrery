@@ -439,6 +439,6 @@ Modell statt Markenname).
 ### Entscheidungen (26.09.2026)
 
 1. Handprüfung ohne Befund (Jens), eingetragen in § 5.
-2. Offen: Website-Adresse in den READMEs nach dem Deploy.
+2. Deploy durch Jens (26.09.2026); beide READMEs nennen die Live-Adresse der Doku-Seiten (`0cd2207`).
 3. Fast-Forward nach `master` und Push freigegeben (Jens).
-4. Offen: `.gitattributes`-Regel für `docs/*.md`.
+4. Keine `.gitattributes`-Regel für `docs/*.md` (Jens); der Generator vereinheitlicht die Zeilenenden selbst.
