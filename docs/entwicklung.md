@@ -21,6 +21,12 @@ Im Entwicklungslauf liegen `window.store`, `window.renderer` und `window.scene`
 bereit, damit sich Szenen und Uniforms für Sichtprüfungen ohne Klickweg setzen und
 ablesen lassen.
 
+Nach dem Vite-Bau führt `npm run build` zusätzlich `scripts/doku-bauen.ts` aus: Das
+Skript wandelt die Making-of-Texte (Überblick und Chronik, je Deutsch und Englisch)
+in statische Seiten unter `dist/doku/making-of/` um, mit Sprachwahl nach
+Browsersprache (Standard Englisch), und prüft anschließend alle Verweise der
+gebauten Seiten. Der nächste `npm run deploy` lädt sie mit dem übrigen `dist/` hoch.
+
 ## Veröffentlichung
 
 Die Seite ist rein statisch und liegt unter `https://orrery3d.de` und

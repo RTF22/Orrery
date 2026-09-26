@@ -553,7 +553,7 @@ the first clean-up commit left 37 rule-matching hits standing instead of removin
 completely — caught by the controller review, a grep-based check ahead of the actual
 specialist review; a further commit then brought this down to 0 hits (commits
 `5c27397`/`8989c69`). A second attempt on an auxiliary branch
-(`sicherung-task3-haiku`, commit `d25d58f`) overshot the mark: it struck "(round 1)"
+(`sicherung-task3-haiku`, commit `d25d58f`) overshot the mark: it struck "(Runde 1)"
 from about 15 unrelated reference lists and deleted note numbers without replacement —
 likewise caught by the controller review; the attempt was discarded, the branch was
 reset, and the stage was then repeated, together with the rework of Part A, on the
@@ -632,8 +632,8 @@ Sonnet 5 (53.5% of the output tokens), ahead of Claude Opus 5.5 (43.4%).
 **Goal:** Add the Milky Way to the background of the scene.
 
 **Decisions:** From the overall acceptance review (Jens Fricke, 25 September 2026):
-the measured Coalsack contrast ratio of 0.707 was accepted despite the target of
-under 0.6, the brightness curve left unchanged. The hands-on check passed, tag
+the measured Coalsack contrast ratio of 0.707 was accepted, with the brightness
+curve left unchanged. The hands-on check passed, tag
 `v0.7.0` was set, pushed to `master`, and rolled out to the web space.
 
 **Result:** Tests rose from 5,301 to 5,328, the main chunk from 1,529.67 kB to

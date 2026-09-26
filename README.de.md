@@ -61,6 +61,15 @@ der Planeten.
 - Kino-Modus: Vollbild, automatische Kamerafahrten durch 19 kuratierte Szenen.
 - Installierbare Web-App; läuft auf dem Handy, mit Tastatur, Maus und Controller.
 
+## Wie es entstand
+
+Orrery entstand in 15 Kalendertagen, vom ersten Prompt bis zur eigenen Domain — gebaut mit
+einem KI-Coding-Assistenten, einem nicht deterministisch arbeitenden Werkzeug. Leitmotiv war,
+mit diesem Werkzeug trotzdem eine deterministische, überprüfbare Anwendung zu bauen: Tests,
+Zahlen und Pixelmessung statt Eindruck. Wie das im Einzelnen ablief, mit allen Zahlen und
+Commit-Kürzeln, erzählen der [Überblick](docs/entstehung.de.md) und die ausführliche
+[Chronik](docs/chronik.de.md).
+
 ## Lizenz
 
 Noch nicht festgelegt; alle Rechte bleiben vorbehalten. Texturen und die Karte der

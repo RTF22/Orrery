@@ -58,6 +58,15 @@ planets.
 - Cinema mode: full screen, automatic camera flights through 19 curated scenes.
 - Installable web app; works on phones, with keyboard, mouse and game controller.
 
+## How it was built
+
+Orrery was built in 15 calendar days, from the initial prompt to its own domain — built with
+an AI coding assistant, a tool that does not work deterministically. The guiding idea was to
+use that tool to build a deterministic, verifiable application anyway: tests, numbers, and
+pixel measurements instead of impressions. How that unfolded in detail, with every number and
+commit hash, is told by the [overview](docs/entstehung.en.md) and the detailed
+[chronicle](docs/chronik.en.md).
+
 ## Licence
 
 No licence has been chosen yet; all rights are reserved. Textures and the Milky Way map are
