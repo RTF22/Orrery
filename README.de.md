@@ -7,7 +7,7 @@ Niveaustufen und einer belegten wissenschaftlichen Grundlage.
 
 **Live: <https://orrery3d.de>**
 
-![Saturn mit dem Schatten des Planeten auf den Ringen, dargestellt von Orrery](docs/bilder/orrery-saturn.jpg)
+![Animierte Ansicht von Saturn mit dem Schatten des Planeten auf den Ringen, dargestellt von Orrery](docs/bilder/orrery-saturn.webp)
 
 Ein Orrery ist ein mechanisches Modell der Planetenbewegung, benannt nach dem Earl of Orrery,
 für den 1704 eines der ersten gebaut wurde. Dieses hier ist digital: Es rechnet mit

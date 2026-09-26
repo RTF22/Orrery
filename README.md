@@ -7,7 +7,7 @@ texts on three educational levels and a documented scientific basis.
 
 **Live: <https://orrery3d.de>**
 
-![Saturn with the planet's shadow on its rings, rendered by Orrery](docs/bilder/orrery-saturn.jpg)
+![Animated view of Saturn with the planet's shadow on its rings, rendered by Orrery](docs/bilder/orrery-saturn.webp)
 
 An orrery is a mechanical model of planetary motion, named after the Earl of Orrery, for whom
 one of the first was built in 1704. This one is digital: it computes positions from published
