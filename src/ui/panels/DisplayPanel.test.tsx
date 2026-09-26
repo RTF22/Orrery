@@ -38,6 +38,26 @@ describe('DisplayPanel: Sitzung merken', () => {
   });
 });
 
+describe('DisplayPanel: Sitzung merken bleibt eingebettet verborgen (Fix-Runde 1)', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
+  });
+
+  it('zeigt den Schalter nicht, wenn ui.eingebettet gesetzt ist', () => {
+    const eingebettetesState = structuredClone(DEFAULT_STATE);
+    eingebettetesState.ui.eingebettet = true;
+    useStore.getState().replaceAll(eingebettetesState);
+    render(<DisplayPanel />);
+    expect(screen.queryByRole('checkbox', { name: 'Sitzung merken' })).toBeNull();
+  });
+
+  it('zeigt ihn wieder, sobald ui.eingebettet false ist', () => {
+    render(<DisplayPanel />);
+    expect(screen.getByRole('checkbox', { name: 'Sitzung merken' })).not.toBeNull();
+  });
+});
+
 describe('DisplayPanel: Milchstraße', () => {
   beforeEach(() => {
     localStorage.clear();

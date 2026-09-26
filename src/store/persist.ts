@@ -71,6 +71,12 @@ export function zurueckgesetzt(aktuell: AppState): AppState {
   // DEFAULT_STATE zurück, weil toShareable/diff (serialize.ts) den Pfad
   // grundsätzlich auslässt.
   s.ui.eingebettet = aktuell.ui.eingebettet;
+  // Eingebettet ist die schlanke Form der Standard (Fix-Runde 1, Entscheidung
+  // Jens): „Zurücksetzen" blendet die Oberfläche wieder aus, auch wenn Taste H
+  // sie zuvor eingeblendet hatte. Taste H bleibt dabei ausdrücklich erlaubt,
+  // um die volle Oberfläche im iframe einblenden zu können — nur dieser Weg
+  // (Zurücksetzen) kehrt zur schlanken Form zurück.
+  if (s.ui.eingebettet) s.ui.hidden = true;
   return s;
 }
 

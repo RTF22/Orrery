@@ -418,4 +418,19 @@ describe('ui.eingebettet: Laufzeittatsache, nie gemerkt oder geteilt (Feature Ei
     expect(zurueckgesetzt(state).ui.eingebettet).toBe(true);
     expect(ansichtAnwenden(state, { name: 'Leer', state: {} }).ui.eingebettet).toBe(true);
   });
+
+  it('zurueckgesetzt erzwingt ui.hidden bei eingebettet — die schlanke Form ist der Standard der Einbettung (Fix-Runde 1)', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    state.ui.eingebettet = true;
+    // Taste H hatte die Oberfläche zuvor eingeblendet — zulässig, siehe Brief
+    // der Fix-Runde: Zurücksetzen kehrt dennoch zur schlanken Form zurück.
+    state.ui.hidden = false;
+    expect(zurueckgesetzt(state).ui.hidden).toBe(true);
+  });
+
+  it('lässt ui.hidden beim Standard, wenn nicht eingebettet', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    state.ui.hidden = true;
+    expect(zurueckgesetzt(state).ui.hidden).toBe(false);
+  });
 });

@@ -20,6 +20,10 @@ const SCHALTER: readonly (readonly [keyof AppState['display'], string])[] = [
 export function DisplayPanel(): React.JSX.Element {
   const display = useStore((s) => s.display);
   const setDisplay = useStore((s) => s.setDisplay);
+  // Eingebettet (Feature Einbettung, Fix-Runde 1): Der Schalter „Sitzung
+  // merken" bleibt hier verborgen, weil im iframe ohnehin nichts gemerkt
+  // wird (main.tsx lässt sicherungStarten dort aus).
+  const eingebettet = useStore((s) => s.ui.eingebettet);
   const helligkeitId = useId();
   const abfallId = useId();
   const nachtId = useId();
@@ -101,14 +105,16 @@ export function DisplayPanel(): React.JSX.Element {
           />
         </label>
 
-        <label className="mt-1 flex items-center gap-2 border-t border-white/10 pt-2">
-          <input
-            type="checkbox"
-            checked={merken}
-            onChange={(e) => { setMerken(e.target.checked); }}
-          />
-          <span>{t('display.rememberSession')}</span>
-        </label>
+        {!eingebettet && (
+          <label className="mt-1 flex items-center gap-2 border-t border-white/10 pt-2">
+            <input
+              type="checkbox"
+              checked={merken}
+              onChange={(e) => { setMerken(e.target.checked); }}
+            />
+            <span>{t('display.rememberSession')}</span>
+          </label>
+        )}
       </div>
     </Panel>
   );
