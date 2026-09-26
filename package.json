@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node scripts/doku-bauen.ts",
     "deploy": "npm run build && node scripts/deploy.ts",
     "deploy:trocken": "node scripts/deploy.ts --trocken",
     "literatur:pruefen": "node scripts/pruefe-literatur.ts",
@@ -34,6 +34,7 @@
     "basic-ftp": "^6.2.1",
     "eslint": "^10.10.0",
     "jsdom": "^30.0.1",
+    "marked": "^18.0.14",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.70.0",
