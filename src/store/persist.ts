@@ -2,7 +2,7 @@ import type { AppState } from './types';
 import { DEFAULT_STATE } from './index';
 import { istPlain, pruefeZustand } from './pruefer';
 import type { Plain } from './pruefer';
-import { encodePatch, fromShareable, mergePatch, toShareable } from './serialize';
+import { fromShareable, mergePatch, toShareable } from './serialize';
 import { SYSTEM_THEMA } from '../data/themen';
 
 /**
@@ -46,13 +46,6 @@ export function filtereProfil(patch: Plain, profil: Profil): Plain {
 
 export function patchFuer(state: AppState, profil: Profil): Plain {
   return filtereProfil(toShareable(state), profil);
-}
-
-export const FRAGMENT_PRAEFIX = '#p=';
-
-/** Vollständige Adresse zum Teilen; Ursprung und Pfad kommen vom Aufrufer (location). */
-export function linkErzeugen(state: AppState, ort: { origin: string; pathname: string }): string {
-  return `${ort.origin}${ort.pathname}${FRAGMENT_PRAEFIX}${encodePatch(patchFuer(state, 'link'))}`;
 }
 
 /**

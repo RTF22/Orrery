@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { DEFAULT_STATE } from './index';
 import type { AppState } from './types';
-import { decodeState, fromShareable, toShareable } from './serialize';
+import { fromShareable, toShareable } from './serialize';
 import {
-  filtereProfil, patchFuer, linkErzeugen, zurueckgesetzt,
+  filtereProfil, patchFuer, zurueckgesetzt,
   sitzungLesen, sitzungSchreiben, sitzungLoeschen, sitzungMerkenLesen, sitzungMerkenSchreiben,
   SCHLUESSEL_SITZUNG, SCHLUESSEL_MERKEN,
   ansichtErstellen, ansichtAnwenden, ansichtenLesen, ansichtenSchreiben,
@@ -90,18 +90,6 @@ describe('Round-Trip je Profil', () => {
   it('sitzung: alles kommt zurück', () => {
     const s = abgewandelt();
     expect(fromShareable(patchFuer(s, 'sitzung'))).toEqual(s);
-  });
-});
-
-describe('linkErzeugen', () => {
-  it('baut Ursprung, Pfad und Fragment zusammen; das Fragment stellt die Ansicht wieder her', () => {
-    const s = abgewandelt();
-    const link = linkErzeugen(s, { origin: 'https://beispiel.test', pathname: '/Orrery/' });
-    expect(link.startsWith('https://beispiel.test/Orrery/#p=')).toBe(true);
-    const zurueck = decodeState(link.slice(link.indexOf('#p=') + 3));
-    expect(zurueck.scale.sizeScale).toBe(7);
-    expect(zurueck.ui.language).toBe('en');
-    expect(zurueck.quality.tier).toBe('auto');
   });
 });
 

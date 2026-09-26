@@ -4,7 +4,7 @@ import { istPlain } from '../store/pruefer';
 import type { Plain } from '../store/pruefer';
 import { fromShareable } from '../store/serialize';
 import { fragmentAuswerten } from '../store/deeplink';
-import { FRAGMENT_PRAEFIX, sitzungLesen, sitzungMerkenLesen, sitzungSchreiben, sitzungsPatch } from '../store/persist';
+import { sitzungLesen, sitzungMerkenLesen, sitzungSchreiben, sitzungsPatch } from '../store/persist';
 import type { Ablage } from '../store/persist';
 import { startSprache } from '../ui/i18n';
 import type { Sprache } from '../ui/i18n';
@@ -17,16 +17,6 @@ export interface StartUmgebung {
   fragmentEntfernen: () => void;
   ablage: Ablage | null;
   navigatorLanguage: string;
-}
-
-/**
- * Liest nur das alte, reine `#p=`-Fragment (ohne weitere Schlüssel). Von
- * `startZustand` nicht mehr verwendet — das übernimmt `fragmentAuswerten`
- * (store/deeplink.ts) für das ganze Fragment, `p` eingeschlossen. Bleibt als
- * schmale, eigenständig geprüfte Funktion stehen.
- */
-export function fragmentLesen(hash: string): string | null {
-  return hash.startsWith(FRAGMENT_PRAEFIX) ? hash.slice(FRAGMENT_PRAEFIX.length) : null;
 }
 
 /** Nur eine im Patch tatsächlich enthaltene Sprache darf den Browser überstimmen. */

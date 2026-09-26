@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useStore, DEFAULT_STATE } from '../store';
 import { encodePatch } from '../store/serialize';
 import { SCHLUESSEL_SITZUNG, SCHLUESSEL_MERKEN, sitzungSchreiben } from '../store/persist';
-import { fragmentLesen, startZustand, sicherungStarten } from './persistenz';
+import { startZustand, sicherungStarten } from './persistenz';
 import type { StartUmgebung, EreignisZiel } from './persistenz';
 import { ablageFake } from '../test/ablageFake';
 
@@ -12,14 +12,6 @@ const umgebung = (teil: Partial<StartUmgebung> = {}): StartUmgebung => ({
   ablage: ablageFake(),
   navigatorLanguage: 'de-DE',
   ...teil,
-});
-
-describe('fragmentLesen', () => {
-  it('liest nur das p-Fragment', () => {
-    expect(fragmentLesen('#p=abc')).toBe('abc');
-    expect(fragmentLesen('#x=1')).toBeNull();
-    expect(fragmentLesen('')).toBeNull();
-  });
 });
 
 describe('startZustand', () => {

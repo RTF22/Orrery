@@ -151,11 +151,15 @@ function koerperPatch(koerper: Body, massstab: ScaleSettings): Plain {
 /**
  * Wertet ein URL-Fragment mit lesbaren Parametern aus (`p`, `date`, `body`,
  * `scene`, `lang`, Reihenfolge beliebig, unbekannte Schlüssel werden
- * ignoriert). `p` ist die Grundlage, `date`/`body`/`lang` überschreiben ihre
- * Felder; bei gültigem `scene` zählen `date` und `body` nicht, das Kino
- * startet stattdessen mit dieser Szene. Liefert `null`, wenn `hash` gar kein
- * Fragment enthält (kein „#"); enthält es eines, ist `patch` nur dann `null`,
- * wenn kein einziger Schlüssel einen gültigen Wert ergab.
+ * ignoriert). `p` ist die Grundlage; `date` und `body` überschreiben ihre
+ * Felder nur, wenn sie vom Zeitpunkt bzw. Körper aus `p` abweichen — stimmen
+ * sie überein, bleibt `p` maßgeblich (Kamera, Abstand, Winkel, Uhrstand samt
+ * Pause), weil der Knopf (`lesbarerLink`) `date`/`body` immer als lesbares
+ * Abbild desselben Zustands daneben legt. `lang` überschreibt immer. Bei
+ * gültigem `scene` zählen `date` und `body` nicht, das Kino startet
+ * stattdessen mit dieser Szene. Liefert `null`, wenn `hash` gar kein Fragment
+ * enthält (kein „#"); enthält es eines, ist `patch` nur dann `null`, wenn
+ * kein einziger Schlüssel einen gültigen Wert ergab.
  */
 export function fragmentAuswerten(hash: string): FragmentErgebnis | null {
   if (!hash.startsWith('#')) return null;
@@ -193,8 +197,20 @@ export function fragmentAuswerten(hash: string): FragmentErgebnis | null {
     const koerperWert = eintraege.get('body');
     const koerper = koerperWert === undefined ? undefined : bodyIndex[koerperWert];
     if (koerper !== undefined) {
-      overlay = mergePatch(overlay, koerperPatch(koerper, wirksamerMassstab(grundlage)));
       gueltig = true;
+      // Der Knopf (lesbarerLink) nimmt body immer vom selben Zustand wie p:
+      // Ist es derselbe Körper, bleiben Kamera, Abstand und Winkel
+      // unangetastet aus p — sonst schnitte ein frisch berechneter
+      // Fokusabstand den genauen, gerade erst geteilten Kamerastand ab
+      // (dieselbe Überlegung wie bei date). Ohne einen Körper in der
+      // Grundlage (kein p, oder p ohne eigenes Ziel) gilt weiter die
+      // Fokus-Regel: Kamera frisch auf den Körper ausrichten.
+      const grundKamera = grundlage.camera;
+      const basisZiel = istPlain(grundKamera) && typeof grundKamera.targetId === 'string'
+        ? grundKamera.targetId : null;
+      if (basisZiel !== koerper.id) {
+        overlay = mergePatch(overlay, koerperPatch(koerper, wirksamerMassstab(grundlage)));
+      }
     }
   }
 

@@ -154,6 +154,42 @@ describe('fragmentAuswerten: body', () => {
   });
 });
 
+describe('fragmentAuswerten: body überschreibt Kamera aus p nur bei anderem Körper', () => {
+  it('derselbe Körper: Kamera, Abstand und Winkel bleiben unverändert aus p', () => {
+    const p = {
+      camera: {
+        targetId: 'mars', mode: 'attached', freezeJd: null,
+        distance: 654_321, azimuth: 0.9, elevation: -0.2,
+      },
+    };
+    const ergebnis = fragmentAuswerten('#p=' + encodePatch(p) + '&body=mars');
+    expect(ergebnis?.patch).toEqual(p);
+  });
+
+  it('anderer Körper: body überschreibt wie ohne p (frischer Fokus), Azimut/Elevation bleiben', () => {
+    const p = {
+      camera: {
+        targetId: 'venus', mode: 'attached', freezeJd: null,
+        distance: 654_321, azimuth: 0.9, elevation: -0.2,
+      },
+    };
+    const ergebnis = fragmentAuswerten('#p=' + encodePatch(p) + '&body=mars');
+    expect(ergebnis?.patch).toEqual({
+      camera: {
+        targetId: 'mars', mode: 'attached', freezeJd: null,
+        distance: erwarteterAbstand('mars'), azimuth: 0.9, elevation: -0.2,
+      },
+      ui: { info: { thema: null } },
+    });
+  });
+
+  it('ohne einen Körper in p (nur andere Felder) gilt weiter die Fokus-Regel', () => {
+    const p = { camera: { azimuth: 0.9, elevation: -0.2 } };
+    const ergebnis = fragmentAuswerten('#p=' + encodePatch(p) + '&body=mars');
+    expect((ergebnis?.patch?.camera as { distance: number }).distance).toBe(erwarteterAbstand('mars'));
+  });
+});
+
 describe('fragmentAuswerten: scene', () => {
   it('gültige Szene: date und body zählen dann nicht', () => {
     const ergebnis = fragmentAuswerten('#scene=systemblick&date=2024-03-01&body=mars');
@@ -298,15 +334,21 @@ describe('lesbarerLink', () => {
     expect(zurueck.scale.sizeScale).toBe(7);
   });
 
-  it('Rundreise mit ausgewähltem Körper: derselbe Zustand wie mit „#p=" allein', () => {
+  it('Rundreise: Zeit, Kamera und Auswahl zusammen ergeben genau den Link-Zustand', () => {
     const state = structuredClone(DEFAULT_STATE);
+    state.time.jd = DEFAULT_STATE.time.jd + 10 / 86_400; // eigene Sekunden, unter der Rundungsgrenze
+    state.time.paused = false;
+    // Von Hand nachgezogener Abstand und Winkel — bewusst ungleich dem
+    // frischen Fokusabstand, sonst prüfte der Test nichts über body hinaus.
     state.camera = {
       ...state.camera, mode: 'attached', targetId: 'mars', freezeJd: null,
-      distance: erwarteterAbstand('mars'),
+      distance: 654_321, azimuth: 1.1, elevation: -0.3,
     };
     const link = lesbarerLink(state, ORT);
     const ergebnis = fragmentAuswerten(fragmentTeil(link));
     const zurueck = fromShareable(ergebnis?.patch ?? {});
+    expect(zurueck.time.jd).toBe(state.time.jd);
+    expect(zurueck.time.paused).toBe(false);
     expect(zurueck.camera).toEqual(state.camera);
   });
 });
