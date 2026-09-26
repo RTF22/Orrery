@@ -22,17 +22,18 @@ built-in compromise.
 |---|---|---|
 | Planetary orbits | JPL Approximate Positions, extrapolated linearly | Checked 1800–2050; nominal longitude error 15″–600″ |
 | Moons | Planetary Satellite Mean Elements (JPL SSD) | No separately maintained Laplace plane |
-| Dwarf planets and the Pluto system | Osculating elements, JPL Small-Body Database | Deviates from DE441 by up to 1.4° (1800) |
-| Rotation and poles | Fixed right ascension/declination, mostly the 2011 IAU report; Uranus/Neptune from Voyager 2 radio data (1986/1989) | No precession, no periodic terms |
+| Dwarf planets and the Pluto system | Osculating elements, JPL Small-Body Database | Pluto deviates from DE441 by up to 1.4° (1800) |
+| Rotation and poles | Fixed right ascension/declination, mostly the pole official since 2015 (Archinal et al. 2018); Mars keeps the 2009 pole, Uranus/Neptune the Voyager 2 periods (1986/1989) | No precession, no periodic terms |
 | Time scales | Clock shows UTC, feeds it into the orbit calculation unconverted | Valid year 1–9999; UTC used as TDB |
-| Eclipses | Computed, not read from tables; checked against the NASA eclipse catalog | Matches 135 of 143 umbral eclipses (1951–2050) |
+| Lunar eclipses | Computed, not read from tables; checked against the NASA eclipse catalog | Matches 135 of 143 umbral eclipses (1951–2050) |
 | Star catalogue | HYG database (Astronexus), version 4.1, CC BY-SA 4.0 | 5070 stars to magnitude 6.0 |
 | Milky Way | NASA SVS "Deep Star Maps 2020", from Gaia DR2 | SVS public domain; Gaia share CC BY-NC 3.0 IGO |
 | Textures | Solar System Scope (CC BY 4.0) and NASA/USGS Astrogeology (public domain) | 14 CC BY maps, 15 public-domain maps |
 | Check against JPL Horizons | JPL Horizons vector table; compares 8 planets and 5 dwarf planets, 5 dates 1850–2040 (65 points) | Planet tolerance 12,000–9,000,000 km |
 
-The topic *Limits of the model* in the app names every simplification with its numbers;
-further detail in [`ASSETS.md`](ASSETS.md) and [`docs/belege/hochschule/`](docs/belege/hochschule/).
+The topic *Limits of the model* in the app describes the model's simplifications and
+quantifies them where possible; further detail in [`ASSETS.md`](ASSETS.md) and
+[`docs/belege/hochschule/`](docs/belege/hochschule/).
 
 ## Educational content
 

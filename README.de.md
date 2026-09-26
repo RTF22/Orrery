@@ -22,17 +22,18 @@ Helligkeiten überhöhen, damit kleine und ferne Körper sichtbar bleiben. Wie s
 |---|---|---|
 | Planetenbahnen | JPL Approximate Positions, linear fortgeschrieben | Geprüft 1800 bis 2050; nominelle Längenfehler 15″ bis 600″ |
 | Monde | Mittlere Bahnelemente der Monde (JPL SSD) | Keine eigens geführte Laplace-Ebene |
-| Zwergplaneten und Pluto-System | Oskulierende Elemente, JPL Small-Body Database | Gegen DE441 bis 1,4° Abweichung (1800) |
-| Rotation und Pole | Feste Rektaszension/Deklination, überwiegend IAU-Bericht 2011; Uranus/Neptun aus Voyager-2-Radiomessungen (1986/1989) | Keine Präzession, keine periodischen Glieder |
+| Zwergplaneten und Pluto-System | Oskulierende Elemente, JPL Small-Body Database | Pluto weicht von DE441 um bis zu 1,4° ab (1800) |
+| Rotation und Pole | Feste Rektaszension/Deklination, überwiegend der seit 2015 amtliche Pol (Archinal et al. 2018); Mars behält den Pol von 2009, Uranus/Neptun die Voyager-2-Perioden (1986/1989) | Keine Präzession, keine periodischen Glieder |
 | Zeitskalen | Uhr zeigt UTC an, setzt sie unverändert in die Bahnrechnung ein | Gültig Jahr 1 bis 9999; UTC als TDB verwendet |
-| Finsternisse | Werden gerechnet, nicht aus Tabellen entnommen; geprüft gegen den NASA-Katalog | Trifft 135 von 143 Kernschattenfinsternissen (1951–2050) |
+| Mondfinsternisse | Werden gerechnet, nicht aus Tabellen entnommen; geprüft gegen den NASA-Katalog | Trifft 135 von 143 Kernschattenfinsternissen (1951–2050) |
 | Sternkatalog | HYG-Datenbank (Astronexus), Version 4.1, CC BY-SA 4.0 | 5070 Sterne bis Helligkeit 6,0 |
 | Milchstraße | NASA SVS „Deep Star Maps 2020“, aus Gaia DR2 | SVS gemeinfrei; Gaia-Anteil CC BY-NC 3.0 IGO |
 | Texturen | Solar System Scope (CC BY 4.0) und NASA/USGS Astrogeology (gemeinfrei) | 14 CC-BY-Karten, 15 gemeinfreie Karten |
 | Prüfung gegen JPL Horizons | JPL-Horizons-Vektortafel; verglichen werden 8 Planeten und 5 Zwergplaneten, 5 Zeitpunkte 1850–2040 (65 Punkte) | Toleranz bei den Planeten 12 000 bis 9 000 000 km |
 
-Das Thema *Grenzen des Modells* in der App benennt alle Vereinfachungen mit ihren Zahlen;
-Einzelheiten außerdem in [`ASSETS.md`](ASSETS.md) und [`docs/belege/hochschule/`](docs/belege/hochschule/).
+Das Thema *Grenzen des Modells* in der App beschreibt die Vereinfachungen des Modells und
+beziffert sie, wo möglich; Einzelheiten außerdem in [`ASSETS.md`](ASSETS.md) und
+[`docs/belege/hochschule/`](docs/belege/hochschule/).
 
 ## Lehrinhalt
 
