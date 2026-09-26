@@ -154,16 +154,21 @@ function koerperPatch(koerper: Body, massstab: ScaleSettings): Plain {
 
 /**
  * Wertet ein URL-Fragment mit lesbaren Parametern aus (`p`, `date`, `body`,
- * `scene`, `lang`, Reihenfolge beliebig, unbekannte Schlüssel werden
+ * `scene`, `lang`, `ui`, Reihenfolge beliebig, unbekannte Schlüssel werden
  * ignoriert). `p` ist die Grundlage; `date` und `body` überschreiben ihre
  * Felder nur, wenn sie vom Zeitpunkt bzw. Körper aus `p` abweichen — stimmen
  * sie überein, bleibt `p` maßgeblich (Kamera, Abstand, Winkel, Uhrstand samt
  * Pause), weil der Knopf (`lesbarerLink`) `date`/`body` immer als lesbares
  * Abbild desselben Zustands daneben legt. `lang` überschreibt immer. Bei
  * gültigem `scene` zählen `date` und `body` nicht, das Kino startet
- * stattdessen mit dieser Szene. Liefert `null`, wenn `hash` gar kein Fragment
- * enthält (kein „#"); enthält es eines, ist `patch` nur dann `null`, wenn
- * kein einziger Schlüssel einen gültigen Wert ergab.
+ * stattdessen mit dieser Szene. `ui=off` (Präsentationsmodus, Feature
+ * Einbettung Schritt 1 — nur dieser eine Wert zählt, wie bei jedem anderen
+ * Schlüssel mit ungültigem Wert) setzt `ui.hidden: true` und überschreibt
+ * damit ein `p`, das die Oberfläche zeigen wollte; es gilt wie `lang`
+ * unabhängig von `scene` und unabhängig davon, ob die Seite in einem iframe
+ * läuft. Liefert `null`, wenn `hash` gar kein Fragment enthält (kein „#");
+ * enthält es eines, ist `patch` nur dann `null`, wenn kein einziger
+ * Schlüssel einen gültigen Wert ergab.
  */
 export function fragmentAuswerten(hash: string): FragmentErgebnis | null {
   if (!hash.startsWith('#')) return null;
@@ -222,6 +227,16 @@ export function fragmentAuswerten(hash: string): FragmentErgebnis | null {
   const spracheWert = eintraege.get('lang');
   if (spracheWert === 'de' || spracheWert === 'en') {
     overlay = mergePatch(overlay, { ui: { language: spracheWert } });
+    gueltig = true;
+  }
+
+  // Präsentationsmodus (Feature Einbettung, Schritt 1): wie lang unabhängig
+  // von scene, und wirkt auch außerhalb eines iframes (Präsentation auf
+  // orrery3d.de). Der Knopf „Link kopieren" (lesbarerLink) erzeugt dieses
+  // ui=off nicht — nur ein von Hand gebauter oder geteilter Link setzt es.
+  const uiWert = eintraege.get('ui');
+  if (uiWert === 'off') {
+    overlay = mergePatch(overlay, { ui: { hidden: true } });
     gueltig = true;
   }
 

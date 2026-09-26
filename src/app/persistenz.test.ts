@@ -132,6 +132,37 @@ describe('startZustand', () => {
   });
 });
 
+describe('startZustand: eingebetteter Start ohne Ablage (Feature Einbettung, Schritt 1)', () => {
+  it('liest keine Sitzung, wenn main.tsx keine Ablage übergibt (ablage: null), obwohl „Sitzung merken" an ist', () => {
+    const echteAblage = ablageFake();
+    echteAblage.daten.set(SCHLUESSEL_SITZUNG, JSON.stringify({ scale: { sizeScale: 7 } }));
+    // main.tsx reicht beim eingebetteten Start ablage: null statt der echten
+    // Ablage weiter — dieselbe Ablage bliebe außerhalb des iframes gelesen.
+    expect(startZustand(umgebung({ ablage: echteAblage })).scale.sizeScale).toBe(7);
+    expect(startZustand(umgebung({ ablage: null })).scale.sizeScale).toBe(DEFAULT_STATE.scale.sizeScale);
+  });
+
+  it('date, body, scene, lang und p gelten unverändert, auch ohne Ablage', () => {
+    const u = umgebung({ ablage: null, hash: '#body=mars' });
+    const state = startZustand(u);
+    expect(state.camera.targetId).toBe('mars');
+    expect(state.camera.mode).toBe('attached');
+  });
+});
+
+describe('startZustand: ui=off (Präsentationsmodus, gilt auch außerhalb eines iframes)', () => {
+  it('gilt als Link, ersetzt die Sitzung und hält die Info-Karte zu (kein Thema)', () => {
+    const ablage = ablageFake();
+    ablage.daten.set(SCHLUESSEL_SITZUNG, JSON.stringify({ scale: { sizeScale: 7 } }));
+    const u = umgebung({ ablage, hash: '#ui=off' });
+    const state = startZustand(u);
+    expect(state.ui.hidden).toBe(true);
+    expect(state.scale.sizeScale).toBe(DEFAULT_STATE.scale.sizeScale);
+    expect(state.ui.info.thema).toBeNull();
+    expect(u.fragmentEntfernen).toHaveBeenCalledTimes(1);
+  });
+});
+
 describe('sicherungStarten', () => {
   let ablage: ReturnType<typeof ablageFake>;
   let handler: Partial<Record<'pagehide', () => void>>;

@@ -24,9 +24,15 @@ function alsGesehenMerken(ablage: Ablage | null): void {
   }
 }
 
-/** Beim Start öffnen: erster Besuch, kein geteilter Link, kein laufendes Kino. */
-export function sollBeimStartOeffnen(p: { ablage: Ablage | null; mitLink: boolean; kinoLaeuft: boolean }): boolean {
-  return !p.mitLink && !p.kinoLaeuft && !gesehen(p.ablage);
+/**
+ * Beim Start öffnen: erster Besuch, kein geteilter Link, kein laufendes
+ * Kino, nicht eingebettet (Feature Einbettung, Schritt 1 — die Info-Karte
+ * öffnet sich in einem fremden iframe nie von selbst).
+ */
+export function sollBeimStartOeffnen(
+  p: { ablage: Ablage | null; mitLink: boolean; kinoLaeuft: boolean; eingebettet: boolean },
+): boolean {
+  return !p.eingebettet && !p.mitLink && !p.kinoLaeuft && !gesehen(p.ablage);
 }
 
 /** „App“ zuerst nur auf Touchgeräten, die Orrery noch nicht als App nutzen. */

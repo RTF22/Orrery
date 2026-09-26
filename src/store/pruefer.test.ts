@@ -150,6 +150,17 @@ describe('pruefeZustand: Flug', () => {
   });
 });
 
+describe('pruefeZustand: ui.eingebettet ist nie extern setzbar (Feature Einbettung, Schritt 1)', () => {
+  it('verwirft ui.eingebettet unabhängig vom Wert — ein manipulierter Link oder eine Sitzung dürfen es nicht setzen', () => {
+    expect(pruefeZustand({ ui: { eingebettet: true } })).toEqual({});
+    expect(pruefeZustand({ ui: { eingebettet: false } })).toEqual({});
+  });
+
+  it('lässt andere ui-Felder neben dem verworfenen eingebettet unberührt', () => {
+    expect(pruefeZustand({ ui: { eingebettet: true, language: 'en' } })).toEqual({ ui: { language: 'en' } });
+  });
+});
+
 describe('pruefeZustand — ton', () => {
   it('übernimmt gültige Werte', () => {
     expect(pruefeZustand({ ton: { modus: 'immer', lautstaerke: 0.8, stumm: true } }))

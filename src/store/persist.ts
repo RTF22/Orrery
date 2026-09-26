@@ -65,6 +65,12 @@ export function zurueckgesetzt(aktuell: AppState): AppState {
   // Zurücksetzen führt in die Startansicht und zeigt deshalb wie ein frischer
   // Start das Sonnensystem (Plan 4c-4, Ruling 4).
   s.ui.info = { ...aktuell.ui.info, thema: SYSTEM_THEMA };
+  // Läuft Orrery in einem iframe, bleibt das über „Zurücksetzen" hinweg
+  // bestehen — eine Tatsache des Ladevorgangs, kein Bedienzustand (Feature
+  // Einbettung, Schritt 1). Ohne diese Zeile fiele s.ui.eingebettet auf
+  // DEFAULT_STATE zurück, weil toShareable/diff (serialize.ts) den Pfad
+  // grundsätzlich auslässt.
+  s.ui.eingebettet = aktuell.ui.eingebettet;
   return s;
 }
 
@@ -251,6 +257,9 @@ export function ansichtAnwenden(aktuell: AppState, ansicht: Ansicht): AppState {
   // schon vorher (ui/panels/AnsichtenPanel.tsx, wie zuruecksetzen in
   // ui/Kopfzeile.tsx).
   if (neu.camera.mode === 'cinema') neu.camera = { ...neu.camera, mode: 'free' };
+  // Wie zurueckgesetzt: die Einbettung ist eine Laufzeittatsache und bleibt
+  // beim Anwenden einer Ansicht bestehen (Feature Einbettung, Schritt 1).
+  neu.ui.eingebettet = aktuell.ui.eingebettet;
   return neu;
 }
 

@@ -295,6 +295,43 @@ describe('fragmentAuswerten: date überschreibt p nur bei abweichender Minute', 
   });
 });
 
+describe('fragmentAuswerten: ui=off (Präsentationsmodus, Feature Einbettung)', () => {
+  it('allein: setzt ui.hidden und gilt als gültiger Link', () => {
+    expect(fragmentAuswerten('#ui=off')?.patch).toEqual({ ui: { hidden: true } });
+  });
+
+  it('überschreibt ui.hidden: false aus p', () => {
+    const p = { ui: { hidden: false } };
+    const ergebnis = fragmentAuswerten('#p=' + encodePatch(p) + '&ui=off');
+    expect(ergebnis?.patch).toEqual({ ui: { hidden: true } });
+  });
+
+  it('wirkt neben scene, obwohl date und body dort nicht zählen', () => {
+    const ergebnis = fragmentAuswerten('#scene=systemblick&ui=off&date=2024-03-01&body=mars');
+    expect(ergebnis?.szeneId).toBe('systemblick');
+    expect(ergebnis?.patch).toEqual({ ui: { hidden: true } });
+  });
+
+  it('kombiniert mit lang', () => {
+    expect(fragmentAuswerten('#ui=off&lang=en')?.patch).toEqual({ ui: { hidden: true, language: 'en' } });
+  });
+
+  it('nur der Wert „off" zählt: „on", leer und „OFF" werden wie ein ungültiger Wert ignoriert', () => {
+    expect(fragmentAuswerten('#ui=on')).toEqual({ patch: null, szeneId: null });
+    expect(fragmentAuswerten('#ui=')).toEqual({ patch: null, szeneId: null });
+    expect(fragmentAuswerten('#ui=OFF')).toEqual({ patch: null, szeneId: null });
+  });
+
+  it('URL-kodiert', () => {
+    expect(fragmentAuswerten('#ui=%6Ff%66')?.patch).toEqual({ ui: { hidden: true } });
+  });
+
+  it('der Knopf „Link kopieren" erzeugt kein ui=off', () => {
+    const link = lesbarerLink(structuredClone(DEFAULT_STATE), ORT);
+    expect(fragmentTeil(link)).not.toMatch(/[#&]ui=/);
+  });
+});
+
 describe('lesbarerLink', () => {
   it('erzeugt date, body (nur bei ausgewähltem Körper) und p in dieser Reihenfolge', () => {
     const state = structuredClone(DEFAULT_STATE);

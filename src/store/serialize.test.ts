@@ -45,6 +45,24 @@ describe('toShareable', () => {
   });
 });
 
+describe('toShareable: ui.eingebettet ist nie Teil eines Patches (Feature Einbettung, Schritt 1)', () => {
+  it('lässt ui.eingebettet auch bei „true" weg — Laufzeittatsache, kein Zustand zum Teilen', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    state.ui.eingebettet = true;
+    expect(toShareable(state)).toEqual({});
+  });
+
+  it('lässt es auch neben anderen Abweichungen weg', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    state.ui.eingebettet = true;
+    state.camera.targetId = 'mars';
+    state.camera.mode = 'attached';
+    const patch = toShareable(state);
+    expect((patch.ui as Record<string, unknown> | undefined)?.eingebettet).toBeUndefined();
+    expect((patch.camera as { targetId: string }).targetId).toBe('mars');
+  });
+});
+
 describe('Round-Trip', () => {
   it('stellt den Zustand über toShareable und fromShareable exakt wieder her', () => {
     const original = abgewandelt();

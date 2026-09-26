@@ -18,6 +18,19 @@ export type Plain = Record<string, unknown>;
  */
 export const GEFAEHRLICHE_SCHLUESSEL: ReadonlySet<string> = new Set(['__proto__', 'constructor', 'prototype']);
 
+/**
+ * Pfade, die nie Teil eines geteilten oder gemerkten Zustands werden dürfen —
+ * anders als GEFAEHRLICHE_SCHLUESSEL geht es hier nicht um Prototyp-
+ * Verschmutzung, sondern um Felder, die nur zur Laufzeit gelten:
+ * `ui.eingebettet` (Feature Einbettung, Schritt 1) ist eine Tatsache des
+ * Ladevorgangs (`window.self !== window.top`, app/einbettung.ts), keine
+ * Einstellung. `pruefeFeld` verwirft einen Pfad aus dieser Liste unabhängig
+ * vom Wert — so kann weder ein Link (`p`) noch eine gemerkte Sitzung noch
+ * eine importierte Ansicht ihn setzen. `serialize.ts` (`diff`) hält dieselbe
+ * Liste ein, damit der Pfad erst gar nicht in einen Patch gelangt.
+ */
+export const FLUECHTIGE_PFADE: ReadonlySet<string> = new Set(['ui.eingebettet']);
+
 export function istPlain(x: unknown): x is Plain {
   return x !== null && typeof x === 'object' && !Array.isArray(x);
 }
@@ -98,6 +111,7 @@ function pruefeRecord(wert: unknown): Plain | typeof VERWORFEN {
 }
 
 function pruefeFeld(pfad: string, wert: unknown, standard: unknown): unknown {
+  if (FLUECHTIGE_PFADE.has(pfad)) return VERWORFEN;
   if (BOOLESCHE_RECORDS.has(pfad)) return pruefeRecord(wert);
   if (wert === null) return Object.hasOwn(NULLBAR, pfad) ? null : VERWORFEN;
   if (Object.hasOwn(AUFZAEHLUNGEN, pfad)) {

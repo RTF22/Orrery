@@ -15,6 +15,7 @@ import { QUALITY_SETTINGS } from './quality';
 import { ablageHolen } from '../store/persist';
 import { fragmentAuswerten } from '../store/deeplink';
 import { sicherungStarten, startZustand } from './persistenz';
+import { eingebettetErkennen } from './einbettung';
 import { SCENES } from '../data/scenes';
 import { starteSzene } from '../ui/cinemaControl';
 import { useInfoKarte, sollBeimStartOeffnen, startReiter } from '../ui/infokarte/zustand';
@@ -191,38 +192,57 @@ const hashBeimStart = window.location.hash;
 // gelesen. Info-Karte (Entwurf Info-Karte §3): Ein geteilter Link zeigt
 // sofort seinen Inhalt; die Karte bleibt dann zu, ebenso bei laufendem Kino.
 // Als Link gilt jedes Fragment mit mindestens einem gültigen Schlüssel (p,
-// date, body, scene, lang) — nicht nur die alte Schreibweise mit p allein.
+// date, body, scene, lang, ui) — nicht nur die alte Schreibweise mit p allein.
 const fragmentErgebnis = fragmentAuswerten(hashBeimStart);
 const mitLink = fragmentErgebnis !== null
   && (fragmentErgebnis.patch !== null || fragmentErgebnis.szeneId !== null);
 // Gültige Szenen-Kennung aus dem Fragment (Parameter `scene`).
 const szeneId = fragmentErgebnis?.szeneId ?? null;
-useStore.getState().replaceAll(startZustand({
+
+// Einbettung (Feature Einbettung und Präsentationsmodus, Schritt 1):
+// Erkennung einmal beim Start (app/einbettung.ts). Im iframe bleibt die
+// gemerkte Sitzung unberührt (weder gelesen — startZustand bekommt dafür
+// ablage: null — noch geschrieben — sicherungStarten entfällt ganz), die
+// Oberfläche startet ausgeblendet, die Info-Karte öffnet sich nie von
+// selbst und es spielt keine Musik. `p`, `date`, `body`, `scene`, `lang` und
+// der Fragment-Parameter `ui=off` gelten unverändert wie außerhalb des
+// iframes.
+const eingebettet = eingebettetErkennen(window);
+const startzustand = startZustand({
   hash: hashBeimStart,
   fragmentEntfernen: () => {
     window.history.replaceState(null, '', window.location.pathname + window.location.search);
   },
-  ablage,
+  ablage: eingebettet ? null : ablage,
   navigatorLanguage: navigator.language,
-}));
-sicherungStarten(useStore, { ablage, ziel: window });
+});
+startzustand.ui.eingebettet = eingebettet;
+if (eingebettet) startzustand.ui.hidden = true;
+useStore.getState().replaceAll(startzustand);
+if (!eingebettet) sicherungStarten(useStore, { ablage, ziel: window });
 themaVerfallStarten();
 if (szeneId !== null) {
   const index = SCENES.findIndex((s) => s.id === szeneId);
   if (index !== -1) starteSzene(index);
 }
 
-if (sollBeimStartOeffnen({ ablage, mitLink, kinoLaeuft: useStore.getState().cinema.running })) {
+if (sollBeimStartOeffnen({
+  ablage, mitLink, kinoLaeuft: useStore.getState().cinema.running, eingebettet,
+})) {
   useInfoKarte.getState().oeffnen(startReiter(grobJetzt(), laeuftAlsApp()));
 }
 
 // Musik des Betreibers (Entwurf Phase 5 §6): ohne musik/stuecke.json bleibt es
-// still. Im Entwicklungslauf liegt der Spieler für Messungen unter window.musik.
-void musikStarten({ basis: import.meta.env.BASE_URL }).then((musik) => {
-  if (import.meta.env.DEV && musik !== null) {
-    (window as unknown as { musik: unknown }).musik = musik.spieler;
-  }
-});
+// still. Eingebettet spielt grundsätzlich keine Musik (Feature Einbettung,
+// Schritt 1). Im Entwicklungslauf liegt der Spieler für Messungen unter
+// window.musik.
+if (!eingebettet) {
+  void musikStarten({ basis: import.meta.env.BASE_URL }).then((musik) => {
+    if (import.meta.env.DEV && musik !== null) {
+      (window as unknown as { musik: unknown }).musik = musik.spieler;
+    }
+  });
+}
 
 createRoot(wurzelElement).render(
   <StrictMode>

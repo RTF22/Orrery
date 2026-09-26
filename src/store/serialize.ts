@@ -1,6 +1,6 @@
 import type { AppState } from './types';
 import { DEFAULT_STATE } from './index';
-import { GEFAEHRLICHE_SCHLUESSEL, pruefeZustand } from './pruefer';
+import { FLUECHTIGE_PFADE, GEFAEHRLICHE_SCHLUESSEL, pruefeZustand } from './pruefer';
 import type { Plain } from './pruefer';
 
 export type { Plain };
@@ -21,15 +21,23 @@ export type { Plain };
  * zuerst lernen, Löschungen darzustellen, bevor dieses Verhalten weiterhin
  * sicher wäre — absichtlich nicht vorab gebaut, solange nichts diesen Fall
  * erreichen kann.
+ *
+ * `pfad` verfolgt die Punktschreibweise („ui.eingebettet") durch die
+ * Rekursion, allein zu dem Zweck, FLUECHTIGE_PFADE (store/pruefer.ts) an
+ * dieser einen Stelle greifen zu lassen: Felder wie `ui.eingebettet` (Feature
+ * Einbettung, Schritt 1 — eine Laufzeittatsache, keine Einstellung) werden so
+ * nie Teil eines Patches, gleich welchen Wert sie gerade tragen.
  */
-function diff(ist: Plain, soll: Plain): Plain {
+function diff(ist: Plain, soll: Plain, pfad = ''): Plain {
   const out: Plain = {};
   for (const [key, wert] of Object.entries(ist)) {
     if (GEFAEHRLICHE_SCHLUESSEL.has(key) || typeof wert === 'function') continue;
+    const kindPfad = pfad === '' ? key : `${pfad}.${key}`;
+    if (FLUECHTIGE_PFADE.has(kindPfad)) continue;
     const standard = soll[key];
     if (wert !== null && typeof wert === 'object' && !Array.isArray(wert)
         && standard !== null && typeof standard === 'object') {
-      const tiefer = diff(wert as Plain, standard as Plain);
+      const tiefer = diff(wert as Plain, standard as Plain, kindPfad);
       if (Object.keys(tiefer).length > 0) out[key] = tiefer;
     } else if (wert !== standard) {
       out[key] = wert;

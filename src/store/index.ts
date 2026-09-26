@@ -51,6 +51,7 @@ export const DEFAULT_STATE: AppState = {
   ton: { modus: 'kino', lautstaerke: 0.5, stumm: false },
   ui: {
     hidden: false,
+    eingebettet: false,
     panels: { time: true, scale: true, camera: true, tree: true },
     language: 'de',
     info: { niveau: 'gymnasium', breiteRem: 24, teilung: 0.65, thema: null },

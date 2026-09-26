@@ -28,14 +28,20 @@ describe('Merkmal „gesehen“', () => {
 
 describe('sollBeimStartOeffnen', () => {
   it('öffnet nur beim ersten Besuch ohne Link und ohne Kino', () => {
-    expect(sollBeimStartOeffnen({ ablage: ablage(), mitLink: false, kinoLaeuft: false })).toBe(true);
-    expect(sollBeimStartOeffnen({ ablage: ablage({ [SCHLUESSEL_INFOKARTE]: '1' }), mitLink: false, kinoLaeuft: false })).toBe(false);
-    expect(sollBeimStartOeffnen({ ablage: ablage(), mitLink: true, kinoLaeuft: false })).toBe(false);
-    expect(sollBeimStartOeffnen({ ablage: ablage(), mitLink: false, kinoLaeuft: true })).toBe(false);
+    expect(sollBeimStartOeffnen({ ablage: ablage(), mitLink: false, kinoLaeuft: false, eingebettet: false })).toBe(true);
+    expect(sollBeimStartOeffnen({
+      ablage: ablage({ [SCHLUESSEL_INFOKARTE]: '1' }), mitLink: false, kinoLaeuft: false, eingebettet: false,
+    })).toBe(false);
+    expect(sollBeimStartOeffnen({ ablage: ablage(), mitLink: true, kinoLaeuft: false, eingebettet: false })).toBe(false);
+    expect(sollBeimStartOeffnen({ ablage: ablage(), mitLink: false, kinoLaeuft: true, eingebettet: false })).toBe(false);
   });
   it('öffnet ohne Fehler, wenn die Ablage wirft oder fehlt', () => {
-    expect(sollBeimStartOeffnen({ ablage: werfend, mitLink: false, kinoLaeuft: false })).toBe(true);
-    expect(sollBeimStartOeffnen({ ablage: null, mitLink: false, kinoLaeuft: false })).toBe(true);
+    expect(sollBeimStartOeffnen({ ablage: werfend, mitLink: false, kinoLaeuft: false, eingebettet: false })).toBe(true);
+    expect(sollBeimStartOeffnen({ ablage: null, mitLink: false, kinoLaeuft: false, eingebettet: false })).toBe(true);
+  });
+  it('öffnet nie in einem eingebetteten Start, auch beim ersten Besuch ohne Link und Kino (Feature Einbettung)', () => {
+    expect(sollBeimStartOeffnen({ ablage: ablage(), mitLink: false, kinoLaeuft: false, eingebettet: true })).toBe(false);
+    expect(sollBeimStartOeffnen({ ablage: null, mitLink: false, kinoLaeuft: false, eingebettet: true })).toBe(false);
   });
 });
 

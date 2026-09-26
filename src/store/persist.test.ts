@@ -393,3 +393,29 @@ describe('ton in den Profilen', () => {
     expect(zurueckgesetzt(state).ton).toEqual({ modus: 'aus', lautstaerke: 0.2, stumm: true });
   });
 });
+
+describe('ui.eingebettet: Laufzeittatsache, nie gemerkt oder geteilt (Feature Einbettung, Schritt 1)', () => {
+  it('reist in keinem Profil mit, auch nicht neben anderen Abweichungen', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    state.ui.eingebettet = true;
+    state.ui.language = 'en';
+    for (const profil of ['sitzung', 'link', 'ansicht'] as const) {
+      const patch = patchFuer(state, profil);
+      expect((patch.ui as Record<string, unknown> | undefined)?.eingebettet).toBeUndefined();
+    }
+    expect(patchFuer(state, 'sitzung').ui).toEqual({ language: 'en' });
+  });
+
+  it('eine gemerkte Sitzung mit (manipuliertem) ui.eingebettet darf es nicht setzen', () => {
+    const a = ablageFake();
+    a.daten.set(SCHLUESSEL_SITZUNG, '{"ui":{"eingebettet":true}}');
+    expect(sitzungLesen(a)).toEqual({});
+  });
+
+  it('zurueckgesetzt und ansichtAnwenden behalten die tatsächliche Einbettung bei', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    state.ui.eingebettet = true;
+    expect(zurueckgesetzt(state).ui.eingebettet).toBe(true);
+    expect(ansichtAnwenden(state, { name: 'Leer', state: {} }).ui.eingebettet).toBe(true);
+  });
+});

@@ -15,6 +15,12 @@ export interface StartUmgebung {
   hash: string;
   /** Entfernt das Fragment aus der Adresszeile (history.replaceState). */
   fragmentEntfernen: () => void;
+  /**
+   * `null` unterdrückt jedes Lesen der gemerkten Sitzung — genutzt beim
+   * eingebetteten Start (app/main.tsx, app/einbettung.ts): Dort bleibt die
+   * Sitzung weder gelesen noch (durch das Weglassen von sicherungStarten)
+   * geschrieben, Fragment und Standard gelten wie gewohnt.
+   */
   ablage: Ablage | null;
   navigatorLanguage: string;
 }
@@ -36,7 +42,10 @@ function spracheAus(patch: Plain): Sprache | null {
  * Sicherung die eigentlich noch vorhandene Sitzung mit dem Standard. Die
  * Sitzung zählt dabei wie immer nur, wenn „Sitzung merken" an ist; ein
  * gültiges (auch ein gültig-leeres) Fragment ersetzt sie in jedem Fall. Nur
- * der Start aus dem Standard setzt das Thema Sonnensystem.
+ * der Start aus dem Standard setzt das Thema Sonnensystem. Ohne Ablage
+ * (`u.ablage: null`, etwa beim eingebetteten Start) bleibt die Sitzung
+ * ungelesen, ganz gleich, ob „Sitzung merken" an ist — der Zustand kommt
+ * dann nur aus dem Fragment oder dem Standard.
  */
 export function startZustand(u: StartUmgebung): AppState {
   const ergebnis = fragmentAuswerten(u.hash);

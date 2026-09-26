@@ -92,6 +92,16 @@ export interface AppState {
   ton: { modus: TonModus; lautstaerke: number; stumm: boolean };
   ui: {
     hidden: boolean;
+    /**
+     * Läuft Orrery in einem fremden iframe (Feature Einbettung und
+     * Präsentationsmodus)? Eine Laufzeittatsache, einmal beim Start aus
+     * `window.self !== window.top` gesetzt (app/einbettung.ts,
+     * app/main.tsx) — kein Bedienzustand: `store/serialize.ts` (`diff`)
+     * lässt sie aus jedem Patch weg, `store/pruefer.ts` verwirft sie aus
+     * jedem externen Zustand, unabhängig vom Wert. Weder eine gemerkte
+     * Sitzung noch ein Link noch eine Ansicht kann sie darum setzen.
+     */
+    eingebettet: boolean;
     panels: Record<string, boolean>;
     /** Muss mit `Sprache` in ui/i18n/index.ts übereinstimmen; i18n.test.ts prüft die Tabellen. */
     language: 'de' | 'en';
