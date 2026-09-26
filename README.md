@@ -20,19 +20,19 @@ built-in compromise.
 
 | Dataset | Source | Validity / accuracy |
 |---|---|---|
-| Planetary orbits | JPL Approximate Positions, extrapolated linearly against the fixed J2000 ecliptic (Earth modeled as the Earth-Moon barycenter) | Checked for 1800–2050; nominal heliocentric-longitude error 15″ (Mercury) to 600″ (Saturn); for Earth, 20″ in longitude, 8″ in latitude, 6000 km in distance |
-| Moons | 20 of 21 moon orbits referred to the parent body's equator (pole fixed at epoch), no separately maintained Laplace plane | Deviates from JPL's own Laplace plane by 0.4° (Callisto), 0.9° (Deimos), 7.6° (Iapetus) |
-| Dwarf planets and the Pluto system | Osculating elements from the JPL Small-Body Database at their own epoch, with only the mean longitude as a running rate | Against the integrated ephemeris DE441, Pluto's position deviates by 0.05° (2000), 0.13° (2050), 0.15° (1900), 1.4° (1800); Pluto sits fixed at its system's origin rather than orbiting the barycenter 2126 km (1.79 Pluto radii) away |
-| Rotation and poles | Fixed right ascension/declination, mostly from the 2011 IAU report; Uranus and Neptune keep the Voyager 2 radio periods from 1986/1989, the Mars pole the older 2009 IAU report | No precession, no periodic terms; the catalog holds −17.24 h for Uranus against 17.247864 ± 0.000010 h from 2011–2022 Hubble images, and 16.11 h for Neptune against a photometric 15.9663 h; the older Mars pole yields a 25.19° obliquity, the one official since 2015 gives 23.92° |
-| Time scales | The clock displays the date as UTC but feeds the same number into the orbit calculation as TDB, unconverted; valid from 1 January year 1 to 31 December 9999, orbital elements checked only for 1800–2050 | Today's UTC/TDB error shifts Earth by 2.8″ in ecliptic longitude, the Moon by 38″ |
-| Eclipses | Computed, not read from tables; the lunar-eclipse search is checked against the NASA catalog | Finds 135 of 143 umbral eclipses from 1951 to 2050, with a maximum time offset of 3.0 h and a root-mean-square of 1.8 h |
-| Star catalogue | HYG database (Astronexus), version 4.1, commit of 17 August 2024, CC BY-SA 4.0 | 5070 stars with apparent magnitude ≤ 6.0 (the naked-eye limit) |
-| Milky Way | NASA SVS "Deep Star Maps 2020", computed from 1.7 billion Gaia DR2 stars (excluding the bright Hipparcos and Tycho stars) | SVS content is public domain; the Gaia share is licensed CC BY-NC 3.0 IGO |
-| Textures | 14 textures (Sun, planets, Moon, four dwarf planets) from Solar System Scope, CC BY 4.0; 15 more (moons, Pluto, Charon) from public-domain NASA/USGS Astrogeology maps | Per-file source, edits and licence in `ASSETS.md` |
-| Check against JPL Horizons | JPL Horizons vector table, heliocentric, J2000 ecliptic, in km (test fixture `src/sim/__fixtures__/horizons.json`) | Compares the computed x/y/z position of the 8 planets and 5 dwarf planets at 5 sample dates between 1850 and 2040 (65 points); tolerance per body, from 12,000 km (Mercury) to 220,000,000 km (Eris) |
+| Planetary orbits | JPL Approximate Positions, extrapolated linearly | Checked 1800–2050; nominal longitude error 15″–600″ |
+| Moons | Planetary Satellite Mean Elements (JPL SSD) | No separately maintained Laplace plane |
+| Dwarf planets and the Pluto system | Osculating elements, JPL Small-Body Database | Deviates from DE441 by up to 1.4° (1800) |
+| Rotation and poles | Fixed right ascension/declination, mostly the 2011 IAU report; Uranus/Neptune from Voyager 2 radio data (1986/1989) | No precession, no periodic terms |
+| Time scales | Clock shows UTC, feeds it into the orbit calculation unconverted | Valid year 1–9999; UTC used as TDB |
+| Eclipses | Computed, not read from tables; checked against the NASA eclipse catalog | Matches 135 of 143 umbral eclipses (1951–2050) |
+| Star catalogue | HYG database (Astronexus), version 4.1, CC BY-SA 4.0 | 5070 stars to magnitude 6.0 |
+| Milky Way | NASA SVS "Deep Star Maps 2020", from Gaia DR2 | SVS public domain; Gaia share CC BY-NC 3.0 IGO |
+| Textures | Solar System Scope (CC BY 4.0) and NASA/USGS Astrogeology (public domain) | 14 CC BY maps, 15 public-domain maps |
+| Check against JPL Horizons | JPL Horizons vector table; compares 8 planets and 5 dwarf planets, 5 dates 1850–2040 (65 points) | Planet tolerance 12,000–9,000,000 km |
 
-For details, including the model's known simplifications, see the topic *Limits of the model*
-in the app, [`ASSETS.md`](ASSETS.md) and [`docs/belege/hochschule/`](docs/belege/hochschule/).
+The topic *Limits of the model* in the app names every simplification with its numbers;
+further detail in [`ASSETS.md`](ASSETS.md) and [`docs/belege/hochschule/`](docs/belege/hochschule/).
 
 ## Educational content
 
