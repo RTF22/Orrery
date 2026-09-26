@@ -75,6 +75,34 @@ gleicht Orrery nicht an.
 **Rechte:** Für die hinterlegten Stücke ist allein der Betreiber der Seite
 verantwortlich, einschließlich Lizenz, Namensnennung und Nutzungsrechten.
 
+## Links
+
+Die Adresse kann den Zustand der Anwendung im URL-Fragment (`#…`) tragen, mit
+lesbaren Parametern in beliebiger Reihenfolge; unbekannte Schlüssel werden
+ignoriert:
+
+- `date`: `JJJJ-MM-TT` oder `JJJJ-MM-TTTHH:MMZ`, gültig im Zeitbereich vom
+  1. Januar des Jahres 1 bis zum 31. Dezember 9999. Ohne Uhrzeit gilt 12:00 UTC,
+  die Uhr steht dann still (`time.paused = true`). Ungültige Werte werden
+  ignoriert.
+- `body`: Kennung eines Körpers aus dem Katalog. Die Anwendung wählt ihn aus und
+  richtet die Kamera auf ihn, genau wie ein Klick in der Körperliste. Unbekannte
+  Kennungen werden ignoriert.
+- `scene`: Kennung einer Kinoszene. Das Kino startet mit dieser Szene; `date` und
+  `body` zählen dann nicht.
+- `lang`: `de` oder `en`, überschreibt die erkannte Browsersprache.
+- `p`: der vollständige, kodierte Zustand, wie ihn der Teilen-Knopf erzeugt. Er
+  ist die Grundlage; `date` und `body` überschreiben ihre Felder nur, wenn sie
+  vom Zeitpunkt bzw. Körper in `p` abweichen. Stimmen sie überein — der
+  Teilen-Knopf legt `date`/`body` immer neben dem passenden `p` ab —, bleibt `p`
+  maßgeblich, und Kamera, Abstand, Winkel sowie der Uhrstand samt Pause bleiben
+  genau erhalten. `lang` überschreibt dagegen immer.
+
+Ein gültiges Fragment ersetzt beim Start eine gemerkte Sitzung und wird
+anschließend aus der Adresszeile entfernt, damit ein späteres Neuladen die
+Sitzung nimmt statt immer wieder denselben Link. Auswertung und Erzeugung stehen
+in `src/store/deeplink.ts`.
+
 ## Aufbau
 
 Vier Schichten mit streng einseitiger Abhängigkeit, jede kennt nur die unter ihr

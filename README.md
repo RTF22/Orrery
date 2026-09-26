@@ -76,6 +76,8 @@ planets.
 - Separate scale sliders for size and distance.
 - Cinema mode: full screen, automatic camera flights through 19 curated scenes.
 - Installable web app; works on phones, with keyboard, mouse and game controller.
+- Shareable links to any date and body, e.g. `https://orrery3d.de/#date=1990-05-17&body=mars`;
+  the share button copies the exact view.
 
 ## How it was built
 

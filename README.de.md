@@ -79,6 +79,8 @@ der Planeten.
 - Getrennte Maßstabsregler für Größe und Abstand.
 - Kino-Modus: Vollbild, automatische Kamerafahrten durch 19 kuratierte Szenen.
 - Installierbare Web-App; läuft auf dem Handy, mit Tastatur, Maus und Controller.
+- Teilbare Links zu jedem Datum und Körper, etwa `https://orrery3d.de/#date=1990-05-17&body=mars`;
+  der Teilen-Knopf kopiert die genaue Ansicht.
 
 ## Wie es entstand
 
