@@ -5,13 +5,19 @@ import {
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Minileiste, KnopfZurueck } from './Minileiste';
 import { useStore, DEFAULT_STATE } from '../store';
+import { startCinema, stopCinema, noteUserInput } from './cinemaControl';
+import { tickCinema } from '../app/cinema';
 import { useInfoKarte } from './infokarte/zustand';
 import { useSteuerKarte } from './steuerkarte/zustand';
 
 beforeEach(() => {
+  // stopCinema zuerst: löscht den von einem vorigen Test gemerkten
+  // Zustand (vorKino) im Modul cinemaControl.ts (wie in dessen eigenen Tests).
+  stopCinema();
   useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
 });
 afterEach(() => {
+  stopCinema();
   useInfoKarte.setState({ offen: false });
   useSteuerKarte.setState({ offen: false });
 });
@@ -83,11 +89,50 @@ describe('Minileiste', () => {
     render(<Minileiste untaetig={false} />);
     expect(document.querySelector('.minileiste')?.hasAttribute('inert')).toBe(true);
   });
+
+  // Fix-Runde 1, C1: tickCinema (app/cinema.ts) setzt time.paused bei
+  // laufendem Kino jedes Bild zurück — ein reines setTime({ paused: true })
+  // aus der Leiste wäre dann wirkungslos. Der Knopf muss deshalb bei
+  // laufendem oder nur durch Eingabe angehaltenem Kino denselben Weg wie
+  // der Start/Stopp-Knopf des Kino-Panels gehen (stopCinema).
+  it('beendet bei laufendem Kino den Film, statt nur time.paused zu setzen', () => {
+    useStore.getState().setUi({ hidden: true });
+    startCinema();
+    render(<Minileiste untaetig={false} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Kino beenden' }));
+    expect(useStore.getState().cinema.running).toBe(false);
+    expect(useStore.getState().camera.mode).not.toBe('cinema');
+    // Anders als ein reines time.paused übersteht das den nächsten Bildtakt:
+    // tickCinema tut ohne laufendes Kino nichts mehr.
+    tickCinema(1);
+    expect(useStore.getState().cinema.running).toBe(false);
+    expect(useStore.getState().time.paused).toBe(false);
+  });
+
+  it('zeigt „Kino beenden" auch, wenn eine Eingabe das Kino nur angehalten hat (camera.mode noch cinema)', () => {
+    useStore.getState().setUi({ hidden: true });
+    startCinema();
+    noteUserInput(); // Standard pauseOnInput: cinema.running wird false, camera.mode bleibt 'cinema'.
+    expect(useStore.getState().cinema.running).toBe(false);
+    expect(useStore.getState().camera.mode).toBe('cinema');
+    render(<Minileiste untaetig={false} />);
+    expect(screen.getByRole('button', { name: 'Kino beenden' })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'Zeit anhalten' })).toBeNull();
+  });
+
+  it('schaltet ohne Kino weiterhin nur time.paused um', () => {
+    useStore.getState().setUi({ hidden: true });
+    render(<Minileiste untaetig={false} />);
+    expect(screen.queryByRole('button', { name: 'Kino beenden' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Zeit anhalten' }));
+    expect(useStore.getState().time.paused).toBe(true);
+    expect(useStore.getState().cinema.running).toBe(false);
+  });
 });
 
 describe('KnopfZurueck', () => {
   it('fehlt außerhalb des iframes', () => {
-    render(<KnopfZurueck />);
+    render(<KnopfZurueck ueberBogenreiter={false} />);
     expect(screen.queryByRole('link')).toBeNull();
   });
 
@@ -95,7 +140,7 @@ describe('KnopfZurueck', () => {
     const state = structuredClone(DEFAULT_STATE);
     state.ui.eingebettet = true;
     useStore.getState().replaceAll(state);
-    render(<KnopfZurueck />);
+    render(<KnopfZurueck ueberBogenreiter={false} />);
     const link = screen.getByRole('link', { name: 'Auf orrery3d.de öffnen' });
     expect(link.getAttribute('target')).toBe('_blank');
     expect(link.getAttribute('rel')).toBe('noopener');
@@ -109,7 +154,7 @@ describe('KnopfZurueck', () => {
     state.camera.mode = 'attached';
     state.camera.targetId = 'mars';
     useStore.getState().replaceAll(state);
-    render(<KnopfZurueck />);
+    render(<KnopfZurueck ueberBogenreiter={false} />);
     const link = screen.getByRole('link', { name: 'Auf orrery3d.de öffnen' });
     fireEvent.click(link);
     expect(link.getAttribute('href')).toContain('body=mars');
@@ -120,7 +165,7 @@ describe('KnopfZurueck', () => {
     state.ui.eingebettet = true;
     state.ui.hidden = false;
     useStore.getState().replaceAll(state);
-    render(<KnopfZurueck />);
+    render(<KnopfZurueck ueberBogenreiter={false} />);
     expect(screen.getByRole('link', { name: 'Auf orrery3d.de öffnen' })).toBeTruthy();
   });
 
@@ -129,7 +174,47 @@ describe('KnopfZurueck', () => {
     state.ui.eingebettet = true;
     useStore.getState().replaceAll(state);
     useSteuerKarte.setState({ offen: true });
-    render(<KnopfZurueck />);
+    render(<KnopfZurueck ueberBogenreiter={false} />);
     expect(screen.getByRole('link', { name: 'Auf orrery3d.de öffnen' }).hasAttribute('inert')).toBe(true);
+  });
+
+  // Fix-Runde 1, C2: Mittelklick (auxclick statt click, kein vorheriger
+  // Fokus), Rechtsklick-Kontextmenü und langes Drücken auf Touch lösen
+  // weder click noch focus aus — pointerenter, pointerdown und contextmenu
+  // müssen den href ebenfalls auf den aktuellen Zustand nachziehen.
+  it('zieht den href auch bei pointerenter, pointerdown und contextmenu nach', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    state.ui.eingebettet = true;
+    state.camera.mode = 'attached';
+    state.camera.targetId = 'venus';
+    useStore.getState().replaceAll(state);
+    render(<KnopfZurueck ueberBogenreiter={false} />);
+    const link = screen.getByRole('link', { name: 'Auf orrery3d.de öffnen' });
+    expect(link.getAttribute('href')).toBe('https://orrery3d.de/');
+
+    fireEvent.pointerEnter(link);
+    expect(link.getAttribute('href')).toContain('body=venus');
+
+    useStore.getState().setCamera({ targetId: 'mars' });
+    fireEvent.contextMenu(link);
+    expect(link.getAttribute('href')).toContain('body=mars');
+
+    useStore.getState().setCamera({ targetId: 'jupiter' });
+    fireEvent.pointerDown(link);
+    expect(link.getAttribute('href')).toContain('body=jupiter');
+  });
+
+  // Fix-Runde 1, C3: Im Kompaktmodus bei eingeblendeter Oberfläche sitzt der
+  // Bogenreiter an derselben Ecke unten rechts (.bogenreiter in index.css,
+  // App.tsx). Der Knopf zurück rückt dann darüber, statt ihn zu verdecken.
+  it('rückt bei ueberBogenreiter höher, sonst unten rechts wie gehabt', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    state.ui.eingebettet = true;
+    useStore.getState().replaceAll(state);
+    const { rerender } = render(<KnopfZurueck ueberBogenreiter={false} />);
+    expect(screen.getByRole('link').className).toContain('bottom-3');
+    expect(screen.getByRole('link').className).not.toContain('bottom-16');
+    rerender(<KnopfZurueck ueberBogenreiter />);
+    expect(screen.getByRole('link').className).toContain('bottom-16');
   });
 });

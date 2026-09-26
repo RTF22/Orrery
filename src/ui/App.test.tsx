@@ -156,4 +156,26 @@ describe('App', () => {
     fireEvent.click(knopf!);
     expect(useInfoKarte.getState().offen).toBe(true);
   });
+
+  // Fix-Runde 1, I2: useIdleHide darf nur einmal laufen (Nebenwirkungen
+  // zeigerAus/resumeIfIdle/noteUserInput, siehe idle.ts) — App.tsx reicht
+  // seinen Rückgabewert an die Minileiste durch, statt den Hook dort ein
+  // zweites Mal aufzurufen. `pointermove` ist innerhalb des isoliert
+  // gerenderten App-Baums nur in useIdleHide registriert (Fadenkreuz.tsx
+  // hängt außerhalb, in app/main.tsx); ein versehentlicher zweiter
+  // useIdleHide-Aufruf verdoppelte diese Registrierung.
+  it('hängt den Ruhewächter (useIdleHide) nur einmal ein', () => {
+    const addSpy = vi.spyOn(window, 'addEventListener');
+    try {
+      const { unmount } = render(<App />);
+      const anzahl = (ereignis: string): number =>
+        addSpy.mock.calls.filter(([name]) => name === ereignis).length;
+      expect(anzahl('pointermove')).toBe(1);
+      expect(anzahl('wheel')).toBe(1);
+      expect(anzahl('touchstart')).toBe(1);
+      unmount();
+    } finally {
+      addSpy.mockRestore();
+    }
+  });
 });

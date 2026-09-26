@@ -77,9 +77,11 @@ export function App(): React.JSX.Element {
           unabhängig immer da (Feature Einbettung, Schritt 2). Der Ruhewächter
           läuft nur einmal (siehe useIdleHide oben); die Minileiste bekommt
           seinen Rückgabewert durchgereicht statt ihn ein zweites Mal
-          aufzurufen. */}
+          aufzurufen. Der Bogenreiter (Fix-Runde 1, C3) sitzt nur bei
+          `sichtbar && schmal` an derselben Ecke unten rechts — der Knopf
+          zurück rückt dann darüber. */}
       <Minileiste untaetig={untaetig} />
-      <KnopfZurueck />
+      <KnopfZurueck ueberBogenreiter={sichtbar && schmal} />
       <InfoKarte />
       <SteuerKarte />
     </>

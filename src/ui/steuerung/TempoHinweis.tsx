@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useStore } from '../../store';
 import { tempoAbonnieren, TEMPO_START } from './anwenden';
 import { t } from '../i18n';
 import { formatZahl } from '../format';
@@ -15,9 +16,18 @@ export const HINWEIS_MS = 1500;
  * Flug Etappe 1): Screenreader melden sie nur zuverlässig, wenn sie schon vor
  * der ersten Änderung im Dokument steht. Ohne Wert bleibt sie leer und ohne
  * Fläche, Rahmen oder Hintergrund (auch die Zeigereingaben bleiben aus).
+ *
+ * Bei ausgeblendeter Oberfläche (`ui.hidden`) steht an derselben Stelle unten
+ * mittig die Minileiste (Feature Einbettung, Schritt 2, Fix-Runde 1, I1): Ein
+ * Mausrad-Dreh — der einzige Auslöser dieser Einblendung — zählt zugleich als
+ * Eingabe für den Ruhewächter der Minileiste (`ui/idle.ts`, dieselbe Liste an
+ * Ereignissen inklusive `wheel`), die Leiste ist also in genau diesem
+ * Augenblick sichtbar. Der Hinweis rückt dann höher, damit sich beide nicht
+ * überlappen.
  */
 export function TempoHinweis(): React.JSX.Element {
   const [wert, setWert] = useState<number | null>(null);
+  const versteckt = useStore((s) => s.ui.hidden);
 
   useEffect(() => {
     let uhr = 0;
@@ -33,13 +43,14 @@ export function TempoHinweis(): React.JSX.Element {
   }, []);
 
   const sichtbar = wert !== null;
+  const lage = versteckt ? 'bottom-16' : 'bottom-6';
   return (
     <div
       role="status"
       className={
         sichtbar
-          ? 'pointer-events-none fixed bottom-6 left-1/2 -translate-x-1/2 rounded bg-black/60 px-3 py-1 text-sm text-slate-100'
-          : 'pointer-events-none fixed bottom-6 left-1/2 -translate-x-1/2'
+          ? `pointer-events-none fixed ${lage} left-1/2 -translate-x-1/2 rounded bg-black/60 px-3 py-1 text-sm text-slate-100`
+          : `pointer-events-none fixed ${lage} left-1/2 -translate-x-1/2`
       }
     >
       {sichtbar ? `${t('fly.tempo')} ×${formatZahl(wert / TEMPO_START)}` : ''}
