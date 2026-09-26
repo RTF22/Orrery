@@ -13,7 +13,10 @@ import { App as Bedienoberflaeche } from '../ui/App';
 import type { QualityTier } from '../store/types';
 import { QUALITY_SETTINGS } from './quality';
 import { ablageHolen, FRAGMENT_PRAEFIX } from '../store/persist';
+import { fragmentAuswerten } from '../store/deeplink';
 import { sicherungStarten, startZustand } from './persistenz';
+import { SCENES } from '../data/scenes';
+import { starteSzene } from '../ui/cinemaControl';
 import { useInfoKarte, sollBeimStartOeffnen, startReiter } from '../ui/infokarte/zustand';
 import { grobJetzt, laeuftAlsApp } from '../ui/infokarte/geraet';
 import { fahreZu } from '../ui/kamerafahrt';
@@ -183,11 +186,15 @@ if (wurzelElement === null) {
 // gedrosselte Sicherung bis zum Schließen der Seite. Der Themenverfall startet
 // erst nach dem Startzustand, damit dessen Thema Sonnensystem stehen bleibt.
 const ablage = ablageHolen();
+const hashBeimStart = window.location.hash;
 // Info-Karte (Entwurf Info-Karte §3): Ein geteilter Link zeigt sofort seinen
 // Inhalt; die Karte bleibt dann zu, ebenso bei laufendem Kino.
-const mitLink = window.location.hash.startsWith(FRAGMENT_PRAEFIX);
+const mitLink = hashBeimStart.startsWith(FRAGMENT_PRAEFIX);
+// Gültige Szenen-Kennung aus dem Fragment (Parameter `scene`): dieselbe
+// Auswertung wie in startZustand, vor dem Entfernen des Fragments gelesen.
+const szeneId = fragmentAuswerten(hashBeimStart)?.szeneId ?? null;
 useStore.getState().replaceAll(startZustand({
-  hash: window.location.hash,
+  hash: hashBeimStart,
   fragmentEntfernen: () => {
     window.history.replaceState(null, '', window.location.pathname + window.location.search);
   },
@@ -196,6 +203,10 @@ useStore.getState().replaceAll(startZustand({
 }));
 sicherungStarten(useStore, { ablage, ziel: window });
 themaVerfallStarten();
+if (szeneId !== null) {
+  const index = SCENES.findIndex((s) => s.id === szeneId);
+  if (index !== -1) starteSzene(index);
+}
 
 if (sollBeimStartOeffnen({ ablage, mitLink, kinoLaeuft: useStore.getState().cinema.running })) {
   useInfoKarte.getState().oeffnen(startReiter(grobJetzt(), laeuftAlsApp()));

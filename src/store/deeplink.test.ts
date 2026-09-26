@@ -1,0 +1,204 @@
+import { describe, it, expect } from 'vitest';
+import { fragmentAuswerten } from './deeplink';
+import { encodePatch } from './serialize';
+import { DEFAULT_STATE } from './index';
+import { JD_MIN, JD_MAX } from '../sim/time';
+import { scaledRadius } from '../sim/scale';
+import { bodyIndex } from '../data';
+
+/** Erwarteter Fokusabstand wie in koerperPatch (Zwilling von ui/kamerafahrt.ts). */
+function erwarteterAbstand(id: string): number {
+  const koerper = bodyIndex[id];
+  if (koerper === undefined) throw new Error(`Unbekannter Körper in der Prüfung: ${id}`);
+  return Math.max(scaledRadius(koerper, DEFAULT_STATE.scale) * 8, 1e4);
+}
+
+describe('fragmentAuswerten: kein Fragment', () => {
+  it('liefert null ohne führendes „#"', () => {
+    expect(fragmentAuswerten('')).toBeNull();
+    expect(fragmentAuswerten('p=abc')).toBeNull();
+  });
+
+  it('liefert ein gültig-leeres Ergebnis für ein bloßes „#"', () => {
+    // Kein einziger Schlüssel vorhanden — wie ein beschädigter Link.
+    expect(fragmentAuswerten('#')).toEqual({ patch: null, szeneId: null });
+  });
+});
+
+describe('fragmentAuswerten: altes „#p="-Fragment unverändert', () => {
+  it('gültig-leer bei „#p=" ohne Rest', () => {
+    expect(fragmentAuswerten('#p=')).toEqual({ patch: {}, szeneId: null });
+  });
+
+  it('übernimmt einen gültigen p-Patch unverändert', () => {
+    const patch = { scale: { sizeScale: 3 } };
+    expect(fragmentAuswerten('#p=' + encodePatch(patch))).toEqual({ patch, szeneId: null });
+  });
+
+  it('beschädigtes p ohne weiteren Schlüssel: patch null', () => {
+    expect(fragmentAuswerten('#p=!!!nicht-base64!!!')).toEqual({ patch: null, szeneId: null });
+  });
+});
+
+describe('fragmentAuswerten: unbekannte Schlüssel', () => {
+  it('ignoriert unbekannte Schlüssel, patch bleibt null ohne einen gültigen', () => {
+    expect(fragmentAuswerten('#foo=bar&baz=qux')).toEqual({ patch: null, szeneId: null });
+  });
+
+  it('unbekannte Schlüssel neben einem gültigen stören nicht', () => {
+    const ergebnis = fragmentAuswerten('#foo=bar&lang=en');
+    expect(ergebnis?.patch).toEqual({ ui: { language: 'en' } });
+  });
+});
+
+describe('fragmentAuswerten: date', () => {
+  it('Datum ohne Uhrzeit bedeutet 12:00 UTC, angehalten', () => {
+    const ergebnis = fragmentAuswerten('#date=2024-03-01');
+    const erwartet = Date.UTC(2024, 2, 1, 12, 0, 0, 0) / 86_400_000 + 2440587.5;
+    expect(ergebnis?.patch).toEqual({ time: { jd: erwartet, paused: true } });
+  });
+
+  it('Datum mit Uhrzeit trifft genau diesen Zeitpunkt', () => {
+    const ergebnis = fragmentAuswerten('#date=2024-03-01T18:45Z');
+    const erwartet = Date.UTC(2024, 2, 1, 18, 45, 0, 0) / 86_400_000 + 2440587.5;
+    expect(ergebnis?.patch).toEqual({ time: { jd: erwartet, paused: true } });
+  });
+
+  it('Prozent-kodierter Doppelpunkt in der Uhrzeit wird verstanden', () => {
+    const kodiert = fragmentAuswerten('#date=2024-03-01T18%3A45Z');
+    const klartext = fragmentAuswerten('#date=2024-03-01T18:45Z');
+    expect(kodiert?.patch).toEqual(klartext?.patch);
+  });
+
+  it('unmögliches Kalenderdatum wird verworfen (kein stilles Umschreiben)', () => {
+    expect(fragmentAuswerten('#date=2026-02-30')).toEqual({ patch: null, szeneId: null });
+  });
+
+  it('Jahr 0000 liegt außerhalb des Zeitbereichs', () => {
+    expect(fragmentAuswerten('#date=0000-06-15')).toEqual({ patch: null, szeneId: null });
+  });
+
+  it('Jahr mit 5 Stellen ist kein gültiges Datum', () => {
+    expect(fragmentAuswerten('#date=10000-01-01')).toEqual({ patch: null, szeneId: null });
+  });
+
+  it('untere Grenze des Zeitbereichs ist genau gültig', () => {
+    const ergebnis = fragmentAuswerten('#date=0001-01-01T00:00Z');
+    expect(ergebnis?.patch).toEqual({ time: { jd: JD_MIN, paused: true } });
+  });
+
+  it('obere Grenze des Zeitbereichs ist genau gültig', () => {
+    const ergebnis = fragmentAuswerten('#date=9999-12-31T00:00Z');
+    expect(ergebnis?.patch).toEqual({ time: { jd: JD_MAX, paused: true } });
+  });
+
+  it('der 31.12.9999 ohne Uhrzeit (12:00 UTC) liegt schon über der oberen Grenze', () => {
+    expect(fragmentAuswerten('#date=9999-12-31')).toEqual({ patch: null, szeneId: null });
+  });
+
+  it('ein ungültiges Datum neben einem gültigen body zählt für sich allein nicht', () => {
+    const ergebnis = fragmentAuswerten('#date=2026-02-30&body=mars');
+    expect(ergebnis?.patch?.time).toBeUndefined();
+    expect((ergebnis?.patch?.camera as { targetId: string }).targetId).toBe('mars');
+  });
+});
+
+describe('fragmentAuswerten: body', () => {
+  it('wählt den Körper aus und richtet die Kamera auf ihn, wie ein Klick in der Körperliste', () => {
+    const ergebnis = fragmentAuswerten('#body=mars');
+    expect(ergebnis?.patch).toEqual({
+      camera: { targetId: 'mars', mode: 'attached', freezeJd: null, distance: erwarteterAbstand('mars') },
+      ui: { info: { thema: null } },
+    });
+  });
+
+  it('unbekannter Körper (katalogfremde Kennung) wird ignoriert', () => {
+    expect(fragmentAuswerten('#body=vulcan')).toEqual({ patch: null, szeneId: null });
+  });
+
+  it('behält Azimut und Elevation aus der Grundlage p bei (wie beim Klick)', () => {
+    const p = { camera: { azimuth: 1.23, elevation: -0.4 } };
+    const ergebnis = fragmentAuswerten('#p=' + encodePatch(p) + '&body=mars');
+    expect(ergebnis?.patch).toEqual({
+      camera: {
+        azimuth: 1.23, elevation: -0.4,
+        targetId: 'mars', mode: 'attached', freezeJd: null, distance: erwarteterAbstand('mars'),
+      },
+      ui: { info: { thema: null } },
+    });
+  });
+
+  it('rechnet den Fokusabstand mit dem Maßstab aus p', () => {
+    const p = { scale: { sizeScale: DEFAULT_STATE.scale.sizeScale * 2 } };
+    const ergebnis = fragmentAuswerten('#p=' + encodePatch(p) + '&body=mars');
+    const massstab = { ...DEFAULT_STATE.scale, sizeScale: DEFAULT_STATE.scale.sizeScale * 2 };
+    const mars = bodyIndex.mars;
+    if (mars === undefined) throw new Error('Unbekannter Körper in der Prüfung: mars');
+    const erwartet = Math.max(scaledRadius(mars, massstab) * 8, 1e4);
+    expect((ergebnis?.patch?.camera as { distance: number }).distance).toBe(erwartet);
+  });
+});
+
+describe('fragmentAuswerten: scene', () => {
+  it('gültige Szene: date und body zählen dann nicht', () => {
+    const ergebnis = fragmentAuswerten('#scene=systemblick&date=2024-03-01&body=mars');
+    expect(ergebnis?.szeneId).toBe('systemblick');
+    expect(ergebnis?.patch).toEqual({});
+  });
+
+  it('lang gilt neben einer Szene weiterhin', () => {
+    const ergebnis = fragmentAuswerten('#scene=systemblick&lang=en');
+    expect(ergebnis?.szeneId).toBe('systemblick');
+    expect(ergebnis?.patch).toEqual({ ui: { language: 'en' } });
+  });
+
+  it('unbekannte Szene wird ignoriert, date und body gelten normal', () => {
+    const ergebnis = fragmentAuswerten('#scene=nichtvorhanden&date=2024-03-01');
+    expect(ergebnis?.szeneId).toBeNull();
+    expect(ergebnis?.patch?.time).toBeDefined();
+  });
+});
+
+describe('fragmentAuswerten: lang', () => {
+  it('de und en sind gültig', () => {
+    expect(fragmentAuswerten('#lang=en')?.patch).toEqual({ ui: { language: 'en' } });
+    expect(fragmentAuswerten('#lang=de')?.patch).toEqual({ ui: { language: 'de' } });
+  });
+
+  it('unbekannte Sprache (fr) wird ignoriert', () => {
+    expect(fragmentAuswerten('#lang=fr')).toEqual({ patch: null, szeneId: null });
+  });
+
+  it('überschreibt die Sprache aus p', () => {
+    const p = { ui: { language: 'de' } };
+    const ergebnis = fragmentAuswerten('#p=' + encodePatch(p) + '&lang=en');
+    expect((ergebnis?.patch?.ui as { language: string }).language).toBe('en');
+  });
+});
+
+describe('fragmentAuswerten: p als Grundlage', () => {
+  it('date überschreibt nur die Uhr, andere Felder von p bleiben', () => {
+    const p = { time: { jd: 2451000, rateDaysPerSec: 5 } };
+    const ergebnis = fragmentAuswerten('#p=' + encodePatch(p) + '&date=2024-03-01');
+    const erwarteteJd = Date.UTC(2024, 2, 1, 12, 0, 0, 0) / 86_400_000 + 2440587.5;
+    expect(ergebnis?.patch).toEqual({ time: { jd: erwarteteJd, paused: true, rateDaysPerSec: 5 } });
+  });
+});
+
+describe('fragmentAuswerten: URL-Kodierung, leere Werte, doppelte Schlüssel', () => {
+  it('leerer Wert bei body neben gültigem date', () => {
+    const ergebnis = fragmentAuswerten('#body=&date=2024-03-01');
+    expect(ergebnis?.patch?.camera).toBeUndefined();
+    expect(ergebnis?.patch?.time).toBeDefined();
+  });
+
+  it('doppelter Schlüssel: der erste zählt', () => {
+    const ergebnis = fragmentAuswerten('#body=mars&body=venus');
+    expect((ergebnis?.patch?.camera as { targetId: string }).targetId).toBe('mars');
+  });
+
+  it('doppelter Schlüssel: ein leerer erster Wert lässt den zweiten nicht mehr gelten', () => {
+    const ergebnis = fragmentAuswerten('#body=&body=mars');
+    expect(ergebnis).toEqual({ patch: null, szeneId: null });
+  });
+});

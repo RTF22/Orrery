@@ -101,6 +101,43 @@ describe('startZustand', () => {
     expect(startZustand(u).scale.sizeScale).toBe(7);
     expect(u.fragmentEntfernen).toHaveBeenCalledTimes(1);
   });
+
+  it('date im Fragment setzt Zeitpunkt und Pause, ohne p oder Sitzung', () => {
+    const u = umgebung({ hash: '#date=2024-03-01T18:45Z' });
+    const state = startZustand(u);
+    expect(state.time.paused).toBe(true);
+    expect(state.time.jd).toBe(Date.UTC(2024, 2, 1, 18, 45, 0, 0) / 86_400_000 + 2440587.5);
+    // Ein Link führt kein Thema, zeigt also nicht die Übersicht.
+    expect(state.ui.info.thema).toBeNull();
+  });
+
+  it('body im Fragment wählt den Körper aus und richtet die Kamera auf ihn', () => {
+    const u = umgebung({ hash: '#body=mars' });
+    const state = startZustand(u);
+    expect(state.camera.targetId).toBe('mars');
+    expect(state.camera.mode).toBe('attached');
+  });
+
+  it('date überschreibt ein mitgegebenes p, scene lässt date und body außer Acht', () => {
+    const p = { camera: { targetId: 'venus' } };
+    const uDate = umgebung({ hash: '#p=' + encodePatch(p) + '&date=2024-03-01' });
+    const stateDate = startZustand(uDate);
+    expect(stateDate.camera.targetId).toBe('venus');
+    expect(stateDate.time.paused).toBe(true);
+
+    const uScene = umgebung({ hash: '#scene=systemblick&date=2024-03-01&body=mars' });
+    const stateScene = startZustand(uScene);
+    expect(stateScene.time).toEqual(DEFAULT_STATE.time);
+    expect(stateScene.camera.targetId).toBe(DEFAULT_STATE.camera.targetId);
+  });
+
+  it('lang=fr ist keine gültige Sprache: ohne weiteren Schlüssel wie ein beschädigter Link', () => {
+    const ablage = ablageFake();
+    ablage.daten.set(SCHLUESSEL_SITZUNG, JSON.stringify({ scale: { sizeScale: 7 } }));
+    const u = umgebung({ ablage, hash: '#lang=fr' });
+    expect(startZustand(u).scale.sizeScale).toBe(7);
+    expect(u.fragmentEntfernen).toHaveBeenCalledTimes(1);
+  });
 });
 
 describe('sicherungStarten', () => {

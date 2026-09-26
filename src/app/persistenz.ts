@@ -2,7 +2,8 @@ import type { useStore } from '../store';
 import type { AppState } from '../store/types';
 import { istPlain } from '../store/pruefer';
 import type { Plain } from '../store/pruefer';
-import { decodePatch, fromShareable } from '../store/serialize';
+import { fromShareable } from '../store/serialize';
+import { fragmentAuswerten } from '../store/deeplink';
 import { FRAGMENT_PRAEFIX, sitzungLesen, sitzungMerkenLesen, sitzungSchreiben, sitzungsPatch } from '../store/persist';
 import type { Ablage } from '../store/persist';
 import { startSprache } from '../ui/i18n';
@@ -18,6 +19,12 @@ export interface StartUmgebung {
   navigatorLanguage: string;
 }
 
+/**
+ * Liest nur das alte, reine `#p=`-Fragment (ohne weitere Schlüssel). Von
+ * `startZustand` nicht mehr verwendet — das übernimmt `fragmentAuswerten`
+ * (store/deeplink.ts) für das ganze Fragment, `p` eingeschlossen. Bleibt als
+ * schmale, eigenständig geprüfte Funktion stehen.
+ */
 export function fragmentLesen(hash: string): string | null {
   return hash.startsWith(FRAGMENT_PRAEFIX) ? hash.slice(FRAGMENT_PRAEFIX.length) : null;
 }
@@ -42,10 +49,10 @@ function spracheAus(patch: Plain): Sprache | null {
  * der Start aus dem Standard setzt das Thema Sonnensystem.
  */
 export function startZustand(u: StartUmgebung): AppState {
-  const fragment = fragmentLesen(u.hash);
+  const ergebnis = fragmentAuswerten(u.hash);
   let dekodiert: Plain | null = null;
-  if (fragment !== null) {
-    dekodiert = decodePatch(fragment);
+  if (ergebnis !== null) {
+    dekodiert = ergebnis.patch;
     u.fragmentEntfernen();
   }
   const sitzung = dekodiert === null && sitzungMerkenLesen(u.ablage) ? sitzungLesen(u.ablage) : null;
