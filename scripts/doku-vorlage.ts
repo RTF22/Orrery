@@ -19,9 +19,13 @@
  */
 import type { Dokument, Eintrag, SeitenDaten, Sprache } from './doku-bauen.ts';
 
-const GITHUB_STAMM = 'https://github.com/RTF22/Orrery';
+// Einzige Quelle für beide Konstanten (auch von doku-bauen.ts verwendet, dort per Wert-Import
+// aus dieser Datei — nicht umgekehrt: doku-bauen.ts importiert von hier nur Typen (`import
+// type`, laufzeitfrei), ein echter Ringimport zur Laufzeit entstünde sonst, weil GITHUB_STAMM
+// hier unten sofort beim Auswerten des Moduls in WOERTER gebraucht wird (TDZ bei `const`).
+export const GITHUB_STAMM = 'https://github.com/RTF22/Orrery';
 
-const DATEI_JE_DOKUMENT: Record<Dokument, string> = {
+export const DATEI_JE_DOKUMENT: Record<Dokument, string> = {
   entstehung: 'index.html',
   chronik: 'chronik.html',
 };
@@ -128,7 +132,6 @@ export function seite(d: SeitenDaten): string {
   return `<!doctype html>
 <html lang="${d.sprache}">
 <head>
-<script>document.documentElement.classList.add('js')</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${titelSeite}</title>
@@ -188,6 +191,13 @@ ${inhalt}
       if (ziel && ziel.tagName === 'A') {
         nav.setAttribute('data-offen', 'false');
         knopf.setAttribute('aria-expanded', 'false');
+      }
+    });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && nav.getAttribute('data-offen') === 'true') {
+        nav.setAttribute('data-offen', 'false');
+        knopf.setAttribute('aria-expanded', 'false');
+        knopf.focus();
       }
     });
   }
@@ -415,7 +425,11 @@ main.inhalt :is(h2, h3, h4)[id] { scroll-margin-top: 4.5rem; }
 main.inhalt img { max-width: 100%; height: auto; }
 main.inhalt .tabelle { overflow-x: auto; border: 1px solid var(--rand); border-radius: 0.4rem; margin: 1rem 0; }
 main.inhalt .tabelle table { width: 100%; border-collapse: collapse; }
-main.inhalt .tabelle th, main.inhalt .tabelle td { padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--rand); text-align: left; white-space: nowrap; }
+main.inhalt .tabelle th, main.inhalt .tabelle td { padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--rand); text-align: left; }
+/* Nur Zahlenspalten (GFM-Tabellensyntax --:, marked rendert sie mit align="right") nicht
+   umbrechen lassen — eine Fließtextspalte wie „Meilenstein" in der Zeitleiste bekommt kein
+   align="right" und bricht wie gewohnt um, statt die 72ch-Spalte am Desktop zu sprengen. */
+main.inhalt .tabelle th[align="right"], main.inhalt .tabelle td[align="right"] { white-space: nowrap; }
 main.inhalt pre { overflow-x: auto; padding: 0.75rem; border: 1px solid var(--rand); border-radius: 0.4rem; }
 main.inhalt code { font-family: ui-monospace, "Cascadia Code", monospace; }
 

@@ -32,7 +32,7 @@ import {
 } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DOKU_CSS, dokuWurzelSeite, seite, sprachwahlSeite } from './doku-vorlage.ts';
+import { DATEI_JE_DOKUMENT, DOKU_CSS, GITHUB_STAMM, dokuWurzelSeite, seite, sprachwahlSeite } from './doku-vorlage.ts';
 
 export type Sprache = 'de' | 'en';
 export type Dokument = 'entstehung' | 'chronik';
@@ -58,8 +58,6 @@ export interface SeitenDaten {
   html: string;
   toc: Eintrag[];
 }
-
-const GITHUB_STAMM = 'https://github.com/RTF22/Orrery';
 
 /** Wandelt eine Überschrift in eine URL-taugliche Kennung um. */
 export function slug(text: string): string {
@@ -335,11 +333,6 @@ function alleDateien(ordner: string): string[] {
   }
   return ergebnis;
 }
-
-const DATEI_JE_DOKUMENT: Record<Dokument, string> = {
-  entstehung: 'index.html',
-  chronik: 'chronik.html',
-};
 
 /**
  * Liest die vier Texte aus `quelle`, schreibt je Sprache `index.html` und
