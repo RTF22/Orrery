@@ -216,10 +216,10 @@ erzeugtes Diagramm ohne Fremdanteil. Keine Lizenzangabe in `ASSETS.md` musste ge
 
 | Prüfpunkt | Ergebnis |
 |---|---|
-| GitHub-Darstellung des Überblicks und der Chronik, Deutsch, hell und dunkel | ausstehend |
-| GitHub-Darstellung des Überblicks und der Chronik, Englisch, hell und dunkel | ausstehend |
-| Doku-Seiten lokal (`npx vite preview`) am PC | ausstehend |
-| Doku-Seiten lokal (`npx vite preview`) am Handy | ausstehend |
+| GitHub-Darstellung des Überblicks und der Chronik, Deutsch, hell und dunkel | ohne Befund (Jens, 26.09.2026) |
+| GitHub-Darstellung des Überblicks und der Chronik, Englisch, hell und dunkel | ohne Befund (Jens, 26.09.2026) |
+| Doku-Seiten lokal (`npx vite preview`) am PC | ohne Befund (Jens, 26.09.2026) |
+| Doku-Seiten lokal (`npx vite preview`) am Handy | ohne Befund (Jens, 26.09.2026) |
 
 ## 6. Rulings
 
@@ -435,3 +435,10 @@ Modell statt Markenname).
 4. **Zeilenenden:** Lokal gilt `core.autocrlf=true`, aber keine `.gitattributes`-Regel hält
    `docs/*.md` auf LF fest; der Generator normalisiert Zeilenenden inzwischen selbst (Task 13).
    Soll trotzdem eine feste `.gitattributes`-Regel für diese Dateien ergänzt werden?
+
+### Entscheidungen (26.09.2026)
+
+1. Handprüfung ohne Befund (Jens), eingetragen in § 5.
+2. Offen: Website-Adresse in den READMEs nach dem Deploy.
+3. Fast-Forward nach `master` und Push freigegeben (Jens).
+4. Offen: `.gitattributes`-Regel für `docs/*.md`.
