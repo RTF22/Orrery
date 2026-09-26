@@ -1,8 +1,21 @@
 import { describe, expect, it } from 'vitest';
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, relative } from 'node:path';
 import { baue, inhaltsverzeichnis, pruefeVerweise, seiteEinfach, slug, umwandeln, verweisUmschreiben } from './doku-bauen.ts';
+
+/** Eigene Beispieltexte: zwei Sprachen, je Dokument ein Bild und ein Querverweis mit Marke. */
+function quelle(): string {
+  const q = mkdtempSync(join(tmpdir(), 'doku-'));
+  mkdirSync(join(q, 'bilder', 'entstehung'), { recursive: true });
+  writeFileSync(join(q, 'bilder', 'entstehung', 'a.jpg'), 'x');
+  for (const s of ['de', 'en']) {
+    writeFileSync(join(q, `entstehung.${s}.md`),
+      `# Ü ${s}\n\nErster Absatz.\n\n![Bild](bilder/entstehung/a.jpg)\n\n[Chronik](chronik.${s}.md#p1)\n`);
+    writeFileSync(join(q, `chronik.${s}.md`), `# C ${s}\n\n<a id="p1"></a>\n## Eins\n`);
+  }
+  return q;
+}
 
 describe('slug', () => {
   it('bildet Kennungen aus Überschriften', () => {
@@ -20,6 +33,29 @@ describe('inhaltsverzeichnis', () => {
       { ebene: 3, text: 'Ziel', id: 'ziel' },
       { ebene: 3, text: 'Ziel', id: 'ziel-2' },
     ]);
+  });
+});
+
+describe('Setext-Überschriften', () => {
+  // marked erkennt neben `##`/`###` auch Setext-Überschriften (Textzeile + Unterstreichung
+  // aus `-` oder `=`, ohne Leerzeile dazwischen). inhaltsverzeichnis muss dieselben
+  // Überschriften in derselben Reihenfolge zählen wie marked selbst, sonst verschiebt
+  // sich still die Zuordnung der Kennungen an alle nachfolgenden Überschriften.
+  const md = ['# Titel', '', 'Erste Überschrift', '---', '', '<a id="zweite"></a>', '## Zweite Überschrift', ''].join(
+    '\n',
+  );
+
+  it('zählt eine Setext-Überschrift (Tiefe 2) wie eine ATX-Überschrift derselben Tiefe', () => {
+    expect(inhaltsverzeichnis(md)).toEqual([
+      { ebene: 2, text: 'Erste Überschrift', id: 'erste-uberschrift' },
+      { ebene: 2, text: 'Zweite Überschrift', id: 'zweite' },
+    ]);
+  });
+
+  it('setzt in umwandeln die richtigen Kennungen in der richtigen Reihenfolge, auch über eine Setext-Überschrift hinweg', () => {
+    const u = umwandeln(md, 'de');
+    expect(u.html).toContain('<h2 id="erste-uberschrift">Erste Überschrift</h2>');
+    expect(u.html).toContain('<h2 id="zweite">Zweite Überschrift</h2>');
   });
 });
 
@@ -64,17 +100,6 @@ describe('umwandeln', () => {
 });
 
 describe('baue und pruefeVerweise', () => {
-  function quelle(): string {
-    const q = mkdtempSync(join(tmpdir(), 'doku-'));
-    mkdirSync(join(q, 'bilder', 'entstehung'), { recursive: true });
-    writeFileSync(join(q, 'bilder', 'entstehung', 'a.jpg'), 'x');
-    for (const s of ['de', 'en']) {
-      writeFileSync(join(q, `entstehung.${s}.md`),
-        `# Ü ${s}\n\nErster Absatz.\n\n![Bild](bilder/entstehung/a.jpg)\n\n[Chronik](chronik.${s}.md#p1)\n`);
-      writeFileSync(join(q, `chronik.${s}.md`), `# C ${s}\n\n<a id="p1"></a>\n## Eins\n`);
-    }
-    return q;
-  }
   it('schreibt vier Seiten, kopiert Bilder und findet keine toten Verweise', () => {
     const ziel = mkdtempSync(join(tmpdir(), 'dist-'));
     baue(quelle(), ziel, seiteEinfach);
@@ -88,5 +113,17 @@ describe('baue und pruefeVerweise', () => {
     const p = join(ziel, 'making-of', 'de', 'index.html');
     writeFileSync(p, readFileSync(p, 'utf8') + '<a href="fehlt.html">x</a><a href="chronik.html#nichts">y</a>');
     expect(pruefeVerweise(ziel)).toHaveLength(2);
+  });
+  it('findet auch bei relativer Wurzel keine toten Verweise (Regressionstest: alleDateien() lieferte relative, resolve() aber absolute Pfade)', () => {
+    // Muss unterhalb des Arbeitsverzeichnisses liegen, damit relative() unten
+    // tatsächlich einen relativen (nicht laufwerksübergreifenden) Pfad liefert.
+    const ziel = mkdtempSync(join(process.cwd(), 'doku-rel-'));
+    try {
+      baue(quelle(), ziel, seiteEinfach);
+      const zielRelativ = relative(process.cwd(), ziel);
+      expect(pruefeVerweise(zielRelativ)).toEqual([]);
+    } finally {
+      rmSync(ziel, { recursive: true, force: true });
+    }
   });
 });

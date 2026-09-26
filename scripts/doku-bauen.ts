@@ -79,21 +79,61 @@ interface RoheUeberschrift {
   vorigeZeile: string;
 }
 
-/** Sammelt alle ATX-Überschriften außerhalb von Code-Zäunen, mit der vorigen nicht leeren Zeile. */
+/**
+ * Sammelt alle Überschriften außerhalb von Code-Zäunen, mit der vorigen nicht
+ * leeren Zeile (für die Marken-Erkennung in inhaltsverzeichnis). Erkennt sowohl
+ * ATX-Überschriften (`#` bis `######`) als auch Setext-Überschriften (eine
+ * Textzeile, unmittelbar gefolgt von einer Zeile aus nur `=` [Ebene 1] oder
+ * mindestens zwei `-` [Ebene 2], ohne Leerzeile dazwischen) — `marked` erkennt
+ * beide Formen, und nur wenn diese Funktion dieselben Überschriften in
+ * derselben Reihenfolge zählt wie `marked` beim Rendern, bekommen die
+ * Überschriften in `umwandeln` die richtige Kennung zugewiesen. Ein einzelner
+ * Gedankenstrich als Unterstreichung gilt hier bewusst nicht als Setext-Ebene-2
+ * (Verwechslung mit einem leeren Listenpunkt), das kommt in echten Texten nicht vor.
+ */
 function roheUeberschriften(md: string): RoheUeberschrift[] {
+  const zeilen = md.split('\n');
   const ergebnis: RoheUeberschrift[] = [];
+
+  // Je Zeile merken, ob sie zu einem Code-Zaun gehört (Zaun-Zeile selbst eingeschlossen).
+  const inCodeAn: boolean[] = [];
   let inCode = false;
-  let vorigeNichtLeere = '';
-  for (const zeile of md.split('\n')) {
-    if (/^```/.test(zeile.trim())) {
-      inCode = !inCode;
-    } else if (!inCode) {
-      const treffer = /^(#{1,6})\s+(.*)$/.exec(zeile);
-      if (treffer) {
-        ergebnis.push({ ebene: treffer[1].length, text: reinerText(treffer[2]), vorigeZeile: vorigeNichtLeere });
-      }
+  for (let i = 0; i < zeilen.length; i += 1) {
+    const zaun = /^```/.test(zeilen[i]!.trim());
+    if (zaun) inCode = !inCode;
+    inCodeAn[i] = inCode || zaun;
+  }
+
+  // Nächste nicht leere Zeile oberhalb von `ab`, Code-Zaun-Zeilen übersprungen.
+  const vorigeNichtLeereAb = (ab: number): string => {
+    for (let j = ab; j >= 0; j -= 1) {
+      if (inCodeAn[j]) continue;
+      if (zeilen[j]!.trim() !== '') return zeilen[j]!;
     }
-    if (zeile.trim() !== '') vorigeNichtLeere = zeile;
+    return '';
+  };
+
+  for (let i = 0; i < zeilen.length; i += 1) {
+    if (inCodeAn[i]) continue;
+    const zeile = zeilen[i]!;
+
+    const atx = /^(#{1,6})\s+(.*)$/.exec(zeile);
+    if (atx) {
+      ergebnis.push({ ebene: atx[1].length, text: reinerText(atx[2]), vorigeZeile: vorigeNichtLeereAb(i - 1) });
+      continue;
+    }
+
+    const setext = /^(-{2,}|={1,})\s*$/.exec(zeile);
+    const textZeile = i > 0 ? zeilen[i - 1]! : null;
+    const textZeileGueltig =
+      textZeile !== null && !inCodeAn[i - 1]! && textZeile.trim() !== '' && !/^#{1,6}\s+/.test(textZeile);
+    if (setext && textZeileGueltig) {
+      ergebnis.push({
+        ebene: setext[1]!.startsWith('=') ? 1 : 2,
+        text: reinerText(textZeile!),
+        vorigeZeile: vorigeNichtLeereAb(i - 2),
+      });
+    }
   }
   return ergebnis;
 }
