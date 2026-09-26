@@ -5,6 +5,7 @@ import { join, relative } from 'node:path';
 import {
   baue,
   inhaltsverzeichnis,
+  kuerzen,
   pruefeVerweise,
   seiteEinfach,
   sitemap,
@@ -239,5 +240,19 @@ describe('pruefeVerweise mit stamm (die Seitenvorlage verlinkt bewusst aus dist/
       'seite.html → ../fehlt.html',
       'seite.html → ../../index.html',
     ]);
+  });
+});
+
+describe('kuerzen', () => {
+  it('lässt kurze Texte unverändert', () => {
+    expect(kuerzen('Ein kurzer Satz.', 160)).toBe('Ein kurzer Satz.');
+  });
+  it('schneidet an der Wortgrenze und hängt eine Ellipse an', () => {
+    const k = kuerzen('Alpha Beta Gamma, Delta Epsilon', 20);
+    expect(k).toBe('Alpha Beta Gamma…');
+    expect(k.length).toBeLessThanOrEqual(20);
+  });
+  it('schneidet ein überlanges Einzelwort hart', () => {
+    expect(kuerzen('Donaudampfschifffahrt', 10)).toBe('Donaudamp…');
   });
 });

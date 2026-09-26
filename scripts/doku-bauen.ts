@@ -323,6 +323,19 @@ export function umwandeln(mdRoh: string, sprache: Sprache): Umgewandelt {
   return { html, titel, toc, bilder: [...bilder] };
 }
 
+/**
+ * Kürzt einen Text auf höchstens `max` Zeichen samt angehängtem „…“. Geschnitten wird an
+ * der letzten Wortgrenze, Satzzeichen davor entfallen; nur ein einzelnes überlanges Wort
+ * wird hart geschnitten.
+ */
+export function kuerzen(text: string, max: number): string {
+  if (text.length <= max) return text;
+  const roh = text.slice(0, max - 1);
+  const grenze = roh.lastIndexOf(' ');
+  const schnitt = grenze > 0 ? roh.slice(0, grenze) : roh;
+  return `${schnitt.replace(/[\s,;:.–—-]+$/, '')}…`;
+}
+
 /** Erster reiner Textabsatz nach Titel und Sprachzeile, ohne Markdown, höchstens 160 Zeichen. */
 function ersterAbsatz(md: string): string {
   const { md: ohneTitel } = ersteH1ZeileEntfernen(md);
@@ -334,7 +347,7 @@ function ersterAbsatz(md: string): string {
     if (/^<a id="[^"]+">\s*<\/a>$/.test(zeile)) continue; // Marken-Zeile
     if (/^#{1,6}\s/.test(zeile)) continue; // eine Überschrift ist kein Absatz
     const text = reinerText(zeile.replace(/\s+/g, ' '));
-    return text.slice(0, 160);
+    return kuerzen(text, 160);
   }
   return '';
 }
