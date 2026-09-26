@@ -309,34 +309,28 @@ describe('lesbarerLink', () => {
     expect(fragmentTeil(link)).not.toMatch(/[#&]body=/);
   });
 
-  it('rundet date auf die volle Minute', () => {
+  it('schneidet date auf die volle Minute ab (kein Runden auf die nächste Minute)', () => {
     const state = structuredClone(DEFAULT_STATE);
     state.time.jd = DEFAULT_STATE.time.jd + 45 / 86_400; // 45 Sekunden später
     const link = lesbarerLink(state, ORT);
     const treffer = /^#date=(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}Z)&/.exec(fragmentTeil(link));
     expect(treffer).not.toBeNull();
-    // 45 s runden aufwärts: Bei J2000 (12:00:00 UTC) ist das die nächste Minute.
-    expect(treffer?.[1]).toBe('2000-01-01T12:01Z');
+    // Abschneiden, nicht runden: Bei J2000 (12:00:00 UTC) bleibt es bei 12:00,
+    // nicht die (falsch) aufgerundete nächste Minute 12:01.
+    expect(treffer?.[1]).toBe('2000-01-01T12:00Z');
   });
 
-  it('Rundreise: Sekunden und laufende Uhr bleiben wie mit „#p=" erhalten', () => {
+  it('rechnet Maßstab und andere p-Felder über die Rundreise unverändert durch', () => {
     const state = structuredClone(DEFAULT_STATE);
-    // 10 s nach der vollen Minute: date rundet ab, fällt also auf dieselbe
-    // Minute wie der genaue Zeitpunkt — 30 s wäre die Rundungsgrenze selbst.
-    state.time.jd = DEFAULT_STATE.time.jd + 10 / 86_400;
-    state.time.paused = false;
     state.scale = { ...state.scale, sizeScale: 7 };
     const link = lesbarerLink(state, ORT);
     const ergebnis = fragmentAuswerten(fragmentTeil(link));
-    const zurueck = fromShareable(ergebnis?.patch ?? {});
-    expect(zurueck.time.jd).toBe(state.time.jd);
-    expect(zurueck.time.paused).toBe(false);
-    expect(zurueck.scale.sizeScale).toBe(7);
+    expect(fromShareable(ergebnis?.patch ?? {}).scale.sizeScale).toBe(7);
   });
 
   it('Rundreise: Zeit, Kamera und Auswahl zusammen ergeben genau den Link-Zustand', () => {
     const state = structuredClone(DEFAULT_STATE);
-    state.time.jd = DEFAULT_STATE.time.jd + 10 / 86_400; // eigene Sekunden, unter der Rundungsgrenze
+    state.time.jd = DEFAULT_STATE.time.jd + 10 / 86_400; // eigene Sekunden
     state.time.paused = false;
     // Von Hand nachgezogener Abstand und Winkel — bewusst ungleich dem
     // frischen Fokusabstand, sonst prüfte der Test nichts über body hinaus.
@@ -350,5 +344,48 @@ describe('lesbarerLink', () => {
     expect(zurueck.time.jd).toBe(state.time.jd);
     expect(zurueck.time.paused).toBe(false);
     expect(zurueck.camera).toEqual(state.camera);
+  });
+});
+
+/** JD aus Kalenderfeldern in UTC, ms optional — Zwilling der Umrechnung in Date.UTC/86 400 000 + 2440587,5. */
+function jdVon(
+  jahr: number, monatNull: number, tag: number, stunde: number, minute: number, sekunde: number, ms = 0,
+): number {
+  return Date.UTC(jahr, monatNull, tag, stunde, minute, sekunde, ms) / 86_400_000 + 2440587.5;
+}
+
+/**
+ * Zeitpunkte rund um die Rundungsgrenze (30 s) und zwei Kalendersprünge —
+ * genau die Fälle, an denen ein Runden statt Abschneiden (oder ein
+ * Kalendersprung beim Abschneiden selbst) sichtbar würde.
+ */
+const RUNDREISE_ZEITPUNKTE: readonly { name: string; jd: number }[] = [
+  { name: '0 s', jd: jdVon(2024, 2, 1, 12, 0, 0) },
+  { name: '10 s', jd: jdVon(2024, 2, 1, 12, 0, 10) },
+  { name: '30 s (die frühere Rundungsgrenze selbst)', jd: jdVon(2024, 2, 1, 12, 0, 30) },
+  { name: '45 s', jd: jdVon(2024, 2, 1, 12, 0, 45) },
+  { name: '59,9 s', jd: jdVon(2024, 2, 1, 12, 0, 59, 900) },
+  { name: 'Tageswechsel, 23:59:45', jd: jdVon(2024, 2, 1, 23, 59, 45) },
+  { name: 'Jahreswechsel, 31.12. 23:59:45', jd: jdVon(2024, 11, 31, 23, 59, 45) },
+];
+
+describe('lesbarerLink: Rundreise unabhängig von den Sekunden innerhalb der Minute', () => {
+  const pruefeRundreise = (jd: number, paused: boolean): void => {
+    const state = structuredClone(DEFAULT_STATE);
+    state.time.jd = jd;
+    state.time.paused = paused;
+    const link = lesbarerLink(state, ORT);
+    const ergebnis = fragmentAuswerten(fragmentTeil(link));
+    const zurueck = fromShareable(ergebnis?.patch ?? {});
+    expect(zurueck.time.jd).toBe(jd);
+    expect(zurueck.time.paused).toBe(paused);
+  };
+
+  it.each(RUNDREISE_ZEITPUNKTE)('$name, laufende Uhr (paused: false)', ({ jd }) => {
+    pruefeRundreise(jd, false);
+  });
+
+  it.each(RUNDREISE_ZEITPUNKTE)('$name, angehalten (paused: true)', ({ jd }) => {
+    pruefeRundreise(jd, true);
   });
 });

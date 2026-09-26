@@ -101,27 +101,31 @@ function zweistellig(n: number): string {
 }
 
 /**
- * Gegenstück zu `datumZuJd`: `date`-Wert für den Knopf, auf die volle Minute
- * gerundet (Entscheidungen von Jens). `jdToDate` selbst rundet nur auf die
- * Millisekunde; das Runden auf die Minute passiert deshalb hier zusätzlich.
+ * Millisekunden des Anfangs der Minute, in der `jd` liegt — Sekunden und
+ * Millisekunden werden **abgeschnitten, nicht gerundet** (58,9 s bleiben in
+ * ihrer Minute, 12:01:00 genau gehört schon zur nächsten). `formatDatum` und
+ * der Minutenvergleich in `fragmentAuswerten` nutzen diese eine Funktion, damit
+ * Schreiben und Vergleichen nie auseinanderlaufen können. Die Jahreszahl geht
+ * über `setUTCFullYear` (nicht `Date.UTC`) ein, damit ein ein- bis
+ * zweistelliges Jahr nicht auf 1900–1999 abgebildet wird (siehe `datumZuJd`).
  */
+function minutenAnfangMs(jd: number): number {
+  const d = jdToDate(jd);
+  const anfang = new Date(0);
+  anfang.setUTCFullYear(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+  anfang.setUTCHours(d.getUTCHours(), d.getUTCMinutes(), 0, 0);
+  return anfang.getTime();
+}
+
+/** Gegenstück zu `datumZuJd`: `date`-Wert für den Knopf, auf die Minute abgeschnitten. */
 function formatDatum(jd: number): string {
-  const ms = jdToDate(jd).getTime();
-  const d = new Date(Math.round(ms / 60_000) * 60_000);
+  const d = new Date(minutenAnfangMs(jd));
   return `${String(d.getUTCFullYear()).padStart(4, '0')}-${zweistellig(d.getUTCMonth() + 1)}`
     + `-${zweistellig(d.getUTCDate())}T${zweistellig(d.getUTCHours())}:${zweistellig(d.getUTCMinutes())}Z`;
 }
 
-/** Jahr, Monat, Tag, Stunde, Minute in UTC — zum Vergleich zweier Zeitpunkte auf Minutengleichheit. */
-function minutenFelder(jd: number): readonly [number, number, number, number, number] {
-  const d = jdToDate(jd);
-  return [d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes()];
-}
-
 function gleicheMinute(jdA: number, jdB: number): boolean {
-  const a = minutenFelder(jdA);
-  const b = minutenFelder(jdB);
-  return a.every((wert, i) => wert === b[i]);
+  return minutenAnfangMs(jdA) === minutenAnfangMs(jdB);
 }
 
 /** Wirksame Maßstabseinstellung: `p` überschreibt einzelne Felder des Standards. */
@@ -182,11 +186,12 @@ export function fragmentAuswerten(hash: string): FragmentErgebnis | null {
     const jd = datumWert === undefined ? null : datumZuJd(datumWert);
     if (jd !== null) {
       gueltig = true;
-      // Der Knopf (lesbarerLink) legt date immer als gerundeten Zeitpunkt von
-      // p daneben, damit der Link auch ohne p lesbar bleibt. Fällt date auf
-      // dieselbe Minute wie der Zeitpunkt aus der Grundlage, bleibt p
-      // maßgeblich — auch für „paused" —, sonst schnitte das gerundete date
-      // die Sekunden aus dem gerade erst geteilten, eigenen Link heraus.
+      // Der Knopf (lesbarerLink) legt date immer als auf die Minute
+      // abgeschnittenen Zeitpunkt von p daneben, damit der Link auch ohne p
+      // lesbar bleibt. Fällt date auf dieselbe Minute wie der Zeitpunkt aus
+      // der Grundlage, bleibt p maßgeblich — auch für „paused" —, sonst
+      // schnitte das abgeschnittene date die Sekunden aus dem gerade erst
+      // geteilten, eigenen Link heraus.
       const grundZeit = grundlage.time;
       const basisJd = istPlain(grundZeit) && typeof grundZeit.jd === 'number' ? grundZeit.jd : null;
       if (basisJd === null || !gleicheMinute(basisJd, jd)) {
@@ -226,7 +231,7 @@ export function fragmentAuswerten(hash: string): FragmentErgebnis | null {
 
 /**
  * Lesbarer Link für den Knopf „Link kopieren": `date` (aktueller Zeitpunkt,
- * auf die Minute gerundet), `body` (nur, wenn ein Körper ausgewählt ist —
+ * auf die Minute abgeschnitten), `body` (nur, wenn ein Körper ausgewählt ist —
  * dasselbe Feld, das `fragmentAuswerten` beim Einlesen setzt:
  * `camera.mode === 'attached'`, Kennung aus `camera.targetId`) und `p`
  * (bisheriger Link-Patch, Profil `link`, unverändert). Die Reihenfolge macht
