@@ -313,6 +313,7 @@ export const de = {
   'infokarte.ueber.drittrechte': 'Texturen, Sternkatalog und Himmelskarte: Rechte der jeweiligen Urheber (u. a. NASA/JPL, NASA/GSFC SVS, ESA/Gaia/DPAC unter CC BY-NC 3.0 IGO).',
   'infokarte.ueber.assets': 'Übersicht in ASSETS.md',
   'infokarte.ueber.nichtkommerziell': 'Nichtkommerzielles Projekt.',
+  'infokarte.ueber.entstehung': 'Wie Orrery entstand',
   'infokarte.ueber.version': 'Version',
   'steuerkarte.titel': 'Steuerung',
   'steuerkarte.reiter': 'Bereiche der Steuerung',

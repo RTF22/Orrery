@@ -1,3 +1,4 @@
+import { useStore } from '../../store';
 import { t } from '../i18n';
 import { useGrob } from '../fenster';
 import { useSteuerKarte } from '../steuerkarte/zustand';
@@ -121,10 +122,17 @@ export function ReiterBedienung(): React.JSX.Element {
 
 /** Reiter „Über“: Projekt, Quellcode, Lizenz, Version (Entwurf §4.3). */
 export function ReiterUeber(): React.JSX.Element {
+  const language = useStore((s) => s.ui.language);
+  // ui.language ist als Typ auf 'de' | 'en' beschränkt (store/types.ts); die
+  // Making-of-Seiten gibt es nur in diesen beiden Sprachen, der Vergleich auf
+  // 'de' hält den Fall trotzdem fest, falls der Typ einmal wächst.
+  const sprache = language === 'de' ? 'de' : 'en';
+  const entstehung = `${import.meta.env.BASE_URL}doku/making-of/${sprache}/`;
   return (
     <div className="flex flex-col gap-2">
       <p className="m-0">{t('infokarte.ueber.text')}</p>
       <p className="m-0"><ExternerLink href={REPO}>{t('infokarte.ueber.quellcode')}</ExternerLink></p>
+      <p className="m-0"><ExternerLink href={entstehung}>{t('infokarte.ueber.entstehung')}</ExternerLink></p>
       <p className="m-0">{t('infokarte.ueber.recht')}</p>
       <p className="m-0">
         {t('infokarte.ueber.drittrechte')}{' '}

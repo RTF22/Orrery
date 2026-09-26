@@ -311,6 +311,7 @@ export const en: Record<Key, string> = {
   'infokarte.ueber.drittrechte': 'Textures, star catalogue and sky map: rights of their respective authors (including NASA/JPL, NASA/GSFC SVS, ESA/Gaia/DPAC under CC BY-NC 3.0 IGO).',
   'infokarte.ueber.assets': 'Overview in ASSETS.md',
   'infokarte.ueber.nichtkommerziell': 'Non-commercial project.',
+  'infokarte.ueber.entstehung': 'How Orrery was built',
   'infokarte.ueber.version': 'Version',
   'steuerkarte.titel': 'Controls',
   'steuerkarte.reiter': 'Sections of the controls',

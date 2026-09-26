@@ -8,6 +8,7 @@ import { useInfoKarte } from './zustand';
 import { useSteuerKarte } from '../steuerkarte/zustand';
 import { padAttrappe } from '../steuerung/padAttrappe';
 import { useStore, DEFAULT_STATE } from '../../store';
+import { setSprache } from '../i18n';
 
 function zeiger(grob: boolean, app = false): void {
   window.matchMedia = ((abfrage: string) => ({
@@ -29,6 +30,7 @@ describe('Reiter der Info-Karte', () => {
     window.matchMedia = urspruenglicheMatchMedia;
     vi.unstubAllGlobals();
     Reflect.deleteProperty(navigator, 'getGamepads');
+    setSprache('de');
   });
 
   it('App: drei Anleitungen, ohne Ereignis kein Installationsknopf', () => {
@@ -101,6 +103,7 @@ describe('Reiter der Info-Karte', () => {
     const links = screen.getAllByRole('link');
     expect(links.map((a) => a.getAttribute('href'))).toEqual([
       'https://github.com/RTF22/Orrery',
+      `${import.meta.env.BASE_URL}doku/making-of/de/`,
       'https://github.com/RTF22/Orrery/blob/master/ASSETS.md',
     ]);
     for (const a of links) {
@@ -111,5 +114,25 @@ describe('Reiter der Info-Karte', () => {
     expect(screen.getByText(/alle Rechte vorbehalten/)).toBeTruthy();
     expect(screen.getByText(/CC BY-NC 3.0 IGO/)).toBeTruthy();
     expect(screen.getByText(/Version/).textContent).toContain(VERSION);
+  });
+
+  it('Über: Making-of-Link folgt der App-Sprache Deutsch', () => {
+    useStore.getState().setUi({ language: 'de' });
+    setSprache('de');
+    render(<ReiterUeber />);
+    const link = screen.getByRole('link', { name: /Wie Orrery entstand/ });
+    expect(link.getAttribute('href')).toBe(`${import.meta.env.BASE_URL}doku/making-of/de/`);
+    expect(link.getAttribute('target')).toBe('_blank');
+    expect(link.getAttribute('rel')).toContain('noopener');
+  });
+
+  it('Über: Making-of-Link folgt der App-Sprache Englisch', () => {
+    useStore.getState().setUi({ language: 'en' });
+    setSprache('en');
+    render(<ReiterUeber />);
+    const link = screen.getByRole('link', { name: /How Orrery was built/ });
+    expect(link.getAttribute('href')).toBe(`${import.meta.env.BASE_URL}doku/making-of/en/`);
+    expect(link.getAttribute('target')).toBe('_blank');
+    expect(link.getAttribute('rel')).toContain('noopener');
   });
 });
