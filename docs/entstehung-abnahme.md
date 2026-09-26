@@ -31,7 +31,7 @@ Verlinkung aus beiden READMEs und der Entwicklerdoku.
 4. **Chronik Deutsch** (Tasks 5–8, `95cf7c7`…`4914aa3`, je mit Nachbesserung): alle 19
    Etappen-Abschnitte, Fehlerkatalog- und Faktenblatt-Fundstelle je Absatz, Anhang Tokenbilanz.
 5. **Überblick Deutsch** (Task 9, `677f2ac`, Fachprüfung und Nacharbeit `caf9c6c`): verdichtete
-   Fassung mit Kernkapitel (sieben „Maschen" plus „Was das Netz nicht fing"), Kostenabschnitt,
+   Fassung mit Kernkapitel (sieben „Maschen“ plus „Was das Netz nicht fing“), Kostenabschnitt,
    Lehren.
 6. **Englische Fassung** (Tasks 11–12, `24c0920`…`dd33a85`): Überblick und Chronik übersetzt,
    Zahlenabgleich gegen das Deutsche in beiden Sprachen ohne unerklärte Abweichung.
@@ -74,7 +74,7 @@ beschrieben, Ergebnis durchgehend `ok`.
 `explorer.jpg` ist Teil der Bildliste, wird laut Ruling 33 aber in keinem Text verwendet
 (Bildplatz in der passenden Etappe bereits durch `alt-v0.4.0.jpg` belegt).
 
-### Tokenbilanz (nur Tokens, keine Beträge; Zeile „Je Modell bis Stichtag" aus `tokenbilanz.md`
+### Tokenbilanz (nur Tokens, keine Beträge; Zeile „Je Modell bis Stichtag“ aus `tokenbilanz.md`
 im Ledger, Stichtag Commit `f3807c7`, 25.09.2026)
 
 | Größe | Wert |
@@ -91,7 +91,7 @@ im Ledger, Stichtag Commit `f3807c7`, 25.09.2026)
 | Anteil Antworten auf dem größten Modell | rund 23 % |
 
 Die übrigen Antworten liefen auf zwei weiteren Modellfassungen und, für rein mechanische
-Bereinigungen, dem bewusst kleinsten Modell (Zuordnung siehe Tabelle „Je Modell bis Stichtag"
+Bereinigungen, dem bewusst kleinsten Modell (Zuordnung siehe Tabelle „Je Modell bis Stichtag“
 in `tokenbilanz.md`, Ledger). Die vollständige Aufschlüsselung nach Tag, Phase und Modell mit
 Anzeigenamen steht — als Teil der Ausnahme der Wortregel — im
 [Anhang der Chronik](../docs/chronik.de.md#anhang-tokens).
@@ -169,7 +169,7 @@ Pfade, Preview-Log-Zeile).
 | Desktop 1600×900, Textspalte | ≤ 72ch | 72,0ch | ja |
 | Scrollen zu `#phase-4d` | ToC-Eintrag `aria-current="location"` | gesetzt | ja |
 | A55 412×915, Navigation vor Tipp | verborgen | verborgen (Rechteck außerhalb) | ja |
-| A55: Knopf „Inhalt" | sichtbar, ≥ 44 px hoch | 44 px | ja |
+| A55: Knopf „Inhalt“ | sichtbar, ≥ 44 px hoch | 44 px | ja |
 | A55: Navigation nach Tipp auf Knopf/Eintrag | sichtbar / wieder zu | erfüllt | ja |
 | A55: Seitenbreite (`scrollWidth`) | ≤ 412 | 412 | ja |
 | A55: breite Tabelle (Anhang Tokenbilanz) im eigenen Rahmen | scrollt im Rahmen | 473 > 378 | ja |
@@ -177,7 +177,7 @@ Pfade, Preview-Log-Zeile).
 | Konsole/Netzwerk | keine Fehler, keine 404 | keine | ja |
 
 Nachbesserungsrunde (Ruling 60a, Important aus der Prüfung): `white-space: nowrap` traf zunächst
-auch die Fließtextspalte „Meilenstein" der Zeitleisten-Tabelle im Überblick (Desktop-Regression);
+auch die Fließtextspalte „Meilenstein“ der Zeitleisten-Tabelle im Überblick (Desktop-Regression);
 nach Verengung auf rechtsbündige Zellen (`[align="right"]`, von `marked` bereits für
 GFM-Spalten mit `---:` gesetzt) Nachmessung: Zeitleiste Desktop 587=587 (kein Scrollen mehr),
 Tokenbilanz-Tabelle A55 weiterhin 457 > 378 (im Rahmen), Seitenbreite 412, Escape schließt die
@@ -197,7 +197,7 @@ npm run build            # Hauptchunk 1 557,08 kB (gzip 430,04 kB); dist/doku/ma
 ### Schlussprüfung
 
 Eine abschließende, vom Task-15-Umsetzer unabhängige Prüfung des gesamten Branches
-(`da9cfc7`…`22583fe`) kommt zum Ergebnis „bereit zum Zusammenführen nach Handprüfung: ja";
+(`da9cfc7`…`22583fe`) kommt zum Ergebnis „bereit zum Zusammenführen nach Handprüfung: ja“;
 0 Critical, 1 Important (die Commitzahl in diesem § 1, hier bereits berichtigt), 4 Minor,
 geparkt (in § 7 geführt oder dort ergänzt). Alle geprüften Kriterien zu Wortregel,
 Datenschutz, Trailer, kaputten Verweisen und dem Zusammenspiel von Generator, Vorlage,
@@ -233,21 +233,21 @@ Modell statt Markenname).
    kostet, falls falsch: nichts.
 3. Die Prüfung der Texttasks 5–12 ist die eine Prüfrunde je Text; die Fachprüfung der Fakten
    folgt gesondert in Task 10 — kostet, falls falsch: Restbefunde fallen erst in Task 10 auf.
-4. Abgrenzung „Beginn"/„Ende" je Phasengrenzen-Kennung: erster Entwurfs-/Plan-Commit bis
+4. Abgrenzung „Beginn“/„Ende“ je Phasengrenzen-Kennung: erster Entwurfs-/Plan-Commit bis
    letzter erkennbar zugehöriger Abnahme-/Nacharbeits-Commit — kostet, falls falsch: einzelne
    Ende-Zeitstempel um wenige Commits verschieben.
-5. `phase-3a` schließt den eingeschobenen Zwischenschritt „Zielbelichtung und Albedo" ein, ohne
+5. `phase-3a` schließt den eingeschobenen Zwischenschritt „Zielbelichtung und Albedo“ ein, ohne
    eigene Kennung — kostet, falls falsch: eigene Zeile nachtragen.
-6. „domain" umfasst nur die zwei Commits des Domain-Fixes, ohne eigenes Abnahmeprotokoll —
+6. „domain“ umfasst nur die zwei Commits des Domain-Fixes, ohne eigenes Abnahmeprotokoll —
    kostet, falls falsch: Zeile um weitere Commits erweitern.
 7. `git tag -l` liefert bei annotierten Tags das Tag-Objekt statt des Commits; Faktenblatt nennt
-   in der Spalte „Tag" den tatsächlichen Commit — kostet, falls falsch: nichts, bereits
+   in der Spalte „Tag“ den tatsächlichen Commit — kostet, falls falsch: nichts, bereits
    korrigiert.
-8. „Gefangen durch: Controller-Prüfung" für zwei gescheiterte Nachführungs-4d-Läufe vor einer
-   förmlichen Fachprüfung — kostet, falls falsch: zwei Zeilen auf „Fachprüfung" umstellen.
-9. „Gefangen durch: Fachprüfung" verallgemeinert auch für Code-Reviews vor einem Merge — kostet,
+8. „Gefangen durch: Controller-Prüfung“ für zwei gescheiterte Nachführungs-4d-Läufe vor einer
+   förmlichen Fachprüfung — kostet, falls falsch: zwei Zeilen auf „Fachprüfung“ umstellen.
+9. „Gefangen durch: Fachprüfung“ verallgemeinert auch für Code-Reviews vor einem Merge — kostet,
    falls falsch: mehrere Zeilen bräuchten eine bislang nicht vorgesehene neue Kategorie.
-10. Kategorie „Gefangen durch: Test" bleibt bei 0 Fällen, kein erfundener Fall ergänzt — kostet,
+10. Kategorie „Gefangen durch: Test“ bleibt bei 0 Fällen, kein erfundener Fall ergänzt — kostet,
     falls falsch: eine Textstelle dürfte diese Kategorie nicht mit einer Beispielzahl belegen.
 11. Zwei Katalogzeilen, die einen Fehler der Prüfung selbst statt des Text-Umsetzers
     beschreiben, wurden fürs Leitmotiv aufgenommen — kostet, falls falsch: beide Zeilen als
@@ -282,8 +282,8 @@ Modell statt Markenname).
 23. — (nicht vergeben)
 24. *(ersetzt durch Ruling 29)* Tokens-Zeile je Etappe nannte Anteil Subagenten und
     vorherrschendes Modell zunächst projektweit statt je Phase.
-25. Entscheidungen aus dem Ursprungsinterview wurden auf die Abschnitte „Die Idee" und
-    „Phase 1" aufgeteilt, „Phase 2" verweist zurück — kostet, falls falsch: Zuordnung
+25. Entscheidungen aus dem Ursprungsinterview wurden auf die Abschnitte „Die Idee“ und
+    „Phase 1“ aufgeteilt, „Phase 2“ verweist zurück — kostet, falls falsch: Zuordnung
     verschieben.
 26. Für eine Etappe ohne eigene Kennzahlenzeile im Faktenblatt sagt die Chronik das ausdrücklich,
     statt ersatzweise eine andere Etappe zuzuschreiben — kostet, falls falsch: Kennzahl
@@ -291,7 +291,7 @@ Modell statt Markenname).
 27. Das Überschriftformat lässt den Tag-Teil weg, wenn eine Etappe keinen eigenen Tag trägt, und
     nennt bei eintägigen Etappen nur ein Datum — kostet, falls falsch: fünf Überschriften
     umformatieren.
-28. Der Zwischenschritt „Zielbelichtung und Albedo" steht mit seinen Commits in einem
+28. Der Zwischenschritt „Zielbelichtung und Albedo“ steht mit seinen Commits in einem
     Etappenabschnitt, sein Entscheidungsinhalt mit Verweissatz im nächsten — kostet, falls
     falsch: Entscheidungssatz verschieben.
 29. Ersetzt Ruling 24: Die Tokenbilanz führt je Phase Anteil Subagenten und vorherrschendes
@@ -332,7 +332,7 @@ Modell statt Markenname).
     zweiten — kostet, falls falsch: einen Satz im zweiten Abschnitt ergänzen.
 43. Ein Alt-Text zum Diagramm übernimmt dessen eigenes `aria-label` wörtlich, keine neue
     Behauptung — kostet, falls falsch: Alt-Text umformulieren.
-44. Sieben Fehlerkatalog-Fälle wurden den sieben „Maschen" des Kernkapitels zugeordnet, entweder
+44. Sieben Fehlerkatalog-Fälle wurden den sieben „Maschen“ des Kernkapitels zugeordnet, entweder
     über eine eindeutige Alleinstellung in einer Kategorie oder inhaltliche Passung — kostet,
     falls falsch: andere Fallnummern vermerken, der Fließtext selbst nennt keine Nummern.
 45. Der Kennzahlen-Abschnitt des Überblicks nennt Testzahl und Hauptchunk aus der aktuellsten
@@ -348,7 +348,7 @@ Modell statt Markenname).
 48. Ein Fachprüfungsbefund zu einer fehlenden Fundstelle wurde als fehlender Beleg behandelt,
     nicht als Falschangabe, da die Angabe öffentlich nachprüfbar ist — kostet, falls falsch: ein
     Satz in zwei Dateien.
-49. „Keine Prozesssprache" gilt für Verweise auf unveröffentlichte Arbeitsdateien und
+49. „Keine Prozesssprache“ gilt für Verweise auf unveröffentlichte Arbeitsdateien und
     internen Verfahrensjargon, nicht für Rulings/Tasks als selbst erklärten Gegenstand der
     Entstehungsgeschichte — kostet, falls falsch: Begriffe durch Umschreibungen ersetzen.
 50. Belege dürfen in der Nacharbeit nachgetragen werden, wenn die Fundstelle eine versionierte
@@ -365,7 +365,7 @@ Modell statt Markenname).
 54. Bildunterschriften zu bereits im Überblick verwendeten Aufnahmen übernehmen dessen englischen
     Alt-Text wörtlich statt einer im Ledger vorgeschlagenen, leicht abweichenden Fassung —
     kostet, falls falsch: zwei Alt-Texte zurücksetzen.
-55. „Nacharbeit" (Korrekturrunde) wird durchgängig anders übersetzt als „Nachführung"
+55. „Nacharbeit“ (Korrekturrunde) wird durchgängig anders übersetzt als „Nachführung“
     (Etappenname), um beide im Englischen unterscheidbar zu halten — kostet, falls falsch: eine
     der beiden Übersetzungen durchgängig ersetzen.
 56. Wörtliche Zitate aus deutschen Quellen werden sinngemäß in indirekter Rede ohne
@@ -391,7 +391,7 @@ Modell statt Markenname).
 ## 7. Offene Punkte
 
 - Faktenblatt: eine Etappe ohne eigene Kennzahlenzeile, eine weitere ohne Entscheidungsblock
-  (Quellen enthalten keinen); im Ledger ggf. mit einem „—"-Hinweis zu ergänzen.
+  (Quellen enthalten keinen); im Ledger ggf. mit einem „—“-Hinweis zu ergänzen.
 - Fehlerkatalog-Bericht: eine Kennungszahl und eine Kopfzeilenbeschriftung im Ledger-internen
   Bericht ungenau (Fehlerkatalog selbst unbetroffen).
 - Diagrammskript (`tokenbilanz.py`): Median bei gerader Anzahl bildet den oberen statt den
@@ -404,9 +404,9 @@ Modell statt Markenname).
 - `fehlerkatalog.md`: eine Tabellenzeile im Ledger mit einer nicht maskierten Trennlinie
   (Spaltenzählung dort betroffen, kein Zahlenwert in den veröffentlichten Texten).
 - **Galaxy A55 vs. A55** (`docs/chronik.de.md`, Abschnitt Info-Karte): Die Fachprüfung schlug die
-  knappere Kürzung auf „A55" vor, im Text steht weiterhin der volle Gerätename mit
+  knappere Kürzung auf „A55“ vor, im Text steht weiterhin der volle Gerätename mit
   nachgetragener Fundstelle — offen, ob das so bleibt oder gekürzt wird.
-- **„Ohne GitHub Pages"**: eine entsprechende Aussage wurde mangels eines belegenden Commits
+- **„Ohne GitHub Pages“**: eine entsprechende Aussage wurde mangels eines belegenden Commits
   ersatzlos aus beiden Texten gestrichen; falls eine solche Entscheidung tatsächlich getroffen
   wurde, könnte sie mit Fundstelle wieder aufgenommen werden.
 - Ein Bericht zum deutschen Überblick zählte die Anführungszeichen versehentlich als 12/12 statt
