@@ -8,6 +8,7 @@
  *   making-of/doku.css          (gemeinsames Stylesheet, siehe doku-vorlage.ts)
  *   making-of/index.html        (Sprachwahl, leitet auf de/ oder en/ weiter)
  *   ../index.html               (dist/doku/index.html, leitet auf making-of/ weiter)
+ *   ../../sitemap.xml           (dist/sitemap.xml, fünf Adressen, siehe sitemap())
  *
  * Die reinen Funktionen sind exportiert und in doku-bauen.test.ts geprüft;
  * der Hauptlauf startet nur beim direkten Aufruf der Datei, baut mit der
@@ -32,10 +33,25 @@ import {
 } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DATEI_JE_DOKUMENT, DOKU_CSS, GITHUB_STAMM, dokuWurzelSeite, seite, sprachwahlSeite } from './doku-vorlage.ts';
+import {
+  DATEI_JE_DOKUMENT,
+  DOKU_CSS,
+  GITHUB_STAMM,
+  SEITEN_STAMM,
+  dokuWurzelSeite,
+  seite,
+  seitenAdresse,
+  sprachwahlSeite,
+} from './doku-vorlage.ts';
 
 export type Sprache = 'de' | 'en';
 export type Dokument = 'entstehung' | 'chronik';
+
+// Sprachen und Dokumente der Etappe: einzige Quelle für die pro Seite erzeugten Dateien
+// (baue()) und für die Adressenliste der Sitemap (sitemap()) — keine zweite, von Hand
+// gepflegte Liste.
+export const SPRACHEN: Sprache[] = ['de', 'en'];
+export const DOKUMENTE: Dokument[] = ['entstehung', 'chronik'];
 
 export interface Eintrag {
   ebene: 2 | 3;
@@ -341,8 +357,8 @@ function alleDateien(ordner: string): string[] {
  * vier Texte, bricht der Bau mit einer Meldung ab.
  */
 export function baue(quelle: string, ziel: string, seite: (d: SeitenDaten) => string): void {
-  const sprachen: Sprache[] = ['de', 'en'];
-  const dokumente: Dokument[] = ['entstehung', 'chronik'];
+  const sprachen = SPRACHEN;
+  const dokumente = DOKUMENTE;
 
   const inhalte = new Map<string, string>();
   for (const dokument of dokumente) {
@@ -451,6 +467,21 @@ export function pruefeVerweise(wurzel: string, stamm: string = wurzel): string[]
 }
 
 /**
+ * Sitemap für die App-Wurzel und die vier Doku-Seiten. Die Sprachwahlseite (`noindex`)
+ * und die Weiterleitung `doku/index.html` fehlen bewusst. Die Adressenliste entsteht aus
+ * SPRACHEN × DOKUMENTE, denselben Feldern wie in `baue()` — keine zweite, handgeschriebene
+ * Liste. `lastmod` entfällt, Namensraum ist sitemaps.org 0.9.
+ */
+export function sitemap(): string {
+  const adressen = [
+    `${SEITEN_STAMM}/`,
+    ...SPRACHEN.flatMap((sprache) => DOKUMENTE.map((dokument) => seitenAdresse(sprache, dokument))),
+  ];
+  const orte = adressen.map((adresse) => `  <url><loc>${adresse}</loc></url>`).join('\n');
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${orte}\n</urlset>\n`;
+}
+
+/**
  * Platzhaltervorlage: ein gültiges Dokument mit Sprache, Titel, Beschreibung
  * und dem Inhaltsverzeichnis als Liste. Die eigentliche Seitenvorlage mit
  * Gestaltung folgt in einem eigenen Schritt und ersetzt diese Funktion.
@@ -487,6 +518,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     writeFileSync(join('dist/doku', 'index.html'), dokuWurzelSeite(), 'utf8');
     writeFileSync(join('dist/doku/making-of', 'index.html'), sprachwahlSeite(), 'utf8');
     writeFileSync(join('dist/doku/making-of', 'doku.css'), DOKU_CSS, 'utf8');
+    writeFileSync(join('dist', 'sitemap.xml'), sitemap(), 'utf8');
     const befunde = pruefeVerweise('dist/doku', 'dist');
     if (befunde.length > 0) {
       console.error('Kaputte Verweise:');

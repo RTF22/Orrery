@@ -1,4 +1,5 @@
-"""Zeichnet das App-Symbol (schlichtes Orrery-Zeichen) in 192 und 512 Pixeln.
+"""Zeichnet das App-Symbol (schlichtes Orrery-Zeichen) in 192 und 512 Pixeln und
+leitet daraus das Browser-Favicon public/favicon.ico (16, 32 und 48 Pixel) ab.
 
 Aufruf aus dem Projektstamm: python scripts/app-symbol.py
 Das Motiv liegt vollständig im Kreis mit 40 % Radius der Kantenlänge
@@ -50,3 +51,10 @@ if __name__ == '__main__':
     for groesse in (192, 512):
         zeichne(groesse).save(ziel / f'orrery-{groesse}.png', optimize=True)
         print(f'public/symbole/orrery-{groesse}.png')
+
+    # Aus der frisch geschriebenen 512-Pixel-Datei (nicht aus dem Bild im Speicher):
+    # Das Favicon spiegelt so immer genau das ausgelieferte Motiv, unabhängig davon, ob
+    # dieser Lauf zufällig andere Bytes als die eingecheckte Fassung erzeugt hätte.
+    motiv = Image.open(ziel / 'orrery-512.png')
+    motiv.save(Path('public/favicon.ico'), sizes=[(16, 16), (32, 32), (48, 48)])
+    print('public/favicon.ico')

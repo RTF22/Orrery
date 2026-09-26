@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://orrery3d.de/sitemap.xml

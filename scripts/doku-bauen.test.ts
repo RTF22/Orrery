@@ -2,7 +2,16 @@ import { describe, expect, it } from 'vitest';
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
-import { baue, inhaltsverzeichnis, pruefeVerweise, seiteEinfach, slug, umwandeln, verweisUmschreiben } from './doku-bauen.ts';
+import {
+  baue,
+  inhaltsverzeichnis,
+  pruefeVerweise,
+  seiteEinfach,
+  sitemap,
+  slug,
+  umwandeln,
+  verweisUmschreiben,
+} from './doku-bauen.ts';
 
 /** Eigene Beispieltexte: zwei Sprachen, je Dokument ein Bild und ein Querverweis mit Marke. */
 function quelle(): string {
@@ -184,6 +193,24 @@ describe('baue und pruefeVerweise', () => {
     } finally {
       rmSync(ziel, { recursive: true, force: true });
     }
+  });
+});
+
+describe('sitemap', () => {
+  it('enthält genau die fünf Adressen, App-Wurzel zuerst, Verzeichnisform für index.html', () => {
+    expect(sitemap()).toBe(
+      [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+        '  <url><loc>https://orrery3d.de/</loc></url>',
+        '  <url><loc>https://orrery3d.de/doku/making-of/de/</loc></url>',
+        '  <url><loc>https://orrery3d.de/doku/making-of/de/chronik.html</loc></url>',
+        '  <url><loc>https://orrery3d.de/doku/making-of/en/</loc></url>',
+        '  <url><loc>https://orrery3d.de/doku/making-of/en/chronik.html</loc></url>',
+        '</urlset>',
+        '',
+      ].join('\n'),
+    );
   });
 });
 

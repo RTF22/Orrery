@@ -25,7 +25,10 @@ Nach dem Vite-Bau führt `npm run build` zusätzlich `scripts/doku-bauen.ts` aus
 Skript wandelt die Making-of-Texte (Überblick und Chronik, je Deutsch und Englisch)
 in statische Seiten unter `dist/doku/making-of/` um, mit Sprachwahl nach
 Browsersprache (Standard Englisch), und prüft anschließend alle Verweise der
-gebauten Seiten. Der nächste `npm run deploy` lädt sie mit dem übrigen `dist/` hoch.
+gebauten Seiten; dabei schreibt es auch `dist/sitemap.xml`. `public/robots.txt` und
+`public/favicon.ico` liegen fest im Projekt und laufen als statische Dateien mit, weil
+orrery3d.de für fehlende Dateien 500 statt 404 liefert. Der nächste `npm run deploy`
+lädt sie mit dem übrigen `dist/` hoch.
 
 ## Veröffentlichung
 

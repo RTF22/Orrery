@@ -25,10 +25,27 @@ import type { Dokument, Eintrag, SeitenDaten, Sprache } from './doku-bauen.ts';
 // hier unten sofort beim Auswerten des Moduls in WOERTER gebraucht wird (TDZ bei `const`).
 export const GITHUB_STAMM = 'https://github.com/RTF22/Orrery';
 
+// Kanonische Wurzel der Seite (orrery3d.de, nicht die gleichwertige Adresse unter
+// jensfricke.com/Orrery/): einzige Quelle für Canonical, Hreflang, og:url/og:image
+// hier sowie für robots.txt und die Sitemap (doku-bauen.ts).
+export const SEITEN_STAMM = 'https://orrery3d.de';
+
 export const DATEI_JE_DOKUMENT: Record<Dokument, string> = {
   entstehung: 'index.html',
   chronik: 'chronik.html',
 };
+
+/**
+ * Absolute Adresse einer Doku-Seite unterhalb von SEITEN_STAMM: Verzeichnisform
+ * (`.../making-of/<sprache>/`) für die als `index.html` abgelegte Übersicht, sonst der
+ * volle Dateiname — dieselbe Form wie in der Sitemap (doku-bauen.ts) und der
+ * Canonical-Zeile von `seite()` unten.
+ */
+export function seitenAdresse(sprache: Sprache, dokument: Dokument): string {
+  const datei = DATEI_JE_DOKUMENT[dokument];
+  const pfad = datei === 'index.html' ? '' : datei;
+  return `${SEITEN_STAMM}/doku/making-of/${sprache}/${pfad}`;
+}
 
 interface Woerter {
   label: Record<Dokument, string>;
@@ -111,6 +128,9 @@ export function seite(d: SeitenDaten): string {
   const titel = maskieren(d.titel);
   const titelSeite = `${titel} · Orrery`;
   const beschreibung = maskieren(d.beschreibung);
+  const adresseEigen = seitenAdresse(d.sprache, d.dokument);
+  const adresseDe = seitenAdresse('de', d.dokument);
+  const adresseEn = seitenAdresse('en', d.dokument);
 
   const navKnopfId = 'inhalt-knopf';
   const navId = 'inhalt-nav';
@@ -136,12 +156,15 @@ export function seite(d: SeitenDaten): string {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${titelSeite}</title>
 <meta name="description" content="${beschreibung}">
-<link rel="alternate" hreflang="de" href="${d.sprache === 'de' ? datei : `../de/${datei}`}">
-<link rel="alternate" hreflang="en" href="${d.sprache === 'en' ? datei : `../en/${datei}`}">
+<link rel="canonical" href="${adresseEigen}">
+<link rel="alternate" hreflang="de" href="${adresseDe}">
+<link rel="alternate" hreflang="en" href="${adresseEn}">
+<link rel="alternate" hreflang="x-default" href="${adresseEn}">
 <meta property="og:type" content="article">
 <meta property="og:title" content="${titelSeite}">
 <meta property="og:description" content="${beschreibung}">
-<meta property="og:image" content="../bilder/orrery-saturn.jpg">
+<meta property="og:url" content="${adresseEigen}">
+<meta property="og:image" content="${SEITEN_STAMM}/doku/making-of/bilder/orrery-saturn.jpg">
 <meta name="theme-color" content="#0f172a">
 <link rel="icon" type="image/png" href="../../../symbole/orrery-192.png">
 <link rel="stylesheet" href="../doku.css">

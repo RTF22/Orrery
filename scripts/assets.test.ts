@@ -25,7 +25,18 @@ describe('ASSETS.md', () => {
 describe('public/', () => {
   it('enthält nur belegte Ordner und die Serverkonfiguration', () => {
     // musik/ ist git-ignoriert und gehört dem Betreiber (docs/entwicklung.md „Eigene Musik").
-    const erlaubt = new Set(['.htaccess', 'basis', 'textures', 'musik', 'symbole', 'manifest.webmanifest']);
+    // robots.txt und favicon.ico kommen statisch mit (orrery3d.de liefert für fehlende
+    // Dateien 500 statt 404, siehe scripts/app-symbol.py und docs/entwicklung.md).
+    const erlaubt = new Set([
+      '.htaccess',
+      'basis',
+      'textures',
+      'musik',
+      'symbole',
+      'manifest.webmanifest',
+      'robots.txt',
+      'favicon.ico',
+    ]);
     expect(readdirSync('public').filter((name) => !erlaubt.has(name))).toEqual([]);
   });
 });
