@@ -186,3 +186,31 @@ describe('baue und pruefeVerweise', () => {
     }
   });
 });
+
+describe('pruefeVerweise mit stamm (die Seitenvorlage verlinkt bewusst aus dist/doku/ hinaus)', () => {
+  it('prüft Verweise, die aus wurzel hinausführen, gegen stamm statt gegen wurzel, und meldet auch, was zufällig außerhalb von stamm existiert', () => {
+    const basis = mkdtempSync(join(tmpdir(), 'stamm-'));
+    // Datei außerhalb des Stamms, die es zufällig gibt — ein Verweis dorthin
+    // bleibt trotzdem ein Befund, weil er über den Stamm hinausführt.
+    writeFileSync(join(basis, 'index.html'), '<html></html>');
+
+    const stamm = join(basis, 'dist');
+    mkdirSync(stamm, { recursive: true });
+    // Die echte Zieldatei im Stamm, außerhalb von wurzel, aber innerhalb von stamm.
+    writeFileSync(join(stamm, 'index.html'), '<html></html>');
+
+    const wurzel = join(stamm, 'doku');
+    mkdirSync(wurzel, { recursive: true });
+    writeFileSync(
+      join(wurzel, 'seite.html'),
+      '<a href="../index.html">im Stamm, vorhanden</a>' +
+        '<a href="../fehlt.html">im Stamm, fehlt</a>' +
+        '<a href="../../index.html">außerhalb des Stamms, obwohl dort eine Datei liegt</a>',
+    );
+
+    expect(pruefeVerweise(wurzel, stamm)).toEqual([
+      'seite.html → ../fehlt.html',
+      'seite.html → ../../index.html',
+    ]);
+  });
+});

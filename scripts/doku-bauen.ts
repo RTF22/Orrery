@@ -5,10 +5,14 @@
  *   making-of/de/index.html     making-of/en/index.html
  *   making-of/de/chronik.html   making-of/en/chronik.html
  *   making-of/bilder/…          (nur die tatsächlich verwendeten Bilder)
+ *   making-of/doku.css          (gemeinsames Stylesheet, siehe doku-vorlage.ts)
+ *   making-of/index.html        (Sprachwahl, leitet auf de/ oder en/ weiter)
+ *   ../index.html               (dist/doku/index.html, leitet auf making-of/ weiter)
  *
  * Die reinen Funktionen sind exportiert und in doku-bauen.test.ts geprüft;
  * der Hauptlauf startet nur beim direkten Aufruf der Datei, baut mit der
- * Platzhaltervorlage `seiteEinfach` und prüft anschließend alle Verweise.
+ * Seitenvorlage `seite` aus doku-vorlage.ts und prüft anschließend alle
+ * Verweise (Verweise aus `dist/doku/` hinaus gegen den vollen `dist`-Baum).
  *
  * Aufruf aus dem Projektstamm, nach `tsc -b && vite build`:
  *   node scripts/doku-bauen.ts
@@ -28,6 +32,7 @@ import {
 } from 'node:fs';
 import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { DOKU_CSS, dokuWurzelSeite, seite, sprachwahlSeite } from './doku-vorlage.ts';
 
 export type Sprache = 'de' | 'en';
 export type Dokument = 'entstehung' | 'chronik';
@@ -391,19 +396,37 @@ export function baue(quelle: string, ziel: string, seite: (d: SeitenDaten) => st
  * Prüft jede `.html`-Datei unter `wurzel`: Jeder relative `href`/`src` muss auf
  * eine vorhandene Datei zeigen, jede `#marke` als `id="marke"` in der Zieldatei
  * vorkommen. Liefert eine leere Liste, wenn alles gut ist.
+ *
+ * Die Seitenvorlage verlinkt bewusst aus `dist/doku/` hinaus (die Simulation
+ * unter `../../../index.html`, das Symbol unter `../../../symbole/…`) — solche
+ * Verweise prüft diese Funktion nicht gegen `wurzel`, sondern gegen `stamm`
+ * (Vorgabe: der volle `dist`-Baum). Ein Verweis, der auch außerhalb von
+ * `stamm` landet, ist ein Befund, selbst wenn dort zufällig eine Datei mit
+ * passendem Namen liegt — sonst könnte ein zu weit hinausführender Verweis
+ * unbemerkt bleiben, nur weil er auf ein unbeteiligtes Verzeichnis trifft.
  */
-export function pruefeVerweise(wurzel: string): string[] {
+export function pruefeVerweise(wurzel: string, stamm: string = wurzel): string[] {
   // Absolut auflösen: alleDateien() bleibt sonst relativ, resolve() bei den
   // Verweisen liefert aber immer absolute Pfade — beides muss zusammenpassen.
   const wurzelAbs = resolve(wurzel);
+  const stammAbs = resolve(stamm);
   const dateien = alleDateien(wurzelAbs).filter((p) => p.endsWith('.html'));
 
   const idsJeDatei = new Map<string, Set<string>>();
-  for (const datei of dateien) {
-    const ids = new Set<string>();
-    for (const treffer of readFileSync(datei, 'utf8').matchAll(/\sid="([^"]+)"/g)) ids.add(treffer[1]!);
-    idsJeDatei.set(datei, ids);
-  }
+  const idsLesen = (datei: string): Set<string> => {
+    let ids = idsJeDatei.get(datei);
+    if (!ids) {
+      ids = new Set<string>();
+      if (datei.endsWith('.html') && existsSync(datei)) {
+        for (const treffer of readFileSync(datei, 'utf8').matchAll(/\sid="([^"]+)"/g)) ids.add(treffer[1]!);
+      }
+      idsJeDatei.set(datei, ids);
+    }
+    return ids;
+  };
+  for (const datei of dateien) idsLesen(datei);
+
+  const innerhalb = (pfad: string, basis: string): boolean => pfad === basis || pfad.startsWith(basis + sep);
 
   const befunde: string[] = [];
   for (const datei of dateien) {
@@ -420,12 +443,13 @@ export function pruefeVerweise(wurzel: string): string[] {
       let zielDatei = datei;
       if (pfadTeil !== '') {
         zielDatei = resolve(ordner, pfadTeil);
-        if (!existsSync(zielDatei)) {
+        const zulaessig = innerhalb(zielDatei, wurzelAbs) || innerhalb(zielDatei, stammAbs);
+        if (!zulaessig || !existsSync(zielDatei)) {
           befunde.push(`${relative(wurzelAbs, datei).split(sep).join('/')} → ${verweis}`);
           continue;
         }
       }
-      if (anker !== undefined && !(idsJeDatei.get(zielDatei)?.has(anker) ?? false)) {
+      if (anker !== undefined && !idsLesen(zielDatei).has(anker)) {
         befunde.push(`${relative(wurzelAbs, datei).split(sep).join('/')} → ${verweis}`);
       }
     }
@@ -466,8 +490,11 @@ ${d.html}
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
-    baue('docs', 'dist/doku', seiteEinfach);
-    const befunde = pruefeVerweise('dist/doku');
+    baue('docs', 'dist/doku', seite);
+    writeFileSync(join('dist/doku', 'index.html'), dokuWurzelSeite(), 'utf8');
+    writeFileSync(join('dist/doku/making-of', 'index.html'), sprachwahlSeite(), 'utf8');
+    writeFileSync(join('dist/doku/making-of', 'doku.css'), DOKU_CSS, 'utf8');
+    const befunde = pruefeVerweise('dist/doku', 'dist');
     if (befunde.length > 0) {
       console.error('Kaputte Verweise:');
       for (const zeile of befunde) console.error(`  ${zeile}`);
