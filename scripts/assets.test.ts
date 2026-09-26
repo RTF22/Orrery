@@ -28,6 +28,7 @@ describe('public/', () => {
     // robots.txt und favicon.ico kommen statisch mit (orrery3d.de liefert für fehlende
     // Dateien 500 statt 404, siehe scripts/app-symbol.py und docs/entwicklung.md).
     // Die google….html weist den Besitz der Domain für die Google Search Console nach.
+    // BingSiteAuth.xml leistet dasselbe für die Bing Webmaster Tools.
     const erlaubt = new Set([
       '.htaccess',
       'basis',
@@ -38,6 +39,7 @@ describe('public/', () => {
       'robots.txt',
       'favicon.ico',
       'google73a5c7151f277813.html',
+      'BingSiteAuth.xml',
     ]);
     expect(readdirSync('public').filter((name) => !erlaubt.has(name))).toEqual([]);
   });
