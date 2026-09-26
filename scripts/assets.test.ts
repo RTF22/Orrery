@@ -84,3 +84,14 @@ describe('Web-App', () => {
     }
   });
 });
+
+describe('public/.htaccess', () => {
+  const regeln = readFileSync('public/.htaccess', 'utf8');
+
+  it('leitet nur orrery3d.de auf die kanonische Adresse um', () => {
+    // Dieselbe Datei gilt unter jensfricke.com/Orrery/, das ohne Umleitung erreichbar bleibt.
+    expect(regeln).toMatch(/RewriteCond %\{HTTP_HOST\} \^\(www\\.\)\?orrery3d\\.de\$ \[NC\]/);
+    expect(regeln).toContain('RewriteRule ^ https://orrery3d.de%{REQUEST_URI}');
+    expect(regeln.match(/^\s*RewriteRule /gm)).toHaveLength(1);
+  });
+});

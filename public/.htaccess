@@ -3,6 +3,17 @@
 # Kein Verzeichnislisting, keine Rückschlüsse auf den Ordnerinhalt.
 Options -Indexes
 
+# Kanonische Adresse: http:// und www. von orrery3d.de auf https://orrery3d.de umleiten.
+# Nur für diesen Host; unter jensfricke.com/Orrery/ gilt dieselbe Datei ohne Umleitung.
+# 302 bis zur Bestätigung im Betrieb, danach 301 (Browser speichern 301 dauerhaft).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^(www\.)?orrery3d\.de$ [NC]
+  RewriteCond %{HTTPS} !=on [OR]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteRule ^ https://orrery3d.de%{REQUEST_URI} [R=302,L]
+</IfModule>
+
 # KTX2-Texturen, der Basis-Transcoder und das Web-App-Manifest (Entwurf Phase 5 §5.5).
 AddType image/ktx2 .ktx2
 AddType application/wasm .wasm
