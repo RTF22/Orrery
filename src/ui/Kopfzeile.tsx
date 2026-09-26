@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useStore } from '../store';
-import { linkErzeugen, zurueckgesetzt } from '../store/persist';
+import { zurueckgesetzt } from '../store/persist';
+import { lesbarerLink } from '../store/deeplink';
 import { t } from './i18n';
 import { cinemaAktiv, stopCinema } from './cinemaControl';
 import { useInfoKarte, startReiter } from './infokarte/zustand';
@@ -52,8 +53,7 @@ export function Kopfzeile(): React.JSX.Element {
     }, MELDUNG_MS);
   };
 
-  const linkKopieren = async (): Promise<void> => {
-    const link = linkErzeugen(useStore.getState(), window.location);
+  const zwischenablage = async (link: string): Promise<void> => {
     try {
       // Ohne sicheren Kontext fehlt navigator.clipboard ganz; der Zugriff
       // wirft dann synchron und landet ebenfalls im Rückfall.
@@ -64,6 +64,24 @@ export function Kopfzeile(): React.JSX.Element {
       window.history.replaceState(null, '', link);
       melde('header.copyFallback');
     }
+  };
+
+  const linkKopieren = async (): Promise<void> => {
+    const link = lesbarerLink(useStore.getState(), window.location);
+    // Native Freigabe nur an Touchgeräten (dieselbe Abfrage wie useGrob in
+    // ui/fenster.ts); am Desktop bleibt es bei der Zwischenablage, auch wenn
+    // der Browser navigator.share anbietet.
+    if (grobJetzt() && typeof navigator.share === 'function') {
+      try {
+        await navigator.share({ url: link, title: t('app.title') });
+        return;
+      } catch (fehler) {
+        // Abbruch im Freigabe-Menü: still, keine Meldung. Jeder andere Fehler
+        // fällt wie bisher auf die Zwischenablage zurück.
+        if (fehler instanceof DOMException && fehler.name === 'AbortError') return;
+      }
+    }
+    await zwischenablage(link);
   };
 
   const zuruecksetzen = (): void => {

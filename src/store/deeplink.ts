@@ -3,11 +3,13 @@ import { SCENES } from '../data/scenes';
 import { fokusAbstand } from '../sim/scale';
 import type { ScaleSettings } from '../sim/scale';
 import type { Body } from '../sim/types';
-import { dateToJd, imZeitbereich } from '../sim/time';
+import { dateToJd, jdToDate, imZeitbereich } from '../sim/time';
 import { DEFAULT_STATE } from './index';
-import { decodePatch, mergePatch } from './serialize';
+import { decodePatch, encodePatch, mergePatch } from './serialize';
 import { istPlain } from './pruefer';
 import type { Plain } from './pruefer';
+import { patchFuer } from './persist';
+import type { AppState } from './types';
 
 /**
  * Ergebnis der Fragmentauswertung. `patch` ist der zusammengesetzte Zustand
@@ -94,6 +96,34 @@ function datumZuJd(wert: string): number | null {
   return imZeitbereich(jd) === jd ? jd : null;
 }
 
+function zweistellig(n: number): string {
+  return String(n).padStart(2, '0');
+}
+
+/**
+ * Gegenstück zu `datumZuJd`: `date`-Wert für den Knopf, auf die volle Minute
+ * gerundet (Entscheidungen von Jens). `jdToDate` selbst rundet nur auf die
+ * Millisekunde; das Runden auf die Minute passiert deshalb hier zusätzlich.
+ */
+function formatDatum(jd: number): string {
+  const ms = jdToDate(jd).getTime();
+  const d = new Date(Math.round(ms / 60_000) * 60_000);
+  return `${String(d.getUTCFullYear()).padStart(4, '0')}-${zweistellig(d.getUTCMonth() + 1)}`
+    + `-${zweistellig(d.getUTCDate())}T${zweistellig(d.getUTCHours())}:${zweistellig(d.getUTCMinutes())}Z`;
+}
+
+/** Jahr, Monat, Tag, Stunde, Minute in UTC — zum Vergleich zweier Zeitpunkte auf Minutengleichheit. */
+function minutenFelder(jd: number): readonly [number, number, number, number, number] {
+  const d = jdToDate(jd);
+  return [d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes()];
+}
+
+function gleicheMinute(jdA: number, jdB: number): boolean {
+  const a = minutenFelder(jdA);
+  const b = minutenFelder(jdB);
+  return a.every((wert, i) => wert === b[i]);
+}
+
 /** Wirksame Maßstabseinstellung: `p` überschreibt einzelne Felder des Standards. */
 function wirksamerMassstab(grundlage: Plain): ScaleSettings {
   const basis = DEFAULT_STATE.scale;
@@ -147,8 +177,17 @@ export function fragmentAuswerten(hash: string): FragmentErgebnis | null {
     const datumWert = eintraege.get('date');
     const jd = datumWert === undefined ? null : datumZuJd(datumWert);
     if (jd !== null) {
-      overlay = mergePatch(overlay, { time: { jd, paused: true } });
       gueltig = true;
+      // Der Knopf (lesbarerLink) legt date immer als gerundeten Zeitpunkt von
+      // p daneben, damit der Link auch ohne p lesbar bleibt. Fällt date auf
+      // dieselbe Minute wie der Zeitpunkt aus der Grundlage, bleibt p
+      // maßgeblich — auch für „paused" —, sonst schnitte das gerundete date
+      // die Sekunden aus dem gerade erst geteilten, eigenen Link heraus.
+      const grundZeit = grundlage.time;
+      const basisJd = istPlain(grundZeit) && typeof grundZeit.jd === 'number' ? grundZeit.jd : null;
+      if (basisJd === null || !gleicheMinute(basisJd, jd)) {
+        overlay = mergePatch(overlay, { time: { jd, paused: true } });
+      }
     }
 
     const koerperWert = eintraege.get('body');
@@ -167,4 +206,20 @@ export function fragmentAuswerten(hash: string): FragmentErgebnis | null {
 
   if (!gueltig) return { patch: null, szeneId: null };
   return { patch: mergePatch(grundlage, overlay), szeneId };
+}
+
+/**
+ * Lesbarer Link für den Knopf „Link kopieren": `date` (aktueller Zeitpunkt,
+ * auf die Minute gerundet), `body` (nur, wenn ein Körper ausgewählt ist —
+ * dasselbe Feld, das `fragmentAuswerten` beim Einlesen setzt:
+ * `camera.mode === 'attached'`, Kennung aus `camera.targetId`) und `p`
+ * (bisheriger Link-Patch, Profil `link`, unverändert). Die Reihenfolge macht
+ * den Link von vorn nach hinten lesbar (Zeitpunkt, Körper, genauer Zustand);
+ * beim Einlesen ist sie gleichgültig.
+ */
+export function lesbarerLink(state: AppState, ort: { origin: string; pathname: string }): string {
+  const teile = [`date=${formatDatum(state.time.jd)}`];
+  if (state.camera.mode === 'attached') teile.push(`body=${state.camera.targetId}`);
+  teile.push(`p=${encodePatch(patchFuer(state, 'link'))}`);
+  return `${ort.origin}${ort.pathname}#${teile.join('&')}`;
 }

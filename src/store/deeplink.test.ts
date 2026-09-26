@@ -1,10 +1,25 @@
 import { describe, it, expect } from 'vitest';
-import { fragmentAuswerten } from './deeplink';
-import { encodePatch } from './serialize';
+import { fragmentAuswerten, lesbarerLink } from './deeplink';
+import { encodePatch, fromShareable } from './serialize';
 import { DEFAULT_STATE } from './index';
-import { JD_MIN, JD_MAX } from '../sim/time';
+import { JD_MIN, JD_MAX, jdToDate } from '../sim/time';
 import { fokusAbstand } from '../sim/scale';
 import { bodyIndex } from '../data';
+
+const ORT = { origin: 'https://beispiel.test', pathname: '/Orrery/' };
+
+/** Fragmentteil eines Links: alles nach dem „#". */
+function fragmentTeil(link: string): string {
+  return link.slice(link.indexOf('#'));
+}
+
+/** JJJJ-MM-TTTHH:MMZ für einen Zeitpunkt, der auf dieselbe Minute wie `jd` fällt. */
+function datumAufDerselbenMinute(jd: number): string {
+  const d = jdToDate(jd);
+  const zwei = (n: number): string => String(n).padStart(2, '0');
+  return `${d.getUTCFullYear()}-${zwei(d.getUTCMonth() + 1)}-${zwei(d.getUTCDate())}`
+    + `T${zwei(d.getUTCHours())}:${zwei(d.getUTCMinutes())}Z`;
+}
 
 /** Erwarteter Fokusabstand: dieselbe Funktion wie in koerperPatch (sim/scale.ts). */
 function erwarteterAbstand(id: string): number {
@@ -224,5 +239,74 @@ describe('fragmentAuswerten: Erkennung als gültiger Link (Grundlage für „mit
   it('ein beschädigtes p ohne weiteren Schlüssel gilt nicht als Link', () => {
     const ergebnis = fragmentAuswerten('#p=!!!nicht-base64!!!');
     expect(ergebnis?.patch === null && ergebnis?.szeneId === null).toBe(true);
+  });
+});
+
+describe('fragmentAuswerten: date überschreibt p nur bei abweichender Minute', () => {
+  it('gleiche Minute: p bleibt maßgeblich, auch für paused', () => {
+    // 30 Sekunden nach einer vollen Minute — date rundet genau auf diese Minute.
+    const basisJd = 2451000 + 30 / 86_400;
+    const p = { time: { jd: basisJd, paused: false, rateDaysPerSec: 5 } };
+    const link = '#p=' + encodePatch(p) + '&date=' + datumAufDerselbenMinute(basisJd);
+    expect(fragmentAuswerten(link)?.patch).toEqual({ time: { jd: basisJd, paused: false, rateDaysPerSec: 5 } });
+  });
+
+  it('abweichende Minute: date überschreibt wie gehabt, auch paused', () => {
+    const p = { time: { jd: 2451000, paused: false, rateDaysPerSec: 5 } };
+    const link = '#p=' + encodePatch(p) + '&date=2024-03-01T18:45Z';
+    const erwarteteJd = Date.UTC(2024, 2, 1, 18, 45, 0, 0) / 86_400_000 + 2440587.5;
+    expect(fragmentAuswerten(link)?.patch).toEqual({ time: { jd: erwarteteJd, paused: true, rateDaysPerSec: 5 } });
+  });
+});
+
+describe('lesbarerLink', () => {
+  it('erzeugt date, body (nur bei ausgewähltem Körper) und p in dieser Reihenfolge', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    state.camera = { ...state.camera, mode: 'attached', targetId: 'mars' };
+    const link = lesbarerLink(state, ORT);
+    expect(link.startsWith(`${ORT.origin}${ORT.pathname}#date=`)).toBe(true);
+    expect(fragmentTeil(link)).toMatch(/^#date=\d{4}-\d{2}-\d{2}T\d{2}:\d{2}Z&body=mars&p=/);
+  });
+
+  it('lässt body weg, wenn kein Körper ausgewählt ist (camera.mode nicht attached)', () => {
+    const link = lesbarerLink(structuredClone(DEFAULT_STATE), ORT); // Standard: mode 'free'
+    expect(fragmentTeil(link)).not.toMatch(/[#&]body=/);
+  });
+
+  it('rundet date auf die volle Minute', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    state.time.jd = DEFAULT_STATE.time.jd + 45 / 86_400; // 45 Sekunden später
+    const link = lesbarerLink(state, ORT);
+    const treffer = /^#date=(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}Z)&/.exec(fragmentTeil(link));
+    expect(treffer).not.toBeNull();
+    // 45 s runden aufwärts: Bei J2000 (12:00:00 UTC) ist das die nächste Minute.
+    expect(treffer?.[1]).toBe('2000-01-01T12:01Z');
+  });
+
+  it('Rundreise: Sekunden und laufende Uhr bleiben wie mit „#p=" erhalten', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    // 10 s nach der vollen Minute: date rundet ab, fällt also auf dieselbe
+    // Minute wie der genaue Zeitpunkt — 30 s wäre die Rundungsgrenze selbst.
+    state.time.jd = DEFAULT_STATE.time.jd + 10 / 86_400;
+    state.time.paused = false;
+    state.scale = { ...state.scale, sizeScale: 7 };
+    const link = lesbarerLink(state, ORT);
+    const ergebnis = fragmentAuswerten(fragmentTeil(link));
+    const zurueck = fromShareable(ergebnis?.patch ?? {});
+    expect(zurueck.time.jd).toBe(state.time.jd);
+    expect(zurueck.time.paused).toBe(false);
+    expect(zurueck.scale.sizeScale).toBe(7);
+  });
+
+  it('Rundreise mit ausgewähltem Körper: derselbe Zustand wie mit „#p=" allein', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    state.camera = {
+      ...state.camera, mode: 'attached', targetId: 'mars', freezeJd: null,
+      distance: erwarteterAbstand('mars'),
+    };
+    const link = lesbarerLink(state, ORT);
+    const ergebnis = fragmentAuswerten(fragmentTeil(link));
+    const zurueck = fromShareable(ergebnis?.patch ?? {});
+    expect(zurueck.camera).toEqual(state.camera);
   });
 });
