@@ -40,6 +40,7 @@ describe('public/', () => {
       'favicon.ico',
       'google73a5c7151f277813.html',
       'BingSiteAuth.xml',
+      'vorschau.png',
     ]);
     expect(readdirSync('public').filter((name) => !erlaubt.has(name))).toEqual([]);
   });
@@ -95,5 +96,20 @@ describe('public/.htaccess', () => {
     expect(regeln).toMatch(/RewriteCond %\{HTTP_HOST\} \^\(www\\.\)\?orrery3d\\.de\$ \[NC\]/);
     expect(regeln).toContain('RewriteRule ^ https://orrery3d.de%{REQUEST_URI}');
     expect(regeln.match(/^\s*RewriteRule /gm)).toHaveLength(1);
+  });
+});
+
+describe('Linkvorschau der App', () => {
+  const kopf = readFileSync('index.html', 'utf8');
+
+  it('führt Beschreibung und Vorschaubild mit absoluter Adresse', () => {
+    expect(kopf).toMatch(/<meta name="description" content="[^"]{50,160}"/);
+    expect(kopf).toContain('<meta property="og:url" content="https://orrery3d.de/"');
+    expect(kopf).toContain('<meta property="og:image" content="https://orrery3d.de/vorschau.png"');
+    expect(kopf).toContain('<meta name="twitter:card" content="summary_large_image"');
+  });
+
+  it('liefert als Vorschaubild dieselbe Datei wie das Repository', () => {
+    expect(readFileSync('public/vorschau.png').equals(readFileSync('docs/bilder/social-preview.png'))).toBe(true);
   });
 });
