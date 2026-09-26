@@ -100,6 +100,24 @@ describe('Trennstrich nach Liste, Tabelle oder Zitat ist keine Setext-Überschri
   });
 });
 
+describe('Zeilenenden CRLF', () => {
+  // `marked` normalisiert `\r\n`/`\r` intern selbst vor dem Lexen; die Zeilen- und
+  // Offset-Rechnung in inhaltsverzeichnis lief vor diesem Fix am unnormalisierten
+  // Text vorbei und verlor dadurch die Zuordnung der Marke — still, ohne
+  // Fehlermeldung, mit CRLF-Eingabe (Windows-Checkouts liefern oft CRLF).
+  const lf = ['# Titel', '', 'Text.', '', '<a id="marke"></a>', '## Mit Marke', ''].join('\n');
+  const crlf = lf.replace(/\n/g, '\r\n');
+
+  it('inhaltsverzeichnis findet die Marke auch bei CRLF-Zeilenenden', () => {
+    expect(inhaltsverzeichnis(crlf)).toEqual([{ ebene: 2, text: 'Mit Marke', id: 'marke' }]);
+  });
+
+  it('umwandeln setzt dieselbe Kennung im HTML auch bei CRLF-Zeilenenden', () => {
+    const u = umwandeln(crlf, 'de');
+    expect(u.html).toContain('<h2 id="marke">Mit Marke</h2>');
+  });
+});
+
 describe('verweisUmschreiben', () => {
   it.each([
     ['https://example.org/a', 'https://example.org/a'],

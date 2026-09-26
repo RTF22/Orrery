@@ -77,6 +77,19 @@ function reinerText(text: string): string {
     .trim();
 }
 
+/**
+ * Vereinheitlicht Zeilenenden auf `\n`. `marked` normalisiert `\r\n`/`\r` intern
+ * selbst vor dem Lexen, unsere eigene Zeilen- und Offset-Rechnung in
+ * `inhaltsverzeichnis` aber nicht — ohne diese Vereinheitlichung liefe sie am
+ * tatsächlich gelexten Text vorbei (jede vorhandene CR verschiebt die
+ * berechnete Zeilennummer um eine Position). `inhaltsverzeichnis` und
+ * `umwandeln` rufen das je an ihrem Eingang auf, damit beide dieselbe Fassung
+ * sehen, auch wenn nur eine der beiden Funktionen direkt aufgerufen wird.
+ */
+function zeilenendenVereinheitlichen(md: string): string {
+  return md.replace(/\r\n?/g, '\n');
+}
+
 /** Zeilenindex (0-basiert), in der `offset` (Zeichenposition) in `text` liegt. */
 function zeileBeiOffset(text: string, offset: number): number {
   let zeile = 0;
@@ -115,7 +128,8 @@ function verschachtelteUeberschriften(token: Token): Array<{ ebene: number; text
  * Zeile, nur auf oberster Ebene ausgewertet) liefert die Kennung, sonst der
  * Slug des Texts; doppelte Kennungen bekommen `-2`, `-3` und so weiter.
  */
-export function inhaltsverzeichnis(md: string): Eintrag[] {
+export function inhaltsverzeichnis(mdRoh: string): Eintrag[] {
+  const md = zeilenendenVereinheitlichen(mdRoh);
   const zeilenOriginal = md.split('\n');
   const markeJeZeile = new Map<number, string>();
   zeilenOriginal.forEach((zeile, i) => {
@@ -251,7 +265,8 @@ function markenEntfernen(md: string): string {
  * erhalten ihre Kennung aus dem Inhaltsverzeichnis, Marken-Zeilen, Titel und
  * Sprachzeile entfallen, Verweise und Bildpfade laufen durch verweisUmschreiben.
  */
-export function umwandeln(md: string, sprache: Sprache): Umgewandelt {
+export function umwandeln(mdRoh: string, sprache: Sprache): Umgewandelt {
+  const md = zeilenendenVereinheitlichen(mdRoh);
   const toc = inhaltsverzeichnis(md);
 
   const { md: ohneTitel, titel } = ersteH1ZeileEntfernen(md);
