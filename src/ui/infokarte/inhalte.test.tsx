@@ -111,8 +111,11 @@ describe('Reiter der Info-Karte', () => {
       expect(a.getAttribute('rel')).toBe('noopener noreferrer');
       expect(a.textContent).toContain('(öffnet in neuem Tab)');
     }
-    expect(screen.getByText(/CC BY-SA 4\.0/)).toBeTruthy();
-    expect(screen.getByText(/CC BY-NC 3.0 IGO/)).toBeTruthy();
+    expect(screen.getByText(/Texte unter CC BY-SA 4\.0/)).toBeTruthy();
+    // Fremdrechte: die Quellen, deren Lizenz eine Namensnennung verlangt, stehen ausdrücklich da.
+    const drittrechte = screen.getByText(/Solar System Scope \(CC BY 4\.0\)/);
+    expect(drittrechte.textContent).toMatch(/HYG \(CC BY-SA 4\.0\)/);
+    expect(drittrechte.textContent).toMatch(/CC BY-NC 3\.0 IGO/);
     expect(screen.getByText(/Version/).textContent).toContain(VERSION);
   });
 

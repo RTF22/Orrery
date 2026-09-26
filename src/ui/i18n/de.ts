@@ -310,7 +310,7 @@ export const de = {
   'infokarte.ueber.text': 'Orrery zeigt das Sonnensystem physikalisch gerechnet: Körper, Monde und Himmel in echter Lage, mit Texten in drei Niveaustufen.',
   'infokarte.ueber.quellcode': 'Quellcode auf GitHub',
   'infokarte.ueber.recht': '© Jens Fricke. Code unter MIT-Lizenz, Texte unter CC BY-SA 4.0.',
-  'infokarte.ueber.drittrechte': 'Texturen, Sternkatalog und Himmelskarte: Rechte der jeweiligen Urheber (u. a. NASA/JPL, NASA/GSFC SVS, ESA/Gaia/DPAC unter CC BY-NC 3.0 IGO).',
+  'infokarte.ueber.drittrechte': 'Texturen: Solar System Scope (CC BY 4.0) und NASA/USGS; Sternkatalog: HYG (CC BY-SA 4.0); Himmelskarte: NASA/GSFC SVS mit Gaia-Daten (CC BY-NC 3.0 IGO).',
   'infokarte.ueber.assets': 'Übersicht in ASSETS.md',
   'infokarte.ueber.nichtkommerziell': 'Nichtkommerzielles Projekt.',
   'infokarte.ueber.entstehung': 'Wie Orrery entstand',
