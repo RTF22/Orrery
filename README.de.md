@@ -73,9 +73,10 @@ Commit-Kürzeln, erzählen der [Überblick](docs/entstehung.de.md) und die ausf�
 
 ## Lizenz
 
-Noch nicht festgelegt; alle Rechte bleiben vorbehalten. Texturen und die Karte der
-Milchstraße unterliegen den in [`ASSETS.md`](ASSETS.md) genannten Lizenzen (überwiegend
-CC BY 4.0; die Milchstraßenkarte enthält Gaia-Daten unter CC BY-NC 3.0 IGO).
+Code steht unter MIT ([`LICENSE`](LICENSE)), eigene Texte und Bilder unter CC BY-SA 4.0
+([`LICENSE-TEXTE.md`](LICENSE-TEXTE.md)). Texturen und die Karte der Milchstraße unterliegen
+den in [`ASSETS.md`](ASSETS.md) genannten Lizenzen (überwiegend CC BY 4.0; die
+Milchstraßenkarte enthält Gaia-Daten unter CC BY-NC 3.0 IGO).
 
 Entwicklung, Veröffentlichung, eigene Musik und Aufbau des Codes:
 [`docs/entwicklung.md`](docs/entwicklung.md).

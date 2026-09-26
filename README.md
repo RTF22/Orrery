@@ -70,9 +70,10 @@ commit hash, is told by the [overview](docs/entstehung.en.md) and the detailed
 
 ## Licence
 
-No licence has been chosen yet; all rights are reserved. Textures and the Milky Way map are
-subject to the licences listed in [`ASSETS.md`](ASSETS.md) (mostly CC BY 4.0; the Milky Way
-map includes Gaia data under CC BY-NC 3.0 IGO).
+Code is licensed under MIT ([`LICENSE`](LICENSE)); own texts and images under CC BY-SA 4.0
+([`LICENSE-TEXTE.md`](LICENSE-TEXTE.md)). Textures and the Milky Way map are subject to the
+licences listed in [`ASSETS.md`](ASSETS.md) (mostly CC BY 4.0; the Milky Way map includes Gaia
+data under CC BY-NC 3.0 IGO).
 
 Development, deployment, custom music and code structure (in German):
 [`docs/entwicklung.md`](docs/entwicklung.md).

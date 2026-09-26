@@ -307,7 +307,7 @@ export const en: Record<Key, string> = {
   'infokarte.bedienung.controllerKarte': 'Controller layout',
   'infokarte.ueber.text': 'Orrery shows the solar system computed physically: bodies, moons and sky in their true positions, with texts at three levels.',
   'infokarte.ueber.quellcode': 'Source code on GitHub',
-  'infokarte.ueber.recht': '© Jens Fricke. Code: all rights reserved.',
+  'infokarte.ueber.recht': '© Jens Fricke. Code under the MIT licence, texts under CC BY-SA 4.0.',
   'infokarte.ueber.drittrechte': 'Textures, star catalogue and sky map: rights of their respective authors (including NASA/JPL, NASA/GSFC SVS, ESA/Gaia/DPAC under CC BY-NC 3.0 IGO).',
   'infokarte.ueber.assets': 'Overview in ASSETS.md',
   'infokarte.ueber.nichtkommerziell': 'Non-commercial project.',

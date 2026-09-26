@@ -111,7 +111,7 @@ describe('Reiter der Info-Karte', () => {
       expect(a.getAttribute('rel')).toBe('noopener noreferrer');
       expect(a.textContent).toContain('(öffnet in neuem Tab)');
     }
-    expect(screen.getByText(/alle Rechte vorbehalten/)).toBeTruthy();
+    expect(screen.getByText(/CC BY-SA 4\.0/)).toBeTruthy();
     expect(screen.getByText(/CC BY-NC 3.0 IGO/)).toBeTruthy();
     expect(screen.getByText(/Version/).textContent).toContain(VERSION);
   });

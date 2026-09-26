@@ -62,7 +62,7 @@ const WOERTER: Record<Sprache, Woerter> = {
     sprachLabel: 'Sprache',
     inhalt: 'Inhalt',
     fuss:
-      `© Jens Fricke · alle Rechte vorbehalten · Texturen siehe ` +
+      `© Jens Fricke · Code MIT, Texte CC BY-SA 4.0 · Texturen siehe ` +
       `<a href="${GITHUB_STAMM}/blob/master/ASSETS.md">ASSETS.md</a> · ` +
       `<a href="${GITHUB_STAMM}">Quelltext bei GitHub</a>`,
   },
@@ -72,7 +72,7 @@ const WOERTER: Record<Sprache, Woerter> = {
     sprachLabel: 'Language',
     inhalt: 'Contents',
     fuss:
-      `© Jens Fricke · all rights reserved · textures see ` +
+      `© Jens Fricke · code MIT, texts CC BY-SA 4.0 · textures see ` +
       `<a href="${GITHUB_STAMM}/blob/master/ASSETS.md">ASSETS.md</a> · ` +
       `<a href="${GITHUB_STAMM}">source on GitHub</a>`,
   },
