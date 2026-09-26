@@ -587,3 +587,241 @@ this phase's output tokens went to subagents, the predominant model was Claude
 Opus 5.5 (51.2% of the output tokens), ahead of Claude Sonnet 5 (33.5%).
 
 **Commits:** `218b1f7`, `a323c80`, `8989c69`, `b6558f6`, `c0b39fb`.
+
+<a id="phase-5"></a>
+## Phase 5: Interface, Mobile, Textures, Music (23–25 September 2026, v0.6.0)
+
+**Goal:** Continue building after phase 4d in four functional stages — 5-1 Interface,
+5-2 Mobile, 5-3 Textures and Loading, 5-4 Music — and finish with stage 5-5.
+
+**Decisions:** The phase's overall acceptance review (Jens Fricke, 25 September 2026)
+recorded the hands-on check as free of issues; tag `v0.6.0` was set and pushed to
+`master`. It also confirmed the lesson on model choice for rule-bound clean-ups
+already drawn during the follow-up after phase 4d (see above).
+
+**Result:** Tests and the main chunk grew from stage to stage: 5-1 5,174 tests
+(1,456.56 kB), 5-2 5,192 tests (1,458.08 kB), 5-3 after rework 5,235 tests
+(1,523.15 kB), 5-4 5,275 tests, final state (`de97203`) 5,285 tests with the main
+chunk unchanged at 1,529.67 kB. Stage 5-3 brought the 1k texture total down to
+3,567,420 bytes (target under 4,000,000 bytes) and, after a correction (`63edc93`),
+the load time under simulated "Fast 4G" down to a median of 4,543.6 ms (target at
+most 5,000 ms) — alongside a repository growth of about 170 MiB for the new texture
+tiers (KTX2 total 177,914,750 bytes). According to the timestamps, the phase ran
+for about 36.3 hours, from 23 September 2026 (`d326970`, 20:00) to 25 September
+2026 (`d0e88f5`, 08:21).
+
+![Compact mode on a smartphone screen with arc navigation at the bottom.](bilder/entstehung/kompakt-handy.jpg)
+
+**Errors and Corrections:** In stage 5-2, `npm run build` (`tsc -b`) rejected the
+literal import of `readFileSync` from `node:fs` in `konstanten.test.ts` (TS2591) —
+caught by the build, fixed within the same task. In stage 5-3, `texturen-bauen.ts`
+compared the 1k sum literally against `breite === 1024` instead of the constant
+`ETC1S_BREITE` — caught by the specialist review, corrected in the rework (commit
+`257750a`).
+
+**Tokens:** 1,386,592 output tokens, 413,032,693 cache-read tokens across 2,784
+responses (identifier `phase-5`; 534 main-session, 2,250 subagent responses); 56.6%
+of this phase's output tokens went to subagents, the predominant model was Claude
+Sonnet 5 (53.5% of the output tokens), ahead of Claude Opus 5.5 (43.4%).
+
+**Commits:** `d326970`, `626dba1`, `c2d871e`, `1c53656`, `d0e88f5`.
+
+<a id="phase-6"></a>
+## Phase 6: Milky Way (25 September 2026, v0.7.0)
+
+**Goal:** Add the Milky Way to the background of the scene.
+
+**Decisions:** From the overall acceptance review (Jens Fricke, 25 September 2026):
+the measured Coalsack contrast ratio of 0.707 was accepted despite the target of
+under 0.6, the brightness curve left unchanged. The hands-on check passed, tag
+`v0.7.0` was set, pushed to `master`, and rolled out to the web space.
+
+**Result:** Tests rose from 5,301 to 5,328, the main chunk from 1,529.67 kB to
+1,531.36 kB. The Milky Way's three texture tiers come to 59,941 bytes (1k),
+1,069,543 bytes (2k), and 30,310,600 bytes (8k). According to the timestamps, the
+stage ran for about 3.4 hours, on 25 September 2026, from `02bb097` (08:45) to
+`a576b7b` (12:10); the tag commit `8d1b268` (11:56) falls in between.
+
+![View from Neptune back toward the small, distant Sun against the Milky Way.](bilder/entstehung/ferne-sonne.jpg)
+
+**Errors and Corrections:** The Gaia share of the Milky Way source had been assumed
+in the design document to carry the CC BY-SA licence; it is actually CC BY-NC 3.0
+IGO (non-commercial, subject to permission) — caught by the specialist review,
+resolved with an NC note on the source card and an update to the design document
+(Orrery is non-commercial).
+
+**Tokens:** 352,026 output tokens, 136,374,213 cache-read tokens across 644
+responses (identifier `phase-6`; 125 main-session, 519 subagent responses); 59.3%
+of this phase's output tokens went to subagents, the predominant model was Claude
+Sonnet 5 (56.0% of the output tokens), ahead of Claude Opus 5.5 (40.7%).
+
+**Commits:** `02bb097`, `8d1b268`, `a576b7b`.
+
+<a id="infokarte"></a>
+## Info Card (25 September 2026, v0.7.1)
+
+**Goal:** Introduce an info card with the tabs App, Controls, and About, plus a
+separate "Controls" card.
+
+**Decisions:** The hands-on check on desktop and on the Galaxy A55 found no
+issues; the ⓘ symbol, initially too small, moved into the language row of the
+header. Tag `v0.7.1` and the deploy were approved.
+
+**Result:** The test count rose in four stages from 5,328 through 5,354 and 5,364
+to 5,370 and 5,371, the main chunk from 1,531.36 kB through 1,543.51 kB and
+1,548.56 kB to 1,548.89 kB and 1,549.24 kB. According to the timestamps, the stage
+ran for about 5.9 hours, on 25 September 2026, from `32fc0b5` (12:26) to `6f8a9d9`
+(18:22).
+
+![The open info card with the "Controls" tab and the main keyboard shortcuts.](bilder/entstehung/infokarte.jpg)
+
+**Errors and Corrections:** On desktop (1600×900), the ⓘ symbol turned out to be
+too small — caught by Jens' own hands-on check, fixed by moving it into the
+language row (commit `f8adc75`). `App.tsx` returned two different tree shapes
+depending on whether the card was open, which caused the info card to be
+remounted whenever `ui.hidden` changed, losing focus restoration in the process —
+caught by the specialist review, fixed by making `App` always return the same tree
+shape. `steuerungTakt` did not check whether the info or controls card was open,
+so controller and WASD input kept flying, turning, and zooming while a card was
+open, and pad A/B kept triggering camera moves — likewise caught by the specialist
+review; the lock was extended, and pad B has closed the card ever since.
+
+**Tokens:** 636,957 output tokens, 178,316,206 cache-read tokens across 1,021
+responses (identifier `infokarte`; 190 main-session, 831 subagent responses);
+68.4% of this phase's output tokens went to subagents, the predominant model was
+Claude Sonnet 5 (68.1% of the output tokens), ahead of Claude Opus 5.5 (31.6%).
+
+**Commits:** `32fc0b5`, `f8adc75`, `6f8a9d9`.
+
+<a id="kleinigkeiten"></a>
+## Odds and Ends (25 September 2026, v0.7.2)
+
+**Goal:** Work through smaller points left open after the info card.
+
+**Decisions:** The hands-on check was skipped for this stage — Jens left it out;
+only the automated evidence counted. Tag `v0.7.2` was approved; the upload to the
+web space was to be triggered by Jens himself afterwards.
+
+**Result:** Tests rose from 5,371 to 5,402, the main chunk from 1,549.24 kB to
+1,550.81 kB. According to the timestamps, the stage ran for about 1.7 hours, on
+25 September 2026, from `f1e308d` (18:37) to `a203f11` (20:17).
+
+**Errors and Corrections:** A type error from a rework (`cinemaControl.test.ts:267`,
+TS2349) made `npm run build` (`tsc -b`) fail — caught by the build, fixed at once by
+the same implementer and bundled with a test-name rename.
+
+**Tokens:** 334,554 output tokens, 83,144,170 cache-read tokens across 559
+responses (identifier `kleinigkeiten`; 89 main-session, 470 subagent responses);
+84.6% of this phase's output tokens went to subagents, the predominant model was
+Claude Sonnet 5 (84.6% of the output tokens), ahead of Claude Opus 5.5 (15.4%).
+
+**Commits:** `f1e308d`, `a203f11`.
+
+<a id="domain"></a>
+## Path to the Domain (25 September 2026)
+
+**Goal:** Put in place the last technical prerequisites for the custom domain, so
+that `https://orrery3d.de` works just as well as the existing address
+`https://www.jensfricke.com/Orrery/`.
+
+**Decisions:** At the start stood the decision, already made back in the idea
+phase, to keep the repository private until completion (see [The Idea](#idee)).
+Next came the deploy script together with `.htaccess` and an environment template
+on 14 September 2026 (commit `c07b521`), on 19 September 2026 the README change
+stating that the repository was now public, the licence still open (commit
+`04fe610`), and on 24 September 2026, in stage 5-5, an installable web app with a
+full-screen start and its own icon (commit `60fa468`), together with a file-by-file
+upload with retries on network errors (commit `217a4f7`).
+
+**Result:** Two commits on 25 September 2026 removed the last technical obstacles:
+`1e08dba` (20:25) switched the build to relative paths, because the fixed base
+`/Orrery/` produced HTTP 500 responses from the server under the custom domain —
+relative paths work under both addresses, the development server stays on
+`/Orrery/`. `f3807c7` (20:30) moved the app icons to `symbole/`, because a global
+server alias `/icons/` would otherwise have served its own icons there instead of
+the app's (404 responses for the favicon and manifest icons). According to
+`docs/entwicklung.md`, the site has since run under `https://orrery3d.de` and
+`https://www.jensfricke.com/Orrery/`, uploaded via FTPS. According to the
+timestamps, the stage itself took about five minutes.
+
+**Errors and Corrections:** For this stage, the reviewed logs record no case.
+
+**Tokens:** 6,458 output tokens, 1,559,177 cache-read tokens across 18 responses
+(identifier `domain`; all 18 in the main session, no subagent response); 0.0% of
+this phase's output tokens went to subagents, the predominant model was Claude
+Opus 5.5 (100.0% of the output tokens).
+
+**Commits:** `c07b521`, `04fe610`, `60fa468`, `1e08dba`, `f3807c7`.
+
+<a id="anhang-tokens"></a>
+## Appendix: Token Balance
+
+This appendix summarises the language-model consumption of the entire project,
+evaluated from the assistant's local session logs for this project; only sums are
+published, never log contents.
+
+**Method:** Every response counts once, identified by its message id; under
+streaming, the same response appears in the log several times, so the maximum
+value across all lines with the same id is counted per field — without this rule, a
+sample for Claude Sonnet 5 came out at only 1.9 instead of 23.8 million output
+tokens. Four categories are counted per response: uncached input, output, cache
+reads, cache writes. Timestamps are recorded in the logs as UTC and were converted
+with a fixed offset of +02:00 to Berlin summer time (which applies throughout
+September 2026); the phase assigned to each response follows from the interval of
+the respective phase boundaries, and in case of overlap from the most recently
+started stage. The cut-off date is the upload of the domain fix (`f3807c7`,
+25 September 2026, 20:30).
+
+**Limits:** The logs exist only locally and have not been reconciled against any
+billing; the counting method and cut-off date are given here so the numbers can be
+put in context.
+
+**Tokens by model (up to the cut-off date):**
+
+| Display name | Responses | Output | Cache reads |
+|---|---:|---:|---:|
+| Claude Opus 5 | 10,523 | 14,011,620 | 3,015,452,404 |
+| Claude Opus 5.5 | 1,646 | 1,747,637 | 452,555,143 |
+| Claude Fable 5.1 | 1,976 | 2,623,271 | 473,944,393 |
+| Claude Sonnet 5 | 29,164 | 23,833,638 | 6,360,113,132 |
+| Claude Haiku 4.5 | 1,586 | 679,317 | 111,541,452 |
+| **Total** | **44,895** | **42,895,483** | **10,413,606,524** |
+
+In addition, up to the cut-off date there were 152,983 tokens of uncached input
+and 200,194,976 tokens of cache writes (same table).
+
+**Tokens by phase (up to the cut-off date):**
+
+| Identifier | Output | Cache reads |
+|---|---:|---:|
+| `idee` | 230,581 | 8,843,552 |
+| `phase-1` | 1,187,833 | 175,356,549 |
+| `phase-2` | 147,022 | 51,721,718 |
+| `phase-3a` | 4,344,979 | 724,412,063 |
+| `phase-3b` | 1,435,858 | 204,267,920 |
+| `phase-4a` | 463,002 | 66,461,714 |
+| `phase-4b` | 881,748 | 103,360,297 |
+| `phase-4c` | 3,987,747 | 539,796,022 |
+| `klickflaechen` | 984,680 | 98,857,888 |
+| `phase-4d` | 23,807,582 | 7,178,734,109 |
+| `zeitbereich` | 365,863 | 89,041,341 |
+| `flug` | 2,107,770 | 278,589,820 |
+| `nachfuehrung-4d` | 234,231 | 81,737,072 |
+| `phase-5` | 1,386,592 | 413,032,693 |
+| `phase-6` | 352,026 | 136,374,213 |
+| `infokarte` | 636,957 | 178,316,206 |
+| `kleinigkeiten` | 334,554 | 83,144,170 |
+| `domain` | 6,458 | 1,559,177 |
+| **Total** | **42,895,483** | **10,413,606,524** |
+
+![Tokens per day by model, and cache reads per day.](bilder/entstehung/tokens-je-tag.svg)
+
+**Diagram:** At the top are the output tokens per calendar day, stacked by model
+(display names without a manufacturer prefix); below, on its own axis, is the
+cache-read count per day as a separate series — per stage, roughly a factor of 100
+to 300 above the output (see the tables above); only this separate axis keeps the
+course of the output visible at all alongside it.
+
+**After the cut-off date:** Sessions after this cut-off date — for instance for the
+bilingual README and for this chronicle stage itself — are already under way, but
+are not included in the figures above, because their total is still growing.
