@@ -697,7 +697,7 @@ dieser Phase entfielen auf Subagenten, vorherrschendes Modell war Claude Sonnet 
 <a id="infokarte"></a>
 ## Info-Karte (25.09.2026, v0.7.1)
 
-**Ziel:** Eine Info-Karte mit den Reitern Einrichtung, Bedienung und Über einführen,
+**Ziel:** Eine Info-Karte mit den Reitern App, Bedienung und Über einführen,
 dazu eine eigene Karte Steuerung.
 
 **Entscheidungen:** Handprüfung an Desktop und am Galaxy A55 ohne

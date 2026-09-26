@@ -111,7 +111,7 @@ Texturstufen: 59 941 Bytes (1k), 1 069 543 Bytes (2k), 30 310 600 Bytes (8k). Ta
 
 ### Info-Karte und Kleinigkeiten
 
-Eine Info-Karte mit den Reitern Einrichtung, Bedienung und Über sowie eine eigene Karte
+Eine Info-Karte mit den Reitern App, Bedienung und Über sowie eine eigene Karte
 Steuerung ergänzten die Oberfläche (v0.7.1, vier Stationen von 5328 auf 5371 Tests, Hauptchunk
 bis 1 549,24 kB); danach schlossen kleinere, offen gebliebene Punkte die Etappe ab (v0.7.2,
 5402 Tests, Hauptchunk 1 550,81 kB).

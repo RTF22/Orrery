@@ -112,7 +112,7 @@ bytes (2k), 30,310,600 bytes (8k). Tag `v0.7.0`, 5,328 tests, main chunk 1,531.3
 
 ### Info Card and Odds and Ends
 
-An info card with the tabs Setup, Controls, and About, plus a separate "Controls" card, extended
+An info card with the tabs App, Controls, and About, plus a separate "Controls" card, extended
 the interface (v0.7.1, four stages taking tests from 5,328 to 5,371, main chunk up to
 1,549.24 kB); smaller, previously open points then closed out the stage (v0.7.2,
 5,402 tests, main chunk 1,550.81 kB).
@@ -129,7 +129,7 @@ smallest model that could still reliably solve the task whenever possible. Every
 through the same sequence: brainstorming, an approved design document, a plan, implementation in
 small, individually assigned work steps (tasks), and an acceptance review with rulings. Decisions
 that became necessary while a plan was running were made by the steering session itself as a
-"ruling" rather than as a question back — each one recorded in writing with its reasoning and
+"ruling" rather than as a follow-up question — each one recorded in writing with its reasoning and
 presented to Jens together at the end.
 
 Two further rules ran through all phases: visual checks were done as pixel measurements rather
@@ -190,7 +190,7 @@ into the language row of the header.
 browser), at most one review round per text, and language models kept as small as possible — four
 rules that limit freedom and cost at the same time. Their limit showed when a mechanical
 clean-up of forbidden phrasing in reference lists was first handed to the smallest model in use:
-the first pass left 37 hits standing that should actually have been caught, and a second attempt
+the first pass left 37 hits untouched that should actually have been caught, and a second attempt
 instead struck unrelated passages and deleted reference numbers without replacement. A grep-based
 review caught both, before a specialist review was even needed; the repeat run then ran on the
 medium model. Since then, similar rule-bound clean-ups start there right away.
