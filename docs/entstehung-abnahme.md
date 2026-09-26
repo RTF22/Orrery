@@ -17,8 +17,8 @@ die vier Texte bei jedem `npm run build` als statische Seiten unter `dist/doku/m
 erzeugt (Sprachwahl nach Browsersprache, Standard Englisch) und alle Verweise prüft, sowie die
 Verlinkung aus beiden READMEs und der Entwicklerdoku.
 
-24 Commits auf dem Branch `entstehung` (ab `master` `da9cfc7`) in 15 Tasks, dazu dieses
-Protokoll:
+26 Commits auf dem Branch `entstehung` (ab `master` `da9cfc7` bis zu diesem Protokoll
+`22583fe`) in 15 Tasks:
 
 1. **Entwurf und Plan** (`602705b`…`cb676af`): Design-Dokument, Implementierungsplan,
    Entscheidung für die Website unter `/doku/making-of/`.
@@ -193,6 +193,15 @@ npm test                 # Test Files 129 passed (129); Tests 5435 passed (5435)
 npm run build            # Hauptchunk 1 557,08 kB (gzip 430,04 kB); dist/doku/making-of/{de,en}
                           # erzeugt, pruefeVerweise ohne Befund
 ```
+
+### Schlussprüfung
+
+Eine abschließende, vom Task-15-Umsetzer unabhängige Prüfung des gesamten Branches
+(`da9cfc7`…`22583fe`) kommt zum Ergebnis „bereit zum Zusammenführen nach Handprüfung: ja";
+0 Critical, 1 Important (die Commitzahl in diesem § 1, hier bereits berichtigt), 4 Minor,
+geparkt (in § 7 geführt oder dort ergänzt). Alle geprüften Kriterien zu Wortregel,
+Datenschutz, Trailer, kaputten Verweisen und dem Zusammenspiel von Generator, Vorlage,
+Deploy-Skript und `.htaccess` sind erfüllt.
 
 ## 4. Lizenz
 
@@ -400,6 +409,9 @@ Modell statt Markenname).
 - **„Ohne GitHub Pages"**: eine entsprechende Aussage wurde mangels eines belegenden Commits
   ersatzlos aus beiden Texten gestrichen; falls eine solche Entscheidung tatsächlich getroffen
   wurde, könnte sie mit Fundstelle wieder aufgenommen werden.
+- Ein Bericht zum deutschen Überblick zählte die Anführungszeichen versehentlich als 12/12 statt
+  tatsächlich 11/11 (der Text selbst ist bereits ausbalanciert, nur eine Ungenauigkeit im
+  Ledger-Bericht).
 - Ein Bericht zu einer Übersetzungs-Task zählte einen Zahlenrest versehentlich zum Datumsformat,
   obwohl es sich um eine korrekt übersetzte ausgeschriebene Zahl handelt (Text selbst
   unbetroffen, nur eine Ungenauigkeit im Ledger-Bericht).
