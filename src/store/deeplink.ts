@@ -1,6 +1,6 @@
 import { bodyIndex } from '../data';
 import { SCENES } from '../data/scenes';
-import { scaledRadius } from '../sim/scale';
+import { fokusAbstand } from '../sim/scale';
 import type { ScaleSettings } from '../sim/scale';
 import type { Body } from '../sim/types';
 import { dateToJd, imZeitbereich } from '../sim/time';
@@ -94,10 +94,6 @@ function datumZuJd(wert: string): number | null {
   return imZeitbereich(jd) === jd ? jd : null;
 }
 
-/** Zwilling von FOKUS_FAKTOR/FOKUS_MIN_KM in ui/kamerafahrt.ts: store/ kennt ui/ nicht. */
-const FOKUS_FAKTOR = 8;
-const FOKUS_MIN_KM = 1e4;
-
 /** Wirksame Maßstabseinstellung: `p` überschreibt einzelne Felder des Standards. */
 function wirksamerMassstab(grundlage: Plain): ScaleSettings {
   const basis = DEFAULT_STATE.scale;
@@ -108,13 +104,16 @@ function wirksamerMassstab(grundlage: Plain): ScaleSettings {
 /**
  * Kamerapatch für `body`: Ziel und Modus wie beim Klick in der Körperliste
  * (ui/kamerafahrt.ts, `fahreZu`) — geheftet, kein eingefrorener Zeitpunkt,
- * Abstand nach Körpergröße. Azimut und Elevation bleiben unangetastet, genau
- * wie beim Klick. Ein gewähltes Thema verfällt dabei wie beim Klick auch.
+ * Abstand nach `fokusAbstand` (sim/scale.ts, derselbe Weg wie beim Klick).
+ * Azimut und Elevation bleiben unangetastet, genau wie beim Klick. Ein
+ * gewähltes Thema verfällt dabei wie beim Klick auch.
  */
 function koerperPatch(koerper: Body, massstab: ScaleSettings): Plain {
-  const distance = Math.max(scaledRadius(koerper, massstab) * FOKUS_FAKTOR, FOKUS_MIN_KM);
   return {
-    camera: { targetId: koerper.id, mode: 'attached', freezeJd: null, distance },
+    camera: {
+      targetId: koerper.id, mode: 'attached', freezeJd: null,
+      distance: fokusAbstand(koerper, massstab),
+    },
     ui: { info: { thema: null } },
   };
 }

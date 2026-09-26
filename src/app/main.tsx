@@ -12,7 +12,7 @@ import { t } from '../ui/i18n';
 import { App as Bedienoberflaeche } from '../ui/App';
 import type { QualityTier } from '../store/types';
 import { QUALITY_SETTINGS } from './quality';
-import { ablageHolen, FRAGMENT_PRAEFIX } from '../store/persist';
+import { ablageHolen } from '../store/persist';
 import { fragmentAuswerten } from '../store/deeplink';
 import { sicherungStarten, startZustand } from './persistenz';
 import { SCENES } from '../data/scenes';
@@ -187,12 +187,16 @@ if (wurzelElement === null) {
 // erst nach dem Startzustand, damit dessen Thema Sonnensystem stehen bleibt.
 const ablage = ablageHolen();
 const hashBeimStart = window.location.hash;
-// Info-Karte (Entwurf Info-Karte §3): Ein geteilter Link zeigt sofort seinen
-// Inhalt; die Karte bleibt dann zu, ebenso bei laufendem Kino.
-const mitLink = hashBeimStart.startsWith(FRAGMENT_PRAEFIX);
-// Gültige Szenen-Kennung aus dem Fragment (Parameter `scene`): dieselbe
-// Auswertung wie in startZustand, vor dem Entfernen des Fragments gelesen.
-const szeneId = fragmentAuswerten(hashBeimStart)?.szeneId ?? null;
+// Dieselbe Auswertung wie in startZustand, vor dem Entfernen des Fragments
+// gelesen. Info-Karte (Entwurf Info-Karte §3): Ein geteilter Link zeigt
+// sofort seinen Inhalt; die Karte bleibt dann zu, ebenso bei laufendem Kino.
+// Als Link gilt jedes Fragment mit mindestens einem gültigen Schlüssel (p,
+// date, body, scene, lang) — nicht nur die alte Schreibweise mit p allein.
+const fragmentErgebnis = fragmentAuswerten(hashBeimStart);
+const mitLink = fragmentErgebnis !== null
+  && (fragmentErgebnis.patch !== null || fragmentErgebnis.szeneId !== null);
+// Gültige Szenen-Kennung aus dem Fragment (Parameter `scene`).
+const szeneId = fragmentErgebnis?.szeneId ?? null;
 useStore.getState().replaceAll(startZustand({
   hash: hashBeimStart,
   fragmentEntfernen: () => {

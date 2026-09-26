@@ -1,7 +1,6 @@
 import { useStore } from '../store';
 import { bodyIndex } from '../data';
-import type { Body } from '../sim/types';
-import { scaledRadius, scaledPositionAt } from '../sim/scale';
+import { scaledPositionAt, FOKUS_FAKTOR, FOKUS_MIN_KM, fokusAbstand } from '../sim/scale';
 import type { ScaleSettings } from '../sim/scale';
 import { systemRadiusKm } from '../render/camera/cinema';
 import { KAMERA_FOV_GRAD } from '../render/renderer';
@@ -12,19 +11,17 @@ import { letztePose } from '../render/camera/controller';
 import { kugelUm } from '../render/camera/flug';
 import type { GezeigtePose } from '../render/camera/flug';
 
+// FOKUS_FAKTOR, FOKUS_MIN_KM und fokusAbstand stehen in sim/scale.ts (dort
+// auch von store/deeplink.ts genutzt); hier nur durchgereicht, damit
+// bestehende Importe aus diesem Modul unverändert bleiben.
+export { FOKUS_FAKTOR, FOKUS_MIN_KM, fokusAbstand };
+
 /** Dauer der Fahrt (Entwurf 4c §5.3). */
 export const FAHRT_MS = 1500;
-/** Abstand, aus dem ein Körper formatfüllend, aber vollständig zu sehen ist. */
-export const FOKUS_FAKTOR = 8;
-export const FOKUS_MIN_KM = 1e4;
 /** Rand um die Bahn des äußersten Planeten in der Draufsicht aufs ganze System. */
 export const SYSTEM_RAND = 1.15;
 /** Blick senkrecht von oben, wie „Draufsicht" im Kamera-Panel. */
 export const DRAUFSICHT_ELEVATION = Math.PI / 2;
-
-export function fokusAbstand(body: Body, scale: ScaleSettings): number {
-  return Math.max(scaledRadius(body, scale) * FOKUS_FAKTOR, FOKUS_MIN_KM);
-}
 
 /**
  * Abstand, aus dem die Bahn des äußersten Planeten samt Rand ganz ins Bild

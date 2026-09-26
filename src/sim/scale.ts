@@ -42,6 +42,20 @@ export function scaledRadius(body: Body, s: ScaleSettings): number {
   return body.physical.radiusKm * s.sizeScale * daempfung;
 }
 
+/** Abstand, aus dem ein Körper formatfüllend, aber vollständig zu sehen ist. */
+export const FOKUS_FAKTOR = 8;
+export const FOKUS_MIN_KM = 1e4;
+
+/**
+ * Kamerafokus auf einen Körper: Abstand nach dargestelltem Radius, mit
+ * Mindestabstand für sehr kleine Körper. Hängt nur von Körper- und
+ * Maßstabsdaten ab, deshalb hier statt bei den Aufrufern (ui/kamerafahrt.ts,
+ * store/deeplink.ts) — beide nutzen dieselbe Formel für denselben Zweck.
+ */
+export function fokusAbstand(body: Body, s: ScaleSettings): number {
+  return Math.max(scaledRadius(body, s) * FOKUS_FAKTOR, FOKUS_MIN_KM);
+}
+
 /**
  * Dargestellte Position in km — hierarchisch.
  *

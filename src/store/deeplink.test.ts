@@ -3,14 +3,14 @@ import { fragmentAuswerten } from './deeplink';
 import { encodePatch } from './serialize';
 import { DEFAULT_STATE } from './index';
 import { JD_MIN, JD_MAX } from '../sim/time';
-import { scaledRadius } from '../sim/scale';
+import { fokusAbstand } from '../sim/scale';
 import { bodyIndex } from '../data';
 
-/** Erwarteter Fokusabstand wie in koerperPatch (Zwilling von ui/kamerafahrt.ts). */
+/** Erwarteter Fokusabstand: dieselbe Funktion wie in koerperPatch (sim/scale.ts). */
 function erwarteterAbstand(id: string): number {
   const koerper = bodyIndex[id];
   if (koerper === undefined) throw new Error(`Unbekannter Körper in der Prüfung: ${id}`);
-  return Math.max(scaledRadius(koerper, DEFAULT_STATE.scale) * 8, 1e4);
+  return fokusAbstand(koerper, DEFAULT_STATE.scale);
 }
 
 describe('fragmentAuswerten: kein Fragment', () => {
@@ -134,7 +134,7 @@ describe('fragmentAuswerten: body', () => {
     const massstab = { ...DEFAULT_STATE.scale, sizeScale: DEFAULT_STATE.scale.sizeScale * 2 };
     const mars = bodyIndex.mars;
     if (mars === undefined) throw new Error('Unbekannter Körper in der Prüfung: mars');
-    const erwartet = Math.max(scaledRadius(mars, massstab) * 8, 1e4);
+    const erwartet = fokusAbstand(mars, massstab);
     expect((ergebnis?.patch?.camera as { distance: number }).distance).toBe(erwartet);
   });
 });
@@ -200,5 +200,29 @@ describe('fragmentAuswerten: URL-Kodierung, leere Werte, doppelte Schlüssel', (
   it('doppelter Schlüssel: ein leerer erster Wert lässt den zweiten nicht mehr gelten', () => {
     const ergebnis = fragmentAuswerten('#body=&body=mars');
     expect(ergebnis).toEqual({ patch: null, szeneId: null });
+  });
+});
+
+describe('fragmentAuswerten: Erkennung als gültiger Link (Grundlage für „mitLink" in app/main.tsx)', () => {
+  it('ein rein lesbarer Link ganz ohne p gilt als gültig', () => {
+    // Das spätere README-Beispiel: https://orrery3d.de/#date=1990-05-17&body=mars
+    const ergebnis = fragmentAuswerten('#date=1990-05-17&body=mars');
+    expect(ergebnis?.patch).not.toBeNull();
+  });
+
+  it('der vom Knopf erzeugte Link (p zuletzt) gilt als gültig', () => {
+    const ergebnis = fragmentAuswerten('#date=1990-05-17&body=mars&p=' + encodePatch({}));
+    expect(ergebnis?.patch).not.toBeNull();
+  });
+
+  it('eine gültige Szene allein gilt ebenfalls als Link', () => {
+    const ergebnis = fragmentAuswerten('#scene=systemblick');
+    expect(ergebnis).not.toBeNull();
+    expect(ergebnis?.patch !== null || ergebnis?.szeneId !== null).toBe(true);
+  });
+
+  it('ein beschädigtes p ohne weiteren Schlüssel gilt nicht als Link', () => {
+    const ergebnis = fragmentAuswerten('#p=!!!nicht-base64!!!');
+    expect(ergebnis?.patch === null && ergebnis?.szeneId === null).toBe(true);
   });
 });
