@@ -14,6 +14,10 @@
  *   node scripts/doku-bauen.ts
  */
 import { Marked } from 'marked';
+import type { Token } from 'marked';
+// (zwei Importe aus demselben Modul: `Token` ist ein reiner Typ und muss laut
+// Node-Type-Stripping als `import type` stehen, sonst schlägt der Lauf ohne
+// Compiler-Schritt fehl.)
 import {
   copyFileSync,
   existsSync,
@@ -73,83 +77,83 @@ function reinerText(text: string): string {
     .trim();
 }
 
-interface RoheUeberschrift {
-  ebene: number;
-  text: string;
-  vorigeZeile: string;
+/** Zeilenindex (0-basiert), in der `offset` (Zeichenposition) in `text` liegt. */
+function zeileBeiOffset(text: string, offset: number): number {
+  let zeile = 0;
+  for (let i = 0; i < offset; i += 1) {
+    if (text[i] === '\n') zeile += 1;
+  }
+  return zeile;
 }
 
 /**
- * Sammelt alle Überschriften außerhalb von Code-Zäunen, mit der vorigen nicht
- * leeren Zeile (für die Marken-Erkennung in inhaltsverzeichnis). Erkennt sowohl
- * ATX-Überschriften (`#` bis `######`) als auch Setext-Überschriften (eine
- * Textzeile, unmittelbar gefolgt von einer Zeile aus nur `=` [Ebene 1] oder
- * mindestens zwei `-` [Ebene 2], ohne Leerzeile dazwischen) — `marked` erkennt
- * beide Formen, und nur wenn diese Funktion dieselben Überschriften in
- * derselben Reihenfolge zählt wie `marked` beim Rendern, bekommen die
- * Überschriften in `umwandeln` die richtige Kennung zugewiesen. Ein einzelner
- * Gedankenstrich als Unterstreichung gilt hier bewusst nicht als Setext-Ebene-2
- * (Verwechslung mit einem leeren Listenpunkt), das kommt in echten Texten nicht vor.
+ * Überschriften (Ebene 2/3), die in einem Zitat oder einer Liste stecken —
+ * ohne Marken-Zuordnung, die gibt es in den vier echten Texten nur auf
+ * oberster Ebene. Deckt den Fall ab, dass `marked` dort tatsächlich eine
+ * Überschrift rendert (in den vier Texten kommt das nicht vor).
  */
-function roheUeberschriften(md: string): RoheUeberschrift[] {
-  const zeilen = md.split('\n');
-  const ergebnis: RoheUeberschrift[] = [];
-
-  // Je Zeile merken, ob sie zu einem Code-Zaun gehört (Zaun-Zeile selbst eingeschlossen).
-  const inCodeAn: boolean[] = [];
-  let inCode = false;
-  for (let i = 0; i < zeilen.length; i += 1) {
-    const zaun = /^```/.test(zeilen[i]!.trim());
-    if (zaun) inCode = !inCode;
-    inCodeAn[i] = inCode || zaun;
-  }
-
-  // Nächste nicht leere Zeile oberhalb von `ab`, Code-Zaun-Zeilen übersprungen.
-  const vorigeNichtLeereAb = (ab: number): string => {
-    for (let j = ab; j >= 0; j -= 1) {
-      if (inCodeAn[j]) continue;
-      if (zeilen[j]!.trim() !== '') return zeilen[j]!;
-    }
-    return '';
-  };
-
-  for (let i = 0; i < zeilen.length; i += 1) {
-    if (inCodeAn[i]) continue;
-    const zeile = zeilen[i]!;
-
-    const atx = /^(#{1,6})\s+(.*)$/.exec(zeile);
-    if (atx) {
-      ergebnis.push({ ebene: atx[1].length, text: reinerText(atx[2]), vorigeZeile: vorigeNichtLeereAb(i - 1) });
-      continue;
-    }
-
-    const setext = /^(-{2,}|={1,})\s*$/.exec(zeile);
-    const textZeile = i > 0 ? zeilen[i - 1]! : null;
-    const textZeileGueltig =
-      textZeile !== null && !inCodeAn[i - 1]! && textZeile.trim() !== '' && !/^#{1,6}\s+/.test(textZeile);
-    if (setext && textZeileGueltig) {
-      ergebnis.push({
-        ebene: setext[1]!.startsWith('=') ? 1 : 2,
-        text: reinerText(textZeile!),
-        vorigeZeile: vorigeNichtLeereAb(i - 2),
-      });
-    }
+function verschachtelteUeberschriften(token: Token): Array<{ ebene: number; text: string }> {
+  const kinder: Token[] =
+    token.type === 'blockquote' ? token.tokens : token.type === 'list' ? token.items.flatMap((e) => e.tokens) : [];
+  const ergebnis: Array<{ ebene: number; text: string }> = [];
+  for (const kind of kinder) {
+    if (kind.type === 'heading') ergebnis.push({ ebene: kind.depth, text: reinerText(kind.text) });
+    else ergebnis.push(...verschachtelteUeberschriften(kind));
   }
   return ergebnis;
 }
 
 /**
- * Inhaltsverzeichnis aus den Überschriften der Ebenen 2 und 3. Eine feste
- * Marke (`<a id="x"></a>` in der vorigen Zeile) liefert die Kennung, sonst der
+ * Inhaltsverzeichnis aus den Überschriften der Ebenen 2 und 3. Die
+ * Überschriften selbst kommen aus `marked.lexer` (mit denselben Optionen wie
+ * `umwandeln`) statt aus einer eigenen, handgeschriebenen Erkennung — so
+ * zählen beide Funktionen aus derselben Quelle und können nicht aus dem Takt
+ * geraten. `marked` weiß zuverlässig, wann eine Liste, eine Tabellenzeile oder
+ * ein Zitat vor einer Zeile aus `-` oder `=` eben keine Setext-Überschrift
+ * ergibt, sondern (Liste/Zitat) einen Trennstrich oder (Tabelle) gar nichts
+ * Eigenes. Eine feste Marke (`<a id="x"></a>` in der vorigen nicht leeren
+ * Zeile, nur auf oberster Ebene ausgewertet) liefert die Kennung, sonst der
  * Slug des Texts; doppelte Kennungen bekommen `-2`, `-3` und so weiter.
  */
 export function inhaltsverzeichnis(md: string): Eintrag[] {
+  const zeilenOriginal = md.split('\n');
+  const markeJeZeile = new Map<number, string>();
+  zeilenOriginal.forEach((zeile, i) => {
+    const treffer = /^<a id="([^"]+)">\s*<\/a>$/.exec(zeile.trim());
+    if (treffer) markeJeZeile.set(i, treffer[1]!);
+  });
+  const vorigeNichtLeereIndex = (ab: number): number => {
+    for (let j = ab; j >= 0; j -= 1) {
+      if (zeilenOriginal[j]!.trim() !== '') return j;
+    }
+    return -1;
+  };
+
+  // Marken vorab entfernen: eine HTML-Zeile unmittelbar vor einer Überschrift
+  // könnte sonst als Teil eines HTML-Blocks die Überschrift verschlucken.
+  const ohneMarken = markenEntfernen(md);
+  const marked = new Marked({ gfm: true });
+  const tokens = marked.lexer(ohneMarken);
+
+  const rohe: Array<{ ebene: number; text: string; anker?: string }> = [];
+  let offset = 0;
+  for (const token of tokens) {
+    if (token.type === 'heading') {
+      const zeile = zeileBeiOffset(ohneMarken, offset);
+      const vorZeile = vorigeNichtLeereIndex(zeile - 1);
+      const anker = vorZeile >= 0 ? markeJeZeile.get(vorZeile) : undefined;
+      rohe.push({ ebene: token.depth, text: reinerText(token.text), anker });
+    } else {
+      rohe.push(...verschachtelteUeberschriften(token));
+    }
+    offset += token.raw.length;
+  }
+
   const vergeben = new Map<string, number>();
   const eintraege: Eintrag[] = [];
-  for (const roh of roheUeberschriften(md)) {
+  for (const roh of rohe) {
     if (roh.ebene !== 2 && roh.ebene !== 3) continue;
-    const marke = /^<a id="([^"]+)">\s*<\/a>$/.exec(roh.vorigeZeile.trim());
-    let id = marke ? marke[1] : slug(roh.text);
+    let id = roh.anker ?? slug(roh.text);
     const anzahl = vergeben.get(id) ?? 0;
     vergeben.set(id, anzahl + 1);
     if (anzahl > 0) id = `${id}-${anzahl + 1}`;

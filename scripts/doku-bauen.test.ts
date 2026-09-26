@@ -59,6 +59,47 @@ describe('Setext-Überschriften', () => {
   });
 });
 
+describe('Trennstrich nach Liste, Tabelle oder Zitat ist keine Setext-Überschrift', () => {
+  // marked selbst entscheidet, ob eine Zeile aus nur `-` eine Setext-Überschrift
+  // ist oder ein Trennstrich: Nach einer Liste, einer Tabellenzeile oder einem
+  // Zitat schließt der vorige Block bereits ab, `---` wird zu <hr>. Eine eigene,
+  // handgeschriebene Erkennung (wie vor diesem Umbau) kann das nicht zuverlässig
+  // unterscheiden und hält die letzte Listen-/Tabellen-/Zitatzeile fälschlich für
+  // eine Überschrift — die wirkliche Überschrift danach bekäme dann die falsche
+  // Kennung zugewiesen (verschoben um einen Eintrag).
+  it('Liste, dann --- (kein Trennstrich als Überschrift): die echte Überschrift danach bekommt die richtige Kennung', () => {
+    const md = ['# Titel', '', '- Punkt A', '- Punkt B', '---', '', '<a id="echte"></a>', '## Echte Überschrift'].join(
+      '\n',
+    );
+    expect(inhaltsverzeichnis(md)).toEqual([{ ebene: 2, text: 'Echte Überschrift', id: 'echte' }]);
+  });
+
+  it('Tabellenzeile, dann ---: die echte Überschrift danach bekommt die richtige Kennung', () => {
+    const md = [
+      '# Titel',
+      '',
+      '| a | b |',
+      '|---|---|',
+      '| 1 | 2 |',
+      '---',
+      '',
+      '<a id="echte"></a>',
+      '## Echte Überschrift',
+    ].join('\n');
+    expect(inhaltsverzeichnis(md)).toEqual([{ ebene: 2, text: 'Echte Überschrift', id: 'echte' }]);
+  });
+
+  it('Blockquote, dann ---: die echte Überschrift danach bekommt die richtige Kennung', () => {
+    const md = ['# Titel', '', '> Ein Zitat', '---', '', '<a id="echte"></a>', '## Echte Überschrift'].join('\n');
+    expect(inhaltsverzeichnis(md)).toEqual([{ ebene: 2, text: 'Echte Überschrift', id: 'echte' }]);
+  });
+
+  it('ATX-Überschrift mit Marke bleibt richtig zugeordnet, auch neben den Trennstrich-Fällen oben', () => {
+    const md = ['# Titel', '', 'Text.', '', '<a id="marke"></a>', '## Mit Marke'].join('\n');
+    expect(inhaltsverzeichnis(md)).toEqual([{ ebene: 2, text: 'Mit Marke', id: 'marke' }]);
+  });
+});
+
 describe('verweisUmschreiben', () => {
   it.each([
     ['https://example.org/a', 'https://example.org/a'],
