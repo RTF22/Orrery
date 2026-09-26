@@ -32,7 +32,7 @@ Meilenstein und Commit-Zahl je Tag; „Tag“ nennt die an diesem Tag gesetzte V
 | Datum | Meilenstein | Tag | Commits |
 |---|---|---|---:|
 | 11.09.2026 | Ursprungsprompt, Design-Dokument, Beginn Phase 1 | — | 18 |
-| 12.09.2026 | Phase 1 abgeschlossen, Phase 2, Beginn Phase 3a | v0.1.0 | 67 |
+| 12.09.2026 | Phase 1 abgeschlossen, Phase 2, Beginn Phase 3a | v0.1.0/v0.2.0 | 67 |
 | 13.09.2026 | Phase 3a/3b, Umbenennung in Orrery, Phase 4a | v0.3.0 | 62 |
 | 14.09.2026 | Phase 4b, Deploy-Skript, Beginn Phase 4c | — | 62 |
 | 15.09.2026 | Grundschul-/Gymnasialtexte, Klickflächen | — | 35 |
@@ -59,8 +59,8 @@ Von der ersten lauffähigen Szene bis zur heutigen Simulation liegen 15 Tage:
 Zuerst ein lauffähiger, vertikaler Durchstich durch die ganze Kette von Eingabe bis Darstellung
 (v0.1.0, 152 Tests, rund 11,1 Stunden), dann — laut Interview-Entscheidung vorgezogen — ein
 Kino-Modus mit Vollbild und automatischer Kamerafahrt (v0.2.0, rund 0,9 Stunden). Es folgte der
-Ausbau des Katalogs auf 20 Monde und 5 Zwergplaneten mit Ringen (Phase 3a, 689 Tests, Hauptchunk
-1 096,84 kB, rund 22,1 Stunden), dann ein Asteroidengürtel als `THREE.Points` mit Bahnrechnung im
+Ausbau des Katalogs auf 20 Monde und 5 Zwergplaneten, dazu Planetenringe (Phase 3a, 689 Tests,
+Hauptchunk 1 096,84 kB, rund 22,1 Stunden), dann ein Asteroidengürtel als `THREE.Points` mit Bahnrechnung im
 Vertex-Shader — 50 000 Keplerlösungen je Bild wären in JavaScript zu teuer gewesen — und echte
 Schatten über analytische Okkluder statt Shadow-Maps, wegen der großen Maßstabsspanne und eines
 exakten Halbschattens aus Kreisüberlappung (Phase 3b, v0.3.0, rund 8,7 Stunden). 46 Minuten nach
@@ -126,10 +126,10 @@ Jens Fricke gab Richtung, Freigaben und Handprüfungen vor; Claude Code entwarf,
 steuerte die Umsetzung; eigenständige Subagenten übernahmen Umsetzung und Prüfung, nach
 Möglichkeit mit dem kleinsten Modell, das die Aufgabe noch zuverlässig löste. Jede Phase
 durchlief denselben Ablauf: Brainstorming, ein freigegebenes Design-Dokument, ein Plan, die
-Umsetzung in kleinen, testbaren Schritten, eine Abnahme mit Rulings. Entscheidungen, die
-während eines laufenden Plans nötig wurden, traf die steuernde Sitzung selbst als „Ruling“
-statt als Rückfrage — jede mit ihrer Begründung in einem Ledger festgehalten und am Ende
-gesammelt Jens vorgelegt.
+Umsetzung in kleinen, einzeln vergebenen Arbeitsschritten (Tasks), eine Abnahme mit
+Rulings. Entscheidungen, die während eines laufenden Plans nötig wurden, traf die
+steuernde Sitzung selbst als „Ruling“ statt als Rückfrage — jede mit ihrer Begründung
+schriftlich festgehalten und am Ende gesammelt Jens vorgelegt.
 
 Zwei weitere Regeln zogen sich durch alle Phasen: Sichtprüfungen liefen als Pixelmessung statt
 als Eindruck — Screenshots derselben Ladung, ein Kontrollbild ohne abweichende Pixel, eine
@@ -158,10 +158,9 @@ fester, dokumentierter Zeitbereich vom 1. Januar 1 bis zum 31. Dezember 9999.
 **Tests als Vertrag.** Die Testzahl wuchs von 152 beim ersten Durchstich auf 5402 am Ende; vor
 jedem „fertig“ liefen `lint`, `tsc -b --noEmit` und `build` dazu. Dass ein grüner `npm
 test`-Lauf keine Typen prüft, zeigte sich mehrfach: Ein literaler Import aus `node:fs` in einer
-Testdatei ließ den Build erst nach dem Testlauf abbrechen, im selben Auftrag behoben. Der
-Fehlerkatalog dieser Chronik führt deshalb ehrlich auf: Unter „gefangen durch: Test“ steht die
-Zahl 0 — kein einziger der 37 verzeichneten Fälle wurde von einem automatisierten Test allein
-gefangen, immer erst zusammen mit Build, Messung oder einer Fachprüfung.
+Testdatei ließ den Build erst nach dem Testlauf abbrechen, noch am selben Tag behoben.
+Ehrlich bleibt dabei: Keiner der 37 oben genannten Fälle wurde von einem automatisierten
+Test allein gefangen, immer erst zusammen mit Build, Messung oder einer Fachprüfung.
 
 **Messen statt Anschauen.** Sichtprüfungen liefern Pixelwerte, keine Eindrücke: Screenshots
 derselben Ladung, Differenzbilder mit einem Kontrollbild ohne abweichende Pixel, eine
@@ -176,7 +175,7 @@ Hochschultexte, jede maschinell gegen Crossref oder arXiv geprüft — und jede 
 gegen die zitierte Arbeit selbst, nicht gegen einen Kommentar im Code. Ein Thema zu den
 Bahnelementen schrieb die Herkunft aller Mondraten pauschal einer einzigen Quelle zu; tatsächlich
 stammte eine der Raten aus der siderischen Umlaufzeit, nicht aus jener Quelle. Eine Fachprüfung
-fand die Verwechslung, eine zweite, ledger-geführte Prüfrunde stellte sie richtig. Typische
+fand die Verwechslung, eine zweite, gesondert dokumentierte Prüfrunde stellte sie richtig. Typische
 Fehler dieser Art waren Größenordnungen, falsch zugeschriebene Werte und verwechselte
 Quellenjahre — nie erfundene Zitate.
 
@@ -191,8 +190,8 @@ wanderte danach in die Sprachzeile der Kopfzeile.
 sich einen Browser), höchstens eine Prüfrunde je Text und möglichst kleine Sprachmodelle — vier
 Regeln, die Freiheit und Kosten zugleich begrenzen. Ihre Grenze zeigte sich, als eine mechanische
 Bereinigung verbotener Formulierungen in Beleglisten zunächst dem kleinsten eingesetzten Modell
-übertragen wurde: Der erste Durchlauf ließ 37 eigentlich erfasste Treffer stehen, ein zweiter,
-paralleler Versuch strich stattdessen unbeteiligte Stellen und löschte Hinweisnummern ersatzlos.
+übertragen wurde: Der erste Durchlauf ließ 37 eigentlich erfasste Treffer stehen, ein zweiter Versuch
+strich stattdessen unbeteiligte Stellen und löschte Hinweisnummern ersatzlos.
 Eine grepbasierte Durchsicht fing beide Male, bevor eine Fachprüfung überhaupt nötig wurde; die
 Wiederholung lief danach auf dem mittleren Modell. Seither starten ähnliche, regelgebundene
 Bereinigungen gleich dort.
@@ -237,8 +236,8 @@ zunehmend das mittlere Modell den Löwenanteil.
 
 Dass das Lesen des immer weiter wachsenden Kontexts die Summe bestimmt und nicht das Schreiben
 von Code, ist kein Zufall: Kleine Tasks je Sitzung und möglichst kleine Modelle sind direkte
-Antworten auf genau diese Kostenstruktur — jede neue Antwort liest Pläne, Ledger und bereits
-geschriebenen Code erneut, bevor sie etwas Neues beiträgt.
+Antworten auf genau diese Kostenstruktur — jede neue Antwort liest Pläne, frühere
+Entscheidungen und bereits geschriebenen Code erneut, bevor sie etwas Neues beiträgt.
 
 ![Tokens je Tag nach Modell und Cache-Lesen je Tag.](bilder/entstehung/tokens-je-tag.svg)
 
@@ -285,13 +284,13 @@ feste Basis für alle Pfade erzeugte unter `https://orrery3d.de` 500-Antworten d
 die Domain direkt auf den Projektordner zeigt; relative Pfade laufen seither unter beiden
 Adressen. Ein globaler Server-Alias lieferte außerdem eigene Symbole statt der App-Symbole aus;
 die Symbole zogen deshalb in einen eigenen Ordner um. Seither läuft die Seite unter
-<https://orrery3d.de> ebenso wie unter <https://www.jensfricke.com/Orrery/>, beide ohne GitHub
-Pages, hochgeladen per FTPS. [Chronik](chronik.de.md#domain)
+<https://orrery3d.de> ebenso wie unter <https://www.jensfricke.com/Orrery/>, hochgeladen per
+FTPS. [Chronik](chronik.de.md#domain)
 
 ## 9. Kennzahlen
 
 - **673 Commits** in 15 Kalendertagen (11.–25.09.2026).
-- **5 402 Tests** in 127 Testdateien, Hauptchunk 1 557,08 kB (gzip 430,04 kB) — Stand nach dem
+- **5402 Tests** in 127 Testdateien, Hauptchunk 1 557,08 kB (gzip 430,04 kB) — Stand nach dem
   Domain-Fix.
 - **761 Fachpublikationen** im Literaturkatalog der Hochschultexte, jede maschinell gegen
   Crossref oder arXiv geprüft, verbunden mit 91 kuratierten Quellenkarten.

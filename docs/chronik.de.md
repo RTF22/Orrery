@@ -66,9 +66,9 @@ Minuten (19:58:18 bis 20:01:07 Uhr); die 63 dieser Etappe zugeordneten Antworten
 laut Tokenbilanz vollständig in der Hauptsitzung, keine davon in einem Subagentenlauf.
 Noch kein Code, noch keine Tests.
 
-**Fehler und Korrekturen:** Für diese Etappe verzeichnet der Fehlerkatalog keinen Fall —
-es gab noch keinen Code, der hätte scheitern können. Der erste im Katalog verzeichnete
-Fall stammt erst aus Phase 4c.
+**Fehler und Korrekturen:** Für diese Etappe verzeichnen die durchgesehenen Protokolle
+keinen Fall — es gab noch keinen Code, der hätte scheitern können. Der erste hier
+verzeichnete Fall stammt erst aus Phase 4c.
 
 **Tokens:** 230 581 Ausgabe-Tokens, 8 843 552 Cache-Lesen-Tokens in 63 Antworten
 (Kennung `idee`). Davon lagen 28 Antworten zeitlich vor dem offiziellen Beginn dieser
@@ -100,7 +100,7 @@ Abschlusses liefen bereits 4 Hauptsitzungen und 62 Subagentenläufe.
 
 ![Früher Entwicklungsstand v0.1.0 mit einfacher Oberfläche.](bilder/entstehung/alt-v0.1.0.jpg)
 
-**Fehler und Korrekturen:** Für diese Etappe verzeichnet der Fehlerkatalog keinen Fall.
+**Fehler und Korrekturen:** Für diese Etappe verzeichnen die durchgesehenen Protokolle keinen Fall.
 
 **Tokens:** 1 187 833 Ausgabe-Tokens, 175 356 549 Cache-Lesen-Tokens in 1 126 Antworten
 (Kennung `phase-1`; 354 Haupt-, 772 Subagentenantworten); 64,3 % der Ausgabetokens
@@ -127,7 +127,7 @@ Phase 3a). Die Etappe selbst lief komplett am Vormittag des 12.09.2026, von `a1d
 (08:10 Uhr) bis `ff68df5` (09:04 Uhr) — knapp eine Stunde (0,9 Stunden laut
 Zeitstempeln).
 
-**Fehler und Korrekturen:** Für diese Etappe verzeichnet der Fehlerkatalog keinen Fall.
+**Fehler und Korrekturen:** Für diese Etappe verzeichnen die durchgesehenen Protokolle keinen Fall.
 
 **Tokens:** 147 022 Ausgabe-Tokens, 51 721 718 Cache-Lesen-Tokens in 171 Antworten
 (Kennung `phase-2`; alle 171 in der Hauptsitzung, keine Subagentenantwort); 0,0 % der
@@ -148,16 +148,16 @@ jeweils aus einer einzigen Zahl; Ringe sind beleuchtet, beidseitig sichtbar und 
 Vorwärtsstreuung gerechnet. Die Prüftiefe verlangt Invarianten über alle Szenen und
 einen Rechennachweis für Stichproben — ein ausdrücklicher Wunsch des Auftraggebers.
 Eingeschoben in diese Etappe war außerdem ein Zwischenschritt zu Zielbelichtung und
-Albedo (Commits `bc0de15`…`a369f57`); seine inhaltlichen Entscheidungen führt das
-Faktenblatt zusammen mit denen von Phase 3b, sie stehen deshalb im folgenden Abschnitt.
+Albedo (Commits `bc0de15`…`a369f57`); seine inhaltlichen Entscheidungen stehen
+zusammen mit denen von Phase 3b im folgenden Abschnitt.
 
 **Ergebnis:** 689 Tests in 44 Testdateien (im nächsten Lauf bereits 721), Hauptchunk
 1 096,84 kB (gzip 290,66 kB). Die Etappe dauerte laut Zeitstempeln rund 22,1 Stunden
 und reichte vom 12.09.2026 (67 Commits, der commitreichste Tag der ersten drei Tage)
 bis in den 13.09.2026 hinein.
 
-**Fehler und Korrekturen:** Auch für diese Etappe verzeichnet der Fehlerkatalog keinen
-Fall.
+**Fehler und Korrekturen:** Auch für diese Etappe verzeichnen die durchgesehenen
+Protokolle keinen Fall.
 
 **Tokens:** 4 344 979 Ausgabe-Tokens, 724 412 063 Cache-Lesen-Tokens in 3 851 Antworten
 (Kennung `phase-3a`; 634 Haupt-, 3 217 Subagentenantworten); 79,4 % der Ausgabetokens
@@ -181,16 +181,16 @@ Sterne bleiben von der Belichtung unberührt.
 
 **Ergebnis:** Tag `v0.3.0` (Tag-Commit `515f4fe`, 17:46 Uhr). Rund 46 Minuten danach,
 um 18:32 Uhr, wurde das Projekt in „Orrery“ umbenannt (`6d3409b`). Eine eigene Testzahl
-oder ein eigener Hauptchunk-Wert für diese Etappe ist im Faktenblatt nicht gesondert
-ausgewiesen (die nächste dort verzeichnete Zahl gehört bereits zu Phase 4a). Die Etappe
+oder ein eigener Hauptchunk-Wert für diese Etappe ist in den Kennzahlen nicht gesondert
+ausgewiesen (die nächste verzeichnete Zahl gehört bereits zu Phase 4a). Die Etappe
 dauerte laut Zeitstempeln rund 8,7 Stunden, ganz am 13.09.2026 — dem Tag mit
 7 Hauptsitzungen und 68 Subagentenläufen, an dem auch Phase 3a endete und Phase 4a
 begann. Bis zum Ende dieses dritten Tages waren nach der Zeitleiste bereits 147 der
 insgesamt 673 Commits bis zum Projektabschluss entstanden (18 am 11.09., 67 am 12.09.,
 62 am 13.09.).
 
-**Fehler und Korrekturen:** Für diese Etappe verzeichnet der Fehlerkatalog ebenfalls
-keinen Fall.
+**Fehler und Korrekturen:** Für diese Etappe verzeichnen die durchgesehenen Protokolle
+ebenfalls keinen Fall.
 
 **Tokens:** 1 435 858 Ausgabe-Tokens, 204 267 920 Cache-Lesen-Tokens in 1 539 Antworten
 (Kennung `phase-3b`; 324 Haupt-, 1 215 Subagentenantworten); 74,8 % der Ausgabetokens
@@ -215,8 +215,8 @@ Lösung; die englische Locale ist `en-GB` (Tag vor Monat, 24-Stunden-Uhr).
 bis `41c0127` (21:25 Uhr) — rund 1,2 Stunden. Ein eigener Git-Tag ist für diese
 Etappe nicht vergeben; sie zählt zum späteren Tag `v0.4.0`.
 
-**Fehler und Korrekturen:** Für diese Etappe verzeichnet der Fehlerkatalog
-keinen Fall.
+**Fehler und Korrekturen:** Für diese Etappe verzeichnen die durchgesehenen
+Protokolle keinen Fall.
 
 **Tokens:** 463 002 Ausgabe-Tokens, 66 461 714 Cache-Lesen-Tokens in 519
 Antworten (Kennung `phase-4a`; 100 Haupt-, 419 Subagentenantworten); 72,2 % der
@@ -244,8 +244,8 @@ URL-Fragment.
 302,88 kB). Die gesamte Etappe lief am Vormittag des 14.09.2026, von `f18d527`
 (07:08 Uhr) bis `3dee118` (10:10 Uhr) — rund 3,0 Stunden.
 
-**Fehler und Korrekturen:** Auch für diese Etappe verzeichnet der Fehlerkatalog
-keinen Fall.
+**Fehler und Korrekturen:** Auch für diese Etappe verzeichnen die durchgesehenen
+Protokolle keinen Fall.
 
 **Tokens:** 881 748 Ausgabe-Tokens, 103 360 297 Cache-Lesen-Tokens in 903
 Antworten (Kennung `phase-4b`; 234 Haupt-, 669 Subagentenantworten); 60,0 % der
@@ -340,7 +340,9 @@ die Bildschleife blieb dauerhaft stehen, gefangen durch die Fachprüfung
 während Phase 4d — und dafür mit Commit `6566e32` einen festen Zeitbereich vom
 1. Januar 1 bis zum 31. Dezember 9999 einführen.
 
-**Entscheidungen:** Aus den Rulings der Umsetzung: Das Datumsfeld zeigt Jahre
+**Entscheidungen:** Aus den Rulings der Umsetzung — einzelnen, während der laufenden
+Umsetzung selbst getroffenen und begründeten Entscheidungen anstelle einer Rückfrage
+an Jens —: Das Datumsfeld zeigt Jahre
 außerhalb von 1 bis 9999 bewusst leer statt eines ungültigen Werts; die
 Untergrenze bleibt der Julianische Tag 0 (Jahr 1), wie von Jens gewählt; vor
 dem Merge lief eine eigene Fix-Welle für die Anzeige vor Christus, das
@@ -413,7 +415,7 @@ Fassung, Belegliste und Katalogeinträgen → eine Fachprüfung, im Fehlerfall e
 Nacharbeit mit eigenem Commit; weitere Prüfrunden kamen nur vereinzelt vor, offen
 gebliebene Befunde wurden sonst vorgemerkt (siehe 4d-3, 4d-5, 4d-7). Für die ganze
 Phase galt außerdem: ein Umsetzer gleichzeitig, Rulings statt Rückfragen während
-eines laufenden Plans, jede Entscheidung ins Ledger und gesammelt an Jens, und
+eines laufenden Plans, jede Entscheidung mit Begründung festgehalten und gesammelt an Jens, und
 Kommentare im Code sind kein Beleg — das bestätigten mehrere Etappen an eigenen
 Fällen (unten). Jede der elf Etappen hatte einen eigenen Plan, eigene Commits und
 ein eigenes Abnahmeprotokoll.
@@ -422,14 +424,14 @@ ein eigenes Abnahmeprotokoll.
 
 Die ersten beiden Hochschultexte, `thema-bahnelemente` und `objekt-earth`, liefen
 als Pilot und wurden mit Commit `f0963a0` abgenommen. Dabei traten gleich drei
-Fälle auf, die der Fehlerkatalog dieser Phase zuordnet: `thema-bahnelemente`
+Fälle auf: `thema-bahnelemente`
 schrieb den vier äußeren Uranusmonden pauschal „über 40 Jahre keinen
 belastbaren linearen Trend“ zu; das traf nur auf zwei von ihnen zu, einziger
 Beleg für die Pauschalaussage war ein falscher Kommentar in `uranus-monde.ts`
 — gefangen durch die Fachprüfung, mit Commit `a21082a` richtiggestellt.
 Derselbe Text schrieb die Herkunft der Mondraten pauschal „JPL“ zu, obwohl die
 Umlaufzeit selbst aus der siderischen Periode stammt — ebenfalls durch die
-Fachprüfung gefangen, in einer zweiten, ledger-geführten Prüfrunde mit Commit
+Fachprüfung gefangen, in einer zweiten, gesondert dokumentierten Prüfrunde mit Commit
 `dc36107` berichtigt. `objekt-earth` verwechselte den Beginn eines
 Messzeitraums (1972) mit dem Beginn des physikalischen Effekts selbst —
 gefangen durch die Fachprüfung, richtiggestellt mit Commit `4e5d336`.
@@ -462,7 +464,7 @@ bestätigte den ursprünglichen Umsetzerwert.
 ### 4d-4: Innere Planeten (20.09.2026)
 
 Commits `7fcea01`…`1059282`, an einem Tag umgesetzt und abgenommen. Für diese
-Etappe verzeichnet der Fehlerkatalog keinen Fall.
+Etappe sind keine Fehlerfälle überliefert.
 
 ### 4d-5: Jupitersystem (20.–21.09.2026)
 
@@ -478,7 +480,7 @@ Kommentar blieb unverändert.
 ### 4d-6: Saturn und Ringe (21.–22.09.2026)
 
 Commits `c74c4b4`…`53a1d63` (abgenommen `dde8291`/`53a1d63`). Für diese Etappe
-verzeichnet der Fehlerkatalog keinen Fall.
+sind keine Fehlerfälle überliefert.
 
 ### 4d-7: Mittlere Saturnmonde (22.09.2026)
 
@@ -508,7 +510,7 @@ sie noch am selben Tag: Commit `63d3144` (23.09.2026, 06:32 Uhr) berichtigte
 Phase 4d vermerkte diese Korrektur an einer Stelle, führte die Zuschreibung an
 anderer Stelle aber weiter als offen — ein Widerspruch im eigenen Protokoll, den
 der erste Entwurf dieses Abschnitts übernahm, bis die Prüfung dieses
-Chronik-Teils ihn am Commit selbst fand (Fehlerkatalog Nr. 37).
+Chronik-Teils ihn direkt am Commit selbst fand.
 
 ### 4d-10: Zwergplaneten (23.09.2026)
 
@@ -534,11 +536,11 @@ veraltete Notiz in einer Prüfspalte und drei unmaskierte Trennstriche — und
 verwies sie in die anschließende Etappe
 [Nachführung nach Phase 4d](#nachfuehrung-4d).
 
-**Fehler und Korrekturen:** Der Fehlerkatalog führt 20 Fälle mit Kennung
-`phase-4d` (Nr. 4–23 und Nr. 37, ohne Nr. 17, das zu [Zeitbereich](#zeitbereich)
-gehört) — fünfzehn davon stehen oben bei ihrer Etappe, fünf (Nr. 4, 20–23) fand
-erst die Gesamtabnahme und sind bei [Nachführung nach Phase 4d](#nachfuehrung-4d)
-beschrieben.
+**Fehler und Korrekturen:** Zu dieser Phase zählen insgesamt 20 verzeichnete
+Fehlerfälle (der unter [Zeitbereich](#zeitbereich) beschriebene Kepler-Absturz
+kommt gesondert hinzu und wird dort behandelt) — fünfzehn davon stehen oben bei
+ihrer Etappe, fünf weitere fand erst die Gesamtabnahme; sie sind bei
+[Nachführung nach Phase 4d](#nachfuehrung-4d) beschrieben.
 
 **Ergebnis:** Am Ende von 4d-1 standen 6 Textdateien, 3537 Tests, 51
 Katalogeinträge, 80 Quellenkarten und ein Hauptchunk von 1 243,77 kB; am Ende der
@@ -570,7 +572,8 @@ technisches Zeichenproblem.
 ausnahmsweise geändert werden — eine ausdrückliche Entscheidung vom 23.09.2026
 gegen die sonst geltende Regel, fachgeprüfte Texte in späteren Etappen nicht mehr
 anzufassen. Die mechanische Bereinigung der Prozesssprache wurde auf zwei Tasks
-für das kleinste eingesetzte Modell aufgeteilt — das reichte am Ende nicht,
+(einzeln vergebene Arbeitsschritte) für das kleinste eingesetzte Modell
+aufgeteilt — das reichte am Ende nicht,
 beide Versuche mussten nachgearbeitet werden (siehe unten).
 
 **Fehler und Korrekturen:** Commit `a323c80` berichtigte zwei der von der
@@ -584,7 +587,7 @@ berichtigt. Die Prozesssprache selbst betraf 27 Beleglisten (rund 230 Treffer in
 Der erste Bereinigungscommit ließ 37 regelgedeckte Treffer stehen, statt sie
 vollständig zu entfernen — gefangen durch die Controller-Prüfung, eine
 grepbasierte Durchsicht vor der eigentlichen Fachprüfung; ein weiterer Commit
-erreichte danach 0 Treffer (Commits `5c27397`/`8989c69`). Ein paralleler zweiter Versuch
+erreichte danach 0 Treffer (Commits `5c27397`/`8989c69`). Ein zweiter Versuch
 auf einem Hilfsbranch (`sicherung-task3-haiku`, Commit `d25d58f`) schoss übers
 Ziel hinaus: Er strich „(Runde 1)“ in rund 15 unbeteiligten Beleglisten und
 löschte Hinweisnummern ersatzlos — ebenfalls durch die Controller-Prüfung
@@ -697,7 +700,7 @@ dieser Phase entfielen auf Subagenten, vorherrschendes Modell war Claude Sonnet 
 **Ziel:** Eine Info-Karte mit den Reitern Einrichtung, Bedienung und Über einführen,
 dazu eine eigene Karte Steuerung.
 
-**Entscheidungen:** Handprüfung an Desktop und am Referenzgerät Galaxy A55 ohne
+**Entscheidungen:** Handprüfung an Desktop und am Galaxy A55 ohne
 Befund; das zunächst zu kleine Symbol ⓘ wanderte in die Sprachzeile der Kopfzeile.
 Tag `v0.7.1` und der Deploy wurden freigegeben.
 
@@ -775,11 +778,11 @@ bei `/Orrery/`. `f3807c7` (20:30 Uhr) verschob die App-Symbole nach `symbole/`, 
 ein globaler Server-Alias `/icons/` dort sonst dessen eigene Symbole statt der
 App-Symbole auslieferte (404 für Favicon und Manifest-Symbole).
 Laut `docs/entwicklung.md` liegt die Seite seither unter `https://orrery3d.de` und
-`https://www.jensfricke.com/Orrery/`, hochgeladen per FTPS, ohne GitHub Pages. Die
+`https://www.jensfricke.com/Orrery/`, hochgeladen per FTPS. Die
 Etappe selbst dauerte laut Zeitstempeln rund fünf Minuten.
 
-**Fehler und Korrekturen:** Für diese Etappe verzeichnet der Fehlerkatalog keinen
-Fall.
+**Fehler und Korrekturen:** Für diese Etappe verzeichnen die durchgesehenen
+Protokolle keinen Fall.
 
 **Tokens:** 6 458 Ausgabe-Tokens, 1 559 177 Cache-Lesen-Tokens in 18 Antworten
 (Kennung `domain`; alle 18 in der Hauptsitzung, keine Subagentenantwort); 0,0 % der
@@ -851,9 +854,10 @@ Tokens Cache-Schreiben (gleiche Tabelle).
 ![Tokens je Tag nach Modell und Cache-Lesen je Tag.](bilder/entstehung/tokens-je-tag.svg)
 
 **Diagramm:** Oben stehen die Ausgabetokens je Kalendertag, gestapelt nach Modell
-(Anzeigenamen ohne Herstellerpräfix); unten steht, auf einer eigenen Achse, das um
-Größenordnungen höhere Cache-Lesen je Tag als eigene Reihe — nur getrennt bleibt der
-Verlauf der Ausgabe überhaupt sichtbar.
+(Anzeigenamen ohne Herstellerpräfix); unten steht, auf einer eigenen Achse, das
+Cache-Lesen je Tag als eigene Reihe — je Etappe rund Faktor 100 bis 300 über der
+Ausgabe (siehe Tabellen oben); erst die eigene Achse hält den Verlauf der Ausgabe
+daneben überhaupt noch sichtbar.
 
 **Nach dem Stichtag:** Sitzungen nach diesem Stichtag — etwa für das
 zweisprachige README und für diese Chronik-Etappe selbst — laufen bereits, fließen
