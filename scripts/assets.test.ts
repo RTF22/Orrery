@@ -27,6 +27,7 @@ describe('public/', () => {
     // musik/ ist git-ignoriert und gehört dem Betreiber (docs/entwicklung.md „Eigene Musik").
     // robots.txt und favicon.ico kommen statisch mit (orrery3d.de liefert für fehlende
     // Dateien 500 statt 404, siehe scripts/app-symbol.py und docs/entwicklung.md).
+    // Die google….html weist den Besitz der Domain für die Google Search Console nach.
     const erlaubt = new Set([
       '.htaccess',
       'basis',
@@ -36,6 +37,7 @@ describe('public/', () => {
       'manifest.webmanifest',
       'robots.txt',
       'favicon.ico',
+      'google73a5c7151f277813.html',
     ]);
     expect(readdirSync('public').filter((name) => !erlaubt.has(name))).toEqual([]);
   });
