@@ -105,6 +105,9 @@ describe('Reiter der Info-Karte', () => {
       'https://github.com/RTF22/Orrery',
       `${import.meta.env.BASE_URL}doku/making-of/de/`,
       'https://github.com/RTF22/Orrery/blob/master/ASSETS.de.md',
+      `${import.meta.env.BASE_URL}lizenzen-dritter.txt`,
+      'https://jensfricke.com/impressum/',
+      'https://jensfricke.com/datenschutz/orrery/',
     ]);
     for (const a of links) {
       expect(a.getAttribute('target')).toBe('_blank');
@@ -141,5 +144,9 @@ describe('Reiter der Info-Karte', () => {
     expect(link.getAttribute('rel')).toContain('noopener');
     const assetsLink = screen.getByRole('link', { name: /ASSETS\.md/ });
     expect(assetsLink.getAttribute('href')).toBe('https://github.com/RTF22/Orrery/blob/master/ASSETS.md');
+    expect(screen.getByRole('link', { name: /Legal notice/ }).getAttribute('href'))
+      .toBe('https://jensfricke.com/en/legal-notice/');
+    expect(screen.getByRole('link', { name: /Privacy/ }).getAttribute('href'))
+      .toBe('https://jensfricke.com/en/privacy/orrery/');
   });
 });

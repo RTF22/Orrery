@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
 import { de } from '../src/ui/i18n/de';
+import { RECHTSSEITEN } from '../src/data/rechtsseiten';
 
 const DATEIEN = ['ASSETS.md', 'ASSETS.de.md'] as const;
 const INHALT: Record<(typeof DATEIEN)[number], string> = Object.fromEntries(
@@ -139,7 +140,7 @@ describe('public/.htaccess', () => {
   const regeln = readFileSync('public/.htaccess', 'utf8');
 
   it('leitet nur orrery3d.de auf die kanonische Adresse um', () => {
-    // Dieselbe Datei gilt unter jensfricke.com/Orrery/, das ohne Umleitung erreichbar bleibt.
+    // jensfricke.com/Orrery/ leitet die .htaccess der FTP-Wurzel um (Homepage-Projekt), nicht diese Datei.
     expect(regeln).toMatch(/RewriteCond %\{HTTP_HOST\} \^\(www\\.\)\?orrery3d\\.de\$ \[NC\]/);
     expect(regeln).toContain('RewriteRule ^ https://orrery3d.de%{REQUEST_URI}');
     expect(regeln.match(/^\s*RewriteRule /gm)).toHaveLength(1);
@@ -180,9 +181,10 @@ describe('Hinweis ohne JavaScript', () => {
   });
 
   it('verlinkt Impressum, Datenschutz und die Doku-Seiten', () => {
+    // Dieselben Adressen wie Info-Karte und Doku-Fußzeile (data/rechtsseiten.ts).
     for (const ziel of [
-      'https://jensfricke.com/impressum/', 'https://jensfricke.com/datenschutz/orrery/',
-      'https://jensfricke.com/en/legal-notice/', 'https://jensfricke.com/en/privacy/orrery/',
+      RECHTSSEITEN.de.impressum, RECHTSSEITEN.de.datenschutz,
+      RECHTSSEITEN.en.impressum, RECHTSSEITEN.en.datenschutz,
       'doku/making-of/de/', 'doku/making-of/en/',
     ]) expect(hinweis).toContain(`href="${ziel}"`);
   });

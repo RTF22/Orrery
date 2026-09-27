@@ -18,6 +18,7 @@
  * src/ui/info/InfoPanel.tsx und src/ui/ueberschrift.ts.
  */
 import type { Dokument, Eintrag, SeitenDaten, Sprache } from './doku-bauen.ts';
+import { RECHTSSEITEN } from '../src/data/rechtsseiten.ts';
 
 // Einzige Quelle für beide Konstanten (auch von doku-bauen.ts verwendet, dort per Wert-Import
 // aus dieser Datei — nicht umgekehrt: doku-bauen.ts importiert von hier nur Typen (`import
@@ -25,8 +26,8 @@ import type { Dokument, Eintrag, SeitenDaten, Sprache } from './doku-bauen.ts';
 // hier unten sofort beim Auswerten des Moduls in WOERTER gebraucht wird (TDZ bei `const`).
 export const GITHUB_STAMM = 'https://github.com/RTF22/Orrery';
 
-// Kanonische Wurzel der Seite (orrery3d.de, nicht die gleichwertige Adresse unter
-// jensfricke.com/Orrery/): einzige Quelle für Canonical, Hreflang, og:url/og:image
+// Kanonische Wurzel der Seite (orrery3d.de; jensfricke.com/Orrery/ leitet seit
+// 27.09.2026 per 301 dorthin um): einzige Quelle für Canonical, Hreflang, og:url/og:image
 // hier sowie für robots.txt und die Sitemap (doku-bauen.ts).
 export const SEITEN_STAMM = 'https://orrery3d.de';
 
@@ -64,7 +65,9 @@ const WOERTER: Record<Sprache, Woerter> = {
     fuss:
       `© Jens Fricke · Code MIT, Texte CC BY-SA 4.0 · Texturen siehe ` +
       `<a href="${GITHUB_STAMM}/blob/master/ASSETS.de.md">ASSETS.de.md</a> · ` +
-      `<a href="${GITHUB_STAMM}">Quelltext bei GitHub</a>`,
+      `<a href="${GITHUB_STAMM}">Quelltext bei GitHub</a> · ` +
+      `<a href="${RECHTSSEITEN.de.impressum}">Impressum</a> · ` +
+      `<a href="${RECHTSSEITEN.de.datenschutz}">Datenschutz</a>`,
   },
   en: {
     label: { entstehung: 'Overview', chronik: 'Chronicle' },
@@ -74,7 +77,9 @@ const WOERTER: Record<Sprache, Woerter> = {
     fuss:
       `© Jens Fricke · code MIT, texts CC BY-SA 4.0 · textures see ` +
       `<a href="${GITHUB_STAMM}/blob/master/ASSETS.md">ASSETS.md</a> · ` +
-      `<a href="${GITHUB_STAMM}">source on GitHub</a>`,
+      `<a href="${GITHUB_STAMM}">source on GitHub</a> · ` +
+      `<a href="${RECHTSSEITEN.en.impressum}">Legal notice</a> · ` +
+      `<a href="${RECHTSSEITEN.en.datenschutz}">Privacy</a>`,
   },
 };
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { SEITEN_STAMM, dokuWurzelSeite, seite, sprachwahlSeite } from './doku-vorlage.ts';
+import { RECHTSSEITEN } from '../src/data/rechtsseiten.ts';
 
 const d = {
   sprache: 'de' as const, dokument: 'chronik' as const, titel: 'Chronik <Test>', beschreibung: 'Kurz & gut',
@@ -31,6 +32,15 @@ describe('seite', () => {
     expect(h).toContain('<link rel="canonical" href="https://orrery3d.de/doku/making-of/de/chronik.html">');
     expect(h).toContain('<meta property="og:url" content="https://orrery3d.de/doku/making-of/de/chronik.html">');
     expect(h).toContain('<meta property="og:image" content="https://orrery3d.de/doku/making-of/bilder/orrery-saturn.jpg">');
+  });
+  it('verlinkt in der Fußzeile Impressum und Datenschutz in der Seitensprache', () => {
+    const fuss = h.slice(h.indexOf('<footer'));
+    expect(fuss).toContain(`<a href="${RECHTSSEITEN.de.impressum}">Impressum</a>`);
+    expect(fuss).toContain(`<a href="${RECHTSSEITEN.de.datenschutz}">Datenschutz</a>`);
+    const en = seite({ ...d, sprache: 'en' });
+    const fussEn = en.slice(en.indexOf('<footer'));
+    expect(fussEn).toContain(`<a href="${RECHTSSEITEN.en.impressum}">Legal notice</a>`);
+    expect(fussEn).toContain(`<a href="${RECHTSSEITEN.en.datenschutz}">Privacy</a>`);
   });
   it('x-default zeigt auf die englische Fassung', () => {
     expect(h).toMatch(/hreflang="x-default" href="https:\/\/orrery3d\.de\/doku\/making-of\/en\/chronik\.html"/);

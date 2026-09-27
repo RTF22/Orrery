@@ -7,6 +7,7 @@ import { laeuftAlsApp } from './geraet';
 import { installieren, useInstallation } from './installation';
 import { useInfoKarte } from './zustand';
 import { VERSION } from './version';
+import { RECHTSSEITEN } from '../../data/rechtsseiten';
 
 const REPO = 'https://github.com/RTF22/Orrery';
 // ASSETS.md gibt es in zwei Sprachfassungen: Englisch bleibt ASSETS.md, Deutsch liegt
@@ -122,7 +123,7 @@ export function ReiterBedienung(): React.JSX.Element {
   );
 }
 
-/** Reiter „Über“: Projekt, Quellcode, Lizenz, Version (Entwurf §4.3). */
+/** Reiter „Über“: Projekt, Quellcode, Lizenz, Rechtsseiten, Version (Entwurf §4.3). */
 export function ReiterUeber(): React.JSX.Element {
   const language = useStore((s) => s.ui.language);
   // ui.language ist als Typ auf 'de' | 'en' beschränkt (store/types.ts); die
@@ -131,6 +132,9 @@ export function ReiterUeber(): React.JSX.Element {
   const sprache = language === 'de' ? 'de' : 'en';
   const entstehung = `${import.meta.env.BASE_URL}doku/making-of/${sprache}/`;
   const assets = `https://github.com/RTF22/Orrery/blob/master/${ASSETS_DATEI[sprache]}`;
+  // Entsteht erst im Build (scripts/lizenzen-dritter.ts); im Entwicklungsserver fehlt die Datei.
+  const lizenzen = `${import.meta.env.BASE_URL}lizenzen-dritter.txt`;
+  const recht = RECHTSSEITEN[sprache];
   return (
     <div className="flex flex-col gap-2">
       <p className="m-0">{t('infokarte.ueber.text')}</p>
@@ -141,7 +145,16 @@ export function ReiterUeber(): React.JSX.Element {
         {t('infokarte.ueber.drittrechte')}{' '}
         <ExternerLink href={assets}>{t('infokarte.ueber.assets')}</ExternerLink>
       </p>
+      <p className="m-0">
+        {t('infokarte.ueber.software')}{' '}
+        <ExternerLink href={lizenzen}>{t('infokarte.ueber.softwareLizenzen')}</ExternerLink>
+      </p>
       <p className="m-0">{t('infokarte.ueber.nichtkommerziell')}</p>
+      <p className="m-0">
+        <ExternerLink href={recht.impressum}>{t('infokarte.ueber.impressum')}</ExternerLink>
+        {' · '}
+        <ExternerLink href={recht.datenschutz}>{t('infokarte.ueber.datenschutz')}</ExternerLink>
+      </p>
       <p className="m-0 text-xs opacity-70">{t('infokarte.ueber.version')} {VERSION}</p>
     </div>
   );

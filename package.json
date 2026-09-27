@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && node scripts/doku-bauen.ts",
+    "build": "tsc -b && vite build && node scripts/doku-bauen.ts && node scripts/lizenzen-dritter.ts",
     "deploy": "npm run build && node scripts/deploy.ts",
     "deploy:trocken": "node scripts/deploy.ts --trocken",
     "literatur:pruefen": "node scripts/pruefe-literatur.ts",
