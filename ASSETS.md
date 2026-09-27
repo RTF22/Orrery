@@ -86,11 +86,15 @@ HDR-Karte über eine Potenzkurve (Median des Bandes und 99,5-Perzentil als Stüt
 eingerechneter Umkehrung des ACES-Tonemappings auf 8 bit sRGB ab, spiegeln sie senkrecht
 (KTX2 kennt kein flipY) und kodieren sie als KTX2.
 
-| Datei | Quelle | Urheber | Lizenz | Maße | Größe | Bearbeitung |
-|---|---|---|---|---|---|---|
-| `public/textures/milchstrasse/himmel-1024.ktx2` | [SVS: milkyway_2020_8k.exr](https://svs.gsfc.nasa.gov/vis/a000000/a004800/a004851/milkyway_2020_8k.exr) | NASA/GSFC SVS; Gaia DR2: ESA/Gaia/DPAC | SVS gemeinfrei; Gaia-Anteil CC BY-NC 3.0 IGO (Namensnennung) | 1024×512 | 59 941 Bytes | siehe oben, ETC1S |
-| `public/textures/milchstrasse/himmel-2048.ktx2` | wie oben | wie oben | wie oben | 2048×1024 | 1 069 543 Bytes | siehe oben, UASTC |
-| `public/textures/milchstrasse/himmel-8192.ktx2` | wie oben | wie oben | wie oben | 8192×4096 | 30 310 600 Bytes | siehe oben, UASTC |
+Urheber und Lizenz sind bei allen drei Dateien dieser Tabelle gleich: Urheber
+„NASA/GSFC SVS; Gaia DR2: ESA/Gaia/DPAC“, Lizenz „SVS gemeinfrei; Gaia-Anteil
+CC BY-NC 3.0 IGO (Namensnennung)“.
+
+| Datei | Quelle | Maße | Größe | Bearbeitung |
+|---|---|---|---|---|
+| `public/textures/milchstrasse/himmel-1024.ktx2` | [SVS: milkyway_2020_8k.exr](https://svs.gsfc.nasa.gov/vis/a000000/a004800/a004851/milkyway_2020_8k.exr) | 1024×512 | 59 941 Bytes | siehe oben, ETC1S |
+| `public/textures/milchstrasse/himmel-2048.ktx2` | wie oben | 2048×1024 | 1 069 543 Bytes | siehe oben, UASTC |
+| `public/textures/milchstrasse/himmel-8192.ktx2` | wie oben | 8192×4096 | 30 310 600 Bytes | siehe oben, UASTC |
 
 ## Textur-Quelle: Solar System Scope (Zwergplaneten)
 
@@ -116,12 +120,15 @@ selten formatfüllend zu sehen).
 Bearbeitung: von der 2k-Ausgangsauflösung (2048×1024, JPEG) auf 1024×512
 verkleinert, sonst unverändert.
 
-| Datei | Quelle (URL) | Urheber | Lizenz | Maße | Größe | Bearbeitung |
-|---|---|---|---|---|---|---|
-| `assets-quellen/texturen/ceres/albedo.jpg` | [2k_ceres_fictional.jpg](https://www.solarsystemscope.com/textures/download/2k_ceres_fictional.jpg) | Solar System Scope | CC BY 4.0 | 1024×512 | 215 184 Bytes | von 2048×1024 auf 1024×512 verkleinert |
-| `assets-quellen/texturen/eris/albedo.jpg` | [2k_eris_fictional.jpg](https://www.solarsystemscope.com/textures/download/2k_eris_fictional.jpg) | Solar System Scope | CC BY 4.0 | 1024×512 | 200 229 Bytes | von 2048×1024 auf 1024×512 verkleinert |
-| `assets-quellen/texturen/haumea/albedo.jpg` | [2k_haumea_fictional.jpg](https://www.solarsystemscope.com/textures/download/2k_haumea_fictional.jpg) | Solar System Scope | CC BY 4.0 | 1024×512 | 192 721 Bytes | von 2048×1024 auf 1024×512 verkleinert |
-| `assets-quellen/texturen/makemake/albedo.jpg` | [2k_makemake_fictional.jpg](https://www.solarsystemscope.com/textures/download/2k_makemake_fictional.jpg) | Solar System Scope | CC BY 4.0 | 1024×512 | 207 523 Bytes | von 2048×1024 auf 1024×512 verkleinert |
+Urheber und Lizenz sind bei allen vier Dateien dieser Tabelle gleich: Urheber
+Solar System Scope, Lizenz CC BY 4.0.
+
+| Datei | Quelle (URL) | Maße | Größe | Bearbeitung |
+|---|---|---|---|---|
+| `assets-quellen/texturen/ceres/albedo.jpg` | [2k_ceres_fictional.jpg](https://www.solarsystemscope.com/textures/download/2k_ceres_fictional.jpg) | 1024×512 | 215 184 Bytes | von 2048×1024 auf 1024×512 verkleinert |
+| `assets-quellen/texturen/eris/albedo.jpg` | [2k_eris_fictional.jpg](https://www.solarsystemscope.com/textures/download/2k_eris_fictional.jpg) | 1024×512 | 200 229 Bytes | von 2048×1024 auf 1024×512 verkleinert |
+| `assets-quellen/texturen/haumea/albedo.jpg` | [2k_haumea_fictional.jpg](https://www.solarsystemscope.com/textures/download/2k_haumea_fictional.jpg) | 1024×512 | 192 721 Bytes | von 2048×1024 auf 1024×512 verkleinert |
+| `assets-quellen/texturen/makemake/albedo.jpg` | [2k_makemake_fictional.jpg](https://www.solarsystemscope.com/textures/download/2k_makemake_fictional.jpg) | 1024×512 | 207 523 Bytes | von 2048×1024 auf 1024×512 verkleinert |
 
 Pluto selbst fehlt hier bewusst: Solar System Scope führt aktuell keine
 Pluto-Textur mehr im Angebot (Prüfung am 12.09.2026: die früher genutzte
@@ -327,16 +334,33 @@ Scope. Die Quelldateien selbst liegen nicht im Repository, sondern nur
 vorübergehend im git-ignorierten Ordner `.cache/texturen/`; der SHA-256 sichert
 die Herkunft bei jedem erneuten Bauen.
 
-| Körper | Quelle (URL) | Urheber | Lizenz | Maße | SHA-256 | Bearbeitung |
-|---|---|---|---|---|---|---|
-| Merkur | [8k_mercury.jpg](https://www.solarsystemscope.com/textures/download/8k_mercury.jpg) | Solar System Scope | CC BY 4.0 | 8192×4096 | `5c8bd885ae3571c6ba2cd34b3446b9c6d767e314bf0ee8c1d5c147cadd388fc3` | wie oben, Stufe 8192 |
-| Venus | [8k_venus_surface.jpg](https://www.solarsystemscope.com/textures/download/8k_venus_surface.jpg) | Solar System Scope | CC BY 4.0 | 8192×4096 | `9bc21a50577ed8ac734cda91058724c7a741c19427aa276224ce349351432c5b` | wie oben, Stufe 8192 |
-| Erde | [8k_earth_daymap.jpg](https://www.solarsystemscope.com/textures/download/8k_earth_daymap.jpg) | Solar System Scope | CC BY 4.0 | 8192×4096 | `88ab060b6e7d241cfc590c69f528fab2b3247b738d40124cb590999a6fe44abc` | wie oben, Stufe 8192 |
-| Mars | [8k_mars.jpg](https://www.solarsystemscope.com/textures/download/8k_mars.jpg) | Solar System Scope | CC BY 4.0 | 8192×4096 | `4cc52149924abc6ae507d63032f994e1d42a55cb82c09e002d1a567ff66c23ee` | wie oben, Stufe 8192 |
-| Mond | [8k_moon.jpg](https://www.solarsystemscope.com/textures/download/8k_moon.jpg) | Solar System Scope | CC BY 4.0 | 8192×4096 | `d1875bcec83588ca25e4802e576f6bb9f88b39e1e403cb41ff55867419c54796` | wie oben, Stufe 8192 |
-| Sonne | [8k_sun.jpg](https://www.solarsystemscope.com/textures/download/8k_sun.jpg) | Solar System Scope | CC BY 4.0 | 4096×2048 | `f22b1cfb306ddce72a7e3b628668a0175b745038ce6268557cb2f7f1bdf98b9d` | wie oben, Stufe 4096 |
-| Jupiter | [8k_jupiter.jpg](https://www.solarsystemscope.com/textures/download/8k_jupiter.jpg) | Solar System Scope | CC BY 4.0 | 4096×2048 | `0bd844bf20822c4e3e80882b077859833c0dac44c7e4e1e0cd63d1b1b6d43085` | wie oben, Stufe 4096 |
-| Saturn | [8k_saturn.jpg](https://www.solarsystemscope.com/textures/download/8k_saturn.jpg) | Solar System Scope | CC BY 4.0 | 4096×2048 | `0d39a4a490c87c3edabe00a3881a29bb3418364178c79c534fe0986e97e09853` | wie oben, Stufe 4096 |
+Urheber und Lizenz sind bei allen acht Dateien dieser Tabelle gleich: Urheber
+Solar System Scope, Lizenz CC BY 4.0.
+
+| Körper | Quelle (URL) | Maße | Bearbeitung |
+|---|---|---|---|
+| Merkur | [8k_mercury.jpg](https://www.solarsystemscope.com/textures/download/8k_mercury.jpg) | 8192×4096 | wie oben, Stufe 8192 |
+| Venus | [8k_venus_surface.jpg](https://www.solarsystemscope.com/textures/download/8k_venus_surface.jpg) | 8192×4096 | wie oben, Stufe 8192 |
+| Erde | [8k_earth_daymap.jpg](https://www.solarsystemscope.com/textures/download/8k_earth_daymap.jpg) | 8192×4096 | wie oben, Stufe 8192 |
+| Mars | [8k_mars.jpg](https://www.solarsystemscope.com/textures/download/8k_mars.jpg) | 8192×4096 | wie oben, Stufe 8192 |
+| Mond | [8k_moon.jpg](https://www.solarsystemscope.com/textures/download/8k_moon.jpg) | 8192×4096 | wie oben, Stufe 8192 |
+| Sonne | [8k_sun.jpg](https://www.solarsystemscope.com/textures/download/8k_sun.jpg) | 4096×2048 | wie oben, Stufe 4096 |
+| Jupiter | [8k_jupiter.jpg](https://www.solarsystemscope.com/textures/download/8k_jupiter.jpg) | 4096×2048 | wie oben, Stufe 4096 |
+| Saturn | [8k_saturn.jpg](https://www.solarsystemscope.com/textures/download/8k_saturn.jpg) | 4096×2048 | wie oben, Stufe 4096 |
+
+Die SHA-256-Prüfsummen dieser acht Ausgangsdateien sichern deren Herkunft bei
+jedem erneuten Bauen:
+
+| Körper | SHA-256 |
+|---|---|
+| Merkur | `5c8bd885ae3571c6ba2cd34b3446b9c6d767e314bf0ee8c1d5c147cadd388fc3` |
+| Venus | `9bc21a50577ed8ac734cda91058724c7a741c19427aa276224ce349351432c5b` |
+| Erde | `88ab060b6e7d241cfc590c69f528fab2b3247b738d40124cb590999a6fe44abc` |
+| Mars | `4cc52149924abc6ae507d63032f994e1d42a55cb82c09e002d1a567ff66c23ee` |
+| Mond | `d1875bcec83588ca25e4802e576f6bb9f88b39e1e403cb41ff55867419c54796` |
+| Sonne | `f22b1cfb306ddce72a7e3b628668a0175b745038ce6268557cb2f7f1bdf98b9d` |
+| Jupiter | `0bd844bf20822c4e3e80882b077859833c0dac44c7e4e1e0cd63d1b1b6d43085` |
+| Saturn | `0d39a4a490c87c3edabe00a3881a29bb3418364178c79c534fe0986e97e09853` |
 
 Diese acht Dateien sind allesamt echte 8192×4096- bzw. 4096×2048-Photomosaike
 derselben Quelle wie die 2k-Karten oben (Solar System Scope, CC BY 4.0), nur in
