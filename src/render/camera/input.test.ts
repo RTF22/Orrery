@@ -327,6 +327,67 @@ describe('attachCameraInput — Einbettung (Gestenregel Schritt 3)', () => {
     stop();
   });
 
+  it('eingebettet: hebt nach Zwei-Finger-Zoom ein Finger ab, dreht der verbleibende nicht mehr, ohne Hinweis', () => {
+    einbetten();
+    const el = flaeche();
+    const onGestenHinweis = vi.fn();
+    const stop = attachCameraInput(el, { onGestenHinweis });
+    zeiger(el, 'pointerdown', 100, 100, 1, 'touch');
+    zeiger(el, 'pointerdown', 200, 100, 2, 'touch');
+    zeiger(el, 'pointermove', 90, 100, 1, 'touch');
+    zeiger(el, 'pointermove', 210, 100, 2, 'touch');
+    // Finger 2 hebt ab, Finger 1 zieht als einziger weiter.
+    zeiger(el, 'pointerup', 210, 100, 2, 'touch');
+    const azimutNachAbheben = useStore.getState().camera.azimuth;
+    const abstandNachAbheben = useStore.getState().camera.distance;
+    zeiger(el, 'pointermove', 150, 100, 1, 'touch');
+    zeiger(el, 'pointermove', 200, 150, 1, 'touch');
+    expect(useStore.getState().camera.azimuth).toBe(azimutNachAbheben);
+    expect(useStore.getState().camera.distance).toBe(abstandNachAbheben);
+    expect(onGestenHinweis).not.toHaveBeenCalled();
+    zeiger(el, 'pointerup', 200, 150, 1, 'touch');
+    stop();
+  });
+
+  it('eingebettet: kommt nach dem Abheben wieder ein zweiter Finger dazu, gilt wieder die Zwei-Finger-Regel', () => {
+    einbetten();
+    const el = flaeche();
+    const onGestenHinweis = vi.fn();
+    const stop = attachCameraInput(el, { onGestenHinweis });
+    zeiger(el, 'pointerdown', 100, 100, 1, 'touch');
+    zeiger(el, 'pointerdown', 200, 100, 2, 'touch');
+    zeiger(el, 'pointermove', 90, 100, 1, 'touch');
+    zeiger(el, 'pointermove', 210, 100, 2, 'touch');
+    zeiger(el, 'pointerup', 210, 100, 2, 'touch');
+    // Verbleibender Finger ist gesperrt (siehe Test oben).
+    zeiger(el, 'pointermove', 150, 100, 1, 'touch');
+    const abstandGesperrt = useStore.getState().camera.distance;
+    // Ein neuer zweiter Finger kommt dazu: Zwei-Finger-Regel gilt wieder.
+    zeiger(el, 'pointerdown', 250, 100, 3, 'touch');
+    zeiger(el, 'pointermove', 140, 100, 1, 'touch');
+    zeiger(el, 'pointermove', 260, 100, 3, 'touch');
+    expect(useStore.getState().camera.distance).not.toBe(abstandGesperrt);
+    expect(onGestenHinweis).not.toHaveBeenCalled();
+    zeiger(el, 'pointerup', 140, 100, 1, 'touch');
+    zeiger(el, 'pointerup', 260, 100, 3, 'touch');
+    stop();
+  });
+
+  it('nicht eingebettet: hebt nach Zwei-Finger-Geste ein Finger ab, dreht der verbleibende weiter (heutiges Verhalten)', () => {
+    const el = flaeche();
+    const stop = attachCameraInput(el);
+    zeiger(el, 'pointerdown', 100, 100, 1, 'touch');
+    zeiger(el, 'pointerdown', 200, 100, 2, 'touch');
+    zeiger(el, 'pointermove', 90, 100, 1, 'touch');
+    zeiger(el, 'pointermove', 210, 100, 2, 'touch');
+    zeiger(el, 'pointerup', 210, 100, 2, 'touch');
+    const azimutVorWeiterzug = useStore.getState().camera.azimuth;
+    zeiger(el, 'pointermove', 150, 100, 1, 'touch');
+    expect(useStore.getState().camera.azimuth).not.toBe(azimutVorWeiterzug);
+    zeiger(el, 'pointerup', 150, 100, 1, 'touch');
+    stop();
+  });
+
   it('Maus- oder Stift-Ziehen dreht eingebettet weiter wie heute, ohne Hinweis', () => {
     einbetten();
     const el = flaeche();

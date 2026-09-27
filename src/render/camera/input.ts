@@ -165,6 +165,25 @@ export function attachCameraInput(element: HTMLElement, rueckrufe: EingabeRueckr
     aktive.delete(e.pointerId);
     if (element.hasPointerCapture(e.pointerId)) element.releasePointerCapture(e.pointerId);
     letzterPinchAbstand = pinchAbstand();
+    // Einbettung Schritt 3: Sinkt eine Mehrfinger-Geste (Pinch/Drehen) auf einen
+    // Finger, entscheidet dieser neu — sonst würde er eingebettet weiterdrehen,
+    // obwohl ein einzelner Finger dort die Seite scrollen soll (z. B. „mit zwei
+    // Fingern zoomen, einen Finger anheben, mit dem verbleibenden weiterziehen").
+    // `hinweisSchonGemeldet` unterdrückt dabei einen zweiten Hinweis.
+    if (aktive.size === 1) {
+      const [rest] = [...aktive.values()];
+      if (rest !== undefined && rest.art === 'finger' && rest.zieht) {
+        const entscheidung = gesteEntscheiden({
+          art: 'ziehen',
+          zeigerart: 'touch',
+          strgOderCmd: false,
+          beruehrungen: 1,
+          eingebettet: useStore.getState().ui.eingebettet,
+          hinweisSchonGemeldet: true,
+        });
+        rest.gesperrt = entscheidung !== 'kamera';
+      }
+    }
     if (tippenErlaubt && d !== undefined && d.tippbar && !d.zieht && aktive.size === 0) {
       const p = lokal(e);
       rueckrufe.onTipp?.(p.x, p.y, d.art);
