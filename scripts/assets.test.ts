@@ -74,6 +74,7 @@ describe('public/', () => {
     // Dateien 500 statt 404, siehe scripts/app-symbol.py und docs/entwicklung.md).
     // Die google….html weist den Besitz der Domain für die Google Search Console nach.
     // BingSiteAuth.xml leistet dasselbe für die Bing Webmaster Tools.
+    // saturn-ohne-js.webp ist das Hintergrundbild des Hinweises ohne JavaScript (index.html).
     const erlaubt = new Set([
       '.htaccess',
       'basis',
@@ -86,6 +87,7 @@ describe('public/', () => {
       'google73a5c7151f277813.html',
       'BingSiteAuth.xml',
       'vorschau.png',
+      'saturn-ohne-js.webp',
     ]);
     expect(readdirSync('public').filter((name) => !erlaubt.has(name))).toEqual([]);
   });
@@ -164,5 +166,31 @@ describe('Linkvorschau der App', () => {
 
   it('liefert als Vorschaubild dieselbe Datei wie das Repository', () => {
     expect(readFileSync('public/vorschau.png').equals(readFileSync('docs/bilder/social-preview.png'))).toBe(true);
+  });
+});
+
+describe('Hinweis ohne JavaScript', () => {
+  const kopf = readFileSync('index.html', 'utf8');
+  const hinweis = kopf.match(/<noscript>([\s\S]*?)<\/noscript>/)?.[1] ?? '';
+
+  it('erklärt auf Deutsch und Englisch, dass Orrery JavaScript braucht', () => {
+    expect(hinweis).toContain('<h2>Orrery braucht JavaScript</h2>');
+    expect(hinweis).toContain('<h2>Orrery needs JavaScript</h2>');
+    expect(kopf.match(/<h1[ >]/g)).toHaveLength(1);
+  });
+
+  it('verlinkt Impressum, Datenschutz und die Doku-Seiten', () => {
+    for (const ziel of [
+      'https://jensfricke.com/impressum/', 'https://jensfricke.com/datenschutz/orrery/',
+      'https://jensfricke.com/en/legal-notice/', 'https://jensfricke.com/en/privacy/orrery/',
+      'doku/making-of/de/', 'doku/making-of/en/',
+    ]) expect(hinweis).toContain(`href="${ziel}"`);
+  });
+
+  it('lädt nur eigene Dateien mit relativem Pfad', () => {
+    const bilder = [...hinweis.matchAll(/src="([^"]+)"/g)].map((m) => m[1]);
+    expect(bilder).toEqual(['saturn-ohne-js.webp']);
+    for (const bild of bilder) expect(readdirSync('public')).toContain(bild);
+    expect(hinweis).not.toMatch(/url\(|@import|<link/);
   });
 });
