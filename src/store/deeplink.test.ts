@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { fragmentAuswerten, lesbarerLink } from './deeplink';
+import { fragmentAuswerten, lesbarerLink, einbettCode } from './deeplink';
 import { encodePatch, fromShareable } from './serialize';
 import { DEFAULT_STATE } from './index';
 import { JD_MIN, JD_MAX, jdToDate } from '../sim/time';
@@ -424,5 +424,32 @@ describe('lesbarerLink: Rundreise unabhängig von den Sekunden innerhalb der Min
 
   it.each(RUNDREISE_ZEITPUNKTE)('$name, angehalten (paused: true)', ({ jd }) => {
     pruefeRundreise(jd, true);
+  });
+});
+
+describe('einbettCode', () => {
+  it('erzeugt den iframe-Code exakt: SRC von orrery3d.de mit &amp; zwischen den Parametern, Titel maskiert', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    const code = einbettCode(state, 'A & B "C" <D>');
+    expect(code).toBe(
+      '<iframe src="https://orrery3d.de/#date=2000-01-01T12:00Z&amp;p=e30" width="800" height="450" '
+      + 'style="max-width:100%;border:0" allow="fullscreen" loading="lazy" '
+      + 'title="A &amp; B &quot;C&quot; &lt;D&gt;"></iframe>',
+    );
+  });
+
+  it('übernimmt einen englischen Titel unverändert (unmaskierte Zeichen bleiben stehen)', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    const code = einbettCode(state, 'Orrery – Solar System in 3D');
+    expect(code).toContain('title="Orrery – Solar System in 3D"');
+    expect(code.startsWith('<iframe src="https://orrery3d.de/#date=')).toBe(true);
+  });
+
+  it('nimmt SRC über denselben lesbarerLink wie der Knopf zurück (feste Adresse orrery3d.de, Pfad /)', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    state.camera = { ...state.camera, mode: 'attached', targetId: 'mars' };
+    const code = einbettCode(state, 'Titel');
+    const erwarteterLink = lesbarerLink(state, { origin: 'https://orrery3d.de', pathname: '/' });
+    expect(code).toContain(`src="${erwarteterLink.replace(/&/g, '&amp;')}"`);
   });
 });

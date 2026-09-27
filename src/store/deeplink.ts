@@ -259,3 +259,34 @@ export function lesbarerLink(state: AppState, ort: { origin: string; pathname: s
   teile.push(`p=${encodePatch(patchFuer(state, 'link'))}`);
   return `${ort.origin}${ort.pathname}#${teile.join('&')}`;
 }
+
+/**
+ * Feste Adresse für den Knopf „Einbetten" (Feature Einbettung, Schritt 4) —
+ * dieselbe Zieladresse wie ZIEL in ui/Minileiste.tsx (Knopf zurück), hier mit
+ * vollem Schema, weil sie als `src` in fremdes HTML eingesetzt wird.
+ */
+const EINBETT_ORT = { origin: 'https://orrery3d.de', pathname: '/' };
+
+/**
+ * Maskiert die vier Zeichen, die in einem HTML-Attributwert nicht roh stehen
+ * dürfen. `&` zuerst, sonst maskierte diese Funktion ihre eigene Ausgabe der
+ * anderen drei Ersetzungen ein zweites Mal.
+ */
+function htmlAttributMaskieren(text: string): string {
+  return text.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/**
+ * Fertiger iframe-Code der aktuellen Ansicht für den Knopf „Einbetten"
+ * (Feature Einbettung, Schritt 4): `SRC` entsteht wie beim Knopf zurück
+ * (`lesbarerLink`, feste Adresse orrery3d.de, Pfad „/"); `titel` liefert der
+ * Aufrufer bereits in der aktuellen App-Sprache übersetzt — diese Funktion
+ * bleibt wie der Rest von `store/` sprachfrei. Beide Werte werden für den
+ * Attributwert maskiert (`&`, `"`, `<`, `>`).
+ */
+export function einbettCode(state: AppState, titel: string): string {
+  const src = htmlAttributMaskieren(lesbarerLink(state, EINBETT_ORT));
+  const titelMaskiert = htmlAttributMaskieren(titel);
+  return `<iframe src="${src}" width="800" height="450" style="max-width:100%;border:0" `
+    + `allow="fullscreen" loading="lazy" title="${titelMaskiert}"></iframe>`;
+}

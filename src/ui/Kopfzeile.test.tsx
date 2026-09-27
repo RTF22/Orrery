@@ -5,7 +5,7 @@ import { Kopfzeile } from './Kopfzeile';
 import { setSprache } from './i18n';
 import { useStore, DEFAULT_STATE } from '../store';
 import { fromShareable } from '../store/serialize';
-import { fragmentAuswerten } from '../store/deeplink';
+import { fragmentAuswerten, einbettCode } from '../store/deeplink';
 import { themaVerfallStarten } from './info/themaVerfall';
 import { cinemaAktiv, startCinema, stopCinema } from './cinemaControl';
 import { useInfoKarte } from './infokarte/zustand';
@@ -204,6 +204,86 @@ describe('Kopfzeile: Link kopieren und Zurücksetzen', () => {
     expect(s.visible).toEqual({});
     expect(s.ui.language).toBe('en');
     expect(s.quality.tier).toBe('high');
+  });
+});
+
+describe('Kopfzeile: Einbetten', () => {
+  beforeEach(() => {
+    useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
+  });
+  afterEach(() => {
+    Reflect.deleteProperty(navigator, 'clipboard');
+    vi.unstubAllGlobals();
+    setSprache('de');
+  });
+
+  const mitZwischenablage = (
+    verhalten: 'erfolg' | 'fehler' = 'erfolg',
+  ): ReturnType<typeof vi.fn> => {
+    const writeText = vi.fn(async () => {
+      if (verhalten === 'fehler') throw new Error('kein Zugriff');
+      return Promise.resolve();
+    });
+    Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
+    return writeText;
+  };
+
+  it('zeigt den Knopf „Einbetten" am Desktop, direkt nach „Link kopieren"', () => {
+    mitZwischenablage();
+    render(<Kopfzeile />);
+    const knoepfe = screen.getAllByRole('button').map((k) => k.textContent);
+    const iLink = knoepfe.indexOf('Link kopieren');
+    const iEinbetten = knoepfe.indexOf('Einbetten');
+    expect(iEinbetten).toBeGreaterThan(-1);
+    expect(iEinbetten).toBe(iLink + 1);
+  });
+
+  it('fehlt an Touchgeräten', () => {
+    stubMatchMedia(GROB_ABFRAGE);
+    mitZwischenablage();
+    render(<Kopfzeile />);
+    expect(screen.queryByRole('button', { name: 'Einbetten' })).toBeNull();
+  });
+
+  it('fehlt, wenn Orrery selbst in einem iframe läuft (ui.eingebettet)', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    state.ui.eingebettet = true;
+    useStore.getState().replaceAll(state);
+    mitZwischenablage();
+    render(<Kopfzeile />);
+    expect(screen.queryByRole('button', { name: 'Einbetten' })).toBeNull();
+  });
+
+  it('kopiert beim Klick den iframe-Code in die Zwischenablage und meldet „Einbettcode kopiert"', async () => {
+    const writeText = mitZwischenablage();
+    useStore.getState().setCamera({ mode: 'attached', targetId: 'mars' });
+    render(<Kopfzeile />);
+    fireEvent.click(screen.getByRole('button', { name: 'Einbetten' }));
+    await waitFor(() => { expect(screen.getByRole('status').textContent).toBe('Einbettcode kopiert'); });
+    expect(writeText).toHaveBeenCalledTimes(1);
+    const code = writeText.mock.calls[0]?.[0] as string;
+    expect(code).toBe(einbettCode(useStore.getState(), 'Orrery – Sonnensystem in 3D'));
+  });
+
+  it('meldet auf Englisch mit dem englischen Titel im Code', async () => {
+    const writeText = mitZwischenablage();
+    setSprache('en');
+    render(<Kopfzeile />);
+    fireEvent.click(screen.getByRole('button', { name: 'Embed' }));
+    await waitFor(() => { expect(screen.getByRole('status').textContent).toBe('Embed code copied'); });
+    const code = writeText.mock.calls[0]?.[0] as string;
+    expect(code).toContain('title="Orrery – Solar System in 3D"');
+  });
+
+  it('scheitert die Zwischenablage, meldet den Fehlertext und lässt die Adresszeile unverändert', async () => {
+    mitZwischenablage('fehler');
+    window.history.replaceState(null, '', '/');
+    render(<Kopfzeile />);
+    fireEvent.click(screen.getByRole('button', { name: 'Einbetten' }));
+    await waitFor(() => {
+      expect(screen.getByRole('status').textContent).toBe('Einbettcode konnte nicht kopiert werden');
+    });
+    expect(window.location.hash).toBe('');
   });
 });
 

@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { useStore } from '../store';
 import { zurueckgesetzt } from '../store/persist';
-import { lesbarerLink } from '../store/deeplink';
+import { lesbarerLink, einbettCode } from '../store/deeplink';
 import { t } from './i18n';
 import { cinemaAktiv, stopCinema } from './cinemaControl';
 import { useInfoKarte, startReiter } from './infokarte/zustand';
 import { grobJetzt, laeuftAlsApp } from './infokarte/geraet';
+import { useGrob } from './fenster';
 import type { Sprache } from './i18n';
 
 /**
@@ -38,6 +39,11 @@ export function Kopfzeile(): React.JSX.Element {
   const setUi = useStore((s) => s.setUi);
   const replaceAll = useStore((s) => s.replaceAll);
   const oeffnen = useInfoKarte((s) => s.oeffnen);
+  const eingebettet = useStore((s) => s.ui.eingebettet);
+  // Reaktiv (anders als grobJetzt() beim Klick auf „Link kopieren"): Der
+  // Knopf „Einbetten" muss verschwinden, sobald sich der Zeigertyp ändert,
+  // nicht erst beim nächsten Klick.
+  const grob = useGrob();
   const [meldung, setMeldung] = useState<string | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -84,6 +90,18 @@ export function Kopfzeile(): React.JSX.Element {
     await zwischenablage(link);
   };
 
+  const einbetten = async (): Promise<void> => {
+    const code = einbettCode(useStore.getState(), t('header.embedTitle'));
+    try {
+      await navigator.clipboard.writeText(code);
+      melde('header.embedCopied');
+    } catch {
+      // Anders als „Link kopieren": kein Rückfall in die Adresszeile, der
+      // iframe-Code wäre dort nutzlos.
+      melde('header.embedCopyFailed');
+    }
+  };
+
   const zuruecksetzen = (): void => {
     // Ein laufendes oder angehaltenes Kino zuerst beenden: Sonst wechselte
     // die Grundlage des Infopanels (Szene → Sonne) im selben Zug, in dem ein
@@ -99,6 +117,19 @@ export function Kopfzeile(): React.JSX.Element {
         <button type="button" className={KNOPF} onClick={() => { void linkKopieren(); }}>
           {t('header.copyLink')}
         </button>
+        {/* Fehlt an Touchgeräten (dort ist ein iframe-Code ohnehin unpraktisch)
+            und wenn Orrery selbst schon in einem iframe läuft (Feature
+            Einbettung, Schritt 4). */}
+        {!grob && !eingebettet && (
+          <button
+            type="button"
+            className={KNOPF}
+            title={t('header.embedTooltip')}
+            onClick={() => { void einbetten(); }}
+          >
+            {t('header.embed')}
+          </button>
+        )}
         <button type="button" className={KNOPF} onClick={zuruecksetzen}>
           {t('header.reset')}
         </button>
