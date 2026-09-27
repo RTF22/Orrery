@@ -78,6 +78,8 @@ planets.
 - Installable web app; works on phones, with keyboard, mouse and game controller.
 - Shareable links to any date and body, e.g. `https://orrery3d.de/#date=1990-05-17&body=mars`;
   the share button copies the exact view.
+- Embeddable in other pages via iframe (the Embed button copies the code); `ui=off` starts without
+  the interface, e.g. for presentations on a projector: `https://orrery3d.de/#scene=mondfinsternis&ui=off`.
 
 ## How it was built
 

@@ -91,6 +91,9 @@ ignoriert:
 - `scene`: Kennung einer Kinoszene. Das Kino startet mit dieser Szene; `date` und
   `body` zählen dann nicht.
 - `lang`: `de` oder `en`, überschreibt die erkannte Browsersprache.
+- `ui`: `off` startet mit ausgeblendeter Oberfläche (`ui.hidden = true`) und
+  überschreibt `p`; andere Werte werden ignoriert. Ein Fragment nur mit
+  `ui=off` gilt bereits als gültiger Link.
 - `p`: der vollständige, kodierte Zustand, wie ihn der Teilen-Knopf erzeugt. Er
   ist die Grundlage; `date` und `body` überschreiben ihre Felder nur, wenn sie
   vom Zeitpunkt bzw. Körper in `p` abweichen. Stimmen sie überein — der
@@ -102,6 +105,50 @@ Ein gültiges Fragment ersetzt beim Start eine gemerkte Sitzung und wird
 anschließend aus der Adresszeile entfernt, damit ein späteres Neuladen die
 Sitzung nimmt statt immer wieder denselben Link. Auswertung und Erzeugung stehen
 in `src/store/deeplink.ts`.
+
+## Einbettung
+
+Die Anwendung erkennt beim Start, ob sie in einem fremden iframe läuft
+(`window.self !== window.top`, `src/app/einbettung.ts`) und hält das
+Ergebnis in `ui.eingebettet` fest. Das Feld ist eine Tatsache des laufenden
+Fensters, keine Einstellung: Es wird nicht in der gemerkten Sitzung
+gespeichert und erscheint nicht im Fragment eines Links.
+
+Im iframe startet die Oberfläche ausgeblendet (`ui.hidden = true`), die
+Info-Karte öffnet sich nie von selbst, eine gemerkte Sitzung wird weder
+gelesen noch geschrieben, und es spielt keine Musik; der Schalter
+„Sitzung merken" im Anzeige-Panel fehlt dann ganz (`src/app/main.tsx`).
+
+Solange die Oberfläche ausgeblendet ist — im iframe wie im
+Präsentationsmodus (`ui=off`) —, zeigt eine kleine Leiste unten mittig
+Zeit Start/Stopp, Vollbild und „Oberfläche einblenden"; sie blendet nach
+kurzer Ruhe wieder aus, genau wie der Mauszeiger im Kino
+(`src/ui/Minileiste.tsx`). Nur im iframe kommt unten rechts ein
+dauerhafter Knopf „orrery3d.de ↗" hinzu: Er öffnet `https://orrery3d.de/`
+mit dem lesbaren Link der aktuellen Ansicht in einem neuen Tab und
+blendet nie aus.
+
+Läuft die App in einem fremden iframe, darf sie das Scrollen der
+einbettenden Seite nicht kapern (wie eine eingebettete Karte): Nur eine
+bewusste Geste bewegt dort die Kamera — das Mausrad mit Strg (bzw. ⌘ auf
+dem Mac) und Ziehen mit Maus oder Stift wie gewohnt, bei Berührung erst
+ab zwei Fingern. Ein einfaches Rad oder ein ziehender Finger lässt
+stattdessen die Seite scrollen und zeigt einen kurzen Hinweis, wie sich
+die Kamera stattdessen bewegen lässt. Auf orrery3d.de selbst
+(`ui.eingebettet === false`) ändert sich nichts. Die Entscheidung steht
+als reine Funktion in `src/render/camera/geste.ts`.
+
+Der Knopf „Einbetten" in der Kopfzeile (fehlt an Touchgeräten und wenn
+Orrery selbst schon in einem iframe läuft) kopiert den iframe-Code der
+aktuellen Ansicht in die Zwischenablage (`einbettCode` in
+`src/store/deeplink.ts`), zum Beispiel:
+
+```html
+<iframe src="https://orrery3d.de/#date=2000-01-01T12:00Z&amp;p=e30"
+  width="800" height="450" style="max-width:100%;border:0"
+  allow="fullscreen" loading="lazy"
+  title="Orrery – Sonnensystem in 3D"></iframe>
+```
 
 ## Aufbau
 
