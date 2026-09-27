@@ -81,7 +81,7 @@ der Planeten.
 - Installierbare Web-App; läuft auf dem Handy, mit Tastatur, Maus und Controller.
 - Teilbare Links zu jedem Datum und Körper, etwa `https://orrery3d.de/#date=1990-05-17&body=mars`;
   der Teilen-Knopf kopiert die genaue Ansicht.
-- Einbettbar per iframe in fremde Seiten (Knopf „Einbetten" kopiert den Code); `ui=off` startet ohne
+- Einbettbar per iframe in fremde Seiten (Knopf „Einbetten“ kopiert den Code); `ui=off` startet ohne
   Oberfläche, etwa für Präsentationen am Beamer: `https://orrery3d.de/#scene=mondfinsternis&ui=off`.
 
 ## Wie es entstand

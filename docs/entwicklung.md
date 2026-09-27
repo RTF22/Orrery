@@ -116,15 +116,16 @@ gespeichert und erscheint nicht im Fragment eines Links.
 
 Im iframe startet die Oberfläche ausgeblendet (`ui.hidden = true`), die
 Info-Karte öffnet sich nie von selbst, eine gemerkte Sitzung wird weder
-gelesen noch geschrieben, und es spielt keine Musik; der Schalter
-„Sitzung merken" im Anzeige-Panel fehlt dann ganz (`src/app/main.tsx`).
+gelesen noch geschrieben, und es spielt keine Musik (`src/app/main.tsx`);
+der Schalter „Sitzung merken“ im Anzeige-Panel fehlt dann ganz
+(`src/ui/panels/DisplayPanel.tsx`).
 
 Solange die Oberfläche ausgeblendet ist — im iframe wie im
 Präsentationsmodus (`ui=off`) —, zeigt eine kleine Leiste unten mittig
-Zeit Start/Stopp, Vollbild und „Oberfläche einblenden"; sie blendet nach
+Zeit Start/Stopp, Vollbild und „Oberfläche einblenden“; sie blendet nach
 kurzer Ruhe wieder aus, genau wie der Mauszeiger im Kino
 (`src/ui/Minileiste.tsx`). Nur im iframe kommt unten rechts ein
-dauerhafter Knopf „orrery3d.de ↗" hinzu: Er öffnet `https://orrery3d.de/`
+dauerhafter Knopf „orrery3d.de ↗“ hinzu: Er öffnet `https://orrery3d.de/`
 mit dem lesbaren Link der aktuellen Ansicht in einem neuen Tab und
 blendet nie aus.
 
@@ -138,7 +139,7 @@ die Kamera stattdessen bewegen lässt. Auf orrery3d.de selbst
 (`ui.eingebettet === false`) ändert sich nichts. Die Entscheidung steht
 als reine Funktion in `src/render/camera/geste.ts`.
 
-Der Knopf „Einbetten" in der Kopfzeile (fehlt an Touchgeräten und wenn
+Der Knopf „Einbetten“ in der Kopfzeile (fehlt an Touchgeräten und wenn
 Orrery selbst schon in einem iframe läuft) kopiert den iframe-Code der
 aktuellen Ansicht in die Zwischenablage (`einbettCode` in
 `src/store/deeplink.ts`), zum Beispiel:
