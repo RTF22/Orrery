@@ -394,8 +394,8 @@ Zeichnungen (Sonne mit zwei Bahnen), erzeugt mit `scripts/app-symbol.py`
 ## Musik
 
 Orrery liefert keine Musik aus. Wer die Seite betreibt, kann eigene MP3-Dateien
-im Ordner `musik/` der ausgelieferten Seite hinterlegen (Anleitung in der
-`README.md`, Abschnitt „Eigene Musik“); lokal liegt der Ordner unter
+im Ordner `musik/` der ausgelieferten Seite hinterlegen (Anleitung in
+`docs/entwicklung.md`, Abschnitt „Eigene Musik“); lokal liegt der Ordner unter
 `public/musik/` und ist git-ignoriert, erscheint also nie im Repository. Für
 Lizenz, Namensnennung und Nutzungsrechte dieser Stücke ist allein der Betreiber
 verantwortlich. Die Anwendung zeigt beim laufenden Stück Titel, Urheber und Link

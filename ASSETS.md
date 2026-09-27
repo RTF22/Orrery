@@ -392,7 +392,7 @@ original drawings (a sun with two orbits), generated with
 
 Orrery ships no music. Whoever operates the site can place their own MP3
 files in the `musik/` folder of the deployed site (instructions in
-`README.md`, section "Custom music"); locally the folder lives under
+`docs/entwicklung.md`, section "Eigene Musik"); locally the folder lives under
 `public/musik/` and is git-ignored, so it never appears in the repository.
 Licensing, attribution and usage rights for these tracks are the operator's
 sole responsibility. The application shows title, author and link for the

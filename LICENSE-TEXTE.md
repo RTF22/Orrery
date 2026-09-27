@@ -11,7 +11,7 @@ unter seiner eigenen Lizenz.
 - **Eigene Texte und Bilder — CC BY-SA 4.0.** `src/data/texte/` (Lehrtexte auf Deutsch und
   Englisch) und `docs/` (Belege, Making-of, Chronik, Protokolle, Entwürfe, Pläne, Screenshots
   und Bilder unter `docs/bilder/`). Die Screenshots zeigen teilweise Texturen Dritter; für
-  diese Bildanteile gilt zusätzlich `ASSETS.md`.
+  diese Bildanteile gilt zusätzlich `ASSETS.de.md`.
 - **Fremdmaterial — eigene Lizenzen.** Texturen, Sternkatalog, Milchstraßenkarte und alles
   Weitere, was [`ASSETS.de.md`](ASSETS.de.md) aufführt, bleibt unter den dort genannten
   Lizenzen. `ASSETS.de.md` und `ASSETS.md` enthalten dieselben Angaben und sind gemeinsam
