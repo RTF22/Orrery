@@ -15,17 +15,17 @@ describe('useSprache', () => {
   afterEach(() => { setSprache('de'); });
 
   it('zeichnet mit der Sprache aus dem Store und setzt lang und title', () => {
-    // Titel ist in beiden Sprachen der Produktname; der Vorbelegung mit 'x'
-    // weist nach, dass der Effekt ihn wirklich setzt.
+    // Die Vorbelegung mit 'x' weist nach, dass der Effekt den Titel wirklich
+    // setzt; der Sprachwechsel, dass er ihm folgt.
     document.title = 'x';
     render(<Probe />);
     expect(screen.getByText('Zeit')).toBeTruthy();
     expect(document.documentElement.lang).toBe('de');
-    expect(document.title).toBe('Orrery');
+    expect(document.title).toBe('Orrery – das Sonnensystem in 3D');
 
     act(() => { useStore.getState().setUi({ language: 'en' }); });
     expect(screen.getByText('Time')).toBeTruthy();
     expect(document.documentElement.lang).toBe('en');
-    expect(document.title).toBe('Orrery');
+    expect(document.title).toBe('Orrery – the solar system in 3D');
   });
 });

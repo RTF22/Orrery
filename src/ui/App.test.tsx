@@ -62,6 +62,15 @@ describe('App', () => {
     expect(useStore.getState().ui.panels).toEqual(vorher);
   });
 
+  it('führt die Seitenüberschrift auch bei ausgeblendeter Oberfläche und folgt der Sprache', () => {
+    useStore.getState().setUi({ hidden: true });
+    render(<App />);
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Orrery – das Sonnensystem in 3D');
+    act(() => { useStore.getState().setUi({ language: 'en' }); });
+    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Orrery – the solar system in 3D');
+    act(() => { useStore.getState().setUi({ language: 'de' }); });
+  });
+
   it('zeigt eine offene Info-Karte auch bei ausgeblendeter Oberfläche', () => {
     useStore.getState().setUi({ hidden: true });
     useInfoKarte.setState({ offen: true, reiter: 'ueber' });

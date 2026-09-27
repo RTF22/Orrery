@@ -1,5 +1,6 @@
 import { useStore } from '../store';
 import { useSprache } from './i18n/useSprache';
+import { t } from './i18n';
 import { Kopfzeile } from './Kopfzeile';
 import { Seitenleiste } from './Seitenleiste';
 import { Bogenreiter } from './Bogenreiter';
@@ -84,6 +85,10 @@ export function App(): React.JSX.Element {
       <KnopfZurueck ueberBogenreiter={sichtbar && schmal} />
       <InfoKarte />
       <SteuerKarte />
+      {/* Unsichtbar, aber für Suchmaschinen und Screenreader die Überschrift
+          der Seite; index.html führt denselben Text vor dem Start. */}
+      <h1 className="sr-only">{t('app.dokumenttitel')}</h1>
+      <p className="sr-only">{t('app.beschreibung')}</p>
     </>
   );
 }

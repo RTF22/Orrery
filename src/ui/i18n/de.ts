@@ -5,6 +5,9 @@
  */
 export const de = {
   'app.title': 'Orrery',
+  'app.dokumenttitel': 'Orrery – das Sonnensystem in 3D',
+  'app.beschreibung':
+    'Das Sonnensystem als interaktive 3D-Simulation im Browser: physikalisch gerechnete Bahnen, Finsternisse und Ringschatten, erklärt in drei Niveaustufen.',
   'panel.time': 'Zeit',
   'panel.scale': 'Maßstab',
   'panel.camera': 'Kamera',

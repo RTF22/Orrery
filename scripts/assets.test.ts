@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
+import { de } from '../src/ui/i18n/de';
 
 const DATEIEN = ['ASSETS.md', 'ASSETS.de.md'] as const;
 const INHALT: Record<(typeof DATEIEN)[number], string> = Object.fromEntries(
@@ -151,6 +152,14 @@ describe('Linkvorschau der App', () => {
     expect(kopf).toContain('<meta property="og:url" content="https://orrery3d.de/"');
     expect(kopf).toContain('<meta property="og:image" content="https://orrery3d.de/vorschau.png"');
     expect(kopf).toContain('<meta name="twitter:card" content="summary_large_image"');
+  });
+
+  it('führt Titel, Überschrift und Beschreibung wortgleich mit der App', () => {
+    expect(kopf).toContain(`<title>${de['app.dokumenttitel']}</title>`);
+    expect(kopf).toContain(`<meta name="description" content="${de['app.beschreibung']}"`);
+    expect(kopf.match(/<h1[ >]/g)).toHaveLength(1);
+    expect(kopf).toContain(`<h1 class="sr-only">${de['app.dokumenttitel']}</h1>`);
+    expect(kopf).toContain(`<p class="sr-only">${de['app.beschreibung']}</p>`);
   });
 
   it('liefert als Vorschaubild dieselbe Datei wie das Repository', () => {

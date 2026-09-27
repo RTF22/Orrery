@@ -7,7 +7,7 @@
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content="#05070d" />
     <link rel="canonical" href="https://orrery3d.de/" />
-    <title>Orrery</title>
+    <title>Orrery – das Sonnensystem in 3D</title>
     <meta name="description" content="Das Sonnensystem als interaktive 3D-Simulation im Browser: physikalisch gerechnete Bahnen, Finsternisse und Ringschatten, erklärt in drei Niveaustufen." />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="de_DE" />
@@ -22,7 +22,12 @@
     <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Für Suchmaschinen und Screenreader vor dem Start der App; React
+           ersetzt den Inhalt beim Einhängen durch dieselben Texte (App.tsx). -->
+      <h1 class="sr-only">Orrery – das Sonnensystem in 3D</h1>
+      <p class="sr-only">Das Sonnensystem als interaktive 3D-Simulation im Browser: physikalisch gerechnete Bahnen, Finsternisse und Ringschatten, erklärt in drei Niveaustufen.</p>
+    </div>
     <script type="module" src="/src/app/main.tsx"></script>
   </body>
 </html>

@@ -16,7 +16,7 @@ export function useSprache(): Sprache {
 
   useEffect(() => {
     document.documentElement.lang = language;
-    document.title = t('app.title');
+    document.title = t('app.dokumenttitel');
   }, [language]);
 
   return language;

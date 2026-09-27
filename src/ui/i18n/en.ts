@@ -6,6 +6,9 @@ import type { Key } from './index';
  */
 export const en: Record<Key, string> = {
   'app.title': 'Orrery',
+  'app.dokumenttitel': 'Orrery – the solar system in 3D',
+  'app.beschreibung':
+    'The solar system as an interactive 3D simulation in the browser: physically computed orbits, eclipses and ring shadows, explained at three levels.',
   'panel.time': 'Time',
   'panel.scale': 'Scale',
   'panel.camera': 'Camera',
