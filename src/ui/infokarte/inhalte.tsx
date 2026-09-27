@@ -9,7 +9,9 @@ import { useInfoKarte } from './zustand';
 import { VERSION } from './version';
 
 const REPO = 'https://github.com/RTF22/Orrery';
-const ASSETS = 'https://github.com/RTF22/Orrery/blob/master/ASSETS.md';
+// ASSETS.md gibt es in zwei Sprachfassungen: Englisch bleibt ASSETS.md, Deutsch liegt
+// unter ASSETS.de.md (wie bei README.md/README.de.md).
+const ASSETS_DATEI: Record<'de' | 'en', string> = { de: 'ASSETS.de.md', en: 'ASSETS.md' };
 
 /** Linkstil wie `LINK` in ui/info/Literaturkarten.tsx — gemeinsame Konstante statt zweier gleicher Zeichenketten. */
 const LINKSTIL = 'text-sky-300 underline decoration-sky-300/50 underline-offset-2 hover:text-sky-200';
@@ -128,6 +130,7 @@ export function ReiterUeber(): React.JSX.Element {
   // 'de' hält den Fall trotzdem fest, falls der Typ einmal wächst.
   const sprache = language === 'de' ? 'de' : 'en';
   const entstehung = `${import.meta.env.BASE_URL}doku/making-of/${sprache}/`;
+  const assets = `https://github.com/RTF22/Orrery/blob/master/${ASSETS_DATEI[sprache]}`;
   return (
     <div className="flex flex-col gap-2">
       <p className="m-0">{t('infokarte.ueber.text')}</p>
@@ -136,7 +139,7 @@ export function ReiterUeber(): React.JSX.Element {
       <p className="m-0">{t('infokarte.ueber.recht')}</p>
       <p className="m-0">
         {t('infokarte.ueber.drittrechte')}{' '}
-        <ExternerLink href={ASSETS}>{t('infokarte.ueber.assets')}</ExternerLink>
+        <ExternerLink href={assets}>{t('infokarte.ueber.assets')}</ExternerLink>
       </p>
       <p className="m-0">{t('infokarte.ueber.nichtkommerziell')}</p>
       <p className="m-0 text-xs opacity-70">{t('infokarte.ueber.version')} {VERSION}</p>

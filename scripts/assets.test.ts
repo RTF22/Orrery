@@ -1,9 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import { readdirSync, readFileSync } from 'node:fs';
 
-const assets = readFileSync('ASSETS.md', 'utf8');
+const DATEIEN = ['ASSETS.md', 'ASSETS.de.md'] as const;
+const INHALT: Record<(typeof DATEIEN)[number], string> = Object.fromEntries(
+  DATEIEN.map((datei) => [datei, readFileSync(datei, 'utf8')]),
+) as Record<(typeof DATEIEN)[number], string>;
 
-describe('ASSETS.md', () => {
+describe.each(DATEIEN)('%s', (datei) => {
+  const assets = INHALT[datei];
+  const musikUeberschrift = datei === 'ASSETS.md' ? '## Music' : '## Musik';
+
   it('nennt jeden ausgelieferten Texturordner', () => {
     const fehlend = readdirSync('public/textures').filter(
       (koerper) => !new RegExp(`(texturen|textures)/${koerper}/`).test(assets),
@@ -17,8 +23,46 @@ describe('ASSETS.md', () => {
   });
 
   it('stellt klar, dass Orrery keine Musik mitliefert', () => {
-    expect(assets).toMatch(/^## Musik$/m);
+    expect(assets).toMatch(new RegExp(`^${musikUeberschrift}$`, 'm'));
     expect(assets).toContain('public/musik/');
+  });
+});
+
+/** Pfad-Zellen der ersten Tabellenspalte, Form `| `pfad` | …`, in Vorkommensreihenfolge. */
+function pfadZellen(text: string): string[] {
+  return [...text.matchAll(/^\|\s*`([^`]+)`\s*\|/gm)].map((treffer) => treffer[1]);
+}
+
+/** Alle URLs des Textes (Markdown-Linkziel oder spitze Klammern), als Menge ohne Reihenfolge. */
+function urlMenge(text: string): Set<string> {
+  const treffer = [
+    ...text.matchAll(/\]\((https?:\/\/[^\s)]+)\)/g),
+    ...text.matchAll(/<(https?:\/\/[^>\s]+)>/g),
+  ];
+  return new Set(treffer.map((t) => t[1]));
+}
+
+describe('Gleichlauf der beiden Sprachfassungen', () => {
+  const en = INHALT['ASSETS.md'];
+  const de = INHALT['ASSETS.de.md'];
+
+  it('gleiche Dateipfade in der ersten Tabellenspalte, gleiche Reihenfolge', () => {
+    expect(pfadZellen(en)).toEqual(pfadZellen(de));
+  });
+
+  it('gleiche Menge an Quellen-URLs', () => {
+    expect(urlMenge(en)).toEqual(urlMenge(de));
+  });
+
+  it('jede Fassung verlinkt die andere', () => {
+    expect(en).toContain('[Deutsch](ASSETS.de.md)');
+    expect(de).toContain('[English](ASSETS.md)');
+  });
+
+  it('keine Prozesssprache in einer der Fassungen', () => {
+    const prozessWoerter = /\bTask\b|\bEtappe\b|\bRuling\b/;
+    expect(en).not.toMatch(prozessWoerter);
+    expect(de).not.toMatch(prozessWoerter);
   });
 });
 

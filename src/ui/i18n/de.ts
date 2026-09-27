@@ -323,7 +323,7 @@ export const de = {
   'infokarte.ueber.quellcode': 'Quellcode auf GitHub',
   'infokarte.ueber.recht': '© Jens Fricke. Code unter MIT-Lizenz, Texte unter CC BY-SA 4.0.',
   'infokarte.ueber.drittrechte': 'Texturen: Solar System Scope (CC BY 4.0) und NASA/USGS; Sternkatalog: HYG (CC BY-SA 4.0); Himmelskarte: NASA/GSFC SVS mit Gaia-Daten (CC BY-NC 3.0 IGO).',
-  'infokarte.ueber.assets': 'Übersicht in ASSETS.md',
+  'infokarte.ueber.assets': 'Übersicht in ASSETS.de.md',
   'infokarte.ueber.nichtkommerziell': 'Nichtkommerzielles Projekt.',
   'infokarte.ueber.entstehung': 'Wie Orrery entstand',
   'infokarte.ueber.version': 'Version',

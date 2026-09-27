@@ -177,5 +177,5 @@ React, Zustand, Tailwind, Vitest.
 - `docs/superpowers/plans/`: Implementierungspläne je Phase.
 - `docs/phase*-abnahme.md`: Abnahmeprotokolle mit Messwerten aus den
   Sichtprüfungen.
-- `ASSETS.md`: Herkunft und Lizenz aller Texturen.
+- `ASSETS.de.md`/`ASSETS.md`: Herkunft und Lizenz aller Texturen (deutsch/englisch).
 

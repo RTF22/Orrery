@@ -32,7 +32,7 @@ Helligkeiten überhöhen, damit kleine und ferne Körper sichtbar bleiben. Wie s
 | Prüfung gegen JPL Horizons | JPL-Horizons-Vektortafel; verglichen werden 8 Planeten und 5 Zwergplaneten, 5 Zeitpunkte 1850–2040 (65 Punkte) | Toleranz bei den Planeten 12 000 bis 9 000 000 km |
 
 Das Thema *Grenzen des Modells* in der App beschreibt die Vereinfachungen des Modells und
-beziffert sie, wo möglich; Einzelheiten außerdem in [`ASSETS.md`](ASSETS.md) und
+beziffert sie, wo möglich; Einzelheiten außerdem in [`ASSETS.de.md`](ASSETS.de.md) und
 [`docs/belege/hochschule/`](docs/belege/hochschule/).
 
 ## Lehrinhalt
@@ -98,7 +98,7 @@ Commit-Kürzeln, erzählen der [Überblick](docs/entstehung.de.md) und die ausf�
 
 Code steht unter MIT ([`LICENSE`](LICENSE)), eigene Texte und Bilder unter CC BY-SA 4.0
 ([`LICENSE-TEXTE.md`](LICENSE-TEXTE.md)). Texturen und die Karte der Milchstraße unterliegen
-den in [`ASSETS.md`](ASSETS.md) genannten Lizenzen (überwiegend CC BY 4.0; die
+den in [`ASSETS.de.md`](ASSETS.de.md) genannten Lizenzen (überwiegend CC BY 4.0; die
 Milchstraßenkarte enthält Gaia-Daten unter CC BY-NC 3.0 IGO).
 
 Entwicklung, Veröffentlichung, eigene Musik und Aufbau des Codes:

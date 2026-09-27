@@ -104,7 +104,7 @@ describe('Reiter der Info-Karte', () => {
     expect(links.map((a) => a.getAttribute('href'))).toEqual([
       'https://github.com/RTF22/Orrery',
       `${import.meta.env.BASE_URL}doku/making-of/de/`,
-      'https://github.com/RTF22/Orrery/blob/master/ASSETS.md',
+      'https://github.com/RTF22/Orrery/blob/master/ASSETS.de.md',
     ]);
     for (const a of links) {
       expect(a.getAttribute('target')).toBe('_blank');
@@ -119,7 +119,7 @@ describe('Reiter der Info-Karte', () => {
     expect(screen.getByText(/Version/).textContent).toContain(VERSION);
   });
 
-  it('Über: Making-of-Link folgt der App-Sprache Deutsch', () => {
+  it('Über: Making-of-Link und ASSETS-Link folgen der App-Sprache Deutsch', () => {
     useStore.getState().setUi({ language: 'de' });
     setSprache('de');
     render(<ReiterUeber />);
@@ -127,9 +127,11 @@ describe('Reiter der Info-Karte', () => {
     expect(link.getAttribute('href')).toBe(`${import.meta.env.BASE_URL}doku/making-of/de/`);
     expect(link.getAttribute('target')).toBe('_blank');
     expect(link.getAttribute('rel')).toContain('noopener');
+    const assetsLink = screen.getByRole('link', { name: /ASSETS\.de\.md/ });
+    expect(assetsLink.getAttribute('href')).toBe('https://github.com/RTF22/Orrery/blob/master/ASSETS.de.md');
   });
 
-  it('Über: Making-of-Link folgt der App-Sprache Englisch', () => {
+  it('Über: Making-of-Link und ASSETS-Link folgen der App-Sprache Englisch', () => {
     useStore.getState().setUi({ language: 'en' });
     setSprache('en');
     render(<ReiterUeber />);
@@ -137,5 +139,7 @@ describe('Reiter der Info-Karte', () => {
     expect(link.getAttribute('href')).toBe(`${import.meta.env.BASE_URL}doku/making-of/en/`);
     expect(link.getAttribute('target')).toBe('_blank');
     expect(link.getAttribute('rel')).toContain('noopener');
+    const assetsLink = screen.getByRole('link', { name: /ASSETS\.md/ });
+    expect(assetsLink.getAttribute('href')).toBe('https://github.com/RTF22/Orrery/blob/master/ASSETS.md');
   });
 });

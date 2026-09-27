@@ -63,7 +63,7 @@ const WOERTER: Record<Sprache, Woerter> = {
     inhalt: 'Inhalt',
     fuss:
       `© Jens Fricke · Code MIT, Texte CC BY-SA 4.0 · Texturen siehe ` +
-      `<a href="${GITHUB_STAMM}/blob/master/ASSETS.md">ASSETS.md</a> · ` +
+      `<a href="${GITHUB_STAMM}/blob/master/ASSETS.de.md">ASSETS.de.md</a> · ` +
       `<a href="${GITHUB_STAMM}">Quelltext bei GitHub</a>`,
   },
   en: {
