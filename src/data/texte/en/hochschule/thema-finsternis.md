@@ -284,13 +284,14 @@ around the planet's equinoxes.
 ## In the model
 
 - **Search:** Orrery searches for lunar eclipses only, purely geocentrically from the orbits. From
-  the starting time the search samples, in steps of 0.25 days, the angle between the direction to the
-  Moon and the shadow axis, refines each local minimum — each of which is a full Moon — by golden
-  section within a fixed window of ±0.5 days down to 10⁻⁴ days, about 9 s, and finds entry and exit
-  by bisection. The umbral radius carries Chauvenet's factor of 1.02; the penumbra does not appear at
-  all. After three years without a hit the search gives up. It knows only "partial" and "total" and
-  returns neither magnitude nor gamma nor a saros number; it never reports a purely penumbral
-  eclipse.
+  one step before the starting time the search samples, in steps of 0.25 days, the angle between the
+  direction to the Moon and the shadow axis, refines each local minimum — each of which is a full
+  Moon — by golden section within a fixed window of ±0.5 days down to 10⁻⁴ days, about 9 s, and
+  finds entry and exit by bisection. The umbral radius carries Chauvenet's factor of 1.02; the
+  penumbra does not appear at all. An eclipse counts as long as its exit does not lie before the
+  starting time, so one already in progress is found as well. After three years without a hit the
+  search gives up. It knows only "partial" and "total" and returns neither magnitude nor gamma nor a
+  saros number; it never reports a purely penumbral eclipse.
 - **Accuracy:** against the NASA catalogue the model finds 135 of the 143
   umbral eclipses from 1951 to 2050, with the maximum off by up to 3.0 h (root mean square 1.8 h);
   eight small partial eclipses are missing, and for three total ones the search reports a partial

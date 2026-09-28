@@ -292,12 +292,14 @@ Tagundnachtgleichen häufen.
 ## Im Modell
 
 - **Suche:** Orrery sucht ausschließlich Mondfinsternisse, rein geozentrisch aus den Bahnen. Die
-  Suche tastet vom Startzeitpunkt in Schritten von 0,25 Tagen den Winkel zwischen Mondrichtung und
-  Schattenachse ab, verfeinert jedes lokale Minimum — das ist jeweils ein Vollmond — mit dem goldenen
-  Schnitt in einem festen Fenster von ±0,5 Tagen auf 10⁻⁴ Tage, also rund 9 s, und sucht Ein- und
-  Austritt durch Bisektion. Der Kernschattenradius trägt dabei den Faktor 1,02 nach Chauvenet; der
-  Halbschatten kommt nicht vor. Nach drei Jahren ohne Treffer bricht die Suche ab. Sie kennt nur
-  „partiell" und „total" und liefert weder Größe noch Gamma noch eine Saros-Nummer; eine reine
+  Suche tastet in Schritten von 0,25 Tagen, beginnend einen Schritt vor dem Startzeitpunkt, den
+  Winkel zwischen Mondrichtung und Schattenachse ab, verfeinert jedes lokale Minimum — das ist
+  jeweils ein Vollmond — mit dem goldenen Schnitt in einem festen Fenster von ±0,5 Tagen auf 10⁻⁴
+  Tage, also rund 9 s, und sucht Ein- und Austritt durch Bisektion. Der Kernschattenradius trägt
+  dabei den Faktor 1,02 nach Chauvenet; der Halbschatten kommt nicht vor. Eine Finsternis zählt,
+  solange ihr Austritt nicht vor dem Startzeitpunkt liegt; eine gerade laufende wird also
+  mitgefunden. Nach drei Jahren ohne Treffer bricht die Suche ab. Sie kennt nur „partiell" und
+  „total" und liefert weder Größe noch Gamma noch eine Saros-Nummer; eine reine
   Halbschattenfinsternis meldet sie nie.
 - **Genauigkeit:** Gegen den NASA-Katalog findet das Modell 1951 bis 2050 135 der 143
   Kernschattenfinsternisse, das Maximum bis 3,0 h daneben (quadratisches Mittel 1,8 h); acht kleine
