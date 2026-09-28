@@ -87,6 +87,10 @@ export function createRenderer(canvas: HTMLCanvasElement): RenderContext {
 
   const resize = (): void => {
     const b = canvas.getBoundingClientRect();
+    // Ohne Fläche (verstecktes iframe, display: none) ergäbe sich das
+    // Seitenverhältnis 0 und eine Projektionsmatrix voller NaN, die Puffer
+    // würden 0×0. Die alte Größe bleibt, bis wieder eine Fläche da ist.
+    if (b.width <= 0 || b.height <= 0) return;
     // Die Pixeldichte wird bei jeder Größenänderung neu gelesen: Wandert
     // das Fenster auf einen Monitor mit anderer Dichte, bliebe der Puffer
     // sonst bei der alten Auflösung — sichtbar unscharf oder unnötig teuer.

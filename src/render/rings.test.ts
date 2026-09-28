@@ -2,7 +2,7 @@
 // createRingViews lädt beim Aufbau die Ringtextur über THREE.TextureLoader,
 // das dafür ein document braucht. In jsdom wird kein Bild geladen — es bleibt
 // die Ersatz- bzw. Profiltextur stehen, und genau die gibt ringTextur zurück.
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import * as THREE from 'three';
 import {
   ringGeometrieDaten, ringAusrichtung, vorwaertsstreuung,
@@ -164,6 +164,49 @@ describe('createRingViews.ringTextur', () => {
     const ringe = createRingViews(new THREE.Scene());
     expect(ringe.ringTextur('earth')).toBeUndefined();
     ringe.dispose();
+  });
+});
+
+describe('createRingViews — nachgeladene Ringtextur', () => {
+  /** Fängt die Lade-Rückrufe ab, statt in jsdom ein Bild zu laden. */
+  function mitAbgefangenemLaden(): { geladen: (textur: THREE.Texture) => void; zurueck: () => void } {
+    const rueckrufe: ((t: THREE.Texture) => void)[] = [];
+    const spion = vi.spyOn(THREE.TextureLoader.prototype, 'load').mockImplementation(
+      (_pfad, beiErfolg) => {
+        if (beiErfolg) rueckrufe.push(beiErfolg as (t: THREE.Texture) => void);
+        return new THREE.Texture<HTMLImageElement>();
+      },
+    );
+    return {
+      geladen: (textur) => { for (const r of rueckrufe) r(textur); },
+      zurueck: () => { spion.mockRestore(); },
+    };
+  }
+
+  it('gibt beim Austausch die Ersatztextur frei', () => {
+    const laden = mitAbgefangenemLaden();
+    const ringe = createRingViews(new THREE.Scene());
+    const ersatz = ringe.ringTextur('saturn')!;
+    const ersatzFrei = vi.fn();
+    ersatz.addEventListener('dispose', ersatzFrei);
+    const bild = new THREE.Texture();
+    laden.geladen(bild);
+    expect(ringe.ringTextur('saturn')).toBe(bild);
+    expect(ersatzFrei).toHaveBeenCalled();
+    ringe.dispose();
+    laden.zurueck();
+  });
+
+  it('gibt eine Textur frei, die erst nach dem Abbau ankommt, statt sie einzusetzen', () => {
+    const laden = mitAbgefangenemLaden();
+    const ringe = createRingViews(new THREE.Scene());
+    ringe.dispose();
+    const bild = new THREE.Texture();
+    const bildFrei = vi.fn();
+    bild.addEventListener('dispose', bildFrei);
+    laden.geladen(bild);
+    expect(bildFrei).toHaveBeenCalled();
+    laden.zurueck();
   });
 });
 

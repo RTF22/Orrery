@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { createCameraController, flugWiederherstellungMelden, targetFor, letztePose } from './controller';
 import { DEFAULT_STATE } from '../../store';
 import { scaledPositionAt, scaledRadius } from '../../sim/scale';
-import { blickAus, kugelUm, laenge, minus, normiert, plus, punkt } from './flug';
+import { blickAus, kugelUm, laenge, minus, normiert, plus, punkt, ELEVATION_GRENZE } from './flug';
 import { bodyIndex } from '../../data/index';
 import { worldToRender } from '../units';
 import type { AppState } from '../../store/types';
@@ -120,6 +120,19 @@ describe('freier Modus mit eingefrorenem Bezugspunkt', () => {
     const weit = abstandZurErde(8e7);
     const nah = abstandZurErde(4e7);
     expect(nah).toBeCloseTo(weit / 2, 0);
+  });
+
+  it('klemmt eine Elevation von genau 90° (Draufsicht) knapp unter den Pol', () => {
+    // Genau am Pol läge der Blick parallel zu camera.up, die Rollung hinge am
+    // Rundungsrauschen, und das erste Ziehen drehte die Ansicht sichtbar.
+    const oben = freiAufErde(4e7);
+    oben.camera.elevation = Math.PI / 2;
+    const grenze = freiAufErde(4e7);
+    grenze.camera.elevation = ELEVATION_GRENZE;
+    expect(targetFor(oben, jd, s).positionKm).toEqual(targetFor(grenze, jd, s).positionKm);
+    oben.camera.elevation = -Math.PI / 2;
+    grenze.camera.elevation = -ELEVATION_GRENZE;
+    expect(targetFor(oben, jd, s).positionKm).toEqual(targetFor(grenze, jd, s).positionKm);
   });
 
   it('lässt die Systemübersicht unverändert, solange die Sonne das Ziel ist', () => {
@@ -333,5 +346,17 @@ describe('Flug', () => {
     let p = { x: 0, y: 0, z: 0 };
     for (let i = 0; i < 27; i++) p = c.update(mitFlug('earth', weiter, blick), jd, 1 / 60, s);
     expect(laenge(minus(minus(p, erde), weiter)) / 1e5).toBeLessThan(0.05);
+  });
+});
+
+describe('createCameraController: neuer Controller nach Remount', () => {
+  it('beginnt ohne gezeigte Lage und ohne gemeldete Wiederherstellung des alten', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    const alt = createCameraController(new THREE.PerspectiveCamera());
+    alt.update(state, state.time.jd, 1 / 60, state.scale);
+    flugWiederherstellungMelden();
+    expect(letztePose()).not.toBeNull();
+    createCameraController(new THREE.PerspectiveCamera());
+    expect(letztePose()).toBeNull();
   });
 });

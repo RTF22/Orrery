@@ -10,7 +10,7 @@ import { plannedSceneAt } from '../../sim/director';
 import { SCENES } from '../../data/scenes';
 import { cinemaTargetFor } from './cinema';
 import { kmToUnits, worldToRender } from '../units';
-import { blickVektor, laenge, mal, minus, normiert, plus } from './flug';
+import { ELEVATION_GRENZE, begrenze, blickVektor, laenge, mal, minus, normiert, plus } from './flug';
 import type { GezeigtePose } from './flug';
 
 export interface CameraTarget { positionKm: Vec3; lookAtKm: Vec3 }
@@ -26,7 +26,7 @@ const normiere = (v: Vec3): Vec3 => {
  * Umlauf- und Kinomodi.
  */
 export function targetFor(state: AppState, jd: number, s: ScaleSettings): CameraTarget {
-  const { mode, targetId, distance, azimuth, elevation, freezeJd } = state.camera;
+  const { mode, targetId, distance, azimuth, freezeJd } = state.camera;
   const anker = scaledPositionAt(targetId, bodyIndex, jd, s);
 
   if (mode === 'cinema') {
@@ -65,6 +65,10 @@ export function targetFor(state: AppState, jd: number, s: ScaleSettings): Camera
   const basis = mode === 'attached'
     ? anker
     : scaledPositionAt(targetId, bodyIndex, freezeJd ?? jd, s);
+  // Draufsicht und Kamerafahrt setzen genau 90°: Am Pol wäre der Blick
+  // parallel zu camera.up und die Rollung unbestimmt, das erste Ziehen
+  // drehte die Ansicht dann sichtbar. Dieselbe Grenze wie beim Ziehen.
+  const elevation = begrenze(state.camera.elevation, -ELEVATION_GRENZE, ELEVATION_GRENZE);
   return {
     positionKm: {
       x: basis.x + distance * Math.cos(elevation) * Math.cos(azimuth),
@@ -130,6 +134,11 @@ export function letztePose(): GezeigtePose | null {
 }
 
 export function createCameraController(camera: THREE.PerspectiveCamera): CameraController {
+  // Die beiden Merker liegen auf Modulebene, weil andere Module sie ohne
+  // Controller lesen bzw. setzen. Ein neuer Controller (Remount, Hot Reload)
+  // beginnt trotzdem ohne die Lage und die Meldung des alten.
+  zuletztGezeigt = null;
+  wiederherstellungGemeldet = false;
   // Gedämpft wird der Versatz **zum Anker**, nicht die absolute Position:
   // Bei hoher Zeitraffung legt die Erde je Sekunde Millionen Kilometer
   // zurück; eine gedämpfte Absolutposition bliebe dauerhaft hinterher und

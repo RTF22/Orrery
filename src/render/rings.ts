@@ -330,18 +330,25 @@ function profilRingTextur(ring: NonNullable<Appearance['rings']>): THREE.DataTex
 /**
  * Lädt die Ringtextur asynchron nach und ersetzt `tRing` erst bei Erfolg.
  * Bis dahin — und bei einem Fehlschlag dauerhaft — bleibt die dunkelgraue
- * Ersatztextur sichtbar. Analog zu ladeAlbedo in bodies.ts.
+ * Ersatztextur sichtbar. Analog zu ladeAlbedo in bodies.ts. Die ersetzte
+ * Ersatztextur gehört allein diesem Material und wird freigegeben; eine
+ * Ladung, die erst nach dem Abbau (`beendet`) ankommt, gibt sich selbst frei.
  */
-function ladeRingTextur(lader: THREE.TextureLoader, pfad: string, material: THREE.ShaderMaterial): void {
+function ladeRingTextur(
+  lader: THREE.TextureLoader, pfad: string, material: THREE.ShaderMaterial, beendet: () => boolean,
+): void {
   // Körper ohne belegte Ringtextur (siehe ASSETS.md für die dokumentierte
   // Lücke bei Uranus) tragen absichtlich einen leeren Pfad.
   if (pfad === '') return;
   lader.load(
     pfad,
     (textur) => {
+      if (beendet()) { textur.dispose(); return; }
       textur.colorSpace = THREE.SRGBColorSpace;
+      const alt = material.uniforms['tRing']!.value as THREE.Texture;
       material.uniforms['tRing']!.value = textur;
       material.needsUpdate = true;
+      alt.dispose();
     },
     undefined,
     () => { /* Ersatztextur bleibt bestehen; kein Log-Spam bei fehlendem Bild. */ },
@@ -390,6 +397,7 @@ interface RingEintrag {
  */
 export function createRingViews(scene: THREE.Scene): RingViews {
   const lader = new THREE.TextureLoader();
+  let beendet = false;
   const eintraege: RingEintrag[] = [];
 
   for (const body of bodies) {
@@ -435,7 +443,7 @@ export function createRingViews(scene: THREE.Scene): RingViews {
       vertexShader: RING_VERTEX_SHADER,
       fragmentShader: RING_FRAGMENT_SHADER,
     });
-    ladeRingTextur(lader, ring.texture, material);
+    ladeRingTextur(lader, ring.texture, material, () => beendet);
 
     const mesh = new THREE.Mesh(geometrie, material);
     scene.add(mesh);
@@ -515,6 +523,7 @@ export function createRingViews(scene: THREE.Scene): RingViews {
       return eintrag?.material.uniforms['tRing']?.value as THREE.Texture | undefined;
     },
     dispose() {
+      beendet = true;
       for (const { mesh, material } of eintraege) {
         scene.remove(mesh);
         mesh.geometry.dispose();

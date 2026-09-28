@@ -6,6 +6,7 @@ import { createRingViews } from './rings';
 import { createBeltViews } from './belts';
 import { createOrbitLines } from './orbits';
 import { createStarfield, sternfeldPixeldichte } from './starfield';
+import { szeneFreigeben } from './freigeben';
 import { createLabelOverlay, apparentRadiusPixels } from './labels';
 import type { LabelEintrag } from './labels';
 import { createCameraController } from './camera/controller';
@@ -237,6 +238,10 @@ export function buildScene(
       labels.dispose();
       ringe.dispose();
       guertel.dispose();
+      // Körper, Bahnlinien, Sternfeld und Licht haben kein eigenes dispose:
+      // Ohne diesen Schritt bliebe bei jedem Hot Reload und unter StrictMode
+      // eine Kopie samt Texturen bis 8192 px im Grafikspeicher.
+      szeneFreigeben(ctx.scene);
     },
     setZeiger(neu) {
       zeiger = neu;

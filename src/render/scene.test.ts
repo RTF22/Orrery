@@ -286,6 +286,18 @@ describe('buildScene — Texturstand', () => {
     expect(freigabeSpion).toHaveBeenCalledOnce();
   });
 
+  it('räumt beim Abbau die ganze Szene samt Körpern, Sternfeld und Licht ab', () => {
+    const ctx = fakeContext();
+    const handle = buildScene(ctx, fakeOverlay, (k) => k);
+    const netz = ctx.scene.children.find((o): o is THREE.Mesh => o instanceof THREE.Mesh);
+    expect(netz).toBeDefined();
+    const geometrieFrei = vi.fn();
+    netz!.geometry.addEventListener('dispose', geometrieFrei);
+    handle.dispose();
+    expect(ctx.scene.children).toHaveLength(0);
+    expect(geometrieFrei).toHaveBeenCalled();
+  });
+
   it('legt die Himmelskugel an und meldet anfangs keine geladene Himmelsstufe', () => {
     const ctx = fakeContext();
     const handle = buildScene(ctx, fakeOverlay, (k) => k);
