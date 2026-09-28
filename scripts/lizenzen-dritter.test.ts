@@ -21,9 +21,14 @@ describe('lizenzenText', () => {
   });
 
   it('liefert für den Basis-Transcoder NOTICE, Apache-Lizenz und die Zstandard-Lizenz mit', () => {
-    expect(text).toContain(readFileSync('scripts/lizenzen/basis-universal-NOTICE.txt', 'utf8').trim());
+    const notice = readFileSync('scripts/lizenzen/basis-universal-NOTICE.txt', 'utf8');
+    expect(text).toContain(notice.replace(/\r\n/g, '\n').trim());
     expect(text).toContain('Apache License\n                           Version 2.0, January 2004');
     expect(text).toContain('For Zstandard software');
+  });
+
+  it('schreibt nur LF, auch wenn die Vorlagen mit CRLF ausgecheckt sind', () => {
+    expect(text).not.toContain('\r');
   });
 
   it('meldet ein Paket ohne Lizenzdatei, statt es still wegzulassen', () => {

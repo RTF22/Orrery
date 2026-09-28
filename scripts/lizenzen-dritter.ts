@@ -31,6 +31,11 @@ interface Kopf {
   dependencies?: Record<string, string>;
 }
 
+/** Liest einen Lizenztext mit LF; unter Windows (core.autocrlf) liegen die Vorlagen mit CRLF. */
+function textLesen(pfad: string): string {
+  return readFileSync(pfad, 'utf8').replace(/\r\n/g, '\n');
+}
+
 function kopfLesen(ordner: string): Kopf {
   return JSON.parse(readFileSync(join(ordner, 'package.json'), 'utf8')) as Kopf;
 }
@@ -65,7 +70,7 @@ export function paketLesen(name: string, wurzel = 'node_modules'): Paket {
     name,
     version: kopf.version,
     lizenz: kopf.license ?? 'unbekannt',
-    text: readFileSync(join(ordner, datei), 'utf8').trim(),
+    text: textLesen(join(ordner, datei)).trim(),
   };
 }
 
@@ -77,7 +82,7 @@ function abschnitt(titel: string, text: string): string {
 
 /** Der vollständige Dateiinhalt für die gegebenen Pakete. */
 export function lizenzenText(pakete: readonly Paket[], stamm = 'scripts/lizenzen'): string {
-  const lesen = (datei: string): string => readFileSync(join(stamm, datei), 'utf8');
+  const lesen = (datei: string): string => textLesen(join(stamm, datei));
   const kopf = [
     'Orrery – Lizenzen der mitgelieferten Fremdsoftware',
     'Orrery – licences of the bundled third-party software',
