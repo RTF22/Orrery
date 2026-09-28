@@ -11,27 +11,47 @@ interface NavigatorMitWakeLock {
 }
 
 let sperre: WakeLockSentinelLike | null = null;
+/** Laufende Anfrage; die Sperre kommt erst an, wenn sie aufgelöst ist. */
+let anfrage: Promise<void> | null = null;
+/** Letzter Wunsch des Aufrufers — entscheidet, ob eine ankommende Sperre bleibt. */
+let gewuenscht = false;
 
 /**
  * Hält den Bildschirm wach. Die API fehlt in manchen Browsern und wird auch
  * vom System jederzeit wieder entzogen (etwa beim Tabwechsel) — beides ist
- * kein Fehlerfall, der Film läuft weiter.
+ * kein Fehlerfall, der Film läuft weiter. Läuft schon eine Anfrage, kommt
+ * keine zweite hinzu.
  */
 export async function requestWakeLock(): Promise<void> {
+  gewuenscht = true;
   if (sperre !== null) return;
+  if (anfrage !== null) return anfrage;
   const api = (navigator as NavigatorMitWakeLock).wakeLock;
   if (api === undefined) return;
-  try {
-    const neu = await api.request('screen');
-    sperre = neu;
-    neu.addEventListener('release', () => { sperre = null; });
-  } catch {
-    // Verweigert (etwa im Hintergrund-Tab) — nicht weiter tragisch.
-    sperre = null;
-  }
+  const laufend = (async () => {
+    try {
+      const neu = await api.request('screen');
+      if (!gewuenscht) {
+        // Inzwischen freigegeben (Kino an und gleich wieder aus): sonst bliebe
+        // die Sperre bis zum nächsten Tabwechsel liegen.
+        try { await neu.release(); } catch { /* schon freigegeben */ }
+        return;
+      }
+      sperre = neu;
+      neu.addEventListener('release', () => { if (sperre === neu) sperre = null; });
+    } catch {
+      // Verweigert (etwa im Hintergrund-Tab) — nicht weiter tragisch.
+    }
+  })();
+  // Erst nach der Zuweisung zurücksetzen: Endet die Anfrage sofort, bliebe
+  // sie sonst für immer als laufend stehen.
+  anfrage = laufend;
+  void laufend.finally(() => { if (anfrage === laufend) anfrage = null; });
+  return laufend;
 }
 
 export async function releaseWakeLock(): Promise<void> {
+  gewuenscht = false;
   const alt = sperre;
   sperre = null;
   if (alt === null) return;
