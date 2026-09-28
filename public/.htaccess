@@ -28,6 +28,11 @@ AddCharset UTF-8 .txt
 </IfModule>
 
 <IfModule mod_headers.c>
+  # Sicherheits-Header. HSTS ohne includeSubDomains, wie auf jensfricke.com. Bewusst ohne
+  # Rahmensperre: Orrery darf auf fremden Seiten per iframe eingebettet werden.
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Strict-Transport-Security "max-age=31536000"
   # Gehashte Bündel (index-XXXXXXXX.js/.css): unbegrenzt cachen, neuer Inhalt trägt einen neuen Namen.
   <FilesMatch "-[A-Za-z0-9_-]{8}\.(js|css)$">
     Header set Cache-Control "public, max-age=31536000, immutable"

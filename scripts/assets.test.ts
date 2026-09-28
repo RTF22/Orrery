@@ -145,6 +145,15 @@ describe('public/.htaccess', () => {
     expect(regeln).toContain('RewriteRule ^ https://orrery3d.de%{REQUEST_URI}');
     expect(regeln.match(/^\s*RewriteRule /gm)).toHaveLength(1);
   });
+
+  it('setzt die Sicherheits-Header, erlaubt aber weiter die Einbettung per iframe', () => {
+    expect(regeln).toContain('Header always set X-Content-Type-Options "nosniff"');
+    expect(regeln).toContain('Header always set Referrer-Policy "strict-origin-when-cross-origin"');
+    // Ohne includeSubDomains, wie auf jensfricke.com.
+    expect(regeln).toContain('Header always set Strict-Transport-Security "max-age=31536000"');
+    expect(regeln).not.toMatch(/X-Frame-Options/i);
+    expect(regeln).not.toMatch(/frame-ancestors\s+'none'/i);
+  });
 });
 
 describe('Linkvorschau der App', () => {
