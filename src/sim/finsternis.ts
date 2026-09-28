@@ -192,14 +192,18 @@ function bisektionsGrenze(index: BodyIndex, jdVerfinstert: number, jdFrei: numbe
 }
 
 /**
- * Sucht ab `jdStart` die nächste Mondfinsternis (partiell oder total).
+ * Sucht ab `jdStart` die nächste Mondfinsternis (partiell oder total), deren
+ * Austritt nicht vor `jdStart` liegt — eine gerade laufende zählt also mit.
  * `null`, wenn innerhalb von `SUCHE_MAX_TAGE` keine gefunden wird.
  */
 export function naechsteMondfinsternis(index: BodyIndex, jdStart: number): Mondfinsternis | null {
   const jdEnde = jdStart + SUCHE_MAX_TAGE;
 
-  let thetaVorher = geometrieAt(index, jdStart).theta;
-  let jdAktuell = jdStart + SCHRITT_TAGE;
+  // Ein Minimum wird erst am mittleren von drei Stützpunkten erkannt. Die
+  // Abtastung beginnt deshalb einen Schritt vor jdStart, sonst entginge ein
+  // Maximum, das weniger als einen Schritt nach jdStart liegt.
+  let thetaVorher = geometrieAt(index, jdStart - SCHRITT_TAGE).theta;
+  let jdAktuell = jdStart;
   let thetaAktuell = geometrieAt(index, jdAktuell).theta;
 
   for (let jdNaechster = jdAktuell + SCHRITT_TAGE; jdNaechster <= jdEnde; jdNaechster += SCHRITT_TAGE) {
@@ -212,12 +216,14 @@ export function naechsteMondfinsternis(index: BodyIndex, jdStart: number): Mondf
       if (istPartiell(lageMax)) {
         const eintrittJd = bisektionsGrenze(index, maximumJd, maximumJd - FENSTER_HALBE_TAGE);
         const austrittJd = bisektionsGrenze(index, maximumJd, maximumJd + FENSTER_HALBE_TAGE);
-        return {
-          eintrittJd,
-          maximumJd,
-          austrittJd,
-          art: istTotal(lageMax) ? 'total' : 'partiell',
-        };
+        if (austrittJd >= jdStart) {
+          return {
+            eintrittJd,
+            maximumJd,
+            austrittJd,
+            art: istTotal(lageMax) ? 'total' : 'partiell',
+          };
+        }
       }
     }
 

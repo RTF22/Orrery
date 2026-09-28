@@ -75,6 +75,35 @@ describe('naechsteMondfinsternis: Kanon-Finsternisse', () => {
   });
 });
 
+// Start kurz vor dem Maximum: Die Abtastung im Vierteltagesraster erkannte
+// ein Minimum früher erst am zweiten Stützpunkt und übersprang eine
+// Finsternis, deren Maximum weniger als einen Schritt nach dem Start lag.
+// Totale Finsternisse 07.09.2025 (Maximum 18:11 UT) und 03.03.2026 (11:33 UT).
+describe('naechsteMondfinsternis: Start kurz vor dem Maximum', () => {
+  it.each([
+    ['07.09.2025', 2460920],
+    ['03.03.2026', 2461090],
+  ])('findet die Finsternis vom %s auch bei Start bis zu einem Schritt vorher', (_name, frueh) => {
+    const bezug = naechsteMondfinsternis(bodyIndex, frueh)!;
+    for (const vorher of [0.01, 0.05, 0.1, 0.15, 0.2, 0.24]) {
+      const f = naechsteMondfinsternis(bodyIndex, bezug.maximumJd - vorher);
+      expect(f!.maximumJd, `Start ${vorher} d vor dem Maximum`).toBeCloseTo(bezug.maximumJd, 3);
+    }
+  });
+
+  it('liefert eine laufende Finsternis, solange ihr Austritt noch bevorsteht', () => {
+    const bezug = naechsteMondfinsternis(bodyIndex, 2460920)!;
+    const f = naechsteMondfinsternis(bodyIndex, bezug.austrittJd - 0.01)!;
+    expect(f.maximumJd).toBeCloseTo(bezug.maximumJd, 3);
+  });
+
+  it('überspringt eine Finsternis, deren Austritt schon vorbei ist', () => {
+    const bezug = naechsteMondfinsternis(bodyIndex, 2460920)!;
+    const f = naechsteMondfinsternis(bodyIndex, bezug.austrittJd + 0.01)!;
+    expect(f.maximumJd).toBeGreaterThan(bezug.austrittJd + 20);
+  });
+});
+
 // Knoten und Perigäum des Mondes laufen gegen die feste Ekliptik J2000, nicht
 // mit den Raten nach Meeus vom Äquinoktium des Datums (Befund aus dem Pilot
 // szene-mondfinsternis, Etappe 4d-1). Mit den alten Raten lag der Knoten 1972
