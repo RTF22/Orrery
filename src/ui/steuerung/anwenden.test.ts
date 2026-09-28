@@ -15,7 +15,7 @@ import { useStore, DEFAULT_STATE } from '../../store';
 import { bodies, bodyIndex } from '../../data';
 import { scaledPositionAt, scaledRadius } from '../../sim/scale';
 import {
-  blickVektor, kreuz, laenge, mal, minus, normiert, plus, punkt,
+  blickVektor, kreuz, laenge, mal, minus, normiert, plus, punkt, MINDESTABSTAND_RADIEN,
 } from '../../render/camera/flug';
 import type { GezeigtePose } from '../../render/camera/flug';
 import { createCameraController, letztePose as controllerLetztePose } from '../../render/camera/controller';
@@ -814,5 +814,13 @@ describe('steuerungTakt: Kartensperre', () => {
     steuerungTakt(jd, 0, mit(padAttrappe({ gedrueckt: [PAD.B] })));
     expect(useStore.getState().camera.targetId).toBe('sun');
     expect(fahrtLaeuft()).toBe(true);
+  });
+});
+
+describe('steuerungTakt: Mindestabstand beim Drehen', () => {
+  it('fährt mit Shift+W nicht in den Zielkörper hinein', () => {
+    useStore.getState().setCamera({ mode: 'attached', targetId: 'earth', distance: 1e5, azimuth: 0, elevation: 0 });
+    steuerungTakt(jd, 30, umgebung(['KeyW'], vorErde(), true));
+    expect(useStore.getState().camera.distance).toBeCloseTo(MINDESTABSTAND_RADIEN * radius('earth'), 3);
   });
 });

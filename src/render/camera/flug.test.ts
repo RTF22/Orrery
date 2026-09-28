@@ -3,7 +3,7 @@ import {
   blickVektor, rechtsVektor, obenVektor, blickAus, koerperStaende, waehleBezug, hoehe,
   fluggeschwindigkeit, mindesthoehe, laenge, plus, mal, punkt, kreuz, ELEVATION_GRENZE,
   koerperNaechstDerMitte, kugelUm, flugSchritt, blickDrehen, minus, normiert,
-  MIN_DISTANCE_KM, MAX_DISTANCE_KM, EINFLUSS_DECKEL,
+  MIN_DISTANCE_KM, MAX_DISTANCE_KM, EINFLUSS_DECKEL, MINDESTABSTAND_RADIEN, kleinsterAbstand,
 } from './flug';
 import type { KoerperStand } from './flug';
 import type { Pose } from './flug';
@@ -273,5 +273,20 @@ describe('blickDrehen', () => {
   it('dreht yaw frei und begrenzt pitch', () => {
     expect(blickDrehen({ yaw: 3, pitch: 1.5 }, 4, 0.2)).toEqual({ yaw: 7, pitch: ELEVATION_GRENZE });
     expect(blickDrehen({ yaw: 0, pitch: 0 }, -1, -0.3)).toEqual({ yaw: -1, pitch: -0.3 });
+  });
+});
+
+describe('kleinsterAbstand', () => {
+  const s = DEFAULT_STATE.scale;
+
+  it('hält die Kamera außerhalb eines großen Körpers', () => {
+    const erde = bodyIndex['earth']!;
+    expect(kleinsterAbstand(erde, s)).toBeCloseTo(MINDESTABSTAND_RADIEN * scaledRadius(erde, s), 6);
+  });
+
+  it('fällt bei winzigen Körpern und ohne Körper auf MIN_DISTANCE_KM zurück', () => {
+    const winzig = { ...bodyIndex['deimos']!, physical: { ...bodyIndex['deimos']!.physical, radiusKm: 1 } };
+    expect(kleinsterAbstand(winzig, s)).toBe(MIN_DISTANCE_KM);
+    expect(kleinsterAbstand(undefined, s)).toBe(MIN_DISTANCE_KM);
   });
 });

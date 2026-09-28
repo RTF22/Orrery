@@ -2,6 +2,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { attachCameraInput } from './input';
 import { useStore, DEFAULT_STATE } from '../../store';
+import { bodyIndex } from '../../data';
+import { scaledRadius } from '../../sim/scale';
+import { MINDESTABSTAND_RADIEN } from './flug';
 
 const DREH = Math.PI / 600;
 
@@ -455,6 +458,62 @@ describe('attachCameraInput — Flug', () => {
     el.dispatchEvent(new WheelEvent('wheel', { deltaY: 100, cancelable: true }));
     expect(onTempo).not.toHaveBeenCalled();
     expect(useStore.getState().camera.distance).toBeCloseTo(DEFAULT_STATE.camera.distance * 1.1, 0);
+    stop();
+  });
+});
+
+describe('attachCameraInput — Mindestabstand und Pinch', () => {
+  const erdnah = (): void => {
+    useStore.getState().setCamera({ mode: 'attached', targetId: 'earth', distance: 1e5 });
+  };
+  const erdGrenze = (): number =>
+    MINDESTABSTAND_RADIEN * scaledRadius(bodyIndex['earth']!, useStore.getState().scale);
+
+  it('zoomt mit dem Rad nicht in den Zielkörper hinein', () => {
+    erdnah();
+    const el = flaeche();
+    const stop = attachCameraInput(el);
+    for (let i = 0; i < 200; i++) el.dispatchEvent(new WheelEvent('wheel', { deltaY: -100, cancelable: true }));
+    expect(useStore.getState().camera.distance).toBeCloseTo(erdGrenze(), 3);
+    stop();
+  });
+
+  it('zoomt mit zwei Fingern nicht in den Zielkörper hinein', () => {
+    erdnah();
+    const el = flaeche();
+    const stop = attachCameraInput(el);
+    zeiger(el, 'pointerdown', 190, 100, 1, 'touch');
+    zeiger(el, 'pointerdown', 210, 100, 2, 'touch');
+    zeiger(el, 'pointermove', 0, 100, 1, 'touch');
+    zeiger(el, 'pointermove', 4000, 100, 2, 'touch');
+    expect(useStore.getState().camera.distance).toBeCloseTo(erdGrenze(), 3);
+    stop();
+  });
+
+  it('ändert im Flug mit zwei Fingern das Tempo statt des Abstands', () => {
+    useStore.getState().setCamera({ mode: 'fly' });
+    const el = flaeche();
+    const onTempo = vi.fn();
+    const stop = attachCameraInput(el, { onTempo });
+    const abstand = useStore.getState().camera.distance;
+    zeiger(el, 'pointerdown', 100, 100, 1, 'touch');
+    zeiger(el, 'pointerdown', 200, 100, 2, 'touch');
+    // Auseinander: wie das Rad nach vorn, also schneller.
+    zeiger(el, 'pointermove', 50, 100, 1, 'touch');
+    expect(onTempo).toHaveBeenCalledTimes(1);
+    expect(onTempo.mock.calls[0]![0]).toBeGreaterThan(1);
+    expect(useStore.getState().camera.distance).toBe(abstand);
+    stop();
+  });
+
+  it('zoomt nicht, wenn beide Finger auf derselben Stelle begonnen haben', () => {
+    const el = flaeche();
+    const stop = attachCameraInput(el);
+    const abstand = useStore.getState().camera.distance;
+    zeiger(el, 'pointerdown', 100, 100, 1, 'touch');
+    zeiger(el, 'pointerdown', 100, 100, 2, 'touch');
+    zeiger(el, 'pointermove', 120, 100, 2, 'touch');
+    expect(useStore.getState().camera.distance).toBe(abstand);
     stop();
   });
 });

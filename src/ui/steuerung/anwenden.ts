@@ -5,7 +5,7 @@ import { SCENES } from '../../data/scenes';
 import { plannedSceneAt } from '../../sim/director';
 import {
   begrenze, blickAus, blickDrehen, flugSchritt, fluggeschwindigkeit, koerperNaechstDerMitte, koerperStaende, kugelUm,
-  laenge, mindesthoehe, minus, plus, waehleBezug, ELEVATION_GRENZE, MAX_DISTANCE_KM, MIN_DISTANCE_KM,
+  laenge, mindesthoehe, minus, plus, waehleBezug, ELEVATION_GRENZE, MAX_DISTANCE_KM, kleinsterAbstand,
 } from '../../render/camera/flug';
 import type { Absicht, GezeigtePose } from '../../render/camera/flug';
 import { cinemaAktiv, noteUserInput, stopCinema } from '../cinemaControl';
@@ -156,13 +156,17 @@ function drehen(dt: number, absicht: Absicht, raten: Drehraten, u: SteuerungUmge
     if (id === null) return;
     heftenUm(id, pose);
   }
-  const { camera, setCamera } = useStore.getState();
+  const { camera, scale, setCamera } = useStore.getState();
   setCamera({
     azimuth: camera.azimuth + absicht.seit * raten.azimut * dt,
     elevation: begrenze(
       camera.elevation + absicht.hoch * raten.elevation * dt, -ELEVATION_GRENZE, ELEVATION_GRENZE,
     ),
-    distance: begrenze(camera.distance * ZOOM_JE_S ** (-absicht.vor * dt), MIN_DISTANCE_KM, MAX_DISTANCE_KM),
+    distance: begrenze(
+      camera.distance * ZOOM_JE_S ** (-absicht.vor * dt),
+      kleinsterAbstand(bodyIndex[camera.targetId], scale),
+      MAX_DISTANCE_KM,
+    ),
   });
 }
 

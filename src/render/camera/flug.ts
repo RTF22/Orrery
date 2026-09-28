@@ -21,6 +21,16 @@ export const BEZUG_RUECKSTELLUNG = 0.8;
 export const TEMPO_UNTERGRENZE_RADIEN = 0.05;
 /** Kleinster Abstand vom Mittelpunkt eines sichtbaren Körpers, in dessen Radien (§3.4). */
 export const MINDESTABSTAND_RADIEN = 1.05;
+/**
+ * Kleinster Umlaufabstand zum Ziel für Rad, Pinch und Controller: dieselbe
+ * Mindesthöhe wie im Flug, damit die Kamera nie im Körper steht; ohne Körper
+ * oder bei winzigen Körpern MIN_DISTANCE_KM.
+ */
+export function kleinsterAbstand(ziel: Body | undefined, s: ScaleSettings): number {
+  if (ziel === undefined) return MIN_DISTANCE_KM;
+  return Math.max(MIN_DISTANCE_KM, MINDESTABSTAND_RADIEN * scaledRadius(ziel, s));
+}
+
 /** Obergrenze des Einflussbereichs als Anteil des dargestellten Sonnenabstands (Nachtrag §13.1). */
 export const EINFLUSS_DECKEL = 0.5;
 

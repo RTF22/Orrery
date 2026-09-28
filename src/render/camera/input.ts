@@ -1,7 +1,8 @@
 import { useStore } from '../../store';
 import { TIPP_SCHWELLE_PX, zeigerartVon } from '../treffer';
 import type { Zeigerart } from '../treffer';
-import { ELEVATION_GRENZE, MIN_DISTANCE_KM, MAX_DISTANCE_KM, begrenze, blickDrehen } from './flug';
+import { bodyIndex } from '../../data/index';
+import { ELEVATION_GRENZE, MAX_DISTANCE_KM, begrenze, blickDrehen, kleinsterAbstand } from './flug';
 import { gesteEntscheiden } from './geste';
 
 /** Bildschirmbreite entspricht etwa einer halben Umdrehung. */
@@ -16,9 +17,13 @@ export const TEMPO_JE_RASTE = 1.25;
  * Neptunbahn — über acht Größenordnungen — gleich schnell an.
  */
 function zoome(faktor: number): void {
-  const { camera, setCamera } = useStore.getState();
-  setCamera({ distance: begrenze(camera.distance * faktor, MIN_DISTANCE_KM, MAX_DISTANCE_KM) });
+  const { camera, scale, setCamera } = useStore.getState();
+  const minimum = kleinsterAbstand(bodyIndex[camera.targetId], scale);
+  setCamera({ distance: begrenze(camera.distance * faktor, minimum, MAX_DISTANCE_KM) });
 }
+
+/** Zoomfaktor je Radraste; Pinch rechnet damit im Flug in Tempo um. */
+const ZOOM_JE_RASTE = 1.1;
 
 function drehe(dx: number, dy: number): void {
   const { camera, setCamera } = useStore.getState();
@@ -123,8 +128,16 @@ export function attachCameraInput(element: HTMLElement, rueckrufe: EingabeRueckr
 
     if (aktive.size >= 2) {
       const jetzt = pinchAbstand();
-      if (jetzt !== null && letzterPinchAbstand !== null && jetzt > 0) {
-        zoome(letzterPinchAbstand / jetzt);
+      // Begannen beide Finger an derselben Stelle, gäbe der erste Schritt den
+      // Faktor 0 und spränge auf den kleinsten Abstand.
+      if (jetzt !== null && letzterPinchAbstand !== null && jetzt > 0 && letzterPinchAbstand > 0) {
+        const faktor = letzterPinchAbstand / jetzt;
+        if (useStore.getState().camera.mode === 'fly') {
+          // Wie das Rad im Flug: Auseinanderziehen (Zoom nach vorn) beschleunigt.
+          rueckrufe.onTempo?.(TEMPO_JE_RASTE ** (-Math.log(faktor) / Math.log(ZOOM_JE_RASTE)));
+        } else {
+          zoome(faktor);
+        }
       }
       letzterPinchAbstand = jetzt;
       return;
@@ -219,7 +232,7 @@ export function attachCameraInput(element: HTMLElement, rueckrufe: EingabeRueckr
       rueckrufe.onTempo?.(TEMPO_JE_RASTE ** -schritte);
       return;
     }
-    zoome(1.1 ** schritte);
+    zoome(ZOOM_JE_RASTE ** schritte);
   };
 
   // Einbettung Schritt 3: `ui.eingebettet` ändert sich nach dem Start nicht
