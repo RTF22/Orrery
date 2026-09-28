@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import {
   MARKE,
   dateienUnter,
+  entfernenFallsDa,
   groesse,
   hochladeFolge,
   istNetzfehler,
@@ -306,5 +307,25 @@ describe('schalterLesen und verschluesselungPruefen', () => {
     expect(() => verschluesselungPruefen(offen, false)).toThrow(/--unsicher/);
     expect(() => verschluesselungPruefen(offen, true)).not.toThrow();
     expect(() => verschluesselungPruefen(konfigLesen(voll), false)).not.toThrow();
+  });
+});
+
+describe('entfernenFallsDa', () => {
+  const ftpFehler = (code: number): Error => Object.assign(new Error(`${code} nicht da`), { code });
+
+  it('meldet true, wenn die Datei entfernt wurde', async () => {
+    const remove = vi.fn(async () => undefined);
+    await expect(entfernenFallsDa({ remove }, '/Orrery/assets/a.js')).resolves.toBe(true);
+    expect(remove).toHaveBeenCalledWith('/Orrery/assets/a.js');
+  });
+
+  it('nimmt eine schon verschwundene Datei (550) hin, statt abzubrechen', async () => {
+    const remove = vi.fn(async () => { throw ftpFehler(550); });
+    await expect(entfernenFallsDa({ remove }, '/Orrery/assets/a.js')).resolves.toBe(false);
+  });
+
+  it('wirft andere Fehler weiter', async () => {
+    const remove = vi.fn(async () => { throw ftpFehler(530); });
+    await expect(entfernenFallsDa({ remove }, '/Orrery/assets/a.js')).rejects.toThrow('530');
   });
 });

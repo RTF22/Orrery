@@ -155,6 +155,23 @@ export function hochladeFolge(
   };
 }
 
+/**
+ * Entfernt eine Datei; ist sie schon fort (FTP 550), gilt das nicht als
+ * Fehler — der Server listete schon verschwundene Bündel, und der Lauf brach
+ * sonst vor dem Schreiben der Markierung ab. true, wenn wirklich entfernt.
+ */
+export async function entfernenFallsDa(
+  client: { remove(pfad: string): Promise<unknown> }, pfad: string,
+): Promise<boolean> {
+  try {
+    await client.remove(pfad);
+    return true;
+  } catch (fehler) {
+    if ((fehler as { code?: unknown }).code === 550) return false;
+    throw fehler;
+  }
+}
+
 /** Namen, die auf dem Server liegen, lokal aber nicht mehr existieren. */
 export function veralteteNamen(entfernt: readonly string[], lokal: readonly string[]): string[] {
   const vorhanden = new Set(lokal);
@@ -439,8 +456,8 @@ async function hauptlauf(): Promise<void> {
     const eintraegeAssets = await mitWiederholung(() => client.list(zielAssets), verbinden);
     const assetsEntfernt = eintraegeAssets.filter((e) => !e.isDirectory).map((e) => e.name);
     for (const name of zuLoeschendeAssets(assetsEntfernt, assetsLokal, vorige)) {
-      await mitWiederholung(() => client.remove(`${zielAssets}/${name}`), verbinden);
-      console.log(`Entfernt: assets/${name}`);
+      const entfernt = await mitWiederholung(() => entfernenFallsDa(client, `${zielAssets}/${name}`), verbinden);
+      console.log(entfernt ? `Entfernt: assets/${name}` : `Schon fort: assets/${name}`);
     }
     // Zuletzt: Erst ein vollständiger Lauf macht diese Bündel zum „vorigen Deploy".
     await mitWiederholung(() => textAblegen(client, markeText(assetsLokal), marke), verbinden);
