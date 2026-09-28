@@ -220,6 +220,17 @@ describe('musikStarten', () => {
     expect(t.umgebung.kontext).not.toHaveBeenCalled();
   });
 
+  it('bleibt still, wenn der Browser keinen AudioContext anlegen kann', async () => {
+    const t = testUmgebung();
+    const umgebung = { ...t.umgebung, kontext: () => { throw new Error('kein Web Audio'); } };
+    const ergebnis = await musikStarten({
+      basis: '/o/', laden: () => Promise.resolve({ ok: true, json: () => Promise.resolve(LISTE) }),
+      umgebung, dokument: ereignisse(), fenster: ereignisse(),
+    });
+    expect(ergebnis).toBeNull();
+    expect(useMusikStand.getState().verfuegbar).toBe(false);
+  });
+
   it('meldet verfügbare Musik und spielt, sobald das Kino läuft', async () => {
     const t = testUmgebung();
     const ergebnis = await musikStarten({

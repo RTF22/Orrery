@@ -778,6 +778,22 @@ describe('steuerungTakt: Kartensperre', () => {
     expect(kreuzSichtbar()).toBe(false);
   });
 
+  it('löscht beim Öffnen einer Karte den Hover des Fadenkreuzes genau einmal', () => {
+    kreuzZuruecksetzen();
+    const zeiger: unknown[] = [];
+    const mit = (p: PadRoh | null): SteuerungUmgebung =>
+      ({ ...umgebung([], null), pad: () => p, leinwand: () => l, zeiger: (z) => { zeiger.push(z); } });
+    steuerungTakt(jd, 0, mit(padAttrappe()));
+    steuerungTakt(jd, 0.25, mit(padAttrappe({ axes: [0, 0, 1, 0] })));
+    expect(zeiger.at(-1)).toEqual({ x: 550, y: 300, art: 'pad' });
+    useInfoKarte.setState({ offen: true });
+    steuerungTakt(jd, 0, mit(padAttrappe()));
+    expect(zeiger.at(-1)).toBeNull();
+    const anzahl = zeiger.length;
+    steuerungTakt(jd, 0, mit(padAttrappe()));
+    expect(zeiger).toHaveLength(anzahl);
+  });
+
   it('schließt die offene Info-Karte mit Pad-B, ohne fahreZuSystem auszulösen — auch nicht im Folgebild', () => {
     useStore.getState().setCamera({ targetId: 'mars' });
     useInfoKarte.setState({ offen: true });

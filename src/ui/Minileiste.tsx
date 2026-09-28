@@ -64,7 +64,7 @@ export function Minileiste({ untaetig }: { untaetig: boolean }): React.JSX.Eleme
         >
           {kinoAktiv ? t('cinema.stop') : (paused ? t('leiste.zeitStart') : t('leiste.zeitStopp'))}
         </button>
-        <button type="button" className={KNOPF} onClick={vollbildUmschalten}>
+        <button type="button" className={KNOPF} onClick={() => { void vollbildUmschalten(); }}>
           {t('shortcuts.fullscreen')}
         </button>
         <button type="button" className={KNOPF} onClick={() => { setUi({ hidden: false }); }}>

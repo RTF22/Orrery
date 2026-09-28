@@ -248,7 +248,7 @@ if (!eingebettet) {
     if (import.meta.env.DEV && musik !== null) {
       (window as unknown as { musik: unknown }).musik = musik.spieler;
     }
-  });
+  }).catch(() => { /* Ohne Musik läuft die Anwendung unverändert weiter. */ });
 }
 
 createRoot(wurzelElement).render(

@@ -72,6 +72,10 @@ export function AnsichtenPanel({ ablage = ablageHolen() }: Props): React.JSX.Ele
   }, []);
 
   const aktualisiere = (neu: Ansicht[]): void => {
+    // Sofort nachführen, nicht erst beim nächsten Render: Laufen zwei Fristen
+    // im selben Zug ab, filterte die zweite sonst die alte Liste und holte den
+    // ersten gelöschten Eintrag zurück.
+    listeRef.current = neu;
     setListe(neu);
     ansichtenSchreiben(ablage, neu);
   };

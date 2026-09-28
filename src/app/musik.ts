@@ -267,10 +267,16 @@ export async function musikStarten(optionen: MusikOptionen): Promise<{ spieler: 
 
   const dokument = optionen.dokument ?? document;
   const fenster = optionen.fenster ?? window;
-  const spieler = erzeugeSpieler(
-    liste, ordner, optionen.umgebung ?? browserUmgebung,
-    (eintrag) => { useMusikStand.setState({ aktuell: eintrag }); },
-  );
+  let spieler: MusikSpieler;
+  try {
+    spieler = erzeugeSpieler(
+      liste, ordner, optionen.umgebung ?? browserUmgebung,
+      (eintrag) => { useMusikStand.setState({ aktuell: eintrag }); },
+    );
+  } catch {
+    // Kein Web Audio (alter Browser, Sperre durch Richtlinien): Es bleibt still.
+    return null;
+  }
   useMusikStand.setState({ verfuegbar: true });
 
   const abgleichen = (): void => {

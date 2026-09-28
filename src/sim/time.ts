@@ -15,8 +15,9 @@ export const J2000 = 2451545.0;
 export const JD_MIN = 1721425.5;
 export const JD_MAX = 5373483.5;
 
-/** Klemmt einen Julianischen Tag auf den Zeitbereich [JD_MIN, JD_MAX]. */
+/** Klemmt einen Julianischen Tag auf den Zeitbereich [JD_MIN, JD_MAX]; NaN wird J2000. */
 export function imZeitbereich(jd: number): number {
+  if (Number.isNaN(jd)) return J2000;
   return Math.min(Math.max(jd, JD_MIN), JD_MAX);
 }
 

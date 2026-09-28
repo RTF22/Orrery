@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { handleShortcut, useShortcuts } from './useShortcuts';
+import { handleShortcut, useShortcuts, vollbildUmschalten } from './useShortcuts';
 import { useStore, DEFAULT_STATE } from '../../store';
 import { cinemaAktiv, noteUserInput, startCinema, stopCinema } from '../cinemaControl';
 import { useBogen } from '../bogen';
@@ -173,5 +173,21 @@ describe('handleShortcut bei offener Info-Karte', () => {
     expect(cinemaAktiv()).toBe(true);
     useInfoKarte.setState({ offen: false });
     stopCinema();
+  });
+});
+
+describe('vollbildUmschalten', () => {
+  // Ohne Abfangen bliebe die Ablehnung unbehandelt (iframe ohne allow="fullscreen").
+  it('fängt eine verweigerte Vollbild-Anfrage ab', async () => {
+    Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: null });
+    document.documentElement.requestFullscreen = vi.fn(() => Promise.reject(new TypeError('nicht erlaubt')));
+    await expect(vollbildUmschalten()).resolves.toBeUndefined();
+  });
+
+  it('fängt ein fehlschlagendes Verlassen des Vollbilds ab', async () => {
+    Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: document.body });
+    document.exitFullscreen = vi.fn(() => Promise.reject(new TypeError('kein Vollbild')));
+    await expect(vollbildUmschalten()).resolves.toBeUndefined();
+    Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: null });
   });
 });

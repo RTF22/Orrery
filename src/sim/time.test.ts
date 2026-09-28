@@ -55,4 +55,9 @@ describe('Zeitbereich', () => {
     expect(imZeitbereich(JD_MAX)).toBe(JD_MAX);
     expect(imZeitbereich(2461300.5)).toBe(2461300.5);
   });
+
+  it('macht aus NaN J2000 statt es durchzulassen', () => {
+    // NaN ließe den Kepler-Löser in jedem Bild werfen.
+    expect(imZeitbereich(Number.NaN)).toBe(J2000);
+  });
 });

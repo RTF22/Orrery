@@ -187,6 +187,18 @@ describe('AnsichtenPanel: löschen mit Rückgängig', () => {
     expect(screen.getByText('Noch keine Ansichten gespeichert.')).toBeTruthy();
   });
 
+  it('löscht zwei Einträge, deren Fristen gleichzeitig ablaufen, beide', () => {
+    const ablage = mitAnsichten([
+      { name: 'Saturn', state: {} }, { name: 'Mars', state: {} }, { name: 'Venus', state: {} },
+    ]);
+    render(<AnsichtenPanel ablage={ablage} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Löschen: Saturn' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Löschen: Mars' }));
+    // Beide Fristen laufen im selben Zug ab, ohne Render dazwischen.
+    act(() => { vi.advanceTimersByTime(5000); });
+    expect(gespeichert(ablage).map((a) => a.name)).toEqual(['Venus']);
+  });
+
   it('Rückgängig stellt die Zeile wieder her', () => {
     const ablage = mitAnsichten([{ name: 'Saturn', state: {} }]);
     render(<AnsichtenPanel ablage={ablage} />);

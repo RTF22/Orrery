@@ -436,6 +436,12 @@ export function steuerungTakt(jd: number, dt: number, u: SteuerungUmgebung): voi
   if (useInfoKarte.getState().offen || useSteuerKarte.getState().offen) {
     padTaktKarteGesperrt(u);
     kreuzAusblenden();
+    // Meldete zuletzt das Kreuz den Zeiger, bliebe dessen Körper sonst
+    // hinter der Karte hervorgehoben.
+    if (kreuzMeldeteZuletzt()) {
+      u.zeiger?.(null);
+      zeigerVonMaus();
+    }
     const leinwand = u.leinwand?.();
     if (leinwand !== undefined) kreuzZeichnen(leinwand);
     return;

@@ -17,12 +17,20 @@ export function istEingabefeld(ziel: EventTarget | null): boolean {
   return tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
 }
 
-/** Auch vom Vollbild-Knopf der Minileiste genutzt (Feature Einbettung, Schritt 2). */
-export function vollbildUmschalten(): void {
-  if (document.fullscreenElement === null) {
-    void document.documentElement.requestFullscreen?.();
-  } else {
-    void document.exitFullscreen?.();
+/**
+ * Auch vom Vollbild-Knopf der Minileiste genutzt (Feature Einbettung, Schritt 2).
+ * Eine Ablehnung (iframe ohne allow="fullscreen", schon verlassen) wird
+ * abgefangen; das Versprechen erfüllt sich immer.
+ */
+export async function vollbildUmschalten(): Promise<void> {
+  try {
+    if (document.fullscreenElement === null) {
+      await document.documentElement.requestFullscreen?.();
+    } else {
+      await document.exitFullscreen?.();
+    }
+  } catch {
+    // Verweigert oder schon verlassen — die Anwendung läuft ohne Vollbild weiter.
   }
 }
 
@@ -38,7 +46,7 @@ export function handleShortcut(taste: string): boolean {
       s.setUi({ hidden: !s.ui.hidden });
       return true;
     case 'f':
-      vollbildUmschalten();
+      void vollbildUmschalten();
       return true;
     case ' ':
       s.setTime({ paused: !s.time.paused });
