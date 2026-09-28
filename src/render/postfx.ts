@@ -206,6 +206,12 @@ export function createPostFx(ctx: RenderContext): PostFx {
     },
     resize: () => {
       ctx.renderer.getSize(groesse);
+      // EffectComposer liest die Pixeldichte nur beim Bau. Ohne Nachführen
+      // blieben die Puffer nach einem Monitorwechsel oder einem neuen Deckel
+      // der Qualitätsstufe bei der alten Auflösung.
+      const dichte = ctx.renderer.getPixelRatio();
+      bloomComposer.setPixelRatio(dichte);
+      finalComposer.setPixelRatio(dichte);
       bloomComposer.setSize(groesse.x, groesse.y);
       finalComposer.setSize(groesse.x, groesse.y);
       tBloom.value = bloomComposer.renderTarget2.texture;

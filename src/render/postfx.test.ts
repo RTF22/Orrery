@@ -1,9 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import * as THREE from 'three';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import type { MaterialSicherung } from './postfx';
 import {
-  bloomStrengthFor, BLOOM_LAYER, verdunkleSzeneAusserBloom, stelleSzeneWieder,
+  bloomStrengthFor, BLOOM_LAYER, createPostFx, verdunkleSzeneAusserBloom, stelleSzeneWieder,
 } from './postfx';
+import type { RenderContext } from './renderer';
 import { createMilchstrasse } from './milchstrasse';
 import { MILCHSTRASSE_STUFEN } from '../data/milchstrasse';
 
@@ -217,5 +219,26 @@ describe('verdunkleSzeneAusserBloom / stelleSzeneWieder', () => {
     stelleSzeneWieder(sicherung, ausgeblendet);
     expect(kugel.material).toBe(original);
     expect(kugel.visible).toBe(true);
+  });
+});
+
+describe('createPostFx: Pixeldichte', () => {
+  it('übernimmt beim Anpassen der Größe die aktuelle Pixeldichte des Renderers', () => {
+    // Nur die Teile des Renderers, die EffectComposer beim Bau und bei der
+    // Größenänderung liest — gezeichnet wird hier nicht.
+    let dichte = 2;
+    const renderer = {
+      getPixelRatio: () => dichte,
+      getSize: (ziel: THREE.Vector2) => ziel.set(400, 300),
+    } as unknown as THREE.WebGLRenderer;
+    const ctx = { renderer, scene: new THREE.Scene(), camera: new THREE.PerspectiveCamera() } as unknown as RenderContext;
+    const gesetzt = vi.spyOn(EffectComposer.prototype, 'setPixelRatio');
+    const fx = createPostFx(ctx);
+    dichte = 1;
+    fx.resize();
+    // Beide Composer (Bloom und Endbild) bekommen die neue Dichte.
+    expect(gesetzt.mock.calls.filter(([wert]) => wert === 1)).toHaveLength(2);
+    gesetzt.mockRestore();
+    fx.dispose();
   });
 });
