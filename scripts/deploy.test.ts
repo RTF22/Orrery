@@ -3,14 +3,22 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
+  MARKE,
   dateienUnter,
   groesse,
+  hochladeFolge,
   istNetzfehler,
   konfigLesen,
+  markeLesen,
+  markeText,
   mitWiederholung,
   ordnerFuer,
+  schalterLesen,
   uebersichtZeilen,
   veralteteNamen,
+  verschluesselungPruefen,
+  zielStand,
+  zuLoeschendeAssets,
 } from './deploy.ts';
 
 const voll = {
@@ -219,5 +227,84 @@ describe('uebersichtZeilen', () => {
 
   it('erwähnt ohne musik/ keine Musik', () => {
     expect(uebersichtZeilen(dateien).some((zeile) => zeile.includes('musik'))).toBe(false);
+  });
+});
+
+describe('zielStand', () => {
+  it('erkennt einen leeren Zielordner', () => {
+    expect(zielStand([])).toBe('leer');
+  });
+
+  it('erkennt den eigenen, markierten Zielordner', () => {
+    expect(zielStand(['index.html', 'assets', MARKE])).toBe('markiert');
+  });
+
+  it('hält einen belegten Ordner ohne Markierung für fremd (etwa DEPLOY_DIR eine Ebene zu hoch)', () => {
+    expect(zielStand(['index.html', 'assets', 'Orrery'])).toBe('fremd');
+    expect(zielStand(['bilder'])).toBe('fremd');
+  });
+});
+
+describe('Markierungsdatei', () => {
+  it('trägt die Assets des Deploys und liest sie wieder', () => {
+    const text = markeText(['index-AAAAAAAA.js', 'index-BBBBBBBB.css']);
+    expect(markeLesen(text)).toEqual(['index-AAAAAAAA.js', 'index-BBBBBBBB.css']);
+  });
+
+  it('liest eine leere oder fremde Markierung als „keine Assets“', () => {
+    expect(markeLesen('')).toEqual([]);
+    expect(markeLesen('kein JSON')).toEqual([]);
+    expect(markeLesen('{"assets": "falsch"}')).toEqual([]);
+  });
+});
+
+describe('zuLoeschendeAssets', () => {
+  it('behält die Assets des vorigen Deploys eine Version lang', () => {
+    const server = ['alt-1.js', 'vorig-1.js', 'neu-1.js'];
+    expect(zuLoeschendeAssets(server, ['neu-1.js'], ['vorig-1.js'])).toEqual(['alt-1.js']);
+  });
+
+  it('löscht ohne bekannte Vorgänger wie bisher alles, was lokal fehlt', () => {
+    expect(zuLoeschendeAssets(['a.js', 'b.js'], ['b.js'], [])).toEqual(['a.js']);
+  });
+});
+
+describe('hochladeFolge', () => {
+  const dateien = [
+    { pfad: 'assets/index-AAAAAAAA.js', bytes: 10 },
+    { pfad: 'index.html', bytes: 1 },
+    { pfad: 'musik/stuecke.json', bytes: 2 },
+    { pfad: 'robots.txt', bytes: 3 },
+  ];
+
+  it('stellt index.html ans Ende und lässt musik/ ohne Schalter aus', () => {
+    const folge = hochladeFolge(dateien, false);
+    expect(folge.vorher.map((d) => d.pfad)).toEqual(['assets/index-AAAAAAAA.js', 'robots.txt']);
+    expect(folge.einstieg?.pfad).toBe('index.html');
+    expect(folge.musikAusgelassen).toBe(1);
+  });
+
+  it('nimmt musik/ mit dem Schalter mit', () => {
+    const folge = hochladeFolge(dateien, true);
+    expect(folge.vorher.map((d) => d.pfad)).toContain('musik/stuecke.json');
+    expect(folge.musikAusgelassen).toBe(0);
+  });
+});
+
+describe('schalterLesen und verschluesselungPruefen', () => {
+  it('liest die Schalter aus der Befehlszeile', () => {
+    expect(schalterLesen(['node', 'deploy.ts'])).toEqual(
+      { trocken: false, markieren: false, mitMusik: false, unsicher: false },
+    );
+    expect(schalterLesen(['node', 'deploy.ts', '--trocken', '--markieren', '--mit-musik', '--unsicher'])).toEqual(
+      { trocken: true, markieren: true, mitMusik: true, unsicher: true },
+    );
+  });
+
+  it('verlangt für unverschlüsseltes FTP zusätzlich --unsicher', () => {
+    const offen = konfigLesen({ ...voll, DEPLOY_SECURE: 'false' });
+    expect(() => verschluesselungPruefen(offen, false)).toThrow(/--unsicher/);
+    expect(() => verschluesselungPruefen(offen, true)).not.toThrow();
+    expect(() => verschluesselungPruefen(konfigLesen(voll), false)).not.toThrow();
   });
 });

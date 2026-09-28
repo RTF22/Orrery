@@ -43,18 +43,26 @@ npm run deploy:trocken       # Dateiliste und Größe von dist/, dann nur verbin
 npm run deploy               # bauen und dist/ hochladen
 ```
 
-`scripts/deploy.ts` lädt `dist/` vollständig hoch und entfernt danach in `assets/`
-nur die gehashten Bündel, die lokal nicht mehr existieren. Das Zielverzeichnis wird
-nie geleert. `public/.htaccess` regelt Kompression und Cache-Dauern auf dem Server.
-Das Skript läuft ausschließlich von Hand.
+`scripts/deploy.ts` lädt nur in einen leeren Zielordner oder in einen, der die
+Markierung `orrery-deploy.json` trägt; sonst bricht es ab, damit ein falsch gesetztes
+`DEPLOY_DIR` keinen fremden Webauftritt überschreibt. Einen schon belegten Ordner
+markiert `node scripts/deploy.ts --markieren` einmalig, nachdem der Trockenlauf ihn
+gezeigt hat. Das Skript lädt `dist/` hoch, `index.html` zuletzt und per Umbenennung,
+und entfernt danach in `assets/` die gehashten Bündel, die weder zu diesem noch zum
+vorigen Deploy gehören; offene Tabs finden ihre nachgeladenen Teile so noch eine
+Version lang. Das Zielverzeichnis wird nie geleert. Unverschlüsseltes FTP
+(`DEPLOY_SECURE=false`) verlangt zusätzlich `--unsicher`. `public/.htaccess` regelt
+Kompression, Cache-Dauern und Sicherheits-Header auf dem Server. Das Skript läuft
+ausschließlich von Hand.
 
 ## Eigene Musik
 
 Orrery bringt keine Musik mit. Wer die Seite betreibt, kann eigene Stücke hinterlegen:
 
 1. MP3-Dateien in den Ordner `musik/` der ausgelieferten Seite legen (auf dem Webspace
-   neben `index.html`; lokal in `public/musik/`, der Ordner ist git-ignoriert und wird
-   von `npm run deploy` mit hochgeladen).
+   neben `index.html`; lokal in `public/musik/`, der Ordner ist git-ignoriert). Hochgeladen
+   wird er nur mit `npm run build && node scripts/deploy.ts --mit-musik`; ein gewöhnliches
+   `npm run deploy` lässt ihn aus und weist darauf hin.
 2. Daneben die Liste `musik/stuecke.json` anlegen:
 
    ```json

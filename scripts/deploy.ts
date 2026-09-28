@@ -8,18 +8,28 @@
  * Zugangsdaten stehen in `.env.local` (git-ignoriert), Vorlage in `.env.example`:
  *   DEPLOY_HOST, DEPLOY_USER, DEPLOY_PASSWORD, DEPLOY_DIR, optional DEPLOY_PORT, DEPLOY_SECURE.
  *
- * Ablauf: dist/ wird vollständig in DEPLOY_DIR hochgeladen (Bestand bleibt
- * erhalten), danach werden in DEPLOY_DIR/assets/ nur die gehashten Bündel
- * gelöscht, die es lokal nicht mehr gibt. Ein Leeren des Zielverzeichnisses
- * findet bewusst nicht statt: ein falsch gesetztes DEPLOY_DIR darf nie den
- * übrigen Webauftritt löschen. Hochgeladen wird Datei für Datei; bei
- * Netzfehlern wird mit neuer Verbindung bis zu dreimal wiederholt.
+ * Weitere Schalter: `--markieren` markiert einen schon belegten Zielordner
+ * einmalig als Orrerys eigenen, `--mit-musik` lädt musik/ mit hoch,
+ * `--unsicher` erlaubt DEPLOY_SECURE=false.
+ *
+ * Ablauf: Der Zielordner muss leer sein oder die Markierungsdatei MARKE
+ * tragen, sonst bricht der Deploy ab — ein falsch gesetztes DEPLOY_DIR darf
+ * nie einen fremden Webauftritt überschreiben. dist/ wird hochgeladen
+ * (Bestand bleibt erhalten), index.html zuletzt und per Umbenennung, damit
+ * nie ein halbes index.html ausgeliefert wird. Danach werden in
+ * DEPLOY_DIR/assets/ die gehashten Bündel gelöscht, die weder zu diesem noch
+ * zum vorigen Deploy gehören: Offene Tabs finden ihre nachgeladenen Chunks so
+ * noch eine Version lang. Die Markierung merkt sich dafür die Assets des
+ * letzten Deploys. Ein Leeren des Zielverzeichnisses findet bewusst nicht
+ * statt. Hochgeladen wird Datei für Datei; bei Netzfehlern wird mit neuer
+ * Verbindung bis zu dreimal wiederholt.
  *
  * Die reinen Funktionen sind exportiert und in deploy.test.ts geprüft; der
  * Hauptlauf startet nur beim direkten Aufruf der Datei.
  */
 import { Client } from 'basic-ftp';
 import { existsSync, readdirSync, statSync } from 'node:fs';
+import { Readable, Writable } from 'node:stream';
 import { join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -65,6 +75,83 @@ export function konfigLesen(env: Umgebung): DeployKonfig {
     password: wert('DEPLOY_PASSWORD'),
     dir,
     secure: wert('DEPLOY_SECURE').toLowerCase() !== 'false',
+  };
+}
+
+/** Schalter der Befehlszeile. */
+export interface Schalter {
+  trocken: boolean;
+  markieren: boolean;
+  mitMusik: boolean;
+  unsicher: boolean;
+}
+
+export function schalterLesen(argv: readonly string[]): Schalter {
+  return {
+    trocken: argv.includes('--trocken'),
+    markieren: argv.includes('--markieren'),
+    mitMusik: argv.includes('--mit-musik'),
+    unsicher: argv.includes('--unsicher'),
+  };
+}
+
+/** Unverschlüsseltes FTP schickt das Passwort im Klartext: nur mit ausdrücklichem --unsicher. */
+export function verschluesselungPruefen(konfig: DeployKonfig, unsicher: boolean): void {
+  if (!konfig.secure && !unsicher) {
+    throw new Error(
+      'DEPLOY_SECURE=false überträgt das Passwort unverschlüsselt; nur zusammen mit --unsicher erlaubt',
+    );
+  }
+}
+
+/**
+ * Markierungsdatei im Zielordner. Ohne Punkt am Anfang, weil manche
+ * FTP-Server Punktdateien im Listing ausblenden. Sie ist öffentlich lesbar,
+ * enthält aber nur die ohnehin öffentlichen Namen der Bündel.
+ */
+export const MARKE = 'orrery-deploy.json';
+
+/** Leer, von Orrery markiert oder fremd belegt (dann bricht der Deploy ab). */
+export function zielStand(namen: readonly string[]): 'leer' | 'markiert' | 'fremd' {
+  const echte = namen.filter((n) => n !== '.' && n !== '..');
+  if (echte.includes(MARKE)) return 'markiert';
+  return echte.length === 0 ? 'leer' : 'fremd';
+}
+
+export function markeText(assets: readonly string[]): string {
+  const inhalt = {
+    hinweis: 'Zielordner von Orrery (scripts/deploy.ts). assets: Bündel des letzten Deploys.',
+    assets: [...assets].sort(),
+  };
+  return `${JSON.stringify(inhalt, null, 2)}\n`;
+}
+
+/** Assets aus der Markierung; eine leere oder fremde Datei ergibt keine. */
+export function markeLesen(text: string): string[] {
+  try {
+    const daten = JSON.parse(text) as { assets?: unknown };
+    return Array.isArray(daten.assets) ? daten.assets.filter((a): a is string => typeof a === 'string') : [];
+  } catch {
+    return [];
+  }
+}
+
+/** Bündel auf dem Server, die weder zu diesem noch zum vorigen Deploy gehören. */
+export function zuLoeschendeAssets(
+  server: readonly string[], lokal: readonly string[], vorige: readonly string[],
+): string[] {
+  return veralteteNamen(server, [...lokal, ...vorige]);
+}
+
+/** Reihenfolge des Uploads: index.html zuletzt, musik/ nur mit Schalter. */
+export function hochladeFolge(
+  dateien: readonly DistDatei[], mitMusik: boolean,
+): { vorher: DistDatei[]; einstieg: DistDatei | undefined; musikAusgelassen: number } {
+  const musik = (d: DistDatei): boolean => d.pfad.startsWith('musik/');
+  return {
+    vorher: dateien.filter((d) => d.pfad !== 'index.html' && (mitMusik || !musik(d))),
+    einstieg: dateien.find((d) => d.pfad === 'index.html'),
+    musikAusgelassen: mitMusik ? 0 : dateien.filter(musik).length,
   };
 }
 
@@ -177,15 +264,42 @@ export function uebersichtZeilen(dateien: readonly DistDatei[]): string[] {
     zeilen.push(`  ${kopf}  ${anzahlText(summe.anzahl)}, ${groesse(summe.bytes)}`);
   }
   if (ordner.has('musik/')) {
-    zeilen.push('Hinweis: musik/ stammt aus public/musik/ (git-ignoriert) und würde mit hochgeladen.');
+    zeilen.push(
+      'Hinweis: musik/ stammt aus public/musik/ (git-ignoriert) und wird nur mit --mit-musik hochgeladen.',
+    );
   }
   const gesamt = dateien.reduce((summe, d) => summe + d.bytes, 0);
   zeilen.push(`Gesamt: ${anzahlText(dateien.length)}, ${groesse(gesamt)}`);
   return zeilen;
 }
 
+/** Liest eine kleine Textdatei vom Server. */
+async function textHolen(client: Client, pfad: string): Promise<string> {
+  const teile: Buffer[] = [];
+  const senke = new Writable({
+    write(stueck: Buffer, _kodierung, fertig) {
+      teile.push(stueck);
+      fertig();
+    },
+  });
+  await client.downloadTo(senke, pfad);
+  return Buffer.concat(teile).toString('utf8');
+}
+
+async function textAblegen(client: Client, text: string, pfad: string): Promise<void> {
+  await client.uploadFrom(Readable.from([Buffer.from(text, 'utf8')]), pfad);
+}
+
+const STAND_TEXT = {
+  markiert: `Markierung ${MARKE} gefunden: Orrerys eigener Zielordner.`,
+  leer: `Zielordner leer: ${MARKE} würde angelegt.`,
+  fremd: `Keine Markierung ${MARKE}, aber der Ordner ist belegt: Der Deploy bräche ab. `
+    + 'Ist es sicher Orrerys Ordner, einmalig mit --markieren hochladen.',
+} as const;
+
 async function hauptlauf(): Promise<void> {
-  const trocken = process.argv.includes('--trocken');
+  const schalter = schalterLesen(process.argv);
+  const { trocken } = schalter;
   const stamm = resolve(fileURLToPath(import.meta.url), '..', '..');
   const dist = join(stamm, 'dist');
 
@@ -205,6 +319,7 @@ async function hauptlauf(): Promise<void> {
     // konfigLesen meldet sonst, was fehlt.
   }
   const konfig = konfigLesen(process.env);
+  verschluesselungPruefen(konfig, schalter.unsicher);
 
   if (!trocken && !existsSync(join(dist, 'index.html'))) {
     throw new Error('dist/index.html fehlt, zuerst `npm run build` ausführen');
@@ -232,30 +347,53 @@ async function hauptlauf(): Promise<void> {
     };
     await verbinden();
 
+    // Nur lesen: ensureDir würde das Zielverzeichnis anlegen. Fehlt es,
+    // gilt es als leer und wird beim Hochladen angelegt.
+    let eintraege: Awaited<ReturnType<Client['list']>> | null = null;
+    try {
+      eintraege = await client.list(konfig.dir);
+    } catch {
+      eintraege = null;
+    }
+    const stand = zielStand((eintraege ?? []).map((e) => e.name));
+
     if (trocken) {
-      // Nur lesen: ensureDir würde das Zielverzeichnis anlegen.
-      try {
-        await client.cd(konfig.dir);
-      } catch {
+      if (eintraege === null) {
         console.log(`${konfig.dir} existiert noch nicht und würde beim Hochladen angelegt`);
-        return;
+      } else {
+        console.log(`Inhalt von ${konfig.dir}: ${eintraege.length} Einträge`);
+        for (const e of eintraege) console.log(`  ${e.isDirectory ? 'd' : '-'} ${e.name}`);
       }
-      const eintraege = await client.list();
-      console.log(`Inhalt von ${konfig.dir}: ${eintraege.length} Einträge`);
-      for (const e of eintraege) console.log(`  ${e.isDirectory ? 'd' : '-'} ${e.name}`);
+      console.log(STAND_TEXT[stand]);
       return;
     }
 
-    const dateien = dateienUnter(dist);
+    if (stand === 'fremd' && !schalter.markieren) {
+      throw new Error(
+        `${konfig.dir} ist belegt, trägt aber keine Markierung ${MARKE}. Falsches DEPLOY_DIR? `
+        + 'Zuerst mit --trocken prüfen; ist es Orrerys Ordner, einmalig mit --markieren hochladen.',
+      );
+    }
+    const marke = `${konfig.dir}/${MARKE}`;
+    const vorige = stand === 'markiert'
+      ? markeLesen(await mitWiederholung(() => textHolen(client, marke), verbinden))
+      : [];
+
+    const folge = hochladeFolge(dateienUnter(dist), schalter.mitMusik);
+    const dateien = folge.einstieg === undefined ? folge.vorher : [...folge.vorher, folge.einstieg];
     await mitWiederholung(() => client.ensureDir(konfig.dir), verbinden);
+    // Die Markierung zuerst: Bricht der Lauf ab, bleibt der Ordner als Orrerys erkennbar.
+    if (stand !== 'markiert') {
+      await mitWiederholung(() => textAblegen(client, markeText(vorige), marke), verbinden);
+      console.log(`Markierung angelegt: ${MARKE}`);
+    }
     for (const ordner of ordnerFuer(dateien)) {
       await mitWiederholung(() => client.ensureDir(`${konfig.dir}/${ordner}`), verbinden);
     }
 
     let hochgeladen = 0;
-    for (const datei of dateien) {
+    const hochladen = async (datei: DistDatei, ziel: string): Promise<void> => {
       const quelle = join(dist, ...datei.pfad.split('/'));
-      const ziel = `${konfig.dir}/${datei.pfad}`;
       let wiederholt = false;
       await mitWiederholung(
         () => client.uploadFrom(quelle, ziel),
@@ -269,17 +407,43 @@ async function hauptlauf(): Promise<void> {
       if (hochgeladen % 50 === 0 && hochgeladen < dateien.length) {
         console.log(`Hochgeladen: ${hochgeladen} von ${dateien.length} Dateien`);
       }
+    };
+    for (const datei of folge.vorher) await hochladen(datei, `${konfig.dir}/${datei.pfad}`);
+    if (folge.einstieg !== undefined) {
+      // Erst vollständig unter anderem Namen, dann umbenennen: Wer die Seite
+      // während des Uploads lädt, bekommt das alte oder das neue index.html,
+      // nie ein halbes.
+      const ziel = `${konfig.dir}/index.html`;
+      const zwischen = `${ziel}.neu`;
+      await hochladen(folge.einstieg, zwischen);
+      await mitWiederholung(async () => {
+        try {
+          await client.rename(zwischen, ziel);
+        } catch {
+          // Manche Server benennen nicht über eine vorhandene Datei hinweg um.
+          await client.remove(ziel, true);
+          await client.rename(zwischen, ziel);
+        }
+      }, verbinden);
     }
     console.log(`Hochgeladen: ${hochgeladen} von ${dateien.length} Dateien`);
+    if (folge.musikAusgelassen > 0) {
+      console.log(
+        `musik/ nicht hochgeladen (${anzahlText(folge.musikAusgelassen)}). Mit --mit-musik hochladen, `
+        + 'wenn die Rechte geklärt sind und die Datenschutzerklärung die Musik nennt.',
+      );
+    }
 
     const assetsLokal = readdirSync(join(dist, 'assets'));
     const zielAssets = `${konfig.dir}/assets`;
     const eintraegeAssets = await mitWiederholung(() => client.list(zielAssets), verbinden);
     const assetsEntfernt = eintraegeAssets.filter((e) => !e.isDirectory).map((e) => e.name);
-    for (const name of veralteteNamen(assetsEntfernt, assetsLokal)) {
+    for (const name of zuLoeschendeAssets(assetsEntfernt, assetsLokal, vorige)) {
       await mitWiederholung(() => client.remove(`${zielAssets}/${name}`), verbinden);
       console.log(`Entfernt: assets/${name}`);
     }
+    // Zuletzt: Erst ein vollständiger Lauf macht diese Bündel zum „vorigen Deploy".
+    await mitWiederholung(() => textAblegen(client, markeText(assetsLokal), marke), verbinden);
   } finally {
     client.close();
   }
