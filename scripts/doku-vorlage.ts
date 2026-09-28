@@ -84,7 +84,7 @@ const WOERTER: Record<Sprache, Woerter> = {
 };
 
 /** HTML-Maskierung für Titel, Beschreibung und Inhaltsverzeichnistexte (Reihenfolge wichtig: `&` zuerst). */
-function maskieren(text: string): string {
+export function maskieren(text: string): string {
   return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 

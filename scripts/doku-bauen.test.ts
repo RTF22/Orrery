@@ -166,6 +166,22 @@ describe('umwandeln', () => {
     expect(u.html).not.toContain('English');
     expect(u.html).toContain('<table>');
   });
+
+  it('maskiert Ziel, Titel und Alternativtext von Verweisen und Bildern genau einmal', () => {
+    const md = '# T\n\n[Tom & Jerry](https://example.org/?a=1&b="2" "Er sagt \\"hallo\\"")\n\n'
+      + '![Saturn "groß" & hell](bild.png "Ringe & Monde")\n';
+    const { html } = umwandeln(md, 'de');
+    expect(html).toContain('href="https://example.org/?a=1&amp;b=&quot;2&quot;"');
+    expect(html).toContain('title="Er sagt &quot;hallo&quot;"');
+    expect(html).toContain('alt="Saturn &quot;groß&quot; &amp; hell"');
+    expect(html).toContain('title="Ringe &amp; Monde"');
+    expect(html).not.toContain('&amp;amp;');
+  });
+
+  it('entschärft javascript:-Ziele', () => {
+    const { html } = umwandeln('# T\n\n[klick](javascript:alert(1))\n', 'de');
+    expect(html).not.toMatch(/href="\s*javascript:/i);
+  });
 });
 
 describe('baue und pruefeVerweise', () => {

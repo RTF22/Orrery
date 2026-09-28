@@ -39,6 +39,7 @@ import {
   GITHUB_STAMM,
   SEITEN_STAMM,
   dokuWurzelSeite,
+  maskieren,
   seite,
   seitenAdresse,
   sprachwahlSeite,
@@ -284,6 +285,25 @@ function markenEntfernen(md: string): string {
  * erhalten ihre Kennung aus dem Inhaltsverzeichnis, Marken-Zeilen, Titel und
  * Sprachzeile entfallen, Verweise und Bildpfade laufen durch verweisUmschreiben.
  */
+/** Ein javascript:-Ziel führt nirgendwohin statt Code auszuführen. */
+function ziel(href: string): string {
+  return /^\s*javascript:/i.test(href) ? '#' : href;
+}
+
+/**
+ * Maskiert einen Attributwert. marked liefert Werte mit schon maskierten
+ * Entitäten (etwa den Alternativtext); die werden erst zurückgewandelt, damit
+ * nichts doppelt maskiert wird.
+ */
+function attribut(wert: string): string {
+  return maskieren(wert.replace(/&(amp|lt|gt|quot|#39);/g, (_, e: string) =>
+    ({ amp: '&', lt: '<', gt: '>', quot: '"', '#39': "'" })[e] ?? ''));
+}
+
+function titelAttribut(title: string | null | undefined): string {
+  return title ? ` title="${attribut(title)}"` : '';
+}
+
 export function umwandeln(mdRoh: string, sprache: Sprache): Umgewandelt {
   const md = zeilenendenVereinheitlichen(mdRoh);
   const toc = inhaltsverzeichnis(md);
@@ -308,13 +328,13 @@ export function umwandeln(mdRoh: string, sprache: Sprache): Umgewandelt {
       link({ href, title, text, tokens, autolink }) {
         const inhalt = autolink ? text : this.parser.parseInline(tokens);
         const { href: neu } = verweisUmschreiben(href, sprache);
-        return `<a href="${neu}"${title ? ` title="${title}"` : ''}>${inhalt}</a>`;
+        return `<a href="${attribut(ziel(neu))}"${titelAttribut(title)}>${inhalt}</a>`;
       },
       image({ href, title, text, tokens }) {
         const alt = tokens ? this.parser.parseInline(tokens, this.parser.textRenderer) : text;
         const { href: neu, bild } = verweisUmschreiben(href, sprache);
         if (bild) bilder.add(bild);
-        return `<img src="${neu}" alt="${alt}"${title ? ` title="${title}"` : ''}>`;
+        return `<img src="${attribut(ziel(neu))}" alt="${attribut(alt)}"${titelAttribut(title)}>`;
       },
     },
   });
