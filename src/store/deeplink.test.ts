@@ -131,6 +131,13 @@ describe('fragmentAuswerten: body', () => {
     expect(fragmentAuswerten('#body=vulcan')).toEqual({ patch: null, szeneId: null });
   });
 
+  it.each(['constructor', '__proto__', 'toString', 'hasOwnProperty'])(
+    'geerbter Objektschlüssel %s gilt als unbekannter Körper',
+    (wert) => {
+      expect(fragmentAuswerten(`#body=${wert}`)).toEqual({ patch: null, szeneId: null });
+    },
+  );
+
   it('behält Azimut und Elevation aus der Grundlage p bei (wie beim Klick)', () => {
     const p = { camera: { azimuth: 1.23, elevation: -0.4 } };
     const ergebnis = fragmentAuswerten('#p=' + encodePatch(p) + '&body=mars');

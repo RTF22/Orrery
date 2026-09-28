@@ -168,10 +168,19 @@ function koerperPatch(koerper: Body, massstab: ScaleSettings): Plain {
  * unabhängig von `scene` und unabhängig davon, ob die Seite in einem iframe
  * läuft. Liefert `null`, wenn `hash` gar kein Fragment enthält (kein „#");
  * enthält es eines, ist `patch` nur dann `null`, wenn kein einziger
- * Schlüssel einen gültigen Wert ergab.
+ * Schlüssel einen gültigen Wert ergab. Wirft die Auswertung, gilt das
+ * Fragment ebenso als ungültig: Ein Link darf den Start nie verhindern.
  */
 export function fragmentAuswerten(hash: string): FragmentErgebnis | null {
   if (!hash.startsWith('#')) return null;
+  try {
+    return fragmentLesen(hash);
+  } catch {
+    return { patch: null, szeneId: null };
+  }
+}
+
+function fragmentLesen(hash: string): FragmentErgebnis {
   const eintraege = paare(hash.slice(1));
   let gueltig = false;
 
@@ -205,7 +214,10 @@ export function fragmentAuswerten(hash: string): FragmentErgebnis | null {
     }
 
     const koerperWert = eintraege.get('body');
-    const koerper = koerperWert === undefined ? undefined : bodyIndex[koerperWert];
+    // Nur eigene Schlüssel: bodyIndex erbt von Object.prototype, sonst lieferte
+    // etwa body=constructor eine Funktion statt „unbekannt".
+    const koerper = koerperWert !== undefined && Object.hasOwn(bodyIndex, koerperWert)
+      ? bodyIndex[koerperWert] : undefined;
     if (koerper !== undefined) {
       gueltig = true;
       // Der Knopf (lesbarerLink) nimmt body immer vom selben Zustand wie p:
