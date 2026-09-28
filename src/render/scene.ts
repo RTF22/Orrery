@@ -5,7 +5,7 @@ import { createBodyViews } from './bodies';
 import { createRingViews } from './rings';
 import { createBeltViews } from './belts';
 import { createOrbitLines } from './orbits';
-import { createStarfield } from './starfield';
+import { createStarfield, sternfeldPixeldichte } from './starfield';
 import { createLabelOverlay, apparentRadiusPixels } from './labels';
 import type { LabelEintrag } from './labels';
 import { createCameraController } from './camera/controller';
@@ -95,7 +95,7 @@ export function buildScene(
   // Einmalig aufgebaut: Sterne stehen fest auf einer sehr großen Kugel um den
   // Ursprung und werden — anders als Körper und Bahnen — nie pro Frame neu
   // positioniert (siehe Kommentar in starfield.ts).
-  createStarfield(ctx.scene);
+  const sternfeld = createStarfield(ctx.scene);
 
   // Beschriftungen und Ersatzglyphen liegen als HTML über der Canvas.
   const labels = createLabelOverlay(overlay, name);
@@ -186,6 +186,7 @@ export function buildScene(
         jd, state.scale.distanceExponent, cameraKm, state.quality.tier,
         state.display.belts, belichtet, ctx.renderer.getPixelRatio(),
       );
+      sternfeldPixeldichte(sternfeld, ctx.renderer.getPixelRatio());
 
       // Kalibrierung: Bei 1 AE Abstand vom Licht soll die Bestrahlungsstärke
       // exakt die belichtete Helligkeit betragen — `brightness` mal

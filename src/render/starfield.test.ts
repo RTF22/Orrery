@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import { equatorialToEcliptic, magnitudeToSize, colorIndexToRgb } from './starfield';
+import * as THREE from 'three';
+import {
+  equatorialToEcliptic, magnitudeToSize, colorIndexToRgb, createStarfield, sternfeldPixeldichte,
+} from './starfield';
 import sterne from '../data/stars/hyg.json';
 
 describe('equatorialToEcliptic', () => {
@@ -70,5 +73,16 @@ describe('Katalog', () => {
       Math.abs(s.ra - ra) < 0.5 && Math.abs(s.dec - dec) < 0.5);
     expect(nahe(88.8, 7.4)).toBe(true);  // Beteigeuze
     expect(nahe(78.6, -8.2)).toBe(true); // Rigel
+  });
+});
+
+describe('createStarfield: Pixeldichte', () => {
+  it('skaliert die Punktgröße mit der Pixeldichte, damit Sterne überall gleich groß erscheinen', () => {
+    const punkte = createStarfield(new THREE.Scene());
+    const material = punkte.material as THREE.ShaderMaterial;
+    expect(material.vertexShader).toMatch(/gl_PointSize\s*=\s*size\s*\*\s*uPixelRatio/);
+    expect(material.uniforms['uPixelRatio']!.value).toBe(1);
+    sternfeldPixeldichte(punkte, 2.5);
+    expect(material.uniforms['uPixelRatio']!.value).toBe(2.5);
   });
 });

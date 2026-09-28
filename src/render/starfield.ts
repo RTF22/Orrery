@@ -40,6 +40,16 @@ export function colorIndexToRgb(ci: number): [number, number, number] {
  * die Sterne beim Schwenken keine Parallaxe zeigen dürfen, während Körper das
  * sehr wohl tun.
  */
+/**
+ * Größen sind geräteunabhängige Pixel wie bei den Gürteln (belts.ts): Mit
+ * der Pixeldichte multipliziert erscheint ein Stern auf jedem Bildschirm
+ * gleich groß, statt auf einem 2×-Schirm auf die Hälfte zu schrumpfen.
+ */
+export function sternfeldPixeldichte(punkte: THREE.Points, dichte: number): void {
+  const u = (punkte.material as THREE.ShaderMaterial).uniforms['uPixelRatio'];
+  if (u !== undefined) u.value = dichte;
+}
+
 export function createStarfield(scene: THREE.Scene): THREE.Points {
   const liste = sterne as StarRecord[];
   const positionen = new Float32Array(liste.length * 3);
@@ -68,13 +78,15 @@ export function createStarfield(scene: THREE.Scene): THREE.Points {
     vertexColors: true,
     transparent: true,
     depthWrite: false,
+    uniforms: { uPixelRatio: { value: 1 } },
     vertexShader: `
       attribute float size;
+      uniform float uPixelRatio;
       varying vec3 vFarbe;
       void main() {
         vFarbe = color;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        gl_PointSize = size;
+        gl_PointSize = size * uPixelRatio;
       }`,
     fragmentShader: `
       varying vec3 vFarbe;
