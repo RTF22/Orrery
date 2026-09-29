@@ -178,3 +178,32 @@ Eine Etappe auf dem Branch `geozentrisch`, jeder Task mit eigenem Commit und gr�
 9. Abnahme mit Protokoll `docs/geozentrisch-abnahme.md`
 
 Tag `v0.8.0` nach der Abnahme, sofern Jens ihn will.
+
+## 10. Nachtrag aus der Planung (29.09.2026)
+
+Beim Lesen des Codes für den Plan (`docs/superpowers/plans/2026-09-29-geozentrisch.md`) ergaben
+sich folgende Präzisierungen; sie ändern das sichtbare Verhalten aus §4 und §5 nicht, außer wo
+vermerkt.
+
+1. **Maßstab wird überlagert, nicht überschrieben** (statt §4.1 „merken und setzen“ und §4.4
+   „gemerkter Maßstab wird mitgespeichert“): `state.scale` bleibt unverändert; eine Funktion
+   `dargestellterMassstab(state)` in `store/himmelsansicht.ts` liefert in der Himmelsansicht
+   `SCALE_PRESETS.realistisch`, sonst `state.scale`. Alle Leser in `render/` gehen über sie. Jeder
+   Ausstieg stellt den alten Maßstab damit von selbst wieder her, Sitzung und Ansichten brauchen
+   kein zusätzliches Feld.
+2. **Himmelsansicht** heißt: `camera.mode === 'geozentrisch'` oder ein Kino, dessen aktuelle Szene
+   den neuen Bahntyp `himmel` trägt (Szene `marsschleife`). Ein Szenenwechsel in die Himmelsansicht
+   oder aus ihr heraus ist ein Schnitt.
+3. **Spuren** laufen nur in der Deckkraft aus; WebGL zeichnet Linien mit 1 px, eine Breite lässt
+   sich nicht staffeln (§5.1).
+4. **Bahnlinien** sind in der Himmelsansicht aus: Die Erdbahn verliefe durch die Kamera und läge
+   als Großkreis über dem ganzen Himmel.
+5. **Tastatur und Controller** (statt §4.2 „WASD ohne Wirkung, rechter Stick“): W/S heben und
+   senken den Blick, A/D schwenken, Q/E zoomen; am Controller schwenkt der linke Stick, RT/LT
+   zoomen. Der rechte Stick bleibt das Fadenkreuz, A richtet den Blick auf den Körper darunter.
+6. **Zeitpunkt der Szene** generisch als `zeitpunkt: 'naechste-opposition'` für den Zielkörper;
+   die Opposition gilt in ekliptikaler Länge (Längendifferenz zur Sonne 180°).
+7. **Startblick:** auf das Ziel, wenn es weder Erde noch Sonne ist, sonst zur Gegensonne.
+   Ausstieg mit G, Esc oder Modusknopf: Ziel Erde → Fahrt zur Erde, sonst geheftet um das Ziel an
+   der gezeigten Lage. Die drei Kästchen aus §5 erscheinen im Darstellungspanel nur in der
+   Himmelsansicht.
