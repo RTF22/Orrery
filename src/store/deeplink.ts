@@ -1,5 +1,6 @@
 import { bodyIndex } from '../data';
 import { SCENES } from '../data/scenes';
+import { geozentrischeRichtung, richtungZuWinkeln } from '../sim/geozentrisch';
 import { fokusAbstand } from '../sim/scale';
 import type { ScaleSettings } from '../sim/scale';
 import type { Body } from '../sim/types';
@@ -152,9 +153,28 @@ function koerperPatch(koerper: Body, massstab: ScaleSettings): Plain {
   };
 }
 
+/** Zeitpunkt, der nach dem Einlesen gilt: aus dem Patch, sonst der Standard. */
+function wirksamesJd(patch: Plain): number {
+  const zeit = patch.time;
+  return istPlain(zeit) && typeof zeit.jd === 'number' ? zeit.jd : DEFAULT_STATE.time.jd;
+}
+
+/**
+ * Kamerapatch für `body` im Blick von der Erde (Entwurf geozentrische Sicht
+ * §4.4): der Körper wird Ziel, der Blick zeigt zu ihm; die Erde selbst ist
+ * von innen nicht zu sehen, dort bleibt der Blick. Ein Thema verfällt wie
+ * beim Klick.
+ */
+function himmelsKoerperPatch(koerper: Body, jd: number): Plain {
+  const blick = koerper.id === 'earth'
+    ? {}
+    : { geo: richtungZuWinkeln(geozentrischeRichtung(koerper.id, bodyIndex, jd)) };
+  return { camera: { targetId: koerper.id, ...blick }, ui: { info: { thema: null } } };
+}
+
 /**
  * Wertet ein URL-Fragment mit lesbaren Parametern aus (`p`, `date`, `body`,
- * `scene`, `lang`, `ui`, Reihenfolge beliebig, unbekannte Schlüssel werden
+ * `scene`, `lang`, `ui`, `view`, Reihenfolge beliebig, unbekannte Schlüssel werden
  * ignoriert). `p` ist die Grundlage; `date` und `body` überschreiben ihre
  * Felder nur, wenn sie vom Zeitpunkt bzw. Körper aus `p` abweichen — stimmen
  * sie überein, bleibt `p` maßgeblich (Kamera, Abstand, Winkel, Uhrstand samt
@@ -166,7 +186,10 @@ function koerperPatch(koerper: Body, massstab: ScaleSettings): Plain {
  * Schlüssel mit ungültigem Wert) setzt `ui.hidden: true` und überschreibt
  * damit ein `p`, das die Oberfläche zeigen wollte; es gilt wie `lang`
  * unabhängig von `scene` und unabhängig davon, ob die Seite in einem iframe
- * läuft. Liefert `null`, wenn `hash` gar kein Fragment enthält (kein „#");
+ * läuft. `view=geo` (nur dieser Wert zählt) öffnet den Blick von der Erde
+ * (`camera.mode: 'geozentrisch'`); wie `date` und `body` zählt es nur ohne
+ * gültiges `scene`, und mit einem von `p` abweichenden `body` zeigt der Blick
+ * zu diesem Körper. Liefert `null`, wenn `hash` gar kein Fragment enthält (kein „#");
  * enthält es eines, ist `patch` nur dann `null`, wenn kein einziger
  * Schlüssel einen gültigen Wert ergab. Wirft die Auswertung, gilt das
  * Fragment ebenso als ungültig: Ein Link darf den Start nie verhindern.
@@ -196,6 +219,13 @@ function fragmentLesen(hash: string): FragmentErgebnis {
   let overlay: Plain = {};
 
   if (szeneId === null) {
+    // Blick von der Erde (Entwurf geozentrische Sicht §4.4): nur dieser eine Wert zählt.
+    const himmel = eintraege.get('view') === 'geo';
+    if (himmel) {
+      overlay = mergePatch(overlay, { camera: { mode: 'geozentrisch' } });
+      gueltig = true;
+    }
+
     const datumWert = eintraege.get('date');
     const jd = datumWert === undefined ? null : datumZuJd(datumWert);
     if (jd !== null) {
@@ -231,7 +261,9 @@ function fragmentLesen(hash: string): FragmentErgebnis {
       const basisZiel = istPlain(grundKamera) && typeof grundKamera.targetId === 'string'
         ? grundKamera.targetId : null;
       if (basisZiel !== koerper.id) {
-        overlay = mergePatch(overlay, koerperPatch(koerper, wirksamerMassstab(grundlage)));
+        overlay = mergePatch(overlay, himmel
+          ? himmelsKoerperPatch(koerper, wirksamesJd(mergePatch(grundlage, overlay)))
+          : koerperPatch(koerper, wirksamerMassstab(grundlage)));
       }
     }
   }
@@ -258,16 +290,19 @@ function fragmentLesen(hash: string): FragmentErgebnis {
 
 /**
  * Lesbarer Link für den Knopf „Link kopieren": `date` (aktueller Zeitpunkt,
- * auf die Minute abgeschnitten), `body` (nur, wenn ein Körper ausgewählt ist —
- * dasselbe Feld, das `fragmentAuswerten` beim Einlesen setzt:
- * `camera.mode === 'attached'`, Kennung aus `camera.targetId`) und `p`
+ * auf die Minute abgeschnitten), `view=geo` (nur im Blick von der Erde), `body` (nur, wenn ein Körper
+ * ausgewählt ist — dasselbe Feld, das `fragmentAuswerten` beim Einlesen setzt:
+ * `camera.mode === 'attached'` oder `'geozentrisch'`, Kennung aus `camera.targetId`) und `p`
  * (bisheriger Link-Patch, Profil `link`, unverändert). Die Reihenfolge macht
  * den Link von vorn nach hinten lesbar (Zeitpunkt, Körper, genauer Zustand);
  * beim Einlesen ist sie gleichgültig.
  */
 export function lesbarerLink(state: AppState, ort: { origin: string; pathname: string }): string {
   const teile = [`date=${formatDatum(state.time.jd)}`];
-  if (state.camera.mode === 'attached') teile.push(`body=${state.camera.targetId}`);
+  if (state.camera.mode === 'geozentrisch') teile.push('view=geo');
+  if (state.camera.mode === 'attached' || state.camera.mode === 'geozentrisch') {
+    teile.push(`body=${state.camera.targetId}`);
+  }
   teile.push(`p=${encodePatch(patchFuer(state, 'link'))}`);
   return `${ort.origin}${ort.pathname}#${teile.join('&')}`;
 }

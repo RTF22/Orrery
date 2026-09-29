@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { fragmentAuswerten, lesbarerLink, einbettCode } from './deeplink';
 import { encodePatch, fromShareable } from './serialize';
 import { DEFAULT_STATE } from './index';
-import { JD_MIN, JD_MAX, jdToDate } from '../sim/time';
+import { JD_MIN, JD_MAX, jdToDate, dateToJd } from '../sim/time';
+import { geozentrischeRichtung, richtungZuWinkeln } from '../sim/geozentrisch';
 import { fokusAbstand } from '../sim/scale';
 import { bodyIndex } from '../data';
 
@@ -458,5 +459,53 @@ describe('einbettCode', () => {
     const code = einbettCode(state, 'Titel');
     const erwarteterLink = lesbarerLink(state, { origin: 'https://orrery3d.de', pathname: '/' });
     expect(code).toContain(`src="${erwarteterLink.replace(/&/g, '&amp;')}"`);
+  });
+});
+
+describe('Deep Link — view=geo', () => {
+  const ort = { origin: 'https://orrery3d.de', pathname: '/' };
+
+  it('öffnet den Blick von der Erde auf einen Körper zu einem Datum', () => {
+    const e = fragmentAuswerten('#date=2027-02-19&view=geo&body=mars')!;
+    const kamera = e.patch!.camera as Record<string, unknown>;
+    expect(kamera.mode).toBe('geozentrisch');
+    expect(kamera.targetId).toBe('mars');
+    const jd = dateToJd(new Date(Date.UTC(2027, 1, 19, 12)));
+    const soll = richtungZuWinkeln(geozentrischeRichtung('mars', bodyIndex, jd));
+    const geo = kamera.geo as { yaw: number; pitch: number };
+    expect(geo.yaw).toBeCloseTo(soll.yaw, 12);
+    expect(geo.pitch).toBeCloseTo(soll.pitch, 12);
+  });
+
+  it('gilt allein als gültiger Link', () => {
+    const e = fragmentAuswerten('#view=geo')!;
+    expect((e.patch!.camera as Record<string, unknown>).mode).toBe('geozentrisch');
+  });
+
+  it('verwirft andere Werte', () => {
+    expect(fragmentAuswerten('#view=mond')!.patch).toBeNull();
+  });
+
+  it('tritt hinter scene zurück', () => {
+    const e = fragmentAuswerten('#scene=mondfinsternis&view=geo')!;
+    expect(e.szeneId).toBe('mondfinsternis');
+    expect(e.patch?.camera).toBeUndefined();
+  });
+
+  it('setzt bei body=earth nur das Ziel', () => {
+    const e = fragmentAuswerten('#view=geo&body=earth')!;
+    const kamera = e.patch!.camera as Record<string, unknown>;
+    expect(kamera.targetId).toBe('earth');
+    expect(kamera.geo).toBeUndefined();
+  });
+
+  it('schreibt view=geo und body und liest den eigenen Link verlustfrei zurück', () => {
+    const state = structuredClone(DEFAULT_STATE);
+    state.time.jd = 2461456.25;
+    state.camera = { ...state.camera, mode: 'geozentrisch', targetId: 'mars', geo: { yaw: 2.6, pitch: 0.07, fovDeg: 24 } };
+    const link = lesbarerLink(state, ort);
+    expect(link).toContain('view=geo&body=mars&p=');
+    const e = fragmentAuswerten(link.slice(link.indexOf('#')))!;
+    expect(fromShareable(e.patch!).camera).toEqual(state.camera);
   });
 });
