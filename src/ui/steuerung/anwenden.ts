@@ -11,6 +11,7 @@ import type { Absicht, GezeigtePose } from '../../render/camera/flug';
 import { cinemaAktiv, noteUserInput, stopCinema } from '../cinemaControl';
 import { fahreZu, fahreZuSystem, fahrtAbbrechen } from '../kamerafahrt';
 import { himmelSchwenken } from '../himmelsmodus';
+import { dargestellterMassstab } from '../../store/himmelsansicht';
 import { blickzielVon } from '../../render/camera/cinema';
 import { eingabeMelden, zeigerAusgeblendet } from '../idle';
 import { handleShortcut } from '../shortcuts/useShortcuts';
@@ -97,12 +98,15 @@ export function flugStarten(pose: GezeigtePose): void {
   fahrtAbbrechen();
   const { scale, visible, setCamera } = useStore.getState();
   const staende = koerperStaende(bodies, bodyIndex, pose.jd, scale, visible);
-  const refId = waehleBezug(pose.positionKm, staende, null) ?? 'sun';
+  // Aus dem Himmel liegt die gezeigte Lage im Erdmittelpunkt; der Flug läuft im
+  // eingestellten Maßstab, dort steckt sie im Körper. Erst herausschieben.
+  const lage = mindesthoehe(pose.positionKm, staende);
+  const refId = waehleBezug(lage, staende, null) ?? 'sun';
   const ref = scaledPositionAt(refId, bodyIndex, pose.jd, scale);
   setCamera({
     mode: 'fly',
     ...(kinoZiel === null ? {} : { targetId: kinoZiel }),
-    fly: { refId, ...minus(pose.positionKm, ref), ...blickAus(pose.blick) },
+    fly: { refId, ...minus(lage, ref), ...blickAus(pose.blick) },
   });
 }
 
@@ -146,13 +150,16 @@ function drehen(dt: number, absicht: Absicht, raten: Drehraten, u: SteuerungUmge
     const pose = u.letztePose();
     if (pose === null) return;
     const neuWaehlen = modus === 'fly' || modus === 'free' || modus === 'cinema';
+    // Der Maßstab des gezeigten Bildes gilt vor dem Kino-Ende: In einer
+    // Himmelsszene ist es „realistisch“, danach wieder der eingestellte.
+    const gezeigt = dargestellterMassstab(useStore.getState());
     // Das Kino zuerst beenden: stopCinema stellt die Kamera von vor dem Start
     // her, gewählt wird aber im gezeigten Bild.
     if (cinemaAktiv()) stopCinema();
     fahrtAbbrechen();
-    const { scale, visible, camera } = useStore.getState();
+    const { visible, camera } = useStore.getState();
     const id = neuWaehlen
-      ? koerperNaechstDerMitte(pose, koerperStaende(bodies, bodyIndex, pose.jd, scale, visible))
+      ? koerperNaechstDerMitte(pose, koerperStaende(bodies, bodyIndex, pose.jd, gezeigt, visible))
       : camera.targetId;
     if (id === null) return;
     heftenUm(id, pose);

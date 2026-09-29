@@ -37,11 +37,11 @@ Zwölf Commits, alle von Jens Fricke; keine Änderung an Abhängigkeiten.
 
 | Größe | Vorher (`master`) | Nachher (`903d3ad` plus Protokoll und README) |
 |---|---:|---:|
-| Tests | 5667 | 5800 (146 Dateien) |
+| Tests | 5667 | 5804 (146 Dateien) |
 | Hauptchunk | 1 569,20 kB | 1 579,86 kB (+10,66 kB) |
 
 Beide Werte aus frischen Durchläufen auf dem Branch: `npm run lint` ohne Meldung,
-`npx tsc -b --noEmit` Ausgang 0, `npm test` (146 Dateien, 5800 Tests, alle grün),
+`npx tsc -b --noEmit` Ausgang 0, `npm test` (146 Dateien, 5804 Tests, alle grün),
 `npm run build` (`tsc -b && vite build`, Hauptchunk `dist/assets/index-*.js`, gzip 436,95 kB). Der
 Wert für `master` stammt aus dem Stand vor der Etappe (Aufgabenstellung). Die Frageschwelle für den
 Hauptchunk (ab 1 571,79 kB, Abnahme Phase 5) ist damit überschritten; der Zuwachs von 10,66 kB ist
@@ -202,6 +202,9 @@ Offen; Vorschlag zur Reihenfolge:
 | A55 hoch und quer: Ziehen mit einem Finger schwenkt, Zwei-Finger-Pinch zoomt den Bildwinkel | offen |
 | A55: keine Taste G, der Knopf „Von der Erde“ im Kamera-Panel schaltet ein und aus; Teilen öffnet den Teilen-Dialog | offen |
 | A55 hoch: Szene Marsschleife im Kino, die Schleife wird waagerecht abgeschnitten (§7) | offen |
+| Desktop: Flug-Knopf aus dem Himmel (Start außerhalb der Erde, kein Durchgleiten) | offen |
+| Desktop: Shift+W in der Marsschleife (Kino endet, Mars wird Ziel) | offen |
+| Desktop: hohe Zeitrate und Taste R im Himmel (Spuren ruckelfrei?) | offen |
 
 ## 6. Rulings
 
@@ -276,8 +279,11 @@ Aus der Umsetzung:
   `p` ebenso; kein `tickCinema`-Test für die Oppositionsszene.
 - Testschärfe: Test `OPPOSITION_SUCHE_TAGE` prüft nur die Konstante; Schwelle 40,9 gegen 81 in `scenes.test.ts`;
   der Wächter im Maßstabstest erkennt nur den Wortlaut, nicht eine Destrukturierung.
-- Kommentare: „siehe Plan, Messwerte“ in `geozentrisch.test.ts` (Prozesssprache), „null bei der
-  Längenopposition“ missverständlich, Umbrüche in `flug.ts` und im Szenenkommentar.
+- Kommentare: Umbrüche in `flug.ts` und im Szenenkommentar.
+- Der Präsentationsmodus mit `view=geo&ui=off` hat an Touchgeräten keinen Ausstieg aus dem Himmel (festes Bild,
+  vertretbar).
+- Die Spuren rechnen bei Sprüngen über 365 Tage und rückwärts je Bild alle Tage neu (7 × 366 Richtungen);
+  gemessen nur bei 1 Tag/s.
 - Controller-Grafik der Steuerkarte zeigt die Himmelsbelegung nicht (Ruling 9); sie steht nur in der Tastaturliste.
 
 ## 8. Fragen an Jens

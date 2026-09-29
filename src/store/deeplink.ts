@@ -1,6 +1,7 @@
 import { bodyIndex } from '../data';
 import { SCENES } from '../data/scenes';
 import { geozentrischeRichtung, richtungZuWinkeln } from '../sim/geozentrisch';
+import { positionAt } from '../sim/orbit';
 import { fokusAbstand } from '../sim/scale';
 import type { ScaleSettings } from '../sim/scale';
 import type { Body } from '../sim/types';
@@ -189,7 +190,8 @@ function himmelsKoerperPatch(koerper: Body, jd: number): Plain {
  * läuft. `view=geo` (nur dieser Wert zählt) öffnet den Blick von der Erde
  * (`camera.mode: 'geozentrisch'`); wie `date` und `body` zählt es nur ohne
  * gültiges `scene`, und mit einem von `p` abweichenden `body` zeigt der Blick
- * zu diesem Körper. Liefert `null`, wenn `hash` gar kein Fragment enthält (kein „#");
+ * zu diesem Körper, ohne `body` und ohne Blick in `p` zur Gegensonne.
+ * Liefert `null`, wenn `hash` gar kein Fragment enthält (kein „#");
  * enthält es eines, ist `patch` nur dann `null`, wenn kein einziger
  * Schlüssel einen gültigen Wert ergab. Wirft die Auswertung, gilt das
  * Fragment ebenso als ungültig: Ein Link darf den Start nie verhindern.
@@ -264,6 +266,16 @@ function fragmentLesen(hash: string): FragmentErgebnis {
         overlay = mergePatch(overlay, himmel
           ? himmelsKoerperPatch(koerper, wirksamesJd(mergePatch(grundlage, overlay)))
           : koerperPatch(koerper, wirksamerMassstab(grundlage)));
+      }
+    } else if (himmel) {
+      // Weder body noch Blick in p: der Blick zeigt wie beim Knopf zur
+      // Gegensonne (Richtung Sonne → Erde) des wirksamen Zeitpunkts.
+      const grundKamera = grundlage.camera;
+      if (!istPlain(grundKamera) || grundKamera.geo === undefined) {
+        const jdWirksam = wirksamesJd(mergePatch(grundlage, overlay));
+        overlay = mergePatch(overlay, {
+          camera: { geo: richtungZuWinkeln(positionAt('earth', bodyIndex, jdWirksam)) },
+        });
       }
     }
   }

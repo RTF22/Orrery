@@ -4,6 +4,7 @@ import { encodePatch, fromShareable } from './serialize';
 import { DEFAULT_STATE } from './index';
 import { JD_MIN, JD_MAX, jdToDate, dateToJd } from '../sim/time';
 import { geozentrischeRichtung, richtungZuWinkeln } from '../sim/geozentrisch';
+import { positionAt } from '../sim/orbit';
 import { fokusAbstand } from '../sim/scale';
 import { bodyIndex } from '../data';
 
@@ -480,6 +481,21 @@ describe('Deep Link — view=geo', () => {
   it('gilt allein als gültiger Link', () => {
     const e = fragmentAuswerten('#view=geo')!;
     expect((e.patch!.camera as Record<string, unknown>).mode).toBe('geozentrisch');
+  });
+
+  it('zeigt ohne body und ohne Blick in p zur Gegensonne des wirksamen Zeitpunkts', () => {
+    const e = fragmentAuswerten('#date=2027-02-19&view=geo')!;
+    const geo = (e.patch!.camera as Record<string, unknown>).geo as { yaw: number; pitch: number };
+    const jd = dateToJd(new Date(Date.UTC(2027, 1, 19, 12)));
+    const soll = richtungZuWinkeln(positionAt('earth', bodyIndex, jd));
+    expect(geo.yaw).toBeCloseTo(soll.yaw, 12);
+    expect(geo.pitch).toBeCloseTo(soll.pitch, 12);
+  });
+
+  it('lässt einen Blick aus p unberührt', () => {
+    const p = encodePatch({ camera: { geo: { yaw: 2.6, pitch: 0.07, fovDeg: 24 } } });
+    const e = fragmentAuswerten(`#view=geo&p=${p}`)!;
+    expect((e.patch!.camera as Record<string, unknown>).geo).toEqual({ yaw: 2.6, pitch: 0.07, fovDeg: 24 });
   });
 
   it('verwirft andere Werte', () => {

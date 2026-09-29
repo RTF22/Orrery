@@ -46,7 +46,7 @@ export function ekliptikaleLaengeGrad(v: Vec3): number {
   return l < 0 ? l + 360 : l;
 }
 
-/** Längendifferenz Körper minus Gegensonne in (−180°, 180°]; null bei der Längenopposition. */
+/** Längendifferenz Körper minus Gegensonne in (−180°, 180°]; 0 bei der Längenopposition. */
 function abstandZurOpposition(id: string, index: BodyIndex, jd: number): number {
   const koerper = ekliptikaleLaengeGrad(geozentrischeRichtung(id, index, jd));
   const e = positionAt('earth', index, jd);

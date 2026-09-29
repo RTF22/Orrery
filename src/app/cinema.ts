@@ -76,7 +76,8 @@ export function szenenBeginn(
  * Eintritt in den Kernschatten, der Mond läuft noch unverfinstert ein.
  * Opposition (Entwurf geozentrische Sicht §4.5): so weit davor, dass sie in
  * der Mitte der Szene liegt, halbe Szenendauer mal Zeitraffer der Szene; die
- * Blende der ersten zwei Sekunden verschiebt das um Bruchteile eines Tages.
+ * Blende der ersten zwei Sekunden kann die Lage der Opposition in der Szene
+ * um bis zu rund 17 Tage verschieben.
  */
 export function sprungZiel(scene: Scene, jd: number): number | null {
   if (scene.zeitpunkt === 'naechste-mondfinsternis') {

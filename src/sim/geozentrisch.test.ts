@@ -9,7 +9,7 @@ interface Punkt { id: string; jd: number; x: number; y: number; z: number }
 const punkte = fixture.punkte as Punkt[];
 const GRAD = Math.PI / 180;
 
-/** Toleranzen in Grad: gemessener Höchstwert der Planung (siehe Plan, „Messwerte“) mit Reserve. */
+/** Toleranzen in Grad: gemessener Höchstwert der Planung gegen die Horizons-Stichtage mit Reserve. */
 const TOLERANZ_GRAD: Record<string, number> = {
   mercury: 0.02, venus: 0.02, mars: 0.02, jupiter: 0.15, saturn: 0.25, uranus: 0.05, neptune: 0.05,
 };

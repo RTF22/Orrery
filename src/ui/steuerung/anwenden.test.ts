@@ -4,7 +4,7 @@ import { act, renderHook } from '@testing-library/react';
 import * as THREE from 'three';
 import {
   steuerungTakt, tempoAendern, tempoAbonnieren, tempoFaktor, tempoZuruecksetzen, padZuruecksetzen,
-  TEMPO_START, TEMPO_MIN, TEMPO_MAX,
+  TEMPO_START, TEMPO_MIN, TEMPO_MAX, flugStarten,
 } from './anwenden';
 import type { SteuerungUmgebung } from './anwenden';
 import type { Flugtaste } from './tastatur';
@@ -13,7 +13,7 @@ import type { PadRoh } from './gamepad';
 import { padAttrappe } from './padAttrappe';
 import { useStore, DEFAULT_STATE } from '../../store';
 import { bodies, bodyIndex } from '../../data';
-import { scaledPositionAt, scaledRadius } from '../../sim/scale';
+import { scaledPositionAt, scaledRadius, SCALE_PRESETS } from '../../sim/scale';
 import {
   blickVektor, kreuz, laenge, mal, minus, normiert, plus, punkt, MINDESTABSTAND_RADIEN,
 } from '../../render/camera/flug';
@@ -855,5 +855,41 @@ describe('steuerungTakt — Himmelsmodus', () => {
     steuerungTakt(jd, 0.5, umgebung(['KeyW'], vorErde(), true));
     expect(useStore.getState().camera.mode).toBe('geozentrisch');
     expect(useStore.getState().camera.geo.pitch).toBeCloseTo(Math.PI / 8, 12);
+  });
+});
+
+describe('Himmel: Maßstab der gezeigten Lage', () => {
+  const real = SCALE_PRESETS.realistisch;
+  /** Lage im Erdmittelpunkt des realistischen Maßstabs, Blick genau auf Mars. */
+  function ausDemErdmittelpunkt(): GezeigtePose {
+    const erde = scaledPositionAt('earth', bodyIndex, jd, real);
+    const mars = scaledPositionAt('mars', bodyIndex, jd, real);
+    return { positionKm: erde, blick: normiert(minus(mars, erde)), jd };
+  }
+
+  it('wählt mit Shift+D im Himmel-Kino den Körper nach dem realistischen Maßstab', () => {
+    // Bei 200-facher Größe und echten Abständen deckte die Sonnenscheibe im eingestellten Maßstab die Blickachse.
+    useStore.getState().setScale({ sizeScale: 200, distanceExponent: 1, sunDamping: 1 });
+    const nummer = SCENES.findIndex((sz) => sz.id === 'marsschleife');
+    expect(nummer).toBeGreaterThanOrEqual(0);
+    useStore.getState().setCinema({ running: true, shuffle: false, nummer });
+    useStore.getState().setCamera({ mode: 'cinema' });
+    steuerungTakt(jd, 0, umgebung(['KeyD'], ausDemErdmittelpunkt(), true));
+    const { camera, cinema } = useStore.getState();
+    expect(cinema.running).toBe(false);
+    expect(camera.mode).toBe('attached');
+    expect(camera.targetId).toBe('mars');
+  });
+
+  it('schiebt den Flug aus dem Himmel aus der Erde heraus (eingestellter Maßstab)', () => {
+    useStore.getState().setScale({ sizeScale: 50, distanceExponent: 1, sunDamping: 1 });
+    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 50 } });
+    const { scale } = useStore.getState();
+    flugStarten(ausDemErdmittelpunkt());
+    const erde = scaledPositionAt('earth', bodyIndex, jd, scale);
+    const { fly } = useStore.getState().camera;
+    const welt = plus(scaledPositionAt(fly.refId, bodyIndex, jd, scale), fly);
+    const abstand = laenge(minus(welt, erde));
+    expect(abstand).toBeGreaterThanOrEqual(MINDESTABSTAND_RADIEN * scaledRadius(bodyIndex.earth!, scale) * (1 - 1e-9));
   });
 });
