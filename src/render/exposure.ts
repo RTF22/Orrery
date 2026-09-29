@@ -1,4 +1,5 @@
 import type { AppState } from '../store/types';
+import { dargestellterMassstab } from '../store/himmelsansicht';
 import { bodyIndex } from '../data/index';
 import { SCENES } from '../data/scenes';
 import { plannedSceneAt } from '../sim/director';
@@ -40,7 +41,7 @@ export function exposureTargetId(state: AppState): string {
  * Körper, sonst passte die Belichtung nicht zum Licht, das die Szene zeigt.
  */
 export function exposureFor(state: AppState, jd: number): number {
-  const p = scaledPositionAt(exposureTargetId(state), bodyIndex, jd, state.scale);
+  const p = scaledPositionAt(exposureTargetId(state), bodyIndex, jd, dargestellterMassstab(state));
   return targetExposure(Math.hypot(p.x, p.y, p.z), state.display);
 }
 

@@ -45,6 +45,11 @@ export interface BodyViews {
     visible: Record<string, boolean>,
     licht: LightingSettings,
     schatten: boolean,
+    /**
+     * Körper, der berechnet wird und Okkluder bleibt, aber nicht gezeichnet
+     * wird — die Erde in der Himmelsansicht (Entwurf geozentrische Sicht §5.3).
+     */
+    ohneNetz?: string | null,
   ): void;
   meshes: Map<string, THREE.Mesh>;
   /** Setzt eine geladene Stufe; eine Stufe, die nicht breiter ist als die sitzende, wird verworfen (dispose). */
@@ -244,7 +249,7 @@ export function createBodyViews(
       alt?.dispose();
     },
     texturBreite: (id) => eintraege.get(id)?.texturBreite ?? 0,
-    update(jd, s, cameraKm, visible, licht, schatten) {
+    update(jd, s, cameraKm, visible, licht, schatten, ohneNetz = null) {
       positionen.clear();
       radien.clear();
 
@@ -253,6 +258,9 @@ export function createBodyViews(
         if (!mesh) continue;
         if (visible[body.id] === false) { mesh.visible = false; continue; }
         mesh.visible = true;
+        // Die Kamera sitzt in diesem Körper (Himmelsansicht): nicht zeichnen,
+        // aber weiter rechnen — er bleibt Okkluder, der Mond verfinstert sich.
+        if (body.id === ohneNetz) mesh.visible = false;
 
         // THREE.Vector3 erfüllt strukturell das Vec3-Interface der Sim-Schicht.
         const weltKm = scaledPositionAt(body.id, bodyIndex, jd, s);

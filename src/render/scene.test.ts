@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
+import { dargestellterMassstab } from '../store/himmelsansicht';
 import * as THREE from 'three';
 import type { LightingSettings } from './lighting';
 import { exposureFor } from './exposure';
@@ -102,7 +103,7 @@ describe('buildScene — Bahnlinien', () => {
     expect(updateSpion).toHaveBeenCalledTimes(50);
     expect(updateSpion).toHaveBeenLastCalledWith(
       expect.any(THREE.Vector3), DEFAULT_STATE.visible, DEFAULT_STATE.display.orbits,
-      2451545.0 + 49, DEFAULT_STATE.scale, null,
+      2451545.0 + 49, dargestellterMassstab(DEFAULT_STATE), null,
     );
   });
 });

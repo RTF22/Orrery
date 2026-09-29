@@ -10,6 +10,7 @@ import { szeneFreigeben } from './freigeben';
 import { createLabelOverlay, apparentRadiusPixels } from './labels';
 import type { LabelEintrag } from './labels';
 import { createCameraController } from './camera/controller';
+import { himmelsansicht, dargestellterMassstab } from '../store/himmelsansicht';
 import { createExposureMeter } from './exposure';
 import type { LightingSettings } from './lighting';
 import { scaledPositionAt } from '../sim/scale';
@@ -140,10 +141,17 @@ export function buildScene(
 
   return {
     update(jd, dt, state) {
+      // Himmelsansicht (Entwurf geozentrische Sicht §3, §10): gezeichnet wird
+      // nie direkt mit dem eingestellten Maßstab, sondern mit dem
+      // dargestellten (Test render/massstab.test.ts); die Erde bleibt
+      // ungezeichnet, Bahnlinien aus.
+      const himmel = himmelsansicht(state);
+      const massstab = dargestellterMassstab(state);
+
       // Die Kamera selbst bleibt konstruktionsbedingt im Ursprung (siehe
       // renderer.ts) — bewegt wird die Welt relativ zu dieser gedachten
       // Kameraposition in Kilometern.
-      const { x, y, z } = kamera.update(state, jd, dt, state.scale);
+      const { x, y, z } = kamera.update(state, jd, dt, massstab);
       const cameraKm = new THREE.Vector3(x, y, z);
 
       // lookAt setzt nur die Quaternion; die Blickmatrix erneuert sonst erst der
@@ -156,16 +164,16 @@ export function buildScene(
       };
 
       // Die momentane Bahnellipse je Bild — ohne Kepler-Löser, siehe orbits.ts.
-      bahnen.update(cameraKm, state.visible, state.display.orbits, jd, state.scale, hover);
+      bahnen.update(cameraKm, state.visible, state.display.orbits && !himmel, jd, massstab, hover);
 
-      koerper.update(jd, state.scale, cameraKm, state.visible, belichtet, state.display.shadows);
+      koerper.update(jd, massstab, cameraKm, state.visible, belichtet, state.display.shadows, himmel ? 'earth' : null);
 
       const obergrenze = obergrenzeFuer(state.quality.tier, ctx.renderer.capabilities.maxTextureSize);
       texturen.pruefe(performance.now(), texturBedarf, state.camera.targetId, obergrenze);
       milchstrasse.update(state.display.milchstrasse, obergrenze, texturen.ruhig());
 
       // Das Licht sitzt an der (kamerarelativen) Sonnenposition.
-      const sonnenpositionKm = scaledPositionAt('sun', bodyIndex, jd, state.scale);
+      const sonnenpositionKm = scaledPositionAt('sun', bodyIndex, jd, massstab);
       const lichtRender = worldToRender(sonnenpositionKm, cameraKm);
       licht.position.set(lichtRender.x, lichtRender.y, lichtRender.z);
 
@@ -173,7 +181,7 @@ export function buildScene(
       // kamerarelative Sonnenposition für die Vorwärtsstreuung (siehe
       // rings.ts) — dasselbe Punktlicht, das gerade eben positioniert wurde.
       ringe.update(
-        jd, state.scale, cameraKm, state.visible, belichtet,
+        jd, massstab, cameraKm, state.visible, belichtet,
         new THREE.Vector3(lichtRender.x, lichtRender.y, lichtRender.z),
         state.display.shadows,
       );
@@ -184,7 +192,7 @@ export function buildScene(
       // vom Renderer, damit ein Teilchen auf jedem Bildschirm gleich groß
       // erscheint.
       guertel.update(
-        jd, state.scale.distanceExponent, cameraKm, state.quality.tier,
+        jd, massstab.distanceExponent, cameraKm, state.quality.tier,
         state.display.belts, belichtet, ctx.renderer.getPixelRatio(),
       );
       sternfeldPixeldichte(sternfeld, ctx.renderer.getPixelRatio());

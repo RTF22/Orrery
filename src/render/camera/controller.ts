@@ -12,6 +12,9 @@ import { cinemaTargetFor } from './cinema';
 import { kmToUnits, worldToRender } from '../units';
 import { ELEVATION_GRENZE, begrenze, blickVektor, laenge, mal, minus, normiert, plus } from './flug';
 import type { GezeigtePose } from './flug';
+import { himmelsansicht } from '../../store/himmelsansicht';
+import { himmelsBlick } from './himmelsblick';
+import { KAMERA_FOV_GRAD } from '../renderer';
 
 export interface CameraTarget { positionKm: Vec3; lookAtKm: Vec3 }
 
@@ -53,6 +56,8 @@ export function targetFor(state: AppState, jd: number, s: ScaleSettings): Camera
     };
   }
 
+  // Der Modus 'geozentrisch' erreicht diesen Zweig nie: update zweigt vorher
+  // in die Himmelsansicht ab.
   // 'free' und 'attached' teilen sich die Kugelkoordinaten; der Unterschied
   // liegt allein im Anker. Geheftet führt den Körper mit, frei friert seine
   // Position ein: Gedreht und gezoomt wird um den Punkt, an dem der Körper
@@ -99,6 +104,18 @@ export const FLUG_DAEMPFUNG_S = 0.15;
 export const FLUG_UEBERGANG_S = 0.45;
 /** Ab diesem Rest gilt ein Übergang als angekommen: Anteil der Lage, Länge der Blickdifferenz. */
 export const UEBERGANG_REST = 1e-3;
+
+/** Dämpfung des Blicks in der Himmelsansicht: wie im Flug, damit Ziehen direkt wirkt. */
+export const HIMMEL_DAEMPFUNG_S = FLUG_DAEMPFUNG_S;
+
+/**
+ * Bezugsabstand für nahe und ferne Ebene in der Himmelsansicht, in
+ * Render-Einheiten (10⁶ Einheiten = 10⁹ km): nahe Ebene 10 Einheiten
+ * (10 000 km, weit diesseits des Mondes bei mindestens 356 000 km), ferne
+ * Ebene 10¹⁰ Einheiten, jenseits der Sternkugel (10⁹, starfield.ts). Die Erde
+ * selbst ist ausgeblendet, näher liegt nichts.
+ */
+export const HIMMEL_EBENEN_ABSTAND = 1e6;
 
 /** Ist die gedämpfte Fluglage noch nicht bei der Solllage aus dem Store angekommen? */
 function nochUnterwegs(lage: Vec3, blick: Vec3, fly: AppState['camera']['fly']): boolean {
@@ -166,6 +183,12 @@ export function createCameraController(camera: THREE.PerspectiveCamera): CameraC
   // Wiederherstellung in den Flug läuft noch (Nachtrag §13.4).
   let uebergang = false;
 
+  // Himmelsansicht (Entwurf geozentrische Sicht §4.2): Lage fest im
+  // Erdmittelpunkt, nur der Blick gedämpft.
+  let imHimmel = false;
+  let himmelBlick: Vec3 = { x: 1, y: 0, z: 0 };
+  const vHimmel: Vec3 = { x: 0, y: 0, z: 0 };
+
   const nullen = (v: Vec3): void => { v.x = 0; v.y = 0; v.z = 0; };
   const schluesselVon = (state: AppState): string =>
     `${state.camera.mode}|${state.camera.targetId}|${state.camera.freezeJd ?? 'jetzt'}`;
@@ -230,9 +253,38 @@ export function createCameraController(camera: THREE.PerspectiveCamera): CameraC
     return position;
   };
 
+  /**
+   * Himmelsansicht: Der Eintritt ist für die Lage ein Schnitt in den
+   * Erdmittelpunkt (Entwurf §10 Punkt 2), der Blick schwenkt von der gezeigten
+   * Richtung herüber. Im allerersten Bild (Neuladen, Link) gibt es keine
+   * gezeigte Lage; dann gilt sofort die Sollrichtung.
+   */
+  const himmel = (state: AppState, jd: number, dt: number, s: ScaleSettings): Vec3 => {
+    const position = scaledPositionAt('earth', bodyIndex, jd, s);
+    const soll = himmelsBlick(state, jd);
+    if (!imHimmel) {
+      himmelBlick = pose?.blick ?? soll.richtung;
+      nullen(vHimmel);
+      imHimmel = true;
+      imFlug = false;
+    }
+    wiederherstellungGemeldet = false;
+    himmelBlick = normiert(smoothDampVec3(himmelBlick, soll.richtung, vHimmel, HIMMEL_DAEMPFUNG_S, dt));
+    camera.fov = soll.fovDeg;
+    ausrichten(himmelBlick, HIMMEL_EBENEN_ABSTAND);
+    merke({ positionKm: position, blick: himmelBlick, jd });
+    return position;
+  };
+
   return {
     update(state, jd, dt, s) {
-      if (state.camera.mode === 'fly') return fliege(state, jd, dt, s);
+      if (himmelsansicht(state)) return himmel(state, jd, dt, s);
+      // Jeder andere Modus zeigt den festen Bildwinkel; ausrichten erneuert die Projektion.
+      camera.fov = KAMERA_FOV_GRAD;
+      if (state.camera.mode === 'fly') {
+        imHimmel = false;
+        return fliege(state, jd, dt, s);
+      }
       wiederherstellungGemeldet = false;
 
       const ziel = targetFor(state, jd, s);
@@ -245,10 +297,11 @@ export function createCameraController(camera: THREE.PerspectiveCamera): CameraC
         z: ziel.positionKm.z - anker.z,
       };
 
-      if (imFlug) {
+      if (imFlug || imHimmel) {
         imFlug = false;
+        imHimmel = false;
         if (pose !== null) {
-          // Ausstieg aus dem Flug: Die Kamera bleibt stehen, der Blickpunkt
+          // Ausstieg aus dem Flug oder der Himmelsansicht: Die Kamera bleibt stehen, der Blickpunkt
           // liegt zuerst auf der alten Blickachse im Abstand des neuen Ankers.
           // Die gezeigte Lage stammt aus einem früheren Bild (pose.jd); erst
           // mit dem Weg des Ankers seither mitgeführt, dann weiterverrechnet

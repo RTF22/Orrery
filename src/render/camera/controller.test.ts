@@ -1,9 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import * as THREE from 'three';
-import { createCameraController, flugWiederherstellungMelden, targetFor, letztePose } from './controller';
+import { createCameraController, flugWiederherstellungMelden, targetFor, letztePose, HIMMEL_EBENEN_ABSTAND } from './controller';
+import { dargestellterMassstab } from '../../store/himmelsansicht';
+import { KAMERA_FOV_GRAD } from '../renderer';
 import { DEFAULT_STATE } from '../../store';
 import { scaledPositionAt, scaledRadius } from '../../sim/scale';
-import { blickAus, kugelUm, laenge, minus, normiert, plus, punkt, ELEVATION_GRENZE } from './flug';
+import { blickAus, blickVektor, kugelUm, laenge, minus, normiert, plus, punkt, ELEVATION_GRENZE } from './flug';
 import { bodyIndex } from '../../data/index';
 import { worldToRender } from '../units';
 import type { AppState } from '../../store/types';
@@ -358,5 +360,56 @@ describe('createCameraController: neuer Controller nach Remount', () => {
     expect(letztePose()).not.toBeNull();
     createCameraController(new THREE.PerspectiveCamera());
     expect(letztePose()).toBeNull();
+  });
+});
+
+describe('createCameraController — Himmelsansicht', () => {
+  const jd = DEFAULT_STATE.time.jd;
+  const himmel = (geo = { yaw: 2, pitch: 0.3, fovDeg: 20 }): AppState => ({
+    ...structuredClone(DEFAULT_STATE),
+    camera: { ...DEFAULT_STATE.camera, mode: 'geozentrisch', geo },
+  });
+  const neueKamera = () => {
+    const c = new THREE.PerspectiveCamera(KAMERA_FOV_GRAD, 1, 0.001, 1e12);
+    c.up.set(0, 0, 1);
+    return c;
+  };
+
+  it('steht im ersten Bild ohne gezeigte Lage schon im Erdmittelpunkt und blickt in die gespeicherte Richtung', () => {
+    const camera = neueKamera();
+    const state = himmel();
+    const s = dargestellterMassstab(state);
+    const position = createCameraController(camera).update(state, jd, 1 / 60, s);
+    const erde = scaledPositionAt('earth', bodyIndex, jd, s);
+    expect(laenge(minus(position, erde))).toBeLessThan(1e-6);
+    const blick = camera.getWorldDirection(new THREE.Vector3());
+    const soll = blickVektor({ yaw: 2, pitch: 0.3 });
+    expect(punkt({ x: blick.x, y: blick.y, z: blick.z }, soll)).toBeGreaterThan(1 - 1e-9);
+    expect(camera.fov).toBe(20);
+    expect(camera.near).toBeCloseTo(HIMMEL_EBENEN_ABSTAND * 1e-5, 9);
+    expect(camera.far).toBeGreaterThan(1e9);
+  });
+
+  it('stellt beim Ausstieg den Bildwinkel auf 50° zurück', () => {
+    const camera = neueKamera();
+    const controller = createCameraController(camera);
+    const state = himmel();
+    for (let i = 0; i < 10; i++) controller.update(state, jd, 1 / 60, dargestellterMassstab(state));
+    const geheftet: AppState = { ...state, camera: { ...state.camera, mode: 'attached', targetId: 'mars', distance: 1e8 } };
+    controller.update(geheftet, jd, 1 / 60, dargestellterMassstab(geheftet));
+    expect(camera.fov).toBe(KAMERA_FOV_GRAD);
+  });
+
+  it('übergibt beim Ausstieg ohne großen Sprung', () => {
+    const camera = neueKamera();
+    const controller = createCameraController(camera);
+    const state = himmel();
+    let position = { x: 0, y: 0, z: 0 };
+    for (let i = 0; i < 60; i++) position = controller.update(state, jd, 1 / 60, dargestellterMassstab(state));
+    const geheftet: AppState = { ...state, camera: { ...state.camera, mode: 'attached', targetId: 'mars', distance: 1e8 } };
+    const danach = controller.update(geheftet, jd, 1e-6, dargestellterMassstab(geheftet));
+    // Die Übergabe hält die Kamera an der gezeigten Lage; nur der Weg der
+    // Erde im Maßstabswechsel bleibt, weit unter der Schwelle von 10⁶ km.
+    expect(laenge(minus(danach, position))).toBeLessThan(1e6);
   });
 });

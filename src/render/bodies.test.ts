@@ -141,6 +141,15 @@ describe('createBodyViews.update — Okkluder je Bild', () => {
     expect(uniforms['uSonnenWinkel']!.value).toBeGreaterThan(0);
   });
 
+  it('blendet das Netz der Erde aus und lässt sie Okkluder des Mondes', () => {
+    const views = createBodyViews(new THREE.Scene());
+    const { uniforms } = schattenEinbau(standardMaterial(views, 'moon'));
+    views.update(J2000, SCALE_PRESETS.realistisch, new THREE.Vector3(0, 0, 0), {}, LICHT, true, 'earth');
+    expect(views.meshes.get('earth')!.visible).toBe(false);
+    expect(views.meshes.get('moon')!.visible).toBe(true);
+    expect(uniforms['uOkkluderAnzahl']!.value).toBeGreaterThanOrEqual(1);
+  });
+
   it('schaltet bei ausgeschaltetem Schatten alle Okkluder ab', () => {
     const views = createBodyViews(new THREE.Scene());
     const { uniforms } = schattenEinbau(standardMaterial(views, 'moon'));
