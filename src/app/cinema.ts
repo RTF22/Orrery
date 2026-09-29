@@ -1,8 +1,9 @@
 import { useStore } from '../store';
 import type { AppState } from '../store/types';
-import { SCENES } from '../data/scenes';
+import { SCENES, type Scene } from '../data/scenes';
 import { plannedSceneAt } from '../sim/director';
 import { naechsteMondfinsternis } from '../sim/finsternis';
+import { naechsteOpposition } from '../sim/geozentrisch';
 import { bodyIndex } from '../data/index';
 import { imZeitbereich } from '../sim/time';
 
@@ -69,6 +70,27 @@ export function szenenBeginn(
 }
 
 /**
+ * Ziel des Zeitsprungs beim Beginn einer Szene mit `zeitpunkt`, oder null
+ * (ohne `zeitpunkt` oder wenn die Suche nichts findet — dann läuft die Szene
+ * ohne Sprung). Mondfinsternis: ein Zehntel der Durchgangsdauer vor dem
+ * Eintritt in den Kernschatten, der Mond läuft noch unverfinstert ein.
+ * Opposition (Entwurf geozentrische Sicht §4.5): so weit davor, dass sie in
+ * der Mitte der Szene liegt, halbe Szenendauer mal Zeitraffer der Szene; die
+ * Blende der ersten zwei Sekunden verschiebt das um Bruchteile eines Tages.
+ */
+export function sprungZiel(scene: Scene, jd: number): number | null {
+  if (scene.zeitpunkt === 'naechste-mondfinsternis') {
+    const f = naechsteMondfinsternis(bodyIndex, jd);
+    return f === null ? null : f.eintrittJd - 0.1 * (f.austrittJd - f.eintrittJd);
+  }
+  if (scene.zeitpunkt === 'naechste-opposition') {
+    const opposition = naechsteOpposition(scene.targetId, bodyIndex, jd);
+    return opposition === null ? null : opposition - (scene.durationSec / 2) * scene.timeRateDaysPerSec;
+  }
+  return null;
+}
+
+/**
  * Ein Bild im Kino-Modus: Szene fortschalten und den Zeitraffer der Szene
  * angleichen. Wird aus der Renderschleife gerufen, nicht aus React.
  */
@@ -88,19 +110,16 @@ export function tickCinema(dtSek: number): void {
       .scene.timeRateDaysPerSec;
 
   // Zeitsprung beim Beginn einer Szene mit `zeitpunkt` (Entwurf §4; Beginn
-  // siehe szenenBeginn): Die Suche läuft ab der aktuellen Zeit, die Zeit
-  // landet um ein Zehntel der Durchgangsdauer vor dem Eintritt in den
-  // Kernschatten — der Zuschauer sieht den Mond also noch unverfinstert
-  // einlaufen. Findet die Suche nichts, bleibt die Zeit stehen und die
-  // Szene läuft ohne Sprung. Der Sprung bleibt nach der Szene bestehen:
-  // Das Kino setzt heute schon den Zeitraffer und stellt ihn nicht zurück,
-  // die Zeit ist im Kino die des Kinos.
+  // siehe szenenBeginn, Ziel siehe sprungZiel): Die Suche läuft ab der
+  // aktuellen Zeit, für die Mondfinsternis wie für die Opposition. Findet
+  // die Suche nichts, bleibt die Zeit stehen und die Szene läuft ohne
+  // Sprung. Der Sprung bleibt nach der Szene bestehen: Das Kino setzt heute
+  // schon den Zeitraffer und stellt ihn nicht zurück, die Zeit ist im Kino
+  // die des Kinos.
   let jdNeu = zustand.time.jd;
-  if (szenenBeginn(vorher, nachher) && geplant.scene.zeitpunkt === 'naechste-mondfinsternis') {
-    const finsternis = naechsteMondfinsternis(bodyIndex, zustand.time.jd);
-    if (finsternis !== null) {
-      jdNeu = finsternis.eintrittJd - 0.1 * (finsternis.austrittJd - finsternis.eintrittJd);
-    }
+  if (szenenBeginn(vorher, nachher)) {
+    const ziel = sprungZiel(geplant.scene, zustand.time.jd);
+    if (ziel !== null) jdNeu = ziel;
   }
 
   useStore.setState({

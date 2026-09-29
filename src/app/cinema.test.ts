@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { advanceCinema, blendedRate, RATE_BLEND_SEC, tickCinema, szenenBeginn } from './cinema';
+import { advanceCinema, blendedRate, RATE_BLEND_SEC, tickCinema, szenenBeginn, sprungZiel } from './cinema';
 import { DEFAULT_STATE, useStore } from '../store';
 import { naechsteMondfinsternis } from '../sim/finsternis';
 import { bodyIndex } from '../data/index';
 import { J2000, JD_MAX } from '../sim/time';
-import { SCENES } from '../data/scenes';
+import { SCENES, type Scene } from '../data/scenes';
 import { plannedSceneAt } from '../sim/director';
 
 const basis = { ...DEFAULT_STATE.cinema, running: true };
@@ -207,5 +207,32 @@ describe('tickCinema — Zeitsprung auf die nächste Mondfinsternis', () => {
     const nachher = useStore.getState();
     expect(nachher.cinema.nummer).toBe(indexMondfinsternis);
     expect(nachher.time.jd).toBe(JD_MAX);
+  });
+});
+
+describe('sprungZiel', () => {
+  const himmel: Scene = {
+    id: 'probe-himmel', titleKey: 'scene.probe', targetId: 'mars', path: 'himmel',
+    distanceBasis: 'bodyRadius',
+    params: { distanceInRadii: 1, elevationDeg: 0, azimuthDeg: 0, azimuthRateDegPerSec: 0 },
+    durationSec: 60, timeRateDaysPerSec: 2.7, himmel: { fovDeg: 30 }, zeitpunkt: 'naechste-opposition',
+    variation: { azimuthDeg: [0, 0], elevationDeg: [0, 0], distanceFactor: [1, 1] },
+  };
+
+  it('legt die nächste Opposition in die Mitte der Szene', () => {
+    const ziel = sprungZiel(himmel, 2461314.5)!;
+    // Opposition 19.02.2027 (JD 2461456,0) minus 30 s · 2,7 Tage/s.
+    expect(Math.abs(ziel - (2461456.0 - 81))).toBeLessThan(1);
+  });
+
+  it('springt für die Mondfinsternis wie bisher vor den Eintritt', () => {
+    const mond = SCENES.find((s) => s.zeitpunkt === 'naechste-mondfinsternis')!;
+    const f = naechsteMondfinsternis(bodyIndex, J2000)!;
+    expect(sprungZiel(mond, J2000)).toBeCloseTo(f.eintrittJd - 0.1 * (f.austrittJd - f.eintrittJd), 9);
+  });
+
+  it('gibt ohne zeitpunkt und ohne Opposition null', () => {
+    expect(sprungZiel({ ...himmel, zeitpunkt: undefined }, 2461314.5)).toBeNull();
+    expect(sprungZiel({ ...himmel, targetId: 'venus' }, 2461314.5)).toBeNull();
   });
 });
