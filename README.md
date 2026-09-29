@@ -46,7 +46,7 @@ German and English. Level and language can be switched in the app at any time.
 | Secondary school | Figures, physical relationships, links to related topics | Also mass, rotation period, axial tilt, eccentricity, orbital velocity | 63 |
 | University | Full scientific basis: formulas, tables with uncertainties, open questions with both sides, citations | Also orbital elements at J2000 with rates, pole direction, geometric albedo | 69 |
 
-The texts cover 35 bodies (the Sun, eight planets, five dwarf planets, 21 moons), 19 cinema
+The texts cover 35 bodies (the Sun, eight planets, five dwarf planets, 21 moons), 20 cinema
 scenes and 9 general topics such as eclipses, ring systems, axial tilt and Kirkwood gaps. The
 university level adds six advanced topics: tides, orbital resonances, reference systems and
 time scales, interior structure, photometry, and the formation of the solar system.
@@ -72,9 +72,12 @@ planets.
   with Kirkwood gaps, the Kuiper belt, a star catalogue and the Milky Way at its true position.
 - Shadows and eclipses: moon shadows on planets, ring shadows, the blood moon; the cinema
   scene *Lunar eclipse* jumps to the next real one.
+- View from Earth: the sky as seen from the centre of the Earth (key G), with the planets' tracks over one year,
+  the ecliptic and the celestial equator; the field of view acts as zoom, and the cinema scene *Mars loop* shows
+  the retrograde loop.
 - Time control from 1 January of year 1 to 31 December 9999: pause, speed, reverse, date jump.
 - Separate scale sliders for size and distance.
-- Cinema mode: full screen, automatic camera flights through 19 curated scenes.
+- Cinema mode: full screen, automatic camera flights through 20 curated scenes.
 - Installable web app; works on phones, with keyboard, mouse and game controller.
 - Shareable links to any date and body, e.g. `https://orrery3d.de/#date=1990-05-17&body=mars`;
   the share button copies the exact view.

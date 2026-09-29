@@ -46,7 +46,7 @@ Deutsch und Englisch. Stufe und Sprache lassen sich in der App jederzeit umschal
 | Gymnasium | Zahlen, physikalische Zusammenhänge, Verweise auf verwandte Themen | Dazu Masse, Rotationsperiode, Achsneigung, Exzentrizität, Bahngeschwindigkeit | 63 |
 | Hochschule | Gesamte wissenschaftliche Grundlage: Formeln, Tabellen mit Unsicherheiten, Streitfragen mit beiden Seiten, Zitate | Dazu Bahnelemente zur Epoche J2000 samt Raten, Polrichtung, geometrische Albedo | 69 |
 
-Die Texte behandeln 35 Körper (Sonne, acht Planeten, fünf Zwergplaneten, 21 Monde), 19
+Die Texte behandeln 35 Körper (Sonne, acht Planeten, fünf Zwergplaneten, 21 Monde), 20
 Kinoszenen und 9 übergreifende Themen wie Finsternisse, Ringsysteme, Achsneigung und
 Kirkwood-Lücken. Die Hochschulstufe ergänzt sechs Fachthemen: Gezeiten, Bahnresonanzen,
 Bezugssysteme und Zeitskalen, innerer Aufbau, Photometrie und die Entstehung des
@@ -74,10 +74,13 @@ der Planeten.
   ihrer wahren Lage.
 - Schatten und Finsternisse: Mondschatten auf Planeten, Ringschatten, Blutmond; die Kinoszene
   *Mondfinsternis* springt zur nächsten echten.
+- Blick von der Erde: der Himmel aus dem Erdmittelpunkt (Taste G) mit den Planetenspuren eines Jahres,
+  Ekliptik und Himmelsäquator; der Bildwinkel wirkt als Zoom, die Kinoszene *Marsschleife* zeigt die
+  Rückläufigkeit.
 - Zeitsteuerung vom 1. Januar des Jahres 1 bis zum 31. Dezember 9999: Pause, Tempo,
   Rückwärtslauf, Datumssprung.
 - Getrennte Maßstabsregler für Größe und Abstand.
-- Kino-Modus: Vollbild, automatische Kamerafahrten durch 19 kuratierte Szenen.
+- Kino-Modus: Vollbild, automatische Kamerafahrten durch 20 kuratierte Szenen.
 - Installierbare Web-App; läuft auf dem Handy, mit Tastatur, Maus und Controller.
 - Teilbare Links zu jedem Datum und Körper, etwa `https://orrery3d.de/#date=1990-05-17&body=mars`;
   der Teilen-Knopf kopiert die genaue Ansicht.
