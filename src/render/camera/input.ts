@@ -2,7 +2,7 @@ import { useStore } from '../../store';
 import { TIPP_SCHWELLE_PX, zeigerartVon } from '../treffer';
 import type { Zeigerart } from '../treffer';
 import { bodyIndex } from '../../data/index';
-import { ELEVATION_GRENZE, MAX_DISTANCE_KM, begrenze, blickDrehen, kleinsterAbstand } from './flug';
+import { ELEVATION_GRENZE, MAX_DISTANCE_KM, begrenze, blickDrehen, himmelDrehen, himmelZoomen, kleinsterAbstand } from './flug';
 import { gesteEntscheiden } from './geste';
 
 /** Bildschirmbreite entspricht etwa einer halben Umdrehung. */
@@ -18,6 +18,11 @@ export const TEMPO_JE_RASTE = 1.25;
  */
 function zoome(faktor: number): void {
   const { camera, scale, setCamera } = useStore.getState();
+  if (camera.mode === 'geozentrisch') {
+    // Himmelsansicht: Zoom ist der Bildwinkel (Entwurf geozentrische Sicht §4.2).
+    setCamera({ geo: himmelZoomen(camera.geo, faktor) });
+    return;
+  }
   const minimum = kleinsterAbstand(bodyIndex[camera.targetId], scale);
   setCamera({ distance: begrenze(camera.distance * faktor, minimum, MAX_DISTANCE_KM) });
 }
@@ -32,6 +37,11 @@ function drehe(dx: number, dy: number): void {
     // folgt der Hand wie in Stellarium: nach rechts gezogen dreht der Blick
     // nach links, nach oben gezogen senkt er sich.
     setCamera({ fly: { ...camera.fly, ...blickDrehen(camera.fly, dx * DREH_PRO_PIXEL, dy * DREH_PRO_PIXEL) } });
+    return;
+  }
+  if (camera.mode === 'geozentrisch') {
+    // Wie im Flug folgt der Himmel der Hand, fein nach Bildwinkel (himmelDrehen).
+    setCamera({ geo: himmelDrehen(camera.geo, dx * DREH_PRO_PIXEL, dy * DREH_PRO_PIXEL) });
     return;
   }
   setCamera({

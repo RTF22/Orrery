@@ -840,3 +840,20 @@ describe('steuerungTakt: Mindestabstand beim Drehen', () => {
     expect(useStore.getState().camera.distance).toBeCloseTo(MINDESTABSTAND_RADIEN * radius('earth'), 3);
   });
 });
+
+describe('steuerungTakt — Himmelsmodus', () => {
+  it('schwenkt mit gehaltenem D, statt zu fliegen', () => {
+    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 50 } });
+    steuerungTakt(jd, 0.5, umgebung(['KeyD'], vorErde()));
+    const { camera } = useStore.getState();
+    expect(camera.mode).toBe('geozentrisch');
+    expect(camera.geo.yaw).toBeCloseTo(-Math.PI / 8, 12);
+  });
+
+  it('schwenkt auch mit Shift, statt zu drehen', () => {
+    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 50 } });
+    steuerungTakt(jd, 0.5, umgebung(['KeyW'], vorErde(), true));
+    expect(useStore.getState().camera.mode).toBe('geozentrisch');
+    expect(useStore.getState().camera.geo.pitch).toBeCloseTo(Math.PI / 8, 12);
+  });
+});

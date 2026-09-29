@@ -220,3 +220,28 @@ describe('Fahrt aus dem Flug', () => {
     expect(useStore.getState().camera.distance).toBeCloseTo(2e8, 0);
   });
 });
+
+describe('fahreZu im Himmelsmodus', () => {
+  it('richtet den Blick aus, statt zu fahren', () => {
+    useStore.getState().setCamera({ mode: 'geozentrisch' });
+    fahreZu('saturn');
+    const { camera } = useStore.getState();
+    expect(camera.mode).toBe('geozentrisch');
+    expect(camera.targetId).toBe('saturn');
+    expect(fahrtLaeuft()).toBe(false);
+  });
+
+  it('verlässt ihn beim Klick auf die Erde', () => {
+    useStore.getState().setCamera({ mode: 'geozentrisch' });
+    fahreZu('earth');
+    expect(useStore.getState().camera.mode).toBe('attached');
+    fahrtAbbrechen();
+  });
+
+  it('verlässt ihn mit der Systemfahrt (Pad-B, Wurzelzeile)', () => {
+    useStore.getState().setCamera({ mode: 'geozentrisch' });
+    fahreZuSystem();
+    expect(useStore.getState().camera.mode).toBe('attached');
+    fahrtAbbrechen();
+  });
+});

@@ -10,6 +10,7 @@ import {
 import type { Absicht, GezeigtePose } from '../../render/camera/flug';
 import { cinemaAktiv, noteUserInput, stopCinema } from '../cinemaControl';
 import { fahreZu, fahreZuSystem, fahrtAbbrechen } from '../kamerafahrt';
+import { himmelSchwenken } from '../himmelsmodus';
 import { blickzielVon } from '../../render/camera/cinema';
 import { eingabeMelden, zeigerAusgeblendet } from '../idle';
 import { handleShortcut } from '../shortcuts/useShortcuts';
@@ -298,6 +299,21 @@ function padTakt(u: SteuerungUmgebung): PadTakt {
 
 /** Bewegung eines Bildes, die Tastatur vor dem Controller. */
 function bewegen(jd: number, dt: number, u: SteuerungUmgebung, bild: PadBild | null): void {
+  if (useStore.getState().camera.mode === 'geozentrisch') {
+    // Himmelsansicht (Entwurf geozentrische Sicht §10 Punkt 5): Tasten und
+    // linker Stick schwenken und zoomen, mit und ohne Shift/LB; kein Flug.
+    const stand = u.tasten();
+    if (stand.gehalten.size > 0) {
+      himmelSchwenken(dt, tastenAbsicht(stand.gehalten));
+      return;
+    }
+    const a = bild?.absicht;
+    // Stick oben = Blick hoch (die y-Achse der API zählt nach unten), RT heran.
+    if (a !== undefined && lenkt(a) && !padGesperrt) {
+      himmelSchwenken(dt, { vor: -a.links.y, seit: a.links.x, hoch: a.vor });
+    }
+    return;
+  }
   const stand = u.tasten();
   if (stand.gehalten.size > 0) {
     const absicht = tastenAbsicht(stand.gehalten);

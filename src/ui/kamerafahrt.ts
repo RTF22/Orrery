@@ -6,6 +6,7 @@ import { systemRadiusKm } from '../render/camera/cinema';
 import { KAMERA_FOV_GRAD } from '../render/renderer';
 import { easeInOutCubic } from './tween';
 import { cinemaAktiv, stopCinema } from './cinemaControl';
+import { himmelAusrichten } from './himmelsmodus';
 import { SYSTEM_THEMA } from '../data/themen';
 import { letztePose } from '../render/camera/controller';
 import { kugelUm } from '../render/camera/flug';
@@ -72,6 +73,13 @@ export function fahrtAbbrechen(): void {
 export function fahreZu(id: string, optionen: FahrtOptionen = {}): void {
   const body = bodyIndex[id];
   if (body === undefined) return;
+  // Im Himmelsmodus richtet ein Klick den Blick aus, statt zu fahren; nur die
+  // Erde selbst ist von innen nicht zu sehen und führt hinaus.
+  if (useStore.getState().camera.mode === 'geozentrisch' && id !== 'earth') {
+    fahrtAbbrechen();
+    himmelAusrichten(id);
+    return;
+  }
   fahre(id, (_jd, scale) => fokusAbstand(body, scale), null, null, optionen);
 }
 
@@ -113,7 +121,10 @@ function fahre(
   // Aus dem Flug gelten Abstand und Winkel der gezeigten Lage relativ zum
   // neuen Ziel; camera.distance stammt dort von vor dem Flug (Entwurf Flug und
   // Controller §4.5). Sonst beginnt die Fahrt wie bisher bei den Kugelwerten.
-  const pose = camera.mode === 'fly' ? (optionen.pose ?? letztePose)() : null;
+  // Aus dem Himmel zur Erde gäbe die Lage im Erdmittelpunkt den Abstand 0;
+  // dann beginnt die Fahrt bei den Kugelwerten.
+  const vonPose = camera.mode === 'fly' || (camera.mode === 'geozentrisch' && id !== 'earth');
+  const pose = vonPose ? (optionen.pose ?? letztePose)() : null;
   const start = pose === null
     ? { distance: camera.distance, azimuth: camera.azimuth, elevation: camera.elevation }
     : kugelUm(pose.positionKm, scaledPositionAt(id, bodyIndex, pose.jd, scale));

@@ -8,6 +8,7 @@ import { useBogen } from '../bogen';
 import { useMusikStand } from '../musikStand';
 import { useInfoKarte } from '../infokarte/zustand';
 import { useSteuerKarte } from '../steuerkarte/zustand';
+import { himmelsansicht } from '../../store/himmelsansicht';
 
 describe('handleShortcut', () => {
   // stopCinema zuerst: löscht den gemerkten Zustand von vor dem Kinostart.
@@ -189,5 +190,37 @@ describe('vollbildUmschalten', () => {
     document.exitFullscreen = vi.fn(() => Promise.reject(new TypeError('kein Vollbild')));
     await expect(vollbildUmschalten()).resolves.toBeUndefined();
     Object.defineProperty(document, 'fullscreenElement', { configurable: true, value: null });
+  });
+});
+
+describe('handleShortcut — Himmelsmodus', () => {
+  beforeEach(() => {
+    stopCinema();
+    useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
+  });
+
+  it('schaltet mit g ein und aus', () => {
+    expect(handleShortcut('g')).toBe(true);
+    expect(useStore.getState().camera.mode).toBe('geozentrisch');
+    handleShortcut('g');
+    expect(useStore.getState().camera.mode).not.toBe('geozentrisch');
+  });
+
+  it('verlässt ihn mit Escape und lässt Escape sonst frei', () => {
+    handleShortcut('g');
+    expect(handleShortcut('Escape')).toBe(true);
+    expect(useStore.getState().camera.mode).not.toBe('geozentrisch');
+    expect(handleShortcut('Escape')).toBe(false);
+  });
+
+  it('verlässt ihn mit Pos1 und kehrt nach einem Kino in ihn zurück', () => {
+    handleShortcut('g');
+    handleShortcut('Home');
+    expect(himmelsansicht(useStore.getState())).toBe(false);
+    handleShortcut('g');
+    handleShortcut('c');
+    expect(useStore.getState().camera.mode).toBe('cinema');
+    handleShortcut('c');
+    expect(useStore.getState().camera.mode).toBe('geozentrisch');
   });
 });

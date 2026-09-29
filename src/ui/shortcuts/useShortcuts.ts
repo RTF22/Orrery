@@ -6,6 +6,7 @@ import { useBogen } from '../bogen';
 import { useMusikStand } from '../musikStand';
 import { useInfoKarte } from '../infokarte/zustand';
 import { useSteuerKarte } from '../steuerkarte/zustand';
+import { himmelUmschalten, himmelVerlassen } from '../himmelsmodus';
 
 /** Faktor je Tastendruck auf die Zeitraffung — multiplikativ, nie additiv. */
 const RATE_SCHRITT = 1.5;
@@ -68,9 +69,19 @@ export function handleShortcut(taste: string): boolean {
       return true;
     case 'Escape':
       // Beendet den Film (auch einen nur angehaltenen) und fällt auf den
-      // Zustand von vor dem Start zurück; ohne Kino bleibt die Taste frei.
-      if (!cinemaAktiv()) return false;
-      stopCinema();
+      // Zustand von vor dem Start zurück; sonst verlässt sie den Himmelsmodus.
+      // Ohne beides bleibt die Taste frei.
+      if (cinemaAktiv()) {
+        stopCinema();
+        return true;
+      }
+      if (s.camera.mode === 'geozentrisch') {
+        himmelVerlassen();
+        return true;
+      }
+      return false;
+    case 'g':
+      himmelUmschalten();
       return true;
     case 'l':
       s.setUi({ language: s.ui.language === 'de' ? 'en' : 'de' });

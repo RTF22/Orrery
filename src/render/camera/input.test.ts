@@ -517,3 +517,38 @@ describe('attachCameraInput — Mindestabstand und Pinch', () => {
     stop();
   });
 });
+
+describe('attachCameraInput — Himmelsmodus', () => {
+  it('dreht beim Ziehen den Blick, nicht die Umlaufkamera, skaliert mit dem Bildwinkel', () => {
+    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 25 } });
+    const el = flaeche();
+    const stop = attachCameraInput(el);
+    const azimut = useStore.getState().camera.azimuth;
+    zeiger(el, 'pointerdown', 100, 100);
+    zeiger(el, 'pointermove', 120, 100);
+    expect(useStore.getState().camera.geo.yaw).toBeCloseTo(20 * DREH * (25 / 50), 12);
+    expect(useStore.getState().camera.azimuth).toBe(azimut);
+    zeiger(el, 'pointerup', 120, 100);
+    stop();
+  });
+
+  it('ändert mit dem Rad den Bildwinkel', () => {
+    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 40 } });
+    const el = flaeche();
+    const stop = attachCameraInput(el);
+    el.dispatchEvent(new WheelEvent('wheel', { deltaY: 100, bubbles: true, cancelable: true }));
+    expect(useStore.getState().camera.geo.fovDeg).toBeCloseTo(44, 9);
+    stop();
+  });
+
+  it('lässt eingebettet ein Ein-Finger-Ziehen die Seite scrollen', () => {
+    useStore.getState().setUi({ eingebettet: true });
+    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 40 } });
+    const el = flaeche();
+    const stop = attachCameraInput(el);
+    zeiger(el, 'pointerdown', 100, 100, 1, 'touch');
+    zeiger(el, 'pointermove', 160, 100, 1, 'touch');
+    expect(useStore.getState().camera.geo.yaw).toBe(0);
+    stop();
+  });
+});

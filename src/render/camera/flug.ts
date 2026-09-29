@@ -2,10 +2,12 @@ import type { Body, BodyIndex, Vec3 } from '../../sim/types';
 import type { ScaleSettings } from '../../sim/scale';
 import { scaledPositionAt, scaledRadius } from '../../sim/scale';
 import { AU_KM } from '../../sim/orbit';
+import { KAMERA_FOV_GRAD } from '../renderer';
+import { HIMMEL_FOV_MIN_GRAD, HIMMEL_FOV_MAX_GRAD } from '../../store/types';
 
 /**
  * Reine Flugmathematik (Entwurf Flug und Controller §3, §4, §6.1): ohne DOM
- * und ohne Store. Positionen sind dargestellte km (scaledPositionAt), Radien
+ * und ohne Store (die Bildwinkelgrenzen aus store/types.ts ausgenommen). Positionen sind dargestellte km (scaledPositionAt), Radien
  * dargestellte Radien (scaledRadius). Hier stehen auch die Grenzen der
  * Kamera, die Orbit-Eingabe (input.ts) und Flug gemeinsam nutzen.
  */
@@ -272,4 +274,23 @@ export function flugSchritt(p: Vec3, blick: Blick, absicht: Absicht, geschwindig
 /** Dreht den Blick; yaw wickelt nicht, pitch bleibt in ±ELEVATION_GRENZE. */
 export function blickDrehen(b: Blick, dYaw: number, dPitch: number): Blick {
   return { yaw: b.yaw + dYaw, pitch: begrenze(b.pitch + dPitch, -ELEVATION_GRENZE, ELEVATION_GRENZE) };
+}
+
+/** Blickrichtung und Bildwinkel der Himmelsansicht, wie camera.geo im Store. */
+export interface HimmelsBlickwinkel { yaw: number; pitch: number; fovDeg: number }
+
+/**
+ * Dreht den Blick der Himmelsansicht. Die Drehung skaliert mit dem Bildwinkel
+ * (bei 50° wie im Flug, bei 1° fünfzigmal feiner), sonst flöge der Himmel
+ * beim Zoomen mit einem Pixel Ziehen aus dem Bild.
+ */
+export function himmelDrehen(geo: HimmelsBlickwinkel, dYaw: number, dPitch: number): HimmelsBlickwinkel {
+  const k = geo.fovDeg / KAMERA_FOV_GRAD;
+  return { ...geo, ...blickDrehen(geo, dYaw * k, dPitch * k) };
+}
+
+/** Bildwinkel mal `faktor`, in den Grenzen HIMMEL_FOV_MIN_GRAD bis HIMMEL_FOV_MAX_GRAD. */
+export function himmelZoomen(geo: HimmelsBlickwinkel, faktor: number): HimmelsBlickwinkel {
+  if (!Number.isFinite(faktor) || faktor <= 0) return geo;
+  return { ...geo, fovDeg: begrenze(geo.fovDeg * faktor, HIMMEL_FOV_MIN_GRAD, HIMMEL_FOV_MAX_GRAD) };
 }
