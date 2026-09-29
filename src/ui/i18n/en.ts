@@ -152,6 +152,7 @@ export const en: Record<Key, string> = {
   'scene.uranusGekippt': 'Uranus lying on its side',
   'scene.ceresGuertel': 'Ceres in the asteroid belt',
   'scene.mondfinsternis': 'Lunar eclipse',
+  'scene.marsschleife': 'Mars retrograde loop',
   'model.limits': 'Model limits',
   'model.limits.text':
     'Keplerian orbits without mutual perturbations. Full accuracy from 1800 to 2050.',

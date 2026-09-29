@@ -517,6 +517,13 @@ export const QUELLEN: readonly Quelle[] = [
     url: 'https://collection.sciencemuseumgroup.org.uk/objects/co56970/orrery-made-by-john-rowley-for-the-earl-of-orrery',
     fuer: ['thema:sonnensystem'],
   },
+  {
+    id: 'sep-copernicus',
+    titel: { de: 'Nicolaus Copernicus (Stanford Encyclopedia of Philosophy)', en: 'Nicolaus Copernicus (Stanford Encyclopedia of Philosophy)' },
+    herausgeber: 'sonstige', sprache: 'en', art: 'uebersicht',
+    url: 'https://plato.stanford.edu/entries/copernicus/',
+    fuer: ['szene:marsschleife'],
+  },
   // --- Werkzeuge ---
   {
     id: 'nasa-eyes',

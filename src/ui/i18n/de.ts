@@ -154,6 +154,7 @@ export const de = {
   // laut Task-2-Brief vor der Szene existieren, weil scenes.test.ts nur die
   // Richtung Szene → Sprachschlüssel prüft, nicht umgekehrt.
   'scene.mondfinsternis': 'Mondfinsternis',
+  'scene.marsschleife': 'Marsschleife',
   'model.limits': 'Modellgrenzen',
   'model.limits.text':
     'Keplerbahnen ohne gegenseitige Störungen. Volle Genauigkeit 1800 bis 2050.',

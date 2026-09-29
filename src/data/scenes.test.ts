@@ -305,3 +305,14 @@ describe('Szene mondfinsternis', () => {
     expect(s.durationSec * s.timeRateDaysPerSec).toBeGreaterThan(0.146);
   });
 });
+
+describe('Szene marsschleife', () => {
+  it('Marsschleife: Himmelsansicht, Opposition in der Mitte, Rückläufigkeit ganz in der Szene', () => {
+    const s = SCENES.find((x) => x.id === 'marsschleife')!;
+    expect(s.path).toBe('himmel');
+    expect(s.zeitpunkt).toBe('naechste-opposition');
+    expect(s.himmel?.fovDeg).toBe(30);
+    // Halbe Szenendauer in simulierten Tagen gegen den späteren Stillstand 2027 (40,9 Tage nach der Opposition).
+    expect((s.durationSec / 2) * s.timeRateDaysPerSec).toBeGreaterThan(40.9);
+  });
+});

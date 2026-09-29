@@ -83,6 +83,10 @@ export interface Scene {
  * Phase 3b-2 (Task 6) legt die 19. Szene dazu: `mondfinsternis`, die einzige
  * Szene mit Bahntyp `sichtlinie` und mit `zeitpunkt` — sie springt auf die
  * nächste echte Mondfinsternis.
+ *
+ * Die 20. Szene, `marsschleife`, ist die zweite mit `zeitpunkt` und die
+ * einzige mit Bahntyp `himmel`: Blick aus dem Erdmittelpunkt, Sprung zur
+ * nächsten Marsopposition.
  */
 export const SCENES: readonly Scene[] = [
   {
@@ -656,5 +660,29 @@ export const SCENES: readonly Scene[] = [
     variation: {
       azimuthDeg: [-20, 20], elevationDeg: [-6, 6], distanceFactor: [0.8, 1.3],
     },
+  },
+  {
+    // Marsschleife (Entwurf geozentrische Sicht §4.5): Blick aus dem
+    // Erdmittelpunkt fest auf die Richtung des Mars zur Szenenmitte, in die
+    // `zeitpunkt` die nächste Opposition legt. 60 s · 2,7 Tage/s = 162 Tage,
+    // 81 Tage vor bis 81 Tage nach der Opposition. 2027 dauert die
+    // Rückläufigkeit im Modell von 40,1 Tagen davor bis 40,9 Tage danach
+    // (Stillstände auf Stunden genau gerechnet, Belegliste der Szenentexte)
+    // und liegt ganz in der Szene. Die
+    // Schleife reicht dabei über 140,5° bis 160,0° ekliptikale Länge bei 1,8°
+    // bis 4,5° Breite; 30° senkrechter Bildwinkel zeigt sie im Querformat mit
+    // Rand (waagerecht 51° bei 16:9). `params` und `variation` wirken beim
+    // Bahntyp `himmel` nicht.
+    id: 'marsschleife',
+    titleKey: 'scene.marsschleife',
+    targetId: 'mars',
+    path: 'himmel',
+    distanceBasis: 'bodyRadius',
+    params: { distanceInRadii: 1, elevationDeg: 0, azimuthDeg: 0, azimuthRateDegPerSec: 0 },
+    durationSec: 60,
+    timeRateDaysPerSec: 2.7,
+    himmel: { fovDeg: 30 },
+    zeitpunkt: 'naechste-opposition',
+    variation: { azimuthDeg: [0, 0], elevationDeg: [0, 0], distanceFactor: [1, 1] },
   },
 ];

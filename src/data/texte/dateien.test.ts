@@ -245,7 +245,7 @@ describe('Textdateien', () => {
       ...SCENES.map((s) => `szene-${s.id}`),
       ...THEMEN.map((t) => `thema-${t.id}`),
     ];
-    expect(namen).toHaveLength(69);
+    expect(namen).toHaveLength(70);
     const fehlend: string[] = [];
     for (const sprache of ['de', 'en']) {
       for (const niveau of NIVEAUS) {
@@ -259,7 +259,7 @@ describe('Textdateien', () => {
     }
     expect(fehlend).toEqual([]);
     // Keine Datei ohne Kennung und keine Fachthemen auf den unteren Niveaus.
-    expect(Object.keys(dateien)).toHaveLength(390);
+    expect(Object.keys(dateien)).toHaveLength(396);
   });
 
   it('zitiert jeden Eintrag des Literaturkatalogs mindestens einmal', () => {
