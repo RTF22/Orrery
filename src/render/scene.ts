@@ -6,6 +6,7 @@ import { createRingViews } from './rings';
 import { createBeltViews } from './belts';
 import { createOrbitLines } from './orbits';
 import { createStarfield, sternfeldPixeldichte } from './starfield';
+import { createHimmelsLinien } from './himmelslinien';
 import { szeneFreigeben } from './freigeben';
 import { createLabelOverlay, apparentRadiusPixels } from './labels';
 import type { LabelEintrag } from './labels';
@@ -98,6 +99,8 @@ export function buildScene(
   // Ursprung und werden — anders als Körper und Bahnen — nie pro Frame neu
   // positioniert (siehe Kommentar in starfield.ts).
   const sternfeld = createStarfield(ctx.scene);
+  // Linien der Himmelsansicht; außerhalb unsichtbar, szeneFreigeben räumt sie mit ab.
+  const himmelsLinien = createHimmelsLinien(ctx.scene);
 
   // Beschriftungen und Ersatzglyphen liegen als HTML über der Canvas.
   const labels = createLabelOverlay(overlay, name);
@@ -165,6 +168,7 @@ export function buildScene(
 
       // Die momentane Bahnellipse je Bild — ohne Kepler-Löser, siehe orbits.ts.
       bahnen.update(cameraKm, state.visible, state.display.orbits && !himmel, jd, massstab, hover);
+      himmelsLinien.update(himmel, jd, state.display);
 
       koerper.update(jd, massstab, cameraKm, state.visible, belichtet, state.display.shadows, himmel ? 'earth' : null);
 
