@@ -5,8 +5,7 @@ die [Erde](objekt:earth) ihn auf der Innenbahn überholt.
 
 ## Was das Bild zeigt
 
-Der Beobachter sitzt im Bahnpunkt der Erde, im Datensatz der Erde-Mond-Schwerpunkt, und blickt fest
-in die Richtung, in der der Mars zur Mitte der Szene steht. Die Erdkugel wird nicht gezeichnet;
+Der Beobachter sitzt im Bahnpunkt der Erde, im Datensatz der Erde-Mond-Schwerpunkt, und blickt nach der Blende der ersten 2 s (siehe unten) fest in die Richtung, in der der Mars zur Mitte der Szene steht. Die Erdkugel wird nicht gezeichnet;
 der Maßstab ist „Realistisch“, damit Richtungen und Winkelgrößen stimmen. Der senkrechte
 Bildwinkel beträgt 30°, bei 16:9 also waagerecht 50,9°. Der Mars misst bei der Opposition 13,8″
 und ist bei 1440 Pixel Bildhöhe (75″ je Pixel) nur eine beschriftete Markierung. Er hinterlässt
@@ -24,9 +23,9 @@ Modelluhr, die das Modell als TDB verwendet.
 Die Opposition 2027 liegt bei 150,39° ekliptikaler Länge und 4,46° Breite in 0,678 AE Abstand. Der
 Mars kehrt am 10. Januar um 13:36 bei 160,05° Länge (Breite 3,61°) um und läuft am 1. April um
 13:09 bei 140,54° (Breite 3,21°) wieder vorwärts. Die Rückläufigkeit dauert 81,0 Tage und
-überstreicht 19,5° Länge. In der Szene, 81 Tage vor bis 81 Tage nach der Opposition, reicht der
+überstreicht 19,5° Länge. Im nominellen Fenster der Szene, 81 Tage vor bis 81 Tage nach der Opposition, reicht der
 Mars von 140,5° bis 160,0° Länge bei 1,8° bis 4,5° Breite. Auch Jupiter steht im Bild, bei rund
-137° bis 146° Länge und 0,8° bis 1,1° Breite; seine Opposition liegt im Modell am 11. Februar 2027
+137° bis 147° Länge und 0,8° bis 1,1° Breite; seine Opposition liegt im Modell am 11. Februar 2027
 um 01:06.
 
 Der Zeitraffer gleitet in den ersten 2 s geometrisch vom Wert der vorigen Szene auf 2,7 Tage je
@@ -34,7 +33,7 @@ Sekunde. Die Opposition liegt deshalb nicht genau bei 30 s, sondern bei 30,7 s n
 Sekunde, bei 23,6 s nach 30 Tagen je Sekunde und bei 31,7 s nach dem kleinsten Wert des Katalogs
 (0,0035 Tage je Sekunde). Der Blick richtet sich auf den Mars zu einer Schätzung der Szenenmitte;
 sie liegt je nach Vorgänger 4,6 Tage vor bis 17,3 Tage nach der Opposition, die Bildmitte bei
-152,2° bis 144,1° Länge. Die Rückläufigkeit bleibt dabei ganz im Bild, und die Szene endet 76 bis
+152,2° bis 144,1° Länge; während der Blende wandert der Blick dorthin, bis zu 6,3°. Die Rückläufigkeit bleibt dabei ganz im Bild, und die Szene endet 76 bis
 98 Tage nach der Opposition.
 
 ## Hintergrund
@@ -48,7 +47,7 @@ $$\frac{1}{S} = \frac{1}{T_\oplus} - \frac{1}{T_\mathrm{Mars}}, \quad S = 779{,}
 Die Oppositionen des Modells von 2022 bis 2029 folgen einander in 769,9, 764,5 und 764,7 Tagen,
 10 bis 15 Tage unter dem Mittel.
 
-Mit $(x, y)$ als Differenz der Ekliptikkomponenten der Orte von Mars und Erde aus DE441,
+Mit $(x, y)$ als Differenz der Ekliptikkomponenten der Orte von Mars und Erde,
 $(\dot x, \dot y)$ als Differenz ihrer Geschwindigkeiten ändert sich die ekliptikale Länge des Mars
 von der Erde aus mit
 
@@ -85,10 +84,9 @@ aber Epizykel auf den Deferenten bei ([Rabin 2023](quelle:sep-copernicus)).
 - **Richtung:** An den fünf Stichtagen der Referenzwerte von JPL Horizons weicht die Richtung des
   Mars um 0,0002° bis 0,0043° ab (bis 16″). Gegen Horizons (geozentrisch, geometrisch, Erde aus DE441,
   [Park et al. 2021](literatur:park-2021)) zwischen November 2026 und Mai 2027
-  sind es höchstens 0,0042°; die Stillstände weichen um +0,80 h und −0,94 h ab, die Opposition um
-  +0,74 h (Horizons: 10. Januar 12:48, 1. April 14:06, 19. Februar 14:59). Jupiter weicht im Bild
+  sind es höchstens 0,0042°; die Stillstände weichen um +0,80 h und −0,94 h ab, die Opposition um 5 s (Horizons: 10. Januar 12:48, 1. April 14:06, 19. Februar 15:44). Jupiter weicht im Bild
   bis 0,036° (131″) ab. Ein Pixel entspricht 75″.
-- **Erde-Mond-Schwerpunkt:** Der Beobachter sitzt nicht im Erdmittelpunkt, sondern 4669 km daneben;
+- **Erde-Mond-Schwerpunkt:** Der Beobachter sitzt nicht im Erdmittelpunkt, sondern 4672 km daneben;
   bei der Opposition macht das bis 9,5″ aus.
 - **Lichtlaufzeit und Aberration:** Das Modell zeigt geometrische Richtungen. Bei der Opposition
   braucht das Licht 338 s; das verschiebt den Mars um 15″, die jährliche Aberration um 21″, beide

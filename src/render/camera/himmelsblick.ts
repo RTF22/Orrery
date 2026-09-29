@@ -18,7 +18,9 @@ export interface HimmelsBlick { richtung: Vec3; fovDeg: number }
  * des Zielkörpers zur Szenenmitte, damit die Schleife vor ruhenden Sternen
  * entsteht, statt dass der Blick dem Planeten folgt. Die Szenenmitte wird aus
  * der verbleibenden Szenenzeit und dem Zeitraffer der Szene geschätzt; die
- * Blende der ersten zwei Sekunden verschiebt sie um Bruchteile eines Tages.
+ * Blende der ersten zwei Sekunden verschiebt sie je nach Zeitraffer der
+ * vorigen Szene um bis zu rund 17 Tage (beim Vorgänger mit 30 Tagen je
+ * Sekunde; der Blick wandert dabei in 2 s um bis zu 6,3°).
  * `szenen` nur für Tests.
  */
 export function himmelsBlick(state: AppState, jd: number, szenen: readonly Scene[] = SCENES): HimmelsBlick {

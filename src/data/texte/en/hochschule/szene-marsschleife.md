@@ -6,7 +6,7 @@ For a while around its opposition, [Mars](objekt:mars) runs backwards against th
 ## What the view shows
 
 The observer sits at the orbital point of Earth, in the dataset the Earth-Moon barycentre, and looks
-fixedly in the direction in which Mars stands at the middle of the scene. The Earth sphere is not
+fixedly, after the blend of the first 2 s (see below), in the direction in which Mars stands at the middle of the scene. The Earth sphere is not
 drawn; the scale is "Realistic" so that directions and angular sizes are right. The vertical field
 of view is 30°, so 50.9° horizontally at 16:9. At opposition Mars measures 13.8″ and, at a picture
 height of 1440 pixels (75″ per pixel), is only a labelled marker. It leaves a trail of the last 365
@@ -23,9 +23,9 @@ the model clock, which the model uses as TDB.
 The 2027 opposition lies at 150.39° ecliptic longitude and 4.46° latitude at a distance of 0.678 AU.
 Mars turns around on 10 January at 13:36 at 160.05° longitude (latitude 3.61°) and runs forwards
 again on 1 April at 13:09 at 140.54° (latitude 3.21°). The retrograde motion lasts 81.0 days and
-covers 19.5° of longitude. In the scene, 81 days before to 81 days after opposition, Mars ranges
+covers 19.5° of longitude. In the nominal window of the scene, 81 days before to 81 days after opposition, Mars ranges
 from 140.5° to 160.0° longitude at 1.8° to 4.5° latitude. Jupiter is in the picture as well, at
-about 137° to 146° longitude and 0.8° to 1.1° latitude; in the model its opposition is on
+about 137° to 147° longitude and 0.8° to 1.1° latitude; in the model its opposition is on
 11 February 2027 at 01:06.
 
 The time rate glides geometrically over the first 2 s from the value of the previous scene to 2.7
@@ -33,7 +33,7 @@ days per second. Opposition therefore does not fall exactly at 30 s, but at 30.7
 second, at 23.6 s after 30 days per second and at 31.7 s after the smallest value in the catalogue
 (0.0035 days per second). The view is aimed at Mars at an estimate of the scene middle; depending on
 the predecessor it lies 4.6 days before to 17.3 days after opposition, with the picture centre at
-152.2° to 144.1° longitude. The retrograde motion stays entirely in the picture, and the scene ends
+152.2° to 144.1° longitude; during the blend the view moves there, by up to 6.3°. The retrograde motion stays entirely in the picture, and the scene ends
 76 to 98 days after opposition.
 
 ## Background
@@ -82,10 +82,9 @@ kept epicycles on the deferents ([Rabin 2023](quelle:sep-copernicus)).
 - **Direction:** At the five reference dates of JPL Horizons, the direction of Mars deviates by
   0.0002° to 0.0043° (up to 16″). Against Horizons (geocentric, geometric, Earth from DE441,
   [Park et al. 2021](literatur:park-2021)) between November 2026 and May 2027 the maximum is
-  0.0042°; the stationary points differ by +0.80 h and −0.94 h, opposition by +0.74 h (Horizons:
-  10 January 12:48, 1 April 14:06, 19 February 14:59). Jupiter deviates by up to 0.036° (131″) in
+  0.0042°; the stationary points differ by +0.80 h and −0.94 h, opposition by 5 s (Horizons: 10 January 12:48, 1 April 14:06, 19 February 15:44). Jupiter deviates by up to 0.036° (131″) in
   the picture. One pixel corresponds to 75″.
-- **Earth-Moon barycentre:** The observer is not at the centre of Earth but 4669 km away; at
+- **Earth-Moon barycentre:** The observer is not at the centre of Earth but 4672 km away; at
   opposition this amounts to up to 9.5″.
 - **Light time and aberration:** The model shows geometric directions. At opposition the light takes
   338 s; this shifts Mars by 15″, annual aberration by 21″, both together by at most 9″ over the
