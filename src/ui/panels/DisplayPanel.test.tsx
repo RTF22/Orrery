@@ -72,3 +72,21 @@ describe('DisplayPanel: Milchstraße', () => {
     expect(useStore.getState().display.milchstrasse).toBe(false);
   });
 });
+
+describe('DisplayPanel: Himmelsschalter', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    useStore.getState().replaceAll(structuredClone(DEFAULT_STATE));
+  });
+
+  it('zeigt die Himmelsschalter nur in der Himmelsansicht', () => {
+    const { unmount } = render(<DisplayPanel />);
+    expect(screen.queryByLabelText('Planetenspuren (1 Jahr)')).toBeNull();
+    unmount();
+    useStore.getState().setCamera({ mode: 'geozentrisch' });
+    render(<DisplayPanel />);
+    fireEvent.click(screen.getByLabelText('Planetenspuren (1 Jahr)'));
+    expect(useStore.getState().display.spuren).toBe(false);
+    expect((screen.getByLabelText('Himmelsäquator') as HTMLInputElement).checked).toBe(false);
+  });
+});

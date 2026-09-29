@@ -2,6 +2,7 @@ import { useEffect, useId, useRef } from 'react';
 import { useStore } from '../../store';
 import { SCALE_PRESETS } from '../../sim/scale';
 import type { ScaleSettings } from '../../sim/scale';
+import { himmelsansicht } from '../../store/himmelsansicht';
 import { t } from '../i18n';
 import { formatZahl } from '../format';
 import { Panel } from './Panel';
@@ -25,6 +26,8 @@ const groesseZuRegler = (g: number): number =>
 
 export function ScalePanel(): React.JSX.Element {
   const scale = useStore((s) => s.scale);
+  // Von der Erde gilt fest der realistische Maßstab; die Regler ruhen.
+  const gesperrt = useStore((s) => himmelsansicht(s));
   const setScale = useStore((s) => s.setScale);
   const abbrechen = useRef<(() => void) | null>(null);
   const groesseId = useId();
@@ -58,11 +61,13 @@ export function ScalePanel(): React.JSX.Element {
   return (
     <Panel id="scale" title={t('panel.scale')}>
       <div className="flex flex-col gap-2">
+        {gesperrt && <p className="text-xs text-white/70">{t('scale.gesperrtHimmel')}</p>}
         <div className="flex flex-wrap gap-2">
           {PRESET_NAMEN.map((name) => (
             <button
               key={name}
               type="button"
+              disabled={gesperrt}
               aria-pressed={scale.preset === name}
               onClick={() => { waehlePreset(name); }}
               className={`rounded border px-2 py-1 ${
@@ -84,6 +89,7 @@ export function ScalePanel(): React.JSX.Element {
           <input
             id={groesseId}
             type="range"
+            disabled={gesperrt}
             min={0} max={1} step={0.001}
             value={groesseZuRegler(scale.sizeScale)}
             onChange={(e) => { vonHand({ sizeScale: reglerZuGroesse(Number(e.target.value)) }); }}
@@ -98,6 +104,7 @@ export function ScalePanel(): React.JSX.Element {
           <input
             id={abstandId}
             type="range"
+            disabled={gesperrt}
             min={0.35} max={1} step={0.005}
             value={scale.distanceExponent}
             onChange={(e) => { vonHand({ distanceExponent: Number(e.target.value) }); }}
@@ -112,6 +119,7 @@ export function ScalePanel(): React.JSX.Element {
           <input
             id={sonneId}
             type="range"
+            disabled={gesperrt}
             min={0.1} max={1} step={0.01}
             value={scale.sunDamping}
             onChange={(e) => { vonHand({ sunDamping: Number(e.target.value) }); }}

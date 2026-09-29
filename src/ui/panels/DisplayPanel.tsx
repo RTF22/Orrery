@@ -1,6 +1,7 @@
 import { useId } from 'react';
 import { useStore } from '../../store';
 import type { AppState } from '../../store/types';
+import { himmelsansicht } from '../../store/himmelsansicht';
 import { t } from '../i18n';
 import { formatZahl } from '../format';
 import { useSitzungMerken } from '../useSitzungMerken';
@@ -17,9 +18,17 @@ const SCHALTER: readonly (readonly [keyof AppState['display'], string])[] = [
   ['bloom', 'display.bloom'],
 ];
 
+/** Nur in der Himmelsansicht (Entwurf geozentrische Sicht §10 Punkt 7). */
+const HIMMEL_SCHALTER: readonly (readonly [keyof AppState['display'], string])[] = [
+  ['spuren', 'display.spuren'],
+  ['ekliptik', 'display.ekliptik'],
+  ['aequator', 'display.aequator'],
+];
+
 export function DisplayPanel(): React.JSX.Element {
   const display = useStore((s) => s.display);
   const setDisplay = useStore((s) => s.setDisplay);
+  const himmel = useStore((s) => himmelsansicht(s));
   // Eingebettet (Feature Einbettung, Fix-Runde 1): Der Schalter „Sitzung
   // merken" bleibt hier verborgen, weil im iframe ohnehin nichts gemerkt
   // wird (main.tsx lässt sicherungStarten dort aus).
@@ -43,6 +52,21 @@ export function DisplayPanel(): React.JSX.Element {
             <span>{t(schluessel)}</span>
           </label>
         ))}
+
+        {himmel && (
+          <div role="group" aria-label={t('display.himmel')} className="mt-1 flex flex-col gap-1 border-t border-white/10 pt-2">
+            {HIMMEL_SCHALTER.map(([feld, schluessel]) => (
+              <label key={feld} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={display[feld] === true}
+                  onChange={(e) => { setDisplay({ [feld]: e.target.checked }); }}
+                />
+                <span>{t(schluessel)}</span>
+              </label>
+            ))}
+          </div>
+        )}
 
         <label htmlFor={helligkeitId} className="flex flex-col gap-1">
           <span className="flex justify-between">

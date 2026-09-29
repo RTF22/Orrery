@@ -16,6 +16,8 @@ export const KUERZEL: Kuerzel = [
   ['W A S D', 'shortcuts.fly'],
   ['Q E', 'shortcuts.flyUpDown'],
   ['Shift + W A S D', 'shortcuts.orbit'],
+  ['G', 'shortcuts.himmel'],
+  ['W A S D · Q E', 'shortcuts.himmelSchwenken'],
   [{ key: 'key.drag' }, 'shortcuts.flyLook'],
   [{ key: 'key.wheel' }, 'shortcuts.flySpeed'],
   ['C', 'shortcuts.cinema'],

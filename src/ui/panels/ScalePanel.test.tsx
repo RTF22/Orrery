@@ -35,4 +35,13 @@ describe('ScalePanel', () => {
     fireEvent.change(screen.getByLabelText(/Körpergröße/), { target: { value: '2' } });
     expect(useStore.getState().scale.preset).toBeNull();
   });
+
+  it('sperrt in der Himmelsansicht alle Regler und nennt den Grund', () => {
+    useStore.getState().setCamera({ mode: 'geozentrisch' });
+    render(<ScalePanel />);
+    expect((screen.getByRole('button', { name: 'Kompakt' }) as HTMLButtonElement).disabled).toBe(true);
+    expect(screen.getByText(/gilt der Maßstab/)).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Kompakt' }));
+    expect(useStore.getState().scale.preset).toBe('schaubild');
+  });
 });

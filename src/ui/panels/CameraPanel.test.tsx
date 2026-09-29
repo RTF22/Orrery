@@ -69,3 +69,30 @@ describe('CameraPanel', () => {
     expect(screen.getByText(`${formatZahl(laenge(pose.positionKm) / 1e6)} ${t('unit.millionKm')}`)).toBeTruthy();
   });
 });
+
+describe('CameraPanel — Von der Erde', () => {
+  it('schaltet in den Himmelsmodus und zeigt den Bildwinkel statt des Abstands', () => {
+    render(<CameraPanel />);
+    fireEvent.click(screen.getByRole('button', { name: 'Von der Erde' }));
+    expect(useStore.getState().camera.mode).toBe('geozentrisch');
+    expect(screen.getByLabelText(/Bildwinkel/)).toBeTruthy();
+    expect(screen.queryByLabelText(/Abstand/)).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Draufsicht' })).toBeNull();
+  });
+
+  it('setzt mit dem Regler den Bildwinkel logarithmisch zwischen 1° und 90°', () => {
+    useStore.getState().setCamera({ mode: 'geozentrisch' });
+    render(<CameraPanel />);
+    fireEvent.change(screen.getByLabelText(/Bildwinkel/), { target: { value: '0' } });
+    expect(useStore.getState().camera.geo.fovDeg).toBeCloseTo(1, 9);
+    fireEvent.change(screen.getByLabelText(/Bildwinkel/), { target: { value: '1' } });
+    expect(useStore.getState().camera.geo.fovDeg).toBeCloseTo(90, 9);
+  });
+
+  it('verlässt den Himmelsmodus über einen anderen Modusknopf', () => {
+    useStore.getState().setCamera({ mode: 'geozentrisch', targetId: 'earth' });
+    render(<CameraPanel />);
+    fireEvent.click(screen.getByRole('button', { name: 'Geheftet' }));
+    expect(useStore.getState().camera.mode).toBe('attached');
+  });
+});
