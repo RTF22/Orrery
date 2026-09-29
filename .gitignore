@@ -9,3 +9,4 @@ coverage/
 .cache/
 __pycache__/
 public/musik/
+.marketing/
