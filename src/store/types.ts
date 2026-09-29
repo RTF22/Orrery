@@ -1,6 +1,14 @@
 import type { Niveau } from '../data/themen';
 
-export type CameraMode = 'free' | 'attached' | 'follow' | 'cinema' | 'fly';
+export type CameraMode = 'free' | 'attached' | 'follow' | 'cinema' | 'fly' | 'geozentrisch';
+
+/**
+ * Grenzen des Bildwinkels in der Himmelsansicht (Entwurf geozentrische Sicht
+ * §4.2), in Grad vertikal. Zwillinge der Bereiche in store/pruefer.ts und des
+ * Reglers in ui/panels/CameraPanel.tsx.
+ */
+export const HIMMEL_FOV_MIN_GRAD = 1;
+export const HIMMEL_FOV_MAX_GRAD = 90;
 export type QualityTier = 'auto' | 'low' | 'medium' | 'high';
 export type TonModus = 'aus' | 'kino' | 'immer';
 
@@ -37,6 +45,11 @@ export interface AppState {
     belts: boolean;
     /** Band der Milchstraße als Himmelshintergrund (render/milchstrasse.ts). */
     milchstrasse: boolean;
+    /**
+     * Nur in der Himmelsansicht (Entwurf geozentrische Sicht §5): Spuren der
+     * Planeten über 365 Tage, Ekliptik und Himmelsäquator (render/himmelslinien.ts).
+     */
+    spuren: boolean; ekliptik: boolean; aequator: boolean;
     /** Analytische Kugel-/Ring-Okkluder und Kernschattenfarbe (render/shadows.ts). */
     shadows: boolean;
     bloom: boolean; brightness: number; lightFalloff: number;
@@ -65,6 +78,12 @@ export interface AppState {
      * bestimmt weiter Infopanel und Objektbaum.
      */
     fly: { refId: string; x: number; y: number; z: number; yaw: number; pitch: number };
+    /**
+     * Nur für den Modus geozentrisch (Entwurf geozentrische Sicht §4.2):
+     * Blickrichtung aus dem Erdmittelpunkt, gezählt wie `fly.yaw`/`fly.pitch`,
+     * und vertikaler Bildwinkel in Grad als Zoom.
+     */
+    geo: { yaw: number; pitch: number; fovDeg: number };
   };
   /**
    * Der Kino-Modus. `nummer` und `elapsedSec` beschreiben die Stelle im

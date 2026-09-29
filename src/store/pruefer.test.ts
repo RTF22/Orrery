@@ -171,4 +171,17 @@ describe('pruefeZustand — ton', () => {
     expect(pruefeZustand({ ton: { modus: 'laut', lautstaerke: 1.5, stumm: 'ja' } })).toEqual({});
     expect(pruefeZustand({ ton: { lautstaerke: -0.1 } })).toEqual({});
   });
+
+  it('nimmt den Modus geozentrisch samt Blick an und verwirft Werte außerhalb der Bereiche', () => {
+    expect(pruefeZustand({ camera: { mode: 'geozentrisch', geo: { yaw: 7, pitch: 0.2, fovDeg: 30 } } }))
+      .toEqual({ camera: { mode: 'geozentrisch', geo: { yaw: 7, pitch: 0.2, fovDeg: 30 } } });
+    expect(pruefeZustand({ camera: { geo: { pitch: 2, fovDeg: 0.5 } } })).toEqual({});
+    expect(pruefeZustand({ camera: { geo: { fovDeg: 91 } } })).toEqual({});
+  });
+
+  it('nimmt die drei Himmelsschalter als boolesche Werte an', () => {
+    expect(pruefeZustand({ display: { spuren: false, ekliptik: false, aequator: true } }))
+      .toEqual({ display: { spuren: false, ekliptik: false, aequator: true } });
+    expect(pruefeZustand({ display: { spuren: 'ja' } })).toEqual({});
+  });
 });

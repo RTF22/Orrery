@@ -223,6 +223,17 @@ describe('Ansichten: erstellen und anwenden', () => {
     expect(ansichtAnwenden(aktuell, ohneKamera).camera.mode).toBe('free');
   });
 
+  it('übernimmt eine Ansicht im Modus geozentrisch samt Blick unverändert', () => {
+    const aktuell = structuredClone(DEFAULT_STATE);
+    const himmel: Ansicht = {
+      name: 'Himmel', state: { camera: { mode: 'geozentrisch', geo: { yaw: 1, pitch: 0.1, fovDeg: 20 } } },
+    };
+    const neu = ansichtAnwenden(aktuell, himmel);
+    expect(neu.camera.mode).toBe('geozentrisch');
+    expect(neu.camera.geo).toEqual({ yaw: 1, pitch: 0.1, fovDeg: 20 });
+    expect(neu.scale).toEqual(DEFAULT_STATE.scale);
+  });
+
   it('ansichtAnwenden mit leerer Ansicht liefert die Standard-Einstellungen zum aktuellen Moment', () => {
     const s = ansichtAnwenden(abgewandelt(), { name: 'Leer', state: {} });
     expect(s.scale).toEqual(DEFAULT_STATE.scale);

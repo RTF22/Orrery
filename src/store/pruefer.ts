@@ -2,7 +2,7 @@ import { DEFAULT_STATE } from './index';
 import { SCALE_PRESETS } from '../sim/scale';
 import { bodyIndex } from '../data';
 import { istThema, NIVEAUS } from '../data/themen';
-import { INFO_BREITE_MAX_REM, INFO_BREITE_MIN_REM, INFO_TEILUNG_MAX, INFO_TEILUNG_MIN, LEISTE_BREITE_MAX_REM, LEISTE_BREITE_MIN_REM } from './types';
+import { HIMMEL_FOV_MAX_GRAD, HIMMEL_FOV_MIN_GRAD, INFO_BREITE_MAX_REM, INFO_BREITE_MIN_REM, INFO_TEILUNG_MAX, INFO_TEILUNG_MIN, LEISTE_BREITE_MAX_REM, LEISTE_BREITE_MIN_REM } from './types';
 import { JD_MIN, JD_MAX } from '../sim/time';
 
 export type Plain = Record<string, unknown>;
@@ -37,7 +37,7 @@ export function istPlain(x: unknown): x is Plain {
 
 /** Aufzählungen je Pfad; ein Wert außerhalb der Liste wird verworfen. */
 const AUFZAEHLUNGEN: Readonly<Record<string, readonly string[]>> = {
-  'camera.mode': ['free', 'attached', 'follow', 'cinema', 'fly'],
+  'camera.mode': ['free', 'attached', 'follow', 'cinema', 'fly', 'geozentrisch'],
   'quality.tier': ['auto', 'low', 'medium', 'high'],
   'ui.language': ['de', 'en'],
   'scale.preset': Object.keys(SCALE_PRESETS),
@@ -67,10 +67,11 @@ const BOOLESCHE_RECORDS: ReadonlySet<string> = new Set(['visible', 'ui.panels'])
  * eingeklemmt, damit ein Eintrag aus einer Datei nie stillschweigend einen
  * anderen Wert bekommt als den, der darin steht. Julianische Tage begrenzt
  * der Zeitbereich aus sim/time.ts (1. Januar 1 bis 31. Dezember 9999).
- * `camera.azimuth` und `camera.fly.yaw` (Winkel ohne Grenze, wickeln um) und
+ * `camera.azimuth`, `camera.fly.yaw` und `camera.geo.yaw` (Winkel ohne Grenze, wickeln um) und
  * `cinema.seed` (beliebige ganze Zahl) bleiben bewusst ohne Eintrag hier. Die
  * Lage im Flug reicht wie `camera.distance` bis 10¹³ km. Zwilling des
- * Lautstärkereglers in `ui/panels/MusikSteuerung.tsx`.
+ * Lautstärkereglers in `ui/panels/MusikSteuerung.tsx`. `camera.geo.fovDeg` ist
+ * Zwilling des Zoomreglers in `ui/panels/CameraPanel.tsx`.
  */
 const BEREICHE: Readonly<Record<string, readonly [number, number]>> = {
   'time.jd': [JD_MIN, JD_MAX],
@@ -89,6 +90,8 @@ const BEREICHE: Readonly<Record<string, readonly [number, number]>> = {
   'camera.fly.y': [-1e13, 1e13],
   'camera.fly.z': [-1e13, 1e13],
   'camera.fly.pitch': [-Math.PI / 2, Math.PI / 2],
+  'camera.geo.pitch': [-Math.PI / 2, Math.PI / 2],
+  'camera.geo.fovDeg': [HIMMEL_FOV_MIN_GRAD, HIMMEL_FOV_MAX_GRAD],
   'cinema.nummer': [0, 1e6],
   'cinema.elapsedSec': [0, 1e7],
   'cinema.idleResumeSec': [1, 3600],

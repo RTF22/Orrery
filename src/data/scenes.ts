@@ -11,8 +11,13 @@
  *   `lookAtId` bestimmt hier also nur die Linie, nicht das Blickziel
  *   (Entwurf `2026-09-13-schatten-design.md` §4). `azimuthDeg` und
  *   `elevationDeg` sind Versätze auf die Kugelkoordinaten dieser Linie.
+ * - `himmel` — Himmelsansicht aus dem Erdmittelpunkt (Entwurf geozentrische
+ *   Sicht §4.5): Maßstab realistisch, Erde ausgeblendet, fester Blick auf die
+ *   geozentrische Richtung von `lookAtId` (sonst `targetId`) zur Szenenmitte,
+ *   Bildwinkel aus `himmel.fovDeg`; `params`, `distanceBasis` und `variation`
+ *   wirken nicht.
  */
-export type ScenePath = 'static' | 'orbit' | 'flyby' | 'chase' | 'system' | 'sichtlinie';
+export type ScenePath = 'static' | 'orbit' | 'flyby' | 'chase' | 'system' | 'sichtlinie' | 'himmel';
 
 /**
  * Bezugsgröße für `distanceInRadii`. `bodyRadius` ist der dargestellte
@@ -41,6 +46,8 @@ export interface Scene {
   };
   durationSec: number;
   timeRateDaysPerSec: number;
+  /** Nur Bahntyp `himmel`: vertikaler Bildwinkel in Grad. */
+  himmel?: { fovDeg: number };
   /**
    * Verlangt beim Beginn dieser Szene (Wechsel oder Kinostart auf ihr) einen
    * Zeitsprung: `tickCinema` (app/cinema.ts) sucht dann mit
@@ -48,9 +55,11 @@ export interface Scene {
    * die nächste Mondfinsternis ab der aktuellen Zeit und stellt `time.jd`
    * kurz vor deren Eintritt. Der Sprung bleibt nach der Szene bestehen — die
    * Zeit ist im Kino die des Kinos (Entwurf §4). Findet die Suche nichts,
-   * läuft die Szene ohne Sprung.
+   * läuft die Szene ohne Sprung. `naechste-opposition` sucht mit
+   * `naechsteOpposition` (sim/geozentrisch.ts) die nächste Opposition des
+   * Zielkörpers und legt sie in die Mitte der Szene.
    */
-  zeitpunkt?: 'naechste-mondfinsternis';
+  zeitpunkt?: 'naechste-mondfinsternis' | 'naechste-opposition';
   /**
    * Streuung je Abspielen: Azimut und Elevation additiv in Grad, Abstand
    * multiplikativ als Faktor. Ein Bereich `[0, 0]` schaltet die Variation

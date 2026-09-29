@@ -7,7 +7,7 @@ export const DEFAULT_STATE: AppState = {
   time: { jd: J2000, rateDaysPerSec: 1, paused: false },
   scale: { ...SCALE_PRESETS.schaubild, preset: 'schaubild' },
   display: {
-    orbits: true, labels: true, markers: true, belts: true, milchstrasse: true, shadows: true,
+    orbits: true, labels: true, markers: true, belts: true, milchstrasse: true, spuren: true, ekliptik: true, aequator: false, shadows: true,
     bloom: true, brightness: 1, lightFalloff: 2,
     // Ohne diese beiden Standardwerte bliebe die abgewandte Hälfte jedes
     // Körpers bei absolut null und die äußeren Planeten bei rund einem
@@ -38,6 +38,7 @@ export const DEFAULT_STATE: AppState = {
       yaw: 0.6 + Math.PI,
       pitch: -0.5,
     },
+    geo: { yaw: 0, pitch: 0, fovDeg: 60 },
   },
   cinema: {
     running: false, nummer: 0, elapsedSec: 0,
