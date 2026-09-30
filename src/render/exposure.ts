@@ -37,9 +37,12 @@ export function exposureTargetId(state: AppState): string {
 
 /**
  * Aufhellung der Himmelsansicht (Entwurf §11.3): Der Vollmond soll vor dem
- * Nachthimmel hell wirken, wie das dunkeladaptierte Auge ihn sieht. Gilt für
- * alle beleuchteten Körper im Himmel; Sonne, Sterne und Linien hängen nicht an
- * der Belichtung. Wert per Messung festgelegt (Plan Himmelsbild, Task 5).
+ * Nachthimmel hell wirken, wie das dunkeladaptierte Auge ihn sieht. 3,7 ist
+ * per Messung am Vollmond festgelegt (Mittel 172 von 255). Je Ziel nimmt
+ * himmelAufhellungFuer den Faktor nach Albedo zurück (gestalteter Exponent 1,5,
+ * Bezug 0,12, ein Messpunkt Mars); Ziele ohne Albedo und die Erde (der
+ * Beobachter) behalten den vollen Faktor. Sonne, Sterne und Linien hängen nicht
+ * an der Belichtung.
  */
 export const HIMMEL_AUFHELLUNG = 3.7;
 
@@ -50,8 +53,13 @@ export const HIMMEL_AUFHELLUNG = 3.7;
  */
 const HIMMEL_BEZUGSALBEDO = 0.12;
 
-/** Aufhellung für dieses Ziel: HIMMEL_AUFHELLUNG beim Mond, darüber schwächer. */
+/**
+ * Aufhellung für dieses Ziel: HIMMEL_AUFHELLUNG beim Mond, darüber schwächer.
+ * Die Erde ist in der Himmelsansicht der Beobachter, ihre Albedo ist ohne
+ * Belang: Ziel Erde zeigt den Vollmond so hell wie Ziel Mond.
+ */
 export function himmelAufhellungFuer(zielId: string): number {
+  if (zielId === 'earth') return HIMMEL_AUFHELLUNG;
   const albedo = bodyIndex[zielId]?.physical.albedo ?? HIMMEL_BEZUGSALBEDO;
   if (!(albedo > HIMMEL_BEZUGSALBEDO)) return HIMMEL_AUFHELLUNG;
   return Math.max(1, HIMMEL_AUFHELLUNG * (HIMMEL_BEZUGSALBEDO / albedo) ** 1.5);

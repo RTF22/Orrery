@@ -11,6 +11,7 @@ describe('LupenHinweis', () => {
     useStore.getState().setCamera({ mode: 'geozentrisch', geo: { ...DEFAULT_STATE.camera.geo, lupe: 12.4 } });
     const { rerender } = render(<LupenHinweis />);
     expect(screen.getByText('Größen überhöht (12×)')).toBeTruthy();
+    expect(screen.getByRole('status').textContent).toBe('Größen überhöht (12×)');
     useStore.getState().setCamera({ geo: { ...DEFAULT_STATE.camera.geo, lupe: 1.3 } });
     rerender(<LupenHinweis />);
     expect(screen.getByText('Größen überhöht (1,3×)')).toBeTruthy();

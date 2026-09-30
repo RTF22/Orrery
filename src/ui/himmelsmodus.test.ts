@@ -86,6 +86,27 @@ describe('himmelAusrichten und himmelSchwenken', () => {
     expect(s.camera.geo.yaw).toBeCloseTo(richtungZuWinkeln(geozentrischeRichtung('jupiter', bodyIndex, jd)).yaw, 12);
   });
 
+  it('richtet unter der Lupe auf die dargestellte Lage eines Mondes', () => {
+    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { ...DEFAULT_STATE.camera.geo, lupe: 25 } });
+    himmelAusrichten('io');
+    const s = useStore.getState();
+    const dar = (id: string) => scaledPositionAt(id, bodyIndex, jd, dargestellterMassstab(s));
+    const io = dar('io'), erde = dar('earth');
+    const soll = richtungZuWinkeln({ x: io.x - erde.x, y: io.y - erde.y, z: io.z - erde.z });
+    const wahr = richtungZuWinkeln(geozentrischeRichtung('io', bodyIndex, jd));
+    expect(s.camera.geo.yaw).toBeCloseTo(soll.yaw, 10);
+    expect(s.camera.geo.pitch).toBeCloseTo(soll.pitch, 10);
+    expect(Math.abs(s.camera.geo.yaw - wahr.yaw) + Math.abs(s.camera.geo.pitch - wahr.pitch)).toBeGreaterThan(1e-6);
+  });
+
+  it('richtet bei Lupe 1 auf die wahre Richtung', () => {
+    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { ...DEFAULT_STATE.camera.geo, lupe: 1 } });
+    himmelAusrichten('io');
+    const soll = richtungZuWinkeln(geozentrischeRichtung('io', bodyIndex, jd));
+    expect(useStore.getState().camera.geo.yaw).toBeCloseTo(soll.yaw, 9);
+    expect(useStore.getState().camera.geo.pitch).toBeCloseTo(soll.pitch, 9);
+  });
+
   it('schwenkt mit D nach rechts, skaliert mit dem Bildwinkel', () => {
     useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 50, lupe: 1 } });
     himmelSchwenken(1, { vor: 0, seit: 1, hoch: 0 });

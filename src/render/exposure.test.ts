@@ -145,4 +145,8 @@ describe('Aufhellung der Himmelsansicht', () => {
     expect(himmelAufhellungFuer('venus')).toBe(1);
     expect(himmelAufhellungFuer('vulcan')).toBe(HIMMEL_AUFHELLUNG);
   });
+  it('behandelt die Erde als Beobachter: voller Faktor wie beim Mond', () => {
+    expect(himmelAufhellungFuer('earth')).toBe(HIMMEL_AUFHELLUNG);
+    expect(himmelAufhellungFuer('earth')).toBe(himmelAufhellungFuer('moon'));
+  });
 });

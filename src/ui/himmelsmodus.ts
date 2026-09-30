@@ -6,6 +6,8 @@ import { fokusAbstand, scaledPositionAt } from '../sim/scale';
 import { himmelDrehen, himmelZoomen, kugelUm } from '../render/camera/flug';
 import type { Absicht } from '../render/camera/flug';
 import { letztePose } from '../render/camera/controller';
+import { dargestellterMassstab } from '../store/himmelsansicht';
+import type { Vec3 } from '../sim/types';
 import { cinemaAktiv, stopCinema } from './cinemaControl';
 
 /**
@@ -62,13 +64,27 @@ export function himmelUmschalten(): void {
   else himmelStarten();
 }
 
+/**
+ * Richtung vom Erdmittelpunkt zur dargestellten Lage des Körpers. Unter der
+ * Lupe stehen Monde anderer Planeten um den Lupenfaktor gespreizt neben ihrem
+ * Planeten; der Klick auf ihren Lichtpunkt muss dorthin zentrieren, nicht auf
+ * die wahre Richtung. Planeten und Erdmond liegen richtungstreu, dort ist das
+ * die wahre Richtung. Bei Lupe 1 ist es immer die wahre.
+ */
+function dargestellteRichtung(id: string, s: ReturnType<typeof useStore.getState>): Vec3 {
+  const massstab = dargestellterMassstab(s);
+  const ziel = scaledPositionAt(id, bodyIndex, s.time.jd, massstab);
+  const erde = scaledPositionAt('earth', bodyIndex, s.time.jd, massstab);
+  return { x: ziel.x - erde.x, y: ziel.y - erde.y, z: ziel.z - erde.z };
+}
+
 /** Klick, Objektbaum, Textverweis und Pad-A im Himmelsmodus: Blick auf den Körper statt Fahrt. */
 export function himmelAusrichten(id: string): void {
   // Ziel und Thema in einem Zug wie fahreZu (ui/info/themaVerfall.ts).
   useStore.setState((s) => ({
     camera: {
       ...s.camera, targetId: id,
-      geo: { ...s.camera.geo, ...richtungZuWinkeln(geozentrischeRichtung(id, bodyIndex, s.time.jd)) },
+      geo: { ...s.camera.geo, ...richtungZuWinkeln(dargestellteRichtung(id, s)) },
     },
     ui: { ...s.ui, info: { ...s.ui.info, thema: null } },
   }));
