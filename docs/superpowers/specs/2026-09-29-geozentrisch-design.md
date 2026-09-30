@@ -276,17 +276,32 @@ Helligkeit und, auf Wunsch des Nutzers, die Winkelgrößen; jede Größenüberh�
 - Zustand `camera.geo.lupe` (1 bis 50) neben Blick und Bildwinkel: Sitzung, Ansichten und Deep Link
   (`p`) nehmen ihn mit, der Prüfer verwirft Werte außerhalb. Himmelsszenen im Kino zeichnen mit 1×.
 
-### 11.5 Auswirkung auf jensfricke.com
+### 11.5 Linke Spalte
+
+- **Ergänzung (Jens, 30.09.2026):** Steuerelemente ohne Wirkung werden in der Himmelsansicht
+  ausgeblendet, nicht ausgegraut. Das Panel wechselt seinen Inhalt, wie das Kamerapanel heute schon
+  den Abstandsregler gegen den Bildwinkel tauscht. Ausgegraute Regler laden zum Klicken ein und
+  bleiben für Tastatur und Screenreader im Weg.
+- **Maßstab:** Voreinstellungen und die Regler Körpergröße, Abstände und Sonnengröße verschwinden.
+  Das Panel zeigt nur den Hinweis, warum der Maßstab realistisch ist, und den Regler „Scheiben
+  vergrößern“ (§11.4). Beim Verlassen erscheinen die Regler mit dem unveränderten `state.scale`.
+- **Darstellung:** Das Kästchen „Markierungen“ schaltet in der Himmelsansicht die Lichtpunkte (§11.2)
+  und bleibt deshalb sichtbar. Die übrigen Kästchen und Regler wirken auch im Himmel (Bahnlinien über
+  die Mondbahn, Beleuchtungsregler auf die Mondscheibe und vergrößerte Scheiben).
+- Der Plan prüft jedes Steuerelement der linken Spalte am Code auf seine Wirkung in der Himmelsansicht.
+  Was dort nichts bewirkt, wird ausgeblendet; die Liste steht im Plan und im Abnahmeprotokoll.
+
+### 11.6 Auswirkung auf jensfricke.com
 
 Keine. Nur ein zusätzliches Feld in bestehenden Speicherschlüsseln; keine fremden Server, keine neuen
 Browserfunktionen.
 
-### 11.6 Zuschnitt
+### 11.7 Zuschnitt
 
 Auf dem Branch `geozentrisch`, jeder Task mit eigenem Commit und grünen Tests:
 
 1. store und Oberfläche: `camera.geo.lupe`, `dargestellterMassstab`, Persistenz, Deep Link, Prüfer,
-   Regler und Hinweis (DE/EN)
+   Regler und Hinweis (DE/EN), linke Spalte ohne wirkungslose Steuerelemente (§11.5)
 2. Mondbahn in der Himmelsansicht samt Klick
 3. sim: scheinbare Helligkeit
 4. render: Lichtpunktschicht, Glyphen aus, Klickflächen
