@@ -365,7 +365,7 @@ describe('createCameraController: neuer Controller nach Remount', () => {
 
 describe('createCameraController — Himmelsansicht', () => {
   const jd = DEFAULT_STATE.time.jd;
-  const himmel = (geo = { yaw: 2, pitch: 0.3, fovDeg: 20 }): AppState => ({
+  const himmel = (geo = { yaw: 2, pitch: 0.3, fovDeg: 20, lupe: 1 }): AppState => ({
     ...structuredClone(DEFAULT_STATE),
     camera: { ...DEFAULT_STATE.camera, mode: 'geozentrisch', geo },
   });

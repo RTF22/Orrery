@@ -195,3 +195,8 @@ describe('decodeState — Prüfung (Pflichtpunkt 4b)', () => {
     expect(toShareable(mitAktion)).toEqual({});
   });
 });
+
+it('ergänzt eine fehlende Lupe aus dem Standard (Zustand von gestern)', () => {
+  const s = fromShareable({ camera: { mode: 'geozentrisch', geo: { yaw: 1, pitch: 0.1, fovDeg: 30 } } });
+  expect(s.camera.geo).toEqual({ yaw: 1, pitch: 0.1, fovDeg: 30, lupe: 1 });
+});

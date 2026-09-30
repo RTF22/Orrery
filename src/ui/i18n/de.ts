@@ -34,6 +34,8 @@ export const de = {
   'scale.preset.realistisch': 'Realistisch',
   'scale.preset.schaubild': 'Schaubild',
   'scale.preset.kompakt': 'Kompakt',
+  'scale.lupe': 'Scheiben vergrößern',
+  'himmel.groessenUeberhoeht': 'Größen überhöht ({n}×)',
   'scale.gesperrtHimmel': 'Von der Erde aus gilt der Maßstab „Realistisch“, damit Richtungen und Größen am Himmel stimmen.',
   'camera.mode.free': 'Frei',
   'camera.mode.attached': 'Geheftet',

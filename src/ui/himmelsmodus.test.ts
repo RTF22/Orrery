@@ -87,16 +87,16 @@ describe('himmelAusrichten und himmelSchwenken', () => {
   });
 
   it('schwenkt mit D nach rechts, skaliert mit dem Bildwinkel', () => {
-    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 50 } });
+    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 50, lupe: 1 } });
     himmelSchwenken(1, { vor: 0, seit: 1, hoch: 0 });
     expect(useStore.getState().camera.geo.yaw).toBeCloseTo(-HIMMEL_SCHWENK_JE_S, 12);
-    useStore.getState().setCamera({ geo: { yaw: 0, pitch: 0, fovDeg: 5 } });
+    useStore.getState().setCamera({ geo: { yaw: 0, pitch: 0, fovDeg: 5, lupe: 1 } });
     himmelSchwenken(1, { vor: 0, seit: 1, hoch: 0 });
     expect(useStore.getState().camera.geo.yaw).toBeCloseTo(-HIMMEL_SCHWENK_JE_S / 10, 12);
   });
 
   it('zoomt mit E hinein und bleibt in den Grenzen', () => {
-    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 2 } });
+    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 2, lupe: 1 } });
     himmelSchwenken(10, { vor: 0, seit: 0, hoch: 1 });
     expect(useStore.getState().camera.geo.fovDeg).toBe(1);
     himmelSchwenken(10, { vor: 0, seit: 0, hoch: -1 });
@@ -104,7 +104,7 @@ describe('himmelAusrichten und himmelSchwenken', () => {
   });
 
   it('hält den Blick knapp unter dem Pol', () => {
-    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 1.5, fovDeg: 50 } });
+    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 1.5, fovDeg: 50, lupe: 1 } });
     himmelSchwenken(10, { vor: 1, seit: 0, hoch: 0 });
     expect(useStore.getState().camera.geo.pitch).toBeCloseTo(Math.PI / 2 - 0.01, 12);
   });

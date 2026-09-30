@@ -3,6 +3,7 @@ import { useStore } from '../../store';
 import { SCALE_PRESETS } from '../../sim/scale';
 import type { ScaleSettings } from '../../sim/scale';
 import { himmelsansicht } from '../../store/himmelsansicht';
+import { HIMMEL_LUPE_MAX, HIMMEL_LUPE_MIN } from '../../store/types';
 import { t } from '../i18n';
 import { formatZahl } from '../format';
 import { Panel } from './Panel';
@@ -24,10 +25,21 @@ const groesseZuRegler = (g: number): number =>
   Math.log(Math.min(Math.max(g, GROESSE_MIN), GROESSE_MAX) / GROESSE_MIN)
   / Math.log(GROESSE_MAX / GROESSE_MIN);
 
+/** Zwilling von 'camera.geo.lupe' in store/pruefer.ts; logarithmisch wie der Größenregler. */
+const reglerZuLupe = (v: number): number =>
+  HIMMEL_LUPE_MIN * (HIMMEL_LUPE_MAX / HIMMEL_LUPE_MIN) ** v;
+const lupeZuRegler = (l: number): number =>
+  Math.log(Math.min(Math.max(l, HIMMEL_LUPE_MIN), HIMMEL_LUPE_MAX) / HIMMEL_LUPE_MIN)
+  / Math.log(HIMMEL_LUPE_MAX / HIMMEL_LUPE_MIN);
+
 export function ScalePanel(): React.JSX.Element {
   const scale = useStore((s) => s.scale);
-  // Von der Erde gilt fest der realistische Maßstab; die Regler ruhen.
-  const gesperrt = useStore((s) => himmelsansicht(s));
+  // Von der Erde gilt der realistische Maßstab; wirkungslose Regler werden
+  // ausgeblendet, nicht gesperrt (Entwurf §11.5).
+  const himmel = useStore((s) => himmelsansicht(s));
+  const handmodus = useStore((s) => s.camera.mode === 'geozentrisch');
+  const lupe = useStore((s) => s.camera.geo.lupe);
+  const lupeId = useId();
   const setScale = useStore((s) => s.setScale);
   const abbrechen = useRef<(() => void) | null>(null);
   const groesseId = useId();
@@ -58,16 +70,43 @@ export function ScalePanel(): React.JSX.Element {
     setScale({ ...patch, preset: null });
   };
 
+  if (himmel) {
+    return (
+      <Panel id="scale" title={t('panel.scale')}>
+        <div className="flex flex-col gap-2">
+          <p className="text-xs text-white/70">{t('scale.gesperrtHimmel')}</p>
+          {handmodus && (
+            <label htmlFor={lupeId} className="flex flex-col gap-1">
+              <span className="flex justify-between">
+                <span>{t('scale.lupe')}</span>
+                <span className="font-mono tabular-nums">{formatZahl(lupe, 1)}×</span>
+              </span>
+              <input
+                id={lupeId}
+                aria-label={t('scale.lupe')}
+                type="range"
+                min={0} max={1} step={0.001}
+                value={lupeZuRegler(lupe)}
+                onChange={(e) => {
+                  const aktuell = useStore.getState().camera;
+                  useStore.getState().setCamera({ geo: { ...aktuell.geo, lupe: reglerZuLupe(Number(e.target.value)) } });
+                }}
+              />
+            </label>
+          )}
+        </div>
+      </Panel>
+    );
+  }
+
   return (
     <Panel id="scale" title={t('panel.scale')}>
       <div className="flex flex-col gap-2">
-        {gesperrt && <p className="text-xs text-white/70">{t('scale.gesperrtHimmel')}</p>}
         <div className="flex flex-wrap gap-2">
           {PRESET_NAMEN.map((name) => (
             <button
               key={name}
               type="button"
-              disabled={gesperrt}
               aria-pressed={scale.preset === name}
               onClick={() => { waehlePreset(name); }}
               className={`rounded border px-2 py-1 ${
@@ -89,7 +128,6 @@ export function ScalePanel(): React.JSX.Element {
           <input
             id={groesseId}
             type="range"
-            disabled={gesperrt}
             min={0} max={1} step={0.001}
             value={groesseZuRegler(scale.sizeScale)}
             onChange={(e) => { vonHand({ sizeScale: reglerZuGroesse(Number(e.target.value)) }); }}
@@ -104,7 +142,6 @@ export function ScalePanel(): React.JSX.Element {
           <input
             id={abstandId}
             type="range"
-            disabled={gesperrt}
             min={0.35} max={1} step={0.005}
             value={scale.distanceExponent}
             onChange={(e) => { vonHand({ distanceExponent: Number(e.target.value) }); }}
@@ -119,7 +156,6 @@ export function ScalePanel(): React.JSX.Element {
           <input
             id={sonneId}
             type="range"
-            disabled={gesperrt}
             min={0.1} max={1} step={0.01}
             value={scale.sunDamping}
             onChange={(e) => { vonHand({ sunDamping: Number(e.target.value) }); }}

@@ -177,6 +177,9 @@ describe('pruefeZustand — ton', () => {
       .toEqual({ camera: { mode: 'geozentrisch', geo: { yaw: 7, pitch: 0.2, fovDeg: 30 } } });
     expect(pruefeZustand({ camera: { geo: { pitch: 2, fovDeg: 0.5 } } })).toEqual({});
     expect(pruefeZustand({ camera: { geo: { fovDeg: 91 } } })).toEqual({});
+    expect(pruefeZustand({ camera: { geo: { lupe: 12.5 } } })).toEqual({ camera: { geo: { lupe: 12.5 } } });
+    expect(pruefeZustand({ camera: { geo: { lupe: 0.5 } } })).toEqual({});
+    expect(pruefeZustand({ camera: { geo: { lupe: 51 } } })).toEqual({});
   });
 
   it('nimmt die drei Himmelsschalter als boolesche Werte an', () => {

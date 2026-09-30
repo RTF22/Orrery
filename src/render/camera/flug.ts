@@ -284,13 +284,13 @@ export interface HimmelsBlickwinkel { yaw: number; pitch: number; fovDeg: number
  * (bei 50° wie im Flug, bei 1° fünfzigmal feiner), sonst flöge der Himmel
  * beim Zoomen mit einem Pixel Ziehen aus dem Bild.
  */
-export function himmelDrehen(geo: HimmelsBlickwinkel, dYaw: number, dPitch: number): HimmelsBlickwinkel {
+export function himmelDrehen<T extends HimmelsBlickwinkel>(geo: T, dYaw: number, dPitch: number): T {
   const k = geo.fovDeg / KAMERA_FOV_GRAD;
   return { ...geo, ...blickDrehen(geo, dYaw * k, dPitch * k) };
 }
 
 /** Bildwinkel mal `faktor`, in den Grenzen HIMMEL_FOV_MIN_GRAD bis HIMMEL_FOV_MAX_GRAD. */
-export function himmelZoomen(geo: HimmelsBlickwinkel, faktor: number): HimmelsBlickwinkel {
+export function himmelZoomen<T extends HimmelsBlickwinkel>(geo: T, faktor: number): T {
   if (!Number.isFinite(faktor) || faktor <= 0) return geo;
   return { ...geo, fovDeg: begrenze(geo.fovDeg * faktor, HIMMEL_FOV_MIN_GRAD, HIMMEL_FOV_MAX_GRAD) };
 }

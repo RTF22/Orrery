@@ -9,6 +9,10 @@ export type CameraMode = 'free' | 'attached' | 'follow' | 'cinema' | 'fly' | 'ge
  */
 export const HIMMEL_FOV_MIN_GRAD = 1;
 export const HIMMEL_FOV_MAX_GRAD = 90;
+
+/** Grenzen des Reglers „Scheiben vergrößern“ (Entwurf geozentrische Sicht §11.4). */
+export const HIMMEL_LUPE_MIN = 1;
+export const HIMMEL_LUPE_MAX = 50;
 export type QualityTier = 'auto' | 'low' | 'medium' | 'high';
 export type TonModus = 'aus' | 'kino' | 'immer';
 
@@ -81,9 +85,10 @@ export interface AppState {
     /**
      * Nur für den Modus geozentrisch (Entwurf geozentrische Sicht §4.2):
      * Blickrichtung aus dem Erdmittelpunkt, gezählt wie `fly.yaw`/`fly.pitch`,
-     * und vertikaler Bildwinkel in Grad als Zoom.
+     * und vertikaler Bildwinkel in Grad als Zoom. `lupe` vergrößert in der
+     * Himmelsansicht nur die Winkelgrößen (§11.4), 1 = echt.
      */
-    geo: { yaw: number; pitch: number; fovDeg: number };
+    geo: { yaw: number; pitch: number; fovDeg: number; lupe: number };
   };
   /**
    * Der Kino-Modus. `nummer` und `elapsedSec` beschreiben die Stelle im

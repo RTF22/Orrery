@@ -38,7 +38,7 @@ export const DEFAULT_STATE: AppState = {
       yaw: 0.6 + Math.PI,
       pitch: -0.5,
     },
-    geo: { yaw: 0, pitch: 0, fovDeg: 60 },
+    geo: { yaw: 0, pitch: 0, fovDeg: 60, lupe: 1 },
   },
   cinema: {
     running: false, nummer: 0, elapsedSec: 0,

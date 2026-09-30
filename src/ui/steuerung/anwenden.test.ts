@@ -843,7 +843,7 @@ describe('steuerungTakt: Mindestabstand beim Drehen', () => {
 
 describe('steuerungTakt — Himmelsmodus', () => {
   it('schwenkt mit gehaltenem D, statt zu fliegen', () => {
-    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 50 } });
+    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 50, lupe: 1 } });
     steuerungTakt(jd, 0.5, umgebung(['KeyD'], vorErde()));
     const { camera } = useStore.getState();
     expect(camera.mode).toBe('geozentrisch');
@@ -851,7 +851,7 @@ describe('steuerungTakt — Himmelsmodus', () => {
   });
 
   it('schwenkt auch mit Shift, statt zu drehen', () => {
-    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 50 } });
+    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 50, lupe: 1 } });
     steuerungTakt(jd, 0.5, umgebung(['KeyW'], vorErde(), true));
     expect(useStore.getState().camera.mode).toBe('geozentrisch');
     expect(useStore.getState().camera.geo.pitch).toBeCloseTo(Math.PI / 8, 12);
@@ -883,7 +883,7 @@ describe('Himmel: Maßstab der gezeigten Lage', () => {
 
   it('schiebt den Flug aus dem Himmel aus der Erde heraus (eingestellter Maßstab)', () => {
     useStore.getState().setScale({ sizeScale: 50, distanceExponent: 1, sunDamping: 1 });
-    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 50 } });
+    useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 50, lupe: 1 } });
     const { scale } = useStore.getState();
     flugStarten(ausDemErdmittelpunkt());
     const erde = scaledPositionAt('earth', bodyIndex, jd, scale);

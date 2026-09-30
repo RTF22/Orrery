@@ -20,7 +20,7 @@ describe('himmelsBlick', () => {
   it('nimmt im Handmodus Blick und Bildwinkel aus camera.geo', () => {
     const state: AppState = {
       ...structuredClone(DEFAULT_STATE),
-      camera: { ...DEFAULT_STATE.camera, mode: 'geozentrisch', geo: { yaw: 1, pitch: 0.2, fovDeg: 12 } },
+      camera: { ...DEFAULT_STATE.camera, mode: 'geozentrisch', geo: { yaw: 1, pitch: 0.2, fovDeg: 12, lupe: 1 } },
     };
     const b = himmelsBlick(state, jd);
     expect(b.fovDeg).toBe(12);

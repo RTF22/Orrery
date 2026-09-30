@@ -16,6 +16,7 @@ import { InfoPanel } from './info/InfoPanel';
 import { useShortcuts } from './shortcuts/useShortcuts';
 import { useIdleHide } from './idle';
 import { Minileiste, KnopfZurueck } from './Minileiste';
+import { LupenHinweis } from './LupenHinweis';
 import { useWakeLock } from './wakeLock';
 import { InfoKarte } from './infokarte/InfoKarte';
 import { useInfoKarte } from './infokarte/zustand';
@@ -82,6 +83,7 @@ export function App(): React.JSX.Element {
           `sichtbar && schmal` an derselben Ecke unten rechts — der Knopf
           zurück rückt dann darüber. */}
       <Minileiste untaetig={untaetig} />
+      <LupenHinweis />
       <KnopfZurueck ueberBogenreiter={sichtbar && schmal} />
       <InfoKarte />
       <SteuerKarte />

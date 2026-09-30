@@ -35,6 +35,8 @@ export const en: Record<Key, string> = {
   'scale.preset.realistisch': 'Realistic',
   'scale.preset.schaubild': 'Diagram',
   'scale.preset.kompakt': 'Compact',
+  'scale.lupe': 'Enlarge discs',
+  'himmel.groessenUeberhoeht': 'Sizes exaggerated ({n}×)',
   'scale.gesperrtHimmel': 'Viewed from Earth, the “Realistic” scale applies so that directions and sizes in the sky are right.',
   'camera.mode.free': 'Free',
   'camera.mode.attached': 'Attached',

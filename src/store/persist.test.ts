@@ -230,7 +230,7 @@ describe('Ansichten: erstellen und anwenden', () => {
     };
     const neu = ansichtAnwenden(aktuell, himmel);
     expect(neu.camera.mode).toBe('geozentrisch');
-    expect(neu.camera.geo).toEqual({ yaw: 1, pitch: 0.1, fovDeg: 20 });
+    expect(neu.camera.geo).toEqual({ yaw: 1, pitch: 0.1, fovDeg: 20, lupe: 1 });
     expect(neu.scale).toEqual(DEFAULT_STATE.scale);
   });
 

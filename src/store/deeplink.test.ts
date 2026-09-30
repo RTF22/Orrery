@@ -518,10 +518,21 @@ describe('Deep Link — view=geo', () => {
   it('schreibt view=geo und body und liest den eigenen Link verlustfrei zurück', () => {
     const state = structuredClone(DEFAULT_STATE);
     state.time.jd = 2461456.25;
-    state.camera = { ...state.camera, mode: 'geozentrisch', targetId: 'mars', geo: { yaw: 2.6, pitch: 0.07, fovDeg: 24 } };
+    state.camera = { ...state.camera, mode: 'geozentrisch', targetId: 'mars', geo: { yaw: 2.6, pitch: 0.07, fovDeg: 24, lupe: 1 } };
     const link = lesbarerLink(state, ort);
     expect(link).toContain('view=geo&body=mars&p=');
     const e = fragmentAuswerten(link.slice(link.indexOf('#')))!;
     expect(fromShareable(e.patch!).camera).toEqual(state.camera);
+  });
+
+  it('trägt die Lupe über den Knopf-Link hin und zurück', () => {
+    const s = structuredClone(DEFAULT_STATE);
+    s.camera.mode = 'geozentrisch';
+    s.camera.targetId = 'jupiter';
+    s.camera.geo = { yaw: 1.2, pitch: 0.05, fovDeg: 5, lupe: 25 };
+    const link = lesbarerLink(s, { origin: 'https://orrery3d.de', pathname: '/' });
+    const e = fragmentAuswerten(link.slice(link.indexOf('#')))!;
+    const kamera = (e.patch as { camera: { geo: { lupe: number } } }).camera;
+    expect(kamera.geo.lupe).toBe(25);
   });
 });

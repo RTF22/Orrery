@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   blickVektor, rechtsVektor, obenVektor, blickAus, koerperStaende, waehleBezug, hoehe,
   fluggeschwindigkeit, mindesthoehe, laenge, plus, mal, punkt, kreuz, ELEVATION_GRENZE,
-  koerperNaechstDerMitte, kugelUm, flugSchritt, blickDrehen, minus, normiert,
+  koerperNaechstDerMitte, kugelUm, flugSchritt, blickDrehen, minus, normiert, himmelDrehen, himmelZoomen,
   MIN_DISTANCE_KM, MAX_DISTANCE_KM, EINFLUSS_DECKEL, MINDESTABSTAND_RADIEN, kleinsterAbstand,
 } from './flug';
 import type { KoerperStand } from './flug';
@@ -289,4 +289,10 @@ describe('kleinsterAbstand', () => {
     expect(kleinsterAbstand(winzig, s)).toBe(MIN_DISTANCE_KM);
     expect(kleinsterAbstand(undefined, s)).toBe(MIN_DISTANCE_KM);
   });
+});
+
+it('behält bei Drehen und Zoomen die Lupe', () => {
+  const geo = { yaw: 0, pitch: 0, fovDeg: 30, lupe: 7 };
+  expect(himmelDrehen(geo, 0.1, 0.1).lupe).toBe(7);
+  expect(himmelZoomen(geo, 0.5).lupe).toBe(7);
 });
