@@ -199,7 +199,7 @@ Offen; Vorschlag zur Reihenfolge:
 | Prüfpunkt | Ergebnis |
 |---|---|
 | Desktop, Maus: G drückt in den Himmelsmodus, erneut G und Esc verlassen ihn; Ziehen schwenkt, Rad zoomt (Bildwinkel), Klick auf Mars und Objektbaum richten den Blick aus | offen |
-| Desktop, Tastatur: Pfeile/WASD schwenken, Q/E zoomen; Steuerkarte (`?`) zeigt zwei neue Zeilen | offen |
+| Desktop, Tastatur: W/A/S/D schwenken, Q/E zoomen; Steuerkarte (`?`) zeigt zwei neue Zeilen | offen |
 | Desktop: Spuren, Ekliptik, Äquator lassen sich im Darstellungspanel schalten; Maßstabsregler sind im Himmelsmodus ausgeblendet (§5.10, Entwurf §11.5) und danach wieder da | offen |
 | Desktop: Kino, Szene 20 „Marsschleife“: Zeitsprung zur Opposition, Schleife im Bild, Text in drei Stufen | offen |
 | Desktop: Teilen-Knopf im Himmelsmodus erzeugt `view=geo&body=…`; Link in neuem Tab öffnet den Blick | offen |
@@ -326,6 +326,34 @@ Scheibenmitte blieb gleich.
 Hauptchunk 1 592,27 kB. Screenshots und Messskripte sind gelöscht, der Baum ist sauber. Die Wort- und
 Trailerkontrolle nach der lokalen Projektanleitung ergab bei jedem Commit 0.
 
+### 5.11 Vorprüfung am Desktop (30.09.2026)
+
+Die Punkte der Handprüfung (§5.9) wurden am Desktop automatisch per Browsersteuerung und Pixelmessung vorgeprüft
+(Chrome, 1600×900 px, Qualität „high“, Stand `423a1ac`); die Spalte „Ergebnis“ in §5.9 bleibt der Handprüfung
+vorbehalten. Bilanz: 15 Punkte bestanden, 1 Befund, 5 nicht automatisierbar (Controller und alle A55-Punkte).
+
+| Prüfpunkt | Ergebnis | Messwert |
+|---|---|---|
+| Maus: G, Esc, Ziehen, Rad, Klick, Objektbaum | bestanden | Ziehen 100/−30 px: yaw −0,628, pitch −0,188; Rad: Bildwinkel 60 → 45,1 → 79,9; Klick auf den Marspunkt: Ziel `mars` |
+| Tastatur W/A/S/D und Q/E; Steuerkarte | bestanden | 400 ms: yaw ±0,52, pitch ±0,52, Bildwinkel +10,1° bzw. −22,6°; Pfeiltasten ändern die Zeitrate, nicht den Blick |
+| Spuren, Ekliptik, Äquator; Maßstabsregler weg und wieder da | bestanden | 7 Spurobjekte folgen dem Kästchen; im Himmel 0 Maßstabsknöpfe, danach 3 |
+| Kino Szene 20 Marsschleife | bestanden | Start 81,4 Tage vor der Opposition vom 7.11.2005; 13 Stichproben in 60 s, Mars durchgehend im Bild (x 623–1019, y 342–480), zwei Umkehrpunkte; Text 80 / 226 / 1058 Wörter |
+| Teilen-Knopf, Link in neuem Tab | bestanden | `#date=2027-02-19T12:00Z&view=geo&body=jupiter&p=…`; Modus, Ziel, Winkel, Bildwinkel 6, Lupe 25 und Zeit gleich |
+| Flug-Knopf aus dem Himmel | bestanden | Abstand 685 163 km vom Erdmittelpunkt, konstant über 800 ms, nach W 0,6 s außerhalb der Erde |
+| Shift+W in der Marsschleife | Befund, behoben (§6 Nr. 34) | Das Kino endete stets, das Ziel war aber der Körper nächst der Bildmitte: nach 3 s `deimos`, nach 4 s `mars`, nach 7 s `jupiter` |
+| Hohe Zeitrate, Taste R | bestanden | 30, −100 und 365 Tage/s: 59,9 bis 60,0 Bilder/s, längstes Bild 17,1 ms, 0 Bilder über 25 ms |
+| Mondbahn; Klick auf die Linie | bestanden | nur `bahn-moon` sichtbar; Klick auf den Linienpunkt: Ziel `moon`, Winkel gleich Soll |
+| Lupe, Hinweis, Monde spreizen | bestanden | Lupe 25: Jupiterradius 2,76 → 68,95 px, Io 14,9 → 371,4 px; Erdmond 122,685 px unverändert; Hinweis „Größen überhöht (25×)“ nur bei Lupe über 1 |
+| Lichtpunkte nach Helligkeit; Jupiter mit vier Monden | bestanden | Helligkeitssumme Venus 8711, Jupiter 9615, Mars 3344, Saturn 4416, Neptun 148; vier getrennte Mondmaxima bei 1° bis 2° |
+| Sonne mit Blendschein, Vollmond mit Maria | bestanden (Eindruck offen) | Sonne Mitte 255/255/253; Vollmond Mittel 172 von 255, Standardabweichung 33 |
+| Maßstabspanel im Himmel | bestanden (Desktop) | nur Hinweis und „Scheiben vergrößern“ |
+| Vollmond bei Ziel Erde, Sonne und Mond | bestanden | Mittel 172,29 / 172,70 / 172,39 |
+| Klick auf einen Jupitermond bei Lupe 25 | bestanden | Io, Europa, Ganymed und Kallisto zentriert (Kallisto bei ausgeblendeter Oberfläche; das Infopanel fängt Klicks am rechten Rand ab) |
+| Bedeckung | bestanden | Mond bedeckt Venus (JD 2 463 771,840) und Merkur (JD 2 463 657,677), Sonne bedeckt Venus (JD 2 463 385,92): im Differenzbild 0 abweichende Pixel; kurz davor 14 bis 73 |
+
+Beim ersten Besuch mit frischem Profil hält die offene Info-Karte die Tastenkürzel gesperrt, G wirkt erst nach Esc.
+Das ist beabsichtigt, fällt aber auf.
+
 ## 6. Rulings
 
 Aus der Planung (Plan, Abschnitt Rulings):
@@ -419,6 +447,13 @@ Aus dem Nachtrag Himmelsbild (Umsetzung):
     und `startBlick` bleiben bei der wahren Richtung, weil die Lupe dort erst nach dem Blick gilt. Kosten, falls
     falsch: beim Einstieg mit Lupe über 1 und einem Mond als Ziel liegt der Blick neben dem Punkt; dann dieselbe
     Funktion dort verwenden.
+
+34. **Shift+W in Himmelsszenen:** In einer Himmelsszene im Kino wird mit Shift+W (Controller: LB) der Szenenkörper
+    Ziel (`targetId` der Szene, gelesen vor dem Ende des Kinos), nicht der Körper nächst der Bildmitte. Die Szene
+    blickt auf die Mitte der Marsschleife; Mars, Phobos und Deimos liegen im Bild auf einem Pixel, später steht
+    Jupiter näher an der Achse (Vorprüfung: `deimos`, `mars`, `jupiter`). In allen anderen Fällen bleibt die Regel
+    „Körper nächst der Bildmitte“. Kosten, falls falsch: wer aus der Marsschleife bewusst einen anderen Körper
+    nahe der Bildmitte greifen will, bekommt Mars; die Bedingung in `drehen` (`anwenden.ts`) streichen.
 
 ## 7. Unschärfen
 
