@@ -207,3 +207,88 @@ vermerkt.
    Ausstieg mit G, Esc oder Modusknopf: Ziel Erde → Fahrt zur Erde, sonst geheftet um das Ziel an
    der gezeigten Lage. Die drei Kästchen aus §5 erscheinen im Darstellungspanel nur in der
    Himmelsansicht.
+
+## 11. Nachtrag nach der ersten Handprüfung (30.09.2026)
+
+**Anlass (Jens):** Im Prinzip funktioniert alles, das Bild ist aber wenig beeindruckend. Man sieht nur
+Spuren und Markierungen, einzig die Sonne ist als Körper zu erkennen und unerwartet klein; der Mond hat
+keine Bahnlinie. Gemessen bei 1600 × 900 px und 60° Bildwinkel am 19.02.2027: Sonne eine orange
+Scheibe von rund 6 bis 8 px mit schwachem Schein, Mond (fast voll) eine graue Scheibe von rund 8 px
+ohne Beschriftung, Planeten nur als Ersatzglyphen von 3 px. Das entspricht dem echten Himmel: Sonne
+und Mond sind dort ebenfalls nur ein halbes Grad groß. Der Eindruck des echten Himmels kommt von
+Helligkeit und Blendung, nicht von Größe.
+
+**Grundsatz (Jens, 30.09.2026):** Richtungen bleiben exakt. Überhöht werden nur die Darstellung der
+Helligkeit und, auf Wunsch des Nutzers, die Winkelgrößen; jede Größenüberhöhung wird angezeigt.
+
+### 11.1 Mondbahn
+
+- In der Himmelsansicht zeichnet die Bahnlinienschicht genau eine Bahn: die des Mondes (Ausnahme von
+  §10 Punkt 4). Vom Erdmittelpunkt aus ist sie sein Weg am Himmel, ein Großkreis rund 5° gegen die
+  Ekliptik geneigt; wo sie die Ekliptik schneidet, liegen die Knoten, an denen Finsternisse möglich
+  sind. Die Linie folgt `display.orbits` und der Sichtbarkeit des Mondes, auch in Himmelsszenen.
+- Ein Klick auf die Linie richtet den Blick auf den Mond (Jens). Der Bahntreffer liefert die Kennung
+  `moon`, der Klick in der Himmelsansicht richtet den Blick aus wie bei einem Klick auf den Körper.
+- Die Planetenbahnen bleiben in der Himmelsansicht aus.
+
+### 11.2 Lichtpunkte
+
+- In der Himmelsansicht ersetzt eine WebGL-Punktschicht die Ersatzglyphen: Jeder Körper außer Sonne,
+  Erde und Mond erscheint an seiner wahren Richtung als weicher Lichtpunkt, dessen Durchmesser und
+  Deckkraft mit der scheinbaren Helligkeit wachsen. Die Beschriftungen bleiben wie bisher.
+- Die scheinbare Helligkeit ist eine Modellrechnung ohne `three` in `sim/`:
+  `m = m☉ − 2,5 · lg(p · (R/Δ)² · Φ(α) · (1 AE/r)²)` mit `m☉ = −26,74`, geometrischer Albedo `p`,
+  Radius `R`, Abstand zur Erde `Δ`, Abstand zur Sonne `r` und Lambert-Phasenfunktion `Φ(α)`. Ringe,
+  Oppositionseffekt und Farbe bleiben außer Acht; die Rechnung muss Venus heller als Jupiter und
+  Jupiter heller als Saturn liefern und Neptun schwächer als die übrigen Planeten. Für `p` gilt
+  `physical.albedo`; ein Körper ohne Wert erhält einen im Plan festgelegten Ersatz.
+- **Auswahl:** Planeten und Zwergplaneten immer, mit Mindestdurchmesser und Mindestdeckkraft, damit
+  kein Körper verschwindet, der heute eine Glyphe trägt. Monde nur bis zu einer im Plan festgelegten
+  Grenzhelligkeit (Richtwert m ≤ 8,5, also etwa Titan und die galileischen Monde); das beantwortet
+  zugleich Frage 1 aus dem Abnahmeprotokoll.
+- **Übergang zur Scheibe:** Wird die wahre Scheibe größer als die Ersatzgröße (`MARKER_MIN_PIXEL`),
+  blendet der Punkt aus und die Kugel übernimmt, wie heute bei der Glyphe.
+- **Klickflächen:** Treffer und Hervorhebung nutzen den Radius des Lichtpunkts, wo die Glyphe genutzt
+  wurde.
+- Außerhalb der Himmelsansicht ändert sich nichts.
+
+### 11.3 Sonne und Mond
+
+- Die Sonne erhält in der Himmelsansicht einen Blendschein: einen weichen Halo von wenigen Grad um die
+  Scheibe, die selbst in wahrer Größe bleibt. Die Scheibe soll weiß bis gelblich erscheinen, nicht
+  orange; die Ursache des Farbtons klärt der Plan am Code.
+- Die Mondscheibe soll bei Vollmond hell wirken. Der Plan legt Messpunkt und Zielwert fest (Ruling 15,
+  Belichtung auf das Ziel, bleibt in Kraft).
+
+### 11.4 Scheiben vergrößern
+
+- Regler „Scheiben vergrößern“ von 1× bis 50×, Standard 1×. Er erscheint in der Himmelsansicht im
+  Maßstabspanel neben den weiterhin gesperrten Maßstabsreglern.
+- `dargestellterMassstab` liefert in der Himmelsansicht
+  `{ sizeScale: lupe, distanceExponent: 1, sunDamping: min(1, SONNE_LUPE_MAX / lupe) }` mit
+  `SONNE_LUPE_MAX = 4` (Sonne höchstens rund 2,1°). Der Wächtertest `render/massstab.test.ts` bleibt.
+- Folgen aus dem Bestand (`scaledPositionAt` rückt Monde mit `sizeScale` vom Mutterkörper ab): Der
+  Erdmond behält Richtung und Winkelgröße, weil Abstand und Radius um denselben Faktor wachsen. Die
+  Monde der übrigen Planeten spreizen sich um denselben Faktor wie ihr Planet, wie unter einer Lupe
+  um ihn herum. Planetenrichtungen, Spuren und Bezugslinien bleiben unberührt.
+- Solange der Faktor über 1 liegt, zeigt die Ansicht den Hinweis „Größen überhöht (n×)“. Bedeckungen
+  und Finsternisse sind dann nicht maßstäblich.
+- Zustand `camera.geo.lupe` (1 bis 50) neben Blick und Bildwinkel: Sitzung, Ansichten und Deep Link
+  (`p`) nehmen ihn mit, der Prüfer verwirft Werte außerhalb. Himmelsszenen im Kino zeichnen mit 1×.
+
+### 11.5 Auswirkung auf jensfricke.com
+
+Keine. Nur ein zusätzliches Feld in bestehenden Speicherschlüsseln; keine fremden Server, keine neuen
+Browserfunktionen.
+
+### 11.6 Zuschnitt
+
+Auf dem Branch `geozentrisch`, jeder Task mit eigenem Commit und grünen Tests:
+
+1. store und Oberfläche: `camera.geo.lupe`, `dargestellterMassstab`, Persistenz, Deep Link, Prüfer,
+   Regler und Hinweis (DE/EN)
+2. Mondbahn in der Himmelsansicht samt Klick
+3. sim: scheinbare Helligkeit
+4. render: Lichtpunktschicht, Glyphen aus, Klickflächen
+5. Sonne und Mond (Blendschein, Farbton, Belichtung) mit Pixelmessung
+6. Nachtrag im Abnahmeprotokoll, danach Handprüfung durch Jens
