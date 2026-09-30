@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  exposureTargetId, exposureFor, createExposureMeter, EXPOSURE_ZEITKONSTANTE_S,
+  exposureTargetId, exposureFor, createExposureMeter, EXPOSURE_ZEITKONSTANTE_S, HIMMEL_AUFHELLUNG, himmelAufhellungFuer,
 } from './exposure';
 import { targetExposure } from './lighting';
 import { blickzielVon } from './camera/cinema';
@@ -9,6 +9,8 @@ import type { AppState } from '../store/types';
 import { SCENES } from '../data/scenes';
 import { bodyIndex } from '../data/index';
 import { scaledPositionAt, SCALE_PRESETS } from '../sim/scale';
+import type { ScaleSettings } from '../sim/scale';
+import { dargestellterMassstab } from '../store/himmelsansicht';
 import { J2000 } from '../sim/time';
 
 function mitKamera(patch: Partial<AppState['camera']>, scale = DEFAULT_STATE.scale): AppState {
@@ -112,5 +114,35 @@ describe('createExposureMeter — Adaption', () => {
     expect(anteilHoch).toBeGreaterThan(0);
     expect(anteilHoch).toBeLessThan(1);
     expect(anteilRunter).toBeCloseTo(anteilHoch, 10);
+  });
+});
+
+describe('Aufhellung der Himmelsansicht', () => {
+  const jd = 2461457.1;
+  const mondAbstand = (s: ScaleSettings) => {
+    const p = scaledPositionAt('moon', bodyIndex, jd, s);
+    return Math.hypot(p.x, p.y, p.z);
+  };
+  it('multipliziert die Zielbelichtung im Himmel genau mit HIMMEL_AUFHELLUNG', () => {
+    const s = structuredClone(DEFAULT_STATE);
+    s.camera.targetId = 'moon';
+    s.camera.mode = 'geozentrisch';
+    const soll = targetExposure(mondAbstand(SCALE_PRESETS.realistisch), s.display) * HIMMEL_AUFHELLUNG;
+    expect(exposureFor(s, jd)).toBeCloseTo(soll, 12);
+    expect(HIMMEL_AUFHELLUNG).toBeGreaterThan(1);
+  });
+  it('lässt die Belichtung außerhalb des Himmels unverändert', () => {
+    const s = structuredClone(DEFAULT_STATE);
+    s.camera.targetId = 'moon';
+    s.camera.mode = 'attached';
+    const soll = targetExposure(mondAbstand(dargestellterMassstab(s)), s.display);
+    expect(exposureFor(s, jd)).toBe(soll);
+  });
+  it('nimmt die Aufhellung für hellere Ziele zurück, nie unter 1', () => {
+    expect(himmelAufhellungFuer('moon')).toBe(HIMMEL_AUFHELLUNG);
+    expect(himmelAufhellungFuer('mars')).toBeLessThan(HIMMEL_AUFHELLUNG);
+    expect(himmelAufhellungFuer('mars')).toBeGreaterThan(1);
+    expect(himmelAufhellungFuer('venus')).toBe(1);
+    expect(himmelAufhellungFuer('vulcan')).toBe(HIMMEL_AUFHELLUNG);
   });
 });

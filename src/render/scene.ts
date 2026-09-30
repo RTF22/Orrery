@@ -8,6 +8,7 @@ import { createOrbitLines } from './orbits';
 import { createStarfield, sternfeldPixeldichte } from './starfield';
 import { createHimmelsLinien } from './himmelslinien';
 import { createLichtpunkte, zeigtLichtpunkt } from './lichtpunkte';
+import { createSonnenschein } from './sonnenschein';
 import { scheinbareHelligkeit } from '../sim/helligkeit';
 import { szeneFreigeben } from './freigeben';
 import { createLabelOverlay, apparentRadiusPixels } from './labels';
@@ -104,6 +105,7 @@ export function buildScene(
   // Linien der Himmelsansicht; außerhalb unsichtbar, szeneFreigeben räumt sie mit ab.
   const himmelsLinien = createHimmelsLinien(ctx.scene);
   const lichtpunkte = createLichtpunkte(ctx.scene);
+  const sonnenschein = createSonnenschein(ctx.scene);
 
   // Beschriftungen und Ersatzglyphen liegen als HTML über der Canvas.
   const labels = createLabelOverlay(overlay, name);
@@ -176,7 +178,8 @@ export function buildScene(
       bahnen.update(cameraKm, state.visible, state.display.orbits, jd, massstab, hover, himmel ? 'moon' : null);
       himmelsLinien.update(himmel, jd, state.display);
 
-      koerper.update(jd, massstab, cameraKm, state.visible, belichtet, state.display.shadows, himmel ? 'earth' : null);
+      koerper.update(jd, massstab, cameraKm, state.visible, belichtet, state.display.shadows, himmel ? 'earth' : null, himmel);
+      sonnenschein.update(himmel, koerper.meshes.get('sun'));
 
       const obergrenze = obergrenzeFuer(state.quality.tier, ctx.renderer.capabilities.maxTextureSize);
       texturen.pruefe(performance.now(), texturBedarf, state.camera.targetId, obergrenze);

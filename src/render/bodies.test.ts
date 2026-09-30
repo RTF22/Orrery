@@ -180,6 +180,20 @@ describe('createBodyViews.update — Okkluder je Bild', () => {
   });
 });
 
+describe('createBodyViews.update — Sonnenfarbe im Himmel', () => {
+  it('färbt die Sonne nur mit sonneWeiss weiß und lässt sie sonst unverändert', () => {
+    const views = createBodyViews(new THREE.Scene());
+    const sonne = views.meshes.get('sun')!.material as THREE.MeshBasicMaterial;
+    const vorher = sonne.color.clone();
+    const kamera = new THREE.Vector3(0, 0, 0);
+    views.update(J2000, SCALE_PRESETS.realistisch, kamera, {}, LICHT, true, 'earth', true);
+    expect(sonne.color.r).toBeCloseTo(sonne.color.b, 6);
+    expect(sonne.color.r).toBeGreaterThan(1);
+    views.update(J2000, SCALE_PRESETS.realistisch, kamera, {}, LICHT, true, null, false);
+    expect(sonne.color.equals(vorher)).toBe(true);
+  });
+});
+
 describe('createBodyViews — Texturstufen', () => {
   const erzeuge = () => createBodyViews(new THREE.Scene());
 

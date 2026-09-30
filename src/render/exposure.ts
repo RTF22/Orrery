@@ -1,5 +1,5 @@
 import type { AppState } from '../store/types';
-import { dargestellterMassstab } from '../store/himmelsansicht';
+import { dargestellterMassstab, himmelsansicht } from '../store/himmelsansicht';
 import { bodyIndex } from '../data/index';
 import { SCENES } from '../data/scenes';
 import { plannedSceneAt } from '../sim/director';
@@ -36,13 +36,37 @@ export function exposureTargetId(state: AppState): string {
 }
 
 /**
+ * Aufhellung der Himmelsansicht (Entwurf §11.3): Der Vollmond soll vor dem
+ * Nachthimmel hell wirken, wie das dunkeladaptierte Auge ihn sieht. Gilt für
+ * alle beleuchteten Körper im Himmel; Sonne, Sterne und Linien hängen nicht an
+ * der Belichtung. Wert per Messung festgelegt (Plan Himmelsbild, Task 5).
+ */
+export const HIMMEL_AUFHELLUNG = 3.7;
+
+/**
+ * Bezugsalbedo der Aufhellung: die des Erdmonds. Hellere Ziele (Mars 0,17,
+ * Venus 0,69) bekämen mit dem vollen Faktor ausgebrannte Scheiben; ihr Faktor
+ * sinkt deshalb mit (Mondalbedo / Albedo)^1,5, mindestens auf 1.
+ */
+const HIMMEL_BEZUGSALBEDO = 0.12;
+
+/** Aufhellung für dieses Ziel: HIMMEL_AUFHELLUNG beim Mond, darüber schwächer. */
+export function himmelAufhellungFuer(zielId: string): number {
+  const albedo = bodyIndex[zielId]?.physical.albedo ?? HIMMEL_BEZUGSALBEDO;
+  if (!(albedo > HIMMEL_BEZUGSALBEDO)) return HIMMEL_AUFHELLUNG;
+  return Math.max(1, HIMMEL_AUFHELLUNG * (HIMMEL_BEZUGSALBEDO / albedo) ** 1.5);
+}
+
+/**
  * Sollwert der Belichtung für diesen Zustand, ungedämpft. Der Sonnenabstand
  * ist der dargestellte (scaledPositionAt) — wie bei der Beleuchtung der
  * Körper, sonst passte die Belichtung nicht zum Licht, das die Szene zeigt.
  */
 export function exposureFor(state: AppState, jd: number): number {
-  const p = scaledPositionAt(exposureTargetId(state), bodyIndex, jd, dargestellterMassstab(state));
-  return targetExposure(Math.hypot(p.x, p.y, p.z), state.display);
+  const zielId = exposureTargetId(state);
+  const p = scaledPositionAt(zielId, bodyIndex, jd, dargestellterMassstab(state));
+  return targetExposure(Math.hypot(p.x, p.y, p.z), state.display)
+    * (himmelsansicht(state) ? himmelAufhellungFuer(zielId) : 1);
 }
 
 export interface ExposureMeter {

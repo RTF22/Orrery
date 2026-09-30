@@ -37,6 +37,13 @@ export function poleAusrichtung(pole: Vec3): THREE.Quaternion {
   );
 }
 
+/**
+ * Farbe der Sonnenscheibe in der Himmelsansicht (Entwurf §11.3): Weiß über 1,
+ * damit ACES die orange getönte Textur nahezu weiß abbildet. Außerhalb bleibt
+ * die bisherige Farbe aus appearance.color.
+ */
+const SONNE_HIMMEL_FARBE = new THREE.Color(3, 3, 3);
+
 export interface BodyViews {
   update(
     jd: number,
@@ -50,6 +57,11 @@ export interface BodyViews {
      * wird — die Erde in der Himmelsansicht (Entwurf geozentrische Sicht §5.3).
      */
     ohneNetz?: string | null,
+    /**
+     * Sonnenscheibe in der Himmelsansicht weiß statt in der Farbe aus
+     * appearance.color (Entwurf §11.3); sonst bleibt die bisherige Farbe.
+     */
+    sonneWeiss?: boolean,
   ): void;
   meshes: Map<string, THREE.Mesh>;
   /** Setzt eine geladene Stufe; eine Stufe, die nicht breiter ist als die sitzende, wird verworfen (dispose). */
@@ -155,6 +167,8 @@ export function createBodyViews(
   const eintraege = new Map<string, KoerperEintrag>();
   // Eine einzige leere Textur für alle Körper ohne Ringträger.
   const leereTextur = leereRingTextur();
+  // Genau der Wert, den das Sonnenmaterial beim Aufbau trägt.
+  const sonnenGrundfarbe = new THREE.Color(bodyIndex['sun']!.appearance.color);
 
   for (const body of bodies) {
     const fallbackFarbe = new THREE.Color(body.appearance.color);
@@ -249,7 +263,7 @@ export function createBodyViews(
       alt?.dispose();
     },
     texturBreite: (id) => eintraege.get(id)?.texturBreite ?? 0,
-    update(jd, s, cameraKm, visible, licht, schatten, ohneNetz = null) {
+    update(jd, s, cameraKm, visible, licht, schatten, ohneNetz = null, sonneWeiss = false) {
       positionen.clear();
       radien.clear();
 
@@ -281,6 +295,9 @@ export function createBodyViews(
         // eigenen Sonnenabstand — siehe lighting.ts. Die Sonne ist
         // selbstleuchtend und bleibt davon unberührt.
         const eintrag = eintraege.get(body.id);
+        if (body.kind === 'star' && eintrag !== undefined) {
+          eintrag.material.color.copy(sonneWeiss ? SONNE_HIMMEL_FARBE : sonnenGrundfarbe);
+        }
         if (eintrag !== undefined && body.kind !== 'star') {
           const sonnenabstandKm = Math.sqrt(weltKm.x ** 2 + weltKm.y ** 2 + weltKm.z ** 2);
           const l = bodyLighting(sonnenabstandKm, licht);
