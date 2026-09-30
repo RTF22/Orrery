@@ -46,9 +46,11 @@ Beide Werte aus frischen Durchläufen auf dem Branch: `npm run lint` ohne Meldun
 `npm run build` (`tsc -b && vite build`, Hauptchunk `dist/assets/index-*.js`, gzip 436,95 kB). Der
 Wert für `master` stammt aus dem Stand vor der Etappe (Aufgabenstellung). Die Frageschwelle für den
 Hauptchunk (ab 1 571,79 kB, Abnahme Phase 5) ist damit überschritten; der Zuwachs von 10,66 kB ist
-der Code der Himmelsansicht samt Szenentexten (Katalog im Hauptbundle). Siehe §8 Frage 4.
+der Code der Himmelsansicht samt Szenentexten (Katalog im Hauptbundle). Siehe §8 Frage 4. Die 1 579,86 kB sind der Stand vor, die 1 579,98 kB (Nachtragszeile, Spalte „Vorher“) der Stand nach
+dem letzten Commit der Etappe (`130671e`); die Spalte „Vorher“ der Nachtragszeile meint durchgehend den Stand vor dem Nachtrag.
 Nach dem Nachtrag Himmelsbild (§5.10) liegt der Hauptchunk bei 1 592,27 kB, gemessen mit `npm run build` auf
-`52b2bf5`; gegenüber `master` sind das +23,07 kB. `npm test` läuft mit 150 Dateien und 5840 Tests grün.
+`52b2bf5`; gegenüber `master` sind das +23,07 kB. `npm test` läuft mit 150 Dateien und 5840 Tests grün. Mit Aufhellung für Ziel Erde und Ausrichten auf die dargestellte Lage (§6 Nr. 32, 33)
+sind es 5843 Tests und 1 592,42 kB.
 
 ## 3. Wort- und Trailerkontrolle
 
@@ -198,7 +200,7 @@ Offen; Vorschlag zur Reihenfolge:
 |---|---|
 | Desktop, Maus: G drückt in den Himmelsmodus, erneut G und Esc verlassen ihn; Ziehen schwenkt, Rad zoomt (Bildwinkel), Klick auf Mars und Objektbaum richten den Blick aus | offen |
 | Desktop, Tastatur: Pfeile/WASD schwenken, Q/E zoomen; Steuerkarte (`?`) zeigt zwei neue Zeilen | offen |
-| Desktop: Spuren, Ekliptik, Äquator lassen sich im Darstellungspanel schalten; Maßstabsregler sind im Himmelsmodus gesperrt und danach wieder frei | offen |
+| Desktop: Spuren, Ekliptik, Äquator lassen sich im Darstellungspanel schalten; Maßstabsregler sind im Himmelsmodus ausgeblendet (§5.10, Entwurf §11.5) und danach wieder da | offen |
 | Desktop: Kino, Szene 20 „Marsschleife“: Zeitsprung zur Opposition, Schleife im Bild, Text in drei Stufen | offen |
 | Desktop: Teilen-Knopf im Himmelsmodus erzeugt `view=geo&body=…`; Link in neuem Tab öffnet den Blick | offen |
 | Desktop, Controller (falls zur Hand): Stick schwenkt, Trigger zoomen, A richtet den Blick aus | offen |
@@ -213,6 +215,10 @@ Offen; Vorschlag zur Reihenfolge:
 | Desktop: Planeten als Lichtpunkte, Venus und Jupiter deutlich heller als Saturn und Neptun; Jupiter bei 1–2° mit vier Monden | offen |
 | Desktop: Sonne weiß mit Blendschein, Vollmond hell mit sichtbaren Maria | offen |
 | Desktop und A55: Maßstabspanel zeigt im Himmel nur Hinweis und Lupe, danach wieder alle Regler | offen |
+| Desktop: Vollmond mit Ziel Erde und mit Ziel Sonne gleich hell (Aufhellung mit Ziel Erde voll) | offen |
+| Desktop: Klick auf einen Jupitermond bei Lupe 25 zentriert ihn im Bild | offen |
+| A55: Bildrate im Himmel (Lichtpunkte, Mondbahn, Sonnenschein) | offen |
+| Desktop: Ein Planet hinter Mond oder Sonne verschwindet (Bedeckung) | offen |
 
 ### 5.10 Nachtrag Himmelsbild (30.09.2026)
 
@@ -222,7 +228,7 @@ gemessen wurde am Prüfrechner wie in §5 (Chrome über Playwright, Vite-Server 
 Qualität „high“, Oberfläche ausgeblendet, Uhr angehalten, Pixelwerte mit Python). Commits auf dem Branch
 `geozentrisch`: `78ca48a`, `2a0b118`, `17bd97a`, `bc3b806` mit Nacharbeit `ca86d0b`, `52b2bf5`.
 
-**Lupe und Maßstabspanel (Entwurf §11.1, §11.5, `78ca48a`)**
+**Lupe und Maßstabspanel (Entwurf §11.4, §11.5, `78ca48a`)**
 
 | Größe | Vorher | Nachher | Soll |
 |---|---|---|---|
@@ -231,7 +237,7 @@ Qualität „high“, Oberfläche ausgeblendet, Uhr angehalten, Pixelwerte mit P
 | Hinweis bei Lupe 20 | — | „Größen überhöht (20×)“ bei x 730–870, y 12–36, oben mittig | verdeckt weder Kopfzeile noch Infopanel |
 | Lupenbereich | — | 1× bis 50×, Sonne höchstens 4× | Sonne unter 2,2° |
 
-**Mondbahn (Entwurf §11.3, `2a0b118`)**
+**Mondbahn (Entwurf §11.1, `2a0b118`)**
 
 | Größe | Vorher | Nachher | Soll |
 |---|---|---|---|
@@ -291,7 +297,7 @@ Nacharbeit brachte einen Kern mit glatter Flanke (t²(3−2t), Faktor 1,6) und l
 Merkur, Venus und Saturn lagen im Bild mit Blick auf Mars hinter der Kamera; Venus und Saturn wurden einzeln in die
 Bildmitte gebracht.
 
-**Sonne und Vollmond (Entwurf §11.4, `52b2bf5`)**
+**Sonne und Vollmond (Entwurf §11.3, `52b2bf5`)**
 
 Sonne bei 20° Bildwinkel (45 px je Grad), Vollmond am 20.02.2027 15:00 UTC bei 2° (450 px je Grad), Mittel innerhalb
 von 60 % des Scheibenradius:
@@ -329,7 +335,7 @@ Aus der Planung (Plan, Abschnitt Rulings):
 2. **Dateinamen** `store/himmelsansicht.ts`, `render/camera/himmelsblick.ts`, `render/himmelslinien.ts`,
    `ui/himmelsmodus.ts`: „Himmel“ statt „geo“, damit sie nicht mit dem Himmelshintergrund
    (`render/milchstrasse.ts`, `HIMMEL_RADIUS`) verwechselt werden.
-3. **Bahnlinien aus** in der Himmelsansicht.
+3. **Bahnlinien aus** in der Himmelsansicht, außer der Mondbahn (überholt, §5.10 und Entwurf §11.1).
 4. **Szenenwechsel in oder aus der Himmelsansicht** ist ein Schnitt der Lage; der Blick schwenkt gedämpft.
 5. **Zeitraffer der Szene** 2,7 Tage je Sekunde, 60 s, 30° Bildwinkel; Hochformat schneidet die Schleife
    waagerecht ab (§7).
@@ -403,6 +409,16 @@ Aus dem Nachtrag Himmelsbild (Umsetzung):
 31. **Kleinere Anpassungen:** `aria-label` „Scheiben vergrößern“ zusätzlich zur Beschriftung mit Wertanzeige,
     Erwartung an `lupe: 1` im übernommenen `geo` der Ansichten, das Linkprofil trug `lupe` ohne Änderung, die
     bestehende Erwartung an den Bahnaufruf um ein Argument ergänzt. Kosten: keine.
+32. **Aufhellung mit Ziel Erde voll:** Die Erde ist in der Himmelsansicht der Beobachter, ihre Albedo (0,434) ist ohne
+    Belang; `himmelAufhellungFuer('earth')` liefert wie beim Mond den vollen Faktor, sonst bliebe der Vollmond bei
+    Ziel Erde (Objektbaum, Textverweis, Link `body=earth`) so dunkel wie vor dem Nachtrag. Kosten, falls falsch: der
+    Vollmond wäre bei Ziel Erde heller als bei Ziel Venus; Ausnahme in `exposure.ts` streichen.
+33. **Ausrichten auf die dargestellte Lage:** `himmelAusrichten` berechnet die Richtung aus `scaledPositionAt` mit dem
+    dargestellten Maßstab (Ziel minus Erde), damit ein Klick auf den Lichtpunkt eines gespreizten Mondes bei Lupe 25
+    dorthin zentriert; für Planeten, Erdmond und Lupe 1 gleicht das der wahren Richtung. Deep Links (`himmelsKoerperPatch`)
+    und `startBlick` bleiben bei der wahren Richtung, weil die Lupe dort erst nach dem Blick gilt. Kosten, falls
+    falsch: beim Einstieg mit Lupe über 1 und einem Mond als Ziel liegt der Blick neben dem Punkt; dann dieselbe
+    Funktion dort verwenden.
 
 ## 7. Unschärfen
 
@@ -413,10 +429,10 @@ Aus dem Nachtrag Himmelsbild (Umsetzung):
   Querformat 2560×1440 (Spannweite 898 px von 2560); die Handprüfung am A55 hochkant klärt, ob es stört (Ruling 5).
 - **Blende des Zeitraffers:** Die 2-s-Blende verschiebt die Szenenmitte in den ersten Sekunden um bis zu 6,3°
   und die Opposition um bis zu 17 Tage (Ruling 16). Das wirkt als kurzes Nachziehen des Blicks zu Beginn.
-- **Planetenpunkte ohne Magnitude:** Planeten und Monde erscheinen als Scheibe oder kleiner Punkt nach wahrer
+- **Planetenpunkte ohne Magnitude (überholt, §5.10, Entwurf §11.2: jetzt Lichtpunkte nach Helligkeit):** Planeten und Monde erscheinen als Scheibe oder kleiner Punkt nach wahrer
   Größe und Beleuchtung, nicht mit scheinbarer Helligkeit (Größenklasse); ein ferner Planet ist im
   Weitwinkel kaum sichtbar, wird aber von seiner Spur und seinem Namen markiert.
-- **Galileische Monde im Fernrohr:** Bei 1° Bildwinkel sind Europa, Ganymed und Kallisto kleiner als 1 px und
+- **Galileische Monde im Fernrohr (überholt, §5.10, Entwurf §11.2: bei 1,5° sind vier Monde zu sehen):** Bei 1° Bildwinkel sind Europa, Ganymed und Kallisto kleiner als 1 px und
   ohne Markierung, weil Mondnamen erst ab 8 px Radius erscheinen (§5.4). Nur Io fällt als heller Punkt auf.
 - **Spur in Tagesschritten:** Die Anzeige verbindet Tagespunkte; kurze Kurvenstücke am Stillstand
   erscheinen leicht eckig (Fachprüfung Befund 7).
@@ -448,7 +464,7 @@ Aus dem Nachtrag Himmelsbild (Umsetzung):
 
 **Kleinigkeiten aus den Prüfungen der einzelnen Schritte (zurückgestellt, alle „kann bleiben“)**
 
-- Gesperrte Maßstabsknöpfe haben kein eigenes `disabled:`-Styling; der Hover-Effekt bleibt sichtbar.
+- Gesperrte Maßstabsknöpfe haben kein eigenes `disabled:`-Styling; der Hover-Effekt bleibt sichtbar (gegenstandslos, §5.10: die Regler sind im Himmel ausgeblendet statt gesperrt).
 - Ein laufender Voreinstellungs-Tween schreibt unter der Sperre bis 700 ms weiter (harmlos).
 - Taste G hat keine Wiederholungssperre (`e.repeat`), gilt für alle Umschalter; Halten der Taste schaltet flackernd.
 - `himmel()` in `controller.ts` setzt den Übergang beim Eintritt nicht zurück; Schwelle 10⁶ km beim Ausstieg
