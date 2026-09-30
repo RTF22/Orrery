@@ -39,6 +39,7 @@ Zwölf Commits, alle von Jens Fricke; keine Änderung an Abhängigkeiten.
 |---|---:|---:|
 | Tests | 5667 | 5804 (146 Dateien) |
 | Hauptchunk | 1 569,20 kB | 1 579,86 kB (+10,66 kB) |
+| Nachtrag Himmelsbild (30.09.2026), Stand `52b2bf5` | 5804 Tests, 1 579,98 kB | 5840 Tests (150 Dateien, +36), 1 592,27 kB (+12,29 kB, gzip 440,16 kB) |
 
 Beide Werte aus frischen Durchläufen auf dem Branch: `npm run lint` ohne Meldung,
 `npx tsc -b --noEmit` Ausgang 0, `npm test` (146 Dateien, 5804 Tests, alle grün),
@@ -46,6 +47,8 @@ Beide Werte aus frischen Durchläufen auf dem Branch: `npm run lint` ohne Meldun
 Wert für `master` stammt aus dem Stand vor der Etappe (Aufgabenstellung). Die Frageschwelle für den
 Hauptchunk (ab 1 571,79 kB, Abnahme Phase 5) ist damit überschritten; der Zuwachs von 10,66 kB ist
 der Code der Himmelsansicht samt Szenentexten (Katalog im Hauptbundle). Siehe §8 Frage 4.
+Nach dem Nachtrag Himmelsbild (§5.10) liegt der Hauptchunk bei 1 592,27 kB, gemessen mit `npm run build` auf
+`52b2bf5`; gegenüber `master` sind das +23,07 kB. `npm test` läuft mit 150 Dateien und 5840 Tests grün.
 
 ## 3. Wort- und Trailerkontrolle
 
@@ -205,6 +208,117 @@ Offen; Vorschlag zur Reihenfolge:
 | Desktop: Flug-Knopf aus dem Himmel (Start außerhalb der Erde, kein Durchgleiten) | offen |
 | Desktop: Shift+W in der Marsschleife (Kino endet, Mars wird Ziel) | offen |
 | Desktop: hohe Zeitrate und Taste R im Himmel (Spuren ruckelfrei?) | offen |
+| Desktop: Mondbahn im Himmel sichtbar; Klick auf die Linie richtet den Blick auf den Mond | offen |
+| Desktop: Regler „Scheiben vergrößern“ (Maßstabspanel), Hinweis „Größen überhöht“ oben, Jupitermonde spreizen sich, Erdmond bleibt gleich; Link mit Lupe öffnet sie wieder | offen |
+| Desktop: Planeten als Lichtpunkte, Venus und Jupiter deutlich heller als Saturn und Neptun; Jupiter bei 1–2° mit vier Monden | offen |
+| Desktop: Sonne weiß mit Blendschein, Vollmond hell mit sichtbaren Maria | offen |
+| Desktop und A55: Maßstabspanel zeigt im Himmel nur Hinweis und Lupe, danach wieder alle Regler | offen |
+
+### 5.10 Nachtrag Himmelsbild (30.09.2026)
+
+Anlass war die erste Handprüfung der Himmelsansicht: Regler ohne Wirkung, keine Mondbahn, Planeten ohne
+sichtbaren Punkt, eine orange Sonne und ein dunkler Vollmond (Entwurf §11). Der Nachtrag umfasst fünf Änderungen;
+gemessen wurde am Prüfrechner wie in §5 (Chrome über Playwright, Vite-Server auf Port 5173, 1600×900 px,
+Qualität „high“, Oberfläche ausgeblendet, Uhr angehalten, Pixelwerte mit Python). Commits auf dem Branch
+`geozentrisch`: `78ca48a`, `2a0b118`, `17bd97a`, `bc3b806` mit Nacharbeit `ca86d0b`, `52b2bf5`.
+
+**Lupe und Maßstabspanel (Entwurf §11.1, §11.5, `78ca48a`)**
+
+| Größe | Vorher | Nachher | Soll |
+|---|---|---|---|
+| Tests | 5804 | 5815 | grün |
+| Maßstabspanel der Himmelsansicht | alle Regler sichtbar, ohne Wirkung | Grundtext und Regler „Scheiben vergrößern“ (nur im Handmodus) | nur wirksame Elemente |
+| Hinweis bei Lupe 20 | — | „Größen überhöht (20×)“ bei x 730–870, y 12–36, oben mittig | verdeckt weder Kopfzeile noch Infopanel |
+| Lupenbereich | — | 1× bis 50×, Sonne höchstens 4× | Sonne unter 2,2° |
+
+**Mondbahn (Entwurf §11.3, `2a0b118`)**
+
+| Größe | Vorher | Nachher | Soll |
+|---|---|---|---|
+| Sichtbare Bahnlinien im Himmel | keine | nur die Mondbahn (`bahn-moon`) | nur der Mond |
+| Großkreistest (Toleranz 1e-3) | — | bestanden | Linie liegt auf einem Großkreis |
+| Klick auf die Linie (Pixel 975,85 / 434,32) | — | Ziel `moon`, Infopanel „Mond“ | Blick auf den Mond |
+| Klick auf die Linie bei Blick auf Mars (Pixel 1333 / 477) | Ziel `mars`, Blickwinkel 2,626 | Ziel `moon`, Blickwinkel 2,300 | Schwenk auf den Mond |
+| Tests | 5815 | 5819 | grün |
+
+**Scheinbare Helligkeit (Entwurf §11.2, `17bd97a`)**
+
+Darstellungsmodell vom Erdmittelpunkt aus (Lambert-Kugel), Werte in Größenklassen (mag) am 19.02.2027 12:00 UTC
+(JD 2 461 456; Ganymed am 10.02.2027, JD 2 461 447,5):
+
+| Körper | Modell (mag) | Beobachtung / Soll |
+|---|---:|---|
+| Mars | −1,33 | rund −1,3 bei der Opposition |
+| Jupiter | −2,57 | rund −2,6 bis −2,7 |
+| Saturn (ohne Ringe) | 0,95 | etwa eine halbe Klasse dunkler als beobachtet |
+| Uranus | 5,77 | — |
+| Neptun | 7,88 | — |
+| Ganymed | 4,76 | unter 9,0 |
+| Titan | 8,62 | unter 9,0 (Entwurfsrichtwert 8,5, Ruling 18) |
+| Triton | 13,65 | über 9,0, ohne Lichtpunkt |
+
+Reihenfolge Venus < Jupiter < Saturn < Neptun bestätigt; für jeden Katalogkörper liefert die Funktion eine Zahl
+oder `null`, nie `NaN`. Tests 5819 → 5825.
+
+**Lichtpunkte (Entwurf §11.2, `bc3b806`, Nacharbeit `ca86d0b`)**
+
+Lichtpunkt je Planet und heller Mond, Größe nach scheinbarer Helligkeit; Blick auf den jeweiligen Körper, 60°,
+19.02.2027. Gemessen als Durchmesser der flächengleichen Kreisfläche über der halben Höhe des Maximums im
+Differenzbild „Markierungen“ an/aus:
+
+| Körper | Punkt im Material (px) | Breite bei halber Höhe, erste Fassung (px) | Breite bei halber Höhe, nach Nacharbeit (px) | Soll |
+|---|---:|---:|---:|---|
+| Venus | 9,91 | — | 7,5 | 4–12 |
+| Jupiter | 8,76 | 3–4 | 7,0 | 4–12, breiter als Mars |
+| Mars | 7,97 | rund 3 | 6,1 | 4–12 |
+| Saturn | 6,51 | — | 4,4 | kleiner als Jupiter |
+| Uranus | 3,43 | — | 1,6 | kleinster Punkt |
+
+Die erste Fassung des Profils war zu spitz (Breite bei halber Höhe rund 40 % des Materialdurchmessers); die
+Nacharbeit brachte einen Kern mit glatter Flanke (t²(3−2t), Faktor 1,6) und lineare Texturfilter. Weitere Messwerte:
+
+| Größe | Wert | Soll |
+|---|---|---|
+| Reihenfolge der Breite | Venus 7,5 > Jupiter 7,0 > Saturn 4,4 > Uranus 1,6 | nach Helligkeit |
+| Jupiter mit Monden, 1,5° Bildwinkel | vier getrennte Maxima bei x = 825 (Io, 237), 810 (Europa, 238), 740 (Ganymed, 179), 724 (Kallisto, 179) | vier Monde einzeln erkennbar |
+| Differenzbild „Markierungen“ an/aus | 97 abweichende Pixel, alle innerhalb 8 px um Mars und Jupiter | nur Lichtpunkte ändern sich |
+| Kontrollbild aus/aus | 0 abweichende Pixel | 0 |
+| Klick auf den Lichtpunkt von Saturn (Ziel Mars) | Ziel wird `saturn` | Blick auf den Punkt |
+| Esc | Modus `attached`, kein Lichtpunkt sichtbar, 9 Glyphen wie zuvor | wie vorher |
+| Bildrate, 5 s, 30 Tage/s | 60,0 gegen 60,1 Bilder/s vorher | kein Abfall |
+| Tests | 5825 → 5834 | grün |
+
+Merkur, Venus und Saturn lagen im Bild mit Blick auf Mars hinter der Kamera; Venus und Saturn wurden einzeln in die
+Bildmitte gebracht.
+
+**Sonne und Vollmond (Entwurf §11.4, `52b2bf5`)**
+
+Sonne bei 20° Bildwinkel (45 px je Grad), Vollmond am 20.02.2027 15:00 UTC bei 2° (450 px je Grad), Mittel innerhalb
+von 60 % des Scheibenradius:
+
+| Größe | Vorher | Nachher | Soll |
+|---|---|---|---|
+| Sonne, Scheibenmitte (RGB) | 255 / 224,8 / 131,2 (Blau/Rot 0,52) | 255 / 251,1 / 240,2 (0,94) | nahezu weiß |
+| Sonne, Grauwert bei 0,5° / 1° / 2° / 4° / 6° / 8° | 71,1 / 29,4 / 14,6 / 10,4 / 8,3 / 8,1 | 184,5 / 92,1 / 32,1 / 15,1 / 10,2 / 9,0 | monoton fallend |
+| Blendschein bei 1° über dem Hintergrund | — | +83 | mindestens +60 |
+| Blendschein bei 6° über dem Hintergrund | — | +1 | höchstens +5 |
+| Vollmond, Mittel | 87,5 | 172,2 | 170 bis 215 |
+| Vollmond, Anteil bei 255 | 0 % | 0 % | 0 % |
+| Mars bei Lupe 30, 2°, Anteil bei 255 | 0 % (Mittel 108,7) | 0 % (Mittel 149,7) | unter 5 % |
+| Sonne außerhalb der Himmelsansicht (Scheibenmitte) | 255 / 225,1 / 133,8 | 255 / 225,1 / 133,8 | unverändert |
+| Tests | 5834 | 5840 | grün |
+
+Ein fester Faktor für die Aufhellung erfüllte Mond und Mars nicht zugleich: bei 3,7 erreicht der Mond 172,2, der
+Mars aber 24,6 % Ausbrand; bei 2,6 fällt der Mars auf 8,6 %, und schon bei 2,5 liegt der Mond nur bei 147,2. Die
+Aufhellung wird daher je Ziel nach Albedo zurückgenommen (Ruling 22). Die Differenz von 371 Pixeln im Ganzbild der
+Außenkontrolle gehört zu Sternen und Rauschen zwischen zwei Ladungen (Höchstwert 135 an Einzelpixeln); die
+Scheibenmitte blieb gleich.
+
+**Sammelwerte**
+
+`npx tsc -b --noEmit` und `npm run lint` ohne Meldung, `npm test` 150 Dateien, 5840 Tests grün, `npm run build`
+Hauptchunk 1 592,27 kB. Screenshots und Messskripte sind gelöscht, der Baum ist sauber. Die Wort- und
+Trailerkontrolle nach der lokalen Projektanleitung ergab bei jedem Commit 0.
 
 ## 6. Rulings
 
@@ -248,6 +362,48 @@ Aus der Umsetzung:
 17. **Fachprüfung Befund 7** (Tagesschritte der Spur nicht auf Selbstschnitt geprüft): unkritisch, der Text
     nennt das Zickzack ohne Schnitt nach Rechnung.
 
+Aus dem Nachtrag Himmelsbild (Planung):
+
+18. **Mondgrenze 9,0 statt 8,5:** Titan schwankt im Modell um 8,3 und erreicht 8,62; bei 8,5 blinkte er über das
+    Jahr ein und aus. Kosten, falls falsch: Titan oder ein anderer schwacher Mond erscheint zu selten oder zu oft
+    als Lichtpunkt; die Grenze ist eine Konstante.
+19. **Sonnenfarbe nur im Himmel:** Außerhalb bleibt die orange getönte Scheibe, damit das bewährte Bild der
+    übrigen Ansichten unverändert bleibt. Kosten, falls falsch: die Sonne erscheint in den übrigen Ansichten
+    weiter orange; die Umschaltung ist ein Parameter.
+20. **Hinweis bei jeder Überhöhung:** Schon ab einer Lupe knapp über 1 erscheint der Hinweis, unter 10× mit einer
+    Nachkommastelle; er bleibt auch bei ausgeblendeter Oberfläche sichtbar, damit ein Bildschirmfoto die
+    Überhöhung nennt. Kosten, falls falsch: ein Hinweis bei Lupe 1,01 wirkt pedantisch; Schwelle anheben.
+
+Aus dem Nachtrag Himmelsbild (Umsetzung):
+
+21. **Linke Spalte im Himmel:** nur das Maßstabspanel hatte wirkungslose Elemente; die Kamera zeigt im Himmel nur
+    Modus und Bildwinkel, Kästchen und Beleuchtungsregler wirken auch dort, die Bahnlinien seit der Mondbahn.
+    Am Code geprüft, nicht jedes Element im Browser. Kosten, falls falsch: ein weiteres wirkungsloses Element
+    bleibt sichtbar.
+22. **Aufhellung je Ziel nach Albedo:** `himmelAufhellungFuer` (Bezug 0,12, Exponent 1,5, mindestens 1) statt
+    eines festen Faktors, weil der Mond mindestens 3,6 und der Mars höchstens etwa 2,3 braucht. Kosten, falls
+    falsch: ein gestalteter Exponent, gestützt auf einen einzigen Marsmesspunkt; Körper neben dem Ziel werden mit
+    dessen Faktor belichtet.
+23. **Vollmond knapp über der Untergrenze:** Mittel 172 gegen Untergrenze 170, der Faktor 3,7 bleibt, weil mehr
+    Faktor den Mars ausbrennen ließe. Kosten, falls falsch: knappe Reserve; die Messung ist deterministisch.
+24. **Sonnenschein unverändert:** Deckkraft 0,7, r0 0,08 und die Sonnenfarbe (3, 3, 3) blieben, das Soll war im
+    ersten Lauf erfüllt. Kosten: keine.
+25. **Punktgröße geht vor Profilvorgabe:** Das Messsoll (Breite bei halber Höhe 4 bis 12 px, Jupiter breiter als
+    Mars) geht dem zuerst vorgegebenen Texturprofil vor; die Nacharbeit machte das Profil flacher. Kosten, falls
+    falsch: Punkte wirken größer als gewünscht.
+26. **Lineare Texturfilter mitgenommen:** dieselbe Textur wurde ohnehin geändert; kleine Punkte flimmern so nicht.
+    Kosten: keine.
+27. **Faktor 1,6 der Punkttextur bleibt:** das Kernmaximum liegt schon bei 200 bis 240 von 255. Kosten: keine.
+28. **Uranus bleibt unter 4 px:** Halbwertsbreite 1,6 px bei 3,4 px Material, folgt der Helligkeitsstaffelung.
+    Kosten, falls falsch: `LICHTPUNKT_MIN_PX` anheben.
+29. **Mars und Jupiter nur knapp getrennt** (6,1 zu 7,0 px): folgt der Formel mit 0,8 px Materialunterschied.
+    Kosten, falls falsch: Steigung in `lichtpunktFuer` erhöhen (Frage 7).
+30. **Klickprüfung der Mondbahn** mit Mars als Ausgangsziel per Kamerabefehl statt Klick im Objektbaum; die
+    Ausrichtung ist ein bestehender, getesteter Weg. Kosten, falls falsch: die Handprüfung zeigt es.
+31. **Kleinere Anpassungen:** `aria-label` „Scheiben vergrößern“ zusätzlich zur Beschriftung mit Wertanzeige,
+    Erwartung an `lupe: 1` im übernommenen `geo` der Ansichten, das Linkprofil trug `lupe` ohne Änderung, die
+    bestehende Erwartung an den Bahnaufruf um ein Argument ergänzt. Kosten: keine.
+
 ## 7. Unschärfen
 
 **Darstellung**
@@ -266,6 +422,29 @@ Aus der Umsetzung:
   erscheinen leicht eckig (Fachprüfung Befund 7).
 - **Entwicklungsserver:** Die React-Meldungen beim Neuladen (§5.8) stammen aus dem Entwicklungslauf und der
   Messung per `import()`; nicht mit `master` verglichen.
+
+**Nachtrag Himmelsbild**
+
+- **Helligkeit ist ein Darstellungsmodell:** Die Helligkeit der Lichtpunkte ist ein Darstellungsmodell
+  (Lambert-Kugel, ohne Ringe und Oppositionseffekt); Saturn erscheint rund eine halbe Größenklasse zu dunkel.
+- **Aufhellung gestaltet:** Der Exponent 1,5 und der Bezug 0,12 der Aufhellung je Ziel sind gestaltet, der Exponent
+  stützt sich auf einen Marsmesspunkt. Jupiter, Saturn und die galileischen Monde als Ziel sind nicht gemessen
+  (Faktor 1, eher zu dunkel). Der Vollmond liegt mit 172 knapp über der Untergrenze 170.
+- **Ziele ohne Albedo:** Die Sonne und kleine Monde erhalten die volle Aufhellung 3,7; bei Ziel Sonne werden
+  daneben stehende Scheiben mit dem Faktor des Ziels belichtet (Frage 6).
+- **Punkte:** Uranus erscheint als Punkt von 1,6 px Halbwertsbreite; Mars und Jupiter unterscheiden sich nur um
+  0,9 px (Frage 7).
+- **Messumfang:** Vollmond und Marsgegenprobe nur an je einem Datum gemessen; das Verdecken eines Lichtpunkts durch
+  Sonne oder Mond ist nur über die Materialeinstellungen getestet, nicht im Bild gemessen. Die Außenkontrolle der
+  Sonne zeigt im Ganzbild 371 Pixel Rauschen zwischen zwei Ladungen.
+- **Kommentare und Tests:** Der Kommentar an `HIMMEL_AUFHELLUNG` („gilt für alle beleuchteten Körper“) passt nicht
+  mehr zur Aufhellung je Ziel; die Verdrahtung des Schalters „Markierungen“ in der Szene, der Zweig Phasenwinkel π
+  der Helligkeit und `himmelsMassstab` bei Lupe ≤ 0 (über die Oberfläche nicht erreichbar) haben keinen eigenen Test;
+  ein leerer Filter für die Bahnlinien blendet alle Linien aus (nur intern aufrufbar); der Großkreistest prüft nicht
+  den Bahnabstand.
+- **Oberfläche:** Der Hinweis zeigt bei einer Lupe knapp über 1 „1,0×“; das Panel nennt „12,3×“, der Hinweis „12×“;
+  der Lupenregler trägt zwei gleichlautende Beschriftungen. Je Bild entsteht ein temporäres Feld aller Körper im
+  Himmel (Bildrate unverändert bei 60 Bildern je Sekunde).
 
 **Kleinigkeiten aus den Prüfungen der einzelnen Schritte (zurückgestellt, alle „kann bleiben“)**
 
@@ -288,17 +467,25 @@ Aus der Umsetzung:
 
 ## 8. Fragen an Jens
 
-1. **Galileische Monde im Fernrohr:** Soll die Szene oder der Himmelsmodus die Monde bei kleinem Bildwinkel
-   markieren (Punkt statt Namen ab etwa 1 px)? Heute erscheinen nur Planeten mit Namen; die Planung
-   erwartete Markierungen. Bedarf Code (Beschriftungsregel in `render/labels.ts`).
+1. **Galileische Monde im Fernrohr:** durch Entwurf §11.2 beantwortet, bitte bestätigen. Jupiter mit seinen vier
+   Monden erscheint bei 1 bis 2° Bildwinkel als Lichtpunkte nach Helligkeit (§5.10: vier getrennte Maxima bei 1,5°).
+   Die ursprüngliche Frage, ob Monde bei kleinem Bildwinkel ohne Namen als Punkt markiert werden sollen, ist damit
+   umgesetzt.
 2. **Blende der Szene:** Reicht die Blende (Ruling 16), oder soll die Rate für Himmelsszenen ohne Blende
    laufen? Kleine Codeänderung.
 3. **Hochformat:** Soll die Szene im Hochformat den Bildwinkel vergrößern (z. B. 40° senkrecht)? Handprüfung
    am A55 abwarten.
-4. **Hauptchunk:** Der Chunk liegt mit 1 579,86 kB über der Frageschwelle 1 571,79 kB (Phase 5); soll er geteilt
-   werden (Katalog nachladen) oder bleibt es so?
+4. **Hauptchunk:** Der Chunk liegt nach dem Nachtrag Himmelsbild mit 1 592,27 kB (vorher 1 579,98 kB) über der
+   Frageschwelle 1 571,79 kB (Phase 5), +23,07 kB gegenüber `master`; soll er geteilt werden (Katalog nachladen)
+   oder bleibt es so?
 5. **Abschluss:** Tag `v0.8.0`? Fast-Forward `geozentrisch` nach `master`, Branch löschen? Push (vorher Diff auf
    Zugangsdaten prüfen)? Deploy startet Jens selbst.
+6. **Ziele ohne Albedo:** Die Sonne und kleine Monde als Ziel erhalten die volle Aufhellung 3,7 (Ruling 22). Soll das
+   so bleiben? Alternative: für die Sonne einen eigenen, kleineren Faktor, damit Scheiben neben ihr nicht wie neben
+   dem Mond belichtet werden.
+7. **Staffelung der Lichtpunkte:** Mars und Jupiter erscheinen nur knapp unterschiedlich groß (6,1 zu 7,0 px). Soll
+   die Staffelung nach Helligkeit verstärkt werden (steilere Steigung in `lichtpunktFuer`)? Kleine Codeänderung;
+   vorher Handprüfung abwarten.
 
 **Auswirkung auf jensfricke.com:** keine. Es entstehen keine neuen Speicherschlüssel (nur zusätzliche Felder in
 `orrery.sitzung.v1` und `orrery.ansichten.v1`), keine Anfragen an fremde Server, keine neuen
