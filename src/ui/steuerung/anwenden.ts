@@ -11,7 +11,7 @@ import type { Absicht, GezeigtePose } from '../../render/camera/flug';
 import { cinemaAktiv, noteUserInput, stopCinema } from '../cinemaControl';
 import { fahreZu, fahreZuSystem, fahrtAbbrechen } from '../kamerafahrt';
 import { himmelSchwenken } from '../himmelsmodus';
-import { dargestellterMassstab } from '../../store/himmelsansicht';
+import { dargestellterMassstab, himmelsansicht } from '../../store/himmelsansicht';
 import { blickzielVon } from '../../render/camera/cinema';
 import { eingabeMelden, zeigerAusgeblendet } from '../idle';
 import { handleShortcut } from '../shortcuts/useShortcuts';
@@ -142,7 +142,8 @@ export function heftenUm(id: string, pose: GezeigtePose): void {
  * das dort ohnehin in der Mitte steht (ein vorbeiziehender Mond wird so nicht
  * Ziel). Folgen wird Geheftet. Ohne Körper vor der Kamera bleibt der Modus,
  * wie er war — ein begonnenes Kino endet trotzdem (stopCinema lief schon
- * vorher).
+ * vorher). In einer Himmelsszene wird der Szenenkörper Ziel: Die Szene blickt
+ * auf die Mitte seiner Schleife, nicht auf ihn (Handprüfung 30.09.2026).
  */
 function drehen(dt: number, absicht: Absicht, raten: Drehraten, u: SteuerungUmgebung): void {
   const modus = useStore.getState().camera.mode;
@@ -153,14 +154,19 @@ function drehen(dt: number, absicht: Absicht, raten: Drehraten, u: SteuerungUmge
     // Der Maßstab des gezeigten Bildes gilt vor dem Kino-Ende: In einer
     // Himmelsszene ist es „realistisch“, danach wieder der eingestellte.
     const gezeigt = dargestellterMassstab(useStore.getState());
+    // Ebenso vor dem Kino-Ende zu lesen: der Körper der Himmelsszene.
+    const zustand = useStore.getState();
+    const himmelsZiel = modus === 'cinema' && himmelsansicht(zustand)
+      ? plannedSceneAt(zustand.cinema.nummer, SCENES, zustand.cinema.seed, zustand.cinema.shuffle).scene.targetId
+      : null;
     // Das Kino zuerst beenden: stopCinema stellt die Kamera von vor dem Start
     // her, gewählt wird aber im gezeigten Bild.
     if (cinemaAktiv()) stopCinema();
     fahrtAbbrechen();
     const { visible, camera } = useStore.getState();
-    const id = neuWaehlen
+    const id = himmelsZiel ?? (neuWaehlen
       ? koerperNaechstDerMitte(pose, koerperStaende(bodies, bodyIndex, pose.jd, gezeigt, visible))
-      : camera.targetId;
+      : camera.targetId);
     if (id === null) return;
     heftenUm(id, pose);
   }

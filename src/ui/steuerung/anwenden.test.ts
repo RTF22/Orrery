@@ -881,6 +881,31 @@ describe('Himmel: Maßstab der gezeigten Lage', () => {
     expect(camera.targetId).toBe('mars');
   });
 
+  it('macht mit Shift+W in einer Himmelsszene den Szenenkörper zum Ziel, auch wenn ein anderer näher an der Bildmitte liegt', () => {
+    const nummer = SCENES.findIndex((sz) => sz.id === 'marsschleife');
+    expect(nummer).toBeGreaterThanOrEqual(0);
+    useStore.getState().setCinema({ running: true, shuffle: false, nummer });
+    useStore.getState().setCamera({ mode: 'cinema' });
+    const erde = scaledPositionAt('earth', bodyIndex, jd, real);
+    const jupiter = scaledPositionAt('jupiter', bodyIndex, jd, real);
+    const pose: GezeigtePose = { positionKm: erde, blick: normiert(minus(jupiter, erde)), jd };
+    steuerungTakt(jd, 0, umgebung(['KeyW'], pose, true));
+    const { camera, cinema } = useStore.getState();
+    expect(cinema.running).toBe(false);
+    expect(camera.mode).toBe('attached');
+    expect(camera.targetId).toBe('mars');
+  });
+
+  it('wählt in einer Szene ohne Himmelsbahn weiter den Körper nächst der Bildmitte', () => {
+    const nummer = SCENES.findIndex((sz) => sz.path !== 'himmel');
+    useStore.getState().setCinema({ running: true, shuffle: false, nummer });
+    useStore.getState().setCamera({ mode: 'cinema' });
+    steuerungTakt(jd, 0, umgebung(['KeyW'], vorKoerper('saturn'), true));
+    const { camera, cinema } = useStore.getState();
+    expect(cinema.running).toBe(false);
+    expect(camera.targetId).toBe('saturn');
+  });
+
   it('schiebt den Flug aus dem Himmel aus der Erde heraus (eingestellter Maßstab)', () => {
     useStore.getState().setScale({ sizeScale: 50, distanceExponent: 1, sunDamping: 1 });
     useStore.getState().setCamera({ mode: 'geozentrisch', geo: { yaw: 0, pitch: 0, fovDeg: 50, lupe: 1 } });
