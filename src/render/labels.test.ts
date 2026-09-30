@@ -292,6 +292,33 @@ describe('createLabelOverlay — Rang vor Tiefe (Flackern bei Mondüberlappung)'
     spion.mockRestore();
   });
 
+  it('ersetzt mit Lichtpunkt die Glyphe und nimmt dessen Radius als Trefferscheibe', () => {
+    const { overlay, container } = baueOverlay();
+    const jupiter = { ...koerper('jupiter', 'body.jupiter.name', false, 1e5, 0.4), lichtpunktPx: 8 };
+    overlay.update([jupiter], testKamera(), true, true, 'de');
+    const w = wrapperVon(container, 'Jupiter')!;
+    expect((w.querySelector('.koerper-glyphe') as HTMLElement).hidden).toBe(true);
+    expect(overlay.trefferScheiben()[0]!.radiusPx).toBe(4);
+  });
+
+  it('zeigt ohne Lichtpunkt die Glyphe wie bisher', () => {
+    const { overlay, container } = baueOverlay();
+    overlay.update([koerper('jupiter', 'body.jupiter.name', false, 1e5, 0.4)], testKamera(), true, true, 'de');
+    const w = wrapperVon(container, 'Jupiter')!;
+    expect((w.querySelector('.koerper-glyphe') as HTMLElement).hidden).toBe(false);
+    expect(overlay.trefferScheiben()[0]!.radiusPx).toBe(MARKER_MIN_PIXEL);
+  });
+
+  it('gibt einem Mond mit Lichtpunkt ohne Namen die Trefferscheibe des Punkts, ohne Glyphe', () => {
+    const { overlay, container } = baueOverlay();
+    const io = { ...koerper('io', 'body.io.name', true, 1e5, 0.2), lichtpunktPx: 4 };
+    overlay.update([io], testKamera(), true, true, 'de');
+    const scheibe = overlay.trefferScheiben().find((s) => s.id === 'io')!;
+    expect(scheibe.radiusPx).toBe(2);
+    expect(scheibe.glyphe).toBe(false);
+    for (const g of container.querySelectorAll<HTMLElement>('.koerper-glyphe')) expect(g.hidden).toBe(true);
+  });
+
   it('liefert Trefferscheiben sichtbarer Körper, mit Glyphe mindestens MARKER_MIN_PIXEL', () => {
     const io = koerper('io', 'body.io.name', true, 1000, 1);
     const jupiter = { ...koerper('jupiter', 'body.jupiter.name', false, 2000, 60), sichtbar: false };

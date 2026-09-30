@@ -88,6 +88,12 @@ export interface LabelEintrag {
    * eine Information, die dieses eine Flag bereits vollständig abbildet.
    */
   istMond: boolean;
+  /**
+   * Durchmesser des Lichtpunkts in Pixeln (Himmelsansicht, Entwurf §11.2). Ist
+   * er gesetzt, entfällt die Ersatzglyphe; Treffer und Platz nehmen seinen
+   * Radius.
+   */
+  lichtpunktPx?: number;
 }
 
 export interface LabelOverlay {
@@ -215,10 +221,15 @@ export function createLabelOverlay(
 
       scheiben = kandidaten.map(({ eintrag, p, radiusPixel }) => {
         // Genau dann Glyphenscheibe, wenn die Ersatzglyphe den Radius anhebt.
-        const glyphe = zeigeMarker && needsMarker(radiusPixel);
+        // In der Himmelsansicht übernimmt der Lichtpunkt (lichtpunkte.ts) die
+        // Rolle der Glyphe.
+        const punktPx = eintrag.lichtpunktPx ?? 0;
+        const glyphe = punktPx === 0 && zeigeMarker && needsMarker(radiusPixel);
         return {
           id: eintrag.id, x: p.x, y: p.y, tiefe: p.tiefe, istMond: eintrag.istMond, glyphe,
-          radiusPx: glyphe ? Math.max(radiusPixel, MARKER_MIN_PIXEL) : radiusPixel,
+          radiusPx: punktPx > 0
+            ? Math.max(radiusPixel, punktPx / 2)
+            : glyphe ? Math.max(radiusPixel, MARKER_MIN_PIXEL) : radiusPixel,
         };
       });
       rechtecke = [];
@@ -239,14 +250,15 @@ export function createLabelOverlay(
 
       for (const { eintrag, p, radiusPixel } of kandidaten) {
         // Die Glyphe ersetzt den Körper erst, wenn er zu klein zum Treffen ist.
-        const brauchtGlyphe = zeigeMarker && needsMarker(radiusPixel);
+        const punktPx = eintrag.lichtpunktPx ?? 0;
+        const brauchtGlyphe = punktPx === 0 && zeigeMarker && needsMarker(radiusPixel);
         // Die Mondschwelle greift VOR der Kollisionsauflösung: Ein zu kleiner
         // Mond belegt gar keinen Platz und tritt keinem anderen Label seinen
         // Platz ab. Der Körper unter dem Zeiger zeigt seinen Namen immer,
         // auch unterhalb der Schwelle und ohne eingeschaltete Beschriftungen.
         const istHervorgehoben = eintrag.id === hervorgehoben;
         const zeigtText = istHervorgehoben || (zeigeLabels && zeigeLabel(radiusPixel, eintrag.istMond));
-        if (!zeigtText && !brauchtGlyphe) continue;
+        if (!zeigtText && !brauchtGlyphe && punktPx === 0) continue;
 
         const belegt = zeigtText ? platziert.filter((q) => q.hatText) : platziert;
         if (belegt.some((q) => ueberlappt(q, p))) continue;

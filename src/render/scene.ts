@@ -7,6 +7,8 @@ import { createBeltViews } from './belts';
 import { createOrbitLines } from './orbits';
 import { createStarfield, sternfeldPixeldichte } from './starfield';
 import { createHimmelsLinien } from './himmelslinien';
+import { createLichtpunkte, zeigtLichtpunkt } from './lichtpunkte';
+import { scheinbareHelligkeit } from '../sim/helligkeit';
 import { szeneFreigeben } from './freigeben';
 import { createLabelOverlay, apparentRadiusPixels } from './labels';
 import type { LabelEintrag } from './labels';
@@ -101,6 +103,7 @@ export function buildScene(
   const sternfeld = createStarfield(ctx.scene);
   // Linien der Himmelsansicht; außerhalb unsichtbar, szeneFreigeben räumt sie mit ab.
   const himmelsLinien = createHimmelsLinien(ctx.scene);
+  const lichtpunkte = createLichtpunkte(ctx.scene);
 
   // Beschriftungen und Ersatzglyphen liegen als HTML über der Canvas.
   const labels = createLabelOverlay(overlay, name);
@@ -230,6 +233,27 @@ export function buildScene(
           istMond: body.kind === 'moon',
         }];
       });
+      // Lichtpunkte der Himmelsansicht (Entwurf §11.2): Größe nach scheinbarer
+      // Helligkeit; das Kästchen „Markierungen“ schaltet sie wie die Glyphen.
+      const hoehe = overlay.clientHeight;
+      const punkte = lichtpunkte.update(state.display.markers && himmel, himmel
+        ? bodies.flatMap((body) => {
+          const mesh = koerper.meshes.get(body.id);
+          if (mesh === undefined) return [];
+          const p = mesh.position;
+          return [{
+            id: body.id, kind: body.kind, renderPos: { x: p.x, y: p.y, z: p.z },
+            farbe: body.appearance.color,
+            radiusPixel: apparentRadiusPixels(mesh.scale.x, p.length(), ctx.camera.fov, hoehe),
+            m: zeigtLichtpunkt(body.id, body.kind, 0) ? scheinbareHelligkeit(body.id, bodyIndex, jd) : null,
+            sichtbar: mesh.visible,
+          }];
+        })
+        : []);
+      for (const e of eintraege) {
+        const px = punkte.get(e.id);
+        if (px !== undefined) e.lichtpunktPx = px;
+      }
       // Die Kennung kommt aus dem Store, die Namen aus dem Auflöser (t() in
       // app/main.tsx, gespiegelt durch useSprache). Beide folgen demselben
       // Store-Schreibvorgang; Reacts Commit läuft als Microtask und damit
