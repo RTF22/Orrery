@@ -39,22 +39,25 @@ export interface LichtpunktEintrag {
   radiusPixel: number; m: number | null; sichtbar: boolean;
 }
 
-/** Weiche Scheibe als Datentextur (kein Canvas, damit die Schicht auch in node-Tests läuft). */
+/** Weiche Scheibe (Kern mit glatter Flanke, Halbwertsbreite rund drei Viertel des Durchmessers) als Datentextur (kein Canvas, damit die Schicht auch in node-Tests läuft). */
 function weicheScheibe(): THREE.DataTexture {
   const n = 32;
   const daten = new Uint8Array(n * n * 4);
   for (let y = 0; y < n; y++) {
     for (let x = 0; x < n; x++) {
       const r = Math.hypot(x + 0.5 - n / 2, y + 0.5 - n / 2) / (n / 2);
-      const a = r >= 1 ? 0 : Math.exp(-4 * r * r) * (1 - r);
+      const t = Math.min(1, Math.max(0, (1 - r) / 0.7));
+      const a = t * t * (3 - 2 * t);
       const i = (y * n + x) * 4;
       daten[i] = 255; daten[i + 1] = 255; daten[i + 2] = 255;
       daten[i + 3] = Math.round(255 * Math.min(1, a * 1.6));
     }
   }
-  const t = new THREE.DataTexture(daten, n, n);
-  t.needsUpdate = true;
-  return t;
+  const tex = new THREE.DataTexture(daten, n, n);
+  tex.magFilter = THREE.LinearFilter;
+  tex.minFilter = THREE.LinearFilter;
+  tex.needsUpdate = true;
+  return tex;
 }
 
 export function createLichtpunkte(scene: THREE.Scene): {
