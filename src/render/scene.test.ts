@@ -103,7 +103,7 @@ describe('buildScene — Bahnlinien', () => {
     expect(updateSpion).toHaveBeenCalledTimes(50);
     expect(updateSpion).toHaveBeenLastCalledWith(
       expect.any(THREE.Vector3), DEFAULT_STATE.visible, DEFAULT_STATE.display.orbits,
-      2451545.0 + 49, dargestellterMassstab(DEFAULT_STATE), null,
+      2451545.0 + 49, dargestellterMassstab(DEFAULT_STATE), null, null,
     );
   });
 });

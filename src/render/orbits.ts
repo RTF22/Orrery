@@ -22,6 +22,11 @@ export interface OrbitLines {
     jd: number,
     s: ScaleSettings,
     hervorgehoben?: string | null,
+    /**
+     * Ist `nurId` gesetzt, zeigt die Schicht höchstens diese eine Bahn — in der
+     * Himmelsansicht die des Mondes (Entwurf geozentrische Sicht §11.1).
+     */
+    nurId?: string | null,
   ): void;
   /** Die Linien je Körper-Id — für Tests und spätere Auswertung. */
   lines: Map<string, THREE.Line>;
@@ -45,6 +50,7 @@ export function createOrbitLines(scene: THREE.Scene): OrbitLines {
     // Objektursprung — Three.js' eigene Bounding-Sphere-Kullung träfe hier
     // eine falsche Annahme und würde Linien fälschlich ausblenden.
     linie.frustumCulled = false;
+    linie.name = `bahn-${body.id}`;
     scene.add(linie);
     linien.set(body.id, linie);
   }
@@ -56,9 +62,9 @@ export function createOrbitLines(scene: THREE.Scene): OrbitLines {
     // einen Umlauf abgetastete Form blieb bei laufender Uhr und nach
     // Zeitsprüngen auf der Bahnlage ihres Aufbauzeitpunkts stehen — der
     // Erdmond löste sich nach zehn Jahren um 14 % des Bahnradius von ihr.
-    update(cameraKm, sichtbar, an, jd, s, hervorgehoben = null) {
+    update(cameraKm, sichtbar, an, jd, s, hervorgehoben = null, nurId = null) {
       for (const [id, linie] of linien) {
-        linie.visible = an && sichtbar[id] !== false;
+        linie.visible = an && sichtbar[id] !== false && (nurId === null || id === nurId);
         (linie.material as THREE.LineBasicMaterial).opacity =
           id === hervorgehoben ? BAHN_DECKKRAFT_HERVOR : BAHN_DECKKRAFT;
         if (!linie.visible) continue;

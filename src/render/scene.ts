@@ -147,7 +147,7 @@ export function buildScene(
       // Himmelsansicht (Entwurf geozentrische Sicht §3, §10): gezeichnet wird
       // nie direkt mit dem eingestellten Maßstab, sondern mit dem
       // dargestellten (Test render/massstab.test.ts); die Erde bleibt
-      // ungezeichnet, Bahnlinien aus.
+      // ungezeichnet, Bahnlinien bis auf die Mondbahn aus.
       const himmel = himmelsansicht(state);
       const massstab = dargestellterMassstab(state);
 
@@ -167,7 +167,10 @@ export function buildScene(
       };
 
       // Die momentane Bahnellipse je Bild — ohne Kepler-Löser, siehe orbits.ts.
-      bahnen.update(cameraKm, state.visible, state.display.orbits && !himmel, jd, massstab, hover);
+      // In der Himmelsansicht bleibt nur die Mondbahn: Vom Erdmittelpunkt aus
+      // ist sie der Weg des Mondes am Himmel, ein Großkreis nahe der Ekliptik
+      // (Entwurf §11.1). Die Planetenbahnen lägen quer über den Himmel.
+      bahnen.update(cameraKm, state.visible, state.display.orbits, jd, massstab, hover, himmel ? 'moon' : null);
       himmelsLinien.update(himmel, jd, state.display);
 
       koerper.update(jd, massstab, cameraKm, state.visible, belichtet, state.display.shadows, himmel ? 'earth' : null);

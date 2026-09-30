@@ -130,3 +130,46 @@ describe('createOrbitLines — Hervorhebung', () => {
     expect(deckkraft('mars')).toBe(BAHN_DECKKRAFT);
   });
 });
+
+describe('Mondbahn in der Himmelsansicht', () => {
+  const jd = 2461456.0;
+  it('zeigt mit nurId genau die eine Linie', () => {
+    const szene = new THREE.Scene();
+    const linien = createOrbitLines(szene);
+    const erde = scaledPositionAt('earth', bodyIndex, jd, SCALE_PRESETS.realistisch);
+    linien.update(new THREE.Vector3(erde.x, erde.y, erde.z), {}, true, jd, SCALE_PRESETS.realistisch, null, 'moon');
+    const sichtbar = [...linien.lines].filter(([, l]) => l.visible).map(([id]) => id);
+    expect(sichtbar).toEqual(['moon']);
+    expect(szene.getObjectByName('bahn-moon')).toBe(linien.lines.get('moon'));
+  });
+
+  it('bleibt aus, wenn Bahnlinien aus sind oder der Mond abgewählt ist', () => {
+    const linien = createOrbitLines(new THREE.Scene());
+    const k = new THREE.Vector3();
+    linien.update(k, {}, false, jd, SCALE_PRESETS.realistisch, null, 'moon');
+    expect(linien.lines.get('moon')!.visible).toBe(false);
+    linien.update(k, { moon: false }, true, jd, SCALE_PRESETS.realistisch, null, 'moon');
+    expect(linien.lines.get('moon')!.visible).toBe(false);
+  });
+
+  it('liegt vom Erdmittelpunkt aus auf einem Großkreis, auch unter der Lupe', () => {
+    for (const s of [SCALE_PRESETS.realistisch, { sizeScale: 30, distanceExponent: 1, sunDamping: 4 / 30 }]) {
+      const linien = createOrbitLines(new THREE.Scene());
+      const erde = scaledPositionAt('earth', bodyIndex, jd, s);
+      linien.update(new THREE.Vector3(erde.x, erde.y, erde.z), {}, true, jd, s, null, 'moon');
+      const attr = linien.lines.get('moon')!.geometry.getAttribute('position');
+      const p = (i: number) => new THREE.Vector3(attr.getX(i), attr.getY(i), attr.getZ(i)).normalize();
+      const normale = new THREE.Vector3().crossVectors(p(0), p(128)).normalize();
+      for (let i = 0; i < attr.count; i += 16) {
+        expect(Math.abs(p(i).dot(normale))).toBeLessThan(1e-3);
+      }
+    }
+  });
+
+  it('ändert ohne nurId nichts am bisherigen Verhalten', () => {
+    const linien = createOrbitLines(new THREE.Scene());
+    linien.update(new THREE.Vector3(), {}, true, jd, SCALE_PRESETS.schaubild);
+    expect(linien.lines.get('mars')!.visible).toBe(true);
+    expect(linien.lines.get('moon')!.visible).toBe(true);
+  });
+});
