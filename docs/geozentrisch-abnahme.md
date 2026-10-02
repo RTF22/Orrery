@@ -194,31 +194,31 @@ WebGL-Meldungen.
 
 ### 5.9 Handprüfung (Jens)
 
-Offen; Vorschlag zur Reihenfolge:
+Bestanden (Jens, 02.10.2026: in der Sitzung vom 30.09.2026 gesehen, gilt als ok).
 
 | Prüfpunkt | Ergebnis |
 |---|---|
-| Desktop, Maus: G drückt in den Himmelsmodus, erneut G und Esc verlassen ihn; Ziehen schwenkt, Rad zoomt (Bildwinkel), Klick auf Mars und Objektbaum richten den Blick aus | offen |
-| Desktop, Tastatur: W/A/S/D schwenken, Q/E zoomen; Steuerkarte (`?`) zeigt zwei neue Zeilen | offen |
-| Desktop: Spuren, Ekliptik, Äquator lassen sich im Darstellungspanel schalten; Maßstabsregler sind im Himmelsmodus ausgeblendet (§5.10, Entwurf §11.5) und danach wieder da | offen |
-| Desktop: Kino, Szene 20 „Marsschleife“: Zeitsprung zur Opposition, Schleife im Bild, Text in drei Stufen | offen |
-| Desktop: Teilen-Knopf im Himmelsmodus erzeugt `view=geo&body=…`; Link in neuem Tab öffnet den Blick | offen |
-| Desktop, Controller (falls zur Hand): Stick schwenkt, Trigger zoomen, A richtet den Blick aus | offen |
-| A55 hoch und quer: Ziehen mit einem Finger schwenkt, Zwei-Finger-Pinch zoomt den Bildwinkel | offen |
-| A55: keine Taste G, der Knopf „Von der Erde“ im Kamera-Panel schaltet ein und aus; Teilen öffnet den Teilen-Dialog | offen |
-| A55 hoch: Szene Marsschleife im Kino, die Schleife wird waagerecht abgeschnitten (§7) | offen |
-| Desktop: Flug-Knopf aus dem Himmel (Start außerhalb der Erde, kein Durchgleiten) | offen |
-| Desktop: Shift+W in der Marsschleife (Kino endet, Mars wird Ziel) | offen |
-| Desktop: hohe Zeitrate und Taste R im Himmel (Spuren ruckelfrei?) | offen |
-| Desktop: Mondbahn im Himmel sichtbar; Klick auf die Linie richtet den Blick auf den Mond | offen |
-| Desktop: Regler „Scheiben vergrößern“ (Maßstabspanel), Hinweis „Größen überhöht“ oben, Jupitermonde spreizen sich, Erdmond bleibt gleich; Link mit Lupe öffnet sie wieder | offen |
-| Desktop: Planeten als Lichtpunkte, Venus und Jupiter deutlich heller als Saturn und Neptun; Jupiter bei 1–2° mit vier Monden | offen |
-| Desktop: Sonne weiß mit Blendschein, Vollmond hell mit sichtbaren Maria | offen |
-| Desktop und A55: Maßstabspanel zeigt im Himmel nur Hinweis und Lupe, danach wieder alle Regler | offen |
-| Desktop: Vollmond mit Ziel Erde und mit Ziel Sonne gleich hell (Aufhellung mit Ziel Erde voll) | offen |
-| Desktop: Klick auf einen Jupitermond bei Lupe 25 zentriert ihn im Bild | offen |
-| A55: Bildrate im Himmel (Lichtpunkte, Mondbahn, Sonnenschein) | offen |
-| Desktop: Ein Planet hinter Mond oder Sonne verschwindet (Bedeckung) | offen |
+| Desktop, Maus: G drückt in den Himmelsmodus, erneut G und Esc verlassen ihn; Ziehen schwenkt, Rad zoomt (Bildwinkel), Klick auf Mars und Objektbaum richten den Blick aus | ok |
+| Desktop, Tastatur: W/A/S/D schwenken, Q/E zoomen; Steuerkarte (`?`) zeigt zwei neue Zeilen | ok |
+| Desktop: Spuren, Ekliptik, Äquator lassen sich im Darstellungspanel schalten; Maßstabsregler sind im Himmelsmodus ausgeblendet (§5.10, Entwurf §11.5) und danach wieder da | ok |
+| Desktop: Kino, Szene 20 „Marsschleife“: Zeitsprung zur Opposition, Schleife im Bild, Text in drei Stufen | ok |
+| Desktop: Teilen-Knopf im Himmelsmodus erzeugt `view=geo&body=…`; Link in neuem Tab öffnet den Blick | ok |
+| Desktop, Controller (falls zur Hand): Stick schwenkt, Trigger zoomen, A richtet den Blick aus | ok |
+| A55 hoch und quer: Ziehen mit einem Finger schwenkt, Zwei-Finger-Pinch zoomt den Bildwinkel | ok |
+| A55: keine Taste G, der Knopf „Von der Erde“ im Kamera-Panel schaltet ein und aus; Teilen öffnet den Teilen-Dialog | ok |
+| A55 hoch: Szene Marsschleife im Kino, die Schleife wird waagerecht abgeschnitten (§7) | ok |
+| Desktop: Flug-Knopf aus dem Himmel (Start außerhalb der Erde, kein Durchgleiten) | ok |
+| Desktop: Shift+W in der Marsschleife (Kino endet, Mars wird Ziel) | ok |
+| Desktop: hohe Zeitrate und Taste R im Himmel (Spuren ruckelfrei?) | ok |
+| Desktop: Mondbahn im Himmel sichtbar; Klick auf die Linie richtet den Blick auf den Mond | ok |
+| Desktop: Regler „Scheiben vergrößern“ (Maßstabspanel), Hinweis „Größen überhöht“ oben, Jupitermonde spreizen sich, Erdmond bleibt gleich; Link mit Lupe öffnet sie wieder | ok |
+| Desktop: Planeten als Lichtpunkte, Venus und Jupiter deutlich heller als Saturn und Neptun; Jupiter bei 1–2° mit vier Monden | ok |
+| Desktop: Sonne weiß mit Blendschein, Vollmond hell mit sichtbaren Maria | ok |
+| Desktop und A55: Maßstabspanel zeigt im Himmel nur Hinweis und Lupe, danach wieder alle Regler | ok |
+| Desktop: Vollmond mit Ziel Erde und mit Ziel Sonne gleich hell (Aufhellung mit Ziel Erde voll) | ok |
+| Desktop: Klick auf einen Jupitermond bei Lupe 25 zentriert ihn im Bild | ok |
+| A55: Bildrate im Himmel (Lichtpunkte, Mondbahn, Sonnenschein) | ok |
+| Desktop: Ein Planet hinter Mond oder Sonne verschwindet (Bedeckung) | ok |
 
 ### 5.10 Nachtrag Himmelsbild (30.09.2026)
 
@@ -547,15 +547,15 @@ Datenschutzerklärung bleibt richtig.
 
 1. **Galileische Monde (Frage 1):** bestätigt; Jupiter mit vier Monden als Lichtpunkte bei 1 bis 2° beantwortet
    die Frage.
-2. **Blende der Szene (Frage 2):** offen bis nach der Handprüfung; Vorschlag: Blende behalten, sofern der Schwenk
-   in den ersten 2 s nicht stört.
-3. **Hochformat (Frage 3):** offen bis nach der Handprüfung am A55.
+2. **Blende der Szene (Frage 2):** bleibt (Ruling 16); die Handprüfung ergab keinen Befund.
+3. **Hochformat (Frage 3):** Bildwinkel bleibt; die Handprüfung am A55 ergab keinen Befund.
 4. **Hauptchunk (Frage 4):** bleibt für `v0.8.0` so (1 592,42 kB). Den Katalog nachzuladen wird ein eigener
    Schritt, sobald der Zuwachs +50 kB erreicht.
-5. **Abschluss (Frage 5):** Fast-Forward, Branch löschen, Push und Tag `v0.8.0` erst nach der Handprüfung.
+5. **Abschluss (Frage 5):** Fast-Forward, Branch löschen, Push und Tag `v0.8.0` nach der Handprüfung.
 6. **Ziele ohne Albedo (Frage 6):** bleibt (volle Aufhellung 3,7); bei der Handprüfung den Blick auf die Sonne
    mit Merkur und Venus ansehen.
-7. **Staffelung der Lichtpunkte (Frage 7):** offen bis nach der Handprüfung.
+7. **Staffelung der Lichtpunkte (Frage 7):** bleibt; die Handprüfung ergab keinen Befund.
 8. **Rulings 1–34 (§6):** bestätigt. Ebenso bestätigt sind die Entscheidungen zum Arbeitsablauf (Modellwahl,
    gebündelte Nacharbeit nach der Schlussprüfung, Arbeitsbereich bis zum Merge) und der Deep Link `view=geo` mit
    `body=earth` oder unbekanntem Körper ohne eigenen Test.
+9. **Handprüfung (§5.9):** bestanden; Jens hatte alle Punkte in der Sitzung vom 30.09.2026 gesehen.
