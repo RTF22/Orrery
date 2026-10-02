@@ -542,3 +542,20 @@ Aus dem Nachtrag Himmelsbild (Umsetzung):
 `orrery.sitzung.v1` und `orrery.ansichten.v1`), keine Anfragen an fremde Server, keine neuen
 Browserfunktionen oder Berechtigungen, keine Änderung an Einbettung, Domain oder `.htaccess`. Die
 Datenschutzerklärung bleibt richtig.
+
+## Entscheidungen (02.10.2026)
+
+1. **Galileische Monde (Frage 1):** bestätigt; Jupiter mit vier Monden als Lichtpunkte bei 1 bis 2° beantwortet
+   die Frage.
+2. **Blende der Szene (Frage 2):** offen bis nach der Handprüfung; Vorschlag: Blende behalten, sofern der Schwenk
+   in den ersten 2 s nicht stört.
+3. **Hochformat (Frage 3):** offen bis nach der Handprüfung am A55.
+4. **Hauptchunk (Frage 4):** bleibt für `v0.8.0` so (1 592,42 kB). Den Katalog nachzuladen wird ein eigener
+   Schritt, sobald der Zuwachs +50 kB erreicht.
+5. **Abschluss (Frage 5):** Fast-Forward, Branch löschen, Push und Tag `v0.8.0` erst nach der Handprüfung.
+6. **Ziele ohne Albedo (Frage 6):** bleibt (volle Aufhellung 3,7); bei der Handprüfung den Blick auf die Sonne
+   mit Merkur und Venus ansehen.
+7. **Staffelung der Lichtpunkte (Frage 7):** offen bis nach der Handprüfung.
+8. **Rulings 1–34 (§6):** bestätigt. Ebenso bestätigt sind die Entscheidungen zum Arbeitsablauf (Modellwahl,
+   gebündelte Nacharbeit nach der Schlussprüfung, Arbeitsbereich bis zum Merge) und der Deep Link `view=geo` mit
+   `body=earth` oder unbekanntem Körper ohne eigenen Test.
