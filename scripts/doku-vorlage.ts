@@ -474,7 +474,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--akzent-stark); 
     width: min(85vw, 320px);
     max-height: 100vh;
     overflow-y: auto;
-    padding: 4rem 1rem 1rem;
+    /* Unter dem festen Knopf „Inhalt“ (4,5 rem + 44 px = 116 px) beginnen, sonst verdeckt er die Überschrift. */
+    padding: 8rem 1rem 1rem;
     background: var(--bg);
     border-right: 1px solid var(--rand);
     transform: translateX(-105%);

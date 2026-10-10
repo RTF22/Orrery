@@ -18,6 +18,14 @@ describe('seite', () => {
     expect(m).not.toBeNull();
     expect(2 * Number(m![1]) * 16 + 40 + 1).toBeLessThanOrEqual(60);
   });
+  it('Ausgeklappte Leiste beginnt unterhalb des Knopfs „Inhalt“', () => {
+    const knopf = /\.navknopf \{[^}]*top: ([\d.]+)rem;[^}]*min-height: (\d+)px/.exec(DOKU_CSS);
+    const leiste = /@media \(max-width: 899px\) \{[^@]*?\.nav \{[^}]*padding: ([\d.]+)rem 1rem 1rem/.exec(DOKU_CSS);
+    expect(knopf).not.toBeNull();
+    expect(leiste).not.toBeNull();
+    const knopfUnten = Number(knopf![1]) * 16 + Number(knopf![2]);
+    expect(Number(leiste![1]) * 16).toBeGreaterThanOrEqual(knopfUnten + 8);
+  });
   it('Kopfzeile bleibt auch am Touchgerät mit 44-px-Knöpfen bei 60 px', () => {
     const m = /@media \(pointer: coarse\) \{[^}]*\.kopf \{[^}]*padding: ([\d.]+)rem 1rem/.exec(DOKU_CSS);
     expect(m).not.toBeNull();
