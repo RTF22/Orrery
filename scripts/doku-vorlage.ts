@@ -370,7 +370,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--akzent-stark); 
   justify-content: space-between;
   gap: 1rem;
   min-height: 60px;
-  padding: 0.6rem 1rem;
+  padding: 0.55rem 1rem;
   background: var(--bg);
   border-bottom: 1px solid var(--rand);
 }
