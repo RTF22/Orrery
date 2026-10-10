@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { DOKU_CSS, SEITEN_STAMM, dokuWurzelSeite, seite, sprachwahlSeite } from './doku-vorlage.ts';
 import { FARBSCHEMA_CSS } from './doku-farbschema.ts';
 import { RECHTSSEITEN } from '../src/data/rechtsseiten.ts';
@@ -74,6 +75,10 @@ describe('seite', () => {
   it('der sichtbare Sprachumschalter im Kopf bleibt relativ', () => {
     expect(h).toContain('<nav class="sprachwahl"');
     expect(h).toContain('href="../en/chronik.html">EN</a>');
+  });
+  it('bindet das Stylesheet mit einer Kennung aus seinem Inhalt ein (neuer Inhalt, neue Adresse)', () => {
+    const kennung = createHash('sha256').update(DOKU_CSS).digest('hex').slice(0, 8);
+    expect(h).toContain(`<link rel="stylesheet" href="../doku.css?v=${kennung}">`);
   });
   it('lädt nichts von außen außer Canonical und Alternate', () => {
     expect(h).not.toMatch(/<script[^>]+src="https?:/);

@@ -21,6 +21,7 @@
 import { FARBSCHEMA_CSS, FARBSCHEMA_SKRIPT, farbschemaKnopf, farbschemaKopf } from './doku-farbschema.ts';
 import { VORLESEN_CSS, VORLESEN_SKRIPT, vorlesenKnopf, vorlesenLeiste } from './doku-vorlesen.ts';
 import type { Dokument, Eintrag, SeitenDaten, Sprache } from './doku-bauen.ts';
+import { createHash } from 'node:crypto';
 import { RECHTSSEITEN } from '../src/data/rechtsseiten.ts';
 
 // Einzige Quelle für beide Konstanten (auch von doku-bauen.ts verwendet, dort per Wert-Import
@@ -178,7 +179,7 @@ export function seite(d: SeitenDaten): string {
 <meta property="og:image" content="${SEITEN_STAMM}/doku/making-of/bilder/orrery-saturn.jpg">
 ${farbschemaKopf()}
 <link rel="icon" type="image/png" href="../../../symbole/orrery-192.png">
-<link rel="stylesheet" href="../doku.css">
+<link rel="stylesheet" href="../doku.css?v=${stylesheetKennung()}">
 <noscript><style>
 .navknopf{display:none}
 .toc .toc-3{display:list-item!important}
@@ -342,6 +343,16 @@ export function dokuWurzelSeite(): string {
 </body>
 </html>
 `;
+}
+
+/**
+ * Kennung des Stylesheets aus seinem Inhalt (8 Hex-Zeichen), angehängt als `doku.css?v=…`.
+ * `doku.css` hat keinen eigenen Cache-Header; Firefox nahm nach dem Deploy vom 10.10.2026
+ * das alte Stylesheet aus dem Cache (Farbschalter ohne Wirkung). Neuer Inhalt ergibt eine
+ * neue Adresse, die Seiten selbst werden nicht gecacht.
+ */
+function stylesheetKennung(): string {
+  return createHash('sha256').update(DOKU_CSS).digest('hex').slice(0, 8);
 }
 
 /**

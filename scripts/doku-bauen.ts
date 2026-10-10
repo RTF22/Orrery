@@ -479,7 +479,8 @@ export function pruefeVerweise(wurzel: string, stamm: string = wurzel): string[]
       if (/^[a-z][a-z0-9+.-]*:/i.test(verweis) || verweis.startsWith('//')) continue;
 
       const trennstelle = verweis.indexOf('#');
-      const pfadTeil = trennstelle === -1 ? verweis : verweis.slice(0, trennstelle);
+      // Abfrageteil (`doku.css?v=…`, Kennung gegen veraltete Browser-Caches) gehört nicht zum Dateipfad.
+      const pfadTeil = (trennstelle === -1 ? verweis : verweis.slice(0, trennstelle)).split('?')[0]!;
       const anker = trennstelle === -1 ? undefined : verweis.slice(trennstelle + 1);
 
       let zielDatei = datei;

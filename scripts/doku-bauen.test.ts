@@ -259,6 +259,21 @@ describe('pruefeVerweise mit stamm (die Seitenvorlage verlinkt bewusst aus dist/
   });
 });
 
+describe('pruefeVerweise mit Abfrageteil', () => {
+  it('prüft bei `datei?v=…` die Datei und ignoriert den Abfrageteil, auch vor einem Anker', () => {
+    const wurzel = mkdtempSync(join(tmpdir(), 'abfrage-'));
+    writeFileSync(join(wurzel, 'stil.css'), '');
+    writeFileSync(join(wurzel, 'ziel.html'), '<h2 id="a">A</h2>');
+    writeFileSync(
+      join(wurzel, 'seite.html'),
+      '<link rel="stylesheet" href="stil.css?v=1a2b3c4d">' +
+        '<a href="ziel.html?x=1#a">vorhanden</a>' +
+        '<a href="fehlt.css?v=1">fehlt</a>',
+    );
+    expect(pruefeVerweise(wurzel)).toEqual(['seite.html → fehlt.css?v=1']);
+  });
+});
+
 describe('kuerzen', () => {
   it('lässt kurze Texte unverändert', () => {
     expect(kuerzen('Ein kurzer Satz.', 160)).toBe('Ein kurzer Satz.');

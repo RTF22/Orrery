@@ -145,3 +145,16 @@ Absatz vor und zurück, Escape und Sprachwechsel beenden es.
 2. **Freigabe** für den Fast-Forward von `doku-farbschema` nach `master` (kein Push, kein Tag)?
 3. **Übernahme nach `finsternisse`:** Die Ereignisseiten haben dort eigene Kopf- und Fußzeilen; Aufgabe 6
    des Plans überträgt Farbschalter, Vorlesen und Fußzeilenhinweis dorthin (Merge). Freigabe?
+
+## Nachtrag nach dem Deploy (10.10.2026)
+
+- Jens: Handprüfung mit Ton bestanden; „Potential nach oben mit eigenen AI-Voices“ (vorgemerkt).
+- Deploy von `d4a45be` durch Jens. Danach in Firefox: Farbschalter ohne Wirkung, mit und ohne NoScript; Vorlesen
+  lief. Ursache: `doku.css` wird ohne `Cache-Control` ausgeliefert, Firefox nahm das alte Stylesheet aus dem Cache
+  (neue Seite, altes CSS). Strg+F5 bestätigte das.
+- Behebung: Die Seiten binden das Stylesheet als `doku.css?v=<Kennung>` ein; die Kennung sind die ersten acht
+  Hex-Zeichen von SHA-256 über den Inhalt. Neuer Inhalt ergibt eine neue Adresse; die Seiten selbst werden nicht
+  gecacht. Der Verweisprüfer des Builds ignoriert den Abfrageteil. Gemessen: Kennung in DE/EN gleich der Prüfsumme
+  der gebauten `doku.css`. `public/.htaccess` bleibt unverändert (Prüfung gegen die Baseline im Domains-Projekt).
+- Offen: Datenschutzerklärung auf jensfricke.com nannte direkt nach dem Deploy weder den neuen Schlüssel noch die
+  Sprachausgabe.
