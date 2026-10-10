@@ -106,6 +106,8 @@ export const VORLESEN_SKRIPT = String.raw`<script>
   var pausiert = false;
   var tempo = 1;
   var lauf = 0;
+  // Chrome verliert onend, wenn die Äußerung vorher vom Speicherbereiniger eingesammelt wird.
+  var aeusserung = null;
 
   ${SAETZE_JS}
 
@@ -201,6 +203,7 @@ export const VORLESEN_SKRIPT = String.raw`<script>
       if (e && (e.error === 'interrupted' || e.error === 'canceled')) return;
       beenden();
     };
+    aeusserung = u;
     synth.speak(u);
   }
 

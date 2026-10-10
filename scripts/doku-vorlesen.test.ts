@@ -268,6 +268,53 @@ describe('Vorlesen: Ablauf', () => {
     s.letzte().onerror!({ error: 'synthesis-failed' });
     expect(s.el('#vorlesen-leiste').hidden).toBe(true);
   });
+  it('Zurück am ersten Block spricht wieder den Titel', async () => {
+    const s = laden([DE_LOKAL]);
+    s.el('#vorlesen-knopf').click();
+    await warten();
+    const anzahl = s.gesprochen.length;
+    s.el('[data-aktion="zurueck"]').click();
+    await warten();
+    expect(s.gesprochen.length).toBe(anzahl + 1);
+    expect(s.letzte().text).toBe('Titel');
+  });
+  it('Vor am letzten Block beendet und blendet die Leiste aus', async () => {
+    const s = laden([DE_LOKAL]);
+    s.el('.toc a[href="#b"]').setAttribute('aria-current', 'location');
+    s.el('#vorlesen-knopf').click();
+    await warten();
+    expect(s.letzte().text).toBe('Abschnitt B');
+    s.el('[data-aktion="vor"]').click();
+    await warten();
+    expect(s.letzte().text).toBe('Letzter Satz.');
+    s.el('[data-aktion="vor"]').click();
+    expect(s.el('#vorlesen-leiste').hidden).toBe(true);
+    expect(s.el('#vorlesen-knopf').getAttribute('aria-pressed')).toBe('false');
+  });
+  it('Tempo in der Pause spricht nicht; Weiter spricht mit dem neuen Tempo', async () => {
+    const s = laden([DE_LOKAL]);
+    s.el('#vorlesen-knopf').click();
+    await warten();
+    s.el('[data-aktion="pause"]').click();
+    const anzahl = s.gesprochen.length;
+    s.el('[data-aktion="tempo"]').click();
+    await warten();
+    expect(s.gesprochen.length).toBe(anzahl);
+    s.el('[data-aktion="pause"]').click();
+    await warten();
+    expect(s.gesprochen.length).toBe(anzahl + 1);
+    expect(s.letzte().rate).toBe(1.25);
+  });
+  it('Stimmverlust beim Vorlesen beendet und verbirgt den Knopf', async () => {
+    const stimmen: Stimme[] = [DE_LOKAL];
+    const s = laden(stimmen);
+    s.el('#vorlesen-knopf').click();
+    await warten();
+    stimmen.length = 0;
+    s.hoerer.forEach((fn) => fn());
+    expect(s.el('#vorlesen-leiste').hidden).toBe(true);
+    expect(s.el('#vorlesen-knopf').hidden).toBe(true);
+  });
   it('englische Seite: englische Beschriftung', () => {
     const en = seite({ sprache: 'en', dokument: 'chronik', titel: 'T', beschreibung: 'B', html: '<p>x</p>', toc: [] });
     expect(en).toMatch(/id="vorlesen-knopf"[^>]*>Read aloud</);
