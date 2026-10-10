@@ -12,6 +12,11 @@ const d = {
 
 describe('seite', () => {
   const h = seite(d);
+  it('Fußzeile nennt die Leseansicht des Browsers in der Seitensprache', () => {
+    expect(h.slice(h.indexOf('<footer'))).toContain('<p class="fuss-hinweis">Tipp: Die Leseansicht des Browsers kann diese Seite ebenfalls vorlesen.</p>');
+    const en = seite({ ...d, sprache: 'en' });
+    expect(en.slice(en.indexOf('<footer'))).toContain("<p class=\"fuss-hinweis\">Tip: Your browser's reader view can also read this page aloud.</p>");
+  });
   it('Farbschalter steht in der Kopfzeile vor der Sprachwahl', () => {
     const kopf = h.slice(h.indexOf('<header'), h.indexOf('</header>'));
     expect(kopf.indexOf('id="farbschema-knopf"')).toBeGreaterThan(0);

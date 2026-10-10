@@ -57,6 +57,7 @@ interface Woerter {
   sprachLabel: string;
   inhalt: string;
   fuss: string;
+  leseansicht: string;
 }
 
 const WOERTER: Record<Sprache, Woerter> = {
@@ -65,6 +66,7 @@ const WOERTER: Record<Sprache, Woerter> = {
     navLabel: 'Making-of-Navigation',
     sprachLabel: 'Sprache',
     inhalt: 'Inhalt',
+    leseansicht: 'Tipp: Die Leseansicht des Browsers kann diese Seite ebenfalls vorlesen.',
     fuss:
       `© Jens Fricke · Code MIT, Texte CC BY-SA 4.0 · Texturen siehe ` +
       `<a href="${GITHUB_STAMM}/blob/master/ASSETS.de.md">ASSETS.de.md</a> · ` +
@@ -77,6 +79,7 @@ const WOERTER: Record<Sprache, Woerter> = {
     navLabel: 'Making-of navigation',
     sprachLabel: 'Language',
     inhalt: 'Contents',
+    leseansicht: "Tip: Your browser's reader view can also read this page aloud.",
     fuss:
       `© Jens Fricke · code MIT, texts CC BY-SA 4.0 · textures see ` +
       `<a href="${GITHUB_STAMM}/blob/master/ASSETS.md">ASSETS.md</a> · ` +
@@ -212,6 +215,7 @@ ${inhalt}
 </main>
 <footer class="fuss">
 <p>${w.fuss}</p>
+<p class="fuss-hinweis">${w.leseansicht}</p>
 </footer>
 ${FARBSCHEMA_SKRIPT}
 <script>
