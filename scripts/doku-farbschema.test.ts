@@ -160,3 +160,35 @@ describe('Schalter', () => {
     );
   });
 });
+
+describe('Schalter: Seitenwechsel und zweiter Tab', () => {
+  it('pageshow mit persisted liest die Wahl neu (Zurück aus dem bfcache)', () => {
+    const w = laden();
+    const knopf = w.document.getElementById('farbschema-knopf')!;
+    expect(w.document.documentElement.hasAttribute('data-theme')).toBe(false);
+    w.localStorage.setItem(FARBSCHEMA_SCHLUESSEL, 'dunkel');
+    const ereignis = new w.Event('pageshow');
+    Object.defineProperty(ereignis, 'persisted', { value: true });
+    w.dispatchEvent(ereignis);
+    expect(w.document.documentElement.getAttribute('data-theme')).toBe('dark');
+    expect(knopf.getAttribute('aria-label')).toBe('Farbschema: dunkel. Klicken für automatisch.');
+  });
+  it('pageshow ohne persisted (frisches Laden) ändert nichts', () => {
+    const w = laden();
+    w.localStorage.setItem(FARBSCHEMA_SCHLUESSEL, 'hell');
+    w.dispatchEvent(new w.Event('pageshow'));
+    expect(w.document.documentElement.hasAttribute('data-theme')).toBe(false);
+  });
+  it('storage mit unserem Schlüssel oder null zieht nach, fremde Schlüssel nicht', () => {
+    const w = laden();
+    const wurzel = w.document.documentElement;
+    w.localStorage.setItem(FARBSCHEMA_SCHLUESSEL, 'hell');
+    w.dispatchEvent(new w.StorageEvent('storage', { key: 'anderer' }));
+    expect(wurzel.hasAttribute('data-theme')).toBe(false);
+    w.dispatchEvent(new w.StorageEvent('storage', { key: FARBSCHEMA_SCHLUESSEL }));
+    expect(wurzel.getAttribute('data-theme')).toBe('light');
+    w.localStorage.removeItem(FARBSCHEMA_SCHLUESSEL);
+    w.dispatchEvent(new w.StorageEvent('storage', { key: null }));
+    expect(wurzel.hasAttribute('data-theme')).toBe(false);
+  });
+});

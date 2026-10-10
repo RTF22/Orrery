@@ -17,6 +17,11 @@ describe('seite', () => {
     expect(m).not.toBeNull();
     expect(2 * Number(m![1]) * 16 + 40 + 1).toBeLessThanOrEqual(60);
   });
+  it('Kopfzeile bleibt auch am Touchgerät mit 44-px-Knöpfen bei 60 px', () => {
+    const m = /@media \(pointer: coarse\) \{[^}]*\.kopf \{[^}]*padding: ([\d.]+)rem 1rem/.exec(DOKU_CSS);
+    expect(m).not.toBeNull();
+    expect(2 * Number(m![1]) * 16 + 44 + 1).toBeLessThanOrEqual(60);
+  });
   it('Fußzeile nennt die Leseansicht des Browsers in der Seitensprache', () => {
     expect(h.slice(h.indexOf('<footer'))).toContain('<p class="fuss-hinweis">Tipp: Die Leseansicht des Browsers kann diese Seite ebenfalls vorlesen.</p>');
     const en = seite({ ...d, sprache: 'en' });

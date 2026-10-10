@@ -120,10 +120,14 @@ export const FARBSCHEMA_SKRIPT = `<script>
     return { content: m.getAttribute('content'), media: m.getAttribute('media') };
   });
   var wahl = 'auto';
-  try {
-    var gespeichert = localStorage.getItem(SCHLUESSEL);
-    if (gespeichert === 'hell' || gespeichert === 'dunkel') wahl = gespeichert;
-  } catch (e) {}
+
+  function lesen() {
+    wahl = 'auto';
+    try {
+      var gespeichert = localStorage.getItem(SCHLUESSEL);
+      if (gespeichert === 'hell' || gespeichert === 'dunkel') wahl = gespeichert;
+    } catch (e) {}
+  }
 
   function anwenden() {
     var wurzel = document.documentElement;
@@ -152,6 +156,18 @@ export const FARBSCHEMA_SKRIPT = `<script>
     } catch (e) {}
     anwenden();
   });
+  // Zurück aus dem bfcache und Wahl in einem zweiten Tab: Seite zeigt sonst die alte Farbe.
+  window.addEventListener('pageshow', function (ev) {
+    if (!ev.persisted) return;
+    lesen();
+    anwenden();
+  });
+  window.addEventListener('storage', function (ev) {
+    if (ev.key !== null && ev.key !== SCHLUESSEL) return;
+    lesen();
+    anwenden();
+  });
+  lesen();
   anwenden();
   knopf.hidden = false;
 })();

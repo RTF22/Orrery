@@ -400,7 +400,11 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--akzent-stark); 
 }
 .kopf-knopf[hidden] { display: none; }
 .kopf-knopf[aria-pressed="true"] { color: var(--akzent); border-color: var(--akzent); }
-@media (pointer: coarse) { .kopf-knopf { min-width: 44px; min-height: 44px; } }
+@media (pointer: coarse) {
+  .kopf-knopf { min-width: 44px; min-height: 44px; }
+}
+/* 44 px Knopf + 2 · 0,4 rem + 1 px Rand = 57,8 px: die Kopfzeile bleibt bei 60 px. */
+@media (pointer: coarse) { .kopf { padding: 0.4rem 1rem; } }
 
 .navknopf {
   position: fixed;
