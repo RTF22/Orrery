@@ -278,7 +278,8 @@ describe('Gliederung der Making-of-Texte', () => {
     for (const sprache of ['de', 'en'] as const) {
       it(`${dokument}.${sprache}: kein h1 im Inhalt, Überschriften ohne Sprung`, () => {
         const { html } = umwandeln(readFileSync(`docs/${dokument}.${sprache}.md`, 'utf8'), sprache);
-        const ebenen = [...html.matchAll(/<h([1-6])/g)].map((m) => Number(m[1]));
+        const ebenen = [...html.matchAll(/<h([1-6])\b/g)].map((m) => Number(m[1]));
+        expect(ebenen.length).toBeGreaterThan(0);
         expect(ebenen).not.toContain(1);
         let vorher = 1;
         for (const ebene of ebenen) {
