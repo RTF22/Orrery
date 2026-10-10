@@ -231,6 +231,7 @@ export const VORLESEN_SKRIPT = String.raw`<script>
     leiste.hidden = false;
     document.body.classList.add('vorlesen-laeuft');
     springen(startIndex());
+    if (laeuft) pauseKnopf.focus();
   }
 
   function beenden() {
@@ -239,8 +240,11 @@ export const VORLESEN_SKRIPT = String.raw`<script>
     pausiert = false;
     synth.cancel();
     markieren(null);
+    // Lag der Fokus in der Leiste, geht er an den Kopfknopf zurück (die Leiste verschwindet).
+    var fokusInLeiste = leiste.contains(document.activeElement);
     knopf.setAttribute('aria-pressed', 'false');
     leiste.hidden = true;
+    if (fokusInLeiste) knopf.focus();
     document.body.classList.remove('vorlesen-laeuft');
     zeigen();
   }
@@ -335,6 +339,12 @@ export const VORLESEN_CSS = `.vorlesen-aktiv {
   border-radius: 0.5rem;
   font: inherit;
   cursor: pointer;
+}
+@supports not (background: color-mix(in srgb, red 50%, blue)) {
+  .vorlesen-aktiv { outline: 2px solid var(--akzent); outline-offset: 0.2rem; }
+}
+@media (forced-colors: active) {
+  .vorlesen-aktiv { outline: 2px solid Highlight; }
 }
 body.vorlesen-laeuft .fuss { padding-bottom: 6rem; }
 `;

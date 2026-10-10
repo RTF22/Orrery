@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { SAETZE_JS } from './doku-vorlesen.ts';
+import { SAETZE_JS, VORLESEN_CSS } from './doku-vorlesen.ts';
 import { seite } from './doku-vorlage.ts';
 
 const saetze = new Function(`${SAETZE_JS}\nreturn saetze;`)() as (text: string) => string[];
@@ -179,6 +179,31 @@ describe('Vorlesen: Ablauf', () => {
     await warten();
     expect(s.gesprochen.length).toBe(anzahl);
   });
+  it('Fokus: Start setzt ihn in die Leiste, Stopp gibt ihn an den Kopfknopf zurück', async () => {
+    const s = laden([DE_LOKAL]);
+    const d = s.fenster.document;
+    s.el('#vorlesen-knopf').click();
+    await warten();
+    expect(d.activeElement).toBe(s.el('[data-aktion="pause"]'));
+    s.el('[data-aktion="stopp"]').click();
+    expect(d.activeElement).toBe(s.el('#vorlesen-knopf'));
+  });
+  it('Fokus: Beenden per Kopfknopf lässt den Fokus dort; Escape ohne Fokus in der Leiste fasst ihn nicht an', async () => {
+    const s = laden([DE_LOKAL]);
+    const d = s.fenster.document;
+    s.el('#vorlesen-knopf').click();
+    await warten();
+    s.el('#vorlesen-knopf').focus();
+    s.el('#vorlesen-knopf').click();
+    expect(d.activeElement).toBe(s.el('#vorlesen-knopf'));
+    s.el('#vorlesen-knopf').click();
+    await warten();
+    s.el('h1').setAttribute('tabindex', '-1');
+    s.el('h1').focus();
+    s.fenster.dispatchEvent(new s.fenster.KeyboardEvent('keydown', { key: 'Escape' }));
+    expect(s.el('#vorlesen-leiste').hidden).toBe(true);
+    expect(d.activeElement).toBe(s.el('h1'));
+  });
   it('der Kopfknopf beendet ein laufendes Vorlesen', async () => {
     const s = laden([DE_LOKAL]);
     s.el('#vorlesen-knopf').click();
@@ -319,5 +344,14 @@ describe('Vorlesen: Ablauf', () => {
     const en = seite({ sprache: 'en', dokument: 'chronik', titel: 'T', beschreibung: 'B', html: '<p>x</p>', toc: [] });
     expect(en).toMatch(/id="vorlesen-knopf"[^>]*>Read aloud</);
     expect(en).toContain('aria-label="Stop reading"');
+  });
+});
+
+describe('VORLESEN_CSS: Markierung ohne color-mix', () => {
+  it('Ersatz für Browser ohne color-mix und für erzwungene Farben', () => {
+    expect(VORLESEN_CSS).toMatch(
+      /@supports not \(background: color-mix\(in srgb, red 50%, blue\)\) \{\s*\.vorlesen-aktiv \{[^}]*outline: 2px solid var\(--akzent\);[^}]*outline-offset: 0\.2rem;/,
+    );
+    expect(VORLESEN_CSS).toMatch(/@media \(forced-colors: active\) \{\s*\.vorlesen-aktiv \{[^}]*outline: 2px solid Highlight;/);
   });
 });
