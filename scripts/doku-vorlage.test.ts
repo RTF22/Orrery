@@ -12,6 +12,11 @@ const d = {
 
 describe('seite', () => {
   const h = seite(d);
+  it('Farbschalter steht in der Kopfzeile vor der Sprachwahl', () => {
+    const kopf = h.slice(h.indexOf('<header'), h.indexOf('</header>'));
+    expect(kopf.indexOf('id="farbschema-knopf"')).toBeGreaterThan(0);
+    expect(kopf.indexOf('id="farbschema-knopf"')).toBeLessThan(kopf.indexOf('class="sprachwahl"'));
+  });
   it('bindet das Farbschema ein: theme-color je Schema, Farbvariablen am Anfang des Stylesheets', () => {
     expect(h).toContain('media="(prefers-color-scheme: light)"');
     expect(h).not.toContain('<meta name="theme-color" content="#0f172a">');

@@ -18,7 +18,7 @@
  * src/ui/info/InfoPanel.tsx und src/ui/ueberschrift.ts.
  * Die helle Palette (Entwurf 2026-10-10) steht in doku-farbschema.ts.
  */
-import { FARBSCHEMA_CSS, farbschemaKopf } from './doku-farbschema.ts';
+import { FARBSCHEMA_CSS, FARBSCHEMA_SKRIPT, farbschemaKnopf, farbschemaKopf } from './doku-farbschema.ts';
 import type { Dokument, Eintrag, SeitenDaten, Sprache } from './doku-bauen.ts';
 import { RECHTSSEITEN } from '../src/data/rechtsseiten.ts';
 
@@ -189,7 +189,10 @@ ${farbschemaKopf()}
 <a class="orrery-link" href="../../../index.html">Orrery</a>
 <span class="kopf-titel">${titel}</span>
 </div>
+<div class="kopf-rechts">
+${farbschemaKnopf(d.sprache)}
 <nav class="sprachwahl" aria-label="${w.sprachLabel}">${sprachwahl}</nav>
+</div>
 </header>
 <button type="button" class="navknopf" id="${navKnopfId}" aria-expanded="false" aria-controls="${navId}">${w.inhalt}</button>
 <nav class="nav" id="${navId}" aria-label="${w.navLabel}">
@@ -208,6 +211,7 @@ ${inhalt}
 <footer class="fuss">
 <p>${w.fuss}</p>
 </footer>
+${FARBSCHEMA_SKRIPT}
 <script>
 (function () {
   var knopf = document.getElementById('${navKnopfId}');
@@ -373,6 +377,22 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--akzent-stark); 
 }
 .sprachwahl { flex-shrink: 0; font-size: 0.875rem; }
 .sprachwahl [aria-current] { color: var(--text); font-weight: 700; }
+.kopf-rechts { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+.kopf-knopf {
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0 0.6rem;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--rand);
+  border-radius: 0.5rem;
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+}
+.kopf-knopf[hidden] { display: none; }
+.kopf-knopf[aria-pressed="true"] { color: var(--akzent); border-color: var(--akzent); }
+@media (pointer: coarse) { .kopf-knopf { min-width: 44px; min-height: 44px; } }
 
 .navknopf {
   position: fixed;

@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { FARBSCHEMA_CSS, PALETTE_DUNKEL, PALETTE_HELL, farbschemaKopf } from './doku-farbschema.ts';
+import { JSDOM } from 'jsdom';
+import { seite } from './doku-vorlage.ts';
+import {
+  FARBSCHEMA_CSS, FARBSCHEMA_SCHLUESSEL, PALETTE_DUNKEL, PALETTE_HELL, farbschemaKopf,
+} from './doku-farbschema.ts';
 
 /** Relative Leuchtdichte nach WCAG 2.x für `#rrggbb`. */
 function leuchtdichte(hex: string): number {
@@ -69,5 +73,90 @@ describe('farbschemaKopf', () => {
     const kopf = farbschemaKopf();
     expect(kopf).toContain('<meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">');
     expect(kopf).toContain('<meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">');
+  });
+});
+
+const DATEN = {
+  sprache: 'de' as const, dokument: 'entstehung' as const, titel: 'Titel', beschreibung: 'Kurz',
+  html: '<h2 id="a">A</h2><p>Text.</p>', toc: [{ ebene: 2 as const, text: 'A', id: 'a' }],
+};
+
+/** Lädt die erzeugte Seite mit Skripten; `gespeichert` belegt den Speicher vorab, 'gesperrt' lässt jeden Zugriff werfen. */
+function laden(gespeichert?: string, sprache: 'de' | 'en' = 'de') {
+  return new JSDOM(seite({ ...DATEN, sprache }), {
+    runScripts: 'dangerously',
+    url: `https://orrery3d.de/doku/making-of/${sprache}/`,
+    beforeParse(w) {
+      if (gespeichert === 'gesperrt') {
+        const wirft = (): never => {
+          throw new Error('gesperrt');
+        };
+        Object.assign(w.Storage.prototype, { getItem: wirft, setItem: wirft, removeItem: wirft });
+      } else if (gespeichert !== undefined) {
+        w.localStorage.setItem(FARBSCHEMA_SCHLUESSEL, gespeichert);
+      }
+    },
+  }).window;
+}
+
+describe('Schalter', () => {
+  it('ohne Skript verborgen: der Knopf trägt im HTML das Attribut hidden', () => {
+    expect(seite(DATEN)).toMatch(/<button[^>]*id="farbschema-knopf"[^>]*\bhidden\b/);
+  });
+  it('das Kopfskript steht vor dem Stylesheet', () => {
+    const h = seite(DATEN);
+    expect(h.indexOf(FARBSCHEMA_SCHLUESSEL)).toBeGreaterThan(0);
+    expect(h.indexOf(FARBSCHEMA_SCHLUESSEL)).toBeLessThan(h.indexOf('rel="stylesheet"'));
+  });
+  it('ohne gespeicherte Wahl: automatisch, Knopf sichtbar mit Beschriftung', () => {
+    const w = laden();
+    const knopf = w.document.getElementById('farbschema-knopf')!;
+    expect(w.document.documentElement.hasAttribute('data-theme')).toBe(false);
+    expect(knopf.hidden).toBe(false);
+    expect(knopf.textContent).toBe('◐');
+    expect(knopf.getAttribute('aria-label')).toBe('Farbschema: automatisch (wie das System). Klicken für hell.');
+  });
+  it('gespeichertes „hell“ gilt sofort, theme-color folgt', () => {
+    const w = laden('hell');
+    expect(w.document.documentElement.getAttribute('data-theme')).toBe('light');
+    const metas = [...w.document.querySelectorAll('meta[name="theme-color"]')];
+    expect(metas.map((m) => [m.getAttribute('content'), m.hasAttribute('media')])).toEqual([
+      ['#f8fafc', false], ['#f8fafc', false],
+    ]);
+  });
+  it('Klick schaltet reihum hell → dunkel → automatisch und speichert', () => {
+    const w = laden();
+    const knopf = w.document.getElementById('farbschema-knopf')!;
+    const wurzel = w.document.documentElement;
+    knopf.click();
+    expect([wurzel.getAttribute('data-theme'), w.localStorage.getItem(FARBSCHEMA_SCHLUESSEL)]).toEqual(['light', 'hell']);
+    expect(knopf.getAttribute('aria-label')).toBe('Farbschema: hell. Klicken für dunkel.');
+    knopf.click();
+    expect([wurzel.getAttribute('data-theme'), w.localStorage.getItem(FARBSCHEMA_SCHLUESSEL)]).toEqual(['dark', 'dunkel']);
+    expect(w.document.querySelector('meta[name="theme-color"]')!.getAttribute('content')).toBe('#0f172a');
+    knopf.click();
+    expect([wurzel.hasAttribute('data-theme'), w.localStorage.getItem(FARBSCHEMA_SCHLUESSEL)]).toEqual([false, null]);
+    const metas = [...w.document.querySelectorAll('meta[name="theme-color"]')];
+    expect(metas.map((m) => [m.getAttribute('content'), m.getAttribute('media')])).toEqual([
+      ['#0f172a', '(prefers-color-scheme: dark)'], ['#f8fafc', '(prefers-color-scheme: light)'],
+    ]);
+  });
+  it('fremder Wert im Speicher gilt als automatisch', () => {
+    const w = laden('blau');
+    expect(w.document.documentElement.hasAttribute('data-theme')).toBe(false);
+    expect(w.document.getElementById('farbschema-knopf')!.textContent).toBe('◐');
+  });
+  it('gesperrter Speicher: kein Fehler, Wahl gilt für die Seite', () => {
+    const w = laden('gesperrt');
+    const knopf = w.document.getElementById('farbschema-knopf')!;
+    expect(knopf.hidden).toBe(false);
+    knopf.click();
+    expect(w.document.documentElement.getAttribute('data-theme')).toBe('light');
+  });
+  it('englische Beschriftung', () => {
+    const w = laden(undefined, 'en');
+    expect(w.document.getElementById('farbschema-knopf')!.getAttribute('aria-label')).toBe(
+      'Color scheme: automatic (follows the system). Click for light.',
+    );
   });
 });
