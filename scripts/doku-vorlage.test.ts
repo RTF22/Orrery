@@ -57,6 +57,12 @@ describe('seite', () => {
     );
     expect(ladend).toEqual([]);
   });
+  it('ohne Skript bleibt die Navigation am Desktop stehen, nur schmal wird sie statisch', () => {
+    const noscript = h.slice(h.indexOf('<noscript>'), h.indexOf('</noscript>'));
+    const schmal = noscript.match(/@media \(max-width: 899px\)\{([\s\S]*?)\}\s*\}/);
+    expect(schmal?.[1]).toContain('position:static');
+    expect(noscript.replace(schmal?.[0] ?? '', '')).not.toMatch(/\.nav\{/);
+  });
 });
 
 describe('SEITEN_STAMM stimmt mit den statischen Dateien überein', () => {

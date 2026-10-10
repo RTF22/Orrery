@@ -175,8 +175,10 @@ export function seite(d: SeitenDaten): string {
 <link rel="stylesheet" href="../doku.css">
 <noscript><style>
 .navknopf{display:none}
-.nav{position:static!important;display:block!important;transform:none!important;max-height:none!important;width:auto!important;padding:1rem!important}
 .toc .toc-3{display:list-item!important}
+@media (max-width: 899px){
+.nav{position:static!important;display:block!important;transform:none!important;max-height:none!important;width:auto!important;padding:1rem!important}
+}
 </style></noscript>
 </head>
 <body>
