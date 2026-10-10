@@ -47,7 +47,7 @@ Stand 10.10.2026, von Jens im Gespräch freigegeben (Abschnitte 1 und 2). Gilt f
   Automatisch → Hell → Dunkel → Automatisch.
 - `aria-label` und `title` in der Seitensprache nennen den aktuellen Zustand und die Wirkung des Klicks
   (etwa „Farbschema: automatisch. Klicken für hell.“).
-- Ohne JavaScript ausgeblendet (`<noscript>`-Stil, wie beim Navigationsknopf).
+- Ohne JavaScript ausgeblendet (Attribut `hidden`, das Skript entfernt es).
 
 ### Paletten
 
@@ -110,7 +110,7 @@ Die Weiterleitungsseiten (`sprachwahlSeite`, `dokuWurzelSeite`) bekommen keinen 
   Namen. Während sie sichtbar ist, bekommt der Seitenfuß unten Platz, damit nichts verdeckt wird.
 - Escape stoppt das Vorlesen. Ist am schmalen Bildschirm die Navigationsschublade offen, schließt Escape zuerst die
   Schublade.
-- Der Knopf „Vorlesen“ in der Kopfzeile wechselt während des Vorlesens auf „Stopp“ (`aria-pressed`).
+- Der Knopf „Vorlesen“ in der Kopfzeile behält seine Beschriftung und zeigt den laufenden Zustand über `aria-pressed`; ein Klick beendet dann das Vorlesen.
 
 ### Leseansicht (Vorschlag C)
 

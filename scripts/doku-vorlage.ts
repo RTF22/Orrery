@@ -19,6 +19,7 @@
  * Die helle Palette (Entwurf 2026-10-10) steht in doku-farbschema.ts.
  */
 import { FARBSCHEMA_CSS, FARBSCHEMA_SKRIPT, farbschemaKnopf, farbschemaKopf } from './doku-farbschema.ts';
+import { VORLESEN_CSS, VORLESEN_SKRIPT, vorlesenKnopf, vorlesenLeiste } from './doku-vorlesen.ts';
 import type { Dokument, Eintrag, SeitenDaten, Sprache } from './doku-bauen.ts';
 import { RECHTSSEITEN } from '../src/data/rechtsseiten.ts';
 
@@ -191,6 +192,7 @@ ${farbschemaKopf()}
 </div>
 <div class="kopf-rechts">
 ${farbschemaKnopf(d.sprache)}
+${vorlesenKnopf(d.sprache)}
 <nav class="sprachwahl" aria-label="${w.sprachLabel}">${sprachwahl}</nav>
 </div>
 </header>
@@ -290,6 +292,8 @@ ${FARBSCHEMA_SKRIPT}
   }
 })();
 </script>
+${vorlesenLeiste(d.sprache)}
+${VORLESEN_SKRIPT}
 </body>
 </html>
 `;
@@ -484,4 +488,4 @@ main.inhalt code { font-family: ui-monospace, "Cascadia Code", monospace; }
   border-top: 1px solid var(--rand);
 }
 .fuss a { color: var(--text-gedaempft); }
-`;
+${VORLESEN_CSS}`;
