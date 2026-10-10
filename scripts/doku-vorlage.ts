@@ -16,7 +16,9 @@
  * `text-slate-300` (#cbd5e1) aus src/ui/Kopfzeile.tsx (Statuszeile), Akzent
  * `border-sky-300`/`bg-sky-400` (#7dd3fc/#38bdf8) aus den aktiven Reitern in
  * src/ui/info/InfoPanel.tsx und src/ui/ueberschrift.ts.
+ * Die helle Palette (Entwurf 2026-10-10) steht in doku-farbschema.ts.
  */
+import { FARBSCHEMA_CSS, farbschemaKopf } from './doku-farbschema.ts';
 import type { Dokument, Eintrag, SeitenDaten, Sprache } from './doku-bauen.ts';
 import { RECHTSSEITEN } from '../src/data/rechtsseiten.ts';
 
@@ -170,7 +172,7 @@ export function seite(d: SeitenDaten): string {
 <meta property="og:description" content="${beschreibung}">
 <meta property="og:url" content="${adresseEigen}">
 <meta property="og:image" content="${SEITEN_STAMM}/doku/making-of/bilder/orrery-saturn.jpg">
-<meta name="theme-color" content="#0f172a">
+${farbschemaKopf()}
 <link rel="icon" type="image/png" href="../../../symbole/orrery-192.png">
 <link rel="stylesheet" href="../doku.css">
 <noscript><style>
@@ -335,17 +337,9 @@ export function dokuWurzelSeite(): string {
  * Tailwind-Klassen der App-Panels (siehe Dateikopf): Hintergrund `#0f172a`,
  * Text `#f1f5f9` — Kontrastverhältnis 16,3:1 (WCAG-Formel über die relative
  * Leuchtdichte), weit über der geforderten Mindestschwelle 7:1.
+ * Farbvariablen und helle Palette in doku-farbschema.ts.
  */
-export const DOKU_CSS = `:root {
-  --bg: #0f172a;
-  --text: #f1f5f9;
-  --text-gedaempft: #cbd5e1;
-  --akzent: #7dd3fc;
-  --akzent-stark: #38bdf8;
-  --rand: rgba(255, 255, 255, 0.14);
-  color-scheme: dark;
-}
-* { box-sizing: border-box; }
+export const DOKU_CSS = `${FARBSCHEMA_CSS}* { box-sizing: border-box; }
 html, body { margin: 0; }
 body {
   background: var(--bg);

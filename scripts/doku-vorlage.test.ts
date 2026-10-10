@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
-import { SEITEN_STAMM, dokuWurzelSeite, seite, sprachwahlSeite } from './doku-vorlage.ts';
+import { DOKU_CSS, SEITEN_STAMM, dokuWurzelSeite, seite, sprachwahlSeite } from './doku-vorlage.ts';
+import { FARBSCHEMA_CSS } from './doku-farbschema.ts';
 import { RECHTSSEITEN } from '../src/data/rechtsseiten.ts';
 
 const d = {
@@ -11,6 +12,11 @@ const d = {
 
 describe('seite', () => {
   const h = seite(d);
+  it('bindet das Farbschema ein: theme-color je Schema, Farbvariablen am Anfang des Stylesheets', () => {
+    expect(h).toContain('media="(prefers-color-scheme: light)"');
+    expect(h).not.toContain('<meta name="theme-color" content="#0f172a">');
+    expect(DOKU_CSS.startsWith(FARBSCHEMA_CSS)).toBe(true);
+  });
   it('setzt Sprache, maskierten Titel und Beschreibung', () => {
     expect(h).toContain('<html lang="de">');
     expect(h).toContain('<title>Chronik &lt;Test&gt; · Orrery</title>');
