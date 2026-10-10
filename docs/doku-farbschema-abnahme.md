@@ -30,12 +30,14 @@ Aufgaben 1 bis 4: `3a519f6` helle Palette, `287c81b` Farbschalter, `21de49a` Sat
 | `97fdea8` | Fußzeilenhinweis auf die Leseansicht (DE/EN), Wächtertest der Gliederung |
 | `32093ff` | Kopfzeile wieder 60 px hoch (siehe § 4, Zeilen 1 und 2) |
 | `44911aa` | Wächtertest prüft Überschriften wirklich (siehe § 6, Ruling 3) |
+| `7371106` | Nacharbeit der Schlussprüfung: Fokus beim Vorlesen (Start auf „Pause“, Beenden zurück zum Kopfknopf); Ersatzmarkierung per Umriss ohne `color-mix` und bei erzwungenen Farben |
+| `c095953` | Farbschalter liest die Wahl bei `pageshow` (Zurück, bfcache) und `storage` (zweiter Tab) neu; Kopfzeile am Touchgerät mit 0,4 rem Polster (57,8 Inhalt, `min-height` 60 px) |
 
 Die Wort- und Trailerprüfung laut lokaler Projektanleitung blieb nach jedem Commit ohne Treffer.
 
 ## 3. Tests und Prüfungen
 
-- Tests: 5889 vor Aufgabe 5, 5899 danach (152 Dateien, alle grün). Neu: vier Randfälle des
+- Tests nach der Nacharbeit der Schlussprüfung: 5906 (152 Dateien, alle grün; zuvor 5899). Neu: Fokus (2), `pageshow`/`storage` (3), Kopfzeile am Touchgerät, Ersatzmarkierung. Davor: 5889 vor Aufgabe 5, 5899 danach. Neu: vier Randfälle des
   Vorlesens (Zurück am ersten Block, Vor am letzten Block, Tempo in der Pause, Stimmverlust), der
   Fußzeilentest, der Kopfzeilenhöhentest, vier Gliederungstests.
 - `npm run lint`: ohne Meldung. `npx tsc -b --noEmit`: Ausgang 0.
@@ -67,8 +69,18 @@ Zeilen 1 und 2 zunächst **abgewichen**: Kopfzeile 60,19 px statt ≤ 60. Ursach
 Behoben mit Polster 0,55 rem (`32093ff`, ein Test rechnet die Summe nach); danach 60 px. Alle anderen
 Zeilen wurden nach der Änderung neu gemessen.
 
-Die mobile Kopfzeile ist mit 62,6 px höher, weil die Knöpfe an Zeigern mit grober Auflösung 44 px hoch
-sind (so gewollt). Der Sprachlink im Kopf ist am Handy nur 17,6×19 px groß; er gehört nicht zu den neuen
+Die Kopfzeile war an Zeigern mit grober Auflösung 62,6 px hoch (44-px-Knöpfe plus Polster). Behoben in
+`c095953` (Polster 0,4 rem unter `pointer: coarse`). Nachmessung (Vorschau des Builds, Chromium, eigener
+Kontext je Zeile):
+
+| Gerät | Seite | `scrollWidth` | Kopfzeile |
+|---|---|---|---|
+| 320×640, `isMobile`, `hasTouch` | DE | 320 | 60 px |
+| 320×640, `isMobile`, `hasTouch` | EN | 320 | 60 px |
+| 1400×900, `hasTouch` (Touch-Desktop) | DE | 1400 | 60 px |
+| 1400×900, `hasTouch` (Touch-Desktop) | EN | 1400 | 60 px |
+
+Keine waagerechte Verbreiterung (`scrollWidth` ≤ Fensterbreite), Kopfzeile überall ≤ 60 px. Der Sprachlink im Kopf ist am Handy nur 17,6×19 px groß; er gehört nicht zu den neuen
 Knöpfen (siehe § 7).
 
 ## 5. Handprüfung (offen, für Jens)
@@ -84,6 +96,8 @@ Absatz vor und zurück, Escape und Sprachwechsel beenden es.
 | Firefox, Leseansicht | Der Fußzeilenhinweis stimmt: Die Leseansicht liest vor | |
 | Chrome unter Windows | Farbschalter, Vorlesen hörbar, Markierung folgt bis zum Ende eines längeren Abschnitts (prüft die festgehaltene Äußerung) | |
 | Edge unter Windows | Nur lokale Stimmen (keine „Natural“-Stimmen); „Laut vorlesen“ der Leseansicht | |
+| Alle Browser | Farbwechsel, dann „Zurück“ zur alten Seite: Sie zeigt die neue Farbe (auch ein zweiter Tab zieht nach) | |
+| Tastatur | Start per Kopfknopf setzt den Fokus in die Leiste (Pause); „Stopp“ gibt ihn an den Kopfknopf zurück | |
 | Galaxy A55, Chrome | Kopfknöpfe gut treffbar, Leiste verdeckt nichts, Vorlesen hörbar | |
 
 ## 6. Rulings
@@ -117,6 +131,10 @@ Absatz vor und zurück, Escape und Sprachwechsel beenden es.
   Knopf nur mit den klassischen Stimmen.
 - Der Sprachlink im Kopf ist am Handy 17,6×19 px klein (bestand schon vor dieser Arbeit).
 - Ob das Vorlesen im verdeckten Tab pausiert, ließ sich per Playwright nicht auslösen.
+- Beim Vorlesen werden Bilder übersprungen; Alt-Texte werden nicht gelesen.
+- Der Vorleseknopf erscheint erst, wenn der Browser seine Stimmen meldet (kleiner Layoutsprung in der Kopfzeile).
+- `doku.css` hat keinen eigenen Cache-Header; nach dem Deploy kann kurz neues HTML mit altem CSS erscheinen (die Funktion bleibt).
+- Die Symbole des Farbschalters stehen als echte Zeichen im Skript (die Seite ist UTF-8).
 - Die Ereignisseiten (`/ereignisse/`) gibt es erst auf dem Branch `finsternisse`; Übernahme siehe § 8.
 
 ## 8. Fragen an Jens
