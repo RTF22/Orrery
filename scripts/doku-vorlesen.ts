@@ -54,12 +54,21 @@ const WOERTER: Record<Sprache, {
   },
 };
 
-/** Kopfknopf; bleibt verborgen, bis das Skript eine lokale Stimme der Seitensprache findet. */
+/** Lautsprecher in Textfarbe; folgt so Farbschema und `aria-pressed`. */
+const LAUTSPRECHER =
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" ' +
+  'stroke-linejoin="round" aria-hidden="true" focusable="false">' +
+  '<path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>';
+
+/**
+ * Kopfknopf mit Symbol, Name über aria-label; bleibt verborgen, bis das Skript eine lokale
+ * Stimme der Seitensprache findet.
+ */
 export function vorlesenKnopf(sprache: Sprache): string {
   const w = WOERTER[sprache];
   return (
     `<button type="button" class="kopf-knopf vorlesen-knopf" id="vorlesen-knopf" hidden aria-pressed="false" ` +
-    `title="${w.knopfTitel}">${w.knopf}</button>`
+    `aria-label="${w.knopf}" title="${w.knopfTitel}">${LAUTSPRECHER}</button>`
   );
 }
 
@@ -309,7 +318,8 @@ export const VORLESEN_SKRIPT = String.raw`<script>
 </script>`;
 
 /** Markierung, Leiste und Platz für den Seitenfuß; Markierungsfarbe wie im Kontrasttest (12 %). */
-export const VORLESEN_CSS = `.vorlesen-aktiv {
+export const VORLESEN_CSS = `.vorlesen-knopf svg { display: block; width: 1.15em; height: 1.15em; margin: auto; }
+.vorlesen-aktiv {
   background: color-mix(in srgb, var(--akzent) 12%, var(--bg));
   box-shadow: 0 0 0 0.3rem color-mix(in srgb, var(--akzent) 12%, var(--bg));
   border-radius: 0.2rem;

@@ -342,8 +342,15 @@ describe('Vorlesen: Ablauf', () => {
   });
   it('englische Seite: englische Beschriftung', () => {
     const en = seite({ sprache: 'en', dokument: 'chronik', titel: 'T', beschreibung: 'B', html: '<p>x</p>', toc: [] });
-    expect(en).toMatch(/id="vorlesen-knopf"[^>]*>Read aloud</);
+    expect(en).toMatch(/id="vorlesen-knopf"[^>]*aria-label="Read aloud"/);
     expect(en).toContain('aria-label="Stop reading"');
+  });
+  it('Kopfknopf zeigt nur ein Lautsprecher-Symbol, der Name steht im aria-label', () => {
+    const knopf = /<button[^>]*id="vorlesen-knopf"[^>]*>([\s\S]*?)<\/button>/.exec(SEITE_DE);
+    expect(knopf).not.toBeNull();
+    expect(knopf![0]).toContain('aria-label="Vorlesen"');
+    expect(knopf![1]).toMatch(/^<svg[^>]*aria-hidden="true"[\s\S]*<\/svg>$/);
+    expect(knopf![1].replace(/<[^>]*>/g, '').trim()).toBe('');
   });
 });
 
